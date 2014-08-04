@@ -1,0 +1,12 @@
+<div class="MenuGuest"> <a href="<?php echo BDO_URL;?>guest?user=<?php echo $view->USERID;?>">Accueil</a><br> 
+<a href="<?php echo BDO_URL;?>guestbrowser?user=<?php echo $view->USERID;?>" title="Parcourir les albums">Parcourir la collection</a><br> 
+<a href="<?php echo BDO_URL;?>guest/notes?user=<?php echo $view->USERID;?>" title="Les albums favoris">Notes/favoris</a><br> 
+<a href="<?php echo BDO_URL;?>guest/futurs_achats?user=<?php echo $view->USERID;?>" title="Prochains achats ou cadeaux à offrir !">Les envies de BD</a><br> 
+<a href="<?php echo BDO_URL;?>guest/derniers_achats?user=<?php echo $view->USERID;?>" title="Derniers achats BD">Derniers achats</a><br> 
+<a href="<?php echo BDO_URL;?>guest/stats?user=<?php echo $view->USERID;?>">Statistiques</a> 
+
+<!-- BEGIN GaleriesBlock -->
+<a href="<?php echo BDO_URL;?>guest/galerie?gal_id=<?php echo $view->GALID;?>"><?php echo $view->GALNAME;?></a> 
+<!-- END GaleriesBlock -->
+
+</div>

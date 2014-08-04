@@ -1,0 +1,256 @@
+<?php
+
+/**
+ *
+ * @author laurent
+ *        
+ */
+class Edition extends Bdo_Db_Line
+{
+
+    /**
+     */
+    public $table_name = 'bd_edition';
+
+    public $error = '';
+    
+    // initialisation
+    public function __construct ($id = null)
+    {
+        if (is_array($id)) {
+            $a_data = $id;
+        }
+        else {
+            $a_data = array(
+                    'ID_EDITION' => $id
+            );
+        }
+        parent::__construct($this->table_name, $a_data);
+    }
+
+    public function select ()
+    {
+        /* gestion des sélection en fonction de la connexion utilisateur
+        * si l'utilisateur est connecté et appel par id_edtion, on fait la jointure gauche avec les editions
+         * dans la collection de l'utilisateur
+         * 
+         * Usage : fait pour l'appel de la fiche album depuis la collection de l'utilisateur
+         * Dans ce cas, on vérifie si cette édition est dans la collection 
+         */
+        $select = "
+        SELECT 
+          	bd_tome.ID_TOME,
+        	bd_tome.TITRE as TITRE_TOME, 
+        	bd_tome.NUM_TOME, 
+        	bd_tome.PRIX_BDNET, 
+        	bd_tome.FLG_INT as FLG_INT_TOME, 
+        	bd_tome.FLG_TYPE as FLG_TYPE_TOME,
+        	bd_tome.HISTOIRE as HISTOIRE_TOME, 
+        	note_tome.NB_NOTE_TOME, 
+        	note_tome.MOYENNE_NOTE_TOME, 
+        	bd_edition_stat.NBR_USER_ID_TOME as NBR_USER_ID, 
+                
+                s.ID_SERIE, 
+        	s.nom as NOM_SERIE, 
+        
+        	g.ID_GENRE, 
+        	g.libelle as NOM_GENRE, 
+        
+        	bd_edition.ID_EDITION,
+        	bd_edition.IMG_COUV,
+        	bd_edition.ean as EAN_EDITION, 
+        	bd_edition.isbn as ISBN_EDITION, 
+                bd_edition.DTE_PARUTION as DATE_PARUTION_EDITION, 
+        
+                c.ID_COLLECTION,
+        	c.nom as NOM_COLLECTION,
+        	
+        	er.ID_EDITEUR,
+        	er.nom as NOM_EDITEUR, 
+                concat_ws(' ',er.nom, year(bd_edition.DTE_PARUTION)) as NOM_EDITION,
+        	bd_tome.ID_SCENAR, 
+        	sc.pseudo as scpseudo, 
+        	bd_tome.ID_DESSIN, 
+        	de.pseudo as depseudo, 
+        	bd_tome.ID_COLOR, 
+        	co.pseudo as copseudo,
+        	bd_tome.ID_SCENAR_ALT, 
+        	sca.pseudo as scapseudo, 
+        	bd_tome.ID_DESSIN_ALT, 	
+        	dea.pseudo as deapseudo, 
+        	bd_tome.ID_COLOR_ALT, 
+        	coa.pseudo as coapseudo ";
+        $from = "
+        FROM bd_edition
+        	INNER JOIN bd_tome ON bd_tome.id_tome = bd_edition.id_tome
+                INNER JOIN bd_serie s ON bd_tome.id_serie = s.id_serie
+        	INNER JOIN bd_genre g ON s.id_genre = g.id_genre
+        	
+        	INNER JOIN bd_collection c ON bd_edition.id_collection = c.id_collection
+        	INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
+        	 
+        	LEFT JOIN bd_edition_stat ON bd_edition.id_edition = bd_edition_stat.ID_EDITION
+        	LEFT JOIN note_tome ON bd_tome.ID_TOME = note_tome.ID_TOME
+                
+                LEFT JOIN bd_auteur sc ON bd_tome.id_scenar = sc.id_auteur
+        	LEFT JOIN bd_auteur de ON bd_tome.id_dessin = de.id_auteur 
+        	LEFT JOIN bd_auteur co ON bd_tome.id_color = co.id_auteur
+        	LEFT JOIN bd_auteur sca ON bd_tome.id_scenar_alt = sca.id_auteur
+        	LEFT JOIN bd_auteur dea ON bd_tome.id_dessin_alt = dea.id_auteur
+        	LEFT JOIN bd_auteur coa ON bd_tome.id_color_alt = coa.id_auteur
+
+                ";
+        if (Bdo_Cfg::user()->minAccessLevel(2)) {
+            // ajout des champs de la collection de l'utilisateur
+            $select .= " , ua.id_edition as USER_EDITION,
+                        ua.flg_pret FLG_PRET,
+                        ua.nom_pret as NOM_PRET,
+                        ua.email_pret as EMAIL_PRET,
+                        ua.flg_dedicace as FLG_DEDICACE,
+                        ua.flg_tete as FLG_TETE,
+                        ua.comment as USER_COMMENT,
+                        ua.date_ajout as DATE_AJOUT,
+                        ua.flg_achat as FLG_ACHAT,
+                        IFNULL(ua.date_achat,ua.date_ajout) as DATE_ACHAT,
+                        ua.cote as COTE,
+                        ua.flg_cadeau as FLG_CADEAU, 
+                        ua.DTE_PARUTION as USER_EDITION_DTE_PARUTION,
+                        ua.IMG_COUV as USER_EDITION_IMG_COUV,
+                        ua.comment_edition as USER_EDITION_COMMENT
+                ";
+            $from .= " 
+                    LEFT JOIN (
+                        select users_album.id_edition, 
+                                flg_pret, 
+                                nom_pret, 
+                                email_pret, 
+                                flg_dedicace, 
+                                flg_tete, 
+                                users_album.comment,
+                                date_ajout,
+                                flg_achat,
+                                date_achat,
+                                cote,
+                                flg_cadeau,
+                                bd_edition.DTE_PARUTION,
+                                bd_edition.IMG_COUV,
+                                bd_edition.COMMENT as comment_edition,
+                                bd_edition.id_tome
+                           from users_album inner join bd_edition using (id_edition)
+                           where users_album.user_id = ". $_SESSION['userConnect']->user_id ."
+                                ) ua 
+                               on ua.id_edition = bd_edition.id_edition 
+                            
+                            ";
+            
+        }
+        
+        
+        return $select.$from;
+    }
+
+    public function search ($a_data = array())
+    {
+        // --------------------------------------------------------------------
+        // -------- Champs selectionnés par defaut --------
+        if (empty($a_data)) $a_data = $_POST;
+        if (! isset($a_data['validSubmitSearch'])) {
+            $a_data['ch_titre'] = "checked";
+            $a_data['ch_s_nom'] = "checked";
+            $a_data['ch_libelle'] = "checked";
+            $a_data['ch_ean'] = "checked";
+            $a_data['ch_cnom'] = "checked";
+            $a_data['ch_enom'] = "checked";
+            $a_data['ch_LIBELLE'] = "checked";
+
+        }
+        
+        $dbSearch = new Bdo_Db_Search();
+        
+        $dbSearch->select = "
+SELECT 
+	t.id_tome,
+	t.titre, 
+	t.num_tome, 
+	t.prix_bdnet, 
+	t.flg_int, 
+	t.flg_type,
+	t.histoire, 
+	t.nb_vote, 
+	t.moyenne, 
+	
+	s.id_serie, 
+	s.nom s_nom, 
+
+	g.id_genre, 
+	g.libelle, 
+
+	en.id_edition,
+	en.img_couv,
+	en.ean, 
+	en.isbn, 
+
+    c.id_collection,
+	c.nom cnom,
+	
+	er.id_editeur,
+	er.nom enom, 
+
+	t.id_scenar, 
+	sc.pseudo as scpseudo, 
+	t.id_dessin, 
+	de.pseudo as depseudo, 
+	t.id_color, 
+	co.pseudo as copseudo,
+	t.id_scenar_alt, 
+	sca.pseudo as scapseudo, 
+	t.id_dessin_alt, 	
+	dea.pseudo as deapseudo, 
+	t.id_color_alt, 
+	coa.pseudo as coapseudo
+        ";
+        
+        // dans les tables
+        $dbSearch->from = "
+FROM bd_edition en
+	INNER JOIN bd_tome t ON t.id_edition = en.id_edition
+    INNER JOIN bd_serie s ON t.id_serie = s.id_serie
+	INNER JOIN bd_genre g ON s.id_genre = g.id_genre
+	
+	INNER JOIN bd_collection c ON en.id_collection = c.id_collection
+	INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
+	 
+	LEFT JOIN bd_auteur sc ON t.id_scenar = sc.id_auteur
+	LEFT JOIN bd_auteur de ON t.id_dessin = de.id_auteur 
+	LEFT JOIN bd_auteur co ON t.id_color = co.id_auteur
+	LEFT JOIN bd_auteur sca ON t.id_scenar_alt = sca.id_auteur
+	LEFT JOIN bd_auteur dea ON t.id_dessin_alt = dea.id_auteur
+	LEFT JOIN bd_auteur coa ON t.id_color_alt = coa.id_auteur
+        ";
+        
+        $dbSearch->where = "WHERE 1";
+        
+        // dans l'ordre
+        if ($a_data['daff'] == "") $a_data['daff'] = "0";
+        if ($a_data['sens_tri'] == "") $a_data['sens_tri'] = "ASC";
+        if ($a_data['col_tri'] == "") $a_data['col_tri'] = "t.titre";
+        
+        $dbSearch->groupby = "";
+        
+        // --------------=======================----------------
+        $dbSearch->infoQuery();
+        // --------------=======================----------------
+        $dbSearch->integreData($a_data);
+        // --------------=======================----------------
+        if (isset($_GET['export'])) {
+            $dbSearch->execNoLimit();
+        }
+        else {
+            $dbSearch->exec();
+        }
+        
+        return $dbSearch;
+    }
+    
+
+}

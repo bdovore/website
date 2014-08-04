@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * CREATION DU MENU
+ *
+ */
+
+$menu = new Bdo_Menu('cfg');
+
+// ---------------------------------------------------------
+// item project
+/*
+ * $m_project = $menu->addItem(new Bdo_Menu_Lien(LANG_PJCT_PROJECT,
+ * "project/search")); $m_project_search = $m_project->addFils(new
+ * Bdo_Menu_Lien(LANG_RECHERCHER, "project/search")); if
+ * (isset($tab_perso_recherche["project/search"]) and
+ * !empty($tab_perso_recherche["project/search"])) { foreach
+ * ($tab_perso_recherche["project/search"] as $obj) {
+ * $m_project_search->addFils(new Bdo_Menu_Lien($obj->LIBELLE_USER_SEARCH,
+ * "project/search?id_rech=".$obj->ID_USER_SEARCH)); } } if
+ * ($user->isAllowed('project.gestion')) $m_project->addFils(new
+ * Bdo_Menu_Lien(LANG_CREER, "project/edit"));
+ */
+// ---------------------------------------------------------
+
+// ---------------------------------------------------------
+// item commande
+$m_gestion = $menu->addItem(new Bdo_Menu_Lien("Gestion", ""));
+$a_model = array(
+        'user',
+        'genre',
+        'editeur',
+        'edition',
+        'tome',
+        'collection',
+        'serie'
+        );
+foreach($a_model as $model) {
+    ${'m_gestion_'.$model} = $m_gestion->addFils(new Bdo_Menu_Lien(ucfirst($model), BDO_URL . "admin/search/".$model));
+//${'m_gestion_'.$model}->addFils(new Bdo_Menu_Lien("Création", "javascript:showLightbox('iframe','admin/edit/".$model."',680,250)"));
+}
+// ---------------------------------------------------------
+$menu->addItem(new Bdo_Menu_Lien("Bdo'Bug","http://www.bdovore.com/mantisbt/"));
+$menu->addItem(new Bdo_Menu_Lien("PhpMyAdmin","http://www.bdovore.com/pma-3"));
+// ---------------------------------------------------------
+// controle aide
+$m_controle = $menu->addItem(new Bdo_Menu_Lien("Contrôles"));
+$m_controle->addFils(new Bdo_Menu_Lien("Relations", BDO_URL . 'controle/relations'));
+$m_controle->addFils(new Bdo_Menu_Lien("Recherches références", BDO_URL . 'controle/references'));
+$m_controle->addFils(new Bdo_Menu_Lien("Règles", BDO_URL . 'controle/regles'));
+// ---------------------------------------------------------
+// item aide
+$m_aide = $menu->addItem(new Bdo_Menu_Lien("&nbsp;?&nbsp;"));
+$m_aide->addFils(new Bdo_Menu_Lien(LANG_MEDIA_FAQ, BDO_URL . 'faq'));
+if (issetNotEmpty($_SESSION['CFG_A_LANG'])) {
+    
+    $m_aide_translate = $m_aide->addFils(new Bdo_Menu_Lien(LANG_TRADUCTION, "admin/constante?"));
+    foreach ($_SESSION['CFG_A_LANG'] as $idLang => $objLang) {
+        if ($idLang != $_SESSION['ID_LANG']) {
+            if (is_file(CFG_DIR_ROOT . 'image/drapeaux/' . $idLang . '.gif')) {
+                $m_aide_translate->addFils(new Bdo_Menu_Lien('<img src="' . 'image/drapeaux/' . $idLang . '.gif" border=0 alt="' . $objLang->{'NOM_LANG' . $_SESSION['ID_LANG']} . '">', '?lang=' . $idLang));
+            }
+            else {
+                $m_aide_translate->addFils(new Bdo_Menu_Lien($objLang->{'NOM_LANG' . $_SESSION['ID_LANG']}, '?lang=' . $idLang));
+            }
+        }
+    }
+    if ($user->isAllowed('admin.constante')) {
+        $m_aide_translate->addFils(new Bdo_Menu_Lien(LANG_LANG_FIELD, "admin/search?gestion_table=lang_field"));
+        $m_aide_translate->addFils(new Bdo_Menu_Lien(LANG_CONSTANTE, "admin/constante"));
+        $m_aide_translate->addFils(new Bdo_Menu_Lien(LANG_CREER . ' ' . LANG_CONSTANTE, "javascript:showLightbox('iframe','admin/modify_constante?NAME_CONSTANT=&ID_LANG=" . $_SESSION['ID_LANG'] . "',680,250)"));
+    }
+}
+
+$m_aide->addFils(new Bdo_Menu_Lien(LANG_APROPOS, "javascript:ValidUrlBox('media/apropos',500,300)"));
+
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+$menu->generate();
+if ($view->addAriane) {
+    $menu->addAriane = $view->addAriane;
+}
+
+/*
+ * echo ' <table width="80%" align="center" border="0" cellspacing="0"
+ * cellpadding="0" style="margin-bottom: 30px;"> <tr> <td nowrap valign="bottom"
+ * width=100%> '.$menu->generateAriane().' </td> </tr> <tr> <td valign="top">'.
+ * $menu.'</td> </tr> </table> ';
+ */
+echo '
+<div id="ariane" style="position: relative;">
+		<div class="fond"></div>
+' . $menu->generateAriane() . '
+</div>
+<div id="menuAdmin">
+' . $menu . '
+</div>
+';

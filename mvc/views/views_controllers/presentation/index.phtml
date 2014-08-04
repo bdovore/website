@@ -1,0 +1,128 @@
+<div class="cadre1">
+	<h2>BDovore en quelques mots</h2>
+	<p>
+		Le projet BDovore est né en mai 2004 de limagination de
+
+		passionnés de Bandes Dessinées. L'idée était de fournir gratuitement aux
+
+		internautes une solution pour gérer leur collection de BD en ligne. Depuis, le site est en continuelle évolution.
+	</p>
+	<p>
+		<h3>Aujourdhui, BDovore c'est&nbsp;:</h3>
+	</p>
+	<ul>
+        <li>
+			Une <b>base de donnée</b> de <?php echo $view->NBALB;?> volumes, tenue à jour 
+  			en permanence, notée et commentée par les membres  
+			(<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur la base de données</a>).
+			<br />
+	        <br />
+		</li>
+		<li>
+			La possibilité de <b>gérer simplement sa propre collection de
+			BD en ligne</b>, en utilisant toute linformation disponible dans la base de donnée
+			commune (<a href="<?php echo BDO_URL;?>tutoriel?page=2">plus dinfo sur la gestion de collection</a>).
+			<br />
+			<br />
+		</li>
+		<li>
+			Le suivi de ses <b>prêts</b>, de ses <b>futurs achats</b> 
+			(<a href="<?php echo BDO_URL;?>tutoriel?page=2">plus dinfo</a>).
+			<br />
+			<br />
+		</li>
+		<li>
+			Consulter les <strong>statistiques</strong> propres à sa collection mais
+			aussi celles de la communauté dans son ensemble (<a href="<?php echo BDO_URL;?>tutoriel?page=3">plus d'info sur les stats</a>).
+			<br />
+			<br />
+		</li>
+		<li>
+			La possibilité de <b>mettre en ligne sa collection</b> de bandes
+			dessinées, à la manière dun "BDprofiler" 
+			(<a href="<?php echo BDO_URL;?>tutoriel?page=4">plus dinfo sur la mise en ligne</a>).
+			<br />
+			<br />
+		</li>
+		<li>
+			La possibilité de suivre au plus près <b>les sorties et
+			lactualité du monde de la bande dessinée</b> 
+			(<a href="<?php echo BDO_URL;?>tutoriel?page=3">plus d'info sur l'actualité</a>).
+			<br />
+			<br />
+		</li>
+		<li>
+			Un <a href="http://forum.bdovore.com/index">forum</a> pour discuter de tout ce qui touche à la BD mais
+			pas seulement
+		</li>
+	</ul>
+	<p>
+		Et le tout <font color="#990000" size="-1"><strong>GRATUITEMENT</strong> et <strong>SANS PUBLICITÉ !</strong></font> 
+	</p>
+	<p>
+		Vous voulez utiliser le site, participer au projet et vous joindre à la
+		communauté&nbsp;? <a href="<?php echo BDO_URL;?>membres/inscription">Inscrivez-vous&nbsp;!</a>
+	</p>
+    <p>
+		Encore des questions sur BDovore ? Rendez-vous sur le <a href="http://forum.bdovore.com/index">forum</a> !
+	</p>
+    <p align="right">
+		<a href="<?php echo BDO_URL;?>tutoriel?page=1">Pour le début de la visite guidée</a>
+	</p>
+    <p>
+		<span class="texte"> 
+			<br />
+        </span>
+		<h2>Bdovore en quelques chiffres</h2>
+		<h3>(Cliquez sur les chiffres pour avoir plus de détails)</h3>
+	    <p>
+			<font color="#990000" size="-1">
+				<strong>Base de donn&eacute;es BD</strong>
+			</font>
+		</p>
+	    <p>
+			Nombre d'albums dans la base : <a href="browser"><?php echo $view->NBALB;?></a>
+			<br />
+	        Nombre de séries : <a href="browser"><?php echo $view->NBSERIE;?></a>
+			<br />
+	        Nombre d'albums en attente d'ajout actuellement : <a href="listpropal?type=AJOUT"><?php echo $view->NBAJOUT;?></a>
+			<br />
+	        Nombre d'albums en attente de correction actuellement : <a href="listpropal?type=CORRECTION"><?php echo $view->NBCORRECT;?></a>
+	        <br />
+	        Nombre d'éditions d'album en attente d'ajout actuellement : <a href="listpropal?type=EDITION"><?php echo $view->NBEDITION;?></a>
+	    </p>
+	    <p>
+			<font color="#990000" size="-1">
+				<b>Les utilisateurs</b>
+			</font>
+		</p>
+	    <p>
+			Nombre de Bdovores : <a href="users.annu"><?php echo $view->NBUSER;?></a>
+			<br />
+	        Nombre d'albums dans les collections : <a href="users.annu"><?php echo $view->NBCOLLEC;?></a>
+			<br />
+	        Nombre de visites de Bdovores : <?php echo $view->NBVISITE;?>
+			<br />
+	    </p>
+	    <p>
+			<font color="#990000" size="-1">
+				<b>La vie du site</b>
+			</font>
+		</p>
+	    <p>
+			Nombre de notes d'albums : <a href="listop?rb_mode=top_vote"><?php echo $view->NBNOTEALBUM;?></a>
+			<br />
+		    Nombre de commentaires d'albums : <a href="listlast?rb_mode=last_cmt"><?php echo $view->NBCOMMENTALBUM;?></a> 
+	        <br />
+	        Nombre de notes de séries : <a href="listop?rb_mode=top_vote"><?php echo $view->NBNOTESERIE;?></a> 
+	        <br />
+	        Nombre de commentaires de séries : <?php echo $view->NBCOMMENTSERIE;?> 
+	    </p>
+	</p>
+
+</div>
+
+
+
+
+

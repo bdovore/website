@@ -1,0 +1,36 @@
+<div class="cadre1">
+
+	<h2>Recherche id de référence</h2>
+
+	<form name="formvalue" method="post">
+		<div>
+			Référence : <select name="column_name">
+<?php
+foreach ($view->a_column as $column_name => $table_name) {
+    $selected = ($column_name == $_POST['column_name']) ? 'SELECTED' : '';
+    echo '<option value="' . $column_name . '" ' . $selected . ' >' . $table_name . '.' . $column_name . '</option>';
+}
+?>
+</select> = <input type="text" name="valeur" value="<?php echo $_POST['valeur'] ;?>"> <br />
+			<label for="viewQuery"> <input type="checkbox" id="viewQuery"
+				name="viewQuery" value="checked" <?php echo $_POST['viewQuery'];?>>
+				voir les requêtes
+			</label> <br />
+			<input type="submit" name="execformvalue" value="Chercher">
+		</div>
+	</form>
+<?php
+foreach ($view->a_ref as $to=>$a_co) {
+    foreach ($a_co as $co=>$a_d) {
+        echo '<h3>Recherche dans la table <i>' . $to . '</i> colonne <i>' . $co . '</i></h3>';
+        echo $a_d->nbr . ' lignes.';
+        tableOfFetchObj($a_d->a_obj, $view->a_onlyCol);
+        if (isset($_POST['viewQuery']) and ! empty($_POST['viewQuery'])) {
+            echo "<font size=2>" . $a_d->query . "</font>";
+        }
+        echo '<hr>';
+    }
+}
+?>
+  
+</div>

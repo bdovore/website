@@ -1,0 +1,40 @@
+<?php
+
+$view->dbSearch->formName = basename(__FILE__, '.phtml') . 'Form';
+$view->dbSearch->formNameModeSubmit = 'xhr';
+
+$critere_div = new Bdo_Onglet('critere_' . $view->dbSearch->formName, LANG_CRITERE, 'cfgonglet');
+$critere_div->setWidth('100%');
+
+$html = "<table cellSpacing=0 cellPadding=5 border=0 width=100%><tr><td>\n";
+
+include_once BDO_DIR . "inc/aff_bouton_recherche.inc.php";
+$html .= aff_bouton_recherche();
+$html .= "<table align=center border=0 cellspacing=0 cellpadding=2 width=100%>";
+
+foreach ($view->dbSearch->a_langField as $champ) {
+    $html .= $view->dbSearch->html_Field_Search($champ->COLUMN_NAME, 1);
+}
+
+$html .= "</table>\n";
+$html .= "</td></tr></table>";
+
+$critere_div->addElement($html);
+$critere_div->changeDisplay();
+
+echo '<form name="' . $view->dbSearch->formName . '" id="' . $view->dbSearch->formName . '" method="POST" 
+action="' . BDO_URL . Bdo_Cfg::getVar('controller') . '/' . Bdo_Cfg::getVar('action') . '_list/' . $view->model . '" 
+onsubmit="Block_None_Div(\'div_aff_' . $_SESSION['id_onglet_div'] . '\');ValidFormXhr(this); return false;">';
+echo "
+<INPUT type=hidden name=daff value='" . $view->dbSearch->a_data['daff'] . "'>
+<INPUT type=hidden name=col_tri value='" . $view->dbSearch->a_data['col_tri'] . "'>
+<INPUT type=hidden name=sens_tri value='" . $view->dbSearch->a_data['sens_tri'] . "'>
+";
+espace();
+
+echo $critere_div->vueOnglet();
+
+echo '<div id="dd' . $view->dbSearch->formName . '">';
+include_once dirname(__FILE__) . DS . "search_list.phtml";
+echo '</div>';
+echo "</form>";

@@ -1,0 +1,316 @@
+<?php 
+
+$ficheAlbum = $view->getHelper('ficheAlbum');
+
+
+
+?>
+	<script language="JavaScript">
+		
+                $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
+    
+		$(function() {
+                    $( "#date_achat" ).datepicker({dateFormat: "dd/mm/yy"});
+                });
+		function changeEdition () {
+			window.location="album?id_tome=<?php echo $view->tome->ID_TOME;?>&id_edition="+ document.getElementById('sel_edition').value;
+		}
+		
+		function liencorrection () {
+			parent.location.href="prop_correct?alb_id=<?php echo $view->tome->ID_TOME;?>&id_edition="+ document.getElementById('sel_edition').value;
+			window.close();
+		}
+		
+		function openSerie(){
+			if (window.name == "Album") {
+				window.opener.location="<?php echo BDO_URL;?>SerieBD?id_serie=<?php echo $view->tome->ID_SERIE;?>";}
+			else {
+			parent.location="<?php echo BDO_URL;?>SerieBD?id_serie=<?php echo $view->tome->ID_SERIE;?>";
+			}
+		}
+		
+		function setDteAchat(){
+                    if (!$("cb_achat").is(':checked')) {
+                            d = new Date();
+                            mm = d.getMonth() + 1;
+                            yyyy = d.getFullYear();
+                            dd = d.getDate();
+                            dte = "";
+                            if (dd < 10) {
+                                    dte = "0" + dd;
+                            }
+                            else {
+                                    dte += dd;
+                            }
+                            if (mm < 10) {
+                                    dte = dte + "/0" + mm;
+                            }
+                            else {
+                                    dte = dte + "/" + mm;
+                            }
+                            dte = dte + "/" + yyyy;
+                            $("#date_achat").val(dte);
+                }
+}
+        //-->	
+            getComment(page=1, id_tome=<?php echo $view->tome->ID_TOME;?>);
+            
+            
+            
+            function viewComment() {
+                $("#writecomment").show(100);
+                offset = $("#writecomment").offset().top;
+                $('html, body').animate({scrollTop: offset}, 'slow');
+            }
+            
+            function myComment(){
+                writeComment($("#id_tome").val(),$("#note").val(), $("#t_comment").val() );
+                $("#listcomment").empty();
+                
+                $("#writecomment").hide(100);
+                
+                getComment(page=1, id_tome=<?php echo $view->tome->ID_TOME;?>);
+            }
+           
+           function saveCollection() {
+               if (!isValidEmailAddress($("#email_pret").val()) && $("#email_pret").val() != "") {
+                 alert("L'adresse email de l'emprunteur est erroné !");
+             } 
+             else {
+                $("#save_collection").html("<img src='./script/ajax-loader.gif'>"); 
+
+                var url = "./Macollection/majcollection?id_edition="+$("#user_edition").val();
+                url += "&id_tome="+<?php echo $view->tome->ID_TOME; ?>;
+                url += "&flg_achat="+ ($("#cb_achat").is(':checked') ? "O" : "N");
+                url+= "&flg_pret="+($("#cb_pret").is(':checked') ? "O" : "N");
+                url+= "&flg_dedicace="+($("#cb_dedicace").is(':checked') ? "O" : "N");
+                url+= "&flg_tete="+($("#cb_tete").is(':checked') ? "O" : "N");
+                url+= "&flg_cadeau="+ ($("#cb_cadeau").is(':checked') ? "O" : "N");
+                url+= "&date_achat="+$("#date_achat").val();
+                url+= "&email_pret="+$("#email_pret").val();
+                url+= "&nom_pret="+$("#nom_pret").val();
+                url+= "&cote="+$("#prix").val();
+                url+= "&comment="+encodeURIComponent($("#remarque").val());
+                //alert (url);
+
+
+                $.getJSON(url, function (data) {
+
+                           if (data.length == 0) {$("#save_collection").html('<input type="button" value="Enregistrer les modifications" onclick="saveCollection();"/> <br>Données mises à jour !')};   
+
+                        }
+
+                   );
+                }
+            }
+	</script>
+
+<div class="conteneuralb">
+      
+			<div class="alb-img">
+				<img src="<?php echo BDO_URL_COUV;?><?php echo $view->tome->IMG_COUV;?>" width="160" border="1" name="imgEdition" id="imgEdition" alt="couverture"> 
+                                <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
+                                <div id="sponsor"><?php echo $ficheAlbum->getSponsor($view->tome); ?></div>
+                 
+                <?php echo $view->COMMENT_EDITION;?>
+                <a href="<?php echo BDO_URL;?>simil?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">vous devriez aimer aussi...</a>
+			</div>
+		
+	    <div class="contentalb" id="alb-description">
+			
+			<h3><?php echo $view->tome->TITRE_TOME;?>  <br>  
+                            <a href="#" onclick="openSerie();">	<?php echo $view->tome->NOM_SERIE;?></a> 
+                        </h3>
+			
+                                <font size="-1"><?php if ($view->tome->NB_NOTE_TOME > 0) { ?> Album noté <?php echo $view->tome->MOYENNE_NOTE_TOME;?>/10 pour <?php echo $view->tome->NB_NOTE_TOME ?> notes. <?php ;} ?></font>
+                                <br>
+			<?php echo $view->tome->NOM_GENRE;?>  -   <?php echo $view->tome->scpseudo; if ($view->tome->scpseudo <> $view->tome->depseudo) echo "/".$view->tome->depseudo; ?>   
+					<br> <b>Edition </b> <font size="-1">
+			                <?php if (count($view->dbs_edition->a_dataQuery) == 1) {
+                                                echo $view->tome->NOM_EDITION ;
+                                                
+                                        }
+                                        else {
+                                            echo '<select name="select" onchange="changeEdition()" id="sel_edition">';
+                                            $edition_selected = $view->tome->USER_EDITON ? $view->tome->USER_EDITON : $view->tome->ID_EDITION;
+                                            foreach ($view->dbs_edition->a_dataQuery as $edition){
+                                                // on ajoute les options
+                                                echo '<option value="'.$edition->ID_EDITION .'"'.($edition->ID_EDITION == $edition_selected ? 'selected=""' : '') .'>'.$edition->NOM_EDITION .'</option>';
+                                            }
+                                            echo "</select>";
+                                        }
+                                        ?>
+						<?php echo $view->tome->NOM_COLLECTION;?>
+					<br> 
+						<span class="petite_police">
+					ISBN-13 (EAN) : <?php echo $view->tome->EAN_EDITION;?> || ISBN-10 : <?php echo $view->ISBN_EDITION;?> || ID-BDovore : <?php echo $view->tome->ID_TOME;?> </span>
+					
+			<div class="action" id="action-menu">
+				<div align="center">
+					<?php                    
+                        echo $ficheAlbum->linkCollection($view->tome);  ?>
+				</div>
+                          
+                        </div>
+		
+	</div>		
+    
+    
+        <div class="synopsis">
+            <?php if ($view->tome->HISTOIRE_TOME <> "") { ?>
+                <strong>Synopsis :</strong>
+
+                                 <font size="-1">
+                                        <?php echo $view->tome->HISTOIRE_TOME;?>
+                                        </font>
+            <?php } ?>
+                                        <br><p><i>Une erreur sur cette fiche ? Vous pouvez <a href="#" onclick="javascript:liencorrection();">
+						
+							<b>proposer une correction</b></i>
+										</a></p>
+
+
+
+        </div>
+    
+	  <div id="info_collection">
+              <center><strong>Données privées</strong><br><span class="petite_police">(pour votre utilisation personnelle)</span></center>
+				<hr style="align: center; width: 50%;">
+                                <input type="hidden" id="user_edition" value="<?php echo $view->tome->USER_EDITON ? $view->tome->USER_EDITON : $view->tome->ID_EDITION; ?>" />
+				<table> 
+                                     <tr>
+                                        <td>
+                                         Futur achat : <input name="cb_achat" id="cb_achat" value="O" type="checkbox" <?php if ($view->tome->FLG_ACHAT == "O") echo "checked"; ?> onclick="setDteAchat();">
+					Date d'achat : <span class="petite_police">(dd/mm/aaaa)</span>	<input name="date_achat" id="date_achat" value="<?php echo date("d/m/Y",strtotime($view->tome->DATE_ACHAT)); ?>" size="10" maxlength="10" type="text">	
+	
+										
+					Prix/cote :<input name="prix" id="prix" value="<?php echo $view->tome->COTE; ?>" size="4" maxlength="8" type="text">
+                                    </td>
+                                </tr>	
+                                    <tr>
+                                        <td>
+				
+					E.O :	<input name="cb_tete" id="cb_tete" value="O" type="checkbox" <?php if ($view->tome->FLG_TETE == 'O') echo "checked"; ?> >
+                                        Dédicace : <input name="cb_dedicace" id="cb_dedicace" value="O" type="checkbox" <?php if ($view->tome->FLG_DEDICACE == 'O') echo "checked"; ?>>
+                                         Cadeau :<input name="cb_cadeau" id="cb_cadeau" value="checkbox" type="checkbox" <?php if ($view->tome->FLG_CADEAU == 'O') echo "checked"; ?>>
+					</td>
+                                    </tr>
+                                   	    
+                                <tr>
+                                    <td>
+                                       
+                                                Prêt :				
+                                       
+                                        <input name="cb_pret" id="cb_pret" value="checkbox" type="checkbox" <?php if ($view->tome->FLG_PRET == 'O') echo "checked"; ?>>		            
+                                       						
+                                                Dernier emprunteur :
+                                       			        
+                                        <input name="nom_pret" id="nom_pret" value="<?php echo $view->tome->NOM_PRET; ?>" size="15" maxlength="100" type="text" >			            
+                                        
+                                               								
+                                                        Email :
+                                               
+                                         		           
+                                        <input name="email_pret" id="email_pret" value="<?php echo $view->tome->EMAIL_PRET; ?>" size="15" maxlength="100" type="text">
+                                    </td>
+                                </tr>		    
+                                    <tr>
+                                    <td>
+										
+					Remarque personnelle (état, mémo, ...) :
+                                        <textarea name="remarque" id="remarque" class="champ_commentaire"><?php echo $view->tome->USER_COMMENT; ?></textarea>
+                                    </td>
+                                    </tr>		
+                                </table>
+                                <div id="save_collection"><input type="button" value="Enregistrer les modifications" onclick="saveCollection();"/></div>
+                                
+                            </div>
+    
+      
+        <div class="comment" id="comment">
+                <font color="#990000" face="Arial, Helvetica, sans-serif" size="-1">
+                        <strong>Commentaires des membres :</strong> <a href="#" onclick="<?php 
+                                        if ($view->connected) { echo "viewComment();";}
+                                        else {
+                                            echo "alert('Vous devez vous authentifier pour écrire un avis de lecture !');";
+                                        }
+                                        ?>">
+						
+							( vous pouvez également donner un avis de lecture)
+						
+					</a>
+                </font>
+                <br>
+                
+                <div id="listcomment">
+                                
+                </div>
+               
+                <div id="writecomment">
+                 
+                    <table width="100%" border="0" align="center">			
+				<tr> 						    
+					<td width="70%">					
+						<p>							
+							<strong>Noter et donner votre avis de lecture pour <font color="#990000"><?php echo $view->tome->TITRE_TOME;?> </font></strong>						
+						</p>					
+					</td>				    		
+				</tr>				
+								
+				    <tr> 									    
+						<td>						
+							Note: 					        
+							<select name="note" id="note"><option value="1" >1</option><option value="2" >2</option><option value="3" >3</option><option value="4" >4</option><option value="5" selected>5</option><option value="6" >6</option><option value="7" >7</option><option value="8" >8</option><option value="9" >9</option><option value="10" >10</option></select>					        
+							<em>(notez de 1-bof &agrave; 10 - culte)</em>							
+							<br />						
+						</td>					    		   
+					</tr>				    
+					<tr>					  			    
+						<td>Avis de lecture * : </td>					    		    
+					</tr>				    
+					<tr> 					 				    
+						<td>						
+							<p align="left">						    
+							    <textarea id="t_comment" class="champ_commentaire"></textarea>					        
+							</p>				        
+						</td>					    			   
+					</tr>				    
+					<tr>				    			    	
+						<td>				    	
+							<p>							
+								<em>								
+									<font size="-1">									
+										* : Avis de lecture qui apparaîtra pour tous les visiteurs sur le site
+										<br />									
+									</font>								
+								</em>							
+							</p>						
+						</td>					
+					</tr>				    
+					<tr>			    
+						<td>						
+							 			
+								<input name="id_tome" type="hidden" id="id_tome" value="<?php echo $view->tome->ID_TOME ?>" />						        
+								<input type="submit" name="Submit" value="Valider" onclick="myComment();"/>					        
+										
+						</td>					    			   
+					</tr>				
+			</table>	
+                   		
+
+                </div>
+        </div>
+</div>
+<script language="javascript">
+    $("#writecomment").hide();
+    <?php 
+    if ($view->tome->USER_EDITION ) {
+        echo '$("#info_collection").show();';
+    }
+    else {
+        echo '$("#info_collection").hide();';
+    }
+    
+    ?>
+         
+</script>

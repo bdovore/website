@@ -1,0 +1,76 @@
+<h2>Bilan des relations BDovore v1</h2>
+<form name="formrelation" method="post">
+	<div>
+		Table d'origine : <select name="tableOrigine[]">
+<?php
+foreach ($view->a_to as $_to) {
+    $selected = (in_array($_to, $_POST['tableOrigine'])) ? 'SELECTED' : '';
+    echo '<option value="' . $_to . '" ' . $selected . ' >' . $_to . '</option>';
+}
+?>
+</select> <br /> <label for="onlyDiff"><input type="checkbox"
+			id="onlyDiff" name="onlyDiff" value="checked"
+			<?php echo $_POST['onlyDiff']; ?>> voir seulement les écarts</label> <br />
+		<label for="viewQuery"><input type="checkbox" id="viewQuery"
+			name="viewQuery" value="checked" <?php echo $_POST['viewQuery']; ?>> voir
+			les requêtes</label> <br /> <input type="submit"
+			name="execformrelation" value="Tester les relations">
+	</div>
+</form>
+<?php
+foreach ($view->a_relation as $o_relation) {
+    $to = $o_relation->a_lien ['to'];
+    $td = $o_relation->a_lien ['td'];
+    $co = $o_relation->a_lien ['co'];
+    $cd = $o_relation->a_lien ['cd'];
+    $nbr = $o_relation->nbr;
+    $a_obj = $o_relation->a_obj;
+    echo "
+<hr>
+Valeur de la colonne [" . $cd . "] table [
+<font color=blue><b>" . $td . "</b></font>
+]
+<br />
+inconnues dans la table de référence [
+<font color=blue><b>" . $to . "</b></font>
+] colonne [" . $co . "]";
+    if (0 < $nbr) {
+        echo "
+<br />
+<font color=red><b>nbr = " . $nbr . "</b></font>
+<br />
+";
+        echo '
+<table border=1>
+	<tr>
+		<td colspan=10 class="entete_admin">' . $cd . '</td>
+	</tr>
+	<tr>';
+        $k = 0;
+        foreach ($a_obj as $obj) {
+            if (! ($k ++ % 10)) echo '
+	</tr>
+	<tr>
+		';
+            echo '
+		<td class="data_admin">' . $obj->$cd . '</td>';
+        }
+        echo '
+	</tr>
+</table>
+';
+    }
+    else {
+        echo "
+<br />
+<font color=gray><b>nbr = " . $nbr . "</b></font>
+<br />
+";
+    }
+    if (isset($_POST['viewQuery']) and ! empty($_POST['viewQuery'])) {
+        echo "
+<font size=2>" . $o_relation->query . "</font>
+";
+    }
+}
+?>

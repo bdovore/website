@@ -1,0 +1,54 @@
+<form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
+	<input name="txtFlgDef" type="hidden" value="<?php echo $view->FLGDEF;?>" />
+	<input name="txtEditionId" type="hidden" value="<?php echo $view->IDEDITION;?>" />
+	<table class="fond_admin">
+	    <tr> 
+			<td valign="top" width="60%">
+				<table class="tableaux_admin">
+					<!--DWLayoutTable-->
+          			<tr bordercolor="#FFFFCC"> 
+			            <td width="10%" class="label">
+							<div align="center">
+								Album
+							</div>
+						</td>
+			            <td width="10%">
+							<div align="left"> 
+			                	<input name="txtTomeId" type="text" id="txtTomeId" value="<?php echo $view->IDTOME;?>" size="5" class="champ_form_desactive" />
+			            	</div>
+						</td>
+			            <td colspan="2" width="80%">
+                            <input name="txtTome" type="text" id="txtTome" value="<?php echo $view->TITRE;?>" class="champ_form_desactive" style="width: 100%;" />
+                        </td>
+			        </tr>
+			    </table>
+        		<?php echo $view->ADMINEDITIONDETAIL;?>
+                <div class="submit"> 
+                    <input type="submit" name="Submit" value="<?php echo $view->ACTIONNAME;?>" />
+                </div>
+			</td>
+            
+            <!-- colonne de droite -->
+			<td valign="top" width="40%">
+				<?php echo $view->ADMINEDITIONCOUV;?>
+				<table class="cadre_texte-admin">
+	          		<tr> 
+	            		<td>
+							<p class="b">Statistiques</p>
+				            <p><?php echo $view->NBUSERS;?> utilisateur(s) ont cette edition dans leur collection <?php echo $view->VIEWUSEREDITION;?></p>
+				            <p class="b">Menu Express</p>
+				            <p>
+                                <?php echo $view->ACTIONAUTORIZE;?> <?php echo $view->CONTACTUSER;?>
+								<ul>
+                                    <a href="<?php echo $view->URLFUSIONEDITION;?>"><li>Fusionner cette édition</li></a>
+                                    <a href="<?php echo $view->URLDELETE;?>"><li>Supprimer cette edition</li></a>
+                                    <a href="#" onclick="javascript:window.open('addauteur','myauteur','scrollbars=no,resizable=yes,width=400,height=150');return(false)"></a>
+                                </ul>
+                            </p>
+						</td>
+	          		</tr>
+        		</table>
+			</td>
+    	</tr>
+	</table>
+</form>

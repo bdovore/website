@@ -1,0 +1,405 @@
+<?php 
+header ( 'Content-Type: text/html; charset=UTF-8' );
+$jquery = $view->getHelper('jquery');
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title><?php echo $view->PAGETITLE;?></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="content-language" content="fr" />
+<meta name="description" content="<?php echo $view->DESCRIPTION;?> BDovore - Le site des collectionneurs de BD. G&eacute;rer votre collection de bandes dessin&eacute;es en ligne et gratuitement !" />
+<meta name="keywords" content="bd, bandes dessin&eacute;es, bandes, dessin&eacute;es, bande, dessin&eacute;e, profiler, bdprofiler, comics, manga, collection, collections, bdvore, collectionneur, dedicace, auteurs, albums, editeurs, gratuit, base de donn&eacute;es, <?php echo $view->PAGEKEYWORD;?>" />
+<meta name="author" content="Tomlameche/Latruffe/Z&eacute;as" />
+<meta name="identifier-url" content="http://www.bdovore.com" />
+<meta name="reply-to" content="" />
+<meta name="revisit-after" content="7 days" />
+<meta name="robots" content="all" />
+<link rel="shortcut icon" href="<?php echo BDO_URL;?>favicon.ico" />
+
+<!-- Declaration fil rss -->
+<link rel="alternate" type="application/rss+xml" title="BDovore - Les derni&egrave;res news du site" href="<?php echo BDO_URL;?>rss-news" />
+<link rel="alternate" type="application/rss+xml" title="BDovore - Les derniers albums ajout&eacute;s" href="<?php echo BDO_URL;?>rss" />
+<link rel="alternate" type="application/rss+xml" title="BDovore - Les derniers avis sur les albums" href="<?php echo BDO_URL;?>rss-avis" />
+<link rel="alternate" type="application/rss+xml" title="BDovore - Les derniers avis sur les s&eacute;ries/one-shots" href="<?php echo BDO_URL;?>rss-avis-serie" />
+
+
+<link href="<?php echo BDO_URL;?>style/style1.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo BDO_URL;?>style/main.css" rel="stylesheet" type="text/css" />
+
+<script src="<?php echo BDO_URL;?>script/library.js" type="text/javascript"></script>
+<script src="<?php echo BDO_URL;?>script/script.js" type="text/javascript"></script>
+<?php 
+if (User::minAccesslevel(0)) {
+?>
+    <script src="<?php echo BDO_URL;?>script/navigation_onglet.js" type="text/javascript"></script>
+    <script src="<?php echo BDO_URL;?>script/excel.js" type="text/javascript"></script>
+
+    <script src="<?php echo BDO_URL;?>script/menu.js" type="text/javascript"></script>
+   
+    <link href="<?php echo BDO_URL;?>style/menu.css" rel="stylesheet" type="text/css" />
+<?php
+}
+?>
+
+<!-- Jquery -->	
+<script src="<?php echo BDO_URL;?>jquery/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script src="<?php echo BDO_URL;?>jquery/jquery.metadata.js" type="text/javascript"></script>
+<!--<script src="<?php echo BDO_URL;?>jquery.autocomplete.js" type="text/javascript"></script> -->
+
+<script src="<?php echo BDO_URL;?>jquery/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
+<link href="<?php echo BDO_URL;?>jquery/jquery-ui/bdovore/jquery-ui-1.10.1.custom.min.css" rel="stylesheet">
+
+<script src="<?php echo BDO_URL;?>jquery/bxslider/jquery.bxslider.min.js" type="text/javascript"></script>
+<link href="<?php echo BDO_URL;?>jquery/bxslider/jquery.bxslider.css" rel="stylesheet">
+		
+<!-- Add mousewheel plugin (this is optional) -->
+<script type="text/javascript" src="<?php echo BDO_URL;?>jquery/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+
+<!-- Add fancyBox main JS and CSS files -->
+<script type="text/javascript" src="<?php echo BDO_URL;?>jquery/fancybox/source/jquery.fancybox.js?v=2.1.4"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo BDO_URL;?>jquery/fancybox/source/jquery.fancybox.css?v=2.1.4" media="screen" />
+
+<!-- Add Button helper (this is optional) -->
+<link rel="stylesheet" type="text/css" href="<?php echo BDO_URL;?>jquery/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" />
+<script type="text/javascript" src="<?php echo BDO_URL;?>jquery/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+
+<!-- Add Thumbnail helper (this is optional) -->
+<link rel="stylesheet" type="text/css" href="<?php echo BDO_URL;?>jquery/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" />
+<script type="text/javascript" src="<?php echo BDO_URL;?>jquery/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+<link href="<?php echo BDO_URL;?>jquery/datatable/css/jquery.dataTables.css" rel="stylesheet"
+	type="text/css" />
+<?php 
+if (User::minAccesslevel(2)) {
+?>
+    <link href="<?php echo BDO_URL;?>css/menu-profil/menu-profil.css" rel="stylesheet" type="text/css" />
+    <script src="<?php echo BDO_URL;?>script/collection.js" type="text/javascript"></script>
+     <script src="<?php echo BDO_URL;?>script/comment.js" type="text/javascript"></script>
+    
+<?php
+}
+?>
+
+<script>
+
+$(document).ready(function() {
+	$(".fancybox")
+    .fancybox({
+        type: 'iframe',
+        autoSize : false
+    });
+});
+
+// boutons haut / bas
+$(document).ready(function() {
+
+	$(window).scroll(function() {
+		if ($(this).scrollTop() < $(document).height() - 200) {
+			$('.scrolldown').fadeIn();
+		} else {
+			$('.scrolldown').fadeOut();
+		}
+		if ($(this).scrollTop() > 100) {
+			$('.scrollup').fadeIn();
+		} else {
+			$('.scrollup').fadeOut();
+		}
+	});
+	$('.scrollup').click(function() {
+		$("html, body").animate({
+			scrollTop : 0
+		}, 600);
+		return false;
+	});
+
+	$('.scrolldown').click(function() {
+		$("html, body").animate({
+			scrollTop : $(document).height()
+		}, 600);
+		return false;
+	});
+        
+        $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
+
+});	
+</script>
+
+
+  <script>
+  $.widget( "custom.catcomplete", $.ui.autocomplete, {
+    _renderMenu: function( ul, items ) {
+      var that = this,
+        currentCategory = "";
+      $.each( items, function( index, item ) {
+        if ( item.category != currentCategory ) {
+          ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+          currentCategory = item.category;
+        }
+        that._renderItemData( ul, item );
+      });
+    }
+  });
+  $(function() {
+	    var cache = {};
+	    $( "#search" ).catcomplete({
+	      minLength: 2,
+	      source: function( request, response ) {
+	        var term = request.term;
+	        if ( term in cache ) {
+	          response( cache[ term ] );
+	          return;
+	        }
+	 
+	        $.getJSON( "<?php echo BDO_URL;?>search/auto", request, function( data, status, xhr ) {
+	          cache[ term ] = data;
+	          response( data );
+	        });
+	      },
+	      select: function( event, ui ) {
+	        //alert( ui.item.category + ' ' + ui.item.label);
+		        if (ui.item.category=='Séries') {
+			        window.location.href = "<?php echo BDO_URL;?>SerieBD?id_serie="+ encodeURIComponent(ui.item.ID_SERIE);
+		        }
+		        if (ui.item.category=='Auteurs') {
+			        window.location.href = "<?php echo BDO_URL;?>browser?rb_browse=aut&let="+ encodeURIComponent(ui.item.label);
+		        }
+		        if (ui.item.category=='Albums') {
+		            $.fancybox.open(
+                     {
+                         type: 'iframe',
+                         autoSize : false,
+                         href : "<?php echo BDO_URL;?>Album?id_tome="+ui.item.ID_TOME,                
+                         title : ui.item.label,
+                         width:600,
+                         height:400
+                     });
+		        }
+	      }
+	    });
+	  });
+
+  </script>
+    <script>
+    
+  $(function() {
+    $( '*' ).tooltip({
+      position: {
+        my: "center bottom-20",
+        at: "center top",
+        using: function( position, feedback ) {
+          $( this ).css( position );
+          $( "<div>" )
+            .addClass( "arrow" )
+            .addClass( feedback.vertical )
+            .addClass( feedback.horizontal )
+            .appendTo( this );
+        }
+      }
+    });
+  });
+    
+  </script>
+   
+<link href="<?php echo BDO_URL;?>jquery/jquery_util.css" rel="stylesheet">
+
+
+<link href="<?php echo BDO_URL;?>jquery/cool-login/cool-login.css" rel="stylesheet">
+<script src="<?php echo BDO_URL;?>jquery/cool-login/cool-login.js" type="text/javascript"></script>
+
+
+	<link type="text/css" rel="stylesheet" href="<?php echo BDO_URL;?>jquery/openid-selector/css/openid.css" />
+	<script type="text/javascript" src="<?php echo BDO_URL;?>jquery/openid-selector/js/openid-jquery.js"></script>
+	<script type="text/javascript" src="<?php echo BDO_URL;?>jquery/openid-selector/js/openid-fr.js"></script>
+		<script type="text/javascript">
+		$(document).ready(function() {
+			openid.init('openid_identifier');
+			openid.setDemoMode(false); //Stops form submission for client javascript-only test purposes
+		});
+	</script>
+	
+<!-- Multiselect chosen widget -->
+<script type="text/javascript" src="<?php echo BDO_URL;?>jquery/chosen/chosen/chosen.jquery.js"></script>
+<link type="text/css" rel="stylesheet" href="<?php echo BDO_URL;?>jquery/chosen/chosen/chosen.css" />
+<?php 
+if ($view->a_cssFile){
+foreach($view->a_cssFile as $cssFile) {
+echo "\n".'<link type="text/css" rel="stylesheet" href="'.BDO_URL.$cssFile.'" />';
+}
+}
+//        	-o-transform: rotate(270deg);
+
+?>
+
+
+
+
+<style type="text/css">
+div.verticaltext {
+        color:#333;
+ writing-mode:tb-rl;
+ -webkit-transform:rotate(270deg);
+ -moz-transform:rotate(270deg);
+ white-space:nowrap;
+ border:0px solid red;
+ display:block;
+ text-align:left; 
+ width:20px;
+ height:200px;
+ text-shadow: 0px 0px 1px #333;
+ font-family: Arial, Verdana, Helvetica, sans-serif;
+ font-size:14px;
+ font-weight:normal;
+}
+</style>
+</head>
+
+<body onLoad="<?php echo $view->BODYONLOAD;?>">
+
+	
+	<div id="header" style="position: relative; z-index: 10;">
+		<div class="fondNoir"></div>
+		<div id="logo">
+			<a href="<?php echo BDO_URL;?>"><img
+				src="<?php echo BDO_URL_IMAGE;?>site/bdovore4.gif" border="0"
+				alt="logo BDovore" id="logo" /></a>
+		</div>
+		<div id="searchtable">
+			<ul id="menusite1">
+				
+				<li><a class="menuGene" href="<?php echo BDO_URL;?>browser"
+					title="Le BDo'Browser ! Oh Yeah!">Browser</a></li>
+				<li><a class="menuGene" href="<?php echo BDO_URL;?>leguide"
+					title="Le top des votes, les albums les plus r&eacute;pandus, les derniers commentaires, les derni&egrave;res sorties...">Le
+						Guide BD</a></li>
+                               
+                                 <li><a class="menuGene" href=<?php 
+                                                if (User::minAccesslevel(2)) {
+                                                    echo '"'.BDO_URL."macollection".'"';
+                                                }
+                                                else{
+                                                    echo ("'#' onclick='".'$("#loginBox").show()'."'");
+                                                }
+                                                ?>
+					title="Tout pour votre collection de BD">Ma Collection</a></li>
+                                <li><a class="menuGene" href="http://forum.bdovore.com/index"
+					title="Le forum">Forum</a></li>
+                                <li><a class="menuGene" href="<?php echo BDO_URL;?>presentation"
+					title="C'est quoi ce bidule ?">Pr&eacute;sentation</a></li>
+                                <li><a class="menuGene" href="<?php echo BDO_URL;?>contacts"
+					title="Les coordonn&eacute;es des tauliers du bidule au cas oÃ¹...">Contacts</a></li>
+			</ul>
+			<br />
+			<form action="<?php echo BDO_URL;?>browser" method="post"
+				id="formsearch" name="formsearch" target="_self">
+<div class="ui-widget">
+				<input name="search" type="text" id="search"
+					onblur="if (!this.value) this.value='Rechercher...';"
+					onfocus="if (this.value=='Rechercher...') this.value='';" size="20"
+					maxlength="50" value="Rechercher..." />
+</div>
+			</form>
+		</div>
+			<?php echo $view->LOGINBARRE;?>
+
+		<hr class="expSep" />
+	</div>
+
+	<?php //if (User::minAccesslevel(0)) include dirname(__FILE__).DS.'..'.DS.'views_controllers'.DS.'menuadmin.phtml';?>
+<?php 
+if (User::minAccesslevel(2)) {
+?>
+<!-- <div id="cadre-menuprofil" style="padding-right:7px">
+    <div id="bordure-menuprofil">
+		<ul>
+	<li><a href="<?php echo BDO_URL;?>membres/actualites.php" title="Actualit&eacute;s de vos s&eacute;ries et pr&eacute;f&eacute;rences !">Nouveaut&eacute;s</a></li>
+	<li><a href="<?php echo BDO_URL;?>membres/userbrowser.php" title="Ma super collec !">Ma collection</a></li>
+	<li><a href="<?php echo BDO_URL;?>membres/albmanquant.php" title="Y m'en manque !">Albums manquants</a></li>
+	<li><a href="<?php echo BDO_URL;?>membres/userhome.php" title="Le tableau de commande de votre espace priv&eacute;">Garde-manger</a></li>
+	<li><a href="<?php echo BDO_URL;?>membres/usersearch.php?rb_mode=1" title="Vos albums">Mes &eacute;tag&egrave;res</a></li>
+	<li><a href="<?php echo BDO_URL;?>membres/userstat.php" title="Grand spotif devant l'&eacute;ternel, le collectionneur m&eacute;rite bien d'avoir ses stats !">Statistiques</a></li>
+	<li><a href="<?php echo BDO_URL;?>guest" title="La pr&eacute;sentation publique de votre collec">Vue public</a></li>
+	<li><a href="<?php echo BDO_URL;?>membres/addition.php" title="L'addition SVP ! Gloups...">L'addition</a></li>
+	<li><a href="<?php echo BDO_URL;?>membres/aut_favoris.php" title="G&eacute;rer la liste d'auteurs dont vous voulez suivre l'actualit&eacute;">Auteurs favoris</a></li>						
+	<li><a href="<?php echo BDO_URL;?>membres/userstat.php" title="R&eacute;partition par genre et par &eacute;diteur, liste des auteurs les plus repr&eacute;sent&eacute;s">Statistiques</a></li>						
+	<li><a href="<?php echo BDO_URL;?>membres/carre.php" title="Choisir les 8 albums de votre carr&eacute; magique">Carr&eacute; magique</a></li>						
+	<li><a href="<?php echo BDO_URL;?>membres/suiviproposals.php?cle=1&sort=DESC" title="Consulter la liste de vos propositions et leur statut">Mes propositions</a></li>						
+	<li><a href="<?php echo BDO_URL;?>membres/prop_album.php" title="Proposer l'ajout d'un album sur le site">Proposer un album</a></li>						
+	<li><a href="<?php echo BDO_URL;?>membres/mass_update.php" title="Editer votre collection rapidement Ã  l'aide d'un formulaire personnalis&eacute;">Formulaire d'&eacute;dition</a></li>					
+	<li><a href="<?php echo BDO_URL;?>membres/export.php" title="Exporter votre collection">Export</a></li>					
+		
+		</ul>
+	</div>
+    <a href="#"><div id="bouton-menuprofil" class="shadow">
+ 	</div></a>
+</div>
+
+<script>
+/*
+$(document).ready(function() {
+	  $("#cadre-menuprofil").click(function() {
+	    $("#cadre-menuprofil").animate({ marginLeft: "170px"  }, 400 );
+	  });
+	});	
+*/
+var position_menu = 0;
+$(document).ready(function() {
+	  $("#cadre-menuprofil").click(function() {
+                position_menu = (position_menu + 1 )% 2;
+		  $("#cadre-menuprofil").animate({ marginLeft: (position_menu * 170 ) +"px"  }, 400 );
+	  }
+          //,function(){
+	   // $("#cadre-menuprofil").animate({ marginLeft: "0"  }, 300 );
+	  //}
+          );
+	});	
+
+</script>-->
+<?php }
+?>
+	<div id="content">
+           
+		<div class="colmask rightmenu">
+                     <?php 
+					if (Bdo_Error::notEmpty()) echo $jquery->alert(Bdo_Error::flush());
+					if ($view->a_alertPage) echo $jquery->alert($view->a_alertPage);
+
+						
+					?>
+			
+                            <?php echo $view->BODY;?>
+				
+			
+		</div>
+	</div>
+
+
+	<div id="footer" class="shadow fond">
+
+		<div id="titre_avertissement">Avertissement</div>
+		<div id="texte_avertissement">Les images pr&eacute;sentes sur ce site sont la
+			propri&eacute;t&eacute; de leurs auteurs et &eacute;diteurs respectifs et sont soumises Ã 
+			copyright. Leur utilisation n'a pour but que d'illustrer
+			l'information contenue dans la base de donn&eacute;e du site. Cependant, si
+			ces derniers le d&eacute;sirent, ces images seront retir&eacute;es sur simple
+			demande de leur part.</div>
+		<div id="texte_avertissement">
+			<font color="#990000"> Lien destin&eacute; au r&eacute;f&eacute;rencement par les moteurs
+				de recherche : </font> <a href="<?php echo BDO_URL;?>indexation">Liste
+				des s&eacute;ries</a>
+		</div>
+	</div>
+<a href="#" class="scrollup">Scroll</a>
+<a href="#" class="scrolldown">Scroll</a>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-49957507-2', 'auto');
+  ga('send', 'pageview');
+
+</script>	
+</body>
+</html>

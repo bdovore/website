@@ -1,0 +1,89 @@
+ <style>
+	#simil-content {
+		width: 500px;
+		height: 500px;
+		position: absolute;
+		
+	
+	}
+	
+	div.simil {
+		position:absolute;
+		max-width: 90px;
+		left: 0;
+		top: 0;
+		font-size: 0.7em;
+	}
+ </style>
+<div class="colleft">
+<div class="col1wrap">
+				<div class="col1 fond">
+						<!-- Column 1 start --> 
+<div id="simil-content">
+<div id="simil-depart" class="simil">
+<?php 
+echo urlAlbum($view->tome,'couvMedium'); ?> 
+</div>
+
+<?php 
+  $cpt = 1;
+ foreach ($view->a_simil as $simil) {
+	?><div id="<?php echo "simil".$cpt; ?>" class="simil"><?php echo urlAlbum ( $simil ,'couvMedium') ; ?>
+	<br />
+	<?php echo $simil->TITRE_TOME;?> <br /> <a href="simil?ID_TOME=<?php echo $simil->ID_TOME ;?>">[...]</a>
+	</div> 
+<?php  
+	$cpt++;
+}
+?>
+</div>
+
+<script>
+var offset = $("#simil-content").offset();
+var w = $("#simil-content").width();
+var h = $("#simil-content").height();
+var setdepart = {top :  w/2 - 50 , left :  h/2 - 45};
+
+
+//$("#simil-depart").offset(setdepart);
+
+$("#simil-depart").animate({
+	"left": (setdepart.left ),
+	"top" : (setdepart.top)
+	}, 1500 );
+
+$("#simil1").animate({
+	"left": (setdepart.left + 140),
+	"top" : (setdepart.top + 120)
+	}, 1500 );
+	
+$("#simil2").animate({
+	"left": (setdepart.left - 140),
+	"top" : (setdepart.top - 120)
+	}, 1500 );
+
+$("#simil3").animate({
+	"left": (setdepart.left ),
+	"top" : (setdepart.top - 180)
+	}, 1500 );
+$("#simil4").animate({
+	"left": (setdepart.left +140 ),
+	"top" : (setdepart.top - 120)
+	}, 1500 );
+
+$("#simil5").animate({
+	"left": (setdepart.left  - 140 ),
+	"top" : (setdepart.top + 120)
+	}, 1500 );
+</script>
+<!-- Column 1 end -->
+					</div>
+</div>
+    				<!-- Debut de la partie de droite -->
+<div class="col2">
+					<!-- Column 2 start -->
+	            <?php echo $view->ACTUAIR;?>
+	            <?php echo $view->LASTAJOUT;?>
+				<!-- Column 2 end -->
+</div>
+</div>	

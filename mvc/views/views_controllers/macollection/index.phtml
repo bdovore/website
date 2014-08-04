@@ -1,0 +1,116 @@
+
+        
+<?php
+    $ficheAlbum = $view->getHelper('ficheAlbum');
+    $page = $view->getHelper('pagination');
+   
+    
+?>
+<div align="center" class="cadre1">
+   <?php echo $page->menuCollection(); ?>
+    <h1>Tableau de bord de ma collection</h1>
+    
+    <div class="cadre1" style="float:left;margin: auto; margin-left:5px ;padding:auto;">
+
+    				<h2>Informations sur la collection</h2>
+
+    				<p>
+
+                        Nombre d'albums : <?php echo $view->stat["nbtomes"];?> dont <?php echo $view->stat["nbintegrales"];?> int&eacute;grales.
+
+                        <br />
+
+                        Nombre de coffrets : <?php echo $view->stat["nbcoffrets"];?>
+
+                        <br />
+
+                        Nombre de s&eacute;ries suivies  : <?php echo $view->stat["nbseries"];?>
+
+                        <br />
+
+                        Nombre d'achats pr&eacute;vus : <?php echo $view->stat["nbfuturs_achats"];?>
+
+                    </p>
+
+    				<p>
+
+    					<font color="#990000"><b>Contributions &agrave; la base de
+
+    							donn&eacute;es</b></font>
+
+    				</p>
+
+    				<p>
+
+                        Propositions de nouveaux albums : <?php echo $view->user_prop_alb;?>
+
+                        <br />
+
+                        Propositions de corrections : <?php echo $view->user_prop_corrS;?>
+
+                    </p>
+
+    </div>
+
+
+
+<hr class="expSep"/>
+
+
+
+
+
+<div class="cadre1">
+
+	<h2>Derniers achats</h2>
+
+	
+        <table><tr>
+            <?php
+
+            foreach ($view->a_lastAchat->a_dataQuery as $o_tome) {
+
+                echo "<td>".$ficheAlbum->urlAlbum($o_tome,"couvBig", true)."</td>";
+
+            }
+
+            ?> 
+        <tr>
+        </table>
+
+        <hr class="expSep"/>
+
+</div>
+<div class="cadre1">
+
+	<h2>Derniers ajouts dans mes futurs achats</h2>
+
+	
+        <table><tr>
+            <?php
+
+            foreach ($view->a_lastFuturAchat->a_dataQuery as $o_tome) {
+
+                echo "<td>".$ficheAlbum->urlAlbum($o_tome,"couvBig", true)."</td>";
+
+            }
+
+            ?> 
+        <tr>
+        </table>
+
+        <hr class="expSep"/>
+
+</div>
+
+<div class="cadre1">
+
+	<h2>Statitiques de la collection</h2>
+        <img src="<?php echo BDO_URL; ?>graphs/rep_genres.php" >
+        <br>
+        <img src="<?php echo BDO_URL; ?>graphs/rep_editeurs.php" >
+        <br>
+        <img src="<?php echo BDO_URL; ?>graphs/rep_auteurs.php" >
+        
+     
+</div>

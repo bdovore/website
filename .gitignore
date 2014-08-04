@@ -1,0 +1,5 @@
+cache/
+library/Bdo/Auth/
+library/Zend/*
+public/jquery/
+vendors/*

@@ -1,0 +1,105 @@
+<div class="cadre1">
+<form name="addresource" method="POST" action="">
+<input type="hidden" name="formAction" value="addResource">
+Ressource : <input type="text" name="NOM_ACL_RESOURCE" value="">
+<input type="submit" name="submitaddresource" value="Ajouter une ressource">
+</form>
+<form name="addprivilege" method="POST" action="">
+<input type="hidden" name="formAction" value="addResourcePrivilege">
+Ressource : <?php echo '
+<select name="ID_ACL_RESOURCE" class="cfg">
+';
+foreach ($acl->getAllResource() as $id_acl_resource=>$nom_acl_resource)
+{
+    if ('all' !== $id_acl_resource) {
+    if ($id_acl_resource == $ID_ACL_RESOURCE) {
+        $selected = "SELECTED";
+    }
+    else {
+        $selected = "";
+    }
+    echo "<option value='".$id_acl_resource."' ".$selected.">".$nom_acl_resource."</OPTION>\n";
+    }
+}
+?>
+</select>
+Privilège : <input type="text" name="NOM_ACL_RESOURCE_PRIVILEGE" value="">
+<input type="submit" name="submitaddprivilege" value="Ajouter un privilège">
+</form>
+</div>
+<?php 
+espace (5);
+
+if (isset($ID_ACL_RESOURCE) and !is_null($ID_ACL_RESOURCE) and $acl->getResource($ID_ACL_RESOURCE))
+{
+    include_once('aff_acl_resource.phtml');
+}
+
+
+
+if (!is_null($ID_ACL_RESOURCE) and $acl->getResource($ID_ACL_RESOURCE)){
+    ?>
+	<div class="cadre1">
+	<form name="updateResource" method="POST" action="">
+	<input type="hidden" name="formAction" value="updateResource">
+		<input type="hidden" name="ID_ACL_RESOURCE" value="<?php  echo $ID_ACL_RESOURCE;?>">
+		Resource : <input type="text" name="NOM_ACL_RESOURCE" value="<?php  echo $acl->getResource($ID_ACL_RESOURCE);?>">
+	<input type="submit" name="submitupdateResource" value="Modifier">
+	<?php 					
+	$onClick = ' style="cursor:pointer" onClick="if (confirm(\''.LANG_SUPPCONFIRM.'\')) {document.delResource.submit()}"';
+echo '<span '.$onClick.'>
+<img src="'.BDO_URL_IMAGE.'site/b_effacer.gif" border=0 title="'.LANG_SUPP. ' '.htmlentities($acl->getResource($ID_ACL_RESOURCE),ENT_QUOTES,'UTF-8').'">
+        </span>';
+?>
+        </form>
+	<?php 
+	echo '<form name="delResource" method="POST">
+<input type="hidden" name="formAction" value="delResource">
+<input type="hidden" name="ID_ACL_RESOURCE" value="'.$ID_ACL_RESOURCE.'">
+</form>		';		
+	
+				?>
+</div>
+	
+<?php if (!is_null($ID_ACL_RESOURCE_PRIVILEGE) and $acl->getResourcePrivilege($ID_ACL_RESOURCE,$ID_ACL_RESOURCE_PRIVILEGE)){
+    ?>
+	<div class="cadre1">
+	<form name="updateResourcePrivilege" method="POST" action="">
+	<input type="hidden" name="formAction" value="updateResourcePrivilege">
+		<input type="hidden" name="ID_ACL_RESOURCE" value="<?php  echo $ID_ACL_RESOURCE;?>">
+			<input type="hidden" name="ID_ACL_RESOURCE_PRIVILEGE" value="<?php  echo $ID_ACL_RESOURCE_PRIVILEGE;?>">
+			Privilège : <input type="text" name="NOM_ACL_RESOURCE_PRIVILEGE" value="<?php  echo $acl->getResourcePrivilege($ID_ACL_RESOURCE,$ID_ACL_RESOURCE_PRIVILEGE);?>">
+	<input type="submit" name="submitupdateResourcePrivilege" value="Modifier">
+	</form>
+
+	</div>
+<?php }
+}?>
+
+
+
+
+
+<u><?php echo LANG_LEGEND;?> :</u>
+<table border="0" cellspacing="1" cellpadding="2">
+<tr>
+<td valign=top><i><?php echo LANG_ACCES;?></i><br />
+<div style="float:left">
+	<table>
+		<tr><td class="oftAclAccessAllow" title="<?php echo LANG_ALLOW;?>" >A</td><td><?php echo LANG_ALLOW;?></td></tr>
+		<tr><td class="oftAclAccessAllowLegacy" title="<?php echo LANG_ALLOW;?>" >A</td><td><?php echo LANG_ALLOW;?> (<?php echo LANG_LEGACY;?>)</td></tr>
+	</table>
+</div>
+<div style="float:left">
+	<table>
+		<tr><td class="oftAclAccessDeny" title="<?php echo LANG_DENY;?>" >D</td><td><?php echo LANG_DENY;?></td></tr>
+		<tr><td class="oftAclAccessDenyLegacy" title="<?php echo LANG_DENY;?>" >D</td><td><?php echo LANG_DENY;?> (<?php echo LANG_LEGACY;?>)</td></tr>
+	</table>
+</div>
+<div style="float:left">
+	<table>
+		<tr><td class="oftAclAccess" title="<?php echo LANG_DENY;?>" >D</td><td><?php echo LANG_UNDEFINED;?> (<?php echo LANG_DENY;?>)</td></tr>
+	</table>
+</div>
+</td></tr>
+</table>

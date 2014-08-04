@@ -1,0 +1,59 @@
+<?php echo $view->MENUCOLL;?>
+
+
+<div class="cadre1">
+<form name="form_browse" method="post" action="<?php echo $view->ACTBROWSER;?>">
+        <div align="center">
+	 		 <input name="rb_browse" type="radio" value="ser" <?php echo $view->SERCHECK;?>>
+            Par série 
+            <input name="rb_browse" type="radio" value="aut" <?php echo $view->AUTCHECK;?>>
+            Par auteur 
+            <input type="radio" name="rb_browse" value="genr" <?php echo $view->GENRCHECK;?>>
+            Par genre 
+            <input type="radio" name="rb_browse" value="edit" <?php echo $view->EDITCHECK;?>>
+            Par Editeur 
+            <input type="submit" name="Submit" value="Envoyer">
+			<table width="60%" border="0">
+				<tr>
+				<td width="20%">N'afficher que les albums :</td>
+				<td width="40%"><input name="cb_pret" type="checkbox" value="1" <?php echo $view->PRETCHECK;?>>prêtés <br>
+					<input name="cb_dedi" type="checkbox" value="1" <?php echo $view->DEDICHECK;?>>dédicacés	
+				</td>
+				<td width="40%">
+				<input name="cb_note" type="checkbox" value="1" <?php echo $view->NOTCHECK;?>>non notés <br>
+				<input name="cb_comment" type="checkbox" value="1" <?php echo $view->CMTCHECK;?>>non commentés	</td>
+				</tr>
+			</table>
+          </div>
+<table width="100%" border="0">
+
+    <tr>
+      <td> 
+        <div align="center"><!-- BEGIN NavBlock --><a href="#" onclick="document.forms.form_browse.let.value='<?php echo $view->VLETTER;?>';document.forms.form_browse.submit();"><?php echo $view->LETTER;?>&nbsp;</a>  <!-- END NavBlock -->         
+        </div>
+		 </td>
+    </tr>
+    <tr>
+      <td>
+          <div align="center"> Ou commence par : 
+            <input name="let" type="text" id="let">
+            
+          </div>
+        </td>
+    </tr>
+  </table>
+</form>
+</div>
+    
+<div class="cadre1">
+      <!-- BEGIN DataBlock -->
+<p id="<?php echo $view->LEVSIGN;?>"><img src="<?php echo BDO_URL_IMAGE;?>site/spacer.gif" width=<?php echo $view->WSPACER;?> height=<?php echo $view->HSPACER;?>><img src="<?php echo BDO_URL_IMAGE;?>site/<?php echo $view->IMGNAVIG;?>"> 
+          <a href="<?php echo $view->URLEVEL;?>#<?php echo $view->LEVSIGN;?>" <?php echo $view->ACTLEVEL;?>><?php echo $view->NAMELEVEL;?></a> <?php echo $view->URLEDIT;?></p>
+	  <!-- END DataBlock -->
+</div	  
+<div class="cadre1">
+<p align="center"><a href="<?php echo $view->URLPREVPAGE;?>">Pr&eacute;c&eacute;dent</a> <a href="<?php echo $view->URLNEXTPAGE;?>">Suivant</a> </p>
+</div>
+  
+
+

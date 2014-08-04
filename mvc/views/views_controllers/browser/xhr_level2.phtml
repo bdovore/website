@@ -1,0 +1,57 @@
+<?php 
+$ficheAlbum = $view->getHelper('ficheAlbum');
+?>
+<table class="browser" width="100%">
+	    <?php
+    if ($view->TOTALROW) {
+        ?>
+	<tr>
+		<td class="milieu" align="center" colspan="3"><?php echo $view->TOTALROW;?>
+		</td>
+	</tr>
+		<?php
+    }
+    if ($view->URLPREVPAGE or $view->URLNEXTPAGE) {
+    ?>
+	<tr>
+	<td class="milieu" align="center" colspan="3"><?php echo $view->URLPREVPAGE;?> <?php echo $view->URLNEXTPAGE;?></td>
+	</tr>
+		<?php
+    }
+    if ($view->FICHESERIE) {
+    ?>
+	<tr>
+	<td class="milieu" colspan="3">
+	<?php echo $ficheAlbum->serie($view->a_row[0]);?>
+	</td>
+	</tr>
+		<?php
+    }
+    ?>
+	<!-- BEGIN DataBlock -->
+		<?php
+foreach ($view->a_row as $row) {
+    ?>
+	<tr>
+		<td class="bord_gauche">&nbsp;</td>
+		<td class="milieu" width="<?php echo $row['WSPACER'];?>"><img
+			src="<?php echo BDO_URL_IMAGE;?>site/spacer.gif"
+			width=<?php echo $row['WSPACER'];?>
+			height=<?php echo $row['HSPACER'];?> /></td>
+		<td> 
+			<?php
+    if ($row['ID_TOME']) {
+        unset($row['NOM_SERIE']);
+        echo $ficheAlbum->small($row);
+    }
+    else
+        echo $ficheAlbum->serie($row);
+    ?>
+
+		</td>
+	</tr>
+		<?php
+}
+?>
+	<!-- END DataBlock -->
+</table>

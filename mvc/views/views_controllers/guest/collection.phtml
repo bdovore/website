@@ -1,0 +1,182 @@
+
+<script language ='javascript'>
+ var order = "<?php echo $view->order; ?>";
+ var column = <?php echo $view->sort ?>;
+ 
+ 
+ 
+ $(document).ready(function() {
+    
+    
+   
+   $("#length").on('change', function (e) {
+       
+      $("#f_collection").submit();
+      
+   });
+   
+   var uri = "./collection?user=<?php echo encodeUserId($view->IDUSER); ?>"
+   
+   q = param();
+   for (k in q) {
+       if (k.substring(0,4)!= "sort" && k.substring(0,5)!= "order") {
+           uri += "&"+k+"="+ encodeURIComponent( q[k][0]);
+       }
+   }
+  
+   $("th").each(function () {
+        $(this).on("click", function (e) {
+             e.preventDefault();
+             var index = $("th").index(this);
+             
+              length = $("#length").val();
+              if (index + 1 == <?php echo $view->sort ?>) {
+                if (order == "ASC") {
+                    lorder = "DESC";
+                }
+                else {
+                    lorder = "ASC";
+                }
+                
+              } else {
+                  lorder = "ASC"; 
+               }
+              window.location = uri +"&order="+lorder+"&sort="+ (index + 1);
+              
+        });
+        
+   });
+   
+   $("#t_collection th:eq( <?php echo ($view->sort - 1) ?>)").attr("aria-sort","<?php if ($view->order == 'ASC') {echo "ascending";} else{echo "descending";} ?>");
+   
+   $("#t_collection th:eq( <?php echo ($view->sort - 1) ?> )").addClass( "sorting_"+order.toLowerCase());
+} );
+
+
+</script>
+        
+<?php
+    $ficheAlbum = $view->getHelper('ficheAlbum');
+    $page = $view->getHelper('pagination');
+   
+    
+?>
+<hr class="expSep"/>
+
+<div class="middle_title"><h3>Collection de <?php echo $view->USERNAME;?></h3></div>
+ <?php echo $page->menuGuest(encodeUserId($view->IDUSER)); ?>
+<br>
+<div align="center" class="cadre1">
+    
+   
+    
+    <b> <?php echo $view->nbr; ?> albums dans la collection. </b>
+        
+    <br>
+     <input type="hidden" name="page" id="page" value="<?php echo $view->page; ?>" />
+     
+    <br>
+    <div class="dataTables_wrapper">
+        <form id="f_collection" method="GET" action="" >
+            <div id="filtre">
+                Filtrer :  
+                E.O :<input id="cb_tete" type="checkbox" value="O" name="cb_tete" onChange='$("#f_collection").submit();' <?php if ($view->eo == "O") echo "checked";  ?>/>
+            Dédicace : <input id="cb_dedicace" type="checkbox" value="O" name="cb_dedicace" onChange='$("#f_collection").submit();'  <?php if ($view->dedicace == "O") echo "checked";  ?> />
+           
+           <input type ="hidden" name="user" id="user" value="<?php echo encodeUserId($view->IDUSER);?>" />
+            </div><br>
+            <div id="data_length" class="dataTables_length">
+                <label>
+
+                    Voir :  
+
+                    <select class="" id="length" name="length">
+                        <option value="10" <?php if ($view->length== 10) {echo "selected" ;}?> >  10</option>
+                        <option value="25" <?php if ($view->length== 25) {echo "selected" ;}?>>  25</option>
+                        <option value="50" <?php if ($view->length== 50) {echo "selected" ;}?>>  50</option>
+                        <option value="100" <?php if ($view->length== 100) {echo "selected" ;}?>> 100</option>
+                    </select>
+
+                     lignes
+
+                </label>
+            </div>
+            <div id="filter" class="dataTables_filter">
+
+                <label>
+
+                    Rechercher:
+
+                    <input class="" type="search" placeholder="" id="l_search" name="l_search" value="<?php echo $view->searchvalue; ?>" />
+                </label>
+
+            </div>
+               
+                <input type="hidden" id="sort" name="sort" value="<?php echo $view->sort; ?>" />
+                <input type="hidden" id="order" name="order" value="<?php echo $view->order; ?>" />
+        </form>
+        <table id="t_collection" class="display dataTable">
+            <thead>
+                <tr>
+                    <th class="sorting">Id</th>
+                    <th class="sorting">Couv.</th>
+                    <th class="sorting">Titre</th>
+                    <th class="sorting">Série</th>
+                    <th class="sorting">Tome</th>
+                    <th class="sorting">Edition</th>
+                    <th class="sorting">Editeur</th>
+                    <th class="sorting">Collection</th>
+                    <th class="sorting">Scenario</th>
+                    <th class="sorting">Dessin</th>
+                    <th class="sorting">Date d'ajout</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $i = 0;
+                foreach ($view->dbs_tome->a_dataQuery as $album) { $i++; ?>
+                <tr class="<?php if($i%2 == 0) {echo "even";} else {echo "odd";}  ?>" role="row">
+                    <td><?php echo $album->ID_TOME; ?></td>
+                    <td><?php echo $ficheAlbum->urlAlbum($album,"couvSmall", true); ?></td>
+                    <td><?php echo $ficheAlbum->urlAlbum($album,"albTitle", true); ?></td>
+                    <td><?php echo $ficheAlbum->urlSerie($album); ?></td>
+                    <td><?php echo $album->NUM_TOME; ?></td>
+                    <td><?php echo $album->NOM_EDITION; ?></td>
+                    <td><?php echo $album->NOM_EDITEUR; ?></td>
+                    <td><?php echo $album->NOM_COLLECTION; ?></td>
+                    <td><?php echo $album->scpseudo ; ?></td>
+                    <td><?php echo $album->depseudo ; ?></td>
+                    <td><?php echo date('d/m/Y',strtotime($album->DATE_AJOUT)); ?></td>
+
+
+                </tr>
+               <?php 
+
+                }     
+                ?>
+            </tbody>
+
+        </table>
+            <div align="center">
+              <?php 
+                    $nbpage = ceil($view->nbr / $view->length);
+                    $uri = "";
+                    $a_uri = explode("?",$_SERVER['REQUEST_URI']);
+                    $a_uri = explode("&", $a_uri [1]);
+                    foreach($a_uri as $key => $value) {
+                        
+                        if (substr($a_uri[$key],0,4) <> "page" and $a_uri[$key] <> "") {
+                            $uri .= "&".$a_uri[$key];
+                        }
+                        
+                    }
+                    //$url = BDO_URL."macollection/mesetageres?length=".$view->length."&order=".$view->order."&sort=".$view->sort."&";
+                    $url = BDO_URL."guest/collection?".$uri."&";
+                   
+                    echo $page->paginate($url,"page=",$nbpage,$view->page);
+                ?>
+            </div>
+    </div>
+</div>

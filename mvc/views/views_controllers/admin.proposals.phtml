@@ -1,0 +1,42 @@
+<div class="fond_admin">
+	<div class="titre_admin"><?php echo $view->TITRE_ADMIN;?></div>
+	<div class="date_before_valid"><?php echo $view->DATEBEFOREVALID;?></div>
+    <table class="donnees" align="center">
+        <tr> 
+            <td width="70" class="entete_admin"><a href="../admin/adminproposals?cle=1&sort=asc"><img src="<?php echo BDO_URL_IMAGE;?>flechehaut.gif" width="12" height="12" hspace="5" border="0" /></a>
+                ID
+            <a href="../admin/adminproposals?cle=1&sort=DESC"><img src="<?php echo BDO_URL_IMAGE;?>flechebas.gif" width="12" height="12" hspace="5" border="0" /></a></td>
+            <td width="83" class="entete_admin"><a href="../admin/adminproposals?cle=2&sort=asc"><img src="<?php echo BDO_URL_IMAGE;?>flechehaut.gif" width="12" height="12" hspace="5" border="0"></a>
+                Date
+            <a href="../admin/adminproposals?cle=2&sort=DESC"><img src="<?php echo BDO_URL_IMAGE;?>flechebas.gif" width="12" height="12" hspace="5" border="0"></a></td>
+            <td width="131" class="entete_admin"><a href="../admin/adminproposals?cle=3&sort=asc"><img src="<?php echo BDO_URL_IMAGE;?>flechehaut.gif" width="12" height="12" hspace="5" border="0"></a>
+                Utilisateur
+            <a href="../admin/adminproposals?cle=3&sort=DESC"><img src="<?php echo BDO_URL_IMAGE;?>flechebas.gif" width="12" height="12" hspace="5" border="0"></a></td>
+            <td width="166" class="entete_admin"><a href="../admin/adminproposals?cle=5&sort=asc"><img src="<?php echo BDO_URL_IMAGE;?>flechehaut.gif" width="12" height="12" hspace="5" border="0"></a>
+                Série
+            <a href="../admin/adminproposals?cle=5&sort=DESC"><img src="<?php echo BDO_URL_IMAGE;?>flechebas.gif" width="12" height="12" hspace="5" border="0"></a></td>
+            <td width="166" class="entete_admin"><a href="../admin/adminproposals?cle=4&sort=asc"><img src="<?php echo BDO_URL_IMAGE;?>flechehaut.gif" width="12" height="12" hspace="5" border="0"></a>
+                Titre
+            <a href="../admin/adminproposals?cle=4&sort=DESC"><img src="<?php echo BDO_URL_IMAGE;?>flechebas.gif" width="12" height="12" hspace="5" border="0"></a></td>
+            <td width="70" class="entete_admin">
+                Statut
+            </td>
+            <td width="30" class="entete_admin"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" title="Consulter la proposition" /></td>
+            <td width="30" class="entete_admin"><img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif" width="25" height="24" title="Supprimer la proposition" /></td>
+        </tr>
+      
+        <!-- BEGIN PropBlock -->
+        <tr> 
+            <td class="data_admin"><?php echo $view->ID;?></td>
+            <td class="data_admin_petit"><?php echo $view->DATE;?></td>
+            <td class="data_admin"><?php echo $view->USER;?></td>
+            <td class="data_admin"><?php echo $view->SERIE;?></td>
+            <td class="data_admin"><?php echo $view->TITRE;?></td>
+            <td class="data_admin" style="background-color: <?php echo $view->COLOR_STATUS;?>;"><?php echo $view->OPTIONSTATUS;?></td>
+            <td class="data_admin"><a href="<?php echo $view->URLEDIT;?>"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a></td>
+            <td class="data_admin" <?php echo $view->STYLE_VALIDDELAY;?>><a href="<?php echo $view->URLDELETE;?>"><img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif" width="20" height="21" border="0" /></a></td>
+        </tr>
+        <!-- END PropBlock --> 
+    </table>
+</div>
+

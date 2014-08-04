@@ -1,0 +1,25 @@
+<?php $acl = $view->acl;?>
+<?php $ID_ACL_RESOURCE = $view->ID_ACL_RESOURCE;?>
+<div id="acl">
+    <ul>
+    <li><a href="#acl-1"><?php echo LANG_ACCES;?></a></li>
+    <li><a href="#acl-2"><?php echo LANG_LEGACY;?></a></li>
+    <li><a href="#acl-3"><?php echo LANG_ACL_RESOURCE_PRIVILEGE;?></a></li>
+    </ul>
+    <div id="acl-1">
+    <?php include_once('aff_acl_acces.phtml');?>
+    </div>
+    <div id="acl-2">
+    <?php include_once('aff_acl_legacy.phtml');?>
+    </div>
+    <div id="acl-3">
+    <?php include_once('resource.phtml');?>
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$( "#acl" ).tabs();
+});	
+</script>
+
+

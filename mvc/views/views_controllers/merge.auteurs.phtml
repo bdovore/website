@@ -1,0 +1,362 @@
+<script type="text/javascript">
+
+function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
+
+	if ((isMandatory == true) && (myText.length < 3)) {
+
+		alert('Veuillez saisir au moins 3 caractères');
+
+	}
+
+	else {
+
+		if (myCategory == "collection") {
+
+			if (myEditeur == '') {
+
+				alert("Veuillez saisir l'éditeur en premier");
+
+			}
+
+			else {
+
+			mywindow=open("pickup?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+
+			}
+
+		}
+
+		else {
+
+			mywindow=open('pickup?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+
+		}
+
+	}
+
+}
+
+
+
+function valider(){
+
+  // si la valeur du champ prenom est non vide
+
+  if((document.forms['form1'].elements['txtTome1Id'].value != "") && (document.forms['form2'].elements['txtTome2Id'].value != "")) {
+
+    // les données sont ok, on peut envoyer le formulaire    
+
+    return true;
+
+  }
+
+  else {
+
+    // sinon on affiche un message
+
+    alert("Saisissez les champs requis");
+
+    // et on indique de ne pas envoyer le formulaire
+
+    return false;
+
+  }
+
+}
+
+
+
+function urlsource(){
+
+	document.forms['form1'].action = "<?php echo $view->URLREFRESH;?>?source_id="+document.forms['form1'].elements['txtField1Id'].value+"&dest_id=<?php echo $view->DESTID;?>";
+
+    //alert("Saisissez les champs requis");
+
+	return true;
+
+}
+
+ 
+
+function urldest(){
+
+	document.forms['form2'].action = "<?php echo $view->URLREFRESH;?>?source_id=<?php echo $view->SOURCEID;?>&dest_id="+document.forms['form2'].elements['txtField2Id'].value;
+
+    //alert("Saisissez les champs requis");
+
+	return true;
+
+}
+
+
+
+</script>
+
+<table width="100%" border="1">
+
+  <tr> 
+
+    <td colspan="2" align="center"><font color="#FF0000" face="Arial, Helvetica, sans-serif"><strong><?php echo $view->ERRORMESSAGE;?></strong></font></td>
+
+  </tr>
+
+  <tr bgcolor="#FFFFCC"> 
+
+    <td width="50%" bordercolor="#CCCCCC" bgcolor="#CCCCCC"> <p><strong>AUTEUR 
+
+        A SUPPRIMER</strong></p>
+
+      <form name="form1" method="post" action="" onSubmit="return urlsource()">
+
+        <input name="txtField1Id" type="text" id="txtField1Id" value="<?php echo $view->AUTEURID1;?>" size="5">
+
+		<input name="txtField1" type="text" id="txtField1" value="<?php echo $view->AUTEUR1;?>" size="40">		
+
+        <a href="<?php echo $view->URLEDITEDIT1;?>"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a> 
+
+        <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.form1.txtField1.value,'form1','txtField1',true)"><br>
+
+        <input name="Submit1" type="submit" id="Submit1" value="Rafraichir">
+
+      </form></td>
+
+    <td width="50%"> <p><strong>AUTEUR A GARDER</strong></p>
+
+      <form name="form2" method="post" action="" onSubmit="return urldest()">
+
+        <input name="txtField2Id" type="text" id="txtField2Id" value="<?php echo $view->AUTEURID2;?>" size="5">
+
+        <input name="txtField2" type="text" id="txtField2" value="<?php echo $view->AUTEUR2;?>" size="40">
+
+        <a href="<?php echo $view->URLEDITEDIT2;?>"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a> 
+
+        <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.form2.txtField2.value,'form2','txtField2',true)"><br>
+
+        <input name="Submit1" type="submit" id="Submit1" value="Rafraichir">
+
+      </form></td>
+
+  </tr>
+
+  <tr> 
+
+    <td><table width="100%" border="1" cellspacing="0">
+
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+
+          <td>Prenom</td>
+
+          <td colspan="4"><?php echo $view->PRENOM1;?></td>
+
+        </tr>
+
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+
+          <td>Nom</td>
+
+          <td colspan="4"><?php echo $view->NOM1;?></td>
+
+        </tr>
+
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+
+          <td>Date Naissance</td>
+
+          <td colspan="4"><?php echo $view->DTENAISS1;?></td>
+
+        </tr>
+
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+
+          <td>Date Dec&egrave;s</td>
+
+          <td colspan="4"><?php echo $view->DTEDECES1;?></td>
+
+        </tr>
+
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+
+          <td>Nationalit&eacute;</td>
+
+          <td colspan="4"><?php echo $view->NATION1;?></td>
+
+        </tr>
+
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+
+          <td>&nbsp;</td>
+
+          <td><div align="center">Sc&eacute;nariste</div></td>
+
+          <td><div align="center">Dessinateur</div></td>
+
+          <td><div align="center">Coloriste</div></td>
+
+          <td>&nbsp;</td>
+
+        </tr>
+
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+
+          <td>&nbsp;</td>
+
+          <td><div align="center"> 
+
+              <input type="checkbox" name="checkbox" value="checkbox" <?php echo $view->ISSCEN1;?> disabled>
+
+            </div></td>
+
+          <td><div align="center"> 
+
+              <input name="checkbox2" type="checkbox" disabled value="checkbox" <?php echo $view->ISDESS1;?>>
+
+            </div></td>
+
+          <td><div align="center"> 
+
+              <input type="checkbox" name="checkbox3" value="checkbox" <?php echo $view->ISCOLOR1;?> disabled>
+
+            </div></td>
+
+          <td>&nbsp;</td>
+
+        </tr>
+
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+
+          <td width="22%">Commentaire</td>
+
+          <td width="78%" colspan="4"><?php echo $view->COMMENT1;?></td>
+
+        </tr>
+
+      </table></td>
+
+    <td><table width="100%" border="1" cellspacing="0">
+
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+
+          <td>Prenom</td>
+
+          <td colspan="4"><?php echo $view->PRENOM2;?></td>
+
+        </tr>
+
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+
+          <td>Nom</td>
+
+          <td colspan="4"><?php echo $view->NOM2;?></td>
+
+        </tr>
+
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+
+          <td>Date Naissance</td>
+
+          <td colspan="4"><?php echo $view->DTENAISS2;?></td>
+
+        </tr>
+
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+
+          <td>Date Dec&egrave;s</td>
+
+          <td colspan="4"><?php echo $view->DTEDECES2;?></td>
+
+        </tr>
+
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+
+          <td>Nationalit&eacute;</td>
+
+          <td colspan="4"><?php echo $view->NATION2;?></td>
+
+        </tr>
+
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+
+          <td>&nbsp;</td>
+
+          <td> 
+
+            <div align="center">Sc&eacute;nariste</div></td>
+
+          <td> 
+
+            <div align="center">Dessinateur</div></td>
+
+          <td> 
+
+            <div align="center">Coloriste</div></td>
+
+          <td>&nbsp;</td>
+
+        </tr>
+
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+
+          <td>&nbsp;</td>
+
+          <td> 
+
+            <div align="center"> 
+
+              <input type="checkbox" name="checkbox" value="checkbox" <?php echo $view->ISSCEN2;?> disabled>
+
+            </div></td>
+
+          <td> 
+
+            <div align="center"> 
+
+              <input type="checkbox" name="checkbox2" value="checkbox" <?php echo $view->ISDESS2;?> disabled>
+
+            </div></td>
+
+          <td> 
+
+            <div align="center"> 
+
+              <input type="checkbox" name="checkbox3" value="checkbox" <?php echo $view->ISCOLOR2;?> disabled>
+
+            </div></td>
+
+          <td>&nbsp;</td>
+
+        </tr>
+
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+
+          <td width="22%">Commentaire</td>
+
+          <td width="78%" colspan="4"><?php echo $view->COMMENT2;?></td>
+
+        </tr>
+
+      </table></td>
+
+  </tr>
+
+  <tr> 
+
+    <td bgcolor="#CCCCCC"> <p><strong>Statistiques</strong></p>
+
+      <p>Cet auteur a travaill&eacute; sur <?php echo $view->NBUSERS1;?> album(s).</p></td>
+
+    <td bordercolor="#FFFFCC" bgcolor="#FFFFCC"> <p><strong>Statistiques</strong></p>
+
+      <p>Cet auteur a travaill&eacute; sur <?php echo $view->NBUSERS2;?> album(s).</p></td>
+
+  </tr>
+
+  <tr> 
+
+    <td colspan="2" align="center"><p><a href="<?php echo $view->URLECHANGE;?>">Inverser la séléction</a><br>
+
+        <a href="<?php echo $view->URLFUSION;?>" onClick="return valider()">Fusionner les deux auteurs</a></p></td>
+
+  </tr>
+
+</table>
+
