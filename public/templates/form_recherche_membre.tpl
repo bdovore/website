@@ -1,0 +1,41 @@
+
+	<form action="usersearch.php" method="post" name="search" target="_self">
+        <div style="position:absolute;left:60%;top:0">
+			<img src="{URLSITEIMAGE}site/recherche.gif" alt="Recherche" />
+		</div> 
+<div class="cadre1">
+					Recherche : 
+					<input name="str_search" type="text" id="str_search" size="20" maxlength="50" /> 
+					<input type="submit" name="Submit" value="Envoyer" />
+					<br />
+					Albums: 
+					<input name="cb_album" type="checkbox" id="cb_album" value="cb_album" checked />
+					S&eacute;ries: 
+					<input name="cb_serie" type="checkbox" id="cb_serie" value="cb_serie" checked />
+					Auteurs: 
+					<input name="cb_aut" type="checkbox" id="cb_aut" value="cb_aut" checked />
+                    ou "ISBN:"
+				</td>
+</div>
+<div class="cadre1">
+					<table width="100%" border="0">
+						<tr>
+							<td width="73%">
+								<div align="left"> 
+									<input name="rb_mode" type="radio" value="1" checked />
+									Mes BD 
+									<input type="radio" name="rb_mode" value="2" />
+									Pr&ecirc;t 
+									<input type="radio" name="rb_mode" value="3" />
+									A pr&eacute;voir
+								</div>
+							</td>
+							<td width="27%">
+								<div align="right">
+									<a href="userbrowser.php">BD<i>o</i>Browser</a>
+								</div>
+							</td>
+						</tr>
+					</table>
+</div>
+	</form>

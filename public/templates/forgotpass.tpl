@@ -1,0 +1,25 @@
+<div class="cadre1">
+<h2>Connexion - Mot de passe oublié</h2>
+</div>
+<div class="cadre1">
+<form name="form1" method="post" action="login.php?act=forgotpass&email=ok">
+  <table align="center" border="0" cellspacing="1" cellpadding="5">
+    <tr> 
+      <td align="right">Votre pseudo :</td>
+      <td><input name="txtusername" type="text" id="txtusername" maxlength="40" size="20"></td>
+    </tr>
+    
+    <tr> 
+      <td align="right">L'adresse email enregistrée pour ce pseudo :</td>
+      <td><input name="txtemail" type="text" id="txtemail" maxlength="40" size="40"></td>
+    </tr>
+    <tr>
+    
+      <td colspan="2" align="center">
+      C'est deux informations sont obligatoires !<br/>
+          <input type="submit" name="Submit" value="Envoyer">
+        </td>
+    </tr>
+  </table>
+</form>
+</div>

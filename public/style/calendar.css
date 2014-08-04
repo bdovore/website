@@ -1,0 +1,354 @@
+DIV.calendar {
+	POSITION: relative
+}
+
+.calendar {
+	BORDER-RIGHT: #bdb2bf 1px solid;
+	BORDER-TOP: #bdb2bf 1px solid;
+	FONT-SIZE: 11px;
+	BACKGROUND: #e1e1e1;
+	BORDER-LEFT: #bdb2bf 1px solid;
+	CURSOR: default;
+	COLOR: #000;
+	BORDER-BOTTOM: #bdb2bf 1px solid;
+	FONT-FAMILY: "trebuchet ms", verdana, tahoma, sans-serif
+}
+
+.calendar TABLE {
+	BORDER-RIGHT: #bdb2bf 1px solid;
+	BORDER-TOP: #bdb2bf 1px solid;
+	FONT-SIZE: 11px;
+	BACKGROUND: #e1e1e1;
+	BORDER-LEFT: #bdb2bf 1px solid;
+	CURSOR: default;
+	COLOR: #000;
+	BORDER-BOTTOM: #bdb2bf 1px solid;
+	FONT-FAMILY: "trebuchet ms", verdana, tahoma, sans-serif
+}
+
+.calendar {
+	BORDER-LEFT-COLOR: #FFFEFF;
+	BORDER-BOTTOM-COLOR: #FFFEFF;
+	BORDER-TOP-COLOR: #FFFEFF;
+	BORDER-RIGHT-COLOR: #FFFEFF
+}
+
+.calendar .button {
+	PADDING-RIGHT: 2px;
+	PADDING-LEFT: 2px;
+	FONT-WEIGHT: bold;
+	BACKGROUND: #e1e1e1;
+	PADDING-BOTTOM: 2px;
+	COLOR: #000;
+	PADDING-TOP: 2px;
+	TEXT-ALIGN: center
+}
+
+.calendar .nav {
+	FONT-FAMILY: verdana, tahoma, sans-serif
+}
+
+.calendar .nav DIV {
+	BACKGROUND: #ffeeff
+}
+
+.calendar THEAD TR {
+	BACKGROUND: #e1e1e1;
+	COLOR: #000
+}
+
+.calendar THEAD .title {
+	PADDING-RIGHT: 2px;
+	PADDING-LEFT: 2px;
+	FONT-WEIGHT: bold;
+	BACKGROUND: #e1e1e1;
+	PADDING-BOTTOM: 2px;
+	COLOR: #000;
+	PADDING-TOP: 2px;
+	TEXT-ALIGN: center
+}
+
+.calendar THEAD .headrow {
+	
+}
+
+.calendar THEAD .name {
+	PADDING-RIGHT: 2px;
+	PADDING-LEFT: 2px;
+	PADDING-BOTTOM: 2px;
+	COLOR: #000;
+	PADDING-TOP: 2px;
+	BORDER-BOTTOM: #FFFEFF 1px solid;
+	TEXT-ALIGN: center
+}
+
+.calendar THEAD .weekend {
+	COLOR: #c44
+}
+
+.calendar THEAD .hilite {
+	PADDING-RIGHT: 2px;
+	PADDING-LEFT: 2px;
+	BACKGROUND: #FFE381;
+	PADDING-BOTTOM: 1px;
+	PADDING-TOP: 2px;
+	BORDER-BOTTOM: #FFFEFF 1px solid
+}
+
+.calendar THEAD .active {
+	PADDING-RIGHT: 1px;
+	PADDING-LEFT: 3px;
+	BACKGROUND: #FFBB00;
+	PADDING-BOTTOM: 0px;
+	COLOR: #fff;
+	PADDING-TOP: 3px;
+	BORDER-BOTTOM: #FFFEFF 1px solid
+}
+
+.calendar THEAD .daynames {
+	BACKGROUND: #bfbfbf
+}
+
+.calendar TBODY .day {
+	PADDING-RIGHT: 4px;
+	PADDING-LEFT: 2px;
+	PADDING-BOTTOM: 2px;
+	WIDTH: 2em;
+	COLOR: #000;
+	PADDING-TOP: 2px;
+	FONT-FAMILY: verdana, tahoma, sans-serif;
+	TEXT-ALIGN: right
+}
+
+.calendar TBODY .othermonth {
+	FONT-SIZE: 80%;
+	COLOR: #999
+}
+
+.calendar TBODY .oweekend {
+	COLOR: #f99
+}
+
+.calendar TABLE .wn {
+	BORDER-RIGHT: #FFFEFF 1px solid;
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 2px;
+	BACKGROUND: #bfbfbf;
+	PADDING-BOTTOM: 2px;
+	PADDING-TOP: 2px
+}
+
+.calendar TBODY .rowhilite TD {
+	BACKGROUND: #ececec
+}
+
+.calendar TBODY .rowhilite TD.wn {
+	BACKGROUND: #ececec
+}
+
+.calendar TBODY TD.today {
+	FONT-WEIGHT: bold
+}
+
+.calendar TBODY TD.hilite {
+	BORDER-RIGHT: #bbb 1px solid;
+	PADDING-RIGHT: 3px;
+	BORDER-TOP: #bbb 1px solid;
+	PADDING-LEFT: 1px;
+	BACKGROUND: #FFE381;
+	PADDING-BOTTOM: 1px;
+	BORDER-LEFT: #bbb 1px solid;
+	PADDING-TOP: 1px;
+	BORDER-BOTTOM: #bbb 1px solid
+}
+
+.calendar TBODY TD.active {
+	PADDING-RIGHT: 2px;
+	PADDING-LEFT: 2px;
+	PADDING-BOTTOM: 0px;
+	PADDING-TOP: 2px
+}
+
+.calendar TBODY TD.weekend {
+	COLOR: #c44
+}
+
+.calendar TBODY TD.selected {
+	BORDER-RIGHT: #FFFEFF 1px solid;
+	PADDING-RIGHT: 3px;
+	BORDER-TOP: #FFFEFF 1px solid;
+	PADDING-LEFT: 1px;
+	FONT-WEIGHT: bold;
+	BACKGROUND: #FFBB00;
+	PADDING-BOTTOM: 1px;
+	BORDER-LEFT: #FFFEFF 1px solid;
+	COLOR: #fff;
+	PADDING-TOP: 1px;
+	BORDER-BOTTOM: #FFFEFF 1px solid
+}
+
+.calendar TBODY .disabled {
+	COLOR: #999
+}
+
+.calendar TBODY .emptycell {
+	VISIBILITY: hidden
+}
+
+.calendar TBODY .emptyrow {
+	DISPLAY: none
+}
+
+.calendar TFOOT .footrow {
+	BACKGROUND: #565;
+	COLOR: #fff;
+	TEXT-ALIGN: center
+}
+
+.calendar TFOOT .ttip {
+	PADDING-RIGHT: 2px;
+	PADDING-LEFT: 2px;
+	BACKGROUND: #FFFFFE;
+	PADDING-BOTTOM: 2px;
+	COLOR: #000;
+	PADDING-TOP: 2px
+}
+
+.calendar TFOOT .hilite {
+	BORDER-RIGHT: #084 1px solid;
+	PADDING-RIGHT: 1px;
+	BORDER-TOP: #084 1px solid;
+	PADDING-LEFT: 1px;
+	BACKGROUND: #afa;
+	PADDING-BOTTOM: 1px;
+	BORDER-LEFT: #084 1px solid;
+	COLOR: #000;
+	PADDING-TOP: 1px;
+	BORDER-BOTTOM: #084 1px solid
+}
+
+.calendar TFOOT .active {
+	PADDING-RIGHT: 0px;
+	PADDING-LEFT: 2px;
+	BACKGROUND: #7c7;
+	PADDING-BOTTOM: 0px;
+	PADDING-TOP: 2px
+}
+
+.calendar .combo {
+	BORDER-RIGHT: #FFFEFF 1px solid;
+	BORDER-TOP: #FFFEFF 0px solid;
+	DISPLAY: none;
+	FONT-SIZE: 90%;
+	Z-INDEX: 100;
+	BACKGROUND: #e1e1e1;
+	LEFT: 0px;
+	BORDER-LEFT: #FFFEFF 1px solid;
+	WIDTH: 4em;
+	CURSOR: default;
+	COLOR: #000;
+	BORDER-BOTTOM: #FFFEFF 1px solid;
+	POSITION: absolute;
+	TOP: 0px
+}
+
+.calendar .combo .label {
+	PADDING-RIGHT: 1px;
+	PADDING-LEFT: 1px;
+	PADDING-BOTTOM: 1px;
+	PADDING-TOP: 1px;
+	TEXT-ALIGN: center
+}
+
+.calendar .combo .label-IEfix {
+	PADDING-RIGHT: 1px;
+	PADDING-LEFT: 1px;
+	PADDING-BOTTOM: 1px;
+	PADDING-TOP: 1px;
+	TEXT-ALIGN: center
+}
+
+.calendar .combo .label-IEfix {
+	WIDTH: 4em
+}
+
+.calendar .combo .hilite {
+	BACKGROUND: #FFE381;
+	COLOR: #000
+}
+
+.calendar .combo .active {
+	FONT-WEIGHT: bold;
+	BACKGROUND: #FFBB00;
+	COLOR: #fff
+}
+
+.calendar TD.time {
+	PADDING-RIGHT: 0px;
+	BORDER-TOP: #FFFEFF 1px solid;
+	PADDING-LEFT: 0px;
+	BACKGROUND: #bfbfbf;
+	PADDING-BOTTOM: 1px;
+	PADDING-TOP: 1px;
+	TEXT-ALIGN: center
+}
+
+.calendar TD.time .hour {
+	PADDING-RIGHT: 5px;
+	PADDING-LEFT: 6px;
+	FONT-WEIGHT: bold;
+	BACKGROUND: #e1e1e1;
+	PADDING-BOTTOM: 0px;
+	COLOR: #000;
+	PADDING-TOP: 0px
+}
+
+.calendar TD.time .minute {
+	PADDING-RIGHT: 5px;
+	PADDING-LEFT: 6px;
+	FONT-WEIGHT: bold;
+	BACKGROUND: #e1e1e1;
+	PADDING-BOTTOM: 0px;
+	COLOR: #000;
+	PADDING-TOP: 0px
+}
+
+.calendar TD.time .ampm {
+	PADDING-RIGHT: 5px;
+	PADDING-LEFT: 6px;
+	FONT-WEIGHT: bold;
+	BACKGROUND: #e1e1e1;
+	PADDING-BOTTOM: 0px;
+	COLOR: #000;
+	PADDING-TOP: 0px
+}
+
+.calendar TD.time .hour {
+	FONT-FAMILY: monospace
+}
+
+.calendar TD.time .minute {
+	FONT-FAMILY: monospace
+}
+
+.calendar TD.time .ampm {
+	TEXT-ALIGN: center
+}
+
+.calendar TD.time .colon {
+	PADDING-RIGHT: 2px;
+	PADDING-LEFT: 3px;
+	FONT-WEIGHT: bold;
+	PADDING-BOTTOM: 0px;
+	PADDING-TOP: 0px
+}
+
+.calendar TD.time SPAN.hilite {
+	BACKGROUND: #FFE381;
+	COLOR: #000
+}
+
+.calendar TD.time SPAN.active {
+	BACKGROUND: #FFBB00;
+	COLOR: #fff
+}

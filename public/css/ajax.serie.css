@@ -1,0 +1,64 @@
+.album {
+	border-color: black;
+	border-style: solid;
+	border-width: 1px;
+	width:200px;
+	margin : 10px;
+	padding: 5px;
+	float : left;
+	min-height:260px;
+    height:auto;
+}
+
+.additional {
+ 	min-height:100px;
+    height:auto;
+	background: red;
+	margin-top: 10px;
+}
+
+.default{
+	background-color:white;
+}
+
+.incollec{
+	background-color:green;
+}
+
+.excluded{
+	background-color:grey;
+}
+
+.alb_af{
+	background-color:orange;
+}
+
+.clickable {
+
+}
+
+.ui-autocomplete-loading {
+	background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
+}
+
+.ui-autocomplete {
+max-height: 350px;
+overflow-y: auto;
+/* prevent horizontal scrollbar */
+overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+* we use height instead, but this forces the menu to always be this tall
+*/
+* html .ui-autocomplete {
+height: 350px;
+}
+
+img.couverture {
+	width: 100px;
+	border-color: black;
+	border-style: solid;
+	border-width: 1px;
+	float: left;
+	margin: 5px;
+}
