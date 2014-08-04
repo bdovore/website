@@ -248,20 +248,20 @@ function Db_multi_query ($requete,$connexion=false)
 	}
 }
 
-function Db_fetch_all_obj ($resultat, $columnKey = '',$multiValByKey=false)
-{
-    $a_obj = array();
-    while ($obj = Db_fetch_object($resultat)) {
-        if (empty($columnKey)) $a_obj[] = $obj;
+function Db_fetch_all_obj ($resultat, $columnKey = '',$multiValByKey=false)
+{
+    $a_obj = array();
+    while ($obj = Db_fetch_object($resultat)) {
+        if (empty($columnKey)) $a_obj[] = $obj;
         else{
             if ($multiVal){
                 $a_obj[$obj->$columnKey][] = $obj;
             }
             else {
-                $a_obj[$obj->$columnKey]= $obj;
+                $a_obj[$obj->$columnKey]= $obj;
             }
-        }
-    }
-    Db_free_result($resultat);
-    return $a_obj;
+        }
+    }
+    Db_free_result($resultat);
+    return $a_obj;
 }

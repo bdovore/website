@@ -3,3 +3,7 @@ library/Bdo/Auth/
 library/Zend/*
 public/jquery/
 vendors/*
+
+#ignore temporary files of some editors
+*~
+*.swp
