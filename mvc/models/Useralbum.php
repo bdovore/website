@@ -273,20 +273,20 @@ class Useralbum extends Bdo_Db_Line
          * - valorisation : valorisation de la collection
          * - 
          */
-        $query = "select sum((case when ua.cote > 0 then ua.cote 
+        $query = "select round(sum((case when ua.cote > 0 then ua.cote 
                                     when bd_tome.prix_bdnet > 0 then prix_bdnet
                                     when bd_tome.flg_int = 'O' then val_int else
-			val_alb end) + IF (bd_tome.flg_type = 1 AND u.val_cof_type = 0 , val_cof, 0))  as valorisation,
+			val_alb end) + IF (bd_tome.flg_type = 1 AND u.val_cof_type = 0 , val_cof, 0)),2)  as valorisation,
                 count(*) nb_album,
                         count(IF((ua.cote > 0),1,null)) nb_val_user,
                         count(IF((ua.cote = 0 or ua.cote is null) and bd_tome.prix_bdnet > 0,1,null)) as nb_val_bdovore,
                         count(IF((ua.cote = 0 or ua.cote is null) and (bd_tome.prix_bdnet = 0 OR bd_tome.prix_bdnet is null),1,null)) as nb_val_defaut,
                         count(IF(bd_tome.flg_type = 1,1,null)) as nb_coffret,
 
-                        sum(IF((ua.cote > 0),ua.cote,0)) as val_user,
-                        sum(IF((ua.cote = 0 or ua.cote is null) and bd_tome.prix_bdnet > 0,bd_tome.prix_bdnet,0)) as val_bdovore,
-                        sum(IF((ua.cote = 0 or ua.cote is null) and (bd_tome.prix_bdnet = 0 OR bd_tome.prix_bdnet is null),IF(flg_int = 'O',val_int ,val_alb) , 0)) as val_defaut,
-                        sum(IF(bd_tome.flg_type = 1 and u.val_cof_type = 0 ,val_cof,0)) as val_coffret
+                        round(sum(IF((ua.cote > 0),ua.cote,0)),2) as val_user,
+                        round(sum(IF((ua.cote = 0 or ua.cote is null) and bd_tome.prix_bdnet > 0,bd_tome.prix_bdnet,0)),2) as val_bdovore,
+                        round(sum(IF((ua.cote = 0 or ua.cote is null) and (bd_tome.prix_bdnet = 0 OR bd_tome.prix_bdnet is null),IF(flg_int = 'O',val_int ,val_alb) , 0)),2) as val_defaut,
+                        round(sum(IF(bd_tome.flg_type = 1 and u.val_cof_type = 0 ,val_cof,0)),2) as val_coffret
                 from users_album ua inner join users u using(user_id)
                 inner join bd_edition on ua.id_edition = bd_edition.id_edition
                 inner join bd_tome on bd_tome.id_tome = bd_edition.id_tome

@@ -271,6 +271,9 @@ class Macollection extends Bdo_Controller {
     
      
      public function monActu() {
+         /*
+          * Onglet mon actualité
+          */
            if (User::minAccesslevel(2)) {
                $this->loadModel("Tome");
                $nb_mois = getVal("nb_mois",1);
@@ -580,6 +583,63 @@ class Macollection extends Bdo_Controller {
 
 
 
+    }
+    
+    public function Detailvalorisation() {
+        /*
+         * Affiche le détail de la valorisation et les options
+         * Pour le moment, on ne reprend pas la saisies des cout par album... à refaire plus tard
+         */
+        if (User::minAccesslevel(2)) {
+            /*
+             * On commence par mettre à jour les valeurs dans User si nécessaire
+             */
+            $user = new User($_SESSION["userConnect"]->user_id);
+            $user->load();
+            if (getVal("action","") == "Recalculer") {
+                $txtPrixAlbum = getVal("txtPrixAlbum","12");
+                $txtPrixIntegrale = getVal("txtPrixIntegrale","30");
+                $txtPrixCoffret = getVal("txtPrixCoffret","5.0");
+                $lstCoffret = getVal("lstCoffret",0);
+                
+                
+                // on met à jour le user
+                
+                $user->set_dataPaste(array(
+                   "VAL_ALB" => floatval($txtPrixAlbum),
+                    "VAL_INT" => floatval($txtPrixIntegrale) ,
+                    "VAL_COF" => floatval($txtPrixCoffret),
+                    "VAL_COF_TYPE" => $lstCoffret
+                ));
+                
+                $user->update();
+            }
+            $txtPrixAlbum = $user->VAL_ALB;
+            $txtPrixIntegrale = $user->VAL_INT;
+            $txtPrixCoffret = $user->VAL_COF;
+            $lstCoffret = $user->VAL_COF_TYPE;
+            
+            
+            $this->loadModel("Useralbum");
+            
+            $o_val = $this->Useralbum->getValorisation($_SESSION["userConnect"]->user_id);
+            
+            $this->view->set_var(array(
+                "o_val" => $o_val,
+                "lstCoffret" => $lstCoffret,
+                "txtPrixAlbum" => $txtPrixAlbum,
+                "txtPrixIntegrale" => $txtPrixIntegrale,
+                "txtPrixCoffret" => $txtPrixCoffret
+                
+            ));
+        }
+        else {
+             $this->view->addAlertPage("Vous devez vous authentifier pour accéder à cette page !");
+
+            $this->view->addPhtmlFile('alert', 'BODY');
+        }
+        $this->view->layout = "iframe";
+        $this->view->render();
     }
 }
 ?>
