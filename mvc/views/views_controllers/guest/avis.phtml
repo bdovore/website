@@ -1,1 +1,63 @@
-<?php $ficheAlbum = $view->getHelper('ficheAlbum');$page = $view->getHelper('pagination');?><hr class="expSep"/><div class="middle_title"><h3>Collection de <?php echo $view->USERNAME;?></h3></div> <?php echo $page->menuGuest(encodeUserId($view->IDUSER)); ?><br><h2>Les avis de lecture de <?php echo $view->USERNAME;?></h2>										<!-- Column 1 start -->					                                              <?php         if (isset($view->dbs_comment))  {         //echo ("<table>");                 foreach ($view->dbs_comment->a_dataQuery as $tome) {                         echo ("<div class='cadre1'>");            echo ("<table width='50%'>");            echo ("<tr><td style='vertical-align:top'>");             echo $ficheAlbum->urlalbum($tome,'couvBig');                                     echo ("</td>");            echo("<td style='vertical-align:top'>");                        echo $ficheAlbum->urlalbum($tome,'albTitle');            echo ("<br>");             echo ("<strong>Note : ".$tome->NOTE ."</strong> publié par <a href='./guest?user=".$tome->user_id."'>".$tome->username. "</a> le ".$tome->DTE_POST);             echo ("<p>".nl2br($tome->COMMENT)."</p>");             echo ("</td>");             echo ("</table>");             echo ("</div>");                   }                             }        ?><div align="center"><?php // pagination         $a_qstring = $_GET;    unset($a_qstring["page"]);    $qstring = http_build_query($a_qstring);    if ($view->NUM_PAGE > 1) echo "<a href='?".$qstring."&page=".($view->NUM_PAGE-1)."'>Précédent &nbsp;</a>";    if ($view->NUM_PAGE < 20) echo "<a href='?".$qstring."&page=".($view->NUM_PAGE+1)."'>&nbsp;Suivant</a>";?>       	<!-- Column 1 end -->					</div>
+<?php 
+
+$ficheAlbum = $view->getHelper('ficheAlbum');
+$page = $view->getHelper('pagination');
+
+
+?>
+<hr class="expSep"/>
+
+<div class="middle_title"><h3>Collection de <?php echo $view->USERNAME;?></h3></div>
+ <?php echo $page->menuGuest(encodeUserId($view->IDUSER)); ?>
+<br>
+<h2>Les avis de lecture de <?php echo $view->USERNAME;?></h2>
+				
+						<!-- Column 1 start -->
+					
+                                              
+
+<?php 
+
+
+   
+     if (isset($view->dbs_comment))  {
+         //echo ("<table>");
+        
+         foreach ($view->dbs_comment->a_dataQuery as $tome) {
+             
+            echo ("<div class='cadre1'>");
+            echo ("<table width='50%'>");
+            echo ("<tr><td style='vertical-align:top'>");
+             echo $ficheAlbum->urlalbum($tome,'couvBig');
+             
+             
+           echo ("</td>");
+            echo("<td style='vertical-align:top'>");
+            
+            echo $ficheAlbum->urlalbum($tome,'albTitle');
+            echo ("<br>");
+             echo ("<strong>Note : ".$tome->NOTE ."</strong> publié par <a href='./guest?user=".$tome->user_id."'>".$tome->username. "</a> le ".$tome->DTE_POST);
+             echo ("<p>".nl2br($tome->COMMENT)."</p>");
+             echo ("</td>");
+             echo ("</table>");
+             echo ("</div>");
+           
+        }
+      
+         
+         
+     }
+
+        ?><div align="center">
+<?php // pagination 
+    
+    $a_qstring = $_GET;
+    unset($a_qstring["page"]);
+    $qstring = http_build_query($a_qstring);
+    if ($view->NUM_PAGE > 1) echo "<a href='?".$qstring."&page=".($view->NUM_PAGE-1)."'>Précédent &nbsp;</a>";
+    if ($view->NUM_PAGE < 20) echo "<a href='?".$qstring."&page=".($view->NUM_PAGE+1)."'>&nbsp;Suivant</a>";
+?>
+       
+	<!-- Column 1 end -->
+					</div>
+

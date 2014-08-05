@@ -1,1 +1,91 @@
-<?php $ficheAlbum = $view->getHelper('ficheAlbum'); $page = $view->getHelper('pagination');?><div align="center" class="cadre1"> <?php echo $page->menuCollection(); ?>						<!-- Column 1 start -->					                                                <div class="middle_title">                                                <h3>Actualités BD liées à vos séries et auteurs favoris </h3>                                                </div><form name="selType" action="" method="get">			<div class="genBlock">				<table border="0">				    <tbody><tr> 						<td>							<span class="texte">								les nouveautés concernant :							</span>						</td>						<td>&nbsp;</td>					    <td>							<span class="texte">								Parues depuis :							</span>						</td>						<td>&nbsp;</td>					    <td>&nbsp;</td>					    <td>&nbsp;</td>				    </tr>				    <tr> 					    <td> 					        <select name="mode" size="1">						        <option value="1" <?php if ($view->mode == 1) echo "selected"; ?>>Mes Séries</option><option value="2" <?php if ($view->mode == 2) echo "selected"; ?>>Mes Auteurs Favoris</option><option value="3" <?php if ($view->mode == 3) echo "selected"; ?>>Intégrales/Coffrets</option>					        </select>						</td>						<td>&nbsp;</td>					    <td> 					        <select name="nb_mois">						        <option value="1" <?php if ($view->nb_mois == 1) echo "selected"; ?>>1 mois</option><option value="3" <?php if ($view->nb_mois == 3) echo "selected"; ?>>3 mois</option><option value="6" <?php if ($view->nb_mois == 6) echo "selected"; ?>>6 mois</option><option value="12" <?php if ($view->nb_mois == 12) echo "selected"; ?>>1 an</option>					        </select>						</td>						<td>&nbsp;</td>					    <td>							<input name="Submit" value="Rafraîchir" type="submit">						</td>						<td>&nbsp;</td>						<td>							<a class="fancybox fancybox.iframe {width:400,height:400}" href="<?php echo BDO_URL; ?>Auteurfavoris">								Gérer mes auteurs favoris							</a>						</td>					</tr>				</tbody></table>				</div>				<hr class="genSep">			</form>                                                <br><?php if (isset($view->dbs_tome)){        foreach ($view->dbs_tome->a_dataQuery as $tome) {        echo $ficheAlbum->big($tome);        }        }              ?><div align="center"><?php // pagination         $a_qstring = $_GET;    unset($a_qstring["page"]);    $qstring = http_build_query($a_qstring);    if ($view->page > 1  ) echo "<a href='?".$qstring."&page=".($view->page-1)."'>Précédent &nbsp;</a>";    if ($view->page < 20 and count($view->dbs_tome->a_dataQuery) == 20) echo "<a href='?".$qstring."&page=".($view->page+1)."'>&nbsp;Suivant</a>";?>        </div>	</div>	
+<?php 
+
+$ficheAlbum = $view->getHelper('ficheAlbum');
+ $page = $view->getHelper('pagination');
+
+
+?>
+<div align="center" class="cadre1">
+ <?php echo $page->menuCollection(); ?>
+						<!-- Column 1 start -->
+					
+                                                <div class="middle_title">
+                                                <h3>Actualités BD liées à vos séries et auteurs favoris </h3>
+                                                </div>
+
+<form name="selType" action="" method="get">
+			<div class="genBlock">
+				<table border="0">
+				    <tbody><tr> 
+						<td>
+							<span class="texte">
+								les nouveautés concernant :
+							</span>
+						</td>
+						<td>&nbsp;</td>
+					    <td>
+							<span class="texte">
+								Parues depuis :
+							</span>
+						</td>
+						<td>&nbsp;</td>
+					    <td>&nbsp;</td>
+					    <td>&nbsp;</td>
+				    </tr>
+				    <tr> 
+					    <td> 
+					        <select name="mode" size="1">
+						        <option value="1" <?php if ($view->mode == 1) echo "selected"; ?>>Mes Séries</option><option value="2" <?php if ($view->mode == 2) echo "selected"; ?>>Mes Auteurs Favoris</option><option value="3" <?php if ($view->mode == 3) echo "selected"; ?>>Intégrales/Coffrets</option>
+					        </select>
+						</td>
+						<td>&nbsp;</td>
+					    <td> 
+					        <select name="nb_mois">
+						        <option value="1" <?php if ($view->nb_mois == 1) echo "selected"; ?>>1 mois</option><option value="3" <?php if ($view->nb_mois == 3) echo "selected"; ?>>3 mois</option><option value="6" <?php if ($view->nb_mois == 6) echo "selected"; ?>>6 mois</option><option value="12" <?php if ($view->nb_mois == 12) echo "selected"; ?>>1 an</option>
+					        </select>
+						</td>
+						<td>&nbsp;</td>
+					    <td>
+							<input name="Submit" value="Rafraîchir" type="submit">
+						</td>
+						<td>&nbsp;</td>
+						<td>
+							<a class="fancybox fancybox.iframe {width:400,height:400}" href="<?php echo BDO_URL; ?>Auteurfavoris">
+								Gérer mes auteurs favoris
+							</a>
+						</td>
+					</tr>
+				</tbody></table>
+				</div>
+				<hr class="genSep">
+			</form>
+                                                <br>
+
+<?php 
+
+if (isset($view->dbs_tome)){
+
+        foreach ($view->dbs_tome->a_dataQuery as $tome) {
+
+        echo $ficheAlbum->big($tome);
+
+        }
+
+        }
+
+ 
+     
+        ?><div align="center">
+<?php // pagination 
+    
+    $a_qstring = $_GET;
+    unset($a_qstring["page"]);
+    $qstring = http_build_query($a_qstring);
+    if ($view->page > 1  ) echo "<a href='?".$qstring."&page=".($view->page-1)."'>Précédent &nbsp;</a>";
+    if ($view->page < 20 and count($view->dbs_tome->a_dataQuery) == 20) echo "<a href='?".$qstring."&page=".($view->page+1)."'>&nbsp;Suivant</a>";
+?>
+        </div>
+	
+</div>
+
+	

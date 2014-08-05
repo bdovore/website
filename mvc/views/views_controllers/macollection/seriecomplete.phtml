@@ -1,1 +1,77 @@
-<?php $ficheAlbum = $view->getHelper('ficheAlbum'); $page = $view->getHelper('pagination');?><div align="center" class="cadre1"> <?php echo $page->menuCollection(); ?>						<!-- Column 1 start -->					                                                <div class="middle_title">                                                <h3>Séries à compléter </h3>                                                </div><form name ="selSerie" action="" method="get"><div class="genBlock"><p>Rechercher les albums manquants dans :</p><p><select name="lstSerie" size="1" id="lstSerie" onChange="submit();">        <?php foreach ($view->listSerie as $serie) {            echo "<option value='".$serie->ID_SERIE."'".($serie->ID_SERIE == $view->id_serie ? "selected" : "" ) .">".$serie->NOM_SERIE."</option>";                    }?>                    </select></p><p><a href="<?php echo BDO_URL."macollection/seriecomplete?lstSerie=$view->id_serie&action=exclude" ?>">Exclure cette série de mes albums à compléter</a></p><p><a href="<?php echo BDO_URL."macollection/seriecomplete?idSerieExclu=$view->id_serie&action=raz" ?>">Annuler les exclusions pour cette série</a></p></div><hr class="genSep"/></form> <form name="selAlbum" action="" method="get">    <div class="genBlock">         <table>           <?php            foreach ($view->dbs_tome->a_dataQuery as $tome) {               echo "<tr>";               echo "<td><input type='checkbox' name='sel_tome[]' value='$tome->ID_TOME'></td>";                echo "<td>".$ficheAlbum->big($tome)."</td>";               echo "</tr>";            }           ?>     </table>        <input type="hidden" name="action" value="exclude_tome">        <input type="hidden" name="lstSerie" value="<?php echo $view->id_serie; ?>">     <p><input type="submit" id="B_Add2" value="Exclure la sélection des albums manquants"></p>     </div> </form><hr class="genSep"/><form action="" method="get">    <input type="hidden" name="action" value="raz"><div class="genBlock"><p>Liste des séries avec au moins un album exclu :</p><p><select name="idSerieExclu" size="1" id="idSerieExclu" >        <?php         foreach ($view->listExclu as $serie) {            echo "<option value='".$serie->ID_SERIE."'>".$serie->NOM_SERIE."</option>";        }        ?>    </select></p><p><input name="actAnnExclu" type="submit" id="B_annEclu" value="Annuler les exclusions pour cette série"></p></div><hr class="genSep"/></form>																															</div>	
+<?php 
+
+$ficheAlbum = $view->getHelper('ficheAlbum');
+ $page = $view->getHelper('pagination');
+
+
+?>
+<div align="center" class="cadre1">
+ <?php echo $page->menuCollection(); ?>
+						<!-- Column 1 start -->
+					
+                                                <div class="middle_title">
+                                                <h3>Séries à compléter </h3>
+                                                </div>
+<form name ="selSerie" action="" method="get">
+
+<div class="genBlock">
+<p>Rechercher les albums manquants dans :</p>
+<p><select name="lstSerie" size="1" id="lstSerie" onChange="submit();">
+        <?php foreach ($view->listSerie as $serie) {
+            echo "<option value='".$serie->ID_SERIE."'".($serie->ID_SERIE == $view->id_serie ? "selected" : "" ) .">".$serie->NOM_SERIE."</option>";
+            
+        }
+?>
+        
+        
+    </select></p>
+<p><a href="<?php echo BDO_URL."macollection/seriecomplete?lstSerie=$view->id_serie&action=exclude" ?>">Exclure cette série de mes albums à compléter</a></p>
+<p><a href="<?php echo BDO_URL."macollection/seriecomplete?idSerieExclu=$view->id_serie&action=raz" ?>">Annuler les exclusions pour cette série</a></p>
+</div>
+<hr class="genSep"/>
+</form>
+
+ <form name="selAlbum" action="" method="get">
+    <div class="genBlock"> 
+        <table>
+           <?php 
+           foreach ($view->dbs_tome->a_dataQuery as $tome) {
+               echo "<tr>";
+               echo "<td><input type='checkbox' name='sel_tome[]' value='$tome->ID_TOME'></td>";
+                echo "<td>".$ficheAlbum->big($tome)."</td>";
+
+
+               echo "</tr>";
+            }
+           ?>
+     </table>
+        <input type="hidden" name="action" value="exclude_tome">
+        <input type="hidden" name="lstSerie" value="<?php echo $view->id_serie; ?>">
+     <p><input type="submit" id="B_Add2" value="Exclure la sélection des albums manquants"></p>
+     </div>
+
+ </form>
+
+<hr class="genSep"/>
+
+<form action="" method="get">
+    <input type="hidden" name="action" value="raz">
+<div class="genBlock">
+<p>Liste des séries avec au moins un album exclu :</p>
+
+<p><select name="idSerieExclu" size="1" id="idSerieExclu" >
+        <?php 
+        foreach ($view->listExclu as $serie) {
+            echo "<option value='".$serie->ID_SERIE."'>".$serie->NOM_SERIE."</option>";
+        }
+        ?>
+    </select></p>
+<p><input name="actAnnExclu" type="submit" id="B_annEclu" value="Annuler les exclusions pour cette série"></p>
+</div>
+<hr class="genSep"/>
+</form>																												
+		
+	
+</div>
+
+	

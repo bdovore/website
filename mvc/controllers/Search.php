@@ -1,1 +1,56 @@
-<?php/** * * @author laurent *         */class Search extends Bdo_Controller{    /**     */    public function Auto ()    {        Bdo_Cfg::setVar('debug',false);                $arr = array();            $this->loadModel ("Serie");        $this->Serie->load('c'," WHERE NOM LIKE '".Db_Escape_String($_GET['term'])."%' GROUP BY ID_SERIE ORDER BY NOM LIMIT 0,10");        foreach ($this->Serie->dbSelect->a_dataQuery as $obj) {            $arr[] = (object) array(                    'label' => $obj->NOM_SERIE,                    'category' => "Séries",                    'ID_SERIE' => $obj->ID_SERIE            );        }                $this->loadModel ("Tome");        $this->Tome->load('c'," WHERE TITRE LIKE '".Db_Escape_String($_GET['term'])."%' ORDER BY TITRE LIMIT 0,10");        foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {            $arr[] = (object) array(                    'label' => $obj->TITRE_TOME,                    'category' => "Albums",                    'ID_TOME' => $obj->ID_TOME            );        }                $this->loadModel ("Auteur");        $this->Auteur->load('c'," WHERE PSEUDO IS NOT NULL AND PSEUDO LIKE '".Db_Escape_String($_GET['term'])."%' ORDER BY PSEUDO LIMIT 0,10");        foreach ($this->Auteur->dbSelect->a_dataQuery as $obj) {            $arr[] = (object) array(                    'label' => $obj->PSEUDO,                    'category' => "Auteurs"            );        }                        $this->view->set_var('json', json_encode($arr));                $this->view->layout = "ajax";        $this->view->render();    }}
+<?php
+
+/**
+ *
+ * @author laurent
+ *        
+ */
+
+class Search extends Bdo_Controller
+{
+    /**
+     */
+    public function Auto ()
+    {
+        Bdo_Cfg::setVar('debug',false);
+
+        $arr = array();
+
+        $this->loadModel ("Serie");
+        $this->Serie->load('c'," WHERE NOM LIKE '".Db_Escape_String($_GET['term'])."%' GROUP BY ID_SERIE ORDER BY NOM LIMIT 0,10");
+
+        foreach ($this->Serie->dbSelect->a_dataQuery as $obj) {
+            $arr[] = (object) array(
+                    'label' => $obj->NOM_SERIE,
+                    'category' => "Séries",
+                    'ID_SERIE' => $obj->ID_SERIE
+            );
+        }
+
+        $this->loadModel ("Tome");
+        $this->Tome->load('c'," WHERE TITRE LIKE '".Db_Escape_String($_GET['term'])."%' ORDER BY TITRE LIMIT 0,10");
+
+        foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
+            $arr[] = (object) array(
+                    'label' => $obj->TITRE_TOME,
+                    'category' => "Albums",
+                    'ID_TOME' => $obj->ID_TOME
+            );
+        }
+
+        $this->loadModel ("Auteur");
+        $this->Auteur->load('c'," WHERE PSEUDO IS NOT NULL AND PSEUDO LIKE '".Db_Escape_String($_GET['term'])."%' ORDER BY PSEUDO LIMIT 0,10");
+
+        foreach ($this->Auteur->dbSelect->a_dataQuery as $obj) {
+            $arr[] = (object) array(
+                    'label' => $obj->PSEUDO,
+                    'category' => "Auteurs"
+            );
+        }
+
+        $this->view->set_var('json', json_encode($arr));
+        $this->view->layout = "ajax";
+        $this->view->render();
+    }
+}
+
