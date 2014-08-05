@@ -1,0 +1,111 @@
+<?php 
+
+$ficheAlbum = $view->getHelper('ficheAlbum');
+
+
+
+?>
+	
+<link href="<?php echo BDO_URL;?>style/addition.css" rel="stylesheet" type="text/css" />
+
+			<div class="addTitle">
+				R&eacute;sum&eacute; de la valorisation
+			</div>
+			<div class="addFreeBlock">
+				<div class="addTitle2">
+					Valorisation de la collection
+				</div>
+				<table width="400" class = "addStats">
+		            <tr> 
+		                <td class="addTitle">&nbsp;</td>
+		                <td class="addTitle">Nombres</td>
+		                <td class="addTitle">Valeur</td>
+		            </tr>
+		            <tr> 
+			            <td class="addDataLeft">
+							Album au prix d'achat
+						</td>
+		                <td class="addData">
+							<a href="#" ><?php echo $view->o_val->nb_val_user;?></a>
+						</td>
+		                <td class="addData"><?php echo $view->o_val->val_user;?></td>
+		            </tr>
+		            <tr> 
+			            <td class="addDataLeft">Album au prix bdovore</td>
+		                <td class="addData">
+							<a href="#" ><?php echo $view->o_val->nb_val_bdovore;?></a>
+						</td>
+		                <td class="addData"><?php echo $view->o_val->val_bdovore;?></td>
+		            </tr>
+		            <tr> 
+			            <td class="addDataLeft">Album au prix par d&eacute;faut</td>
+		                <td class="addData">
+							<a href="#" ><?php echo $view->o_val->nb_val_defaut;?></a>
+						</td>
+		                <td class="addData"><?php echo $view->o_val->val_defaut;?></td>
+		            </tr>
+		            <tr> 
+		                <td class="addDataLeft">Coffrets</td>
+		                <td class="addData">
+							<p><a href="#" ><?php echo $view->o_val->nb_coffret;?></a></p>
+						</td>
+		                <td class="addData"><?php echo $view->o_val->val_coffret;?></td>
+		            </tr>
+		            
+		            <tr> 
+		                <td class="addDataLeft">Total</td>
+		                <td class="addData">
+							<a href="#" ><?php echo $view->o_val->nb_album;?></a>
+						</td>
+		                <td class="addData"><?php echo $view->o_val->valorisation;?></td>
+		            </tr>
+	            </table>
+                            
+			</div>
+			<div class="addFreeBlock">
+				<form name="form1" method="get" action="">
+					<div class="addTitle2">
+						Param&egrave;tres de valorisation
+					</div>
+					<table width="400"  class="addStats">
+			            <tr> 
+				            <td class="addDataLeft">Prix par d&eacute;faut d'un album</td>
+				            <td>
+								<input name="txtPrixAlbum" type="text" value="<?php echo $view->txtPrixAlbum;?>" size="6" class="flat" />
+				            </td>
+			            </tr>
+			            <tr> 
+				            <td class="addDataLeft">Prix par d&eacute;faut d'une int&eacute;grale</td>
+				            <td>
+								<input name="txtPrixIntegrale" type="text" value="<?php echo $view->txtPrixIntegrale;?>" size="6" class="flat" />
+				            </td>
+			            </tr>
+			            <tr> 
+				            <td class="addDataLeft">Prix par d&eacute;fault / surco&ucirc;t d'un coffret</td>
+				            <td>
+								<input name="txtPrixCoffret" type="text" value="<?php echo $view->txtPrixCoffret;?>" size="6" class="flat" />
+				            </td>
+			            </tr>
+			            <tr> 
+				            <td class="addDataLeft">Valorisation des coffrets</td>
+				            <td>
+								<select name="lstCoffret" class="flat">
+									<option value="0" <?php echo ($view->lstCoffret == 0 ? "selected=''" : "" );  ?> >Par album + Surcout</option>
+                                                                        <option value="1"  <?php echo ($view->lstCoffret == 1 ? "selected=''" : "" );  ?>>Valeur du coffret</option>
+                                                                </select>
+				            </td>
+			            </tr>
+			            <tr> 
+				            <td height="31">&nbsp;</td>
+				            <td valign="bottom">
+								<input type="submit" name="action" value="Recalculer">
+							</td>
+				        </tr>
+					</table>
+		        </form>
+                            
+                        
+                        </div>
+			
+
+                           
