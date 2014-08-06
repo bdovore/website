@@ -1,7 +1,7 @@
 cache/
 library/Bdo/Auth/
 library/Zend/*
-public/jquery/
+#public/jquery/
 vendors/*
 
 #ignore temporary files of some editors
