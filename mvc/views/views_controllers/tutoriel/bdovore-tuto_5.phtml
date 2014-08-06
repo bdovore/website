@@ -11,7 +11,7 @@
 	offrir des bandes dessinées de savoir quelles sont celles que vous possédez
 	déjà et aussi quels sont vos goûts. Fini la BD en double ou en triple dans la
 	collection&nbsp;! Sympa pour les potes toujours en quête de cadeau
-	danniversaire&nbsp;!</p>
+	d'anniversaire&nbsp;!</p>
 	
 	<p><font size="-2">Astuce&nbsp;: cette fonction doit être activée dans votre
 	profil&nbsp;: par défaut, personne ne peut accéder à votre collection. Pour l'autoriser et pour savoir quel est le lien vers votre collection, rendez-vous dans votre profil.</font></p>
