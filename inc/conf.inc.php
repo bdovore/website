@@ -29,7 +29,8 @@ $user_status = array(
 );
 
 // str_replace utile uniquement en local
-$_SERVER['REQUEST_URI'] = str_replace('/beta.bdovore/', '', $_SERVER['REQUEST_URI']);
+if (defined(BDO_URL_RELATIVE) && strlen(BDO_URL_RELATIVE) > 0)
+	$_SERVER['REQUEST_URI'] = str_replace(BDO_URL_RELATIVE, '', $_SERVER['REQUEST_URI']);
 
 //
 $a_request_uri = explode('?',$_SERVER['REQUEST_URI']);
