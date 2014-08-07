@@ -32,12 +32,12 @@ class Bdo_Controller
 
         
 
-        if (Bdo_Cfg::user()->minAccessLevel(1)) {
+       /* if (Bdo_Cfg::user()->minAccessLevel(1)) {
 
             $this->view->addPhtmlFile("menuadmin", 'MENUBARRE');
 
         }
-
+*/
 
 
 

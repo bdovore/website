@@ -37,9 +37,11 @@ Bdo_Cfg::setVar('schema', $schema);
 Bdo_Debug::execTime("apres charg schema");
 // ---------------------------------------------------------------
 // chargement des acl
-$acl = new Bdo_Acl();
+/*$acl = new Bdo_Acl();
 Bdo_Cfg::setVar('acl',$acl);
 Bdo_Debug::execTime("apres charg acl");
+ * /
+ */
 // ---------------------------------------------------------------
 // Connexion
 // ---------------------------------------------------------------
