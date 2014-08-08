@@ -1,0 +1,17 @@
+SetEnv PHP_VER 5_3
+
+# On suit les liens symboliques
+Options +FollowSymlinks
+
+# page erreur personnalisee
+Options -Indexes
+# chemin reel du fichier d'erreur sur le système (Linux dans ce cas)
+# exemple pour Windows : C:/web/bdovore/public/erreur.php?error=404
+ErrorDocument 403 /homez.95/bdovore/wwwbeta/public/erreur.php?error=403
+ErrorDocument 404 /homez.95/bdovore/wwwbeta/public/erreur.php?error=404
+
+# Activation du mod rewrite d'Apache
+RewriteEngine On
+# ne pas oublier pour pointer vers la base url en local, par exemple pour http://localhost/beta:
+# RewriteBase /beta/ 
+RewriteRule !\.(js|ico|gif|jpg|png|css|html|htm|xml|wsdl) index.php [NC,L]
