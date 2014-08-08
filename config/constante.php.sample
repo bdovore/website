@@ -13,8 +13,8 @@ else {
     define('BDO_PROTOCOL', 'http');
 }
 // repertoire de bdovore
-define('BDO_DIR', substr(dirname(__FILE__), 0, - 6));
-define('BDO_DIR_CACHE', BDO_DIR . 'cache' . DS );
+define('BDO_DIR', dirname(dirname(__FILE__)) . DS);
+define('BDO_DIR_CACHE', BDO_DIR . 'cache' . DS);
 
 // utile uniquement si bdovore n'est pas à la racine 
 // par exemple si l'url est http://localhost/bdovore/beta/Album?id_tome=1234
