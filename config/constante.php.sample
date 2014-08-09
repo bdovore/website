@@ -13,7 +13,7 @@ else {
     define('BDO_PROTOCOL', 'http');
 }
 // repertoire de bdovore
-define('BDO_DIR', dirname(dirname(__FILE__)) . DS);
+define('BDO_DIR', dirname(dirname(__FILE__)) . DS); //NB: dirname(__FILE__) === __DIR__ (since php 5.3.0)
 define('BDO_DIR_CACHE', BDO_DIR . 'cache' . DS);
 
 // utile uniquement si bdovore n'est pas à la racine 
@@ -150,10 +150,11 @@ switch ($_SERVER["SERVER_NAME"]) {
             error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 
 			// use BDO_URL_RELATIVE here if available instead of /bdovore/beta/
-			if (defined(BDO_URL_RELATIVE))
-				define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . BDO_URL_RELATIVE . 'public/');
+			// NB: configure Apache correctly so that it directly redirects to ./public/
+			if (defined('BDO_URL_RELATIVE'))
+				define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . BDO_URL_RELATIVE );
 			else
-	            define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . '/bdovore/beta/public/');
+	            define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . '/bdovore/beta/');
             define('BDO_URL_IMAGE', 'http://www.bdovore.com/images/');
             define('BDO_URL_COUV', BDO_URL_IMAGE . 'couv/');
             

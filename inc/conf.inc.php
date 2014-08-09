@@ -29,7 +29,7 @@ $user_status = array(
 );
 
 // str_replace utile uniquement en local
-if (defined(BDO_URL_RELATIVE) && strlen(BDO_URL_RELATIVE) > 0)
+if (defined('BDO_URL_RELATIVE') && strlen(BDO_URL_RELATIVE) > 0)
 	$_SERVER['REQUEST_URI'] = str_replace(BDO_URL_RELATIVE, '', $_SERVER['REQUEST_URI']);
 
 //
