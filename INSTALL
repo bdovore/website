@@ -1,5 +1,25 @@
 == localhost install ==
+c.f. https://bdovore.com/forum/viewtopic.php?t=2214
 
-Je propose de mettre ici les différentes manip (modif de .htaccess, de conf.inc.php) à accomplir pour installer en localhost
+1. charger toutes les sources via git : git clone ssh://bdovore@ftp.bdovore.com/~/git/beta dans votre répertoire en local
+2. créer votre  alias dans Apache pour qu'il pointe vers le repertoire "beta/public" : le fichier index.php est la racine du site
+3. ajouter un fichier .htaccess dans public/beta pour gérer l'url rewriting qui va bien : exemple chez moi (l'alias Appache s'appelle "beta" 
+    SetEnv PHP_VER 5_3
+    #DocumentRoot beta.bdovore/
+    # On suit les liens symboliques
+    Options +FollowSymlinks
 
-quelque chose du genre de https://bdovore.com/forum/viewtopic.php?t=2214
+    #page erreur personnalisee
+    Options -Indexes
+    ErrorDocument 403 /localhost/beta/erreur.php?error=403
+    ErrorDocument 404 /localhost/beta/erreur.php?error=404
+
+    # Activation du mod rewrite d'Apache
+    RewriteEngine On
+    RewriteBase /beta/
+    RewriteRule !\.(js|ico|gif|jpg|png|css|html|htm|xml|wsdl) index.php [NC,L]
+4. dans le repertoire "config", copier/coller le contenu de constante.php.sample dans constante.php et modifier les variables
+    ligne 24 : dé-commenter la ligne et faire pointer la variable vers l'alias appache 
+                define('BDO_URL_RELATIVE', '/beta/');
+    ligne 164 à 167 : paramètre de votre connexion mysql en local
+5. créer un repertoire "cache" à la racine
