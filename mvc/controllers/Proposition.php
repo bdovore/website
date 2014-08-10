@@ -59,18 +59,18 @@ class Proposition extends Bdo_Controller {
         $this->loadModel("User_album_prop");
        
         // Verifie la présence d'une image � t�l�charger
-	if (is_file($_POST['$txtFileLoc']) | (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)))
+	if (is_file($_POST['txtFileLoc']) | (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)))
 	{
-		if (is_file($_POST['$txtFileLoc']))
+		if (is_file($_POST['txtFileLoc']))
 		{ // un fichier à uploader
-			$imageproperties = getimagesize($_POST['$txtFileLoc']);
+			$imageproperties = getimagesize($_POST['txtFileLoc']);
 			$imagetype = $imageproperties[2];
 			$imagelargeur = $imageproperties[0];
 			$imagehauteur = $imageproperties[1];
 			// vérifie le type d'image
 			if (($imagetype != 1) and ($imagetype != 2))
 			{
-				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent �tre charg�s. Vous allez �tre redirig�.';
+				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent �tre charg�s. Vous allez être redirigé.';
 				exit();
 			}
 			$uploaddir = BDO_DIR."images/tmp/";
@@ -83,7 +83,7 @@ class Proposition extends Bdo_Controller {
 			}
 			if(!copy($txtFileLoc,$uploaddir.$newfilename))
 			{
-				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez �tre redirig�.';
+				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez être redirigé.';
 				exit();
 			}else{
 				$img_couv=$newfilename;
