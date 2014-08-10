@@ -1,0 +1,219 @@
+<?php
+
+/*
+ * Controller pour l'ajout et la gestion des propositions
+ * reprie en partie du code Latruffe originale + usage du model
+ * @author : Tom
+ *  
+ */
+
+class Proposition extends Bdo_Controller {
+    
+    public function Index () {
+        /*
+         * Affichage du modele de saisie d'une proposition
+         * => si un album est passé en paramètre, on est dans le cas de la correction, sinon création
+         */
+        if (User::minAccesslevel(2)) {
+            $id_edition = intval(getVal("id_edition",0));
+            
+            $action = postVal("action","");
+
+            if ($action == "append") {
+                $er = $this->addProposition();
+                die("Votre demande est bien enregistrée !");
+            }
+            else 
+            { 
+                if ($id_edition <> 0) {
+                    $this->loadModel("Edition");
+                    $this->Edition->load();
+                    $this->Edition->set_dataPaste(array(
+                    "ID_EDITION" => $id_edition
+                    ));
+                    $this->Edition->load();
+                    $this->view->set_var("edition",$this->Edition);
+                    $this->view->set_var('PAGETITLE',"Proposer une correction pour ".$this->Edition->TITRE_TOME);
+                } 
+                else {
+                    $this->view->set_var('PAGETITLE',"Proposer l'ajout d'un album");
+                }
+            }
+        }
+            
+         else {
+            $this->view->addAlertPage("Vous devez vous authentifier pour accéder à cette page !");
+
+            $this->view->addPhtmlFile('alert', 'BODY');
+         
+            }
+
+         $this->view->layout = "iframe";
+            
+        $this->view->render();
+        
+        
+    }
+ 
+    private function addProposition() {
+        $this->loadModel("User_album_prop");
+       
+        // Verifie la présence d'une image � t�l�charger
+	if (is_file($_POST['$txtFileLoc']) | (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)))
+	{
+		if (is_file($_POST['$txtFileLoc']))
+		{ // un fichier à uploader
+			$imageproperties = getimagesize($_POST['$txtFileLoc']);
+			$imagetype = $imageproperties[2];
+			$imagelargeur = $imageproperties[0];
+			$imagehauteur = $imageproperties[1];
+			// vérifie le type d'image
+			if (($imagetype != 1) and ($imagetype != 2))
+			{
+				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent �tre charg�s. Vous allez �tre redirig�.';
+				exit();
+			}
+			$uploaddir = BDO_DIR."images/tmp/";
+			$newfilename = sprintf("tmpCV-%06d-01",$lid);
+			if (($imagetype == 1))
+			{
+				$newfilename .=".gif";
+			}else{
+				$newfilename .=".jpg";
+			}
+			if(!copy($txtFileLoc,$uploaddir.$newfilename))
+			{
+				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez �tre redirig�.';
+				exit();
+			}else{
+				$img_couv=$newfilename;
+			}
+		}
+		else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary))
+		{ // un fichier � t�l�charger
+			if ( empty($url_ary[4]) )
+			{
+				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incompl�te. Vous allez �tre redirig�.';
+				exit();
+			}
+			$base_get = '/' . $url_ary[4];
+			$port = ( !empty($url_ary[3]) ) ? $url_ary[3] : 80;
+			// Connection au serveur h�bergeant l'image
+			if ( !($fsock = @fsockopen($url_ary[2], $port, $errno, $errstr)) )
+			{
+				$error = true;
+				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image innacessible. Vous allez �tre redirig�.';
+				exit();
+			}
+
+			// R�cup�re l'image
+			@fputs($fsock, "GET $base_get HTTP/1.1\r\n");
+			@fputs($fsock, "HOST: " . $url_ary[2] . "\r\n");
+			@fputs($fsock, "Connection: close\r\n\r\n");
+
+			unset($avatar_data);
+			while( !@feof($fsock) )
+			{
+				$avatar_data .= @fread($fsock, 102400);
+			}
+			@fclose($fsock);
+
+			// Check la validit� de l'image
+			if (!preg_match('#Content-Length\: ([0-9]+)[^ /][\s]+#i', $avatar_data, $file_data1) || !preg_match('#Content-Type\: image/[x\-]*([a-z]+)[\s]+#i', $avatar_data, $file_data2))
+			{
+				$error = true;
+				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du t�l�chargement de l\'image. Vous allez �tre redirig�.';
+				exit();
+			}
+
+			$avatar_filesize = $file_data1[1];
+			$avatar_filetype = $file_data2[1];
+
+			$avatar_data = substr($avatar_data, strlen($avatar_data) - $avatar_filesize, $avatar_filesize);
+
+			$tmp_path = BDO_DIR.'images/tmp';
+			$tmp_filename = tempnam($tmp_path, uniqid(rand()) . '-');
+
+			$fptr = @fopen($tmp_filename, 'wb');
+			$bytes_written = @fwrite($fptr, $avatar_data, $avatar_filesize);
+			@fclose($fptr);
+
+			if ( $bytes_written != $avatar_filesize )
+			{
+				@unlink($tmp_filename);
+				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Could not write avatar file to local storage. Please contact the board administrator with this message. Vous allez �tre redirig�.';
+				exit();
+			}
+			// newfilemname
+			if ( !($imgtype = check_image_type($avatar_filetype, $error)) )
+			{
+				exit;
+			}
+
+			$new_filename = sprintf("tmpCV-%06d-01",$lid).$imgtype;
+
+			// si le fichier existe, on l'efface
+			if (file_exists(BDO_DIR."images/tmp/$new_filename"))
+			{
+				@unlink(BDO_DIR."images/tmp/$new_filename");
+			}
+
+			// copie le fichier temporaire dans le repertoire image
+			@copy($tmp_filename, BDO_DIR."images/tmp/$new_filename");
+			@unlink($tmp_filename);
+
+			$img_couv=$new_filename;
+		}
+                 else
+                 {
+                    $img_couv='';
+                   }
+        }
+        $id_edition = intval(postVal("txtEditionId",0));
+        $this->User_album_prop->set_dataPaste(array(
+                "USER_ID" => $_SESSION['userConnect']->user_id,
+                "PROP_DTE" => date('d/m/Y H:i:s'),
+                "PROP_TYPE" => ($id_edition == 0) ? 'AJOUT' : 'CORRECTION',
+                "ID_TOME" => Db_Escape_String($_POST['txtTomeId']),
+                "ID_EDITION" => Db_Escape_String($_POST['txtEditionId']),
+                "TITRE" => $_POST['txtTitre'],
+                "NUM_TOME" => $_POST['txtNumTome'],
+                "FLG_INT" => (($_POST['chkIntegrale'] == "checkbox") ? "O" : "N"),
+                "FLG_TYPE" => Db_Escape_String($_POST['lstType']),
+                "ID_SERIE" => $_POST['txtSerieId'],
+                "SERIE" => $_POST['txtSerie'],
+                "FLG_FINI" => $_POST['lstAchevee'],
+                "DTE_PARUTION" => $_POST['txtDateParution'],
+                "ID_GENRE" => $_POST['txtGenreId'],
+                "GENRE" => $_POST['txtGenre'],
+                "ID_EDITEUR" => $_POST['txtEditeurId'],
+                "EDITEUR" => $_POST['txtEditeur'],
+                "ID_SCENAR" => $_POST['txtScenarId'],
+                "SCENAR" => $_POST['txtScenar'],
+                "ID_SCENAR_ALT" => $_POST['txtScenarAltId'],
+                "SCENAR_ALT" => $_POST['txtScenarAlt'],
+                "ID_DESSIN" => $_POST['txtDessiId'],
+                "DESSIN" => $_POST['txtDessi'],
+                "ID_DESSIN_ALT" => $_POST['txtDessiAltId'],
+                "DESSIN_ALT" => $_POST['txtDessiAlt'],
+                "ID_COLOR" => $_POST['txtColorId'],
+                "COLOR" => $_POST['txtColor'],
+                "ID_COLLECTION" => $_POST['txtCollecId'],
+                "EAN" => $_POST['txtEAN'],
+                "ISBN" => $_POST['txtISBN'],
+                "COLLECTION" => $_POST['txtCollec'],
+                "HISTOIRE" => $_POST['txtHistoire'],
+                "COMMENTAIRE" => $_POST['txtCommentaire'],
+                "IMG_COUV" => $img_couv
+            
+        ));
+        $this->User_album_prop->update();
+        
+        return $this->User_album_prop->error;
+        
+        
+    }
+    
+    }
+    
+?>

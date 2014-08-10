@@ -111,9 +111,9 @@ class User_album_prop extends Bdo_Db_Line
 
                     `CORR_COMMENT`,
 
-                    `CORR_STATUT`,
+                    `CORR_STATUT`
 
-                    FROM `users_alb_prop`" . $this->table_name . "`
+                    FROM " . $this->table_name . "`
 
         
 

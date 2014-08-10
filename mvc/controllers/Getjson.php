@@ -32,15 +32,18 @@ class GetJSON extends Bdo_Controller {
 				$this->Collection();
 				break;
 			case "Album" :
-				$this->Album;
+				$this->Album();
 				break;
+                        case "Serie" :
+                            $this->Serie();
+                            break;
 			default :
 				break;
 		}
         
     }
     
-    public function Auteur () {
+    private function Auteur () {
         $id_auteur = getVal("id_auteur",0);
         $term = getVal("term","");
         $mode = getVal("mode",0);
@@ -82,7 +85,7 @@ class GetJSON extends Bdo_Controller {
     }
     
     
-    public function Album (){
+    private function Album (){
         $ID_TOME = getVal('id_tome',0);        
         $id_edition = getVal('id_edition',0);
         $isbn = getVal('ISBN','');
@@ -134,7 +137,8 @@ class GetJSON extends Bdo_Controller {
         
     }
 	
-	public function Genre () {
+    
+    private function Genre () {
 		$id_genre = getVal("id_genre",0);
         $term = getVal("term","");
         $mode = getVal("mode",0);
@@ -175,8 +179,8 @@ class GetJSON extends Bdo_Controller {
 	}
 	
 	
-	public function Editeur () {
-		$id_editeur = getVal("id_editeur",0);
+    private function Editeur () {
+	$id_editeur = getVal("id_editeur",0);
         $term = getVal("term","");
         $mode = getVal("mode",0);
         /*
@@ -214,56 +218,97 @@ class GetJSON extends Bdo_Controller {
         
         $this->view->layout = "ajax";
         $this->view->render();
-	}
+    }
 	
-	public function Collection () {
+    private function Collection () {
 		$id_editeur = getVal("id_editeur",0);
 		$id_collection = getVal("id_collection",0);
+            $term = getVal("term","");
+            $mode = getVal("mode",0);
+            /*
+             * Mode : 0 pour autocomplete, 1 pour l'ensemble des données
+             */
+                    $this->loadModel("Collection");
+            if ($id_collection <> 0) {
+                $this->Collection->set_dataPaste(array("ID_COLLECTION" => $id_collection));
+                $this->Collection->load();
+
+            }
+            else if ($id_editeur <> 0) {
+                    /* 
+                    * Sélection de la liste des collection disponible pour cet éditeur
+                    */
+                     $where = " WHERE bd_collection.ID_EDITEUR =".  intval($id_editeur)." ";
+                     $this->Collection->load("c",$where);
+
+            }
+            else {
+                $where = " WHERE bd_collection.NOM like '%".  Db_Escape_String($term)."%'";
+                $this->Collection->load("c",$where);
+
+            }
+            if ($mode == 0 ) {
+                foreach ($this->Collection->dbSelect->a_dataQuery as $obj) {
+
+                $arr[] = (object) array(
+
+                        'label' => $obj->NOM,
+
+                        'id' => $obj->ID_COLLECTION
+
+                );
+
+                }
+                $this->view->set_var('json', json_encode($arr));
+            } else
+            {
+               $this->view->set_var('json', json_encode($this->Collection->dbSelect->a_dataQuery));
+            }
+
+            $this->view->layout = "ajax";
+            $this->view->render();
+    }
+    
+    private function Serie () {
+        $id_serie = getVal("id_serie",0);
         $term = getVal("term","");
         $mode = getVal("mode",0);
-        /*
-         * Mode : 0 pour autocomplete, 1 pour l'ensemble des données
-         */
-		$this->loadModel("Collection");
-        if ($id_collection <> 0) {
-            $this->Collection->set_dataPaste(array("ID_COLLECTION" => $id_collection));
-            $this->Collection->load();
-            
-        }
-        else if ($id_editeur <> 0) {
-                /* 
-                * Sélection de la liste des collection disponible pour cet éditeur
-                */
-                 $where = " WHERE bd_collection.ID_EDITEUR =".  intval($id_editeur)." ";
-                 $this->Collection->load("c",$where);
-
+        
+        $this->loadModel("Serie");
+        
+        if ($id_serie <> 0) {
+             $this->Serie->set_dataPaste(array("ID_SERIE" => $id_serie));
+             $this->Serie->load();
         }
         else {
-            $where = " WHERE bd_collection.NOM like '%".  Db_Escape_String($term)."%'";
-            $this->Collection->load("c",$where);
+            $this->Serie->load("c"," WHERE bd_serie.nom like '".Db_Escape_String($term)."%' group by id_serie" );
             
-        }
-        if ($mode == 0 ) {
-            foreach ($this->Collection->dbSelect->a_dataQuery as $obj) {
-
-            $arr[] = (object) array(
-
-                    'label' => $obj->NOM,
-
-                    'id' => $obj->ID_EDITEUR
-
-            );
-            
-            }
-            $this->view->set_var('json', json_encode($arr));
-        } else
-        {
-           $this->view->set_var('json', json_encode($this->Collection->dbSelect->a_dataQuery));
         }
         
-        $this->view->layout = "ajax";
-        $this->view->render();
-	}
+         if ($mode == 0 ) {
+                foreach ($this->Serie->dbSelect->a_dataQuery as $obj) {
+
+                $arr[] = (object) array(
+
+                        'label' => $obj->NOM_SERIE,
+
+                        'id' => $obj->ID_SERIE
+
+                );
+
+                }
+                $this->view->set_var('json', json_encode($arr));
+            } 
+            else
+            {
+               $this->view->set_var('json', json_encode($this->Serie->dbSelect->a_dataQuery));
+            }
+
+            $this->view->layout = "ajax";
+            $this->view->render();
+        
+        
+    }
 	
 	
 	

@@ -128,7 +128,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 					<br> <b>Edition </b> <font size="-1">
 			                <?php if (count($view->dbs_edition->a_dataQuery) == 1) {
                                                 echo $view->tome->NOM_EDITION ;
-                                                
+                                                $edition_selected = $view->tome->ID_EDITION;
                                         }
                                         else {
                                             echo '<select name="select" onchange="changeEdition()" id="sel_edition">';
@@ -164,10 +164,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                         <?php echo $view->tome->HISTOIRE_TOME;?>
                                         </font>
             <?php } ?>
-                                        <br><p><i>Une erreur sur cette fiche ? Vous pouvez <a href="#" onclick="javascript:liencorrection();">
-						
-							<b>proposer une correction</b></i>
-										</a></p>
+                                        <br><div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+                                            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><i>Une erreur sur cette fiche ? Vous pouvez 
+                                                    <a href="<?php echo BDO_URL; ?>Proposition?id_edition=<?php echo $edition_selected; ?>" >
+								<b>proposer une correction</b>
+										</a></i></p></div>
 
 
 

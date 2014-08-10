@@ -1,12 +1,16 @@
-function addAutocomplete (idInput, idSpan, idHiddenField, url){
+function addAutocomplete (idInput, idSpan, idHiddenField, url, min){
 /* 
-* Crée un champs de saisie autocompletion sur l'input d'id "idinput" et 
+* CrÃ©e un champs de saisie autocompletion sur l'input d'id "idinput" et 
 *	affiche le code dans le span idspan
 *   remplit le champ hidden avec l'id dans idhidden
-*/
+*/      
+    
+        if (! min) {
+           var min = 2;
+        }
         var cache = {};
         $( "#"+idInput ).autocomplete({
-        minLength: 2,
+        minLength: min,
         source: function( request, response ) {
             var term = request.term;
             if ( term in cache ) {
@@ -19,9 +23,30 @@ function addAutocomplete (idInput, idSpan, idHiddenField, url){
             });
         },
         select: function( event, ui ) {
-            $(idHiddenField).val(ui.item.id);
-            $(idSpan).text(ui.item.id);
+            $("#"+idHiddenField).val(ui.item.id);
+            $("#"+idSpan).text(ui.item.id);
+            
         }
         });
     }
+    
+    function addSelectOption(idInput,url,id_select){
+        
+        
+        $("#"+idInput).empty();
+        $.getJSON( url, function( data) {
+            
+           $.each(data, function( item ) {
+               
+               if (id_select == data[item].id) {
+                   select = "selected";
+               }
+               else {
+                   select = "";
+               }
+               $("#"+idInput).append("<option value='"+data[item].id+"'"+ select + ">"+data[item].label+"</option>")
+           });
+           }); 
+        }
+    
 	
