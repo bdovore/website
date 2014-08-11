@@ -1,0 +1,106 @@
+<?php 
+
+$ficheAlbum = $view->getHelper('ficheAlbum');
+ $page = $view->getHelper('pagination');
+$status[0] = "En attente";
+	$status[1] = "Valid&eacute;";
+	$status[2] = "En attente";
+	$status[3] = "En attente";
+	$status[4] = "En attente";
+	$status[99] = "Refus&eacute;";
+	$status[98] = "Effac&eacute; par l\'utilisateur";
+
+?>
+<script src="<?php echo BDO_URL;?>jquery/datatable/js/jquery.dataTables.min.js" type="text/javascript"></script>
+
+<div align="center" class="cadre1">
+ <?php echo $page->menuCollection(); ?>
+						<!-- Column 1 start -->
+					
+                                                <div class="middle_title">
+                                                <h3>Suivi des mes propositions </h3>
+                                                </div>
+
+											  
+            <h3>Historique des propositions</h3>									  
+            Il y a actuellement <a href="http://www.bdovore.com/listpropal?type=AJOUT"><b><?php echo $view->NBAJOUT;?> propositions d'album</b></a>, <a href="http://www.bdovore.com/listpropal?type=EDITION"><b><?php echo $view->NBEDITION;?> propositions de nouvelle édition</b></a>
+             et <a href="http://www.bdovore.com/listpropal?type=CORRECTION"><b><?php echo $view->NBCORRECTION;?> propositions de correction</b></a>
+             en cours de traitement pour l'ensemble de la communauté BDovore.
+            <br />
+            <a href="<?php echo BDO_URL; ?>Proposition" class="fancybox fancybox.iframe {width:600,height:400}"> Saisir une nouvelle proposition</a>
+            
+            <form action="" method="get">		  
+                    <br />									  
+                    <table width="80%" border="1" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC" bgcolor="#DAC1B3"frame="box" rules="groups">
+                        <tr> 																															 
+                            <td width="31%">
+                                            <span class="texte">Voir : </span>
+                                            <select name="lstSource" size="1"><?php echo $view->OPTIONSOURCE;?></select>
+                                    </td>																		  
+                            <td width="58%">
+                                            <span class="texte">Status : </span>									  
+                                    <select name="lstFiltre"><?php echo $view->OPTIONFILTRE;?></select>
+                                    </td>																		  
+                            <td width="11%">
+                                            <input type="submit" name="Submit" value="Rafraichir" />
+                                    </td>			  
+                        </tr>																					  
+                    </table>																					  
+            </form>
+            
+            <table width="80%" id="propal" align="left">											  
+                    <thead>
+                    <tr> 																						  
+                        <th>Date </th>
+                        <th> Titre</th>
+                        <th>Status </th>
+                        <th><img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif" width="25" height="24" /> 
+                            </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($view->dbs_prop->a_dataQuery as $prop) { ?>
+                    <!-- BEGIN PropBlock -->
+                    <tr>			
+                        <td>
+                                    
+                                            <?php echo $prop->PROP_DTE;?>
+                                   
+                            </td>			
+                        <td>
+                                    
+                                            <?php echo $prop->TITRE;?>
+                                   
+                            </td>			  			
+                        <td>
+                                  
+                                            <?php echo $status[$prop->STATUS];?>
+                                 
+                            </td>		  			
+                        <td>
+                                   
+                                            <a href="?act=suppr&propid=<?php echo $prop->ID_PROPOSAL;?>&lstSource="<?php echo $view->lstSource;?>>
+                                                    <img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif" width="20" height="21" border="0" />
+                                            </a>
+                                  
+                            </td>			
+                    </tr>	
+                    <?php } ?>
+                    </tbody>
+                    <!-- END PropBlock -->						
+            </table>
+
+    </div>
+	
+
+<script>	
+$(document).ready(function() {
+    $('#propal').dataTable({
+        "paging":   false,
+        "ordering": true,
+        "info":     false,
+        "searching": false,
+        "order": [[ 0, "desc" ]]
+    } );
+} );
+</script>

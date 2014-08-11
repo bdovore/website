@@ -113,7 +113,7 @@ class User_album_prop extends Bdo_Db_Line
 
                     `CORR_STATUT`
 
-                    FROM " . $this->table_name . "`
+                    FROM " . $this->table_name . "
 
         
 
@@ -131,7 +131,22 @@ class User_album_prop extends Bdo_Db_Line
            "user_prop_corr" =>  $user_prop_corr
         ));
     }
+    
+    public function supprProposition($id, $user_id) {
+        $query = "UPDATE users_alb_prop SET `STATUS` = 98, `VALIDATOR`=".  Db_Escape_String($user_id)." , `VALID_DTE` = NOW() WHERE id_proposal=".intVal($id);
+        Db_query($query);
+    }
 
+    public function getAllStat() {
+         $prop_alb = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'AJOUT' and status = 0 ");
+         $prop_corr = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'CORRECTION' and status = 0");
+         
+         return (array(
+             "NBAJOUT" =>  $prop_alb,
+             "NBCORRECTION" => $prop_corr
+         ));
+         
+    }
 }
 
     

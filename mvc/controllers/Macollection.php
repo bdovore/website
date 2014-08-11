@@ -638,9 +638,113 @@ class Macollection extends Bdo_Controller {
 
             $this->view->addPhtmlFile('alert', 'BODY');
         }
+        $this->view->set_var("PAGETITLE","Détail de la valorisation");
         $this->view->layout = "iframe";
         $this->view->render();
     }
+    
+    public function Proposition () {
+        if (User::minAccesslevel(2)) {
+            $this->loadModel("User_album_prop");
+            
+            
+            // Tableau pour les choix d'options
+
+            $opt_source[0][0] = 0;
+            $opt_source[0][1] = 'Albums';
+            $opt_source[1][0] = 1;
+            $opt_source[1][1] = 'Editions';
+            $opt_source[2][0] = 2;
+            $opt_source[2][1] = 'Corrections';
+
+            $opt_filtre[0][0] = -1;
+            $opt_filtre[0][1] = 'Tous';
+            $opt_filtre[1][0] = 0;
+            $opt_filtre[1][1] = 'En attente';
+            $opt_filtre[2][0] = 1;
+            $opt_filtre[2][1] = 'Valid&eacute';
+            $opt_filtre[3][0] = 99;
+            $opt_filtre[3][1] = 'Refus&eacute;';
+            $opt_filtre[4][0] = 98;
+            $opt_filtre[4][1] = 'Effac&eacute; par l\'utilisateur';
+            
+            $act = getVal("act","");
+            $propid = intval(getVal("propid",0));
+            
+            $lstSource = getVal("lstSource","");
+            $lstFiltre= getVal("lstFiltre","");
+            
+            if ($lstSource ==2){
+		$criteria = "CORRECTION";
+		$choix_source = 2;
+            }else if ($lstSource==1){
+                    $criteria = "EDITION";
+                    $choix_source = 1;
+            }else{
+                    $criteria = "AJOUT";
+                    $choix_source = 0;
+            }
+            
+            if ($lstFiltre==0) {
+		if ($lstSource==1){
+			$filtre = " AND (prop_status = 0 OR prop_status = 2 OR prop_status = 3 OR prop_status = 4)";
+		}
+                else{
+			$filtre = " AND (status = 0 OR status = 2 OR status = 3 OR status = 4)";
+		}
+		$choix_filtre = $lstFiltre;
+            } 
+            elseif ($lstFiltre!=-1 & $lstFiltre !=""){
+		if ($lstSource ==1){
+			$filtre = " AND prop_status = ".  Db_Escape_String($lstFiltre);
+		}else{
+			$filtre = " AND status = ".Db_Escape_String($lstFiltre);
+		}
+		$choix_filtre = $lstFiltre;
+            } 
+            else{
+		$filtre = "";
+		$choix_filtre = -1;
+               }
+               
+               $status[0] = "En attente";
+                $status[1] = "Valid&eacute;";
+                $status[2] = "En attente";
+                $status[3] = "En attente";
+                $status[4] = "En attente";
+                $status[99] = "Refus&eacute;";
+                $status[98] = "Effac&eacute; par l\'utilisateur";
+            
+                // Requete sur les donn�es � afficher
+            if ($lstSource ==1){
+                // reqûete sur les éditions
+                $this->loadModel("Edition");
+                
+                $dbs_edition = $this->Edition->load("c"," WHERE bd_edition.user_id = ".$_SESSION["userConnect"]->user_id." ".$filtre);
+                $this->view->set_var("dbs_edition",$db_edition);
+            }
+            else{
+               
+                $dbs_prop= $this->User_album_prop->load("c"," WHERE user_id = ".$_SESSION["userConnect"]->user_id. " 
+                    AND prop_type = '".  Db_Escape_String($criteria)."' $filtre ");
+                  $this->view->set_var("dbs_prop",$dbs_prop);  
+            }
+            
+            $this->view->set_var($this->User_album_prop->getAllStat());
+            $this->view->set_var (array(
+                "OPTIONSOURCE" => GetOptionValue($opt_source,$choix_source),
+                "OPTIONFILTRE" => GetOptionValue($opt_filtre,$choix_filtre)
+                ));
+        }
+        else {
+             $this->view->addAlertPage("Vous devez vous authentifier pour accéder à cette page !");
+
+            $this->view->addPhtmlFile('alert', 'BODY');
+        }
+        $this->view->set_var("PAGETITLE","Suivi des mes propositions");
+         $this->view->render();
+    }
+    
 }
 ?>
 

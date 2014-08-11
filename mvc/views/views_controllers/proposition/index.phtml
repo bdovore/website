@@ -361,7 +361,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                     <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Ajoutez
 
-                      ici votre commentaire sur votre correction</strong></font><br><font size="-2">(Vous
+                      ici votre commentaire sur votre proposition</strong></font><br><font size="-2">(Vous
 
                         pouvez également utiliser ce champs pour signaler un doublon ou demander un effacement)</font><br> <br>
 
@@ -409,7 +409,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
      
      changeEditeur();
     function changeEditeur() {
-        addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo $view->edition->ID_COLLECTION;?>);
+        addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo issetNotEmpty($view->edition) ? $view->edition->ID_COLLECTION : 0;?>);
     
     }
 </script>
