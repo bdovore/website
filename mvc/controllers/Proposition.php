@@ -73,7 +73,7 @@ class Proposition extends Bdo_Controller {
 				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent �tre charg�s. Vous allez être redirigé.';
 				exit();
 			}
-			$uploaddir = BDO_DIR."images/tmp/";
+			$uploaddir = BDO_DIR_IMAGE."tmp/";
 			$newfilename = sprintf("tmpCV-%06d-01",$lid);
 			if (($imagetype == 1))
 			{
@@ -131,7 +131,7 @@ class Proposition extends Bdo_Controller {
 
 			$avatar_data = substr($avatar_data, strlen($avatar_data) - $avatar_filesize, $avatar_filesize);
 
-			$tmp_path = BDO_DIR.'images/tmp';
+			$tmp_path = BDO_DIR_IMAGE.'tmp';
 			$tmp_filename = tempnam($tmp_path, uniqid(rand()) . '-');
 
 			$fptr = @fopen($tmp_filename, 'wb');
@@ -153,13 +153,13 @@ class Proposition extends Bdo_Controller {
 			$new_filename = sprintf("tmpCV-%06d-01",$lid).$imgtype;
 
 			// si le fichier existe, on l'efface
-			if (file_exists(BDO_DIR."images/tmp/$new_filename"))
+			if (file_exists(BDO_DIR_IMAGE."tmp/$new_filename"))
 			{
-				@unlink(BDO_DIR."images/tmp/$new_filename");
+				@unlink(BDO_DIR_IMAGE."tmp/$new_filename");
 			}
 
 			// copie le fichier temporaire dans le repertoire image
-			@copy($tmp_filename, BDO_DIR."images/tmp/$new_filename");
+			@copy($tmp_filename, BDO_DIR_IMAGE."tmp/$new_filename");
 			@unlink($tmp_filename);
 
 			$img_couv=$new_filename;
