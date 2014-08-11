@@ -1,10 +1,10 @@
 #automatically convert from CRLF to LF if needed when staging/committing a file
-* text=auto
+* text eol=lf
 
 # Explicitly declare text files you want to always be normalized and converted
 # to native line endings on checkout.
-*.html
-*.js
+*.html text
+*.js text
 *.php text
 *.phtml text
 
