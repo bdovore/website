@@ -56,6 +56,12 @@
 		
 	
 		<div class="fond"></div>
+                <?php 
+					if (Bdo_Error::notEmpty()) echo $jquery->alert(Bdo_Error::flush());
+					if ($view->a_alertPage) echo $jquery->alert($view->a_alertPage);
+
+						
+					?>
 					<?php echo $view->BODY;?>
 
 
