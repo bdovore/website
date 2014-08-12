@@ -20,6 +20,16 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
           <tbody>
             <tr bordercolor="#FFFFFF">
               <td rowspan="4" bordercolor="#FFFFFF" valign="top">
+                  <?php if ($view->TYPE == "AJOUT") { ?>
+                  <div id="titre_prop_album">Vous êtes ici sur la page de <b>proposition de nouvel album</b></div>
+                   <div style="margin-top: 7px;">
+                    - Pour une proposition de <b>nouvelle édition</b> concernant un album existant, vous pouvez également utiliser
+                    ce formulaire mais un formulaire plus pratique pour vous est à votre disposition via la fiche album de votre collection
+                    (ajoutez l'album à votre collection puis faites une demande de nouvelle édition)
+                    <br />
+                    - Pour une demande de <b>correction</b> sur un album existant, utilisez le lien indiqué sur les fiches albums ou sur les pages série
+                </div>
+                  <?php } ?>
               <p>Avant, tout merci de prendre le temps de lire les guides de saisie disponibles :
                         </p><ul type="SQUARE">
                             <li><a href="http://www.bdovore.com/forum/viewtopic.php?t=352" target="_blank">Tutorial : comment faire une demande d'ajout ou de correction</a>
@@ -29,8 +39,17 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                             </li><li><a href="http://www.bdovore.com/forum/viewtopic.php?t=391" target="_blank">Tutorial : les artbooks</a>
                         </li></ul>
                           <p></p>
-                          <p>Nos valideurs et correcteurs travaillent d'arrache pied (et bénévolement) pour que notre base de données soit la plus complète possible, aidez les en renseignant au mieux toutes les informations à votre disposition et en utilisant les loupes !</p>
-            <br>
+                          <p>Nos valideurs et correcteurs travaillent d'arrache pied (et bénévolement) pour que notre base de données soit la plus complète possible, aidez les en renseignant au mieux toutes les informations à votre disposition et en utilisant les propositions automatiques lors de la saisie !</p>
+            <br> 
+             <?php if ($view->TYPE == "AJOUT") { ?>
+                <p>
+                    Avant de commencer à remplir ce formulaire d'ajout, vous pouvez consulter la
+                    <b><a href="<?php echo BDO_URL;?>listpropal?type=AJOUT">liste des demandes d'ajout en cours de traitement</a></b>
+                    afin de vous éviter de saisir une proposition déjà faite récemment (et évidemment de bien vérifier
+                    que l'album n'existe pas déjà via le moteur de recherche ou le <a href="<?php echo BDO_URL;?>browser">BDoBrowser</a>.
+                </p>
+                 <div style="padding-top: 10px;"><span class="i">La meilleure source pour remplir ce formulaire est <span class="b">votre exemplaire</span> (si vous en possédez un)</span> - Proverbe bdovorien présocrato-cambrien</div>
+                  <?php } ?>
             
     <table frame="box" rules="groups" cellpadding="5" bgcolor="#DAC1B3" border="1" bordercolor="#FFFFCC" width="550px">
 
@@ -77,8 +96,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                     <tr bordercolor="#DAC1B3">
                       <td bordercolor="#DAC1B3" class="label" width="81"><font color="#990000" size="-1"><strong>Titre</strong></font></td>
                       <td> <div align="left"> </div></td>
-                      <td> <input name="txtTitre" id="txtTitre" value="<?php echo $view->edition->TITRE_TOME;?>" size="50" class="flat" type="text"></td>
-                      <td width="10%"> </td>
+                      <td> <input name="txtTitre" id="txtTitre" value="<?php echo $view->edition->TITRE_TOME;?>" size="50" class="flat" type="text">
+                          <br>
+                          <span class="petite_police">
+                            En l'absence de titre distinctif : "<i>Titre de la Série</i>, Tome X" ; "<i>Titre de la Série</i>" pour un one-shot
+                        </span></td>
                     </tr>
                     <tr bordercolor="#DAC1B3">
                       <td colspan="4" bordercolor="#DAC1B3" class="label"> <table border="0" width="100%">
@@ -98,7 +120,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                         </tbody></table></td>
                     </tr>
                     <tr bordercolor="#DAC1B3">
-                      <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Tome</strong></font></td>
+                      <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Tome n°</strong></font></td>
                       <td> <div align="left"> </div></td>
                       <td colspan="2"> <input name="txtNumTome" id="txtNumTome" value="<?php echo $view->edition->NUM_TOME; ?>" size="2" class="flat" type="text"></td>
                     </tr>
@@ -106,7 +128,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                       <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Synopsis</strong></font></td>
                       <td><!--DWLayoutEmptyCell-->&nbsp;</td>
                       <td colspan="2"><textarea cols="50" name="txtHistoire" rows="8" id="txtHistoire"><?php echo $view->edition->HISTOIRE_TOME; ?>
-</textarea></td>
+</textarea><br>
+                            <span class="petite_police">Utiliser ce champ pour indiquer le "résumé" de l'album. <u>Indiquez votre source !</u> (votre pseudo si vous en êtes l'auteur, le nom de l'éditeur,...).
+                            <br /><br />
+                            Vous pouvez également utiliser ce champ pour <u>laisser un commentaire</u> à vos correcteurs adorés et aimants</span>
+                        </td>
                     </tr>
                   </tbody>
                 </table>
@@ -191,7 +217,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                         sur les auteurs</strong></font><br> <font size="-2">(Vous
 
-                        pouvez proposer deux scénaristes / dessinateurs par tome)</font></td>
+                        pouvez proposer deux scénaristes / dessinateurs par tome)</font><span class="petite_police"> (un seul par champ, à valider à la loupe si présent dans la base.
+                            <br />Vous pouvez sélectionner "Collectif" comme 1er ou 2nd auteur si plus de 2)</span></td>
 
                     </tr>
 
@@ -375,7 +402,22 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
             </table>
                 <div align="center">
-
+                     <?php if ($view->TYPE == "AJOUT") { ?>
+<table class="table_form_public">
+                    <tr>
+                        <td class="label">
+                            Après ajout dans la base
+                            <select name="cmbAction" size="1" id="cmbAction"><?php echo $view->OPTIONS;?></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <input name="chkNotEmail" value="checked" type="checkbox" checked />
+                            <font size="-1">recevoir un email d'information/confirmation après traitement de cette proposition par l'équipe</font>
+                        </td>
+                    </tr>
+                </table>
+                     <?php } ?>
                   <p></p>
 <input type="hidden" name="action" value="append">
                   <input name="Submit" value="Valider la proposition" type="submit">

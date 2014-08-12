@@ -14,6 +14,12 @@ class Proposition extends Bdo_Controller {
          * Affichage du modele de saisie d'une proposition
          * => si un album est passé en paramètre, on est dans le cas de la correction, sinon création
          */
+        $action_user[0][0] = 0;
+        $action_user[0][1] = "Insérer dans ma collection";
+        $action_user[1][0] = 1;
+        $action_user[1][1] = "Insérer dans mes achats futurs";
+        $action_user[2][0] = 2;
+        $action_user[2][1] = "Ne rien faire";
         if (User::minAccesslevel(2)) {
             $id_edition = intval(getVal("id_edition",0));
             
@@ -21,7 +27,14 @@ class Proposition extends Bdo_Controller {
 
             if ($action == "append") {
                 $er = $this->addProposition();
-                die("Votre demande est bien enregistrée !");
+                if (count($er) > 1)  {
+                    var_dump($er); 
+                    die("Erreur lors de l'insertion, contactez l'équipe !");
+                }
+                else {
+                    die("Votre demande est bien enregistrée !");
+                
+                }
             }
             else 
             { 
@@ -34,9 +47,12 @@ class Proposition extends Bdo_Controller {
                     $this->Edition->load();
                     $this->view->set_var("edition",$this->Edition);
                     $this->view->set_var('PAGETITLE',"Proposer une correction pour ".$this->Edition->TITRE_TOME);
+                    $this->view->set_var("TYPE","CORRECTION");
                 } 
                 else {
                     $this->view->set_var('PAGETITLE',"Proposer l'ajout d'un album");
+                    $this->view->set_var("OPTIONS",GetOptionValue($action_user,0));
+                    $this->view->set_var("TYPE","AJOUT");
                 }
             }
         }
@@ -57,7 +73,48 @@ class Proposition extends Bdo_Controller {
  
     private function addProposition() {
         $this->loadModel("User_album_prop");
-       
+        $id_edition = intval(getVal("id_edition",0));
+        // on enregistre la proposition 
+        $this->User_album_prop->set_dataPaste(array(
+                "USER_ID" => $_SESSION['userConnect']->user_id,
+                "PROP_DTE" => date('d/m/Y H:i:s'),
+                "PROP_TYPE" => ($id_edition == 0) ? 'AJOUT' : 'CORRECTION',
+                "ID_TOME" => Db_Escape_String($_POST['txtTomeId']),
+                "ID_EDITION" => Db_Escape_String($_POST['txtEditionId']),
+                "TITRE" => $_POST['txtTitre'],
+                "NUM_TOME" => $_POST['txtNumTome'],
+                "FLG_INT" => (($_POST['chkIntegrale'] == "checkbox") ? "O" : "N"),
+                "FLG_TYPE" => Db_Escape_String($_POST['lstType']),
+                "ID_SERIE" => $_POST['txtSerieId'],
+                "SERIE" => $_POST['txtSerie'],
+                "FLG_FINI" => $_POST['lstAchevee'],
+                "DTE_PARUTION" => $_POST['txtDateParution'],
+                "ID_GENRE" => $_POST['txtGenreId'],
+                "GENRE" => $_POST['txtGenre'],
+                "ID_EDITEUR" => $_POST['txtEditeurId'],
+                "EDITEUR" => $_POST['txtEditeur'],
+                "ID_SCENAR" => $_POST['txtScenarId'],
+                "SCENAR" => $_POST['txtScenar'],
+                "ID_SCENAR_ALT" => $_POST['txtScenarAltId'],
+                "SCENAR_ALT" => $_POST['txtScenarAlt'],
+                "ID_DESSIN" => $_POST['txtDessiId'],
+                "DESSIN" => $_POST['txtDessi'],
+                "ID_DESSIN_ALT" => $_POST['txtDessiAltId'],
+                "DESSIN_ALT" => $_POST['txtDessiAlt'],
+                "ID_COLOR" => $_POST['txtColorId'],
+                "COLOR" => $_POST['txtColor'],
+                "ID_COLLECTION" => $_POST['txtCollecId'],
+                "EAN" => $_POST['txtEAN'],
+                "ISBN" => $_POST['txtISBN'],
+                "COLLECTION" => $_POST['txtCollec'],
+                "HISTOIRE" => $_POST['txtHistoire'],
+                "COMMENTAIRE" => $_POST['txtCommentaire'],
+                "ACTION" => Db_Escape_String($_POST['cmbAction']),
+                "NOTIF_MAIL" =>(($_POST['chkNotEmail'] == "checked") ? "1" : "0")
+            
+        ));
+        $this->User_album_prop->update();
+        $lid = $this->User_album_prop->ID_PROPOSAL;
         // Verifie la présence d'une image � t�l�charger
 	if (is_file($_POST['txtFileLoc']) | (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)))
 	{
@@ -168,46 +225,12 @@ class Proposition extends Bdo_Controller {
                  {
                     $img_couv='';
                    }
+                   $id_edition = intval(postVal("txtEditionId",0));
+                    $this->User_album_prop->set_dataPaste(array(  "IMG_COUV" => $img_couv   ));
+                     $this->User_album_prop->update();
+                   
         }
-        $id_edition = intval(postVal("txtEditionId",0));
-        $this->User_album_prop->set_dataPaste(array(
-                "USER_ID" => $_SESSION['userConnect']->user_id,
-                "PROP_DTE" => date('d/m/Y H:i:s'),
-                "PROP_TYPE" => ($id_edition == 0) ? 'AJOUT' : 'CORRECTION',
-                "ID_TOME" => Db_Escape_String($_POST['txtTomeId']),
-                "ID_EDITION" => Db_Escape_String($_POST['txtEditionId']),
-                "TITRE" => $_POST['txtTitre'],
-                "NUM_TOME" => $_POST['txtNumTome'],
-                "FLG_INT" => (($_POST['chkIntegrale'] == "checkbox") ? "O" : "N"),
-                "FLG_TYPE" => Db_Escape_String($_POST['lstType']),
-                "ID_SERIE" => $_POST['txtSerieId'],
-                "SERIE" => $_POST['txtSerie'],
-                "FLG_FINI" => $_POST['lstAchevee'],
-                "DTE_PARUTION" => $_POST['txtDateParution'],
-                "ID_GENRE" => $_POST['txtGenreId'],
-                "GENRE" => $_POST['txtGenre'],
-                "ID_EDITEUR" => $_POST['txtEditeurId'],
-                "EDITEUR" => $_POST['txtEditeur'],
-                "ID_SCENAR" => $_POST['txtScenarId'],
-                "SCENAR" => $_POST['txtScenar'],
-                "ID_SCENAR_ALT" => $_POST['txtScenarAltId'],
-                "SCENAR_ALT" => $_POST['txtScenarAlt'],
-                "ID_DESSIN" => $_POST['txtDessiId'],
-                "DESSIN" => $_POST['txtDessi'],
-                "ID_DESSIN_ALT" => $_POST['txtDessiAltId'],
-                "DESSIN_ALT" => $_POST['txtDessiAlt'],
-                "ID_COLOR" => $_POST['txtColorId'],
-                "COLOR" => $_POST['txtColor'],
-                "ID_COLLECTION" => $_POST['txtCollecId'],
-                "EAN" => $_POST['txtEAN'],
-                "ISBN" => $_POST['txtISBN'],
-                "COLLECTION" => $_POST['txtCollec'],
-                "HISTOIRE" => $_POST['txtHistoire'],
-                "COMMENTAIRE" => $_POST['txtCommentaire'],
-                "IMG_COUV" => $img_couv
-            
-        ));
-        $this->User_album_prop->update();
+        
         
         return $this->User_album_prop->error;
         
