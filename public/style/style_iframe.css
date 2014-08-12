@@ -99,24 +99,24 @@ body {
 	color: #000000;
 	
 	
-	background-color: #3D201C;
+	background-color: #FFF;
 	
 	
 	/*background-image: url(http://www.bdovore.com/images/site/texturedefond.gif);
 	
 	*/
-	background-image: url("http://www.bdovore.com/images/site/bdo_fond1.jpg");
+	/*background-image: url("http://www.bdovore.com/images/site/bdo_fond1.jpg");
 	
 	
 	background-repeat: repeat-x;
 	
 	
-	background-attachment:fixed;
+	background-attachment:fixed;*/
 	
 	
 	margin: 0;
 	
-	margin-top: 40px;
+	
 	padding: 0;
 	
 	
@@ -2299,7 +2299,8 @@ div.conteneuralb {
 	
 	float: left;
 	
-        	
+        background-color: white;
+        
 
 
 }
