@@ -132,7 +132,7 @@ class Leguide extends Bdo_Controller
 
         // checkbox de recherche
 
-        if (! isset($_GET['rb_mode'])) $_GET['rb_mode'] = 1;
+        if (! isset($_GET['rb_mode'])) $_GET['rb_mode'] = 3;
 
         foreach ($a_chGuide as $key => $chGuide) {
 
