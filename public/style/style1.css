@@ -67,7 +67,7 @@
 html {
 	
 	
-	font-size: 0.8em;
+	font-size: 0.9em;
 	
 	
 	font-family:  Trebuchet MS, Helvetica,Arial, sans-serif;
@@ -99,24 +99,24 @@ body {
 	color: #000000;
 	
 	
-	background-color: #FFFFF;
+	background-color: #3D201C;
 	
 	
 	/*background-image: url(http://www.bdovore.com/images/site/texturedefond.gif);
 	
 	*/
-	/*background-image: url("http://www.bdovore.com/images/site/bdo_fond4.jpg");
+	background-image: url("http://www.bdovore.com/images/site/bdo_fond1.jpg");
 	
 	
-	background-repeat: repeat;
+	background-repeat: repeat-x;
 	
 	
 	background-attachment:fixed;
 	
-	*/
+	
 	margin: 0;
 	
-	
+	margin-top: 40px;
 	padding: 0;
 	
 	
@@ -718,7 +718,7 @@ textarea {
 	background-color: #eee;
 	
 	
-	opacity: 0.9;
+	opacity: 1;
 	
 	
 
