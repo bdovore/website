@@ -45,7 +45,7 @@ class Bdo_Cache {
 			return true;
 		}
 
-		exit('erreur fatale : sauvegarde fichier cache ['.$this->filename.'] impossible.');
+		exit('erreur fatale : sauvegarde fichier cache ['.$this->fileCache.'] impossible. Vérifiez les permissions du dossier cache');
 	}
 
 	public function delete()

@@ -5,6 +5,8 @@ library/Zend/*
 public/script/fckeditor
 vendors/*
 
+images/
+
 #sensitive data & setup-dependent files
 config/constante.php
 public/.htaccess

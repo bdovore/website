@@ -14,7 +14,6 @@ else {
 }
 // repertoire de bdovore
 define('BDO_DIR', dirname(dirname(__FILE__)) . DS); //NB: dirname(__FILE__) === __DIR__ (since php 5.3.0)
-define('BDO_DIR_CACHE', BDO_DIR . 'cache' . DS);
 
 // utile uniquement si bdovore n'est pas à la racine 
 // par exemple si l'url est http://localhost/bdovore/beta/Album?id_tome=1234
@@ -146,7 +145,6 @@ switch ($_SERVER["SERVER_NAME"]) {
     case '192.168.1.77':
     case 'localhost':
         {
-            
             error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 
 			// use BDO_URL_RELATIVE here if available instead of /bdovore/beta/
@@ -155,6 +153,7 @@ switch ($_SERVER["SERVER_NAME"]) {
 				define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . BDO_URL_RELATIVE );
 			else
 	            define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . '/bdovore/beta/');
+
             define('BDO_URL_IMAGE', 'http://www.bdovore.com/images/');
             define('BDO_URL_COUV', BDO_URL_IMAGE . 'couv/');
             
@@ -178,7 +177,7 @@ switch ($_SERVER["SERVER_NAME"]) {
         }
 }
 define('BDO_CACHE_ENABLED', true);
-define('BDO_DIR_CACHE', BDO_DIR.DS.'cache');
+define('BDO_DIR_CACHE', BDO_DIR . 'cache' . DS);
 
 
 define('BDO_NBLINEBYPAGE_DEFAULT', 25);

@@ -1,9 +1,13 @@
 == localhost install ==
+
 c.f. https://bdovore.com/forum/viewtopic.php?t=2214
 
 1. charger toutes les sources via git : git clone ssh://bdovore@ftp.bdovore.com/~/git/beta dans votre répertoire en local
+
 2. créer votre  alias dans Apache pour qu'il pointe vers le repertoire "beta/public" : le fichier index.php est la racine du site
-3. ajouter un fichier .htaccess dans public/beta pour gérer l'url rewriting qui va bien : exemple chez moi (l'alias Appache s'appelle "beta" 
+
+3. ajouter un fichier .htaccess dans public/beta pour gérer l'url rewriting qui va bien : exemple chez moi (l'alias Apache s'appelle "beta" 
+
     SetEnv PHP_VER 5_3
     #DocumentRoot beta.bdovore/
     # On suit les liens symboliques
@@ -18,8 +22,23 @@ c.f. https://bdovore.com/forum/viewtopic.php?t=2214
     RewriteEngine On
     RewriteBase /beta/
     RewriteRule !\.(js|ico|gif|jpg|png|css|html|htm|xml|wsdl) index.php [NC,L]
+
+3b. Si nécesssaire, activer le module 'rewrite' de Apache et adapter le fichier de configuration :
+	Linux :
+		$ sudo a2enmod rewrite
+		$ sudo vim /etc/apache2/sites-enabled/000-default
+			<Directory /var/www/>
+				Options Indexes FollowSymLinks MultiViews
+				# changed from None to FileInfo or All (FileInfo crashed for me)
+				AllowOverride All
+				Order allow,deny
+				allow from all
+			</Directory>
+		$ sudo service apache2 restart
+
 4. dans le repertoire "config", copier/coller le contenu de constante.php.sample dans constante.php et modifier les variables
     ligne 24 : dé-commenter la ligne et faire pointer la variable vers l'alias appache 
                 define('BDO_URL_RELATIVE', '/beta/');
     ligne 164 à 167 : paramètre de votre connexion mysql en local
-5. créer un repertoire "cache" à la racine
+
+5. créer un repertoire "cache" à la racine avec permission d'écriture pour le serveur Apache
