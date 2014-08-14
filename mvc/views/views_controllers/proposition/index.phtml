@@ -9,7 +9,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     <div class="middle_title"><h3>Proposition d'ajout et de correction</h3></div>
    <?php if(IssetNotEmpty($view->edition)) { ?> <a href="#null" onclick="javascript:history.back();"> Retour à la fiche Album</a> <?php } ?>
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
-<form action="" name="action" value="append" method="POST"> 	
+<form enctype="multipart/form-data" action="" name="action" value="append" method="POST"> 	
      <?php if(IssetNotEmpty($view->edition)) { ?>
         <input type="hidden" name="txtTomeId" value="<?php echo $view->edition->ID_TOME; ?>">
         <input type="hidden" name="txtEditionId" value="<?php echo $view->edition->ID_EDITION; ?>">

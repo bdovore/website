@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  *
  * @author Tom
@@ -8,55 +7,32 @@
  */
 
 class User_album_prop extends Bdo_Db_Line
-
 {
-
-
-
     /**
-
      */
 
     public $table_name = 'users_alb_prop';
 
-
-
     public $error = '';
-
-    
 
     // initialisation
 
     public function __construct ($id = null)
-
     {
-
         if (is_array($id)) {
-
             $a_data = $id;
-
         }
-
         else {
-
             $a_data = array(
-
                     'ID_PROPOSAL' => $id
-
             );
-
         }
 
         parent::__construct($this->table_name, $a_data);
-
     }
 
-
-
     public function select ()
-
     {
-
         return "
         SELECT `ID_PROPOSAL`,
                     `USER_ID`,
@@ -66,11 +42,8 @@ class User_album_prop extends Bdo_Db_Line
                     `ID_TOME`,
                     `ID_EDITION`,
                     `TITRE`,
-
                     `NUM_TOME`,
                     `FLG_INT`,
-
-
                     `FLG_TYPE`,
                     `ID_SERIE`,
                     `SERIE`,
@@ -108,22 +81,15 @@ class User_album_prop extends Bdo_Db_Line
                     `STATUS`,
                     `VALIDATOR`,
                     `VALID_DTE`,
-
                     `CORR_COMMENT`,
-
                     `CORR_STATUT`
 
                     FROM " . $this->table_name . "
-
-        
-
                 ";
-
     }
     
     public function getUserStat($user_id){
         $user_prop_alb = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'AJOUT' and user_id=" . $user_id );
-
         $user_prop_corr = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'CORRECTION' and user_id=" . $user_id );
 
         return (array(
@@ -145,7 +111,6 @@ class User_album_prop extends Bdo_Db_Line
              "NBAJOUT" =>  $prop_alb,
              "NBCORRECTION" => $prop_corr
          ));
-         
     }
 }
 
