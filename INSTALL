@@ -1,29 +1,36 @@
 == localhost install ==
 
-c.f. https://bdovore.com/forum/viewtopic.php?t=2214
+c.f. https://bdovore.com/forum/viewtopic.php?t=2214 (peut-être plus complètement à jour, mais c'est un bon point de départ)
 
-1. charger toutes les sources via git : git clone ssh://bdovore@ftp.bdovore.com/~/git/beta dans votre répertoire en local
+1. charger toutes les sources via git dans votre répertoire en local :
 
-2. créer votre  alias dans Apache pour qu'il pointe vers le repertoire "beta/public" : le fichier index.php est la racine du site
+	git clone ssh://bdovore@ftp.bdovore.com/~/git/beta nomdedossier
 
-3. ajouter un fichier .htaccess dans public/beta pour gérer l'url rewriting qui va bien : exemple chez moi (l'alias Apache s'appelle "beta" 
+(le paramètre "nomdedossier" est facultatif, s'il n'est pas donné, un dossier nommé "beta" sera créé dans le dossier actuel)
 
-    SetEnv PHP_VER 5_3
-    #DocumentRoot beta.bdovore/
-    # On suit les liens symboliques
-    Options +FollowSymlinks
+2. créer un alias dans Apache pour qu'il pointe vers le repertoire "beta/public" : le fichier index.php est la racine du site
 
-    #page erreur personnalisee
-    Options -Indexes
-    ErrorDocument 403 /localhost/beta/erreur.php?error=403
-    ErrorDocument 404 /localhost/beta/erreur.php?error=404
+3. copier et adapter le fichier public/.htaccess.sample dans le fichier public/.htaccess pour gérer l'url rewriting qui va bien.
 
-    # Activation du mod rewrite d'Apache
-    RewriteEngine On
-    RewriteBase /beta/
-    RewriteRule !\.(js|ico|gif|jpg|png|css|html|htm|xml|wsdl) index.php [NC,L]
+	exemple chez moi (l'alias Apache s'appelle "beta") :
 
-3b. Si nécesssaire, activer le module 'rewrite' de Apache et adapter le fichier de configuration :
+	SetEnv PHP_VER 5_3
+	#DocumentRoot beta.bdovore/
+	# On suit les liens symboliques
+	Options +FollowSymlinks
+
+	#page erreur personnalisee
+	Options -Indexes
+	ErrorDocument 403 /beta/erreur.php?error=403
+	ErrorDocument 404 /beta/erreur.php?error=404
+
+	# Activation du mod rewrite d'Apache
+	RewriteEngine On
+	RewriteBase /beta/
+	RewriteRule !\.(js|ico|gif|jpg|png|css|html|htm|xml|wsdl) index.php [NC,L]
+
+3b. Si nécessaire, activer le module "rewrite" de Apache et adapter le fichier de configuration :
+
 	Linux :
 		$ sudo a2enmod rewrite
 		$ sudo vim /etc/apache2/sites-enabled/000-default
@@ -36,9 +43,28 @@ c.f. https://bdovore.com/forum/viewtopic.php?t=2214
 			</Directory>
 		$ sudo service apache2 restart
 
-4. dans le repertoire "config", copier/coller le contenu de constante.php.sample dans constante.php et modifier les variables
-    ligne 24 : dé-commenter la ligne et faire pointer la variable vers l'alias appache 
-                define('BDO_URL_RELATIVE', '/beta/');
-    ligne 164 à 167 : paramètre de votre connexion mysql en local
+4. dans le repertoire "config", copier/coller le contenu de constante.php.sample dans constante.php
+   et modifier/adapter les variables BDO_URL_RELATIVE et BDO_DB_...
 
-5. créer un repertoire "cache" à la racine avec permission d'écriture pour le serveur Apache
+	dé-commenter la ligne définissant BDO_URL_RELATIVE et faire pointer la variable vers l'alias Apache
+ 
+		define('BDO_URL_RELATIVE', '/beta/');
+
+	dans la section "case 'localhost'" : modifier les paramètres de votre connexion mysql en local :
+
+		define('BDO_DB_HOST', 'localhost');
+		define('BDO_DB_SID', 'nom_de_la_base');
+		define('BDO_DB_USER', 'nom_utilisateur_MySQL');
+		define('BDO_DB_PWD', 'mot_de_passe');
+
+5. créer les repertoires "cache", "images/couv" et "images/tmp" à la racine avec permission d'écriture pour le serveur Apache
+
+== Remarques ==
+
+1. Dans le .htaccess, le ligne "ErrorDocument 404" n'est pas vraiment nécessaire tant que l'URL rewriting fonctionne
+   puisque index.php est configuré (entre autres) pour gérer les 404. (TODO: et l'erreur 403 ?)
+
+2. pour le points 5, une autre option est de modifier BDO_DIR_IMAGE, BDO_DIR_COUV, BDO_DIR_UPLOAD et BDO_DIR_CACHE
+   pour qu'ils pointent sur des dossiers existants. Par exemple, c'est la configuration actuellement utilisée par
+   le site beta pour BDO_DIR_IMAGE, qui pointe vers le dossier images de la version 1.0 de Bdovore
+

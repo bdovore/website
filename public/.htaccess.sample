@@ -5,10 +5,9 @@ Options +FollowSymlinks
 
 # page erreur personnalisee
 Options -Indexes
-# chemin reel du fichier d'erreur sur le système (Linux dans ce cas)
-# exemple pour Windows : C:/web/bdovore/public/erreur.php?error=404
-ErrorDocument 403 /homez.95/bdovore/wwwbeta/public/erreur.php?error=403
-ErrorDocument 404 /homez.95/bdovore/wwwbeta/public/erreur.php?error=404
+# URL relative du fichier d'erreur (par rapport à l'URL du serveut, e.g. http://beta.bdovore.com/)
+ErrorDocument 403 /erreur.php?error=403
+ErrorDocument 404 /erreur.php?error=404
 
 # Activation du mod rewrite d'Apache
 RewriteEngine On
