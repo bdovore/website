@@ -115,32 +115,20 @@ class Proposition extends Bdo_Controller {
 		$lid = $this->User_album_prop->ID_PROPOSAL;
 
 		// Verifie la présence d'une image à télécharger
-		// TODO vérifier la taille maximale d'un upload. Normalement
-		//      si le serveur est configuré correctement, on ne doit
-		//      pas trop s'en préoccuper, la limite est automatique.
-		if ($_FILES['txtFileLoc']['size'] > 0)
+		// on vérifie aussi la taille maximale d'un upload (2MB pour le moment).
+		// Normalement si le serveur est configuré correctement, on ne doit pas
+		// vraiment s'en préoccuper, il y a une limite dans la config du serveur.
+		if ( $_FILES['txtFileLoc']['size'] > 0 && $_FILES['txtFileLoc']['size'] < 2000000 )
 		//if (is_file($_POST['txtFileLoc']))
 		{ // un fichier à uploader
 			$imageproperties = getimagesize($_FILES['txtFileLoc']['tmp_name']);
 			$imagetype = $imageproperties[2];
-			$imagelargeur = $imageproperties[0];
-			$imagehauteur = $imageproperties[1];
-			// vérifie le type d'image
-			if (($imagetype != IMAGETYPE_GIF) and ($imagetype != IMAGETYPE_JPEG) and ($imagetype != IMAGETYPE_PNG))
-			{
-				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Type '.$imagetype.'('.$imagelargeur.' x '.$imagehauteur.') Seul des fichiers PNG, JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
-				exit();
-			}
-			$uploaddir = BDO_DIR_IMAGE."tmp/";
-			//// newfilemname
-			//if ( !($imgtype = check_image_type($imagetype, $error)) )
-			//{
-			//    exit;
-			//}
-
-			//$new_filename = sprintf("tmpCV-%06d-01",$lid).$imgtype;
-
+			//$imagelargeur = $imageproperties[0];
+			//$imagehauteur = $imageproperties[1];
+			
 			$new_filename = sprintf("tmpCV-%06d-01",$lid);
+			
+			// vérifie le type d'image
 			switch ($imagetype)
 			{
 				case IMAGETYPE_GIF:
@@ -153,10 +141,14 @@ class Proposition extends Bdo_Controller {
 					$new_filename .=".png";
 					break;
 				default:
+					echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers PNG, JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
+					exit();
 					break;
 			}
 
-			if(!copy($_FILES['txtFileLoc']['tmp_name'],$uploaddir.$new_filename))
+			//move_uploaded_file fait un copy(), mais en plus il vérifie que le fichier est bien un upload
+			//et pas un fichier local (genre constante.php, au hasard)
+			if(!move_uploaded_file($_FILES['txtFileLoc']['tmp_name'], BDO_DIR_UPLOAD.$new_filename))
 			{
 				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez être redirigé.';
 				exit();
@@ -166,6 +158,8 @@ class Proposition extends Bdo_Controller {
 		}
 		else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary))
 		{ // un fichier à télécharger
+			// TODO en php5 copy() gère tout ça, plus besoin de passer directement par les sockets
+			// mais le serveur bodovore est en php 4.4 ...
 			if ( empty($url_ary[4]) )
 			{
 				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplète. Vous allez être redirigé.';
@@ -193,7 +187,7 @@ class Proposition extends Bdo_Controller {
 			}
 			@fclose($fsock);
 
-			// Check la validit� de l'image
+			// Check la validité de l'image
 			if (!preg_match('#Content-Length\: ([0-9]+)[^ /][\s]+#i', $avatar_data, $file_data1) || !preg_match('#Content-Type\: image/[x\-]*([a-z]+)[\s]+#i', $avatar_data, $file_data2))
 			{
 				$error = true;
@@ -202,12 +196,12 @@ class Proposition extends Bdo_Controller {
 			}
 
 			$avatar_filesize = $file_data1[1];
-			$avatar_filetype = $file_data2[1];
+			// règle n°1 de l'upload: ne pas faire confiance au type MIME du header HTTP
+			//$avatar_filetype = $file_data2[1];
 
 			$avatar_data = substr($avatar_data, strlen($avatar_data) - $avatar_filesize, $avatar_filesize);
 
-			$tmp_path = BDO_DIR_IMAGE.'tmp';
-			$tmp_filename = tempnam($tmp_path, uniqid(rand()) . '-');
+			$tmp_filename = tempnam(BDO_DIR_UPLOAD, uniqid(rand()) . '-');
 
 			$fptr = @fopen($tmp_filename, 'wb');
 			$bytes_written = @fwrite($fptr, $avatar_data, $avatar_filesize);
@@ -216,25 +210,56 @@ class Proposition extends Bdo_Controller {
 			if ( $bytes_written != $avatar_filesize )
 			{
 				@unlink($tmp_filename);
-				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Could not write avatar file to local storage. Please contact the board administrator with this message. Vous allez �tre redirig�.';
+				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'écriture de l\'image en local. Vous allez être redirigé.';
 				exit();
 			}
-			// newfilemname
-			if ( !($imgtype = check_image_type($avatar_filetype, $error)) )
+
+			// règle n°1 de l'upload: ne pas faire confiance au type MIME du header HTTP
+			// new file name
+			//if ( !($imgtype = check_image_type($avatar_filetype, $error)) )
+			//{
+			//    exit;
+			//}
+
+			//$new_filename = sprintf("tmpCV-%06d-01",$lid).$imgtype;
+
+			$imageproperties = getimagesize($tmp_filename);
+			$imagetype = $imageproperties[2];
+			
+			$new_filename = sprintf("tmpCV-%06d-01",$lid);
+			
+			// vérifie le type d'image
+			switch ($imagetype)
 			{
-				exit;
+				case IMAGETYPE_GIF:
+					$new_filename .=".gif";
+					break;
+				case IMAGETYPE_JPEG:
+					$new_filename .=".jpg";
+					break;
+				case IMAGETYPE_PNG:
+					$new_filename .=".png";
+					break;
+				default:
+					echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers PNG, JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
+					exit();
+					break;
 			}
 
-			$new_filename = sprintf("tmpCV-%06d-01",$lid).$imgtype;
-
-			// si le fichier existe, on l'efface
-			if (file_exists(BDO_DIR_IMAGE."tmp/$new_filename"))
-			{
-				@unlink(BDO_DIR_IMAGE."tmp/$new_filename");
-			}
+			// si le fichier existe, on l'efface.
+			// NB: D'après la doc, copy écrase le fichier existant automatiquement
+			//if (file_exists(BDO_DIR_UPLOAD . $new_filename))
+			//{
+			//    @unlink(BDO_DIR_UPLOAD . $new_filename);
+			//}
 
 			// copie le fichier temporaire dans le repertoire image
-			@copy($tmp_filename, BDO_DIR_IMAGE."tmp/$new_filename");
+			if (!@copy($tmp_filename, BDO_DIR_UPLOAD . $new_filename)) {
+				@unlink($tmp_filename);
+				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de la copie de l\'image sur le serveur. Vous allez être redirigé.';
+				exit();
+			}
+
 			@unlink($tmp_filename);
 
 			$img_couv=$new_filename;
@@ -250,7 +275,6 @@ class Proposition extends Bdo_Controller {
                    
 		return $this->User_album_prop->error;
     }
-    
 }
     
 ?>

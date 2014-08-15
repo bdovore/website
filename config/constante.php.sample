@@ -42,7 +42,8 @@ switch ($_SERVER["SERVER_NAME"]) {
 			// BDO_DIR_IMAGE: location of all the images of the website
 			// BDO_DIR_COUV: location of all the album covers (usually inside the BDO_DIR_IMAGE folder)
             define('BDO_DIR_IMAGE', BDO_DIR . 'images' . DS); // system path, but URL can be used as well
-			define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
+            define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
+            define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
 
 			// BDO_DB_HOST: hostname for the DB. For instance 'localhost' for a local install
 			//              or 'mysql5-dev.bdb' if that's what your provider gives you
@@ -73,6 +74,7 @@ switch ($_SERVER["SERVER_NAME"]) {
             
             define('BDO_DIR_IMAGE', '/home/bdovore/www/images' . DS);
             define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
+            define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
 			
 			//currently the same login info as bdovore.com, until we switch to the new DB schema
             define('BDO_DB_HOST', '');
@@ -99,6 +101,7 @@ switch ($_SERVER["SERVER_NAME"]) {
             
             define('BDO_DIR_IMAGE', BDO_DIR . 'images' . DS);
             define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
+            define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
 
 			//same as bdovore bdovore.com
             define('BDO_DB_HOST', '');
@@ -126,6 +129,7 @@ switch ($_SERVER["SERVER_NAME"]) {
             
             define('BDO_DIR_IMAGE', BDO_DIR . 'images' . DS);
             define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
+            define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
             
             define('BDO_DB_HOST', '');
             define('BDO_DB_SID', '');
@@ -159,6 +163,7 @@ switch ($_SERVER["SERVER_NAME"]) {
             
             define('BDO_DIR_IMAGE', BDO_DIR . 'images' . DS);
             define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
+            define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
             
             define('BDO_DB_HOST', 'localhost');
             define('BDO_DB_SID', 'bdovore');
@@ -176,6 +181,7 @@ switch ($_SERVER["SERVER_NAME"]) {
             break;
         }
 }
+
 define('BDO_CACHE_ENABLED', true);
 define('BDO_DIR_CACHE', BDO_DIR . 'cache' . DS);
 
