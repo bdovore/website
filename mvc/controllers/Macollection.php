@@ -671,7 +671,7 @@ class Macollection extends Bdo_Controller {
             $act = getVal("act","");
             $propid = intval(getVal("propid",0));
             
-            $lstSource = getVal("lstSource","");
+            $lstSource = getVal("lstSource",0);
             $lstFiltre= getVal("lstFiltre","");
             
             if ($lstSource ==2){
@@ -685,6 +685,24 @@ class Macollection extends Bdo_Controller {
                     $choix_source = 0;
             }
             
+            if ($act == "suppr") {
+                // annulation de la proposition courrante : on passe le statut à 98
+                if ($lstSource == 1) {
+                    
+                }
+                else {
+                    $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $propid));
+                    $this->User_album_prop->load();
+                    if ($this->User_album_prop->USER_ID == $_SESSION["userConnect"]->user_id ) {
+                        $this->User_album_prop->set_dataPaste(array("STATUS"=>98));
+                        $this->User_album_prop->update();
+                    }
+                    else {
+                        die("Vous ne pouvez pas supprimer une proposition d'un autre utilisateur !");
+                    }
+                }
+                
+            }
             if ($lstFiltre==0) {
 		if ($lstSource==1){
 			$filtre = " AND (prop_status = 0 OR prop_status = 2 OR prop_status = 3 OR prop_status = 4)";
@@ -733,7 +751,8 @@ class Macollection extends Bdo_Controller {
             $this->view->set_var($this->User_album_prop->getAllStat());
             $this->view->set_var (array(
                 "OPTIONSOURCE" => GetOptionValue($opt_source,$choix_source),
-                "OPTIONFILTRE" => GetOptionValue($opt_filtre,$choix_filtre)
+                "OPTIONFILTRE" => GetOptionValue($opt_filtre,$choix_filtre),
+                "lstSource" => $lstSource
                 ));
         }
         else {

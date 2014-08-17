@@ -80,7 +80,12 @@ class Edition extends Bdo_Db_Line
         	bd_tome.ID_DESSIN_ALT, 	
         	dea.pseudo as deapseudo, 
         	bd_tome.ID_COLOR_ALT, 
-        	coa.pseudo as coapseudo ";
+        	coa.pseudo as coapseudo,
+                bd_edition.USER_ID, 
+                bd_edition.PROP_DTE, 
+                bd_edition.PROP_STATUS,
+                bd_edition.VALIDATOR,
+                bd_edition.VALID_DTE";
         $from = "
         FROM bd_edition
         	INNER JOIN bd_tome ON bd_tome.id_tome = bd_edition.id_tome

@@ -59,7 +59,7 @@ $status[0] = "En attente";
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($view->dbs_prop->a_dataQuery as $prop) { ?>
+                    <?php if (issetNotEmpty($view->dbs_prop)) { foreach ($view->dbs_prop->a_dataQuery as $prop) { ?>
                     <!-- BEGIN PropBlock -->
                     <tr>			
                         <td>
@@ -79,13 +79,41 @@ $status[0] = "En attente";
                             </td>		  			
                         <td>
                                    
-                                            <a href="?act=suppr&propid=<?php echo $prop->ID_PROPOSAL;?>&lstSource="<?php echo $view->lstSource;?>>
+                                            <a href="?act=suppr&propid=<?php echo $prop->ID_PROPOSAL;?>&lstSource=<?php echo $view->lstSource;?>">
                                                     <img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif" width="20" height="21" border="0" />
                                             </a>
                                   
                             </td>			
                     </tr>	
-                    <?php } ?>
+                    <?php }} ?>
+                    
+                     <?php if (issetNotEmpty($view->dbs_edition)) { foreach ($view->dbs_edition->a_dataQuery as $prop) { ?>
+                    <!-- BEGIN PropBlock -->
+                    <tr>			
+                        <td>
+                                    
+                                            <?php echo $prop->PROP_DTE;?>
+                                   
+                            </td>			
+                        <td>
+                                    
+                                            <?php echo $prop->TITRE_TOME;?>
+                                   
+                            </td>			  			
+                        <td>
+                                  
+                                            <?php echo $status[$prop->PROP_STATUS];?>
+                                 
+                            </td>		  			
+                        <td>
+                                   
+                                            <a href="?act=suppr&propid=<?php echo $prop->ID_EDITION;?>&lstSource=<?php echo $view->lstSource;?>">
+                                                    <img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif" width="20" height="21" border="0" />
+                                            </a>
+                                  
+                            </td>			
+                    </tr>	
+                    <?php }} ?>
                     </tbody>
                     <!-- END PropBlock -->						
             </table>
