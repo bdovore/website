@@ -199,17 +199,32 @@ class Guest extends Bdo_Controller
                 $length = getVal("length",10);
                 $searchvalue = Db_Escape_String(getVal("l_search","" ));
 
+                // tableau pour gérer les order by
+           
+                $a_order[0]= "IMG_COUV";
+                $a_order[1]= "TITRE_TOME";
+                $a_order[2]= "NOM_SERIE";
+                $a_order[3]= "NUM_TOME";
+                $a_order[4]= "NOM_EDITION";
+                $a_order[5]= "NOM_COLLECTION";
+                $a_order[6]="scpseudo";
+                $a_order[7]= "depseudo";
+                $a_order[8]= "DATE_AJOUT";
 
-
-                $sort = getVal("sort","11");
+                $sort = getVal("sort",9);
                 $order = getVal("order","DESC");
-
+                
+                // variable $sort donne la colonne pour le tri
+                // on s'assure que la variable est dans le bon intervale de valeur
+                $sort = intval(getVal("sort",9));
+                $sort = max(min($sort,9),0);
+                if ($sort < 0) $sort =1;
 
                 $eo = getVal("cb_tete","N");
                 $dedicace = getVal("cb_dedicace","N");
 
                 $limit = " limit ".(($page - 1)*$length).", ".$length;
-                $orderby = " order by ".$sort." ".$order;
+                $orderby = " order by ".$a_order[$sort-1]." ".$order;
 
                 $where = " where ua.user_id = ".intval($user->user_id) ." and flg_achat = 'N' ";
 
@@ -280,15 +295,29 @@ class Guest extends Bdo_Controller
                 $length = getVal("length",10);
                 $searchvalue = Db_Escape_String(getVal("l_search","" ));
 
+                // tableau pour gérer les order by
+           
+                $a_order[0]= "IMG_COUV";
+                $a_order[1]= "TITRE_TOME";
+                $a_order[2]= "NOM_SERIE";
+                $a_order[3]= "NUM_TOME";
+                $a_order[4]= "NOM_EDITION";
+                $a_order[5]= "NOM_COLLECTION";
+                $a_order[6]="scpseudo";
+                $a_order[7]= "depseudo";
+                $a_order[8]= "DATE_AJOUT";
 
-
-                $sort = getVal("sort","11");
+                $sort = getVal("sort",9);
                 $order = getVal("order","DESC");
 
-
+                // variable $sort donne la colonne pour le tri
+                // on s'assure que la variable est dans le bon intervale de valeur
+                $sort = intval(getVal("sort",9));
+                $sort = max(min($sort,9),0);
+                if ($sort < 0) $sort =1;
 
                 $limit = " limit ".(($page - 1)*$length).", ".$length;
-                $orderby = " order by ".$sort." ".$order;
+                $orderby = " order by ".$a_order[$sort-1]." ".$order;
 
                 $where = " where ua.user_id = ".intval($user->user_id) ." and flg_achat = 'O' ";
 
