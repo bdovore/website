@@ -15,6 +15,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         <input type="hidden" name="txtEditionId" value="<?php echo $view->edition->ID_EDITION; ?>">
                
     <?php } ?>
+        <?php if(IssetNotEmpty($view->ID_TOME)) { ?>
+         <input type="hidden" name="txtTomeId" value="<?php echo $view->ID_TOME; ?>">
+        <?php } ?>
 <table cellpadding="10" cellspacing="10" align="center" bgcolor="EED8BF">
           <!--DWLayoutTable-->
           <tbody>
@@ -86,6 +89,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                   </tbody>
 
                 </table>
+                 <?php if($view->TYPE <> "EDITION") { ?>
                 <table frame="box" rules="groups" cellpadding="5" cellspacing="0" bgcolor="#DAC1B3" border="1" bordercolor="#FFFFCC" width="550px">
                   <!--DWLayoutTable-->
                   <tbody>
@@ -136,7 +140,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                     </tr>
                   </tbody>
                 </table>
-
+                
                 <br>
 
                 <table frame="box" rules="groups" cellpadding="5" bgcolor="#DAC1B3" border="1" bordercolor="#FFFFCC" width="550px">
@@ -299,7 +303,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 </table>
 
                 <br>
-
+ <?php } ?>
                 <table frame="box" rules="groups" cellpadding="5" bgcolor="#DAC1B3" border="1" bordercolor="#FFFFCC" width="550px">
 
                   <tbody>
@@ -345,7 +349,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                           <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-13 (EAN)</strong></font></td>
                             <td> <div align="left"> </div></td>
                             <td colspan="3">
-                                <input name="txtEAN" id="txtEAN" value="<?php echo $view->edition->EAN_EDITION; ?>" size="14" class="flat" type="text">
+                                <input name="txtEAN" id="txtEAN" value="<?php echo $view->edition->EAN_EDITION; ?>" size="13" class="flat" type="text">
                                 <span class="texte">ISBN à 13 chiffres <u>sans</u> trait d'union ni espace (aussi appelé EAN)</span>
                             </td>
                     </tr>         
@@ -353,7 +357,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                         <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-10</strong></font></td>
                         <td> <div align="left"> </div></td>
                         <td colspan="3">
-                            <input name="txtISBN" id="txtISBN" value="<?php echo $view->edition->ISBN_EDITION; ?>" size="11" class="flat" type="text">
+                            <input name="txtISBN" id="txtISBN" value="<?php echo $view->edition->ISBN_EDITION; ?>" size="10" class="flat" type="text">
                             <span class="texte">ISBN à 10 chiffres <u>sans</u> trait d'union ni espace (obsolète depuis janvier 2007)</span>
                         </td>
                     </tr>
@@ -366,11 +370,12 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td> <input name="txtDateParution" id="txtDateParution3" value="<?php echo $view->edition->DATE_PARUTION_EDITION; ?>" size="15" class="flat" type="text">
 
-                        <span class="texte"><u>BDovore NE gère PAS les réimpressions</u>.<br>Assurez-vous que la date de l'album que vous proposez correspond à une édition originale ou à une réédition (couverture ou contenu différent), PAS à une réimpression (même contenu que la dernière édition)</span> </td>
+                        </td>
 
                       <td>&nbsp;</td>
 
                     </tr>
+                    <tr><td colspan="4"><span class="texte"><u>BDovore NE gère PAS les réimpressions</u>.<br>Assurez-vous que la date de l'album que vous proposez correspond à une édition originale ou à une réédition (couverture ou contenu différent), PAS à une réimpression (même contenu que la dernière édition)</span> </td></tr>
 
 
                    
@@ -419,6 +424,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 </table>
                      <?php } ?>
                   <p></p>
+                  <input type="hidden" name="type" value="<?php echo $view->TYPE; ?>">
 <input type="hidden" name="action" value="append">
                   <input name="Submit" value="Valider la proposition" type="submit">
 
@@ -438,6 +444,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
      * On remplit les champs de saisie par l'autocompletion
      * 
      */
+    <?php  if ($view->TYPE <> "EDITION") { ?>
     addAutocomplete("txtSerie","spSerie","txtSerieId","<?php echo BDO_URL; ?>getjson?data=Serie");
     addAutocomplete("txtGenre","spGenre","txtGenreId","<?php echo BDO_URL; ?>getjson?data=Genre");
     addAutocomplete("txtScenar","spScenar","txtScenarId","<?php echo BDO_URL; ?>getjson?data=Auteur");
@@ -446,7 +453,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     addAutocomplete("txtDessi","spDessi","txtDessiId","<?php echo BDO_URL; ?>getjson?data=Auteur");
     
      addAutocomplete("txtColor","spColor","txtColorId","<?php echo BDO_URL; ?>getjson?data=Auteur");
-     
+      <?php } ?>
      addAutocomplete("txtEditeur","spEditeur","txtEditeurId","<?php echo BDO_URL; ?>getjson?data=Editeur");
      
      changeEditeur();

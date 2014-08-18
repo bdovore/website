@@ -46,7 +46,7 @@ class Album extends Bdo_Controller {
         
         $this->loadModel('Edition');
        
-        $dbs_edition = $this->Edition->load(c,"where bd_tome.id_tome =".$ID_TOME);
+        $dbs_edition = $this->Edition->load(c,"where PROP_STATUS not in ('0','99','98') and bd_tome.id_tome =".$ID_TOME);
        
        $this->view->set_var(array("dbs_edition" => $dbs_edition));
         

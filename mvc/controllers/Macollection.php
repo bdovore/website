@@ -761,7 +761,7 @@ class Macollection extends Bdo_Controller {
                 $status[3] = "En attente";
                 $status[4] = "En attente";
                 $status[99] = "Refus&eacute;";
-                $status[98] = "Effac&eacute; par l\'utilisateur";
+                $status[98] = "Effac&eacute; par l'utilisateur";
             
                 // Requete sur les donn�es � afficher
             if ($lstSource ==1){
@@ -769,7 +769,7 @@ class Macollection extends Bdo_Controller {
                 $this->loadModel("Edition");
                 
                 $dbs_edition = $this->Edition->load("c"," WHERE bd_edition.user_id = ".$_SESSION["userConnect"]->user_id." ".$filtre);
-                $this->view->set_var("dbs_edition",$db_edition);
+                $this->view->set_var("dbs_edition",$dbs_edition);
             }
             else{
                

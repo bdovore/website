@@ -20,6 +20,7 @@ class Proposition extends Bdo_Controller {
         $action_user[1][1] = "Insérer dans mes achats futurs";
         $action_user[2][0] = 2;
         $action_user[2][1] = "Ne rien faire";
+        $type = getVal("type","ALBUM");
         if (User::minAccesslevel(2)) {
             $id_edition = intval(getVal("id_edition",0));
             
@@ -38,7 +39,12 @@ class Proposition extends Bdo_Controller {
             }
             else 
             { 
-                if ($id_edition <> 0) {
+                if ($type == "EDITION") {
+                    $this->view->set_var("ID_TOME",getVal("id_tome"));
+                    $this->view->set_var('PAGETITLE',"Proposer l'ajout d'une édition ");
+                    $this->view->set_var("TYPE","EDITION");
+                }
+                else if ($id_edition <> 0) {
                     $this->loadModel("Edition");
                     $this->Edition->load();
                     $this->Edition->set_dataPaste(array(
@@ -70,9 +76,32 @@ class Proposition extends Bdo_Controller {
     }
  
 	private function addProposition() {
-        $this->loadModel("User_album_prop");
+            
+        
+        
+        $type = postVal("type","ALBUM");
+        if ($type == "EDITION") {
+            $this->loadModel("Edition");
+            $this->Edition->set_dataPaste((array(
+                "ID_TOME" => Db_Escape_String($_POST['txtTomeId']),
+                "ID_EDITEUR" => Db_Escape_String($_POST['txtEditeurId']),
+                "ID_COLLECTION" => Db_Escape_String($_POST['txtCollec']),
+                "DTE_PARUTION" => $_POST['txtDateParution'],
+                
+                "COMMENT" => Db_Escape_String($_POST['txtCommentaire']),
+                "USER_ID" => $_SESSION['userConnect']->user_id,
+                "PROP_DTE" => date('d/m/Y H:i:s'),
+                "PROP_STATUS" => "0",
+                "ISBN" => Db_Escape_String($_POST['txtISBN']),
+                "EAN" => Db_Escape_String($_POST['txtEAN'])
+            )));
+            $this->Edition->update();
+            $lid = $this->Edition->ID_EDITION;
+        }
+        else {
+            $this->loadModel("User_album_prop");
         $id_edition = intval(getVal("id_edition",0));
-        // on enregistre la proposition 
+             // on enregistre la proposition 
         $this->User_album_prop->set_dataPaste(array(
                 "USER_ID" => $_SESSION['userConnect']->user_id,
                 "PROP_DTE" => date('d/m/Y H:i:s'),
@@ -101,7 +130,7 @@ class Proposition extends Bdo_Controller {
                 "DESSIN_ALT" => $_POST['txtDessiAlt'],
                 "ID_COLOR" => $_POST['txtColorId'],
                 "COLOR" => $_POST['txtColor'],
-                "ID_COLLECTION" => $_POST['txtCollecId'],
+                "ID_COLLECTION" => $_POST['txtCollec'],
                 "EAN" => $_POST['txtEAN'],
                 "ISBN" => $_POST['txtISBN'],
                 "COLLECTION" => $_POST['txtCollec'],
@@ -111,8 +140,10 @@ class Proposition extends Bdo_Controller {
                 "NOTIF_MAIL" =>(($_POST['chkNotEmail'] == "checked") ? "1" : "0")
             ));
 
-        $this->User_album_prop->update();
+                $this->User_album_prop->update();
 		$lid = $this->User_album_prop->ID_PROPOSAL;
+        }
+       
 
 		// Verifie la présence d'une image à télécharger
 		// on vérifie aussi la taille maximale d'un upload (2MB pour le moment).
@@ -270,10 +301,18 @@ class Proposition extends Bdo_Controller {
 		}
 
 		$id_edition = intval(postVal("txtEditionId",0));
-		$this->User_album_prop->set_dataPaste(array(  "IMG_COUV" => $img_couv   ));
-		$this->User_album_prop->update();
+                if ($type=="EDITION") {
+                    $this->Edition->set_dataPaste(array(  "IMG_COUV" => $img_couv   ));
+                    $this->Edition->update();
+                    return $this->Edition->error;
+                }
+                else {
+                    $this->User_album_prop->set_dataPaste(array(  "IMG_COUV" => $img_couv   ));
+                    $this->User_album_prop->update();
                    
 		return $this->User_album_prop->error;
+                }
+		
     }
 }
     

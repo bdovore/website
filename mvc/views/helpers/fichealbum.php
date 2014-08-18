@@ -601,6 +601,11 @@ class FicheAlbum
                  }
                 
                  $html .= " - <a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' title='Supprimer l'édition de ma collection' onclick='deleteEdition(".$o_tome->ID_EDITION.")'>Supprimer</a>";
+                 $html .='<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+                                            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><i>Votre édition est différente ? Vous pouvez 
+                                                    <a href="'.BDO_URL.'Proposition?type=EDITION&id_tome='.$o_tome->ID_TOME .'">
+								<b>proposer une édition</b>
+										</a></i></p></div>';
               }
             else {
                 
