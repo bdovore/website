@@ -1,0 +1,46 @@
+<script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
+<div class="cadre1"> <h3>Les albums de mon carr&eacute; magique</h3>
+Choisissez dans la liste ci-dessous les 9 albums que vous souhaitez voir 
+apparaître dans votre carr&eacute; magique, ou cocher la case "sélection automatique" puis cliquez sur "Enregistrer".
+La sélection automatique affichera à chaque fois les 9 albums les mieux notés de votre collection.
+<BR>
+<span class="texte">(Entrez simplement les ID-BDovores des albums si vous les connaissez 
+sinon faites une recherche sur le titre de l'album grâce au champ de droite)</span><br /><br />
+<form action="<?php echo $view->URLACTION;?>" method="post" name="myform" target="_self" id="myform">
+    Sélection automatique : <input type="checkbox" value="O" name="auto">
+  <table width="100%" border="0">
+          <tr> 
+         	<td width="10%">ID-BDovore</td>
+            <td width="90%"><center>Titre de l'album</center></td>
+          </tr>
+         
+	  
+          <!-- BEGIN DetailBlock -->
+          <?php $i=0; 
+          foreach ($view->a_carre as $tome) { 
+              $i++; ?>
+         <tr>
+            <td width="10%"><input name="txtAlbumId<?php echo $i;?>" id="txtAlbumId<?php echo $i;?>" type="text" class="flat" value="<?php echo $tome->ID_TOME;?>" size="6" maxlength="6"></td>
+            <td width="90%"><input name="txtAlbum<?php echo $i;?>" id="txtAlbum<?php echo $i;?>" value="<?php echo $tome->TITRE_TOME;?>" size="40" class="flat" type="text"></td>
+            
+          </tr>
+          <?php } ?>
+          <?php if ($i < 9) { for ($j=$i;$j<10;$j++) { ?>
+            <tr>
+            <td width="10%"><input name="txtAlbum<?php echo $j;?>Id" type="text" class="flat" value="" size="6" maxlength="6"></td>
+            <td width="90%"><input name="txtAlbum<?php echo $j;?>" value="" size="40" class="flat" type="text"></td>
+            
+          </tr>
+          <?php }} ?>
+          <tr> 
+            <td colspan="2" align="center"><input name="Submit" value="Enregistrer" type="submit"></td>
+            <td width="69%">&nbsp;</td>
+          </tr>
+        </table>
+      </form>
+</div>
+<script>
+    for (i=1;i<=9;i++) {
+        addAutocomplete("txtAlbum"+i,"txtAlbumId"+i,"txtAlbumId"+i,"<?php echo BDO_URL; ?>getjson?data=Album");
+    }
+    </script>

@@ -10,7 +10,44 @@
    <?php echo $page->menuCollection(); ?>
     <h1>Tableau de bord de ma collection</h1>
     
-    <div class="cadre1" style="float:left;margin: auto; margin-left:5px ;padding:auto;">
+    <div class="cadre1" style="float:left;">
+
+    <h2>Carr&eacute; Magique </h2>
+
+            <table width="300" border="0">
+
+                    <tr>
+
+            <?php
+
+            $i = 1;
+
+            foreach ($view->a_carre as $o_tome) {
+
+                if ($i > 3) {
+
+                    $i = 1;
+
+                    echo '</tr><tr>';
+
+                }
+
+                echo '<td width="100" class="CarreMagique">'.$ficheAlbum->urlAlbum ($o_tome,'couvMedium').'</td>';
+
+                $i ++;
+
+            }
+
+            ?> 
+
+            </tr>
+
+            </table>
+    <a href="Paramcarre" class="fancybox fancybox.iframe {width:600,height:400}">Paramètres de mon Carr&eacute; Magique</a>
+    
+    </div>
+    
+    <div class="cadre1" style="float:left;margin: auto; margin-left:5px ;padding:auto;max-width:400px;">
 
     				<h2>Informations sur la collection</h2>
 
@@ -46,13 +83,25 @@
 
                         <br />
 
-                        Propositions de corrections : <?php echo $view->user_prop_corrS;?>
+                        Propositions de corrections : <?php echo $view->user_prop_corr;?>
 
                     </p>
-
+                    <h2>Partage de ma collection</h2>
+                    <form method="post">
+                                <p>Rendre ma collection public : <select name="open_collec">
+                                            <option value="Y" <?php if ($view->open_collec == "Y") echo "selected=''"; ?> >Oui</option>
+                                            <option value="N" <?php if ($view->open_collec == "N") echo "selected=''"; ?>>Non</option>
+                                    </select><input type="submit" value="Ok">
+                                    
+                                    
+                                </p>
+                    
+                                <p>Adresse public de la collection : <br><a href="<?php echo BDO_URL ?>guest?user=<?php echo encodeUserId($view->user_id);?>"><?php echo BDO_URL; ?>guest?user=<?php echo encodeUserId($view->user_id);?></a>
+                                </p>
+                    </form>
     </div>
 
-
+    				
 
 <hr class="expSep"/>
 

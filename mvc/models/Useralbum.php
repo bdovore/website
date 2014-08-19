@@ -299,5 +299,84 @@ class Useralbum extends Bdo_Db_Line
          return $obj;
     }
     
+    public function Carre($user) {
+        /*
+         * Fonction qui renvoie les albums du carré magique de l'utilisateur 
+         * 
+         */
+        // Selections des 9 albums les mieux notés
+
+        if ($user->CARRE_TYPE == 0) {
+
+            $query = "
+
+	SELECT
+
+		t.ID_TOME,
+
+		t.TITRE as TITRE_TOME,
+
+		en.IMG_COUV
+
+	FROM
+
+		users_album ua
+
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
+
+		INNER JOIN users_comment uc ON  uc.id_tome = en.id_tome AND uc.user_id = ua.user_id
+
+		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+
+	WHERE
+
+		ua.user_id=" . $user->$user_id . "
+
+		and ua.flg_achat='N'
+
+	ORDER BY uc.note desc
+
+	LIMIT 0,9";
+
+        }
+
+        // Selections du carre magique
+
+        else {
+
+            $query = "
+
+	select
+
+		t.ID_TOME,
+
+		t.TITRE as TITRE_TOME,
+
+		en.IMG_COUV
+
+   	from
+
+		users_list_carre ulc
+
+		INNER JOIN bd_tome t ON t.id_tome = ulc.id_tome
+
+		INNER JOIN bd_edition en ON en.id_edition = t.id_edition
+
+	where
+
+		ulc.user_id=" . $user->user_id . "
+
+	ORDER BY ulc.rang
+
+	limit 0,9
+
+	";
+
+        }
+        $resultat = Db_query($query);
+
+        return Db_fetch_all_obj($resultat, 'ID_TOME');
+    }
+    
 }
 ?>

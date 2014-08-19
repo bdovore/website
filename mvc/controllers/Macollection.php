@@ -15,9 +15,16 @@ class Macollection extends Bdo_Controller {
         
           if (User::minAccesslevel(2)) {
             $user_id = $_SESSION["userConnect"]->user_id;
-             $this->loadModel('Useralbum');
-           
-             
+            $this->loadModel('Useralbum');
+            $user = $this->getUserInfo();
+
+            $open_collec = postVal("open_collec","");
+            
+            if ($open_collec <> "") {
+                // mise à jour des paramètres de la collection
+                $user->set_dataPaste(array("OPEN_COLLEC" => $open_collec));
+                $user->update();
+            }
             $this->view->set_var('a_lastAchat',$this->Useralbum->lastAchat($user_id));
 
             $this->view->set_var('a_lastFuturAchat',$this->Useralbum->lastFuturAchat($user_id));
@@ -33,13 +40,15 @@ class Macollection extends Bdo_Controller {
             $user_prop_corr = $prop_stat["user_prop_corr"];
 
            
-           
             $this->view->set_var( array (
                 
                 "stat" => $this->Useralbum->getStatistiques($user_id),
                 "user_prop_alb" => $user_prop_alb ,
-                "user_prop_corr" => $user_prop_corr
-               
+                "user_prop_corr" => $user_prop_corr,
+                "a_carre" =>  $this->Useralbum->carre($this->getUserInfo()),
+                 "user_id" => $user_id,
+                "carre_type" => $user->CARRE_TYPE,
+                "open_collec" => $user->OPEN_COLLEC
                     )
                   ) ;
         }
@@ -50,6 +59,20 @@ class Macollection extends Bdo_Controller {
         
         $this->view->set_var("PAGETITLE","Ma Collection de sur Bdovore");
         $this->view->render();
+    }
+    
+    
+    private function getUserInfo() {
+        /*
+         * Récupère les infos du user connecté
+         */
+            
+
+        $user = new User($_SESSION["userConnect"]->user_id);
+
+        $user->load();
+
+        return $user;
     }
     
     public function majCollection () {

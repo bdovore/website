@@ -91,7 +91,7 @@ class Guest extends Bdo_Controller
 
         // Selections des 9 albums les mieux notés
 
-        $this->view->set_var('a_carre', $user->carre());
+        $this->view->set_var('a_carre',  $this->Useralbum->carre($user));
 
                 
 
