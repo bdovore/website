@@ -330,7 +330,7 @@ class Useralbum extends Bdo_Db_Line
 
 	WHERE
 
-		ua.user_id=" . $user->$user_id . "
+		ua.user_id=" . $user->user_id . "
 
 		and ua.flg_achat='N'
 

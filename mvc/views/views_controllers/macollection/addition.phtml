@@ -1,4 +1,16 @@
 <link href="<?php echo BDO_URL; ?>style/addition.css" rel="stylesheet" type="text/css">
+<script>
+$(document).ready(function() {
+	$(".fancybox2")
+    .fancybox({
+        type: 'iframe',
+        autoSize : false,
+        afterClose: function () {
+                parent.location.reload(true);
+            }
+    });
+});
+</script>
 <?php 
 
 $ficheAlbum = $view->getHelper('ficheAlbum');
@@ -16,7 +28,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     </div>
 
      <div class="cadre1">
-    <a href="<?php echo BDO_URL;?>Macollection/detailvalorisation" class="fancybox fancybox.iframe {width:415,height:500}">Detail 
+    <a href="<?php echo BDO_URL;?>Macollection/detailvalorisation" class="fancybox2 fancybox.iframe {width:415,height:500}">Detail 
     de la valorisation</a>
     </div>
 

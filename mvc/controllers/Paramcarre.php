@@ -21,18 +21,28 @@ class Paramcarre extends Bdo_Controller {
             $user_id = $_SESSION["userConnect"]->user_id;
             $this->loadModel('Useralbum');
             $user = $this->getUserInfo();
-
-             if (postVal("Submit") == "Enregister") {
+            $action = postVal("Submit","");
+            
+             if ( $action == "Enregistrer") {
                  /*
                   * Sauvegarde du carré magique
                   */
-                 $carre_type=0;
+                
+                 $carre_type = '0';
                  $auto = postVal("auto","N");
-                 if ($auto == N) $carre_type=1;
+                 
+                 if ($auto == N) $carre_type='1';
+                 
+                 $user->set_dataPaste(array("CARRE_TYPE" => $carre_type));
+                 $user->update();
                  
                  if ($carre_type == 1) {
-                     
+                     $this->loadModel("Users_list_carre");
+                     $this->Users_list_carre->majListCarre($_SESSION["userConnect"]->user_id,postVal("txtAlbumId"));
                  }
+                 $this->view->addInfoPage("Modifications enregistrées !");
+
+                $this->view->addPhtmlFile('alert', 'BODY');
              }       
 
             $this->view->set_var(array(

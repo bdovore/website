@@ -1,4 +1,15 @@
-
+<script>
+$(document).ready(function() {
+	$(".fancybox2")
+    .fancybox({
+        type: 'iframe',
+        autoSize : false,
+        afterClose: function () {
+                parent.location.reload(true);
+            }
+    });
+});
+</script>
         
 <?php
     $ficheAlbum = $view->getHelper('ficheAlbum');
@@ -43,7 +54,7 @@
             </tr>
 
             </table>
-    <a href="Paramcarre" class="fancybox fancybox.iframe {width:600,height:400}">Paramètres de mon Carr&eacute; Magique</a>
+    <a href="Paramcarre" class="fancybox2 fancybox.iframe {width:600,height:400}">Paramètres de mon Carr&eacute; Magique</a>
     
     </div>
     
