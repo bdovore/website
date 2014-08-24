@@ -6,7 +6,12 @@ function __autoload ($class_name)
     $classFile = implode(DS, $a_className);
     $file = BDO_DIR . 'library' . DS . $classFile . '.php';
     
-    return require_once $file;
+    if (file_exists($file))   {
+    return require_once $file; }
+    else{ 
+        return false;
+    }
+    
 }
 function htmlPrepaTexte($val)
 {

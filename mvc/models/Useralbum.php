@@ -76,7 +76,7 @@ class Useralbum extends Bdo_Db_Line
         	g.libelle as NOM_GENRE, 
         
         	en.ID_EDITION,
-        	
+        	en.DTE_PARUTION,
         	en.ean as EAN_EDITION, 
         	en.isbn as ISBN_EDITION, 
         

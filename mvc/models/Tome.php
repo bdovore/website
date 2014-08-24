@@ -36,6 +36,7 @@ class Tome extends Bdo_Db_Line
         	en.IMG_COUV,
         	en.ean as EAN_EDITION, 
         	en.isbn as ISBN_EDITION, 
+                en.DTE_PARUTION,
         
                 c.ID_COLLECTION,
         	c.nom as NOM_COLLECTION,
@@ -355,24 +356,43 @@ FROM bd_tome t
     }
     
     
-    public function getListAlbumToComplete($user_id, $id_serie) {
-        $query = " WHERE s.id_serie = '".intval($id_serie)."'
-	AND
-	NOT EXISTS (
-		SELECT NULL 
-		FROM users_album ua
-		INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
-		WHERE 
-		ua.user_id = ".intval($user_id)."
-		AND bd_tome.id_tome=en.id_tome 
-	)
-	AND NOT EXISTS (
-		SELECT NULL 
-		FROM users_exclusions uet
-		WHERE uet.user_id = ".intval($user_id)."
-		AND bd_tome.id_tome=uet.id_tome
-	) 
-        order by en.dte_parution desc";
+    public function getListAlbumToComplete($user_id, $id_serie=0) {
+        if ($id_serie == 0) {
+            $query = " WHERE 
+            NOT EXISTS (
+                    SELECT NULL 
+                    FROM users_album ua
+                    INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
+                    WHERE 
+                    ua.user_id = ".intval($user_id)."
+                    AND bd_tome.id_tome=en.id_tome 
+            )
+            AND NOT EXISTS (
+                    SELECT NULL 
+                    FROM users_exclusions uet
+                    WHERE uet.user_id = ".intval($user_id)."
+                    AND bd_tome.id_tome=uet.id_tome
+            ) 
+            order by bd_serie.tri, bd_serie.NOM, bd_tome.NUM_TOME";
+        } else {
+            $query = " WHERE s.id_serie = '".intval($id_serie)."'
+            AND
+            NOT EXISTS (
+                    SELECT NULL 
+                    FROM users_album ua
+                    INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
+                    WHERE 
+                    ua.user_id = ".intval($user_id)."
+                    AND bd_tome.id_tome=en.id_tome 
+            )
+            AND NOT EXISTS (
+                    SELECT NULL 
+                    FROM users_exclusions uet
+                    WHERE uet.user_id = ".intval($user_id)."
+                    AND bd_tome.id_tome=uet.id_tome
+            ) 
+            order by en.dte_parution desc";
+        }
         
        // echo $this->select().$query;
          return $this->load("c",$query);
