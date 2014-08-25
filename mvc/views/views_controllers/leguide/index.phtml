@@ -138,13 +138,15 @@ if (isset($view->dbs_tome)){
            echo ("</td>");
             echo("<td style='vertical-align:top'>");
             
-            echo $ficheAlbum->urlalbum($tome,'albTitle');
+            echo "<strong>".$ficheAlbum->urlalbum($tome,'albTitle')."</strong>";
+            echo ("<span id='noteTome".$tome->ID_TOME ."'> </span>");
             echo ("<br>");
-             echo ("<strong>Note : ".$tome->NOTE ."</strong> publié par <a href='./guest?user=".$tome->user_id."'>".$tome->username. "</a> le ".$tome->DTE_POST);
+             echo ("Publié par <a href='./guest?user=".$tome->user_id."'>".$tome->username. "</a> le ".$tome->DTE_POST);
              echo ("<p>".nl2br($tome->COMMENT)."</p>");
              echo ("</td>");
              echo ("</table>");
              echo ("</div>");
+             echo "<script>$('#noteTome".$tome->ID_TOME."').raty({score: ".$tome->NOTE/2 .", readOnly: true});</script>";
              //echo ('<hr class="expSep">');
             //echo ("<tr><td>");
             //echo $ficheAlbum->big($tome);

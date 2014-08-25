@@ -122,7 +122,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                             <a href="#" onclick="openSerie();">	<?php echo $view->tome->NOM_SERIE;?></a> 
                         </h3>
 			
-                                <font size="-1"><?php if ($view->tome->NB_NOTE_TOME > 0) { ?> Album noté <?php echo $view->tome->MOYENNE_NOTE_TOME;?>/10 pour <?php echo $view->tome->NB_NOTE_TOME ?> notes. <?php ;} ?></font>
+                                <font size="-1"><?php if ($view->tome->NB_NOTE_TOME > 0) { ?> <span id="noteTome<?php echo $view->tome->ID_TOME; ?>"> </span> <script>$('#noteTome<?php echo $view->tome->ID_TOME; ?>').raty({score: <?php echo $view->tome->MOYENNE_NOTE_TOME/2.0; ?>, readOnly: true});</script> pour <?php echo $view->tome->NB_NOTE_TOME ?> notes. <?php ;} ?></font>
                                 <br>
 			<?php echo $view->tome->NOM_GENRE;?>  -   <?php echo $view->tome->scpseudo; if ($view->tome->scpseudo <> $view->tome->depseudo) echo "/".$view->tome->depseudo; ?>   
 					<br> <b>Edition </b> <font size="-1">

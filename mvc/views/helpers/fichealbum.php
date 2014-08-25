@@ -221,6 +221,13 @@ class FicheAlbum
     	    $html .=$this->urlAlbum($o_tome, 'albTitle').'</td></tr>';
 
     	}
+        // note/votes
+
+    	if ($o_tome->NB_NOTE_TOME) {
+
+    	    $html .= '<tr><td class="fiche_h2l" colspan="2"><div align="center" id=noteTome'.$o_tome->ID_TOME.'> </div></td><td>';
+            $html .= "<script>$('#noteTome".$o_tome->ID_TOME."').raty({score: ".$o_tome->MOYENNE_NOTE_TOME/2 .", readOnly: true});</script>";
+    	}
  // nom de la serie
 
         if ($o_tome->NOM_SERIE
@@ -294,13 +301,7 @@ class FicheAlbum
 
 
 
-    	// note/votes
-
-    	if ($o_tome->NB_NOTE_TOME) {
-
-    	    $html .= '<tr><td class="fiche_h2l" colspan="2">Album noté '.$o_tome->MOYENNE_NOTE_TOME.'/10 pour '.$o_tome->NB_NOTE_TOME.' votes</td><td>';
-
-    	}
+    	
 
     	 
 
