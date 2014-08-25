@@ -53,7 +53,7 @@ class Export extends Bdo_Controller {
                         $this->loadModel("Useralbum");
                         
                         $dbs_tome = $this->Useralbum->load("c"," WHERE ua.user_id = ".$_SESSION["userConnect"]->user_id." and flg_achat = '$flg_achat' ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME" );
-                        $entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution', 'Date d\'ajout', 'Remarque', 'Prété', 'Emprunteur', 'Date d\'achat', 'Prix', 'Cadeau', 'Edition originale');
+                        $entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution', 'Date d\'ajout', 'Remarque', 'Pret', 'Emprunteur', 'Date d\'achat', 'Prix', 'Cadeau', 'Edition originale');
                         $largeur = array(20, 20, 5, 10, 15, 15, 15, 15, 15, 15, 15, 5, 20, 5, 10, 15, 10, 5, 5);
                         $nbpages = 100;
                         break;
@@ -166,12 +166,12 @@ class Export extends Bdo_Controller {
                         header("Content-Type: application/force-download");
                         header("Content-Type: application/octet-stream");
                         header("Content-Type: application/download");;
-                        header("Content-Disposition: attachment;filename=File.xls");
+                        header("Content-Disposition: attachment;filename=" . $nomFichier . ".xls");
                         header("Content-Transfer-Encoding: binary ");
                         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
                         $objWriter->save('php://output');
                          
-                        $objWriter->save('php://output');
+                        
                         exit;
 
                         break;
@@ -181,7 +181,7 @@ class Export extends Bdo_Controller {
                         $nomFichier .=".csv";
 
                         // Construction du header
-                        header("Content-Type: application/csv-tab-delimited-table");
+                        header("Content-Type: application/csv-tab-delimited-table; charset=utf-8");
                         header("Content-Disposition: attachment; filename=\"$nomFichier\"");
 
                         // Titre des colonnes
@@ -208,7 +208,7 @@ class Export extends Bdo_Controller {
                             $txtCol .= $sep.$tome->ISBN_EDITION;
                             $txtCol .= $sep.$tome->NOM_GENRE;
                             $txtCol .= $sep.$tome->scpeudo;
-                           $txtCol .= $sep.$tome->depsceudo;
+                            $txtCol .= $sep.$tome->depsceudo;
                             $txtCol .= $sep.$tome->NOM_EDITEUR;
                             $txtCol .= $sep.$tome->NOM_COLLECTION;
                             $txtCol .= $sep.$tome->DTE_PARUTION;
