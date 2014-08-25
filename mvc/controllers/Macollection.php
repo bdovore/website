@@ -159,8 +159,8 @@ class Macollection extends Bdo_Controller {
             // tableau pour gérer les order by
            
             $a_order[0]= "IMG_COUV";
-            $a_order[1]= "TITRE_TOME";
-            $a_order[2]= "NOM_SERIE";
+            $a_order[1]= "TITRE_TOME, NUM_TOME";
+            $a_order[2]= "NOM_SERIE, NUM_TOME";
             $a_order[3]= "NUM_TOME";
             $a_order[4]= "NOM_EDITION";
             $a_order[5]= "NOM_COLLECTION";
