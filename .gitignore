@@ -14,4 +14,8 @@ public/.htaccess
 #ignore temporary files of some editors
 *~
 *.swp
+
+#ignore script-generated files
 Collection au*
+*.xls
+*.pdf
