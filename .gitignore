@@ -14,3 +14,4 @@ public/.htaccess
 #ignore temporary files of some editors
 *~
 *.swp
+Collection au*
