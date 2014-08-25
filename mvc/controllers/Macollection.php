@@ -156,18 +156,6 @@ class Macollection extends Bdo_Controller {
             $user_id = $_SESSION["userConnect"]->user_id;
             $this->loadModel('Useralbum');
            
-            // tableau pour gérer les order by
-           
-            $a_order[0]= "IMG_COUV";
-            $a_order[1]= "TITRE_TOME, NUM_TOME";
-            $a_order[2]= "NOM_SERIE, NUM_TOME";
-            $a_order[3]= "NUM_TOME";
-            $a_order[4]= "NOM_EDITION";
-            $a_order[5]= "NOM_COLLECTION";
-            $a_order[6]="scpseudo";
-            $a_order[7]= "depseudo";
-            $a_order[8]= "DATE_AJOUT";
-            
             $page = getVal("page",1);
             $length = getVal("length",10);
             $searchvalue = Db_Escape_String(getVal("l_search","" ));
@@ -180,6 +168,17 @@ class Macollection extends Bdo_Controller {
             if ($sort < 0) $sort =1;
             
             $order = getVal("order","DESC");
+            // tableau pour gérer les order by
+           
+            $a_order[0]= "IMG_COUV";
+            $a_order[1]= "TITRE_TOME $order, NUM_TOME";
+            $a_order[2]= "NOM_SERIE $order, NUM_TOME";
+            $a_order[3]= "NUM_TOME";
+            $a_order[4]= "NOM_EDITION";
+            $a_order[5]= "NOM_COLLECTION";
+            $a_order[6]="scpseudo";
+            $a_order[7]= "depseudo";
+            $a_order[8]= "DATE_AJOUT";
             
             $pret = getVal("cb_pret","N");
             
