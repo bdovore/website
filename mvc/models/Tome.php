@@ -135,7 +135,7 @@ class Tome extends Bdo_Db_Line
                                 bd_edition.COMMENT as comment_edition,
                                 bd_edition.id_tome
                            from users_album inner join bd_edition using (id_edition)
-                           where users_album.user_id = ". $_SESSION['userConnect']->user_id ."
+                           where users_album.user_id = ". intval($_SESSION['userConnect']->user_id) ."
                                 group by bd_edition.id_tome) ua 
                                on ua.id_tome = bd_tome.id_tome 
                             
@@ -264,7 +264,12 @@ FROM bd_tome t
          * Mode : 1=Serie, 2=Auteur, 3=Intégrales/Coffret
          */
         
-        // R�cup�re le nombre d'albums
+		$user_id = intval($_SESSION["userConnect"]->user_id);
+		$mode = intval($mode);
+		$nb_mois = intval($nb_mois);
+		$page = intval($page);
+
+		// Récupère le nombre d'albums
         if ($mode == 1)
         {
 	$query = "
@@ -278,12 +283,12 @@ FROM bd_tome t
 				INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 				INNER JOIN bd_serie s ON s.id_serie = t.id_serie
 			WHERE
-				ua.user_id=".$_SESSION["userConnect"]->user_id."
+				ua.user_id=".$user_id."
 				AND NOT EXISTS (
 							SELECT NULL FROM users_exclusions ues
 							WHERE s.id_serie=ues.id_serie 
 							AND ues.id_tome = 0 
-							AND ues.user_id = ".$_SESSION["userConnect"]->user_id."
+							AND ues.user_id = ".$user_id."
 						) 	
 		) list_serie ON bd_tome.id_serie=list_serie.id_serie
 		
@@ -293,13 +298,13 @@ FROM bd_tome t
 			FROM users_album ua
 			INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
 			WHERE 
-			ua.user_id = ".$_SESSION['userConnect']->user_id."
+			ua.user_id = ".$user_id."
 			AND bd_tome.id_tome=en.id_tome 
 		)
 		AND NOT EXISTS (
 			SELECT NULL 
 			FROM users_exclusions uet
-			WHERE uet.user_id = ".$_SESSION['userConnect']->user_id."
+			WHERE uet.user_id = ".$user_id."
 			AND bd_tome.id_tome=uet.id_tome
 		)  
                 ";
@@ -314,14 +319,14 @@ FROM bd_tome t
                     
                             
                     WHERE 
-                            (bd_tome.id_scenar IN (SELECT id_auteur FROM users_list_aut WHERE user_id = ". $_SESSION['userConnect']->user_id.") OR 
-                                bd_tome.id_dessin IN (SELECT id_auteur FROM users_list_aut WHERE user_id = ". $_SESSION['userConnect']->user_id."))
+                            (bd_tome.id_scenar IN (SELECT id_auteur FROM users_list_aut WHERE user_id = ". $user_id .") OR 
+                                bd_tome.id_dessin IN (SELECT id_auteur FROM users_list_aut WHERE user_id = ". $user_id ."))
 
                            and ua.id_edition is null 
                             AND NOT EXISTS (
                                     SELECT NULL 
                                     FROM users_exclusions uet
-                                    WHERE uet.user_id = ".$_SESSION['userConnect']->user_id."
+									WHERE uet.user_id = ". $user_id ."
                                     AND bd_tome.id_tome=uet.id_tome
                             )  
                     ";
@@ -339,13 +344,13 @@ FROM bd_tome t
                             AND NOT EXISTS (
                                     SELECT NULL 
                                     FROM users_exclusions uet
-                                    WHERE uet.user_id = ".$_SESSION['userConnect']->user_id."
+                                    WHERE uet.user_id = ". $user_id ."
                                     AND bd_tome.id_tome=uet.id_tome
                             )  
                     ";
             }
         
-        $query .= "AND en.dte_parution >= DATE_SUB(NOW(), INTERVAL ".$nb_mois." MONTH)";
+        $query .= "AND en.dte_parution >= DATE_SUB(NOW(), INTERVAL ". $nb_mois." MONTH)";
         $query .= " ORDER BY en.dte_parution";
         
         $query .= " limit ".(($page-1)*20).", 20";
@@ -356,7 +361,9 @@ FROM bd_tome t
     }
     
     
-    public function getListAlbumToComplete($user_id, $id_serie=0) {
+	public function getListAlbumToComplete($user_id, $id_serie=0) {
+
+		$user_id = intval($user_id);
         if ($id_serie == 0) {
             $query = " WHERE 
             NOT EXISTS (
@@ -364,31 +371,31 @@ FROM bd_tome t
                     FROM users_album ua
                     INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
                     WHERE 
-                    ua.user_id = ".intval($user_id)."
+                    ua.user_id = ".$user_id."
                     AND bd_tome.id_tome=en.id_tome 
             )
             AND NOT EXISTS (
                     SELECT NULL 
                     FROM users_exclusions uet
-                    WHERE uet.user_id = ".intval($user_id)."
+                    WHERE uet.user_id = ".$user_id."
                     AND bd_tome.id_tome=uet.id_tome
             ) 
             order by bd_serie.tri, bd_serie.NOM, bd_tome.NUM_TOME";
         } else {
-            $query = " WHERE s.id_serie = '".intval($id_serie)."'
+            $query = " WHERE s.id_serie = '".$id_serie."'
             AND
             NOT EXISTS (
                     SELECT NULL 
                     FROM users_album ua
                     INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
                     WHERE 
-                    ua.user_id = ".intval($user_id)."
+                    ua.user_id = ".$user_id."
                     AND bd_tome.id_tome=en.id_tome 
             )
             AND NOT EXISTS (
                     SELECT NULL 
                     FROM users_exclusions uet
-                    WHERE uet.user_id = ".intval($user_id)."
+                    WHERE uet.user_id = ".$user_id."
                     AND bd_tome.id_tome=uet.id_tome
             ) 
             order by en.dte_parution desc";

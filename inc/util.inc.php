@@ -400,10 +400,22 @@ function getVal ($nomvar, $default = '')
     return $val;
 }
 
+function getValInteger ($nomvar, $default = 0)
+{
+    $val = isset($_GET[$nomvar]) ? $_GET[$nomvar] : $default;
+    return intval($val);
+}
+
 function postVal ($nomvar, $default = '')
 {
     $val = isset($_POST[$nomvar]) ? $_POST[$nomvar] : $default;
     return $val;
+}
+
+function postValInteger ($nomvar, $default = '')
+{
+    $val = isset($_POST[$nomvar]) ? $_POST[$nomvar] : $default;
+    return intval($val);
 }
 
 function var_dump_pre ($var)

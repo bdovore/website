@@ -14,7 +14,7 @@ class Macollection extends Bdo_Controller {
         // liste les albums
         
           if (User::minAccesslevel(2)) {
-            $user_id = $_SESSION["userConnect"]->user_id;
+            $user_id = intval($_SESSION["userConnect"]->user_id);
             $this->loadModel('Useralbum');
             $user = $this->getUserInfo();
 
@@ -61,22 +61,18 @@ class Macollection extends Bdo_Controller {
         $this->view->render();
     }
     
-    
     private function getUserInfo() {
         /*
          * Récupère les infos du user connecté
          */
-            
-
-        $user = new User($_SESSION["userConnect"]->user_id);
-
+        $user = new User(intval($_SESSION["userConnect"]->user_id));
         $user->load();
 
         return $user;
     }
     
     public function majCollection () {
-        $id_tome = getVal('id_edition',0);
+        $id_tome = getValInteger('id_edition',0);
        /* Fonction pour ajouter / mettre à jour un album dans la collection 
         * 
         * seul le user connecté peut mettre à jour 
@@ -84,8 +80,8 @@ class Macollection extends Bdo_Controller {
         * retour : vide si ok, code erreur sinon
         */
         if (! empty($_SESSION['userConnect']->user_id)) {
-            $user_id = $_SESSION['userConnect']->user_id;
-            $id_edition = getVal("id_edition",0);
+            $user_id = intval($_SESSION['userConnect']->user_id);
+            $id_edition = getValInteger("id_edition",0);
             $flg_achat = getVal('flg_achat','N');
             
             $flg_pret = getVal('flg_pret','N');
@@ -146,35 +142,37 @@ class Macollection extends Bdo_Controller {
                 $this->view->set_var('json', json_encode(array('CODE'=> 'ERR_EDITION', 'MSG' => "Id edition nécessaire")));
                 
             }
-             $this->view->layout = "ajax";
+            $this->view->layout = "ajax";
             $this->view->render();
         }
     }
     
      public function mesEtageres () {
           if (User::minAccesslevel(2)) {
-            $user_id = $_SESSION["userConnect"]->user_id;
+            $user_id = intval($_SESSION["userConnect"]->user_id);
             $this->loadModel('Useralbum');
            
-            $page = getVal("page",1);
-            $length = getVal("length",10);
+            $page = getValInteger("page",1);
+            $length = getValInteger("length",10);
             $searchvalue = Db_Escape_String(getVal("l_search","" ));
            
             
             // variable $sort donne la colonne pour le tri
             // on s'assure que la variable est dans le bon intervale de valeur
-            $sort = intval(getVal("sort",9));
-            $sort = max(min($sort,9),0);
-            if ($sort < 0) $sort =1;
-            
+            $sort = getValInteger("sort",9);
+            $sort = max(min($sort,9),1);
+            //if ($sort <= 0) $sort = 1;//inutile grace a max(min()) juste au-dessus 
+
+            //TODO getValInArray("order",array("ASC","DESC")); ou quelque chose du genre
             $order = getVal("order","DESC");
 
-            if ( strcmp($order,"ASC") !== 0 && strcmp($order,"DESC") !== 0 )
-                $order = "DESC";
+            //évite les injections SQL (inutile quand on aura écrit getValInArray())
+            if ( strcmp($order,"ASC") !== 0 )
+                $order = "DESC";//si ça n'est pas ASC, ça doit être DESC ...
 
             // tableau pour gérer les order by
             $a_order[0]= "IMG_COUV";
-            $a_order[1]= "TITRE_TOME $order, NUM_TOME";
+            $a_order[1]= "TITRE_TOME $order, NUM_TOME"; // MySQL: "ORDER BY column1 TRI1, column2 TRI2". TRI1, TRI2 dans [ASC, DESC]
             $a_order[2]= "NOM_SERIE $order, NUM_TOME";
             $a_order[3]= "NUM_TOME";
             $a_order[4]= "NOM_EDITION";
@@ -233,40 +231,42 @@ class Macollection extends Bdo_Controller {
      
      public function futursAchats () {
           if (User::minAccesslevel(2)) {
-            $user_id = $_SESSION["userConnect"]->user_id;
+            $user_id = intval($_SESSION["userConnect"]->user_id);
             $this->loadModel('Useralbum');
            
              
-            $page = getVal("page",1);
-            $length = getVal("length",10);
+            $page = getValInteger("page",1);
+            $length = getValInteger("length",10);
             $searchvalue = Db_Escape_String(getVal("l_search","" ));
-           
+
+            //TODO remplacer les 3 lignes suivantes par getValInArray 
+            $order = getVal("order","DESC");
+
+            if ( strcmp($order,"ASC") !== 0 )
+                $order = "DESC";
+
             // tableau pour gérer les order by
-           
             $a_order[0]= "IMG_COUV";
-            $a_order[1]= "TITRE_TOME";
-            $a_order[2]= "NOM_SERIE";
+            $a_order[1]= "TITRE_TOME $order, NUM_TOME";
+            $a_order[2]= "NOM_SERIE $order, NUM_TOME";
             $a_order[3]= "NUM_TOME";
             $a_order[4]= "NOM_EDITION";
             $a_order[5]= "NOM_COLLECTION";
-            $a_order[6]="scpseudo";
+            $a_order[6]= "scpseudo";
             $a_order[7]= "depseudo";
             $a_order[8]= "DATE_AJOUT";
             
             // variable $sort donne la colonne pour le tri
             // on s'assure que la variable est dans le bon intervale de valeur
-            $sort = intval(getVal("sort",9));
-           $sort = max(min($sort,9),0);
-            if ($sort < 0) $sort =1;
-            
-           
+            $sort = getValInteger("sort",9);
+            $sort = max(min($sort,9),1);
+            //if ($sort <= 0) $sort = 1;//inutile grace a max(min()) juste au-dessus
             
             $limit = " limit ".(($page - 1)*$length).", ".$length;
             $orderby = " order by ".$a_order[$sort-1]." ".$order;
             
             $where = " where ua.user_id = ".$user_id ." and flg_achat = 'O' ";
             
-           
             
             if(searchvalue <> "") $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
            // echo  $this->Useralbum->select()." where ua.user_id = ".$user_id ." and flg_achat = 'N' ".$orderby. $limit;
@@ -307,12 +307,12 @@ class Macollection extends Bdo_Controller {
           * 
           */
          if (User::minAccesslevel(2)) {
-             $id_edition = getVal("id_edition",0);
+             $id_edition = getValInteger("id_edition",0);
              $this->loadModel("Useralbum");
              
              $this->Useralbum->set_dataPaste(array(
                  "id_edition" => $id_edition,
-                 "user_id" => $_SESSION["userConnect"]->user_id
+                 "user_id" => intval($_SESSION["userConnect"]->user_id)
              ));
              //$this->Useralbum->load();
              $this->Useralbum->delete();
@@ -329,9 +329,9 @@ class Macollection extends Bdo_Controller {
           */
            if (User::minAccesslevel(2)) {
                $this->loadModel("Tome");
-               $nb_mois = getVal("nb_mois",1);
-               $page = getVal("page",1);
-               $mode = getVal("mode",1);
+               $nb_mois = getValInteger("nb_mois",1);
+               $page = getValInteger("page",1);
+               $mode = getValInteger("mode",1);
                // creation du filtre par défaut sur les série
                $dbs_tome = $this->Tome->getUserActualite($mode, $nb_mois,$page);
                
@@ -357,42 +357,42 @@ class Macollection extends Bdo_Controller {
           * 
           */
          if (User::minAccesslevel(2)) {
-              $id_serie = getVal("lstSerie",0);
-              
+              $user_id = intval($_SESSION["userConnect"]->user_id);
+              $id_serie = getValInteger("lstSerie",0);
               $action = getVal("action","none"); // variable d'action pour l'ajout ou suppression de série à compléter
               
               $this->loadModel("Tome");
               $this->loadModel("Users_exclusions");
               
               if ($action == "exclude") {
-                  $this->Users_exclusions->addSerieExclude($_SESSION["userConnect"]->user_id,$id_serie);
+                  $this->Users_exclusions->addSerieExclude($user_id,$id_serie);
                   $id_serie = 0;
               }
               if ($action == "raz") {
-                  $idSerieExclu = getVal("idSerieExclu",0);
-                  $this->Users_exclusions->delSerieExclude($_SESSION["userConnect"]->user_id,$idSerieExclu);
+                  $idSerieExclu = getValInteger("idSerieExclu",0);
+                  $this->Users_exclusions->delSerieExclude($user_id,$idSerieExclu);
               }
              
               if($action== "exclude_tome") {
                   $listAlbum = getVal("sel_tome",array());
                   
                   foreach ($listAlbum as $id_tome) {
-                       $this->Users_exclusions->addAlbumExclude($_SESSION["userConnect"]->user_id,$id_serie,$id_tome);
+                       $this->Users_exclusions->addAlbumExclude($user_id,$id_serie,intval($id_tome));
                   }
                   
               }
               
              
-              $listSerie = $this->Users_exclusions->getListSerieToComplete($_SESSION["userConnect"]->user_id);
+              $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id);
               
-              $listExclu = $this->Users_exclusions->getListSerieExclu($_SESSION["userConnect"]->user_id);
+              $listExclu = $this->Users_exclusions->getListSerieExclu($user_id);
               
                if ($id_serie == 0 and count($listSerie) > 0) {
                    // selection de la première série de la liste
                    $id_serie = $listSerie[0]->ID_SERIE;
                }
                
-              $dbs_tome  = $this->Tome->getListAlbumToComplete($_SESSION["userConnect"]->user_id,$id_serie);
+              $dbs_tome  = $this->Tome->getListAlbumToComplete($user_id,$id_serie);
               $this->view->set_var(array(
                   "listSerie" =>  $listSerie,
                   "id_serie" => $id_serie,
@@ -413,77 +413,51 @@ class Macollection extends Bdo_Controller {
      
     public function Addition() {
         /* 
-         * L'addition : reprise quasi telquel du code de Latruffe... 
+         * L'addition : reprise quasi tel quel du code de Latruffe... 
          * Un peu compliqué à refaire en 5 mn !
          */
         // Variables générales
 
          if (User::minAccesslevel(2)) {
 
+            $user_id = intval($_SESSION["userConnect"]->user_id);
             $annee = getVal("annee",'');
             $mois = getVal("mois",'');
             $info = getVal("info",'');
 
             if ($annee=='') $annee=date("Y");
-
             if ($mois=='') $mois=date("n");
-
             if ($info=='') $info=1;
 
 
-
-
-
             // Valeurs d'option
-
-            $tb_mois=array("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre");
-
-            for ($i=0; $i<12; $i++)
-
-            {
-
-                    $opt_mois[$i][0] = $i+1;
-
-                    $opt_mois[$i][1] = $tb_mois[$i];
-
-            }
-
-
+            //$tb_mois=array("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre");
+            //for ($i=0; $i<12; $i++)
+            //{
+            //        $opt_mois[$i][0] = $i+1;
+            //        $opt_mois[$i][1] = $tb_mois[$i];
+            //} 
 
             // initialise les compteurs
-
             $count = 0;
 
-
-
-            // R�cup�re les valeurs par d�faut
-
+            // Récupère les valeurs par défaut
             $this->loadModel("User");
-            $this->User->load("c"," WHERE user_id = ".$_SESSION["userConnect"]->user_id);
-
-
+            $this->User->load("c"," WHERE user_id = ".$user_id);
 
             $defval[0] = $this->User->VAL_ALB;
-
             $defval[1] = $this->User->VAL_INT;
-
             $defval[2] = $this->User->VAL_COF;
-
             $defcoffret = $this->User->VAL_COF_TYPE;
 
-
-
-            // R�cup�re la collection
+            // Récupère la collection
             $this->loadModel("Useralbum");
-            $dbs_album = $this->Useralbum->load("c"," WHERE flg_achat = 'N' and ua.user_id = ".$_SESSION["userConnect"]->user_id . " ORDER BY IFNULL(ua.date_achat, ua.date_ajout) DESC");
-
-
+            $dbs_album = $this->Useralbum->load("c"," WHERE flg_achat = 'N' and ua.user_id = ".$user_id . " ORDER BY IFNULL(ua.date_achat, ua.date_ajout) DESC");
 
 
             $a_album = array();
             $count = 0;
             foreach ($dbs_album->a_dataQuery as $album) 
-
             {
                 /*
                  * On parcours la liste des albums de la colleciton pour faire l'addition
@@ -491,118 +465,62 @@ class Macollection extends Bdo_Controller {
                  * 
                  */
                     if ($album->FLG_INT_TOME == 'O')
-
-                    $type = 1;
-
+                        $type = 1;
                     else
-
-                    $type = 0;
-
+                        $type = 0;
+					
                     if ($album->FLG_TYPE_TOME == 1) $type = 2;
 
-
-
-                    // V�rifie si l'album est cot� par l'utilisateur
-
+                    // Vérifie si l'album est coté par l'utilisateur
                     if (($album->cote != '') & (($album->FLG_TYPE_TOME == 0) | ($defcoffret == 1)))
-
                     {
-
                             $tot_prix[$type] += $album->cote;
-
                             $tot_count[$type]++;
-
                             $prix_retenu = $album->cote;
-
                     }
-
-                    // Verifie si l'album est not� par bdovore
-
+                    // Verifie si l'album est noté par bdovore
                     elseif (($album->PRIX_BDNET != '') & ($album->FLG_TYPE_TOME == 0 | ($defcoffret == 1)))
-
                     {
-
                             $tot_prix[$type] += $album->PRIX_BDNET;
-
                             $tot_count[$type]++;
-
                             $prix_retenu = $album->PRIX_BDNET;
-
                     }
-
-                    // Non valoris�
-
+                    // Non valorisé
                     elseif (($album->FLG_TYPE_TOME == 0) | ($defcoffret == 1))
-
                     {
-
                             if ($defval[$type] == '')
-
                             {
-
                                     $tot_count[$type]++;
-
                                     $prix_retenu = 0;
-
                             }else{
-
                                     $tot_prix[$type] += $defval[$type];
-
                                     $tot_count[$type]++;
-
                                     $prix_retenu = $defval[$type];
-
                             }
-
                     }
-
                     // Coffret valorisé album par album
-
                     elseif (($album->FLG_TYPE_TOME == 1) & ($defcoffret == 0))
-
                     {
-
                             $tot_prix[$type] += $defval[2];
-
                             $tot_count[$type]++;
-
                             $prix_retenu = $defval[2];
-
                     }
-
-
-
+                    
                     // stocke les mini et les maxi
-
                     $year =$album->annee_achat;
-
                     $depense[$year] += $prix_retenu;
-
                     $nbalbums[$year]++;
 
-
-
-                    // stocke le d�tail par mois
-
+                    // stocke le détail par mois
                     $month = $album->mois_achat;
 
-
-
                     if (($year == $annee) & ($month == $mois))
-
                     {
                             $a_album [] = $album;
                             $prixretenu[$count] = $prix_retenu;
-
                             $count++;
-
                     }
-
             }
-
-
-
-
 
             $this->view->set_var(array(
                 "a_depense" => $depense,
@@ -615,27 +533,14 @@ class Macollection extends Bdo_Controller {
                 "PAGETITLE" => "L'addition"
             ));
 
-            // on remplie le block detail par annee
-
-
-
-            
+            // on remplit le block detail par annee 
          }
          else {
              $this->view->addAlertPage("Vous devez vous authentifier pour accéder à cette page !");
-
-            $this->view->addPhtmlFile('alert', 'BODY');
+             $this->view->addPhtmlFile('alert', 'BODY');
          }
 
         $this->view->render();
-
-        
-
-
-
-
-
-
     }
     
     public function Detailvalorisation() {
@@ -647,7 +552,8 @@ class Macollection extends Bdo_Controller {
             /*
              * On commence par mettre à jour les valeurs dans User si nécessaire
              */
-            $user = new User($_SESSION["userConnect"]->user_id);
+            $user_id = intval($_SESSION["userConnect"]->user_id);
+            $user = new User($user_id);
             $user->load();
             if (getVal("action","") == "Recalculer") {
                 $txtPrixAlbum = getVal("txtPrixAlbum","12");
@@ -659,23 +565,23 @@ class Macollection extends Bdo_Controller {
                 // on met à jour le user
                 
                 $user->set_dataPaste(array(
-                   "VAL_ALB" => floatval($txtPrixAlbum),
+                    "VAL_ALB" => floatval($txtPrixAlbum),
                     "VAL_INT" => floatval($txtPrixIntegrale) ,
                     "VAL_COF" => floatval($txtPrixCoffret),
-                    "VAL_COF_TYPE" => $lstCoffret
+                    "VAL_COF_TYPE" => intval($lstCoffret)
                 ));
                 
                 $user->update();
-            }
+			}
+
             $txtPrixAlbum = $user->VAL_ALB;
             $txtPrixIntegrale = $user->VAL_INT;
             $txtPrixCoffret = $user->VAL_COF;
             $lstCoffret = $user->VAL_COF_TYPE;
             
-            
             $this->loadModel("Useralbum");
             
-            $o_val = $this->Useralbum->getValorisation($_SESSION["userConnect"]->user_id);
+            $o_val = $this->Useralbum->getValorisation($user_id);
             
             $this->view->set_var(array(
                 "o_val" => $o_val,
@@ -683,7 +589,6 @@ class Macollection extends Bdo_Controller {
                 "txtPrixAlbum" => $txtPrixAlbum,
                 "txtPrixIntegrale" => $txtPrixIntegrale,
                 "txtPrixCoffret" => $txtPrixCoffret
-                
             ));
         }
         else {
@@ -699,8 +604,9 @@ class Macollection extends Bdo_Controller {
     public function Proposition () {
         if (User::minAccesslevel(2)) {
             $this->loadModel("User_album_prop");
-            
-            
+
+            $user_id = intval($_SESSION["userConnect"]->user_id);
+
             // Tableau pour les choix d'options
 
             $opt_source[0][0] = 0;
@@ -722,31 +628,31 @@ class Macollection extends Bdo_Controller {
             $opt_filtre[4][1] = 'Effac&eacute; par l\'utilisateur';
             
             $act = getVal("act","");
-            $propid = intval(getVal("propid",0));
+            $propid = getValInteger("propid",0);
             
             $lstSource = getVal("lstSource",0);
             $lstFiltre= getVal("lstFiltre","");
             
-            if ($lstSource ==2){
-		$criteria = "CORRECTION";
-		$choix_source = 2;
-            }else if ($lstSource==1){
-                    $criteria = "EDITION";
-                    $choix_source = 1;
+            if ($lstSource == 2){
+                $criteria = "CORRECTION";
+                $choix_source = 2;
+            }else if ($lstSource == 1){
+                $criteria = "EDITION";
+                $choix_source = 1;
             }else{
-                    $criteria = "AJOUT";
-                    $choix_source = 0;
+                $criteria = "AJOUT";
+                $choix_source = 0;
             }
-            
+
             if ($act == "suppr") {
-                // annulation de la proposition courrante : on passe le statut à 98
+                // annulation de la proposition courante : on passe le statut à 98
                 if ($lstSource == 1) {
                     
                 }
                 else {
                     $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $propid));
                     $this->User_album_prop->load();
-                    if ($this->User_album_prop->USER_ID == $_SESSION["userConnect"]->user_id ) {
+                    if ($this->User_album_prop->USER_ID == $user_id ) {
                         $this->User_album_prop->set_dataPaste(array("STATUS"=>98));
                         $this->User_album_prop->update();
                     }
@@ -756,49 +662,49 @@ class Macollection extends Bdo_Controller {
                 }
                 
             }
-            if ($lstFiltre==0) {
-		if ($lstSource==1){
-			$filtre = " AND (prop_status = 0 OR prop_status = 2 OR prop_status = 3 OR prop_status = 4)";
-		}
+            if ($lstFiltre == 0) {
+                if ($lstSource == 1){
+                    $filtre = " AND (prop_status = 0 OR prop_status = 2 OR prop_status = 3 OR prop_status = 4)";
+                }
                 else{
-			$filtre = " AND (status = 0 OR status = 2 OR status = 3 OR status = 4)";
-		}
-		$choix_filtre = $lstFiltre;
+                    $filtre = " AND (status = 0 OR status = 2 OR status = 3 OR status = 4)";
+                }
+                $choix_filtre = $lstFiltre;
             } 
-            elseif ($lstFiltre!=-1 & $lstFiltre !=""){
-		if ($lstSource ==1){
-			$filtre = " AND prop_status = ".  Db_Escape_String($lstFiltre);
-		}else{
-			$filtre = " AND status = ".Db_Escape_String($lstFiltre);
-		}
-		$choix_filtre = $lstFiltre;
+            elseif ($lstFiltre != -1 && $lstFiltre != ""){
+                if ($lstSource == 1){
+                    $filtre = " AND prop_status = ".  Db_Escape_String($lstFiltre);
+                }else{
+                    $filtre = " AND status = ".Db_Escape_String($lstFiltre);
+                }
+                $choix_filtre = $lstFiltre;
             } 
             else{
-		$filtre = "";
-		$choix_filtre = -1;
-               }
+                $filtre = "";
+                $choix_filtre = -1;
+            }
                
-               $status[0] = "En attente";
-                $status[1] = "Valid&eacute;";
-                $status[2] = "En attente";
-                $status[3] = "En attente";
-                $status[4] = "En attente";
-                $status[99] = "Refus&eacute;";
-                $status[98] = "Effac&eacute; par l'utilisateur";
+            $status[0] = "En attente";
+            $status[1] = "Valid&eacute;";
+            $status[2] = "En attente";
+            $status[3] = "En attente";
+            $status[4] = "En attente";
+            $status[99] = "Refus&eacute;";
+            $status[98] = "Effac&eacute; par l'utilisateur";
             
-                // Requete sur les donn�es � afficher
-            if ($lstSource ==1){
-                // reqûete sur les éditions
+            // Requete sur les données à afficher
+            if ($lstSource == 1){
+                // requête sur les éditions
                 $this->loadModel("Edition");
                 
-                $dbs_edition = $this->Edition->load("c"," WHERE bd_edition.user_id = ".$_SESSION["userConnect"]->user_id." ".$filtre);
+                $dbs_edition = $this->Edition->load("c"," WHERE bd_edition.user_id = ".$user_id." ".$filtre);
                 $this->view->set_var("dbs_edition",$dbs_edition);
             }
             else{
                
-                $dbs_prop= $this->User_album_prop->load("c"," WHERE user_id = ".$_SESSION["userConnect"]->user_id. " 
+                $dbs_prop= $this->User_album_prop->load("c"," WHERE user_id = ".$user_id. " 
                     AND prop_type = '".  Db_Escape_String($criteria)."' $filtre ");
-                  $this->view->set_var("dbs_prop",$dbs_prop);  
+                $this->view->set_var("dbs_prop",$dbs_prop);  
             }
             
             $this->view->set_var($this->User_album_prop->getAllStat());
@@ -809,14 +715,14 @@ class Macollection extends Bdo_Controller {
                 ));
         }
         else {
-             $this->view->addAlertPage("Vous devez vous authentifier pour accéder à cette page !");
-
+            $this->view->addAlertPage("Vous devez vous authentifier pour accéder à cette page !");
             $this->view->addPhtmlFile('alert', 'BODY');
-        }
+		}
+
         $this->view->set_var("PAGETITLE","Suivi des mes propositions");
-         $this->view->render();
+        $this->view->render();
     }
-    
+
 }
 ?>
 
