@@ -15,12 +15,12 @@
 
         });
 
-        var uri = "./collection?user=<?php echo encodeUserId($view->IDUSER); ?>"
+        var uri = "./collection?user=<?php echo encodeUserId($view->IDUSER); ?>&"
 
         q = param();
         for (k in q) {
-            if (k.substring(0, 4) != "sort" && k.substring(0, 5) != "order") {
-                uri += "&" + k + "=" + encodeURIComponent(q[k][0]);
+            if (k.substring(0, 4) != "sort" && k.substring(0, 5) != "order" && k.substring(0,4) != "user") {
+                uri += k + "=" + encodeURIComponent(q[k][0]) + "&";
             }
         }
 
@@ -41,7 +41,7 @@
                 } else {
                     lorder = "ASC";
                 }
-                window.location = uri + "&order=" + lorder + "&sort=" + (index + 1);
+                window.location = uri + "order=" + lorder + "&sort=" + (index + 1);
 
             });
 

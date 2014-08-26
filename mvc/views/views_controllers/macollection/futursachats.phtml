@@ -20,31 +20,28 @@
    q = param();
    for (k in q) {
        if (k.substring(0,4)!= "sort" && k.substring(0,5)!= "order") {
-           uri += "&"+k+"="+ encodeURIComponent( q[k][0]);
+           uri += k+"="+ encodeURIComponent( q[k][0]) + "&";
        }
    }
   
    $("th").each(function () {
-        $(this).on("click", function (e) {
-             e.preventDefault();
-             var index = $("th").index(this);
-             
-              length = $("#length").val();
-              if (index + 1 == <?php echo $view->sort ?>) {
-                if (order == "ASC") {
-                    lorder = "DESC";
-                }
-                else {
-                    lorder = "ASC";
-                }
-                
-              } else {
-                  lorder = "ASC"; 
-               }
-              window.location = uri +"&order="+lorder+"&sort="+ (index + 1);
-              
-        });
-        
+     $(this).on("click", function (e) {
+       e.preventDefault();
+       var index = $("th").index(this);
+
+       length = $("#length").val();
+       if (index + 1 == <?php echo $view->sort ?>) {
+           if (order == "ASC") {
+               lorder = "DESC";
+           }
+           else {
+               lorder = "ASC";
+           }
+       } else {
+           lorder = "ASC"; 
+       }
+       window.location = uri +"order="+lorder+"&sort="+ (index + 1);
+     });
    });
    
    $("#t_collection th:eq( <?php echo ($view->sort - 1) ?>)").attr("aria-sort","<?php if ($view->order == 'ASC') {echo "ascending";} else{echo "descending";} ?>");

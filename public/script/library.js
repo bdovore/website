@@ -261,20 +261,21 @@ function ptq(q)
     /* q changes from string version of query to object */
     for (q={}, i=0; i<x.length; i++)
     {
-        t = x[i].split('=', 2);
-        name = unescape(t[0]);
-        if (!q[name])         q[name] = [];
-        if (t.length > 1)
-            {
-                q[name][q[name].length] = unescape(t[1]);
+        if (x[i].length > 0) {
+            t = x[i].split('=', 2);
+            name = unescape(t[0]);
+            if (!q[name])         q[name] = [];
+            if (t.length > 1) {
+                    q[name][q[name].length] = unescape(t[1]);
+            } else { /* nonstandard */
+                 q[name][q[name].length] = true;
             }
-            /* next two lines are nonstandard */
-            else
-                q[name][q[name].length] = true;
         }
+	}
    return q;
 }
 
 function param() {
+	//substring(1) to remove the '?' at the begining of the querystring in the URL
     return ptq(location.search.substring(1).replace(/\+/g, ' '));
 }
