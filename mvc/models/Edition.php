@@ -143,7 +143,7 @@ class Edition extends Bdo_Db_Line
                                 bd_edition.COMMENT as comment_edition,
                                 bd_edition.id_tome
                            from users_album inner join bd_edition using (id_edition)
-                           where users_album.user_id = ". $_SESSION['userConnect']->user_id ."
+                           where users_album.user_id = ". intval($_SESSION['userConnect']->user_id) ."
                                 ) ua 
                                on ua.id_edition = bd_edition.id_edition 
                             
