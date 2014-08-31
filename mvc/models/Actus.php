@@ -386,7 +386,7 @@ class Actus
 
             if ($obj = Db_fetch_object($resultat)) {
 
-                 $html .=urlAlbum ($obj,'couvMedium');
+                 $html .= urlAlbum ($obj,'couvMedium');
 
                  $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";
 

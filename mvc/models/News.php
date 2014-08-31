@@ -19,11 +19,15 @@ class News extends Bdo_Db_Line
         }
         else {
             $a_data = array(
-                    'NEWS_ID' => $id
+                    'news_id' => $id
             );
         }
         parent::__construct($this->table_name, $a_data);
     }
-
+    
+    public function select() {
+        return "SELECT `news_id`, `ID_NEWS_TYPE`, `news_level`, `news_posteur`, `news_date`, `news_titre` , `news_text`, `news_on_date`, `news_off_date`, `USER_ID`
+            FROM `news` ";
+    }
 
 }

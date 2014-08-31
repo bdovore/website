@@ -1,30 +1,28 @@
 <hr class="expSep" />
-<div class="contenu" id="news">
-	<img src="<?php echo BDO_URL_IMAGE;?>site/rub_news.gif"
-		alt="Rubrique des news" class="rub_title" />
-		<a href="./rss-news"><img
-		src="<?php echo BDO_URL_IMAGE;?>site/feed.png" class="rub_title"
-		style="border: 0; margin: 0 0 13px -7px;" alt="logo fil rss"
-		title="Suivez les news du site grace à ce fil rss" /> </a>
-</div>
-<div id="accordion">
-<?php
-    foreach ($view->a_lastNews as $lastNews) {
+<div class="cadre1">
+    <div class="middle_title"><h3>News du site</h3></div>
+    <div id="accordion">
+    <?php
+        foreach ($view->a_lastNews as $lastNews) {
+            ?>
+        <div class="cadre1">
+      <h4><?php echo $lastNews->news_titre;?>- Postée par <?php echo $lastNews->news_posteur;?> le <?php echo $lastNews->news_date;?></h4>
+      <div>
+        <p>
+    <?php echo $lastNews->news_text;?>
+        </p>
+      </div>
+      </div>
+                     <?php
+        }
         ?>
-  <h4><?php echo $lastNews->news_titre;?>- Postée par <?php echo $lastNews->news_posteur;?> le <?php echo $lastNews->news_date;?></h4>
-  <div>
-    <p>
-<?php echo $lastNews->news_text;?>
-    </p>
-  </div>
-  		 <?php
-    }
-    ?>
+
+    </div>
 </div>
 <script>
 
-$(function() {
+/*$(function() {
     $( "#accordion" ).accordion({header: "h4", collapsible: true, heightStyle: "content"});
 });
-
+*/
 </script>

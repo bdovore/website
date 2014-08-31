@@ -198,9 +198,9 @@ class FicheAlbum
 
 	</div>
 
-    <div style="float:left" >
+    <div style="float:left;margin-left: 5px;" class="mw50">
 
-	<table>';
+	';
 
         
 
@@ -210,7 +210,7 @@ class FicheAlbum
 
     	if ($o_tome->TITRE_TOME) {
 
-    	    $html .= '<tr><td class="fiche_h1r">Titre : </td><td class="fiche_h1l">';
+    	    
 
     		if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME,$o_tome->NUM_TOME))) {
 
@@ -218,14 +218,14 @@ class FicheAlbum
 
     	    }
 
-    	    $html .=$this->urlAlbum($o_tome, 'albTitle').'</td></tr>';
+    	    $html .=$this->urlAlbum($o_tome, 'albTitle').'<br>';
 
     	}
         // note/votes
 
     	if ($o_tome->NB_NOTE_TOME) {
 
-    	    $html .= '<tr><td class="fiche_h2l" colspan="2"><div align="center" id=noteTome'.$o_tome->ID_TOME.'> </div></td><td>';
+    	    $html .= '<div align="center" id=noteTome'.$o_tome->ID_TOME.'> </div><br>';
             $html .= "<script>$('#noteTome".$o_tome->ID_TOME."').raty({score: ".$o_tome->MOYENNE_NOTE_TOME/2 .", readOnly: true});</script>";
     	}
  // nom de la serie
@@ -234,28 +234,40 @@ class FicheAlbum
 
                 AND ($o_tome->TITRE_TOME AND (strtolower($o_tome->NOM_SERIE)!=strtolower($o_tome->TITRE_TOME)) AND $getUrlSerie)) {
 
-            $html .= '<tr><td class="fiche_h1r">Série : </td><td class="fiche_h1l">'.$this->urlSerie($o_tome).'</td></tr>';
+            $html .= 'Série : '.$this->urlSerie($o_tome).'<br>';
 
         }
     	// genre
 
     	if ($o_tome->NOM_GENRE) {
 
-    	    $html .= '<tr><td class="fiche_h2r">Genre : </td><td class="fiche_h2l">';
+    	    $html .= 'Genre : ';
 
-    	    $html .= '<i>'.$o_tome->NOM_GENRE.'</i></td></tr>';
+    	    $html .= '<i>'.$o_tome->NOM_GENRE.'</i><br>';
 
     	}
 
+        if ($o_tome->scpseudo) {
 
+    	    $html .= 'Auteur(s) : ';
+
+    	    $html .= '<i>'.$o_tome->scpseudo.($o_tome->ID_SCENAR == $o_tome->ID_DESSIN ? '' : " / ".$o_tome->depseudo ) .'</i><br>';
+
+    	}
 
     	// editeur
 
     	if ($o_tome->NOM_EDITEUR) {
 
-    	    $html .= '<tr><td class="fiche_h2r">Editeur : </td><td class="fiche_h2l">';
+    	    $html .= 'Editeur : ';
 
-    	    $html .= '<i>'.$o_tome->NOM_EDITEUR.'</i></td></tr>';
+    	    $html .= '<i>'.$o_tome->NOM_EDITEUR.'</i>';
+            if (($o_tome->NOM_COLLECTION) and  ($o_tome->NOM_COLLECTION!= '<N/A>')) {
+
+                $html .= ' (collection  <i>'.$o_tome->NOM_COLLECTION.'</i>)';
+
+            }
+            $html.="<br>";
 
     	}
 
@@ -263,13 +275,7 @@ class FicheAlbum
 
     	// collection editeur
 
-    	if (($o_tome->NOM_COLLECTION) and  ($o_tome->NOM_COLLECTION!= '<N/A>')) {
-
-    	    $html .= '<tr><td class="fiche_h2r">Collection : </td><td class="fiche_h2l">';
-
-    	    $html .= '<i>'.$o_tome->NOM_COLLECTION.'</i></td></tr>';
-
-    	}
+    	
 
 
 
@@ -277,54 +283,22 @@ class FicheAlbum
 
     	if ($o_tome->DATE_PARUTION_EDITION) {
 
-    	    $html .= '<tr><td class="fiche_h2r">Date parution : </td><td class="fiche_h2l">';
+    	    $html .= 'Date parution : ';
 
-    	    $html .=$this->dateParution($o_tome->DATE_PARUTION_EDITION).'</td></tr>';
-
-    	}
-
-
-
-    	// ISBN
-
-    	if ($o_tome->ISBN_EDITION or $o_tome->EAN_EDITION) {
-
-    	    $html .= '<tr><td class="fiche_h3r">Référence(s) : </td><td class="fiche_h3l">';
-
-    	    if ($o_tome->ISBN_EDITION) $html .= ' ISBN-'.$o_tome->ISBN_EDITION;
-
-    	    if ($o_tome->EAN_EDITION) $html .= ' EAN-'.$o_tome->EAN_EDITION;
-
-    	    $html .= '</td></tr>';
+    	    $html .=$this->dateParution($o_tome->DATE_PARUTION_EDITION);
 
     	}
-
-
-
-    	
-
-    	 
-
-
-
-    	// nb_user tome
-
-    	if (!is_null($o_tome->NBR_USER_ID_TOME)) {
-
-    	    $html .= '<tr><td class="fiche_h2l" colspan="2">'.$o_tome->NBR_USER_ID_TOME.' utilisateurs possèdent cet album</td><td>';
-
-    	}
+        
 
     	 
         if (Bdo_Cfg::user()->minAccessLevel(2)) {
             // ajout des liens d'ajout dans la collection
-            $html .= '<tr><td class="fiche_h2r" colspan="2">'.$this->linkCollection($o_tome). '</td></tr>';
+            $html .= '<br>'.$this->linkCollection($o_tome);
            
         }
     	 
 
-    	$html .= '</table>
-
+    	$html .= '
 	</div>';
         
 
@@ -606,8 +580,8 @@ class FicheAlbum
               }
             else {
                 
-                $html .= "<a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' href='javascript:addAlbum(".$o_tome->ID_TOME.",".$o_tome->ID_EDITION.',"N")'."'".'>Ajouter à ma collection</a>';
-                $html .= " - <a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' href='javascript:addAlbum(".$o_tome->ID_TOME.",".$o_tome->ID_EDITION.',"O")'."'".'>Futur Achat</a>';
+                $html .= "<a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' href='javascript:addAlbum(".$o_tome->ID_TOME.",".$o_tome->ID_EDITION.',"N")'."'".' title="Ajouter cet album dans votre collection">Dans ma collection</a>';
+                $html .= " - <a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' href='javascript:addAlbum(".$o_tome->ID_TOME.",".$o_tome->ID_EDITION.',"O")'."'".' title="A acheter prochainement">Futur Achat</a>';
                
 
             }

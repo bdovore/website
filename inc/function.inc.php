@@ -1530,16 +1530,26 @@ function dateParution ($date, $flag = 0)
 
 }
 
-/*
-
- * ficheAlbum
-
-* fiche de présentation d'un album
-
-*
-
-*/
-
+// création de la fonction curString à 4 paramètres  
+// $string = la chaîne tronquer  
+// $start = le caractère de départ  
+// $length = la longueur de la chaîne (en caractère)  
+// $endStr = paramètre optionnel qui termine l'extrait ([…] par défaut)  
+function cutString($string, $start, $length, $endStr = '[...]'){  
+    // si la taille de la chaine est inférieure ou égale à celle  
+    // attendue on la retourne telle qu'elle  
+    if( strlen( $string ) <= $length ) return $string;  
+    // autrement on continue  
+  
+    // permet de couper la phrase aux caractères définis tout  
+    // en prenant en compte la taille de votre $endStr et en   
+    // re-précisant l'encodage du contenu récupéré  
+    $str = mb_substr( $string, $start, $length - strlen( $endStr ) + 1, 'UTF-8');  
+    // retourne la chaîne coupée avant la dernière espace rencontrée  
+    // à laquelle s'ajoute notre $endStr  
+    return substr( $str, 0, strrpos( $str,' ') ).$endStr;  
+}  
+  
 function ficheAlbum ($o_album, $class = 'couvBig')
 
 {
@@ -1670,30 +1680,7 @@ function urlSerie ($o_serie)
 
 }
 
-/*
 
- * Fonctoin getAlbumUrl : fournit l'url d'un lien vers un album V1 :
 
- * remplacement du la fenêtre pop up par un pop in
 
- */
 
-function getAlbumUrl ($id_tome)
-
-{
-
-    $x = getenv("HTTP_USER_AGENT");
-
-    if (strpos($x, 'MSIE 7.0') || strpos($x, 'MSIE 6.0')) {
-
-        return '#" onclick="window.open(' . "'" . BDO_URL . "membres/album.php?id_tome=" . $id_tome . "','Album','width=600,height=600,scrollbars=1')" . ';return false;';
-
-    }
-
-    else {
-
-        return BDO_URL . 'membres/album.php?id_tome=' . $id_tome . '" rel="shadowbox;player=iframe;height=600;width=580;';
-
-    }
-
-}

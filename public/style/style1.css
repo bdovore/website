@@ -527,10 +527,10 @@ textarea {
 #searchtable a {
 	
 	
-	color : #999;
+	color : #FFF;
 	
 	
-	background-color : #fff ;
+	background-color : #471C1C ;
 	
 	
 	margin : 12px;
@@ -546,8 +546,8 @@ textarea {
 	
 	  
 	box-shadow:2px 2px 6px #888;
-	
-	
+	border-radius: 5px;
+	font-size: 1.2em;
 
 
 }
@@ -562,7 +562,7 @@ textarea {
 	color : #fff;
 	
 	
-	background-color : #bbb ;
+	background-color : #6C3030 ;
 	
 	
 	margin : 8px;
@@ -715,11 +715,11 @@ textarea {
 .fond {
 	
 	
-	background-color: #eee;
+	background-color: #fff;
 	
 	
 	opacity: 1;
-	
+	border-radius: 5px;
 	
 
 
@@ -764,7 +764,7 @@ textarea {
 	  
 	box-shadow:4px 4px 6px #888;
 	
-	
+	border-radius: 5px;
 
 
 }
@@ -2230,7 +2230,7 @@ div.cadre1 {
 	padding: 5px;
 	
 	
-	border: 1px solid #bbbbbb;
+	border-bottom: 1px dashed #bbbbbb;
 	
 	
 	text-align : left;
@@ -2517,6 +2517,7 @@ div.copyright {
 	
 	padding: 2px;
 	
+        max-width: 90px;
 	
 
 
@@ -2636,14 +2637,15 @@ div.middle_title {
 	width: 100%;
 	
 	
-	background-color: #000000;
+	background-color: rgba(143, 18, 4, 1);
 	
 	
-	min-width: 150px;
+	/*min-width: 150px;*/
 	
 	color: #FFFFFF;
         
         padding-left: 5px;
+        border-radius:5px;
 
 }
 
@@ -3197,7 +3199,7 @@ font.pucenum {
 	
 	padding: 5px;
 	
-	
+	border-radius:5px;
 
 
 }
@@ -3223,7 +3225,7 @@ font.pucenum {
 	
 	padding-right: 10px;
 	
-	
+	border-radius:5px;
 
 
 }
@@ -3386,6 +3388,7 @@ font-size : 0.8em;
 }
 #search {
     margin-left:10px;
+    font-size:1.1em;
 }
 
 	
@@ -3460,7 +3463,7 @@ list-style-type:circle
 #onglets a
 {
     display : block;
-    color : #666;
+    color : rgba(107, 53, 53, 1);
     text-decoration : none;
     padding : 4px;
 }
@@ -3496,4 +3499,19 @@ table.list_album tr {
 
 .mw50{
    max-width:50%; 
+}
+.mw30{
+   max-width:32%; 
+}
+
+.left{
+    float:left;
+    margin-left:5px;
+    padding-left:5px;
+}
+
+.fright{
+    float:right;
+    margin-left:5px;
+    padding-left:5px;
 }

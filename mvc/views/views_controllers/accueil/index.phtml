@@ -1,3 +1,10 @@
+<?php 
+
+$ficheAlbum = $view->getHelper('ficheAlbum');
+
+
+
+?>
 <div class="colleft">
 <div class="col1wrap">
 				<div class="col1 fond">
@@ -10,7 +17,7 @@
 
 <div class="cadre1">
 
-	<h1>Bienvenue sur BDovore</h1>
+	<h1>BDovore, le site des dévoreurs de BD </h1>
 
         G&eacute;rer votre <b>collection de bandes dessin&eacute;es</b> en ligne via une
 
@@ -67,27 +74,125 @@
 
 </div>
 
+<div style="padding:5px;">
+<h2>Dernières Critiques</h2></div>
 
 
+<div class="cadre1 left mw30">
+ <div class="middle_title"><h3 align="center"><a href="./leguide?rb_mode=3&rb_list=album&submitGuide=Envoyer">BD</a></h3></div>
+ 
+        	 <?php
 
+        foreach ($view->a_lastBD as $tome) {
 
+            ?>
+                <div class='cadre1'>
+                <table>
+            <tr><td style='vertical-align:top'>
+             <?php echo $ficheAlbum->urlalbum($tome,'couvBig'); ?>
+             
+             
+           </td>
+            <td style='vertical-align:top'>
+            
+           <strong><?php echo $ficheAlbum->urlalbum($tome,'albTitle'); ?></strong><br>
+                <span id='noteTome<?php echo $tome->ID_TOME ;?>'> </span>
+            <br>
+            Publié par <a href='./guest?user=".<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
+               
+            </td>
+            </table>
+             </div>
+             <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE/2; ?>, readOnly: true});</script>
+            
+                <?php //echo $ficheAlbum->big ( $lastCommentaires);?>
 
+        <?php
 
-<div id="bx-pager" style="margin:auto; text-align:center">
+        }
 
-    <a data-slide-index="0" href="">[ Derni&egrave;res sorties ]</a> - 
-
-    <a data-slide-index="1" href="">[ Sorties &agrave; venir ]</a> - 
-
-  <a data-slide-index="2" href="">[ Derniers avis ]</a>
-
+        ?>	
+        <hr class="expSep" />
+<div class="fright"><a href="leguide">Tous les avis BD</div>     
 </div>
 
-<div class="slider2">
+<div class="cadre1 left mw30">
+ <div class="middle_title"><h3 align="center"><a href="./leguide?rb_mode=3&rb_list=album&origine=2&submitGuide=Envoyer">Mangas</a></h3></div>
+ 
+        	 <?php
 
-    <div class="slide" style="background-color:#fff">
+        foreach ($view->a_lastManga as $tome) {
 
-        <div class="slideBdo">
+            ?>
+                <div class='cadre1'>
+                <table>
+            <tr><td style='vertical-align:top'>
+             <?php echo $ficheAlbum->urlalbum($tome,'couvBig'); ?>
+             
+             
+           </td>
+            <td style='vertical-align:top'>
+            
+           <strong><?php echo $ficheAlbum->urlalbum($tome,'albTitle'); ?></strong><br>
+                <span id='noteTome<?php echo $tome->ID_TOME ;?>'> </span>
+            <br>
+            Publié par <a href='./guest?user=".<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
+               
+            </td>
+            </table>
+             </div>
+             <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE/2; ?>, readOnly: true});</script>
+            
+                <?php //echo $ficheAlbum->big ( $lastCommentaires);?>
+
+        <?php
+
+        }
+
+        ?>	
+        <hr class="expSep" />
+<div class="fright"><a href="./leguide?rb_mode=3&rb_list=album&origine=2&submitGuide=Envoyer">Tous les avis Mangas</div>     
+</div>
+<div class="cadre1 left mw30">
+ <div class="middle_title"><h3 align="center"><a href="./leguide?rb_mode=3&rb_list=album&origine=3&submitGuide=Envoyer">Comics</a></h3></div>
+ 
+        	 <?php
+
+        foreach ($view->a_lastComics as $tome) {
+
+            ?>
+                <div class='cadre1'>
+                <table>
+            <tr><td style='vertical-align:top'>
+             <?php echo $ficheAlbum->urlalbum($tome,'couvBig'); ?>
+             
+             
+           </td>
+            <td style='vertical-align:top'>
+            
+           <strong><?php echo $ficheAlbum->urlalbum($tome,'albTitle'); ?></strong><br>
+                <span id='noteTome<?php echo $tome->ID_TOME ;?>'> </span>
+            <br>
+            Publié par <a href='./guest?user=".<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
+               
+            </td>
+            </table>
+             </div>
+             <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE/2; ?>, readOnly: true});</script>
+            
+                <?php //echo $ficheAlbum->big ( $lastCommentaires);?>
+
+        <?php
+
+        }
+
+        ?>	
+        <hr class="expSep" />
+<div class="fright"><a href="./leguide?rb_mode=3&rb_list=album&origine=3&submitGuide=Envoyer">Tous les avis Comics</div>     
+</div>
+<hr class="expSep" />
+          <div class="mw50 left">
+
 
             <div class="middle_title"><h3><a href="./leguide?rb_mode=4&rb_list=album&submitGuide=Envoyer">Derni&egrave;res sorties</a></h3></div>
 
@@ -97,101 +202,43 @@
 
             foreach ($view->a_lastSorties as $lastSorties) {
 
-                ?><div style="float:left;margin:5px 0 5px 5px"><?php echo urlAlbum ( $lastSorties ,'couvBig');?></div>
+                echo $ficheAlbum->big ( $lastSorties );
 
-            <?php
+           
 
             }
 
             ?>
-              
-            <hr class="expSep" />	
-            
-        </div>
- 
-     </div>
+          </div>
+           
+     
 
-     <div class="slide">
-
-         <div class="slideBdo">
-
+    
+<div class="mw50 left">
              <div class="middle_title"><h3><a href="./leguide?rb_mode=5&rb_list=album&submitGuide=Envoyer">Sorties &agrave; venir</a></h3></div>
 
               		 <?php
 
             foreach ($view->a_futurSorties as $futurSorties) {
-
-                ?><div style="float:left;margin:5px 0 5px 5px"><?php echo urlAlbum ( $futurSorties ,'couvBig');?></div>
-
-            <?php
+                echo $ficheAlbum->big ( $futurSorties);
 
             }
 
             ?>	
-
+</div>
                         <hr class="expSep" />	
 
             
 
-        </div>
+        
 
-    </div>
+  
 
-    <div class="slide">
+       	
 
-    <div class="slideBdo">
-
-        <div class="middle_title"><h3><a href="./leguide?rb_mode=3&rb_list=album&submitGuide=Envoyer">Derniers avis</a></h3></div>
-
-        	 <?php
-
-        foreach ($view->a_lastCommentaires as $lastCommentaires) {
-
-            ?><div style="float:left;margin:5px 0 5px 5px"><?php echo urlAlbum ( $lastCommentaires ,'couvBig');?></div>
-
-        <?php
-
-        }
-
-        ?>	
-
-           <hr class="expSep" />	
-
-        </div>
-
-    </div>
-
-</div>
+       
 
 <hr class="expSep" />
-
-
-
-
-
-<script type="text/javascript">
-
-$(document).ready(function(){
-
-	  $('.slider2').bxSlider({
-
-		    slideWidth: 650,
-
-  		    minSlides: 1,
-
-		    maxSlides: 1,
-
-		    adaptiveHeight:true,
-
-		    pagerCustom: '#bx-pager'
-
-
-
-		  });
-
-});
-
-</script>
 
 
 
