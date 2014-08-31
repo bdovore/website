@@ -32,12 +32,12 @@ class Accueil extends Bdo_Controller
        
        $this->view->set_var(
                 array(
-                        'a_lastSorties' => $this->lastSorties(),
+                        'a_lastSorties' => $this->lastSorties(6),
                         'a_lastNews' => $this->lastNews(4),
                         'a_lastBD' => $this->lastCommentaires(3),
                         'a_lastManga' => $this->lastCommentaires(3,"Mangas"),
                         'a_lastComics' => $this->lastCommentaires(3,"Comics"),
-                        'a_futurSorties' => $this->futurSorties(),
+                        'a_futurSorties' => $this->futurSorties(6),
                         'PAGETITLE' => "BDOVORE.com - gestion de collection de BD, actualité BD et forums BD"
                 ));
         
@@ -64,7 +64,7 @@ class Accueil extends Bdo_Controller
     {
 
         $this->loadModel("Tome");
-        $dbs = $this->Tome->load("c"," WHERE en.DTE_PARUTION <= CURDATE() and en.DTE_PARUTION > DATE_ADD(CURDATE(), INTERVAL -12 MONTH)  order by en.DTE_PARUTION desc limit 0,".intval($max));
+        $dbs = $this->Tome->load("c"," WHERE en.DTE_PARUTION <= CURDATE() and en.DTE_PARUTION > DATE_ADD(CURDATE(), INTERVAL -12 MONTH) and bd_tome.id_genre not in (17,55) order by en.DTE_PARUTION desc limit 0,".intval($max));
 
         return $dbs->a_dataQuery;
 
@@ -78,7 +78,7 @@ class Accueil extends Bdo_Controller
 
         
         $this->loadModel("Tome");
-        $dbs = $this->Tome->load("c"," WHERE en.DTE_PARUTION > CURDATE() order by en.DTE_PARUTION limit 0,".intval($max));
+        $dbs = $this->Tome->load("c"," WHERE en.DTE_PARUTION > CURDATE() and bd_tome.id_genre not in (17,55) order by en.DTE_PARUTION limit 0,".intval($max));
 
         return $dbs->a_dataQuery;
 

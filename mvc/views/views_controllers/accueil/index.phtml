@@ -191,40 +191,51 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 <div class="fright"><a href="./leguide?rb_mode=3&rb_list=album&origine=3&submitGuide=Envoyer">Tous les avis Comics</div>     
 </div>
 <hr class="expSep" />
-          <div class="mw50 left">
+          <div class="cadre1">
 
 
             <div class="middle_title"><h3><a href="./leguide?rb_mode=4&rb_list=album&submitGuide=Envoyer">Derni&egrave;res sorties</a></h3></div>
 
 
-
+<table class="list_album">
             <?php
-
+            $tr = true;
             foreach ($view->a_lastSorties as $lastSorties) {
+                if ($tr) echo "<tr>";
+                 echo "<td class='mw50'>" . $ficheAlbum->big($lastSorties,$sep=true,$getUrlSerie=false) . "</td>";
 
-                echo $ficheAlbum->big ( $lastSorties );
-
-           
-
+                if (!$tr) {
+                    echo "</tr>";
+                }
+                $tr = !$tr;
             }
 
             ?>
+</table>
+            <hr class="expSep" />
+   <div class="fright"><a href="./leguide?rb_mode=4&rb_list=album&submitGuide=Envoyer">Toutes les dernières sorties</div>       
+ <hr class="expSep" />
           </div>
-           
-     
-
+          
     
-<div class="mw50 left">
+<div class="cadre1">
              <div class="middle_title"><h3><a href="./leguide?rb_mode=5&rb_list=album&submitGuide=Envoyer">Sorties &agrave; venir</a></h3></div>
-
+<table class="list_album">
               		 <?php
-
+            $tr = true;
             foreach ($view->a_futurSorties as $futurSorties) {
-                echo $ficheAlbum->big ( $futurSorties);
+                if ($tr) echo "<tr>";
+                 echo "<td class='mw50'>" . $ficheAlbum->big($futurSorties,$sep=true,$getUrlSerie=false) . "</td>";
+
+                if (!$tr) {
+                    echo "</tr>";
+                }
+                $tr = !$tr;
 
             }
 
             ?>	
+    </table>
 </div>
                         <hr class="expSep" />	
 
