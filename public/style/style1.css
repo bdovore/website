@@ -306,7 +306,7 @@ textarea {
 	min-width: 920px;
 	
     
-    max-width: 1220px;
+        max-width: 1220px;
 	
 	
 	margin-left: auto;
@@ -3360,7 +3360,7 @@ table.list_album tr {
     }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 920px) {
   .colleft {
     float: left;
     width: 200%;
