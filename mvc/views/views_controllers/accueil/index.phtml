@@ -95,11 +95,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
            </td>
             <td style='vertical-align:top'>
             
-           <strong><?php echo $ficheAlbum->urlalbum($tome,'albTitle'); ?></strong><br>
+           <?php echo $ficheAlbum->urlalbum($tome,'albTitle'); ?><br>
                 <span id='noteTome<?php echo $tome->ID_TOME ;?>'> </span>
-            <br>
+           <p class="fiche_album">
             Publié par <a href='./guest?user=".<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
-               
+           </p>
             </td>
             </table>
              </div>
@@ -133,11 +133,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
            </td>
             <td style='vertical-align:top'>
             
-           <strong><?php echo $ficheAlbum->urlalbum($tome,'albTitle'); ?></strong><br>
+           <?php echo $ficheAlbum->urlalbum($tome,'albTitle'); ?><br>
                 <span id='noteTome<?php echo $tome->ID_TOME ;?>'> </span>
-            <br>
+           <p class="fiche_album">
             Publié par <a href='./guest?user=".<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
-               
+           </p>
             </td>
             </table>
              </div>
@@ -153,7 +153,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         <hr class="expSep" />
 <div class="fright"><a href="./leguide?rb_mode=3&rb_list=album&origine=2&submitGuide=Envoyer">Tous les avis Mangas</div>     
 </div>
-<div class="cadre1 left mw30">
+<div class="cadre1 left mw30" id="lastcomics">
  <div class="middle_title"><h3 align="center"><a href="./leguide?rb_mode=3&rb_list=album&origine=3&submitGuide=Envoyer">Comics</a></h3></div>
  
         	 <?php
@@ -170,11 +170,12 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
            </td>
             <td style='vertical-align:top'>
             
-           <strong><?php echo $ficheAlbum->urlalbum($tome,'albTitle'); ?></strong><br>
+           <?php echo $ficheAlbum->urlalbum($tome,'albTitle'); ?><br>
                 <span id='noteTome<?php echo $tome->ID_TOME ;?>'> </span>
             <br>
+            <p class="fiche_album">
             Publié par <a href='./guest?user=".<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
-               
+            </p>
             </td>
             </table>
              </div>

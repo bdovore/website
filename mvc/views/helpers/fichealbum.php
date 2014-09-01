@@ -30,9 +30,9 @@ class FicheAlbum
 
 	</div>
 
-    <div style="float:left" class="mw50">
+    <div style="float:left;font-size:0.9em" class="mw50">
 
-	<table>';
+	';
 
   
 
@@ -42,7 +42,7 @@ class FicheAlbum
 
 	if ($o_tome->TITRE_TOME) {
 
-	    $html .= '<tr><td class="fiche_h2r">Titre : </td><td class="fiche_h2l">';
+	   
 
 		if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME,$o_tome->NUM_TOME))) {
 
@@ -50,7 +50,7 @@ class FicheAlbum
 
 		}
 
-	    $html .=$this->urlAlbum($o_tome, 'albTitle').'</td></tr>';
+	    $html .=$this->urlAlbum($o_tome, 'albTitle').'<br>';
 
 	}
 // nom de la serie
@@ -59,44 +59,15 @@ class FicheAlbum
 
 	        AND ($o_tome->TITRE_TOME AND (strtolower($o_tome->NOM_SERIE)!=strtolower($o_tome->TITRE_TOME)) AND $getUrlSerie)) {
 
-	    $html .= '<tr><td class="fiche_h2r">Série : </td><td class="fiche_h2l">'.$this->urlSerie($o_tome).'</td></tr>';
+	    $html .= 'Série : '.$this->urlSerie($o_tome).'';
 
 	}
 	// genre
 
-	if ($o_tome->NOM_GENRE) {
-
-	    $html .= '<tr><td class="fiche_h3r">Genre : </td><td class="fiche_h3l">';
-
-	    $html .= '<i>'.$o_tome->NOM_GENRE.'</i></td></tr>';
-
-	}
-
-	// editeur
-
-	if ($o_tome->NOM_EDITEUR) {
-
-	    $html .= '<tr><td class="fiche_h3r">Editeur : </td><td class="fiche_h3l">';
-
-	    $html .= '<i>'.$o_tome->NOM_EDITEUR.'</i></td></tr>';
-
-	}
-
+	
 	
 
-	// collection editeur
-
-	if (($o_tome->NOM_COLLECTION) and  ($o_tome->NOM_COLLECTION!= '<N/A>')) {
-
-	    $html .= '<tr><td class="fiche_h3r">Collection : </td><td class="fiche_h3l">';
-
-	    $html .= '<i>'.$o_tome->NOM_COLLECTION.'</i></td></tr>';
-
-	}
-
-	
-
-	$html .= '</table>
+	$html .= '
 
 	</div>
 
@@ -222,14 +193,15 @@ class FicheAlbum
 
     	}
         // note/votes
+        
+    	if ($o_tome->NB_NOTE_TOME > 0) {
 
-    	if ($o_tome->NB_NOTE_TOME) {
-
-    	    $html .= '<div align="center" id=noteTome'.$o_tome->ID_TOME.'> </div><br>';
+    	    $html .= '<div align="center" id=noteTome'.$o_tome->ID_TOME.'> </div>';
             $html .= "<script>$('#noteTome".$o_tome->ID_TOME."').raty({score: ".$o_tome->MOYENNE_NOTE_TOME/2 .", readOnly: true});</script>";
     	}
+       
  // nom de la serie
-
+        $html.="<p class='fiche_album'";
         if ($o_tome->NOM_SERIE
 
                 AND ($o_tome->TITRE_TOME AND (strtolower($o_tome->NOM_SERIE)!=strtolower($o_tome->TITRE_TOME)) AND $getUrlSerie)) {
@@ -264,7 +236,7 @@ class FicheAlbum
     	    $html .= '<i>'.$o_tome->NOM_EDITEUR.'</i>';
             if (($o_tome->NOM_COLLECTION) and  ($o_tome->NOM_COLLECTION!= '<N/A>')) {
 
-                $html .= ' (collection  <i>'.$o_tome->NOM_COLLECTION.'</i>)';
+                $html .= ' -  <i>'.$o_tome->NOM_COLLECTION.'</i>';
 
             }
             $html.="<br>";
@@ -289,7 +261,7 @@ class FicheAlbum
 
     	}
         
-
+        $html.="</p>";
     	 
         if (Bdo_Cfg::user()->minAccessLevel(2)) {
             // ajout des liens d'ajout dans la collection
@@ -326,9 +298,11 @@ class FicheAlbum
 
         $html = '
 
-<div class="cadre1">
-    <img src="'. BDO_URL_COUV.$o_serie->IMG_COUV_SERIE.'" class="couvSmall" style="float:left;margin=2px">
-	<div><table>
+<div class="cadre1">';
+        
+        
+   if ($o_serie->IMG_COUV_SERIE) $html.= '<img src="'. BDO_URL_COUV.$o_serie->IMG_COUV_SERIE.'" class="couvSmall" style="float:left;margin=2px">';
+	$html.='<div><table>
 
 		<tr><td class="fiche_h2l">'. $this->urlSerie($o_serie).'</td></tr>';
 
@@ -455,7 +429,7 @@ class FicheAlbum
 
             
 
-            $html = '<a class="fancybox fancybox.iframe {width:600,height:400}"
+            $html = '<a class="fancybox fancybox.iframe {width:600,height:500}"
 
                 href="' . BDO_URL . $id_link . '" title="' .$titleHtml . '">';
 

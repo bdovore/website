@@ -1,67 +1,5 @@
 /*Classes g?n?riques*/
 
-/*Comptabilit? IE-Firefox*/
-/*html,body{
-	
-	margin:0;
-	
-	padding:0
-
-}
-
-
-
-*/
-/*p {
-	
-	margin:0 0 1em 0;
-	
-	padding:0
-
-}
-
-
-
-*/
-/*h1{
-	
-	margin:0 0 .7em 0;
-	
-	padding:0
-
-}
-
-
-
-*/
-/*form {
-	
-	margin:0;
-	
-	padding:0
-
-}
-
-
-
-
-* {
-	
-	
-	margin: 0;
-	
-	
-	padding: 0;
-	
-	
-
-
-}
-
-
-
-
-*/
 
 /* ---------- balises de base */
 html {
@@ -3234,125 +3172,10 @@ font.pucenum {
 
 
 
-td.fiche_h1l {
-	
-	
-	text-align : left;
-	
-	
-	vertical-align : top;
-	
-	
-	font-size: 1em;
-        
-        max-width:150px;
-	
-		
-
-
+.fiche_album {
+    font-size: 0.9em;
+    color: rgba(107, 107, 107, 1);;
 }
-
-
-
-
-
-td.fiche_h1r {
-	
-	
-	text-align : right;
-	
-	
-	vertical-align : top;
-	
-		
-	font-size: 1em;
-	
-		
-
-
-}
-
-
-
-
-
-td.fiche_h2l {
-	
-	
-	text-align : left;
-	
-	
-	vertical-align : top;
-	
-		
-	font-size: 0.9em;
-	
-		
-
-
-}
-
-
-
-
-
-td.fiche_h2r {
-	
-	
-	text-align : right;
-	
-	
-	vertical-align : top;
-	
-		
-	font-size: 0.9em;
-	
-		
-
-
-}
-
-
-
-
-
-
-td.fiche_h3l {
-	
-	
-	text-align : left;
-	
-	
-	vertical-align : top;
-	
-		
-	font-size: 0.8em;
-	
-		
-
-
-}
-
-
-
-
-
-td.fiche_h3r {
-	
-	
-	text-align : right;
-	
-	
-	vertical-align : top;
-	
-		
-	font-size: 0.8em;
-	
-		
-
-
-}
-
 
 
 
@@ -3514,4 +3337,66 @@ table.list_album tr {
     float:right;
     margin-left:5px;
     padding-left:5px;
+}
+
+@media screen and (max-width: 1100px) {
+  .colleft {
+    float: left;
+    width: 200%;
+    margin-left: 0px !important;  
+    position: relative;
+    right: 100%;
+    min-height: 600px;
+    }
+   .col1 {
+    overflow: hidden;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 0px 25px 0px 0px !important;
+    }
+    
+    .col2 {
+        display:none;
+    }
+}
+
+@media screen and (max-width: 800px) {
+  .colleft {
+    float: left;
+    width: 200%;
+    margin-left: 0px !important;  
+    position: relative;
+    right: 100%;
+    min-height: 600px;
+    }
+   .col1 {
+    overflow: hidden;
+    padding: 5px;
+    border-radius: 5px;
+    margin: auto !important;
+    }
+    
+    .col2 {
+        display:none;
+    }
+    #header {
+        width: 100% !important;
+        margin: auto !important;
+        padding: 5px 5px 0px !important;
+        min-width: 0 !important;
+    }
+    #content {
+        width: 100% !important;
+         margin: auto !important;
+          min-width: 0 !important;
+    }
+    #lastcomics {
+        display:none;
+    }
+    .mw30 {
+        max-width: 45% !important; 
+    }
+    #logo {
+        display:none;
+    }
 }
