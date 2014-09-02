@@ -22,7 +22,7 @@ class FicheAlbum
 
         $html = '
 
-<div class="cadre1">
+<div class="cadre1 fiche_small">
 
 	<div style="float:left" class="mw50">
 
@@ -93,7 +93,7 @@ class FicheAlbum
 
         $html = '
 
-<div class="cadre1">
+<div class="cadre1 fiche_medium">
 
 	<div style="float:left">
 
@@ -161,7 +161,7 @@ class FicheAlbum
 
         $html = '
 
-<div class="cadre1">
+<div class="cadre1 fiche_big">
 
 	<div style="float:left" class="mw50">
 
@@ -541,7 +541,7 @@ class FicheAlbum
         
          if (User::minAccesslevel(2)) {
              $id_source = "addAlbum".$o_tome->ID_EDITION; 
-             $html = "<div id='".$id_source."'>";
+             $html = "<div id='".$id_source."' style='font-size:0.9em;'>";
             if ($o_tome->DATE_AJOUT) {
                  if ($o_tome->FLG_ACHAT == "O") {
                      $html.= "ajouté à vos futurs achats le ".date_format(date_create($o_tome->DATE_AJOUT),"d/m/Y");

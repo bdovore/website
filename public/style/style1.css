@@ -3283,12 +3283,12 @@ list-style-type:circle
     background-color: #fff;
 }
 
-#onglets a
-{
-    display : block;
-    color : rgba(107, 53, 53, 1);
-    text-decoration : none;
-    padding : 4px;
+#onglets a {
+    display: block;
+    color: #101D44;
+    text-decoration: none;
+    padding: 0px 1em;
+    font-weight: bold;
 }
 
 #onglets a:hover
@@ -3307,6 +3307,7 @@ list-style-type:circle
 
 table.list_album {
     height:100%;
+    width:100%;
 }
 table.list_album td {
     height:95%;
@@ -3323,6 +3324,9 @@ table.list_album tr {
 .mw50{
    max-width:50%; 
 }
+.mw70{
+   max-width:70%; 
+}
 .mw30{
    max-width:32%; 
 }
@@ -3337,6 +3341,11 @@ table.list_album tr {
     float:right;
     margin-left:5px;
     padding-left:5px;
+}
+
+.fiche_big{
+   
+    
 }
 
 @media screen and (max-width: 1100px) {
