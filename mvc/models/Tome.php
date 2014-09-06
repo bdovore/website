@@ -401,7 +401,7 @@ FROM bd_tome t
             order by en.dte_parution desc";
         }
         
-       echo $this->select().$query;
+      
          return $this->load("c",$query);
     }
 }
