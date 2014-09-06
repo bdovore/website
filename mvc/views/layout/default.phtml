@@ -281,7 +281,7 @@ div.verticaltext {
                                 <li><a class="menuGene" href="<?php echo BDO_URL;?>presentation"
 					title="C'est quoi ce bidule ?">Pr&eacute;sentation</a></li>
                                 <?php 
-if (User::minAccesslevel(0)) { ?><li>
+if (User::minAccesslevel(1)) { ?><li>
 <a class="menuGene" href="<?php echo BDO_URL;?>admin"
 title="Pour les admins !">Admin</a></li> <?php } ?>
 			</ul>

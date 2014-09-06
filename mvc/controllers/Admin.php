@@ -11,7 +11,7 @@ class Admin extends Bdo_Controller
      */
     public function Index(){
         
-         if (User::minAccesslevel(0)) {
+         if (User::minAccesslevel(1)) {
              $this->loadModel("User_album_prop");
              
              $this->view->set_var($this->User_album_prop->getAllStat());
@@ -24,7 +24,7 @@ class Admin extends Bdo_Controller
     }
     
     public function Proposition() {
-        if (User::minAccesslevel(0)) {
+        if (User::minAccesslevel(1)) {
             $act = $_REQUEST["act"];
             $update = $_REQUEST["chkUpdate"];
             if ($update == 'O') {
