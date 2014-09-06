@@ -82,9 +82,11 @@ class User_album_prop extends Bdo_Db_Line
                     `VALIDATOR`,
                     `VALID_DTE`,
                     `CORR_COMMENT`,
-                    `CORR_STATUT`
+                    `CORR_STATUT`,
+                    USERS.USERNAME
 
-                    FROM " . $this->table_name . "
+                    FROM " . $this->table_name . " INNER JOIN users using(user_id)
+                    
                 ";
     }
     
@@ -106,10 +108,11 @@ class User_album_prop extends Bdo_Db_Line
     public function getAllStat() {
          $prop_alb = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'AJOUT' and status = 0 ");
          $prop_corr = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'CORRECTION' and status = 0");
-         
+         $NBEDITION = Db_CountRow("SELECT * FROM BD_EDITION Where prop_status = 0");
          return (array(
              "NBAJOUT" =>  $prop_alb,
-             "NBCORRECTION" => $prop_corr
+             "NBCORRECTION" => $prop_corr,
+             "NBEDITION" => $NBEDITION
          ));
     }
 }

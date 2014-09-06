@@ -1,0 +1,30 @@
+
+        
+<?php
+    $ficheAlbum = $view->getHelper('ficheAlbum');
+    $page = $view->getHelper('pagination');
+   
+    
+?>
+<div align="center" class="cadre1">
+   <?php echo $page->menuAdmin(); ?>
+    <h1>Tableau de bord de l'administration</h1>
+    
+    <div class="cadre1">
+        <h3>Propositions en attente : </h3>
+         Il y a actuellement <a href="./Admin/Proposition?type=AJOUT"><b><?php echo $view->NBAJOUT;?> propositions d'album</b></a>, <a href="./Admin/Proposition?type=EDITION"><b><?php echo $view->NBEDITION;?> propositions de nouvelle édition</b></a>
+             et <a href="./Admin/Proposition?type=CORRECTION"><b><?php echo $view->NBCORRECTION;?> propositions de correction</b></a>
+             en cours de traitement pour l'ensemble de la communauté BDovore.
+            <br />
+    </div>
+    
+     <div class="cadre1">
+        <h3>Raccourcis : </h3>
+        <ul>
+            <li>- <a href='http://admin.bdovore.com/pma-3'>PHP My Admin</a></li>
+            <li>- <a href='http://admin.bdovore.com/mantis'>BDo'Bug</a></li>
+           
+        </ul>
+    </div>
+     
+</div>

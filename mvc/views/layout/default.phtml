@@ -67,7 +67,7 @@ $jquery = $view->getHelper('jquery');
 <?php 
 if (User::minAccesslevel(2)) {
 ?>
-    <link href="<?php echo BDO_URL;?>css/menu-profil/menu-profil.css" rel="stylesheet" type="text/css" />
+   
     <script src="<?php echo BDO_URL;?>script/collection.js" type="text/javascript"></script>
      <script src="<?php echo BDO_URL;?>script/comment.js" type="text/javascript"></script>
     
@@ -280,8 +280,10 @@ div.verticaltext {
 					title="Le forum">Forum</a></li>
                                 <li><a class="menuGene" href="<?php echo BDO_URL;?>presentation"
 					title="C'est quoi ce bidule ?">Pr&eacute;sentation</a></li>
-                                <li><a class="menuGene" href="<?php echo BDO_URL;?>contacts"
-					title="Les coordonn&eacute;es des tauliers du bidule au cas où...">Contacts</a></li>
+                                <?php 
+if (User::minAccesslevel(0)) { ?><li>
+<a class="menuGene" href="<?php echo BDO_URL;?>admin"
+title="Pour les admins !">Admin</a></li> <?php } ?>
 			</ul>
 			<br />
 			<form action="<?php echo BDO_URL;?>browser" method="post"

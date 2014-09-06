@@ -1,180 +1,167 @@
-<?php 
-
+<?php
 $ficheAlbum = $view->getHelper('ficheAlbum');
-
-
-
 ?>
 <div class="colleft">
-<div class="col1wrap">
-				<div class="col1 fond">
-						<!-- Column 1 start -->
-					
-                                                <div class="middle_title">
-                                                <h3>Le Guide BD</h3>
-                                                </div>
-<form id="form1" name="form1" method="get">
-<div id="select_origine">
-    <label for="o1">BD </label>  <input type="radio" name="origine" id="o1" value="1" <?php if($view->origine == 1) echo "checked"; ?> onclick="$('#form1').submit();">  <label for="o2">Mangas </label> <input type="radio" name="origine" id="o2" value="2" <?php if($view->origine == 2) echo "checked"; ?> onclick="$('#form1').submit();">  <label for="o3">Comics</label>  <input type="radio" name="origine" id="o3" value="3" <?php if($view->origine == 3) echo "checked"; ?> onclick="$('#form1').submit();">
-        
-    </div>
+    <div class="col1wrap">
+        <div class="col1 fond">
+            <!-- Column 1 start -->
 
-   
-	<table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC" bgcolor="#FFFFFF" frame="box" rules="groups">
+            <div class="middle_title">
+                <h3>Le Guide BD</h3>
+            </div>
+            <form id="form1" name="form1" method="get">
+                <div id="select_origine">
+                    <label for="o1">BD </label>  <input type="radio" name="origine" id="o1" value="1" <?php if ($view->origine == 1) echo "checked"; ?> onclick="$('#form1').submit();">  <label for="o2">Mangas </label> <input type="radio" name="origine" id="o2" value="2" <?php if ($view->origine == 2) echo "checked"; ?> onclick="$('#form1').submit();">  <label for="o3">Comics</label>  <input type="radio" name="origine" id="o3" value="3" <?php if ($view->origine == 3) echo "checked"; ?> onclick="$('#form1').submit();">
 
-		<tr>
+                </div>
 
-			<td></td>
 
-			<td><div id="rb_mode">
-	<table><tbody><tr><td><b>Actualité BD</b> <br>
-		<input id="rb_mode3" name="rb_mode" value="4" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[3]["checked"]; ?> type="radio"><label for="rb_mode3">Dernières parutions</label><br>
-		<input id="rb_mode4" name="rb_mode" value="5" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[4]["checked"]; ?> type="radio"><label for="rb_mode4">A paraitre</label><br>
-<input id="rb_mode5" name="rb_mode" value="6" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[5]["checked"]; ?> type="radio"><label for="rb_mode5">Derniers ajouts</label><br>
-		</td>
-		
-		<td><b>Découverte BD</b> <br>
-			<input id="rb_mode2" name="rb_mode" value="3" <?php echo $view->a_chGuide[2]["checked"]; ?> onclick="$('#form1').submit();" type="radio"><label for="rb_mode2">Derniers avis de lecture</label><br>
-		<input id="rb_mode0" name="rb_mode" value="1" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[0]["checked"]; ?> type="radio"><label for="rb_mode0">Top des votes</label><br>
-			<input id="rb_mode1" name="rb_mode" value="2" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[1]["checked"]; ?>  type="radio"><label for="rb_mode1">Les incontournables</label><br>
-		</td></tr>
-	</tbody></table>
-			
+                <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC" bgcolor="#FFFFFF" frame="box" rules="groups">
 
-			
+                    <tr>
+
+                        <td></td>
+
+                        <td><div id="rb_mode">
+                                <table><tbody><tr><td><b>Actualité BD</b> <br>
+                                                <input id="rb_mode3" name="rb_mode" value="4" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[3]["checked"]; ?> type="radio"><label for="rb_mode3">Dernières parutions</label><br>
+                                                <input id="rb_mode4" name="rb_mode" value="5" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[4]["checked"]; ?> type="radio"><label for="rb_mode4">A paraitre</label><br>
+                                                <input id="rb_mode5" name="rb_mode" value="6" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[5]["checked"]; ?> type="radio"><label for="rb_mode5">Derniers ajouts</label><br>
+                                            </td>
+
+                                            <td><b>Découverte BD</b> <br>
+                                                <input id="rb_mode2" name="rb_mode" value="3" <?php echo $view->a_chGuide[2]["checked"]; ?> onclick="$('#form1').submit();" type="radio"><label for="rb_mode2">Derniers avis de lecture</label><br>
+                                                <input id="rb_mode0" name="rb_mode" value="1" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[0]["checked"]; ?> type="radio"><label for="rb_mode0">Top des votes</label><br>
+                                                <input id="rb_mode1" name="rb_mode" value="2" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[1]["checked"]; ?>  type="radio"><label for="rb_mode1">Les incontournables</label><br>
+                                            </td></tr>
+                                    </tbody></table>
 
 
 
 
-</div>
 
 
 
-</td>
+                            </div>
 
-<td>
-    
-Genre : <select data-placeholder="Choisir un ou plusieurs genres..." name="a_idGenre[]" id="a_idGenre" style="width:350px;" multiple="multiple" size="10">
 
-								<?php
 
-					
+                        </td>
 
-        foreach ($view->dbs_genre->a_dataQuery as $genre) {
+                        <td>
 
-$selected = (isset($_GET['a_idGenre']) and (in_array($genre->ID_GENRE,$_GET['a_idGenre']))) ? 'selected' : '';
+                            Genre : <select data-placeholder="Choisir un ou plusieurs genres..." name="a_idGenre[]" id="a_idGenre" style="width:350px;" multiple="multiple" size="10">
 
-            echo '<option value="'.$genre->ID_GENRE.'" '.$selected.'>'.$genre->LIBELLE.'</option>';
+<?php
+foreach ($view->dbs_genre->a_dataQuery as $genre) {
 
-        }
+    $selected = (isset($_GET['a_idGenre']) and (in_array($genre->ID_GENRE, $_GET['a_idGenre']))) ? 'selected' : '';
 
-        ?>
+    echo '<option value="' . $genre->ID_GENRE . '" ' . $selected . '>' . $genre->LIBELLE . '</option>';
+}
+?>
 
-</select> 
+                            </select> 
 
-<script type="text/javascript">
+                            <script type="text/javascript">
 
-$(document).ready(function() {
+                                    $(document).ready(function() {
 
-	$("#a_idGenre").chosen({max_selected_options: 10});
+                                        $("#a_idGenre").chosen({max_selected_options: 10});
 
-	});	
+                                    });
 
-</script>
+                            </script>
 
-<div id="rb_list">
+                            <div id="rb_list">
 
-<input id="rb_list1" name="rb_list" type="radio" value="album" <?php echo $view->a_checkboxType['album'];?>><label for="rb_list1"> Albums</label>
+                                <input id="rb_list1" name="rb_list" type="radio" value="album" <?php echo $view->a_checkboxType['album']; ?>><label for="rb_list1"> Albums</label>
 
-<input id="rb_list2" name="rb_list" type="radio" value="serie" <?php echo $view->a_checkboxType['serie'];?>><label for="rb_list2">Séries</label>
+                                <input id="rb_list2" name="rb_list" type="radio" value="serie" <?php echo $view->a_checkboxType['serie']; ?>><label for="rb_list2">Séries</label>
 
-</div>
+                            </div>
 
-			<input type="submit" name="submitGuide" value="Envoyer"></td>
+                            <input type="submit" name="submitGuide" value="Envoyer"></td>
 
-		</tr>
+                    </tr>
 
-	</table>
+                </table>
 
-</form>
+            </form>
 
-                                                <br>
+            <br>
 
-<?php 
+<?php
+if (isset($view->dbs_tome)) {
 
-if (isset($view->dbs_tome)){
-
-        foreach ($view->dbs_tome->a_dataQuery as $tome) {
+    foreach ($view->dbs_tome->a_dataQuery as $tome) {
 
         echo $ficheAlbum->big($tome);
+    }
+}
 
-        }
+if (isset($view->dbs_serie)) {
 
-        }
+    foreach ($view->dbs_serie->a_dataQuery as $serie) {
 
-  if (isset($view->dbs_serie)){
+        echo $ficheAlbum->serie($serie);
+    }
+}
 
-        foreach ($view->dbs_serie->a_dataQuery as $serie) {
+if (isset($view->dbs_comment)) {
+    //echo ("<table>");
 
-            echo $ficheAlbum->serie($serie);
+    foreach ($view->dbs_comment->a_dataQuery as $tome) {
+        ?>
 
-        }
+                    <div class='cadre1'>
+                        <table>
+                            <tr><td style='vertical-align:top'>
+                    <?php echo $ficheAlbum->urlalbum($tome, 'couvBig'); ?>
 
-     }
-   
-     if (isset($view->dbs_comment))  {
-         //echo ("<table>");
-        
-         foreach ($view->dbs_comment->a_dataQuery as $tome) { ?>
-             
-           <div class='cadre1'>
-                <table>
-            <tr><td style='vertical-align:top'>
-             <?php echo $ficheAlbum->urlalbum($tome,'couvBig'); ?>
-             
-             
-           </td>
-            <td style='vertical-align:top'>
-            
-           <strong><?php echo $ficheAlbum->urlalbum($tome,'albTitle'); ?></strong>
-                <span id='noteTome<?php echo $tome->ID_TOME ;?>'> </span>
-            <br>
-            Publié par <a href='./guest?user=".<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
-                <p> <?php echo nl2br($tome->COMMENT); ?>;
-            </td>
-            </table>
-             </div>
-             <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE/2; ?>, readOnly: true});</script>
-            
-       <?php } 
-       
-         
-         
-     }
 
-        ?><div align="center">
-<?php // pagination 
-    
-    $a_qstring = $_GET;
-    unset($a_qstring["page"]);
-    $qstring = http_build_query($a_qstring);
-    if ($view->NUM_PAGE > 1) echo "<a href='./leguide?".$qstring."&page=".($view->NUM_PAGE-1)."'>Précédent &nbsp;</a>";
-    if ($view->NUM_PAGE < 20) echo "<a href='./leguide?".$qstring."&page=".($view->NUM_PAGE+1)."'>&nbsp;Suivant</a>";
+                                </td>
+                                <td style='vertical-align:top'>
+
+                                    <strong><?php echo $ficheAlbum->urlalbum($tome, 'albTitle'); ?></strong>
+                                    <span id='noteTome<?php echo $tome->ID_TOME; ?>'> </span>
+                                    <br>
+                                    Publié par <a href='./guest?user=".<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
+                                    <p> <?php echo nl2br($tome->COMMENT); ?>
+                                </td>
+                        </table>
+                    </div>
+                    <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE / 2; ?>, readOnly: true});</script>
+
+    <?php
+    }
+}
+?><div align="center">
+<?php
+// pagination 
+
+$a_qstring = $_GET;
+unset($a_qstring["page"]);
+$qstring = http_build_query($a_qstring);
+if ($view->NUM_PAGE > 1)
+    echo "<a href='./leguide?" . $qstring . "&page=" . ($view->NUM_PAGE - 1) . "'>Précédent &nbsp;</a>";
+if ($view->NUM_PAGE < 20)
+    echo "<a href='./leguide?" . $qstring . "&page=" . ($view->NUM_PAGE + 1) . "'>&nbsp;Suivant</a>";
 ?>
+            </div>
+            <!-- Column 1 end -->
         </div>
-	<!-- Column 1 end -->
-					</div>
-</div>
-				<!-- Debut de la partie de droite -->
-<div class="col2">
-					<!-- Column 2 start -->
-	            <?php echo $view->ACTUAIR;?>
-	            <?php echo $view->LASTAJOUT;?>
-				<!-- Column 2 end -->
-</div>
+    </div>
+    <!-- Debut de la partie de droite -->
+    <div class="col2">
+        <!-- Column 2 start -->
+                <?php echo $view->ACTUAIR; ?>
+                <?php echo $view->LASTAJOUT; ?>
+        <!-- Column 2 end -->
+    </div>
 </div>
 <script>
-$(document).ready(function() {
-    $( "#select_origine" ).buttonset();
+    $(document).ready(function() {
+        $("#select_origine").buttonset();
     });
- </script>
+</script>

@@ -221,5 +221,41 @@ class Pagination{
         // on renvoie le code xHTML
         return $menu;  
      }
+     
+     public function menuAdmin() {
+        
+      
+        // tableaux contenant les liens d'accès et le texte à afficher
+        $tab_menu_lien = array( "admin", "admin/proposition", "admin/controle", "admin/ajout", "admin/news", "admin/user");
+        $tab_menu_texte = array( "Tableau de bord", "Propositions", "Contrôles", "Ajout",  "News","Utilisateurs" );
+        
+        // informations sur la page
+        
+        $menu = "\n<div id=\"menu\">\n    <ul id=\"onglets\">\n";
+
+        $a_request_uri = explode('?',$_SERVER['REQUEST_URI']);
+        
+        $onglet = $a_request_uri[0];
+        
+        // boucle qui parcours les deux tableaux
+        foreach($tab_menu_lien as $cle=>$lien)
+        {
+            $menu .= "    <li";
+            
+            
+            // si le nom du fichier correspond à celui pointé par l'indice, alors on l'active
+            if( $onglet == "/".$lien )
+                $menu .= " class=\"active\"";
+                
+            $menu .= "><a href=\"" . BDO_URL.$lien . "\">" . $tab_menu_texte[$cle] . "</a></li>\n";
+        }
+        
+        $menu .= "</ul>\n</div>";
+        
+        // on renvoie le code xHTML
+        return $menu;        
+    
+
+    }
  }
 ?>
