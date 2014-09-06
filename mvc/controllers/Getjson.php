@@ -81,7 +81,7 @@ class GetJSON extends Bdo_Controller {
         $isbn = getVal('ISBN', '');
         $ean = getVal('EAN', '');
         $mode = getVal("mode", 0);
-        if (!$ID_TOME) {
+        if ($id_edition or $isbn <> '' or $ean <> '' ) {
             //selection par isbn ou ean
             
             if ($ean <> '') {
