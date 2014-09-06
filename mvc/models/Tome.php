@@ -365,7 +365,24 @@ FROM bd_tome t
 
 		$user_id = intval($user_id);
         if ($id_serie == 0) {
-            $query = " WHERE 
+            $query = " , (
+		SELECT DISTINCT
+			s.*
+		FROM 
+			users_album ua 
+			INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+			INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+			INNER JOIN bd_serie s ON t.ID_SERIE=s.ID_SERIE 
+		WHERE 
+			ua.user_id = ".$user_id."
+			AND NOT EXISTS (
+						SELECT NULL FROM users_exclusions ues
+						WHERE s.id_serie=ues.id_serie 
+						AND ues.id_tome = 0 
+						AND ues.user_id = ".$user_id."
+					)
+		) s_lim WHERE 
+                s.id_serie = s_lim.id_serie AND
             NOT EXISTS (
                     SELECT NULL 
                     FROM users_album ua

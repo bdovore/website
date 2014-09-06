@@ -156,18 +156,11 @@ class Export extends Bdo_Controller {
                         $objPHPExcel->getActiveSheet()->setTitle('Albums');
 
                         // Redirect output to a clientes web browser (Excel2007)
-                        /*header('Content-Type: application/vnd.ms-excel');
+                        header('Content-Type: application/vnd.ms-excel');
                         header('Content-Disposition: attachment;filename="' . $nomFichier . '.xls"');
                         header('Cache-Control: max-age=0');
-                        */
-                        header("Pragma: public");
-                        header("Expires: 0");
-                        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-                        header("Content-Type: application/force-download");
-                        header("Content-Type: application/octet-stream");
-                        header("Content-Type: application/download");;
-                        header("Content-Disposition: attachment;filename=" . $nomFichier . ".xls");
-                        header("Content-Transfer-Encoding: binary ");
+                       
+                        
                         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
                         $objWriter->save('php://output');
                          
