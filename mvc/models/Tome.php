@@ -380,7 +380,7 @@ FROM bd_tome t
                     WHERE uet.user_id = ".$user_id."
                     AND bd_tome.id_tome=uet.id_tome
             ) 
-            order by bd_serie.tri, bd_serie.NOM, bd_tome.NUM_TOME";
+            order by s.tri, s.NOM, bd_tome.NUM_TOME";
         } else {
             $query = " WHERE s.id_serie = '".$id_serie."'
             AND
@@ -401,7 +401,7 @@ FROM bd_tome t
             order by en.dte_parution desc";
         }
         
-       // echo $this->select().$query;
+       echo $this->select().$query;
          return $this->load("c",$query);
     }
 }
