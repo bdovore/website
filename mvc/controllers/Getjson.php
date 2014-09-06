@@ -81,14 +81,17 @@ class GetJSON extends Bdo_Controller {
         $isbn = getVal('ISBN', '');
         $ean = getVal('EAN', '');
         $mode = getVal("mode", 0);
-        if ($ID_TOME == 0 && $id_edition <> 0) {
+        if (!$ID_TOME) {
             //selection par isbn ou ean
+            
             if ($ean <> '') {
                 // selection par ean
                 $filter = "bd_edition.ean  ='" . Db_Escape_String($ean) . "'";
             } else if ($isbn <> '') {
                 // selection par isbn
                 $filter = "bd_edition.isbn = '" . Db_Escape_String($isbn) . "'";
+            } else if ($id_edition){
+                 $filter = "bd_edition.id_edition = ".intval($id_edition);
             }
 
             if ($filter) {
