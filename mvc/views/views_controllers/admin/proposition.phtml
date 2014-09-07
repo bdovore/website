@@ -3,7 +3,8 @@
 <?php
     $ficheAlbum = $view->getHelper('ficheAlbum');
     $page = $view->getHelper('pagination');
-   
+   $date_courante_21 = new DateTime();
+   $date_courante_21->modify("+ ".$view->validationdelay." days");
      // Tableau pour les choix d'options
             $opt_type[0][0] = 0;
             $opt_type[0][1] = 'Album';
@@ -31,8 +32,8 @@
     
     <div class="cadre1">
         <h3>Propositions en attente : </h3>
-         Il y a actuellement <a href="./Admin/Proposition?type=AJOUT"><b><?php echo $view->NBAJOUT;?> propositions d'album</b></a>, <a href="./Admin/Proposition?type=EDITION"><b><?php echo $view->NBEDITION;?> propositions de nouvelle édition</b></a>
-             et <a href="./Admin/Proposition?type=CORRECTION"><b><?php echo $view->NBCORRECTION;?> propositions de correction</b></a>
+         Il y a actuellement <a href="./Proposition?type=AJOUT"><b><?php echo $view->NBAJOUT;?> propositions d'album</b></a>, <a href="./Proposition?type=EDITION"><b><?php echo $view->NBEDITION;?> propositions de nouvelle édition</b></a>
+             et <a href="./Proposition?type=CORRECTION"><b><?php echo $view->NBCORRECTION;?> propositions de correction</b></a>
              en cours de traitement pour l'ensemble de la communauté BDovore.
             <br />
     </div>
@@ -67,7 +68,14 @@
         </thead>
         <tbody>
         <!-- BEGIN PropBlock -->
-        <?php foreach ($view->dbs_prop->a_dataQuery as $prop) { ?>
+        <?php if (issetNotEmpty($view->dbs_prop))  { foreach ($view->dbs_prop->a_dataQuery as $prop) { 
+                $date_parution = new DateTime($prop->DTE_PARUTION);
+		
+                if ($date_parution > $date_courante_21){
+			$stylevaliddelay = 'style="background-color: #FFDB70;" title="Parution le '.$prop->DTE_PARUTION.'"';
+		  
+                }
+                ?>
             <tr> 
                 <td class="data_admin"><?php echo $prop->ID_PROPOSAL;?></td>
                 <td class="data_admin_petit"><?php echo $prop->PROP_DTE;?></td>
@@ -75,10 +83,29 @@
                 <td class="data_admin"><?php echo $prop->SERIE;?></td>
                 <td class="data_admin"><?php echo $prop->TITRE;?></td>
                 <td class="data_admin <?php echo "status".$prop->STATUS;?>"><?php echo GetOption1Value($opt_status,$prop->STATUS);?></td>
-                <td class="data_admin"><a href="<?php echo $view->URLEDIT;?>"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a></td>
+                <td class="data_admin"><a href="./editProposition?ID=<?php echo $prop->ID_PROPOSAL;?>"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a></td>
+                <td class="data_admin" <?php echo $stylevaliddelay;?>><a href="./deleteProposition?src=list&ID=<?php echo $prop->ID_PROPOSAL; ?>"><img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif" width="20" height="21" border="0" /></a></td>
+            </tr>
+        <?php }} ?>
+            <?php if (issetNotEmpty($view->dbs_edition))  { foreach ($view->dbs_edition->a_dataQuery as $prop) { 
+                 $date_parution = new DateTime($prop->DATE_PARUTION_EDITION);
+		
+                if ($date_parution > $date_courante_21){
+			$stylevaliddelay = 'style="background-color: #FFDB70;" title="Parution le '.$prop->DTE_PARUTION.'"';
+		  
+                }?>
+            <tr> 
+                <td class="data_admin"><?php echo $prop->ID_EDITION;?></td>
+                <td class="data_admin_petit"><?php echo $prop->PROP_DTE;?></td>
+                <td class="data_admin"><?php echo $prop->USERNAME;?></td>
+                <td class="data_admin"><?php echo $prop->NOM_SERIE;?></td>
+                <td class="data_admin"><?php echo $prop->TITRE_TOME;?></td>
+                <td class="data_admin <?php echo "status".$prop->PROP_STATUS;?>"><?php echo GetOption1Value($opt_status,$prop->PROP_STATUS);?></td>
+                <td class="data_admin"><a href="./editEdition?ID=<?php echo $prop->ID_EDITION;?>"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a></td>
                 <td class="data_admin" <?php echo $view->STYLE_VALIDDELAY;?>><a href="<?php echo $view->URLDELETE;?>"><img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif" width="20" height="21" border="0" /></a></td>
             </tr>
-        <?php } ?>
+        <?php }} ?>
+            
         </tbody>
         <!-- END PropBlock --> 
     </table>

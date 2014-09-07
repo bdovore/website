@@ -85,7 +85,8 @@ class Edition extends Bdo_Db_Line
                 bd_edition.PROP_DTE, 
                 bd_edition.PROP_STATUS,
                 bd_edition.VALIDATOR,
-                bd_edition.VALID_DTE";
+                bd_edition.VALID_DTE,
+                us.username USERNAME";
         $from = "
         FROM bd_edition
         	INNER JOIN bd_tome ON bd_tome.id_tome = bd_edition.id_tome
@@ -104,7 +105,7 @@ class Edition extends Bdo_Db_Line
         	LEFT JOIN bd_auteur sca ON bd_tome.id_scenar_alt = sca.id_auteur
         	LEFT JOIN bd_auteur dea ON bd_tome.id_dessin_alt = dea.id_auteur
         	LEFT JOIN bd_auteur coa ON bd_tome.id_color_alt = coa.id_auteur
-
+                LEFT JOIN users us on us.user_id = bd_edition.USER_ID 
                 ";
         if (Bdo_Cfg::user()->minAccessLevel(2)) {
             // ajout des champs de la collection de l'utilisateur
