@@ -83,7 +83,8 @@ class User_album_prop extends Bdo_Db_Line
                     `VALID_DTE`,
                     `CORR_COMMENT`,
                     `CORR_STATUT`,
-                    users.USERNAME
+                    users.USERNAME,
+                    users.EMAIL
 
                     FROM " . $this->table_name . " INNER JOIN users using(user_id)
                     

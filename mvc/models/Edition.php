@@ -86,7 +86,8 @@ class Edition extends Bdo_Db_Line
                 bd_edition.PROP_STATUS,
                 bd_edition.VALIDATOR,
                 bd_edition.VALID_DTE,
-                us.username USERNAME";
+                us.username USERNAME,
+                us.email EMAIL";
         $from = "
         FROM bd_edition
         	INNER JOIN bd_tome ON bd_tome.id_tome = bd_edition.id_tome
