@@ -40,7 +40,7 @@ function verifAddExisting(myIdTome,myAction) {
 	<div class="date_before_valid"><?php echo $view->DATEBEFOREVALID;?></div>
     <table width="100%">
         <tr>
-            <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" onsubmit="return verifFieldNull(document.myform.txtSerieId.value);">
+            <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" onsubmit="return verifFieldNull(document.myform.txtSerieId.value)">
                 <!--Debut colonne gauche -->
                 <td width="65%" valign="top">
                     <table class="tableaux_admin">
@@ -398,9 +398,13 @@ function verifAddExisting(myIdTome,myAction) {
                             <td>
                                 <p class="texte"><b>Albums Approchants</b></p>
                                 <div class="texte">
-                                    <!-- BEGIN CloseBlock -->
-                                      <a href="<?php echo $view->URLCLOSELINKS;?>" target="_blank"><?php echo $view->CLOSELINKS;?></a><br />
-                                    <!-- END CloseBlock -->
+                                     <!-- BEGIN CloseBlock -->
+                                    <?php foreach ($view->dbs_tome->a_dataQuery as $tome) { ?>
+                                     <div class="mw50 left">
+                                      <a href="<?php echo BDO_URL."admin/editalbum?alb_id=".$tome->ID_TOME;?>" target="_blank"><?php echo $tome->TITRE_TOME;?></a><br />
+                                     </div>
+                                    <?php } ?>
+                                      <!-- END CloseBlock -->
                                 </div>
                             </td>
                         </tr>

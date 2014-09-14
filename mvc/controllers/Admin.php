@@ -30,9 +30,8 @@ class Admin extends Bdo_Controller {
             }
             $type = getVal("type", "AJOUT");
 
-            $validationdelay = 21; //nbre de jours apr�s lesquels on ne valide pas (pour les parutions futures)
-            $datebeforevalid = "Ne pas valider les albums qui paraissent après le " . date("d/m/Y", mktime(0, 0, 0, date("m"), date("d") + $validationdelay, date("Y"))) . " ($validationdelay jours)";
-
+            $validationdelay = 21; //nbre de jours aprés lesquels on ne valide pas (pour les parutions futures)
+            
             // LISTE LES PROPOSALS
             if ($act == "") {
                 $this->loadModel("User_album_prop");
@@ -80,7 +79,7 @@ class Admin extends Bdo_Controller {
                     "dbs_prop" => $dbs_prop,
                     "dbs_edition" => $dbs_edition,
                     "URLEDIT" => $urledit,
-                    "DATEBEFOREVALID" => $datebeforevalid,
+                    "DATEBEFOREVALID" => $this->getDateBeforeValid(),
                     "validationdelay" => $validationdelay));
             }
 
@@ -92,7 +91,13 @@ class Admin extends Bdo_Controller {
             die("Vous n'avez pas accès à cette page.");
         }
     }
-
+    
+    private function getDateBeforeValid() {
+         $validationdelay = 21; //nbre de jours aprés lesquels on ne valide pas (pour les parutions futures)
+         $datebeforevalid = "Ne pas valider les albums qui paraissent après le " . date("d/m/Y", mktime(0, 0, 0, date("m"), date("d") + $validationdelay, date("Y"))) . " ($validationdelay jours)";
+         
+         return $datebeforevalid;
+    }
     public function deleteProposition() {
         /*
          * Fonction de suppression d'une proposition dont l'id est passé en paramètre
@@ -184,8 +189,230 @@ class Admin extends Bdo_Controller {
         if (User::minAccesslevel(1)) {
             $id = getValInteger("ID");
             $this->loadModel("User_album_prop");
-            $this->User_album_prop->set_dataPaste(array("ID_PROPSAL" => $id));
+            $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $id));
+           // chargement des données complètes
+            $this->User_album_prop->setWithAlbumInfo($bool=true);
             $this->User_album_prop->load();
+            
+            $titre = stripslashes($this->User_album_prop->TITRE);
+
+            $color_status = "";
+            switch ($this->User_album_prop->STATUS) {
+                    case "0":
+                            $color_status = "#FFFFFF";
+                            break;
+                    case "2":
+                            $color_status = "#FFDB70";
+                            break;
+                    case "3":
+                            $color_status = "#8374E7";
+                            break;
+            }
+            
+            $opt_action[0] = "Insérer dans la collection";
+            $opt_action[1] = "Insérer comme achat futur";
+            $opt_action[2] = "Aucune";
+            $opt_type[0][0] = 0;
+            
+            $opt_status[0][0] = 0;
+            $opt_status[0][1] = "En cours";
+            $opt_status[1][0] = 2;
+            $opt_status[1][1] = "En pause";
+            $opt_status[2][0] = 3;
+            $opt_status[2][1] = "Aide requise";
+            $opt_status[3][0] = 4;
+            $opt_status[3][1] = "Aide apportée";
+
+            $opt_type[0][1] = 'Album';
+            $opt_type[1][0] = 1;
+            $opt_type[1][1] = 'Coffret';
+            
+            // Determine l'URL image
+            if (is_null($this->User_album_prop->IMG_COUV) | ($this->User_album_prop->IMG_COUV=='')){
+                    $url_image = BDO_URL_COUV."default.png";
+            }else{
+                    $url_image = BDO_DIR_UPLOAD.$this->User_album_prop->IMG_COUV;
+                    $dim_image = imgdim($url_image);
+            }
+        
+            $this->view->set_var (array(
+                "DATEBEFOREVALID" => $this->getDateBeforeValid(),
+                "PROPID" => stripslashes($this->User_album_prop->ID_PROPOSAL),
+                "TITRE" => stripslashes($this->User_album_prop->TITRE),
+                "CLTITRE" => ($this->User_album_prop->TITRE !='' ? "flat" : "to_be_corrected"),
+                "ORITITRE" => stripslashes($this->User_album_prop->TITRE),
+                "IDSERIE" => stripslashes($this->User_album_prop->ID_SERIE),
+                "CLIDSERIE" => (is_numeric($this->User_album_prop->ID_SERIE) ? "flat" : "to_be_corrected"),
+                "ORISERIE" => stripslashes($this->User_album_prop->SERIE),
+                "TOME" => $this->User_album_prop->NUM_TOME,
+                "CLTOME" => "flat",
+                "PRIX_VENTE" => $this->User_album_prop->PRIX,
+                "ISINT" => (($this->User_album_prop->FLG_INT=='O') ? 'checked' : ''),
+                "OPTTYPE" => GetOptionValue($opt_type,$this->User_album_prop->FLG_TYPE),
+                "IDGENRE" => $this->User_album_prop->ID_GENRE,
+                "CLIDGENRE" => (is_numeric($this->User_album_prop->ID_GENRE) ? "flat" : "to_be_corrected"),
+                "ORIGENRE" => $this->User_album_prop->GENRE,
+                "IDSCEN" => $this->User_album_prop->ID_SCENAR,
+                "CLIDSCEN" => (is_numeric($this->User_album_prop->ID_SCENAR) ? "flat" : "to_be_corrected"),
+                "ORISCENARISTE" => $this->User_album_prop->SCENAR,
+                "IDSCENALT" => $this->User_album_prop->ID_SCENAR_ALT,
+                "CLIDSCENALT" => "flat",
+                "ORISCENARISTEALT" => $this->User_album_prop->SCENARALT,
+                "IDEDIT" => $this->User_album_prop->ID_EDITEUR,
+                "CLIDEDIT" => (is_numeric($this->User_album_prop->ID_EDITEUR) ? "flat" : "to_be_corrected"),
+                "ORIEDITEUR" => $this->User_album_prop->EDITEUR,
+                "IDDESS" => $this->User_album_prop->ID_DESSIN,
+                "CLIDDESS" => (is_numeric($this->User_album_prop->ID_DESSIN) ? "flat" : "to_be_corrected"),
+                "ORIDESSINATEUR" => $this->User_album_prop->DESSIN,
+                "IDDESSALT" => $this->User_album_prop->ID_DESSIN_ALT,
+                "CLIDDESSALT" => "flat",
+                "ORIDESSINATEURALT" => $this->User_album_prop->DESSINALT,
+                "IDCOLOR" => $this->User_album_prop->ID_COLOR,
+                "CLIDCOLOR" => (is_numeric($this->User_album_prop->ID_COLOR) ? "flat" : "to_be_corrected"),
+                "ORICOLORISTE" => $this->User_album_prop->COLOR,
+                "IDCOLORALT" => $this->User_album_prop->ID_COLOR_ALT,
+                "CLIDCOLORALT" => "flat",
+                "ORICOLORISTEALT" => $this->User_album_prop->COLORALT,
+                "IDCOLLEC" => $this->User_album_prop->ID_COLLECTION,
+                "CLIDCOLLEC" => (is_numeric($this->User_album_prop->ID_COLLECTION) ? "flat" : "to_be_corrected"),
+                "ORICOLLECTION" => $this->User_album_prop->COLLECTION,
+                "DTPAR" => $this->User_album_prop->DTE_PARUTION,
+                "EAN" => $this->User_album_prop->EAN,
+                "URLEAN" => "http://www.bdnet.com/".$this->User_album_prop->EAN."/alb.htm",
+                "ISEAN" => check_EAN($this->User_album_prop->EAN) ? "" : "*",
+                "ISBN" => $this->User_album_prop->ISBN,
+                "URLISBN" => "http://www.amazon.fr/exec/obidos/ASIN/".$this->User_album_prop->ISBN,
+                "ISISBN" => check_ISBN($this->User_album_prop->ISBN) ? "" : "*",
+                "PRIX" => $this->User_album_prop->PRIX,
+                "ISTT" => (($this->User_album_prop->FLG_TT == 'O') ? 'checked' : ''),
+                "CLDTPAR" => "flat",
+                "URLIMAGE" => $url_image,
+                "DIMIMAGE" => $dim_image,
+                "HISTOIRE" => stripslashes($this->User_album_prop->HISTOIRE),
+                "SERIE" => is_null($this->User_album_prop->ID_SERIE) ? stripslashes($this->User_album_prop->SERIE) : stripslashes($this->User_album_prop->ACTUSERIE),
+                "CLSERIE" => ($this->User_album_prop->SERIE==$this->User_album_prop->ACTUSERIE ? "flat" : "has_changed"),
+                "GENRE" => is_null($this->User_album_prop->ID_GENRE) ? $this->User_album_prop->GENRE : $this->User_album_prop->ACTUGENRE,
+                "CLGENRE" => ($this->User_album_prop->GENRE==$this->User_album_prop->ACTUGENRE ? "flat" : "has_changed"),
+                "SCENARISTE" => is_null($this->User_album_prop->ID_SCENAR) ?  $this->User_album_prop->ACTUSCENAR :($this->User_album_prop->PSEUDO_SCENAR),
+                "CLSCENARISTE" => ($this->User_album_prop->PSEUDO_SCENAR==$this->User_album_prop->SCENAR ? "flat" : "has_changed"),
+                "SCENARISTEALT" => is_null($this->User_album_prop->ID_SCENAR_ALT) ?  ($this->User_album_prop->SCENARALT) :($this->User_album_prop->PSEUDO_SCENAR_ALT),
+                "CLSCENARISTEALT" => ($this->User_album_prop->PSEUDO_SCENAR_ALT==$this->User_album_prop->SCENARALT ? "flat" : "has_changed"),
+                "DESSINATEUR" => is_null($this->User_album_prop->ID_DESSIN) ?  ($this->User_album_prop->DESSIN) :($this->User_album_prop->PSEUDO_DESSIN),
+                "CLDESSINATEUR" => ($this->User_album_prop->PSEUDO_DESSIN==$this->User_album_prop->DESSIN ? "flat" : "has_changed"),
+                "DESSINATEURALT" => is_null($this->User_album_prop->ID_DESSIN_ALT) ?  ($this->User_album_prop->DESSINALT) :($this->User_album_prop->PSEUDO_DESSIN_ALT),
+                "CLDESSINATEURALT" => ($this->User_album_prop->PSEUDO_DESSIN_ALT==$this->User_album_prop->ORIDESSINALT ? "flat" : "has_changed"),
+                "COLORISTE" => is_null($this->User_album_prop->ID_COLOR) ?  ($this->User_album_prop->COLOR) :($this->User_album_prop->PSEUDO_COLOR),
+                "CLCOLORISTE" => ($this->User_album_prop->PSEUDO_COLOR==$this->User_album_prop->COLOR ? "flat" : "has_changed"),
+                "COLORISTEALT" => is_null($this->User_album_prop->ID_COLOR_ALT) ?  ($this->User_album_prop->COLORALT) :($this->User_album_prop->PSEUDO_COLOR_ALT),
+                "CLCOLORISTEALT" => ($this->User_album_prop->PSEUDO_COLOR_ALT==$this->User_album_prop->COLORALT ? "flat" : "has_changed"),
+                "EDITEUR" => is_null($this->User_album_prop->ID_EDITEUR) ?  ($this->User_album_prop->EDITEUR) :($this->User_album_prop->ACTUEDITEUR),
+                "CLEDITEUR" => ($this->User_album_prop->ACTUEDITEUR==$this->User_album_prop->EDITEUR ? "flat" : "has_changed"),
+                "COLLECTION" => is_null($this->User_album_prop->ID_COLLECTION) ?  ($this->User_album_prop->COLLECTION) :($this->User_album_prop->COLLECTION),
+                "CLCOLLECTION" => ($this->User_album_prop->COLLECTION==$this->User_album_prop->COLLECTION ? "flat" : "has_changed"),
+                "COMMENT" => stripslashes($this->User_album_prop->DESCRIB_EDITION),
+                "CORRCOMMENT" => $this->User_album_prop->CORR_COMMENT,
+                "OPTIONSTATUS" => GetOptionValue($opt_status,$this->User_album_prop->STATUS),
+                "COLOR_STATUS" => $color_status,
+                "PROPACTION" => $this->User_album_prop->ACTION,
+                "ACTIONUTIL" => $opt_action[$this->User_album_prop->ACTION],
+                "ACTIONNAME" => "Valider",
+                "URLACTION" => BDO_URL."admin/adminproposals.php?act=append&propid=".$this->User_album_prop->ID_PROPOSAL,
+                "URLUTILVALID" => BDO_URL."admin/adminproposals.php?act=merge&propid=".$this->User_album_prop->ID_PROPOSAL,
+                "URLCOMMENTCORR" => BDO_URL."admin/adminproposals.php?act=comment&propid=".$this->User_album_prop->ID_PROPOSAL,
+                "URLDELETE" => BDO_URL."admin/deleteProposition?src=fiche&ID=".$this->User_album_prop->ID_PROPOSAL,
+                ));
+
+                // Exemple d'email en cas de suppression
+                $mail_sujet = "Votre proposition d'ajout dans la base BDOVORE";
+                $mail_body = "Bonjour, \n";
+                $mail_body .= "Votre proposition ";
+                $mail_body .= '"'.$titre.'"';
+                $mail_body .= " a été refusée par l'équipe de correction. \n";
+                $mail_body .= "- Les informations que vous avez fournies n'étaient pas suffisantes. \n";
+                $mail_body .= "- La proposition d'un autre membre a été préférée ou validée avant. \n";
+                $mail_body .= "- Nous considérons que cet album n'a pas de rapport suffisamment proche à la bande dessinée pour être intégré à la base de données du site. \n";
+                $mail_body .= "- Cet album figurait déjà dans votre collection. \n";
+                $mail_body .= "Si l'édition par défaut de cet album ne correspond pas à celle que vous possédez,";
+                $mail_body .= "	d'autres éditions sont peut-être déjà présentes dans la base et peuvent étre sélectionnées en cliquant sur l'album en question depuis votre garde-manger (menu déroulant [Mon édition] des fiches album). \n";
+                $mail_body .= "Si ce n'est pas le cas, vous pouvez faire une proposition de nouvelle édition via ce même menu déroulant.\n\n";
+                $mail_body .= "Merci de votre compréhension, \n";
+                $mail_body .= "L'équipe BDOVORE";
+                $this->view->set_var (array(
+                "SUJET_EMAIL" => $mail_sujet,
+                "CORPS_EMAIL" => $mail_body
+                ));
+
+                if ($this->User_album_prop->ID_SERIE != 0){
+                        $this->view->set_var (
+                        "LIENEDITSERIE" , "<a href='".BDO_URL."admin/editserie?serie_id=".stripslashes($this->User_album_prop->ID_SERIE)."'><img src='".BDO_URL_IMAGE."edit.gif' width='18' height='13' border='0'></a>"
+                        );
+                }
+                // Détermine les albums ayant une syntaxe approchante
+                $main_words = main_words(stripslashes($this->User_album_prop->TITRE));
+                if ($main_words[1][0] != ''){
+                        $query = "
+                        where 
+                                bd_tome.titre like '%".  Db_Escape_String($main_words[0][0])."%".DB_Escape_String($main_words[1][0])."%'
+                                or bd_tome.titre like '%".DB_Escape_String($main_words[1][0])."%".DB_Escape_String($main_words[0][0])."%' 
+                                LIMIT 0,30;";
+                }else{
+                        $query = "
+                       where 
+                                bd_tome.titre like '%".DB_Escape_String($main_words[0][0])."%' 
+                        LIMIT 0,30;";
+                }
+                $this->loadModel("Tome");
+                $dbs_tome =  $this->Tome->load("c",$query);
+
+                // on déclare le block é utiliser
+               
+                $this->view->set_var (array(
+                        "dbs_tome" => $dbs_tome
+                ));
+
+                // Récupére l'adresse mail de l'utilisateur
+            
+            $mail_adress = $this->User_album_prop->EMAIL;
+            $pseudo = $this->User_album_prop->USERNAME;
+
+            $this->view->set_var (array(
+            "ADRESSEMAIL" => $mail_adress,
+            "MAILSUBJECT" => "Votre proposition BDovore : ".$titre,
+            "MEMBRE" => $pseudo
+            ));
+
+            // url suivant et précédent
+            $this->User_album_prop->load("c", " WHERE 
+                    id_proposal <".$id." 
+                    AND status = 0 
+                    AND prop_type = 'AJOUT' 
+            ORDER BY id_proposal desc limit 0,1");
+            
+            // URL précédent : proposition avec ID inférieur
+            if ($this->User_album_prop->ID_PROPOSAL <> $id) {
+               $prev_url = BDO_URL."admin/editpropositionajout?ID=".$this->User_album_prop->ID_PROPOSAL;
+                $this->view->set_var ("BOUTONPRECEDENT" , "<a href='".$prev_url."'><input type='button' value='Précédent' /></a>");
+            }else{
+                    $this->view->set_var ("BOUTONPRECEDENT" , "<del>Précédent</del>");
+            }
+           $this->User_album_prop->load("c", " WHERE 
+                    id_proposal > ".$id." 
+                    AND status = 0 
+                    AND prop_type = 'AJOUT' 
+            ORDER BY id_proposal desc limit 0,1
+            ");
+            // URL précédent : proposition avec ID supérieur
+            if ($this->User_album_prop->ID_PROPOSAL <> $id) {
+                   
+                   
+                    $next_url = BDO_URL."admin/editpropositionajout?ID=".$this->User_album_prop->ID_PROPOSAL;
+                    $this->view->set_var ("BOUTONSUIVANT" , "<a href='".$next_url."'><input type='button' value='Suivant'></a>");
+            }else{
+                    $this->view->set_var ("BOUTONSUIVANT" , "<del>Suivant</del>");
+            }
+
+            
+            $this->view->render();
             
             
         } else {

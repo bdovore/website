@@ -16,6 +16,7 @@ date_default_timezone_set ( 'Europe/Paris' );
 include_once (BDO_DIR . 'inc' . DS . 'util.inc.php');
 include_once (BDO_DIR . 'inc' . DS . 'mysql.inc.php');
 include_once (BDO_DIR . 'inc' . DS . 'function.inc.php');
+include_once (BDO_DIR . 'inc' . DS . 'function.cle.inc.php');
 include_once (BDO_DIR . 'inc' . DS . 'function_design.inc.php');
 
 // tableau des roles
