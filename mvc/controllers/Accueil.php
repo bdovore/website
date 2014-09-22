@@ -52,7 +52,7 @@ class Accueil extends Bdo_Controller
         
         $origine = Db_Escape_String($origine);
         $this->loadModel("Comment");
-        $dbs = $this->Comment->load("c"," WHERE c.comment <> '' and g.origine = '$origine' order by DTE_POST desc limit 0,".intVal($max));
+        $dbs = $this->Comment->load("c"," WHERE c.comment <> '' and g.origine = '$origine' order by DTE_POST desc limit 0,".intval($max));
           return $dbs->a_dataQuery;
 
     }

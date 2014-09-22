@@ -184,12 +184,12 @@ class User_album_prop extends Bdo_Db_Line
 
         return (array(
             "user_prop_alb" => $user_prop_alb,
-           "user_prop_corr" =>  $user_prop_corr
+           "user_prop_corr" => $user_prop_corr
         ));
     }
     
     public function supprProposition($id, $user_id) {
-        $query = "UPDATE users_alb_prop SET `STATUS` = 98, `VALIDATOR`=".  Db_Escape_String($user_id)." , `VALID_DTE` = NOW() WHERE id_proposal=".intVal($id);
+        $query = "UPDATE users_alb_prop SET `STATUS` = 98, `VALIDATOR`=".  Db_Escape_String($user_id)." , `VALID_DTE` = NOW() WHERE id_proposal=".intval($id);
         Db_query($query);
     }
 
