@@ -126,7 +126,7 @@ if (isset($view->dbs_comment)) {
                                     <strong><?php echo $ficheAlbum->urlalbum($tome, 'albTitle'); ?></strong>
                                     <span id='noteTome<?php echo $tome->ID_TOME; ?>'> </span>
                                     <br>
-                                    Publié par <a href='./guest?user=".<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
+                                    Publié par <a href='./guest?user=<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
                                     <p> <?php echo nl2br(stripslashes($tome->COMMENT)); ?>
                                 </td>
                         </table>

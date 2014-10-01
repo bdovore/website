@@ -31,7 +31,7 @@ if (isset($view->dbs_comment)) {
         echo $ficheAlbum->urlalbum($tome, 'albTitle');
         echo ("<br>");
         echo ("<strong>Note : " . $tome->NOTE . "</strong> publié par <a href='./guest?user=" . $tome->user_id . "'>" . $tome->username . "</a> le " . $tome->DTE_POST);
-        echo ("<p>" . nl2br($tome->COMMENT) . "</p>");
+        echo ("<p>" . nl2br(stripslashes($tome->COMMENT)) . "</p>");
         echo ("</td>");
         echo ("</table>");
         echo ("</div>");
