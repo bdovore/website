@@ -179,7 +179,7 @@ class Macollection extends Bdo_Controller {
             $a_order[5]= "NOM_COLLECTION";
             $a_order[6]= "scpseudo";
             $a_order[7]= "depseudo";
-            $a_order[8]= "DATE_AJOUT";
+            $a_order[8]= "DATE_ACHAT";
             
             $pret = getVal("cb_pret","N");
             
