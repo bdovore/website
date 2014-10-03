@@ -9,16 +9,16 @@ class Auteurfavoris extends Bdo_Controller {
     
     public function Index () {
         if (User::minAccesslevel(2)) {
+            $user_id = intval($_SESSION["userConnect"]->user_id);
+            $listmaj = getValInteger("txtAuteurId",0);
+
             $this->loadModel("Users_list_aut");
-            $where = " WHERE USER_ID= ".$_SESSION["userConnect"]->user_id;
-            
-            
-            $listmaj = getVal("txtAuteurId",0);
             
             if ($listmaj <> 0) {
-                $this->Users_list_aut->majListAuteur($_SESSION["userConnect"]->user_id, $listmaj);
-                
+                $this->Users_list_aut->majListAuteur($user_id, $listmaj);
             }
+
+            $where = " WHERE USER_ID= " . $user_id;
             //echo $this->Users_list_aut->select().$where;
             $this->Users_list_aut->load("c",$where);
             $this->view->set_var("a_listauteur",$this->Users_list_aut->dbSelect->a_dataQuery);
@@ -31,12 +31,9 @@ class Auteurfavoris extends Bdo_Controller {
     }
     
     public function majListAuteur() {
-     if (User::minAccesslevel(2)) {
-        $this->loadModel("Users_list_aut");
-        
-      
-      
-     }
+       if (User::minAccesslevel(2)) {
+          $this->loadModel("Users_list_aut");
+       }
         
        $this->view->layout = "json";
        $this->view->render(); 
@@ -44,13 +41,12 @@ class Auteurfavoris extends Bdo_Controller {
     }
     
     public function suppAuteur(){
-        
-         if (User::minAccesslevel(2)) {
+        if (User::minAccesslevel(2)) {
      
-         }
+        }
+
         $this->view->layout = "json";
         $this->view->render(); 
-        
     }
     
 }

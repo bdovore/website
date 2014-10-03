@@ -21,7 +21,9 @@ class Browser extends Bdo_Controller
     public $keyword = "";
     
     public $lev_id = "";
-
+    // TODO: $this->lev2_id est utilisé, selon les endroits, comme un id (donc un entier),
+    // comme un string, ou comme un mix genre lev2_id=5269#2L5269 (dans les URL).
+    // Il doit y avoir une confusion quelque part à régler.
     public $lev2_id = "";
 
     public $let = "";
@@ -38,14 +40,13 @@ class Browser extends Bdo_Controller
     {
         parent::__construct();
         
-        $this->pageNum = getVal('pageNum', '0');
+        $this->pageNum = getValInteger('pageNum', 0);
         $this->rb_browse = getVal('rb_browse', 'ser');
-        $this->lev_id = getVal('lev_id');
-        $this->lev2_id = getVal('lev2_id');
+        $this->lev_id = getValInteger('lev_id',0);//comme ça il est 'clean' pour toutes les utilisations
+        $this->lev2_id = getVal('lev2_id');//à vérifier cf. 'TODO' ci-dessus
         $this->let = getVal('let');
-        $this->a_idGenre = getVal('a_idGenre',null);
+        $this->a_idGenre = getVal('a_idGenre',null);//TODO sanitize pour SQL injections
 
-        
         $this->startRow = $this->pageNum * $this->maxRows;
         
         if (! isset($this->a_searchType[$this->rb_browse])) $this->rb_browse = "ser";
@@ -94,9 +95,7 @@ class Browser extends Bdo_Controller
                 $query_where .= " AND nom like '" . PMA_sqlAddslashes($this->let, true) . "%' ";
             }
             if ($this->a_idGenre) {
-
                 $query_where .= " AND ID_GENRE IN (".implode(',',$this->a_idGenre). ")";
-
             }
 
             
@@ -470,12 +469,12 @@ class Browser extends Bdo_Controller
         		bd_serie
         		INNER JOIN bd_tome USING(id_serie)
         	where
-        		(bd_tome.id_dessin = " . Db_Escape_String($this->lev_id) . "
-        		or bd_tome.id_scenar = " . Db_Escape_String($this->lev_id) . "
-        		or bd_tome.id_color = " . Db_Escape_String($this->lev_id) . "
-        		or bd_tome.id_scenar_alt = " . Db_Escape_String($this->lev_id) . "
-        		or bd_tome.id_dessin_alt = " . Db_Escape_String($this->lev_id) . "
-        		or bd_tome.id_color_alt = " . Db_Escape_String($this->lev_id) . ")
+        		(bd_tome.id_dessin = " . $this->lev_id . "
+        		or bd_tome.id_scenar = " . $this->lev_id . "
+        		or bd_tome.id_color = " . $this->lev_id . "
+        		or bd_tome.id_scenar_alt = " . $this->lev_id . "
+        		or bd_tome.id_dessin_alt = " . $this->lev_id . "
+        		or bd_tome.id_color_alt = " . $this->lev_id . ")
         		".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
         	order by name ";
             
@@ -489,7 +488,7 @@ class Browser extends Bdo_Controller
         	from
         		bd_collection
         	where
-        		id_editeur =" . Db_Escape_String($this->lev_id) . "
+        		id_editeur =" . $this->lev_id . "
         	order by name
         	";
         }
@@ -655,14 +654,14 @@ class Browser extends Bdo_Controller
         		INNER JOIN bd_edition USING(ID_EDITION)
         	INNER JOIN bd_genre ON bd_genre.ID_GENRE=bd_serie.ID_GENRE
                     where
-        		bd_tome.id_serie =" . $this->lev2_id . "
+        		bd_tome.id_serie =" . intval($this->lev2_id) . "
                 		and	(
-        			bd_tome.id_dessin = " . Db_Escape_String($this->lev_id) . "
-                			or bd_tome.id_scenar = " . Db_Escape_String($this->lev_id) . "
-                			or bd_tome.id_color = " . Db_Escape_String($this->lev_id) . "
-                			or bd_tome.id_scenar_alt = " . Db_Escape_String($this->lev_id) . "
-                			or bd_tome.id_dessin_alt = " . Db_Escape_String($this->lev_id) . "
-                			or bd_tome.id_color_alt = " . Db_Escape_String($this->lev_id) . "
+        			bd_tome.id_dessin = " . $this->lev_id . "
+                			or bd_tome.id_scenar = " . $this->lev_id . "
+                			or bd_tome.id_color = " . $this->lev_id . "
+                			or bd_tome.id_scenar_alt = " . $this->lev_id . "
+                			or bd_tome.id_dessin_alt = " . $this->lev_id . "
+                			or bd_tome.id_color_alt = " . $this->lev_id . "
                 			)
                 ".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
                 			        
@@ -689,8 +688,8 @@ class Browser extends Bdo_Controller
         		INNER JOIN bd_tome USING(id_tome)
         		INNER JOIN bd_serie USING(id_serie)
         	where
-        		bd_edition.id_editeur=" . Db_Escape_String($this->lev_id) . "
-        		and bd_edition.id_collection=" . Db_Escape_String($this->lev2_id) . "
+        		bd_edition.id_editeur=" . $this->lev_id . "
+        		and bd_edition.id_collection=" . intval($this->lev2_id) . "
         		".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
         		        
         	order by bd_serie.nom
@@ -715,8 +714,8 @@ class Browser extends Bdo_Controller
           	from
                 bd_serie
             where
-                bd_serie.id_genre=" . Db_Escape_String($this->lev_id) . "
-        		and bd_serie.nom like '" . $this->lev2_id . "%'
+                bd_serie.id_genre=" . $this->lev_id . "
+        		and bd_serie.nom like '" . Db_Escape_String($this->lev2_id) . "%'
             order by titre
         	";
             $url_alb = "serie?id_serie=%d";
@@ -726,7 +725,7 @@ class Browser extends Bdo_Controller
         }
         
         if ($this->rb_browse != "ser") {
-            $recAlbum = Db_query($query_album . " LIMIT " . Db_Escape_String($this->startRow) . "," . Db_Escape_String($this->maxRows));
+            $recAlbum = Db_query($query_album . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
             
             $resCount = Db_query('SELECT FOUND_ROWS() as nb');
             $rowCount = Db_fetch_array($resCount);
@@ -754,7 +753,7 @@ class Browser extends Bdo_Controller
                             "FICHESERIE" => $this->lev_id,
                     ));
             
-            $recAlbum = Db_query($query_album . " LIMIT " . Db_Escape_String($this->startRow) . "," . Db_Escape_String($this->maxRows));
+            $recAlbum = Db_query($query_album . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
             
             $resCount = Db_query('SELECT FOUND_ROWS() as nb');
             $rowCount = Db_fetch_array($resCount);

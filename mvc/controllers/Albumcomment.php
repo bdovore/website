@@ -13,10 +13,10 @@ class AlbumComment extends Bdo_Controller {
     
     public function Index () {
     
-        $id_tome = getVal('id_tome',0);
-        $user_id = getVal('user_id',0);
-        $page = getVal('page',1);
-        $all = getVal('all',0);
+        $id_tome = getValInteger('id_tome',0);
+        $user_id = getValInteger('user_id',0);
+        $page = getValInteger('page',1);
+        $all = getValInteger('all',0);
         //echo ("ok");
         $this->loadModel('Comment');
         
@@ -47,7 +47,7 @@ class AlbumComment extends Bdo_Controller {
     }
     
     public function writeComment () {
-        $id_tome = getVal('id_tome',0);
+        $id_tome = getValInteger('id_tome',0);
        /* Fonction pour écrire un commentaire 
         * 
         * seul le user connecté peut écrire un commentaire d'un album
@@ -55,9 +55,9 @@ class AlbumComment extends Bdo_Controller {
         * return : code erreur en json s'il y en a
         */
         if (! empty($_SESSION['userConnect']->user_id)) {
-            $user_id = $_SESSION['userConnect']->user_id;
-            $comment = getVal('comment','');
-            $note = getVal("note",0);
+            $user_id = intval($_SESSION['userConnect']->user_id);
+            $comment = Db_Escape_String(getVal('comment',''));
+            $note = getValInteger("note",0);
             $this->loadModel('Comment');
             
             $this->Comment->load(c," WHERE c.user_id = ".$user_id . " and c.id_tome = ".$id_tome);
