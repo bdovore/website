@@ -45,7 +45,15 @@ class Browser extends Bdo_Controller
         $this->lev_id = getValInteger('lev_id',0);//comme ça il est 'clean' pour toutes les utilisations
         $this->lev2_id = getVal('lev2_id');//à vérifier cf. 'TODO' ci-dessus
         $this->let = getVal('let');
-        $this->a_idGenre = getVal('a_idGenre',null);//TODO sanitize pour SQL injections
+        $this->a_idGenre = getVal('a_idGenre',null);
+        
+        if ($this->a_idGenre)
+        {
+            if ( is_array($this->a_idGenre) )
+                $this->a_idGenre = array_map("intval",$this->a_idGenre);
+            else
+                $this->a_idGenre = intval($this->a_idGenre);
+        }
 
         $this->startRow = $this->pageNum * $this->maxRows;
         
@@ -140,7 +148,7 @@ class Browser extends Bdo_Controller
         }
 
         // echo $query_limit;
-        $query_limit = $query_select . $query_where . $query_order . " LIMIT " . Db_Escape_String($this->startRow) . "," . Db_Escape_String($this->maxRows);
+        $query_limit = $query_select . $query_where . $query_order . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows);
         $RecAuteur = Db_query($query_limit);
         
         if (isset($_GET['totalRows'])) {
@@ -329,7 +337,7 @@ class Browser extends Bdo_Controller
         }
 
         // echo $query_limit;
-        $query_limit = $query_select . $query_where . $query_order . " LIMIT " . Db_Escape_String($this->startRow) . "," . Db_Escape_String($this->maxRows);
+        $query_limit = $query_select . $query_where . $query_order . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows);
         $RecAuteur = Db_query($query_limit);
         
         if (isset($_GET['totalRows'])) {
@@ -493,7 +501,7 @@ class Browser extends Bdo_Controller
         	";
         }
         
-        $recLev2 = Db_query($query_niv2 . " LIMIT " . Db_Escape_String($this->startRow) . "," . Db_Escape_String($this->maxRows));
+        $recLev2 = Db_query($query_niv2 . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
         
         $resCount = Db_query('SELECT FOUND_ROWS() as nb');
         $rowCount = Db_fetch_array($resCount);
