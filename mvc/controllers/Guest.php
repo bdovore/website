@@ -97,7 +97,7 @@ class Guest extends Bdo_Controller
             // controle d'acces 
             if (($user->user_id != $_SESSION["userConnect"]->user_id) and ! $user->is_openCollection()) {
 
-                $this->view->addAlertPage("Cet utilisateur n'a pas rendu sa collection public !");
+                $this->view->addAlertPage("Cet utilisateur n'a pas rendu sa collection publique !");
                 $this->view->addPhtmlFile('alert', 'BODY');
                 $this->view->render();
 
@@ -108,7 +108,7 @@ class Guest extends Bdo_Controller
 
             $page = getValInteger("page",1);
             $length = getValInteger("length",10);
-            $searchvalue = Db_Escape_String(getVal("l_search","" ));
+            $searchvalue = Db_Escape_String(getVal("l_search",""));
 
             // tableau pour gérer les order by
        
@@ -144,7 +144,7 @@ class Guest extends Bdo_Controller
 
             if ($eo == "O") $where .= " and flg_tete = 'O' ";
             if ($dedicace== "O") $where .= " and flg_dedicace = 'O' ";
-            if($searchvalue <> "") $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
+            if ($searchvalue <> "") $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
            // echo  $this->Useralbum->select()." where ua.user_id = ".$user_id ." and flg_achat = 'N' ".$orderby. $limit;
             $dbs_tome = $this->Useralbum->load("c",$where.$orderby. $limit);
 
@@ -182,7 +182,7 @@ class Guest extends Bdo_Controller
         if ($this->verifUserID($user)) {
             // controle d'acces 
             if (($user->user_id != $_SESSION["userConnect"]->user_id) and ! $user->is_openCollection()) {
-                $this->view->addAlertPage("Cet utilisateur n'a pas rendu sa collection public !");
+                $this->view->addAlertPage("Cet utilisateur n'a pas rendu sa collection publique !");
                 $this->view->addPhtmlFile('alert', 'BODY');
                 $this->view->render();
 
