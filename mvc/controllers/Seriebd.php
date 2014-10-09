@@ -14,8 +14,8 @@ class SerieBD extends Bdo_Controller {
     
     public function Index () {
     
-        $ID_SERIE = getVal('id_serie',1);
-        $page = getVal('page',1);
+        $ID_SERIE = getValInteger('id_serie',1);
+        $page = getValInteger('page',1);
         
         $this->loadModel('Serie');
         

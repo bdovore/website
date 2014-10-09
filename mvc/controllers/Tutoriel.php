@@ -12,7 +12,7 @@ class Tutoriel extends Bdo_Controller
      */
     public function Index ()
     {
-        $page = getVal('page',1);
+        $page = getValInteger('page',1);
                 
         $this->view->addPhtmlFile(__CLASS__ . DS . 'bdovore-tuto_' . $page, 'BODY', true);
         if ($page!=1) {

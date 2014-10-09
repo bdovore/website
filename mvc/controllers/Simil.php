@@ -12,7 +12,7 @@ class Simil extends Bdo_Controller
      */
     public function Index ()
     {
-        $ID_TOME = getVal('ID_TOME', 1);
+        $ID_TOME = getValInteger('ID_TOME', 1);
         
         $this->loadModel("Tome");
         $this->Tome->set_dataPaste(array(

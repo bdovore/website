@@ -22,7 +22,7 @@ class Proposition extends Bdo_Controller {
         $action_user[2][1] = "Ne rien faire";
         $type = getVal("type","ALBUM");
         if (User::minAccesslevel(2)) {
-            $id_edition = intval(getVal("id_edition",0));
+            $id_edition = getValInteger("id_edition",0);
             
             $action = postVal("action","");
 
@@ -38,7 +38,7 @@ class Proposition extends Bdo_Controller {
             }
             else {
                 if ($type == "EDITION") {
-                    $this->view->set_var("ID_TOME",getVal("id_tome"));
+                    $this->view->set_var("ID_TOME",getValInteger("id_tome"));
                     $this->view->set_var('PAGETITLE',"Proposer l'ajout d'une édition ");
                     $this->view->set_var("TYPE","EDITION");
                 }
@@ -93,7 +93,7 @@ class Proposition extends Bdo_Controller {
         }
         else {
             $this->loadModel("User_album_prop");
-        $id_edition = intval(getVal("id_edition",0));
+            $id_edition = getValInteger("id_edition",0);
             // on enregistre la proposition 
             // TODO vérifier pourquoi il n'y a de Db_Escape_String que sur certain string ...
             $this->User_album_prop->set_dataPaste(array(
@@ -293,14 +293,14 @@ class Proposition extends Bdo_Controller {
             $img_couv='';
         }
 
-        $id_edition = intval(postVal("txtEditionId",0));
+        $id_edition = postValInteger("txtEditionId",0);
                 if ($type=="EDITION") {
-                    $this->Edition->set_dataPaste(array(  "IMG_COUV" => $img_couv   ));
+                    $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
                     $this->Edition->update();
                     return $this->Edition->error;
                 }
                 else {
-                    $this->User_album_prop->set_dataPaste(array(  "IMG_COUV" => $img_couv   ));
+                    $this->User_album_prop->set_dataPaste(array("IMG_COUV" => $img_couv));
                     $this->User_album_prop->update();
                    
         return $this->User_album_prop->error;
