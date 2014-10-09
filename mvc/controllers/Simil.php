@@ -35,8 +35,9 @@ class Simil extends Bdo_Controller
             $a_simil = $this->Tome->simil();
         }
         
-        $this->view->set_var(array(					"PAGETITLE" => "Albums proches de ".$this->Tome->TITRE_TOME,
-                'a_simil' => $a_simil
+        $this->view->set_var(array(
+            "PAGETITLE" => "Albums proches de ".$this->Tome->TITRE_TOME,
+            'a_simil' => $a_simil
         ));
         
          $this->loadModel('Actus');
@@ -44,11 +45,8 @@ class Simil extends Bdo_Controller
         
 
         $this->view->set_var(array(
-
                 'ACTUAIR' => $this->Actus->actuAir(),
-
                 'LASTAJOUT' => $this->Actus->lastAjout()
-
         ));
 
         $this->view->render();

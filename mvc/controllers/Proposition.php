@@ -34,11 +34,9 @@ class Proposition extends Bdo_Controller {
                 }
                 else {
                     die("Votre demande est bien enregistrée !");
-                
                 }
             }
-            else 
-            { 
+            else {
                 if ($type == "EDITION") {
                     $this->view->set_var("ID_TOME",getVal("id_tome"));
                     $this->view->set_var('PAGETITLE',"Proposer l'ajout d'une édition ");
@@ -63,21 +61,16 @@ class Proposition extends Bdo_Controller {
             }
         }
             
-         else {
+        else {
             $this->view->addAlertPage("Vous devez vous authentifier pour accéder à cette page !");
-
             $this->view->addPhtmlFile('alert', 'BODY');
-         
-            }
+        }
 
-         $this->view->layout = "iframe";
-            
-         $this->view->render();
+        $this->view->layout = "iframe";
+        $this->view->render();
     }
  
-	private function addProposition() {
-            
-        
+    private function addProposition() {
         
         $type = postVal("type","ALBUM");
         if ($type == "EDITION") {
@@ -101,8 +94,9 @@ class Proposition extends Bdo_Controller {
         else {
             $this->loadModel("User_album_prop");
         $id_edition = intval(getVal("id_edition",0));
-             // on enregistre la proposition 
-        $this->User_album_prop->set_dataPaste(array(
+            // on enregistre la proposition 
+            // TODO vérifier pourquoi il n'y a de Db_Escape_String que sur certain string ...
+            $this->User_album_prop->set_dataPaste(array(
                 "USER_ID" => $_SESSION['userConnect']->user_id,
                 "PROP_DTE" => date('d/m/Y H:i:s'),
                 "PROP_TYPE" => ($id_edition == 0) ? 'AJOUT' : 'CORRECTION',
@@ -140,167 +134,166 @@ class Proposition extends Bdo_Controller {
                 "NOTIF_MAIL" =>(($_POST['chkNotEmail'] == "checked") ? "1" : "0")
             ));
 
-                $this->User_album_prop->update();
-		$lid = $this->User_album_prop->ID_PROPOSAL;
+            $this->User_album_prop->update();
+            $lid = $this->User_album_prop->ID_PROPOSAL;
         }
-       
 
-		// Verifie la présence d'une image à télécharger
-		// on vérifie aussi la taille maximale d'un upload (2MB pour le moment).
-		// Normalement si le serveur est configuré correctement, on ne doit pas
-		// vraiment s'en préoccuper, il y a une limite dans la config du serveur.
-		if ( $_FILES['txtFileLoc']['size'] > 0 && $_FILES['txtFileLoc']['size'] < 2000000 )
-		//if (is_file($_POST['txtFileLoc']))
-		{ // un fichier à uploader
-			$imageproperties = getimagesize($_FILES['txtFileLoc']['tmp_name']);
-			$imagetype = $imageproperties[2];
-			//$imagelargeur = $imageproperties[0];
-			//$imagehauteur = $imageproperties[1];
-			
-			$new_filename = sprintf("tmpCV-%06d-01",$lid);
-			
-			// vérifie le type d'image
-			switch ($imagetype)
-			{
-				case IMAGETYPE_GIF:
-					$new_filename .=".gif";
-					break;
-				case IMAGETYPE_JPEG:
-					$new_filename .=".jpg";
-					break;
-				case IMAGETYPE_PNG:
-					$new_filename .=".png";
-					break;
-				default:
-					echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers PNG, JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
-					exit();
-					break;
-			}
+        // Verifie la présence d'une image à télécharger
+        // on vérifie aussi la taille maximale d'un upload (2MB pour le moment).
+        // Normalement si le serveur est configuré correctement, on ne doit pas
+        // vraiment s'en préoccuper, il y a une limite dans la config du serveur.
+        if ( $_FILES['txtFileLoc']['size'] > 0 && $_FILES['txtFileLoc']['size'] < 2000000 )
+        //if (is_file($_POST['txtFileLoc']))
+        { // un fichier à uploader
+            $imageproperties = getimagesize($_FILES['txtFileLoc']['tmp_name']);
+            $imagetype = $imageproperties[2];
+            //$imagelargeur = $imageproperties[0];
+            //$imagehauteur = $imageproperties[1];
 
-			//move_uploaded_file fait un copy(), mais en plus il vérifie que le fichier est bien un upload
-			//et pas un fichier local (genre constante.php, au hasard)
-			if(!move_uploaded_file($_FILES['txtFileLoc']['tmp_name'], BDO_DIR_UPLOAD.$new_filename))
-			{
-				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez être redirigé.';
-				exit();
-			}else{
-				$img_couv=$new_filename;
-			}
-		}
-		else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary))
-		{ // un fichier à télécharger
-			// TODO en php5 copy() gère tout ça, plus besoin de passer directement par les sockets
-			// mais le serveur bodovore est en php 4.4 ...
-			if ( empty($url_ary[4]) )
-			{
-				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplète. Vous allez être redirigé.';
-				exit();
-			}
-			$base_get = '/' . $url_ary[4];
-			$port = ( !empty($url_ary[3]) ) ? $url_ary[3] : 80;
-			// Connection au serveur hébergeant l'image
-			if ( !($fsock = @fsockopen($url_ary[2], $port, $errno, $errstr)) )
-			{
-				$error = true;
-				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image inacessible. Vous allez être redirigé.';
-				exit();
-			}
+            $new_filename = sprintf("tmpCV-%06d-01",$lid);
 
-			// Récupère l'image
-			@fputs($fsock, "GET $base_get HTTP/1.1\r\n");
-			@fputs($fsock, "HOST: " . $url_ary[2] . "\r\n");
-			@fputs($fsock, "Connection: close\r\n\r\n");
+            // vérifie le type d'image
+            switch ($imagetype)
+            {
+                case IMAGETYPE_GIF:
+                    $new_filename .=".gif";
+                    break;
+                case IMAGETYPE_JPEG:
+                    $new_filename .=".jpg";
+                    break;
+                case IMAGETYPE_PNG:
+                    $new_filename .=".png";
+                    break;
+                default:
+                    echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers PNG, JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
+                    exit();
+                    break;
+            }
 
-			unset($avatar_data);
-			while( !@feof($fsock) )
-			{
-				$avatar_data .= @fread($fsock, 102400);
-			}
-			@fclose($fsock);
+            //move_uploaded_file fait un copy(), mais en plus il vérifie que le fichier est bien un upload
+            //et pas un fichier local (genre constante.php, au hasard)
+            if(!move_uploaded_file($_FILES['txtFileLoc']['tmp_name'], BDO_DIR_UPLOAD.$new_filename)) {
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez être redirigé.';
+                exit();
+            } else {
+                $img_couv=$new_filename;
+            }
+        }
+        else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary))
+        { // un fichier à télécharger
+            // TODO en php5 copy() gère tout ça, plus besoin de passer directement par les sockets
+            // mais le serveur bodovore est en php 4.4
+            // !!! le serveur pour la beta est en php 5 !!! --> TODO
+            if ( empty($url_ary[4]) )
+            {
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplète. Vous allez être redirigé.';
+                exit();
+            }
+            $base_get = '/' . $url_ary[4];
+            $port = ( !empty($url_ary[3]) ) ? $url_ary[3] : 80;
+            // Connection au serveur hébergeant l'image
+            if ( !($fsock = @fsockopen($url_ary[2], $port, $errno, $errstr)) )
+            {
+                $error = true;
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image inacessible. Vous allez être redirigé.';
+                exit();
+            }
 
-			// Check la validité de l'image
-			if (!preg_match('#Content-Length\: ([0-9]+)[^ /][\s]+#i', $avatar_data, $file_data1) || !preg_match('#Content-Type\: image/[x\-]*([a-z]+)[\s]+#i', $avatar_data, $file_data2))
-			{
-				$error = true;
-				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du téléchargement de l\'image. Vous allez être redirigé.';
-				exit();
-			}
+            // Récupère l'image
+            @fputs($fsock, "GET $base_get HTTP/1.1\r\n");
+            @fputs($fsock, "HOST: " . $url_ary[2] . "\r\n");
+            @fputs($fsock, "Connection: close\r\n\r\n");
 
-			$avatar_filesize = $file_data1[1];
-			// règle n°1 de l'upload: ne pas faire confiance au type MIME du header HTTP
-			//$avatar_filetype = $file_data2[1];
+            unset($avatar_data);
+            while( !@feof($fsock) )
+            {
+                $avatar_data .= @fread($fsock, 102400);
+            }
+            @fclose($fsock);
 
-			$avatar_data = substr($avatar_data, strlen($avatar_data) - $avatar_filesize, $avatar_filesize);
+            // Check la validité de l'image
+            if (!preg_match('#Content-Length\: ([0-9]+)[^ /][\s]+#i', $avatar_data, $file_data1) || !preg_match('#Content-Type\: image/[x\-]*([a-z]+)[\s]+#i', $avatar_data, $file_data2))
+            {
+                $error = true;
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du téléchargement de l\'image. Vous allez être redirigé.';
+                exit();
+            }
 
-			$tmp_filename = tempnam(BDO_DIR_UPLOAD, uniqid(rand()) . '-');
+            $avatar_filesize = $file_data1[1];
+            // règle n°1 de l'upload: ne pas faire confiance au type MIME du header HTTP
+            //$avatar_filetype = $file_data2[1];
 
-			$fptr = @fopen($tmp_filename, 'wb');
-			$bytes_written = @fwrite($fptr, $avatar_data, $avatar_filesize);
-			@fclose($fptr);
+            $avatar_data = substr($avatar_data, strlen($avatar_data) - $avatar_filesize, $avatar_filesize);
 
-			if ( $bytes_written != $avatar_filesize )
-			{
-				@unlink($tmp_filename);
-				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'écriture de l\'image en local. Vous allez être redirigé.';
-				exit();
-			}
+            $tmp_filename = tempnam(BDO_DIR_UPLOAD, uniqid(rand()) . '-');
 
-			// règle n°1 de l'upload: ne pas faire confiance au type MIME du header HTTP
-			// new file name
-			//if ( !($imgtype = check_image_type($avatar_filetype, $error)) )
-			//{
-			//    exit;
-			//}
+            $fptr = @fopen($tmp_filename, 'wb');
+            $bytes_written = @fwrite($fptr, $avatar_data, $avatar_filesize);
+            @fclose($fptr);
 
-			//$new_filename = sprintf("tmpCV-%06d-01",$lid).$imgtype;
+            if ( $bytes_written != $avatar_filesize )
+            {
+                @unlink($tmp_filename);
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'écriture de l\'image en local. Vous allez être redirigé.';
+                exit();
+            }
 
-			$imageproperties = getimagesize($tmp_filename);
-			$imagetype = $imageproperties[2];
-			
-			$new_filename = sprintf("tmpCV-%06d-01",$lid);
-			
-			// vérifie le type d'image
-			switch ($imagetype)
-			{
-				case IMAGETYPE_GIF:
-					$new_filename .=".gif";
-					break;
-				case IMAGETYPE_JPEG:
-					$new_filename .=".jpg";
-					break;
-				case IMAGETYPE_PNG:
-					$new_filename .=".png";
-					break;
-				default:
-					echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers PNG, JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
-					exit();
-					break;
-			}
+            // règle n°1 de l'upload: ne pas faire confiance au type MIME du header HTTP
+            // new file name
+            //if ( !($imgtype = check_image_type($avatar_filetype, $error)) )
+            //{
+            //    exit;
+            //}
 
-			// si le fichier existe, on l'efface.
-			// NB: D'après la doc, copy écrase le fichier existant automatiquement
-			//if (file_exists(BDO_DIR_UPLOAD . $new_filename))
-			//{
-			//    @unlink(BDO_DIR_UPLOAD . $new_filename);
-			//}
+            //$new_filename = sprintf("tmpCV-%06d-01",$lid).$imgtype;
 
-			// copie le fichier temporaire dans le repertoire image
-			if (!@copy($tmp_filename, BDO_DIR_UPLOAD . $new_filename)) {
-				@unlink($tmp_filename);
-				echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de la copie de l\'image sur le serveur. Vous allez être redirigé.';
-				exit();
-			}
+            $imageproperties = getimagesize($tmp_filename);
+            $imagetype = $imageproperties[2];
+            
+            $new_filename = sprintf("tmpCV-%06d-01",$lid);
+            
+            // vérifie le type d'image
+            switch ($imagetype)
+            {
+                case IMAGETYPE_GIF:
+                    $new_filename .=".gif";
+                    break;
+                case IMAGETYPE_JPEG:
+                    $new_filename .=".jpg";
+                    break;
+                case IMAGETYPE_PNG:
+                    $new_filename .=".png";
+                    break;
+                default:
+                    echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers PNG, JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
+                    exit();
+                    break;
+            }
 
-			@unlink($tmp_filename);
+            // si le fichier existe, on l'efface.
+            // NB: D'après la doc, copy écrase le fichier existant automatiquement
+            //if (file_exists(BDO_DIR_UPLOAD . $new_filename))
+            //{
+            //    @unlink(BDO_DIR_UPLOAD . $new_filename);
+            //}
 
-			$img_couv=$new_filename;
-		}
-		else
-		{
-			$img_couv='';
-		}
+            // copie le fichier temporaire dans le repertoire image
+            if (!@copy($tmp_filename, BDO_DIR_UPLOAD . $new_filename)) {
+                @unlink($tmp_filename);
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de la copie de l\'image sur le serveur. Vous allez être redirigé.';
+                exit();
+            }
 
-		$id_edition = intval(postVal("txtEditionId",0));
+            @unlink($tmp_filename);
+
+            $img_couv=$new_filename;
+        }
+        else
+        {
+            $img_couv='';
+        }
+
+        $id_edition = intval(postVal("txtEditionId",0));
                 if ($type=="EDITION") {
                     $this->Edition->set_dataPaste(array(  "IMG_COUV" => $img_couv   ));
                     $this->Edition->update();
@@ -310,9 +303,9 @@ class Proposition extends Bdo_Controller {
                     $this->User_album_prop->set_dataPaste(array(  "IMG_COUV" => $img_couv   ));
                     $this->User_album_prop->update();
                    
-		return $this->User_album_prop->error;
+        return $this->User_album_prop->error;
                 }
-		
+        
     }
 }
     
