@@ -12,6 +12,10 @@ class Cache extends Bdo_Controller
      */
     public function Index ()
     {
+        $max_id_tome = 0;
+        $max_id_edition = 0;
+        $max_id_serie = 0;
+
         $resultat = Db_query("SELECT MAX(ID_TOME) as ID_TOME FROM bd_tome");
         while ($obj = Db_fetch_object($resultat)) {
             $max_id_tome = $obj->ID_TOME;
@@ -94,7 +98,7 @@ class Cache extends Bdo_Controller
      */
     public function Nbuserbytome ()
     {
-        $nbruser_ID_TOME = getVal('nbruser_ID_TOME', '') + 0;
+        $nbruser_ID_TOME = getValInteger('nbruser_ID_TOME', 0) + 0;
         $continuer = getVal('continuer', '');
         
         $nbruser_ID_TOME_next = $nbruser_ID_TOME - 500;
@@ -193,7 +197,7 @@ WHERE bd_edition_stat.ID_EDITION BETWEEN " . $nbruser_ID_EDITION_next . " AND " 
 
     public function Nbuserbyserie ()
     {
-        $nbruser_ID_SERIE = getVal('nbruser_ID_SERIE', '') + 0;
+        $nbruser_ID_SERIE = getValInteger('nbruser_ID_SERIE', 0) + 0;
         $continuer = getVal('continuer', '');
         
         $nbruser_ID_SERIE_next = $nbruser_ID_SERIE - 100;

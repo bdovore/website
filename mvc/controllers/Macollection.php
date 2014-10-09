@@ -13,7 +13,7 @@ class Macollection extends Bdo_Controller {
         // page d'accueil de la collection 
         // liste les albums
         
-          if (User::minAccesslevel(2)) {
+        if (User::minAccesslevel(2)) {
             $user_id = intval($_SESSION["userConnect"]->user_id);
             $this->loadModel('Useralbum');
             $user = $this->getUserInfo();
@@ -25,37 +25,30 @@ class Macollection extends Bdo_Controller {
                 $user->set_dataPaste(array("OPEN_COLLEC" => $open_collec));
                 $user->update();
             }
+
             $this->view->set_var('a_lastAchat',$this->Useralbum->lastAchat($user_id));
-
             $this->view->set_var('a_lastFuturAchat',$this->Useralbum->lastFuturAchat($user_id));
-
-
 
             // Récupère les contributions
             $this->loadModel("User_album_prop");
             $prop_stat = $this->User_album_prop->getUserStat($user_id);
 
             $user_prop_alb =  $prop_stat["user_prop_alb"];
-
             $user_prop_corr = $prop_stat["user_prop_corr"];
-
            
             $this->view->set_var( array (
-                
                 "stat" => $this->Useralbum->getStatistiques($user_id),
                 "user_prop_alb" => $user_prop_alb ,
                 "user_prop_corr" => $user_prop_corr,
-                "a_carre" =>  $this->Useralbum->carre($this->getUserInfo()),
-                 "user_id" => $user_id,
+                "a_carre" => $this->Useralbum->carre($this->getUserInfo()),
+                "user_id" => $user_id,
                 "carre_type" => $user->CARRE_TYPE,
                 "open_collec" => $user->OPEN_COLLEC
-                    )
-                  ) ;
-        }
+                ));
+        } 
         else {
             die("Vous devez vous authentifier pour accéder à cette page.");
         }
-        
         
         $this->view->set_var("PAGETITLE","Ma Collection de sur Bdovore");
         $this->view->render();
@@ -73,12 +66,12 @@ class Macollection extends Bdo_Controller {
     
     public function majCollection () {
         $id_tome = getValInteger('id_edition',0);
-       /* Fonction pour ajouter / mettre à jour un album dans la collection 
-        * 
-        * seul le user connecté peut mettre à jour 
-        * prévu pour un appel en mode ajax
-        * retour : vide si ok, code erreur sinon
-        */
+        /* Fonction pour ajouter / mettre à jour un album dans la collection 
+         * 
+         * seul le user connecté peut mettre à jour 
+         * prévu pour un appel en mode ajax
+         * retour : vide si ok, code erreur sinon
+         */
         if (! empty($_SESSION['userConnect']->user_id)) {
             $user_id = intval($_SESSION['userConnect']->user_id);
             $id_edition = getValInteger("id_edition",0);
@@ -147,8 +140,8 @@ class Macollection extends Bdo_Controller {
         }
     }
     
-     public function mesEtageres () {
-          if (User::minAccesslevel(2)) {
+    public function mesEtageres () {
+        if (User::minAccesslevel(2)) {
             $user_id = intval($_SESSION["userConnect"]->user_id);
             $this->loadModel('Useralbum');
            
@@ -223,17 +216,14 @@ class Macollection extends Bdo_Controller {
             die("Vous devez vous authentifier pour accéder à cette page.");
         }
         
-        
         $this->view->set_var("PAGETITLE","Ma Collection de sur Bdovore");
         $this->view->render();
-         
-     }
+    }
      
-     public function futursAchats () {
-          if (User::minAccesslevel(2)) {
+    public function futursAchats () {
+        if (User::minAccesslevel(2)) {
             $user_id = intval($_SESSION["userConnect"]->user_id);
             $this->loadModel('Useralbum');
-           
              
             $page = getValInteger("page",1);
             $length = getValInteger("length",10);
@@ -286,130 +276,120 @@ class Macollection extends Bdo_Controller {
                 "eo" => $eo,
                 "dedicace" => $dedicace,
                 "searchvalue" => $searchvalue
-               
-                    )
-                  )     ;
+                ));
         }
         else {
             die("Vous devez vous authentifier pour accéder à cette page.");
         }
-        
-        
+       
         $this->view->set_var("PAGETITLE","Mes Futurs Achats");
         $this->view->render();
-         
-     }
+    }
      
-     public function deleteAlbum() {
-         /*
-          * fonction pour supprimer un album de sa collection
-          * s'execute en mode ajax
-          * 
-          */
-         if (User::minAccesslevel(2)) {
-             $id_edition = getValInteger("id_edition",0);
-             $this->loadModel("Useralbum");
-             
-             $this->Useralbum->set_dataPaste(array(
-                 "id_edition" => $id_edition,
-                 "user_id" => intval($_SESSION["userConnect"]->user_id)
-             ));
-             //$this->Useralbum->load();
-             $this->Useralbum->delete();
-             $this->view->set_var('json', json_encode($this->Useralbum->error));
+    public function deleteAlbum() {
+        /*
+         * fonction pour supprimer un album de sa collection
+         * s'execute en mode ajax
+         * 
+         */
+        if (User::minAccesslevel(2)) {
+            $id_edition = getValInteger("id_edition",0);
+            $this->loadModel("Useralbum");
+            
+            $this->Useralbum->set_dataPaste(array(
+                "id_edition" => $id_edition,
+                "user_id" => intval($_SESSION["userConnect"]->user_id)
+            ));
+            //$this->Useralbum->load();
+            $this->Useralbum->delete();
+            $this->view->set_var('json', json_encode($this->Useralbum->error));
             $this->view->layout = "ajax";
             $this->view->render();
-         }
-     } 
-    
+        }
+    } 
      
-     public function monActu() {
-         /*
-          * Onglet mon actualité
-          */
-           if (User::minAccesslevel(2)) {
-               $this->loadModel("Tome");
-               $nb_mois = getValInteger("nb_mois",1);
-               $page = getValInteger("page",1);
-               $mode = getValInteger("mode",1);
-               // creation du filtre par défaut sur les série
-               $dbs_tome = $this->Tome->getUserActualite($mode, $nb_mois,$page);
-               
-               $this->view->set_var(array(
-                   "dbs_tome" => $dbs_tome,
-                   "page" => $page,
-                   "nb_mois" => $nb_mois,
-                   "mode" => $mode
-                   
-                       ));
-               $this->view->set_var("PAGETITLE","Mon actualité BD");
-               $this->view->render();
-           
-           }
-           else {
-               die("Vous devez vous authentifier pour accéder à cette page.");
-           }
-     }
+    public function monActu() {
+        /*
+         * Onglet mon actualité
+         */
+        if (User::minAccesslevel(2)) {
+            $this->loadModel("Tome");
+            $nb_mois = getValInteger("nb_mois",1);
+            $page = getValInteger("page",1);
+            $mode = getValInteger("mode",1);
+            // creation du filtre par défaut sur les série
+            $dbs_tome = $this->Tome->getUserActualite($mode, $nb_mois,$page);
+            
+            $this->view->set_var(array(
+                "dbs_tome" => $dbs_tome,
+                "page" => $page,
+                "nb_mois" => $nb_mois,
+                "mode" => $mode
+                ));
+            $this->view->set_var("PAGETITLE","Mon actualité BD");
+            $this->view->render();
+        }
+        else {
+            die("Vous devez vous authentifier pour accéder à cette page.");
+        }
+    }
      
-     public function serieComplete () {
-         /*
-          * Séries à compléter !
-          * 
-          */
-         if (User::minAccesslevel(2)) {
-              $user_id = intval($_SESSION["userConnect"]->user_id);
-              $id_serie = getValInteger("lstSerie",0);
-              $action = getVal("action","none"); // variable d'action pour l'ajout ou suppression de série à compléter
-              
-              $this->loadModel("Tome");
-              $this->loadModel("Users_exclusions");
-              
-              if ($action == "exclude") {
-                  $this->Users_exclusions->addSerieExclude($user_id,$id_serie);
-                  $id_serie = 0;
-              }
-              if ($action == "raz") {
-                  $idSerieExclu = getValInteger("idSerieExclu",0);
-                  $this->Users_exclusions->delSerieExclude($user_id,$idSerieExclu);
-              }
+    public function serieComplete () {
+        /*
+         * Séries à compléter !
+         * 
+         */
+        if (User::minAccesslevel(2)) {
+             $user_id = intval($_SESSION["userConnect"]->user_id);
+             $id_serie = getValInteger("lstSerie",0);
+             $action = getVal("action","none"); // variable d'action pour l'ajout ou suppression de série à compléter
              
-              if($action== "exclude_tome") {
-                  $listAlbum = getVal("sel_tome",array());
-                  
-                  foreach ($listAlbum as $id_tome) {
-                       $this->Users_exclusions->addAlbumExclude($user_id,$id_serie,intval($id_tome));
-                  }
-                  
-              }
-              
+             $this->loadModel("Tome");
+             $this->loadModel("Users_exclusions");
              
-              $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id);
-              
-              $listExclu = $this->Users_exclusions->getListSerieExclu($user_id);
-              
-               if ($id_serie == 0 and count($listSerie) > 0) {
-                   // selection de la première série de la liste
-                   $id_serie = $listSerie[0]->ID_SERIE;
-               }
-               
-              $dbs_tome  = $this->Tome->getListAlbumToComplete($user_id,$id_serie);
-              $this->view->set_var(array(
-                  "listSerie" =>  $listSerie,
-                  "id_serie" => $id_serie,
-                  "dbs_tome" => $dbs_tome,
-                  "listExclu" => $listExclu
-              ));
-              
-              $this->view->set_var("PAGETITLE","Séries à compléter");
-              $this->view->render();
+             if ($action == "exclude") {
+                 $this->Users_exclusions->addSerieExclude($user_id,$id_serie);
+                 $id_serie = 0;
+             }
+             if ($action == "raz") {
+                 $idSerieExclu = getValInteger("idSerieExclu",0);
+                 $this->Users_exclusions->delSerieExclude($user_id,$idSerieExclu);
+             }
+            
+             if($action== "exclude_tome") {
+                 $listAlbum = getVal("sel_tome",array());
+                 
+                 foreach ($listAlbum as $id_tome) {
+                      $this->Users_exclusions->addAlbumExclude($user_id,$id_serie,intval($id_tome));
+                 }
+                 
+             }
              
-         }
-          else {
-               die("Vous devez vous authentifier pour accéder à cette page.");
-           }
-         
-     }
-      
+            
+             $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id);
+             
+             $listExclu = $this->Users_exclusions->getListSerieExclu($user_id);
+             
+             if ($id_serie == 0 and count($listSerie) > 0) {
+                 // selection de la première série de la liste
+                 $id_serie = $listSerie[0]->ID_SERIE;
+             }
+              
+             $dbs_tome  = $this->Tome->getListAlbumToComplete($user_id,$id_serie);
+             $this->view->set_var(array(
+                 "listSerie" =>  $listSerie,
+                 "id_serie" => $id_serie,
+                 "dbs_tome" => $dbs_tome,
+                 "listExclu" => $listExclu
+             ));
+             
+             $this->view->set_var("PAGETITLE","Séries à compléter");
+             $this->view->render();
+        }
+        else {
+            die("Vous devez vous authentifier pour accéder à cette page.");
+        }
+    }
      
     public function Addition() {
         /* 
@@ -418,7 +398,7 @@ class Macollection extends Bdo_Controller {
          */
         // Variables générales
 
-         if (User::minAccesslevel(2)) {
+        if (User::minAccesslevel(2)) {
 
             $user_id = intval($_SESSION["userConnect"]->user_id);
             $annee = getVal("annee",'');
@@ -534,11 +514,11 @@ class Macollection extends Bdo_Controller {
             ));
 
             // on remplit le block detail par annee 
-         }
-         else {
-             $this->view->addAlertPage("Vous devez vous authentifier pour accéder à cette page !");
-             $this->view->addPhtmlFile('alert', 'BODY');
-         }
+        }
+        else {
+            $this->view->addAlertPage("Vous devez vous authentifier pour accéder à cette page !");
+            $this->view->addPhtmlFile('alert', 'BODY');
+        }
 
         $this->view->render();
     }

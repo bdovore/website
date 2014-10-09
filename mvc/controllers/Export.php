@@ -13,11 +13,11 @@ class Export extends Bdo_Controller {
             $act = getVal("act","");
             $sel_field = postVal("sel_field","");
             $memsel = postVal("memsel","");
-            $contenu = postVal("contenu",0);
-            $info = postVal("info",0);
+            $contenu = postValInteger("contenu",0);
+            $info = postValInteger("info",0);
             if ($act == "export") {
 
-                // met � jour la s�lection
+                // met à jour la sélection
                 $codesel = "";
                 for ($i = 0; $i <= 18; $i++) {
                     if (in_array($i, $sel_field)) {
@@ -28,7 +28,7 @@ class Export extends Bdo_Controller {
                 }
 
                 if ($memsel == "checked") {
-                   $user = new User($_SESSION["userConnect"]->user_id);
+                    $user = new User($_SESSION["userConnect"]->user_id);
 
                     $user->load();
                     $user->set_dataPaste(array("pref_export" => Db_Escape_String($codesel)));
@@ -61,7 +61,7 @@ class Export extends Bdo_Controller {
                     case 2:
                         $this->loadModel("Tome");
                         
-                       $dbs_tome = $this->Tome->getListAlbumToComplete($_SESSION["userConnect"]->user_id); 
+                        $dbs_tome = $this->Tome->getListAlbumToComplete($_SESSION["userConnect"]->user_id); 
                         $entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution');
                         $largeur = array(20, 20, 5, 10, 15, 15, 15, 15, 18, 15);
                         $nbpages = 100;
@@ -131,13 +131,11 @@ class Export extends Bdo_Controller {
                             if ($contenu <> 2) {
                                 $a_line[] = $tome->DATE_AJOUT;
                                 $a_line[] = $tome->comment;
-                                
                                 $a_line[] = $tome->FLG_PRET;
                                 $a_line[] = $tome->NOM_PRET;
                                 $a_line[] = $tome->DATE_ACHAT;
                                 $a_line[] = $tome->cote;
                                 $a_line[] = $tome->FLG_CADEAU;
-                                
                                 $a_line[] = $tome->FLG_TETE;
                             }
                             
@@ -160,10 +158,8 @@ class Export extends Bdo_Controller {
                         header('Content-Disposition: attachment;filename="' . $nomFichier . '.xls"');
                         header('Cache-Control: max-age=0');
                        
-                        
                         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
                         $objWriter->save('php://output');
-                         
                         
                         exit;
 
@@ -191,7 +187,7 @@ class Export extends Bdo_Controller {
                         $txtTitre = substr($txtTitre, 0, -1);
                         echo $txtTitre . "\n";
 
-                        // Donn�es de l'export
+                        // Données de l'export
                         
                         foreach ($dbs_tome->a_dataQuery as $tome ) {
                             $txtCol = "";
@@ -209,16 +205,13 @@ class Export extends Bdo_Controller {
                             if ($contenu <> 2) {
                                 $txtCol .= $sep.$tome->DATE_AJOUT;
                                 $txtCol .= $sep.$tome->comment;
-                                
                                 $txtCol .= $sep.$tome->FLG_PRET;
                                 $txtCol .= $sep.$tome->NOM_PRET;
                                 $txtCol .= $sep.$tome->DATE_ACHAT;
                                 $txtCol .= $sep.$tome->cote;
                                 $txtCol .= $sep.$tome->FLG_CADEAU;
-                                
                                 $txtCol .= $sep.$tome->FLG_TETE;
                             }
-                            
                            
                             echo $txtCol . "\n";
                         }
@@ -252,23 +245,17 @@ class Export extends Bdo_Controller {
             } else {
 
 
-                // r�cup�re les param�tres par d�faut de l'utilisateur
+                // récupère les paramètres par défaut de l'utilisateur
                 $user = new User($_SESSION["userConnect"]->user_id);
-
                 $user->load();
-                
-
                 $codesel = $user->PREF_EXPORT;
 
-                
-
-                // Pr�remplie les case � cocher
+                // Prérempli les cases à cocher
                 for ($i = 0; $i <= 18; $i++) {
                     if (substr($codesel, $i, 1) == "1") {
                         $this->view->set_var("SELFIELD" . $i, 'checked');
                     }
                 }
-
 
                 // Tableaux d'option
                 $this->view->set_var(array
@@ -282,23 +269,19 @@ class Export extends Bdo_Controller {
                     "CONTENU2" => ($contenu == 2) ? 'checked' : '',
                 ));
 
-
-
                 // assigne la barre de login
                 $this->view->set_var(array
                     (
                     "PAGETITLE" => "Export de données"));
-                 $this->view->layout = "iframe";
+                $this->view->layout = "iframe";
 
-            $this->view->render();
+                $this->view->render();
                 
             }
-           
         } else {
             die("Vous devez vous authentifier pour accéder à cette page.");
         }
     }
-
 }
 
 ?>

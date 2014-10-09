@@ -43,9 +43,9 @@ class GetJSON extends Bdo_Controller {
     }
 
     private function Auteur() {
-        $id_auteur = getVal("id_auteur", 0);
+        $id_auteur = getValInteger("id_auteur", 0);
         $term = getVal("term", "");
-        $mode = getVal("mode", 0);
+        $mode = getValInteger("mode", 0);
         /*
          * Mode : 0 pour autocomplete, 1 pour l'ensemble des données
          */
@@ -76,11 +76,11 @@ class GetJSON extends Bdo_Controller {
     }
 
     private function Album() {
-        $ID_TOME = getVal('id_tome', 0);
-        $id_edition = getVal('id_edition', 0);
+        $ID_TOME = getValInteger('id_tome', 0);
+        $id_edition = getValInteger('id_edition', 0);
         $isbn = getVal('ISBN', '');
         $ean = getVal('EAN', '');
-        $mode = getVal("mode", 0);
+        $mode = getValInteger("mode", 0);
         if ($id_edition or $isbn <> '' or $ean <> '' ) {
             //selection par isbn ou ean
             
@@ -91,14 +91,13 @@ class GetJSON extends Bdo_Controller {
                 // selection par isbn
                 $filter = "bd_edition.isbn = '" . Db_Escape_String($isbn) . "'";
             } else if ($id_edition){
-                 $filter = "bd_edition.id_edition = ".intval($id_edition);
+                 $filter = "bd_edition.id_edition = ". $id_edition;
             }
 
             if ($filter) {
                 $this->loadModel('Edition');
 
                 $this->Edition->load(c, "WHERE  " . $filter);
-
 
                 $this->view->set_var('json', json_encode($this->Edition->dbSelect->a_dataQuery));
             } else {
@@ -140,9 +139,9 @@ class GetJSON extends Bdo_Controller {
     }
 
     private function Genre() {
-        $id_genre = getVal("id_genre", 0);
+        $id_genre = getValInteger("id_genre", 0);
         $term = getVal("term", "");
-        $mode = getVal("mode", 0);
+        $mode = getValInteger("mode", 0);
         /*
          * Mode : 0 pour autocomplete, 1 pour l'ensemble des données
          */
@@ -172,9 +171,9 @@ class GetJSON extends Bdo_Controller {
     }
 
     private function Editeur() {
-        $id_editeur = getVal("id_editeur", 0);
+        $id_editeur = getValInteger("id_editeur", 0);
         $term = getVal("term", "");
-        $mode = getVal("mode", 0);
+        $mode = getValInteger("mode", 0);
         /*
          * Mode : 0 pour autocomplete, 1 pour l'ensemble des données
          */
@@ -205,10 +204,10 @@ class GetJSON extends Bdo_Controller {
     }
 
     private function Collection() {
-        $id_editeur = getVal("id_editeur", 0);
-        $id_collection = getVal("id_collection", 0);
+        $id_editeur = getValInteger("id_editeur", 0);
+        $id_collection = getValInteger("id_collection", 0);
         $term = getVal("term", "");
-        $mode = getVal("mode", 0);
+        $mode = getValInteger("mode", 0);
         /*
          * Mode : 0 pour autocomplete, 1 pour l'ensemble des données
          */
@@ -220,7 +219,7 @@ class GetJSON extends Bdo_Controller {
             /*
              * Sélection de la liste des collection disponible pour cet éditeur
              */
-            $where = " WHERE bd_collection.ID_EDITEUR =" . intval($id_editeur) . " ";
+            $where = " WHERE bd_collection.ID_EDITEUR =" . $id_editeur . " ";
             $this->Collection->load("c", $where);
         } else {
             $where = " WHERE bd_collection.NOM like '%" . Db_Escape_String($term) . "%'";
@@ -244,9 +243,9 @@ class GetJSON extends Bdo_Controller {
     }
 
     private function Serie() {
-        $id_serie = getVal("id_serie", 0);
+        $id_serie = getValInteger("id_serie", 0);
         $term = getVal("term", "");
-        $mode = getVal("mode", 0);
+        $mode = getValInteger("mode", 0);
 
         $this->loadModel("Serie");
 

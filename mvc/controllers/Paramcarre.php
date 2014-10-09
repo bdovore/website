@@ -1,10 +1,6 @@
 <?php
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-/*
  * @author : Tom
  * Contrôleur pour l'ajout, la consultation, l'édition des infos persos de la colleciton
  * Il alimente la plupart des pages perso de la collection
@@ -18,32 +14,31 @@ class Paramcarre extends Bdo_Controller {
         // liste les albums
 
         if (User::minAccesslevel(2)) {
-            $user_id = $_SESSION["userConnect"]->user_id;
             $this->loadModel('Useralbum');
             $user = $this->getUserInfo();
             $action = postVal("Submit","");
             
-             if ( $action == "Enregistrer") {
-                 /*
-                  * Sauvegarde du carré magique
-                  */
+            if ($action == "Enregistrer") {
+                /*
+                 * Sauvegarde du carré magique
+                 */
                 
-                 $carre_type = '0';
-                 $auto = postVal("auto","N");
-                 
-                 if ($auto == N) $carre_type='1';
-                 
-                 $user->set_dataPaste(array("CARRE_TYPE" => $carre_type));
-                 $user->update();
-                 
-                 if ($carre_type == 1) {
-                     $this->loadModel("Users_list_carre");
-                     $this->Users_list_carre->majListCarre($_SESSION["userConnect"]->user_id,postVal("txtAlbumId"));
-                 }
-                 $this->view->addInfoPage("Modifications enregistrées !");
+                $carre_type = '0';
+                $auto = postVal("auto","N");
+                
+                if ($auto == "N") $carre_type='1';
+                
+                $user->set_dataPaste(array("CARRE_TYPE" => $carre_type));
+                $user->update();
+                
+                if ($carre_type == 1) {
+                    $this->loadModel("Users_list_carre");
+                    $this->Users_list_carre->majListCarre($user->user_id,postVal("txtAlbumId"));
+                }
+                $this->view->addInfoPage("Modifications enregistrées !");
 
                 $this->view->addPhtmlFile('alert', 'BODY');
-             }       
+            }       
 
             $this->view->set_var(array(
                 "a_carre" => $this->Useralbum->carre($user),
@@ -62,15 +57,11 @@ class Paramcarre extends Bdo_Controller {
         /*
          * Récupère les infos du user connecté
          */
-
-
         $user = new User($_SESSION["userConnect"]->user_id);
-
         $user->load();
 
         return $user;
     }
-
 }
 
 ?>

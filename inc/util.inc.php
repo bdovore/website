@@ -412,7 +412,7 @@ function postVal ($nomvar, $default = '')
     return $val;
 }
 
-function postValInteger ($nomvar, $default = '')
+function postValInteger ($nomvar, $default = 0)
 {
     $val = isset($_POST[$nomvar]) ? $_POST[$nomvar] : $default;
     return intval($val);
