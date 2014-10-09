@@ -36,7 +36,7 @@ class Leguide extends Bdo_Controller
                 
         endswitch;
        
-        $page = getVal('page',1);
+        $page = getValInteger('page',1);
         $limit = "LIMIT ".(($page-1)*20).",20";
         //if (! isset($_GET['a_idGenre'])) $_GET['a_idGenre'][] = $dbs_genre->a_dataQuery[0]->ID_GENRE;
 

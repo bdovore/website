@@ -117,7 +117,7 @@ class GetJSON extends Bdo_Controller {
         } else {
             $term = getVal("term", "");
             $this->loadModel('Tome');
-            $this->Tome->load("c", " WHERE bd_tome.TITRE like '" . $term . "%' limit 0,10");
+            $this->Tome->load("c", " WHERE bd_tome.TITRE like '" . Db_Escape_String($term) . "%' limit 0,10");
            
             if ($mode == 0) {
                 foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
