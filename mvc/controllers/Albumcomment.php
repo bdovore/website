@@ -56,7 +56,7 @@ class AlbumComment extends Bdo_Controller {
         */
         if (! empty($_SESSION['userConnect']->user_id)) {
             $user_id = intval($_SESSION['userConnect']->user_id);
-            $comment = Db_Escape_String(getVal('comment',''));
+            $comment = getVal('comment','');
             $note = getValInteger("note",0);
             $this->loadModel('Comment');
             
@@ -68,7 +68,7 @@ class AlbumComment extends Bdo_Controller {
                         'ID_TOME' => $id_tome,
                        'USER_ID' => $user_id,
                        'NOTE' => $note,
-                       'COMMENT' => stripslashes(nl2br($comment)),
+                       'COMMENT' => $comment, // ne pas ajouter un contrôle DB_escape_string : il est opéré lors de l'insertion
                        'DTE_POST' => date('d/m/Y H:i:s')
 
                 )
