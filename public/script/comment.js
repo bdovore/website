@@ -69,7 +69,7 @@ function getComment(page,id_tome,user_id) {
         $.each(data,function (i, item) {
             $("#listcomment").append("<div class='listcomment'> <strong>Note : "+ item.NOTE + "</strong> \n\
              Posté par <a href='./guest?user="+item.user_id + "' target='parent'>"+ item.username + "</a> le "+ item.DTE_POST +"  <p>     \n\
-             " + nl2br(stripslashes(item.COMMENT)) + "</p> </div>")
+             " + stripslashes(nl2br(item.COMMENT)) + "</p> </div>")
             
             }
            )
