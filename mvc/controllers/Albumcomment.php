@@ -68,7 +68,7 @@ class AlbumComment extends Bdo_Controller {
                         'ID_TOME' => $id_tome,
                        'USER_ID' => $user_id,
                        'NOTE' => $note,
-                       'COMMENT' => stripslashes($comment),
+                       'COMMENT' => stripslashes(nl2br($comment)),
                        'DTE_POST' => date('d/m/Y H:i:s')
 
                 )
