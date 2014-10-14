@@ -76,17 +76,17 @@ class Proposition extends Bdo_Controller {
         if ($type == "EDITION") {
             $this->loadModel("Edition");
             $this->Edition->set_dataPaste((array(
-                "ID_TOME" => Db_Escape_String($_POST['txtTomeId']),
-                "ID_EDITEUR" => Db_Escape_String($_POST['txtEditeurId']),
-                "ID_COLLECTION" => Db_Escape_String($_POST['txtCollec']),
-                "DTE_PARUTION" => $_POST['txtDateParution'],
+                "ID_TOME" => postValInteger("txtTomeId"),
+                "ID_EDITEUR" => postValInteger("txtEditeurId"),
+                "ID_COLLECTION" => postValInteger("txtCollec"),
+                "DTE_PARUTION" => postVal("txtDateParution"),
                 
-                "COMMENT" => Db_Escape_String($_POST['txtCommentaire']),
+                "COMMENT" => Db_Escape_String(postVal("txtCommentaire")),
                 "USER_ID" => $_SESSION['userConnect']->user_id,
                 "PROP_DTE" => date('d/m/Y H:i:s'),
                 "PROP_STATUS" => "0",
-                "ISBN" => Db_Escape_String($_POST['txtISBN']),
-                "EAN" => Db_Escape_String($_POST['txtEAN'])
+                "ISBN" => Db_Escape_String(postVal("txtISBN")),
+                "EAN" => Db_Escape_String(postVal("txtEAN"))
             )));
             $this->Edition->update();
             $lid = $this->Edition->ID_EDITION;
@@ -100,38 +100,38 @@ class Proposition extends Bdo_Controller {
                 "USER_ID" => $_SESSION['userConnect']->user_id,
                 "PROP_DTE" => date('d/m/Y H:i:s'),
                 "PROP_TYPE" => ($id_edition == 0) ? 'AJOUT' : 'CORRECTION',
-                "ID_TOME" => Db_Escape_String($_POST['txtTomeId']),
-                "ID_EDITION" => Db_Escape_String($_POST['txtEditionId']),
-                "TITRE" => $_POST['txtTitre'],
-                "NUM_TOME" => $_POST['txtNumTome'],
-                "FLG_INT" => (($_POST['chkIntegrale'] == "checkbox") ? "O" : "N"),
-                "FLG_TYPE" => Db_Escape_String($_POST['lstType']),
-                "ID_SERIE" => $_POST['txtSerieId'],
-                "SERIE" => $_POST['txtSerie'],
-                "FLG_FINI" => $_POST['lstAchevee'],
-                "DTE_PARUTION" => $_POST['txtDateParution'],
-                "ID_GENRE" => $_POST['txtGenreId'],
-                "GENRE" => $_POST['txtGenre'],
-                "ID_EDITEUR" => $_POST['txtEditeurId'],
-                "EDITEUR" => $_POST['txtEditeur'],
-                "ID_SCENAR" => $_POST['txtScenarId'],
-                "SCENAR" => $_POST['txtScenar'],
-                "ID_SCENAR_ALT" => $_POST['txtScenarAltId'],
-                "SCENAR_ALT" => $_POST['txtScenarAlt'],
-                "ID_DESSIN" => $_POST['txtDessiId'],
-                "DESSIN" => $_POST['txtDessi'],
-                "ID_DESSIN_ALT" => $_POST['txtDessiAltId'],
-                "DESSIN_ALT" => $_POST['txtDessiAlt'],
-                "ID_COLOR" => $_POST['txtColorId'],
-                "COLOR" => $_POST['txtColor'],
-                "ID_COLLECTION" => $_POST['txtCollec'],
-                "EAN" => $_POST['txtEAN'],
-                "ISBN" => $_POST['txtISBN'],
-                "COLLECTION" => $_POST['txtCollec'],
-                "HISTOIRE" => $_POST['txtHistoire'],
-                "COMMENTAIRE" => $_POST['txtCommentaire'],
-                "ACTION" => Db_Escape_String($_POST['cmbAction']),
-                "NOTIF_MAIL" =>(($_POST['chkNotEmail'] == "checked") ? "1" : "0")
+                "ID_TOME" => postValInteger("txtTomeId"),
+                "ID_EDITION" => postValInteger("txtEditionId"),
+                "TITRE" => postVal("txtTitre"),
+                "NUM_TOME" => postVal("txtNumTome"),
+                "FLG_INT" => ((postVal("chkIntegrale") == "checkbox") ? "O" : "N"),
+                "FLG_TYPE" => Db_Escape_String(postVal("lstType")),
+                "ID_SERIE" => postValInteger("txtSerieId"),
+                "SERIE" => postVal("txtSerie"),
+                "FLG_FINI" => postVal("lstAchevee"),
+                "DTE_PARUTION" => postVal("txtDateParution"),
+                "ID_GENRE" => postValInteger("txtGenreId"),
+                "GENRE" => postVal("txtGenre"),
+                "ID_EDITEUR" => postValInteger("txtEditeurId"),
+                "EDITEUR" => postVal("txtEditeur"),
+                "ID_SCENAR" => postValInteger("txtScenarId"),
+                "SCENAR" => postVal("txtScenar"),
+                "ID_SCENAR_ALT" => postValInteger("txtScenarAltId"),
+                "SCENAR_ALT" => postVal("txtScenarAlt"),
+                "ID_DESSIN" => postValInteger("txtDessiId"),
+                "DESSIN" => postVal("txtDessi"),
+                "ID_DESSIN_ALT" => postValInteger("txtDessiAltId"),
+                "DESSIN_ALT" => postVal("txtDessiAlt"),
+                "ID_COLOR" => postValInteger("txtColorId"),
+                "COLOR" => postVal("txtColor"),
+                "ID_COLLECTION" => postValInteger("txtCollec"),
+                "COLLECTION" => postVal("txtCollec"),
+                "EAN" => postVal("txtEAN"),
+                "ISBN" => postVal("txtISBN"),
+                "HISTOIRE" => postVal("txtHistoire"),
+                "COMMENTAIRE" => postVal("txtCommentaire"),
+                "ACTION" => Db_Escape_String(postVal("cmbAction")),
+                "NOTIF_MAIL" =>((postVal("chkNotEmail") == "checked") ? "1" : "0")
             ));
 
             $this->User_album_prop->update();
@@ -143,7 +143,7 @@ class Proposition extends Bdo_Controller {
         // Normalement si le serveur est configuré correctement, on ne doit pas
         // vraiment s'en préoccuper, il y a une limite dans la config du serveur.
         if ( $_FILES['txtFileLoc']['size'] > 0 && $_FILES['txtFileLoc']['size'] < 2000000 )
-        //if (is_file($_POST['txtFileLoc']))
+        //if (is_file(postVal("txtFileLoc")))
         { // un fichier à uploader
             $imageproperties = getimagesize($_FILES['txtFileLoc']['tmp_name']);
             $imagetype = $imageproperties[2];
@@ -179,7 +179,7 @@ class Proposition extends Bdo_Controller {
                 $img_couv=$new_filename;
             }
         }
-        else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary))
+        else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal("txtFileURL"), $url_ary))
         { // un fichier à télécharger
             // TODO en php5 copy() gère tout ça, plus besoin de passer directement par les sockets
             // mais le serveur bodovore est en php 4.4
@@ -294,18 +294,18 @@ class Proposition extends Bdo_Controller {
         }
 
         $id_edition = postValInteger("txtEditionId",0);
-                if ($type=="EDITION") {
-                    $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
-                    $this->Edition->update();
-                    return $this->Edition->error;
-                }
-                else {
-                    $this->User_album_prop->set_dataPaste(array("IMG_COUV" => $img_couv));
-                    $this->User_album_prop->update();
-                   
-        return $this->User_album_prop->error;
-                }
         
+        if ($type=="EDITION") {
+            $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
+            $this->Edition->update();
+            return $this->Edition->error;
+        }
+        else {
+            $this->User_album_prop->set_dataPaste(array("IMG_COUV" => $img_couv));
+            $this->User_album_prop->update();
+           
+            return $this->User_album_prop->error;
+        }
     }
 }
     
