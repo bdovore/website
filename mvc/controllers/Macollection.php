@@ -19,8 +19,11 @@ class Macollection extends Bdo_Controller {
             $user = $this->getUserInfo();
 
             $open_collec = postVal("open_collec","");
-            
+ 
             if ($open_collec <> "") {
+                if ($open_collec <> 'Y')
+                    $open_collec = 'N';
+
                 // mise à jour des paramètres de la collection
                 $user->set_dataPaste(array("OPEN_COLLEC" => $open_collec));
                 $user->update();

@@ -41,8 +41,8 @@ class AlbumComment extends Bdo_Controller {
         $where .= " limit ". (($page-1)*20).",20";
       // echo ($this->Comment->select().$where);
         $this->Comment->load(c,$where);
-         $this->view->set_var('json', json_encode($this->Comment->dbSelect->a_dataQuery));
-         $this->view->layout = "ajax";
+        $this->view->set_var('json', json_encode($this->Comment->dbSelect->a_dataQuery));
+        $this->view->layout = "ajax";
         $this->view->render();
     }
     
@@ -63,16 +63,13 @@ class AlbumComment extends Bdo_Controller {
             $this->Comment->load(c," WHERE c.user_id = ".$user_id . " and c.id_tome = ".$id_tome);
             
             $this->Comment->set_dataPaste(
-                   array(
-
-                        'ID_TOME' => $id_tome,
-                       'USER_ID' => $user_id,
-                       'NOTE' => $note,
-                       'COMMENT' => $comment, // ne pas ajouter un contrôle DB_escape_string : il est opéré lors de l'insertion
-                       'DTE_POST' => date('d/m/Y H:i:s')
-
+                array(
+                   'ID_TOME' => $id_tome,
+                   'USER_ID' => $user_id,
+                   'NOTE' => $note,
+                   'COMMENT' => $comment, // ne pas ajouter un contrôle DB_escape_string : il est opéré lors de l'insertion
+                   'DTE_POST' => date('d/m/Y H:i:s')
                 )
-
             );
             
             $this->Comment->update();

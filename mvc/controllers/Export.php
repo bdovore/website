@@ -31,7 +31,7 @@ class Export extends Bdo_Controller {
                     $user = new User($_SESSION["userConnect"]->user_id);
 
                     $user->load();
-                    $user->set_dataPaste(array("pref_export" => Db_Escape_String($codesel)));
+                    $user->set_dataPaste(array("pref_export" => $codesel));
                     $user->update();
                 }
 
