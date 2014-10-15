@@ -220,6 +220,9 @@ class GetJSON extends Bdo_Controller {
              * Sélection de la liste des collection disponible pour cet éditeur
              */
             $where = " WHERE bd_collection.ID_EDITEUR =" . $id_editeur . " ";
+            if ($term <> "")
+                $where .= " AND bd_collection.NOM like '%" . Db_Escape_String($term) . "%'";
+
             $this->Collection->load("c", $where);
         } else {
             $where = " WHERE bd_collection.NOM like '%" . Db_Escape_String($term) . "%'";
