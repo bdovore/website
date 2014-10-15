@@ -78,15 +78,15 @@ class Proposition extends Bdo_Controller {
             $this->Edition->set_dataPaste((array(
                 "ID_TOME" => postValInteger("txtTomeId"),
                 "ID_EDITEUR" => postValInteger("txtEditeurId"),
-                "ID_COLLECTION" => postValInteger("txtCollec"),
+                "ID_COLLECTION" => postValInteger("txtCollecId"),
                 "DTE_PARUTION" => postVal("txtDateParution"),
                 
-                "COMMENT" => Db_Escape_String(postVal("txtCommentaire")),
+                "COMMENT" => postVal("txtCommentaire"),
                 "USER_ID" => $_SESSION['userConnect']->user_id,
                 "PROP_DTE" => date('d/m/Y H:i:s'),
                 "PROP_STATUS" => "0",
-                "ISBN" => Db_Escape_String(postVal("txtISBN")),
-                "EAN" => Db_Escape_String(postVal("txtEAN"))
+                "ISBN" => postVal("txtISBN"),
+                "EAN" => postVal("txtEAN")
             )));
             $this->Edition->update();
             $lid = $this->Edition->ID_EDITION;
@@ -105,7 +105,7 @@ class Proposition extends Bdo_Controller {
                 "TITRE" => postVal("txtTitre"),
                 "NUM_TOME" => postVal("txtNumTome"),
                 "FLG_INT" => ((postVal("chkIntegrale") == "checkbox") ? "O" : "N"),
-                "FLG_TYPE" => Db_Escape_String(postVal("lstType")),
+                "FLG_TYPE" => postVal("lstType"),
                 "ID_SERIE" => postValInteger("txtSerieId"),
                 "SERIE" => postVal("txtSerie"),
                 "FLG_FINI" => postVal("lstAchevee"),
@@ -124,13 +124,13 @@ class Proposition extends Bdo_Controller {
                 "DESSIN_ALT" => postVal("txtDessiAlt"),
                 "ID_COLOR" => postValInteger("txtColorId"),
                 "COLOR" => postVal("txtColor"),
-                "ID_COLLECTION" => postValInteger("txtCollec"),
+                "ID_COLLECTION" => postValInteger("txtCollecId"),
                 "COLLECTION" => postVal("txtCollec"),
                 "EAN" => postVal("txtEAN"),
                 "ISBN" => postVal("txtISBN"),
                 "HISTOIRE" => postVal("txtHistoire"),
                 "COMMENTAIRE" => postVal("txtCommentaire"),
-                "ACTION" => Db_Escape_String(postVal("cmbAction")),
+                "ACTION" => postVal("cmbAction"),
                 "NOTIF_MAIL" =>((postVal("chkNotEmail") == "checked") ? "1" : "0")
             ));
 

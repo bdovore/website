@@ -324,7 +324,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                           <span id="spEditeur"><?php echo $view->edition->ID_EDITEUR; ?></span>
                       </td>
 
-                      <td bordercolor="#DAC1B3" width="59%"> <input name="txtEditeur" id="txtEditeur" value="<?php echo $view->edition->NOM_EDITEUR; ?>" size="40" class="flat" type="text" onchange="changeEditeur();"></td>
+                      <td bordercolor="#DAC1B3" width="59%"> <input name="txtEditeur" id="txtEditeur" value="<?php echo $view->edition->NOM_EDITEUR; ?>" size="40" class="flat" type="text"></td>
 
                      
 
@@ -335,10 +335,10 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                       <td class="label"> <font color="#990000" size="-1"><strong>Collection</strong></font></td>
 
                       <td bordercolor="#DAC1B3"> <input name="txtCollecId" id="txtCollecId" value="<?php echo $view->edition->ID_COLLECTION; ?>" size="7" type="hidden">
-                          <span id="spCollec"></span>
+                      <span id="spCollec"><?php echo $view->edition->ID_COLLECTION; ?></span>
                       </td>
 
-                      <td bordercolor="#DAC1B3"> <select name="txtCollec" id="txtCollec" class="flat" ></select></td>
+                      <td bordercolor="#DAC1B3"> <input name="txtCollec" id="txtCollec" value="<?php echo $view->edition->ID_COLLECTION; ?>" size="40" class="flat" type="text"></td>
 
                       
 
@@ -455,6 +455,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
      addAutocomplete("txtColor","spColor","txtColorId","<?php echo BDO_URL; ?>getjson?data=Auteur");
       <?php } ?>
      addAutocomplete("txtEditeur","spEditeur","txtEditeurId","<?php echo BDO_URL; ?>getjson?data=Editeur");
+     addAutocomplete("txtCollec","spCollec","txtCollecId","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val());
      
      changeEditeur();
     function changeEditeur() {
