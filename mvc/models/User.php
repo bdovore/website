@@ -137,13 +137,13 @@ FROM " . $this->table_name . "
         if ((! isset($_SESSION['userConnect']->user_id) or empty($_SESSION['userConnect']->user_id)) 
                 and issetNotEmpty($_COOKIE["username"]) 
                 and issetNotEmpty($_COOKIE["pass"])) {
-            
+
             $this->load('c', "
     			WHERE username ='" . Db_Escape_String($_COOKIE["username"]) . "'
     			AND password='" . Db_Escape_String($_COOKIE["pass"]) . "'
     			AND level<98
     			");
-            
+
             if (1 == $this->dbSelect->nbLineResult) {
                 $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
                 $this->addNbConnect();
@@ -174,7 +174,7 @@ FROM " . $this->table_name . "
                             $this->addNbConnect();
                             
                             // défini les paramètres de cookie
-                            setcookie("username", $this->user_id, time() + 31104000, "/");
+                            setcookie("username", $this->username, time() + 31104000, "/");
                             // connexion automatique "se souvenir de moi"
                             if (isset($_POST['chkvisit'])) {
                                 setcookie("pass", $this->password, time() + 31104000, "/");
