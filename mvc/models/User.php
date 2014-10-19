@@ -176,7 +176,7 @@ FROM " . $this->table_name . "
                             // défini les paramètres de cookie
                             setcookie("username", $this->user_id, time() + 31104000, "/");
                             // connexion automatique "se souvenir de moi"
-                            if ($_POST['chkvisit'] == 1) {
+                            if (isset($_POST['chkvisit'])) {
                                 setcookie("pass", $this->password, time() + 31104000, "/");
                             }
                         }
