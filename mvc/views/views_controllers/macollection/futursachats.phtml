@@ -108,13 +108,14 @@
                     <th class="sorting">Couv.</th>
                     <th class="sorting">Titre</th>
                     <th class="sorting">Série</th>
-                    <th class="sorting">Tome</th>
+                    
                     <th class="sorting">Edition</th>
                    
                     <th class="sorting">Collection</th>
                     <th class="sorting">Scenario</th>
                     <th class="sorting">Dessin</th>
                     <th class="sorting">Date d'ajout</th>
+                    <th class="sorting">Date de parution</th>
 
 
                 </tr>
@@ -128,13 +129,14 @@
                     <td><?php echo $ficheAlbum->urlAlbum($album,"couvSmall", true); ?></td>
                     <td><?php echo $ficheAlbum->urlAlbum($album,"albTitle", true); ?></td>
                     <td><?php echo $ficheAlbum->urlSerie($album); ?></td>
-                    <td><?php echo $album->NUM_TOME; ?></td>
+                    
                     <td><?php echo $album->NOM_EDITION; ?></td>
                 
                     <td><?php echo $album->NOM_COLLECTION; ?></td>
                     <td><?php echo $album->scpseudo ; ?></td>
                     <td><?php echo $album->depseudo ; ?></td>
                     <td><?php echo date('d/m/Y',strtotime($album->DATE_AJOUT)); ?></td>
+                    <td><?php echo date('d/m/Y',strtotime($album->DTE_PARUTION)); ?></td>
 
 
                 </tr>

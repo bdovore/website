@@ -242,12 +242,12 @@ class Macollection extends Bdo_Controller {
             $a_order[0]= "IMG_COUV";
             $a_order[1]= "TITRE_TOME $order, NUM_TOME";
             $a_order[2]= "NOM_SERIE $order, NUM_TOME";
-            $a_order[3]= "NUM_TOME";
-            $a_order[4]= "NOM_EDITION";
-            $a_order[5]= "NOM_COLLECTION";
-            $a_order[6]= "scpseudo";
-            $a_order[7]= "depseudo";
-            $a_order[8]= "DATE_AJOUT";
+            $a_order[3]= "NOM_EDITION";
+            $a_order[4]= "NOM_COLLECTION";
+            $a_order[5]= "scpseudo";
+            $a_order[6]= "depseudo";
+            $a_order[7]= "DATE_AJOUT";
+            $a_order[8]= "DTE_PARUTION";
             
             // variable $sort donne la colonne pour le tri
             // on s'assure que la variable est dans le bon intervale de valeur
