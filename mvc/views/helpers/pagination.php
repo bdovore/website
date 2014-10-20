@@ -161,7 +161,7 @@ class Pagination{
       
         // tableaux contenant les liens d'accès et le texte à afficher
         $tab_menu_lien = array( "macollection", "macollection/mesetageres", "macollection/futursachats", "macollection/monactu", "macollection/seriecomplete", "macollection/addition", "macollection/proposition");
-        $tab_menu_texte = array( "Tableau de bord", "Mes Albums", "Futurs Achats", "Mon Actualité", "Séries à compléter", "L'Addiditon","Mes propositions" );
+        $tab_menu_texte = array( "Tableau de bord", "Mes Albums", "Futurs Achats", "Mon Actualité", "Séries à compléter", "L'Addition","Mes propositions" );
         
         // informations sur la page
         
