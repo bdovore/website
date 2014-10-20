@@ -30,7 +30,7 @@ class Search extends Bdo_Controller
         }
 
         $this->loadModel ("Tome");
-        $this->Tome->load('c'," WHERE TITRE LIKE '". $term ."%' ORDER BY TITRE LIMIT 0,10");
+        $this->Tome->load('c'," WHERE (TITRE LIKE '". $term ."%' ) ORDER BY TITRE LIMIT 0,10");
 
         foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
             $arr[] = (object) array(
@@ -39,7 +39,27 @@ class Search extends Bdo_Controller
                     'ID_TOME' => $obj->ID_TOME
             );
         }
+        
+        $this->Tome->load('c'," WHERE (en.ean like '". $term ."%' ) ORDER BY TITRE LIMIT 0,10");
 
+        foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
+            $arr[] = (object) array(
+                    'label' => $obj->TITRE_TOME,
+                    'category' => "Albums",
+                    'ID_TOME' => $obj->ID_TOME
+            );
+        }
+        
+        $this->Tome->load('c'," WHERE (en.isbn like '". $term ."%' ) ORDER BY TITRE LIMIT 0,10");
+
+        foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
+            $arr[] = (object) array(
+                    'label' => $obj->TITRE_TOME,
+                    'category' => "Albums",
+                    'ID_TOME' => $obj->ID_TOME
+            );
+        }
+        
         $this->loadModel ("Auteur");
         $this->Auteur->load('c'," WHERE PSEUDO IS NOT NULL AND PSEUDO LIKE '". $term ."%' ORDER BY PSEUDO LIMIT 0,10");
 
