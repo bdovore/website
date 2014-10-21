@@ -368,16 +368,16 @@ function check_image_type (&$type, &$error)
  */
 function sqlise ($text, $type)
 {
-    global $DB;
+    
     switch ($type) {
         case 'text':
-            return ($text == '') ? 'NULL' : "'" . $DB->escape($text) . "'";
+            return ($text == '') ? 'NULL' : "'" . Db_Escape_String($text) . "'";
         case 'text_simple':
-            return ($text == '') ? 'NULL' : "'" . $DB->escape($text) . "'";
+            return ($text == '') ? 'NULL' : "'" . Db_Escape_String($text) . "'";
         case 'int':
-            return ($text == '') ? 0 : $DB->escape($text);
+            return ($text == '') ? 0 : Db_Escape_String($text);
         case 'int_null':
-            return ($text == '') ? 'NULL' : $DB->escape($text);
+            return ($text == '') ? 'NULL' : Db_Escape_String($text);
     }
 }
 

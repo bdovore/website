@@ -194,9 +194,9 @@ class User_album_prop extends Bdo_Db_Line
     }
 
     public function getAllStat() {
-         $prop_alb = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'AJOUT' and status = 0 ");
-         $prop_corr = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'CORRECTION' and status = 0");
-         $NBEDITION = Db_CountRow("SELECT * FROM bd_edition WHERE prop_status = 0");
+         $prop_alb = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'AJOUT' and status not in ( 98,99,1) ");
+         $prop_corr = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'CORRECTION' and status not in ( 98,99,1)");
+         $NBEDITION = Db_CountRow("SELECT * FROM bd_edition WHERE prop_status not in ( 98,99,1) ");
          return (array(
              "NBAJOUT" =>  $prop_alb,
              "NBCORRECTION" => $prop_corr,
