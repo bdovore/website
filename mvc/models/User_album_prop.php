@@ -48,7 +48,7 @@ class User_album_prop extends Bdo_Db_Line
     {
         if ($this->iswithalbum) {
             /*
-             * Selection des données user_ablum_prop + id et libellé des tables liées
+             * Selection des données user_album_prop + id et libellé des tables liées
              */
             $select = "SELECT 
 		users_alb_prop.USER_ID, 
