@@ -237,7 +237,7 @@ class Admin extends Bdo_Controller {
             if (is_null($this->User_album_prop->IMG_COUV) | ($this->User_album_prop->IMG_COUV == '')) {
                 $url_image = BDO_URL_COUV . "default.png";
             } else {
-                $url_image = BDO_DIR_UPLOAD . $this->User_album_prop->IMG_COUV;
+                $url_image = BDO_URL_IMAGE ."tmp/". $this->User_album_prop->IMG_COUV;
                 $dim_image = imgdim($url_image);
             }
 
