@@ -641,7 +641,7 @@ class Bdo_Db_Line
             else if (0 < count($this->a_updateColumn)) {
                 $this->error[] = "execute 'insert' query failed";
             }
-        }
+        } 
     }
 
     public function priColUrl ()
