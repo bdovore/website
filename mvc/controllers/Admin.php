@@ -836,36 +836,39 @@ class Admin extends Bdo_Controller {
     }
 
     public function commentProposition() {
-        $comment = postVal("txtCommentCorr");
-        $id = getValInteger("ID");
-        $status = postVal("cmbStatus");
+        if (User::minAccesslevel(1)) {
+            $comment = postVal("txtCommentCorr");
+            $id = getValInteger("ID");
+            $status = postVal("cmbStatus");
 
-        // Met à jour la case commentaire
+            // Met à jour la case commentaire
 
-        $this->loadModel("User_album_prop");
-        $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $id));
-        $this->User_album_prop->load();
+            $this->loadModel("User_album_prop");
+            $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $id));
+            $this->User_album_prop->load();
 
-        $this->User_album_prop->set_dataPaste(array(
-            "CORR_COMMENT" => $comment,
-            "STATUS" => $status,
-            "VALIDATOR" => $_SESSION["userConnect"]->user_id,
-            "VALID_DTE" => date('d/m/Y H:i:s')
-        ));
-        $this->User_album_prop->update();
-        if (issetNotEmpty($this->User_album_prop->error)) {
-            var_dump($this->User_album_prop->error);
+            $this->User_album_prop->set_dataPaste(array(
+                "CORR_COMMENT" => $comment,
+                "STATUS" => $status,
+                "VALIDATOR" => $_SESSION["userConnect"]->user_id,
+                "VALID_DTE" => date('d/m/Y H:i:s')
+            ));
+            $this->User_album_prop->update();
+            if (issetNotEmpty($this->User_album_prop->error)) {
+                var_dump($this->User_album_prop->error);
+                exit();
+            }
+            // Retourne sur la page proposition
+            header("Location:" . BDO_URL . "admin/editPropositionAjout?ID=$id");
             exit();
         }
-        // Retourne sur la page proposition
-        header("Location:" . BDO_URL . "admin/editPropositionAjout?ID=$id");
-        exit();
     }
     
     public function addSerie() {
         /*
          * Ajout rapide d'une série
          */
+        if (User::minAccesslevel(1)) {
         $act = getVal("act");
         // Mettre à jour les informations
         if ($act=="insert"){
@@ -897,6 +900,46 @@ class Admin extends Bdo_Controller {
         }
          $this->view->layout = "iframe";
          $this->view->render();
+        }
+    }
+    
+    public function addAuteur () {
+        if (User::minAccesslevel(1)) {
+            $act= getVal("act","");
+            if ($act=="insert")
+            {
+                    if (postVal('txtPrenom') != '')
+                    $long_name = postVal('txtNom').", ".postVal('txtPrenom');
+                    else
+                    $long_name = postVal('txtNom');
+
+                    $pseudo = notIssetOrEmpty(postVal('txtPseudo')) ?  $long_name : postVal('txtPseudo');
+                    $this->loadModel("Auteur");
+                    $this->Auteur->set_dataPaste(array(
+                        "PSEUDO" => $pseudo,
+                        "NOM" => postVal('txtNom'),
+                        "PRENOM" => postVal('txtPrenom')
+                    ));
+                    $this->Auteur->update();
+                    $this->view->set_var (array
+                    (
+                    "BODYONLOAD" => "parent.$.fancybox.close();"
+                    ));
+                   
+                    
+            }
+
+            // Afficher le formulaire pr� - remplis
+            elseif($act=="")
+            {
+                    $this->view->set_var (array
+                    (
+                    "URLACTION" => BDO_URL."admin/addauteur?act=insert"
+                    ));                  
+            }
+            $this->view->layout = "iframe";
+            $this->view->render();
+        }
     }
     public function editEdition() {
         if (User::minAccesslevel(1)) {
