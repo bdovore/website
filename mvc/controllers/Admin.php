@@ -22,7 +22,7 @@ class Admin extends Bdo_Controller {
     }
 
     private function getDateBeforeValid() {
-        $validationdelay = 21; //nbre de jours apr&eacutes lesquels on ne valide pas (pour les parutions futures)
+        $validationdelay = 21; //nbre de jours après lesquels on ne valide pas (pour les parutions futures)
         $datebeforevalid = "Ne pas valider les albums qui paraissent apr&egrave;s le " . date("d/m/Y", mktime(0, 0, 0, date("m"), date("d") + $validationdelay, date("Y"))) . " ($validationdelay jours)";
 
         return $datebeforevalid;
@@ -32,7 +32,7 @@ class Admin extends Bdo_Controller {
         /*
          * Page principale de gestion des propositions
          * Affiche les listes de proposition en attente
-         * La gestion proprement dite est effectu&eacutee dans editPropositoin
+         * La gestion proprement dite est effectuée dans editPropositoin
          */
         if (User::minAccesslevel(1)) {
             $act = getVal("act", "");
@@ -42,7 +42,7 @@ class Admin extends Bdo_Controller {
             }
             $type = getVal("type", "AJOUT");
 
-            $validationdelay = 21; //nbre de jours apr&eacutes lesquels on ne valide pas (pour les parutions futures)
+            $validationdelay = 21; //nbre de jours après lesquels on ne valide pas (pour les parutions futures)
             // LISTE LES PROPOSALS
             $this->loadModel("User_album_prop");
             switch ($type) {
@@ -102,23 +102,23 @@ class Admin extends Bdo_Controller {
 
     public function deleteProposition() {
         /*
-         * Fonction de suppression d'une proposition dont l'id est pass&eacute en param&egrave;tre
+         * Fonction de suppression d'une proposition dont l'id est passé en paramètre
          * ainsi que le type : type = AJOUT, CORRECTION ou EDITION
-         * La suppression fait simplement changer le statut, et envoie &eacuteventuellement un mail &agrave; l'utilisateur
+         * La suppression fait simplement changer le statut, et envoie éventuellement un mail à l'utilisateur
          * 
          */
         if (User::minAccesslevel(1)) {
             $src = getVal("src", "");
 
             if ($src == "list") {
-                // supppression depuis la liste : mode AJAX, on r&eacutecup&egrave;re l'id via GET et pas de mail
+                // supppression depuis la liste : mode AJAX, on récupère l'id via GET et pas de mail
                 $this->view->layout = "ajax";
                 $id = getValInteger("ID", 0);
                 $type = getVal("type", "");
                 $mail = "";
             } else {
                 /*
-                 * Depuis la fiche d'&eacutedition : acc&egrave;s via POST, on r&eacutecup&egrave;re un email 
+                 * Depuis la fiche d'édition : accès via POST, on récupère un email 
                  */
                 $id = postValInteger("ID", 0);
                 $type = postVal("type", "");
@@ -126,19 +126,19 @@ class Admin extends Bdo_Controller {
             }
             if ($id > 0) {
                 /*
-                 * On a bien un id en param&egrave;tre, on met &agrave; jour le statut
+                 * On a bien un id en paramètre, on met à jour le statut
                  */
                 if ($type == "AJOUT" or $type == "CORRECTION") {
                     $this->loadModel("User_album_prop");
                     $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $id));
-                    // on charge la proposition &agrave; supprimer
+                    // on charge la proposition à supprimer
                     $this->User_album_prop->load();
                     // modification du statut
                     $this->User_album_prop->set_dataPaste(array("STATUS" => '99'));
-                    // mise &agrave; jour
+                    // mise à jour
                     $this->User_album_prop->update();
                     $this->view->set_var(array("json" => json_encode($this->User_album_prop->error)));
-                    // on garde en m&eacutemoire les valeurs des champs
+                    // on garde en mémoire les valeurs des champs
                     $prop_user = $this->User_album_prop->USER_ID;
                     $prop_img = $this->User_album_prop->IMG_COUV;
                     $prop_action = $this->User_album_prop->ACTION;
@@ -158,7 +158,7 @@ class Admin extends Bdo_Controller {
                     $prop_titre = $this->Edition->TITRE_TOME;
                     $notif_mail = $this->Edition->EMAIL;
                 }
-                // on supprime l'image si n&eacutecessaire
+                // on supprime l'image si nécessaire
                 if ($prop_img != '') {
 
                     if (file_exists(BDO_DIR_UPLOAD . $prop_img)) {
@@ -187,7 +187,7 @@ class Admin extends Bdo_Controller {
     public function editPropositionAjout() {
         /*
          * Affichage d'une proposition d'ajout ou correction
-         * G&egrave;re aussi les actions : 
+         * Gère aussi les actions : 
          * - append : ajoute un album 
          * - merge : fusionne des infos avec un album
          * - comment : enregistre un commentaire sur la proposition
@@ -196,7 +196,7 @@ class Admin extends Bdo_Controller {
             $id = getValInteger("ID");
             $this->loadModel("User_album_prop");
             $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $id));
-            // chargement des donn&eacutees compl&egrave;tes
+            // chargement des données complètes
             $this->User_album_prop->setWithAlbumInfo($bool = true);
             $this->User_album_prop->load();
 
@@ -353,7 +353,7 @@ class Admin extends Bdo_Controller {
                         "LIENEDITSERIE", "<a href='" . BDO_URL . "admin/editserie?serie_id=" . stripslashes($this->User_album_prop->ID_SERIE) . "'><img src='" . BDO_URL_IMAGE . "edit.gif' width='18' height='13' border='0'></a>"
                 );
             }
-            // D&eacutetermine les albums ayant une syntaxe approchante
+            // Détermine les albums ayant une syntaxe approchante
             $main_words = main_words(stripslashes($this->User_album_prop->TITRE));
             if ($main_words[1][0] != '') {
                 $query = "
@@ -370,13 +370,13 @@ class Admin extends Bdo_Controller {
             $this->loadModel("Tome");
             $dbs_tome = $this->Tome->load("c", $query);
 
-            // on d&eacuteclare le block &eacute utiliser
+            // on déclare le block à utiliser
 
             $this->view->set_var(array(
                 "dbs_tome" => $dbs_tome
             ));
 
-            // R&eacutecup&eacutere l'adresse mail de l'utilisateur
+            // Récupère l'adresse mail de l'utilisateur
 
             $mail_adress = $this->User_album_prop->EMAIL;
             $pseudo = $this->User_album_prop->USERNAME;
@@ -387,14 +387,14 @@ class Admin extends Bdo_Controller {
                 "MEMBRE" => $pseudo
             ));
 
-            // url suivant et pr&eacutec&eacutedent
+            // url suivant et précédent
             $this->User_album_prop->load("c", " WHERE 
                     id_proposal <" . $id . " 
                     AND status not in (98,99,1)
                     AND prop_type = 'AJOUT' 
             ORDER BY id_proposal desc limit 0,1");
 
-            // URL pr&eacutec&eacutedent : proposition avec ID inf&eacuterieur
+            // URL précédent : proposition avec ID inférieur
             if ($this->User_album_prop->ID_PROPOSAL < $id) {
                 $prev_url = BDO_URL . "admin/editpropositionajout?ID=" . $this->User_album_prop->ID_PROPOSAL;
                 $this->view->set_var("BOUTONPRECEDENT", "<a href='" . $prev_url . "'><input type='button' value='Précédent' /></a>");
@@ -407,7 +407,7 @@ class Admin extends Bdo_Controller {
                     AND prop_type = 'AJOUT' 
             ORDER BY id_proposal asc limit 0,1
             ");
-            // URL pr&eacutec&eacutedent : proposition avec ID sup&eacuterieur
+            // URL précédent : proposition avec ID supérieur
             if ($this->User_album_prop->ID_PROPOSAL > $id) {
 
 
@@ -430,7 +430,7 @@ class Admin extends Bdo_Controller {
             $id = getValInteger("ID"); // id de la proposition
             $this->loadModel("User_album_prop");
 
-            // R&eacutecup&egrave;re l'utilisateur et l'image de couv
+            // Récupère l'utilisateur et l'image de couv
             $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $id));
             $this->User_album_prop->load();
             $prop_user = $this->User_album_prop->USER_ID;
@@ -490,9 +490,9 @@ class Admin extends Bdo_Controller {
                 // on crée l'album etc...
 
 
-                // n'ins&egrave;re dans bd_tome que s'il s'agit d'une nouvelle &eacutedition
+                // n'insère dans bd_tome que s'il s'agit d'une nouvelle édition
                 if (postVal('txtExistingTomeId', '') == '') {
-                    // R&eacutecup&egrave;re le genre de la s&eacuterie
+                    // Récupère le genre de la série
                     $this->loadModel("Serie");
                     $this->Serie->set_dataPaste(array("ID_SERIE" => postValInteger('txtSerieId')));
                     $this->Serie->load();
@@ -515,7 +515,7 @@ class Admin extends Bdo_Controller {
                         "FLG_INT" => ((postVal('chkIntegrale') == "checkbox") ? "O" : "N"),
                         "FLG_TYPE" => postVal('lstType')));
 
-                    // Ins&egrave;re l'information dans la table bd_tome
+                    // Insère l'information dans la table bd_tome
                     $this->Tome->update();
                     if (issetNotEmpty($this->Tome->error)) {
                         var_dump($this->Tome->error);
@@ -523,7 +523,7 @@ class Admin extends Bdo_Controller {
                     }
                     echo "Album ajout&eacute dans la table bd_tome<br />";
 
-                    // r&eacutecup&egrave;re la valeur de la derni&egrave;re insertion
+                    // récupère la valeur de la dernière insertion
                     $lid_tome = $this->Tome->ID_TOME;
                     $nouv_edition = "O";
                 } else {
@@ -531,7 +531,7 @@ class Admin extends Bdo_Controller {
                     $nouv_edition = "N";
                 }
 
-                // ins&egrave;re un champ dans la table bd_edition
+                // insère un champ dans la table bd_edition
                 $this->loadModel("Edition");
                 $this->Edition->set_dataPaste(array(
                     "ID_TOME" => $lid_tome,
@@ -552,7 +552,7 @@ class Admin extends Bdo_Controller {
                 }
                 echo "Nouvelle &eacutedition ins&eacuter&eacutee dans la table id_edition<br />";
 
-                // r&eacutecup&egrave;re la valeur de la derni&egrave;re insertion
+                // récupère la valeur de la dernière insertion
                 $lid_edition = $this->Edition->ID_EDITION;
 
                 if ($nouv_edition == "O") {
@@ -564,24 +564,24 @@ class Admin extends Bdo_Controller {
                     $this->Tome->update();
                 }
 
-                // Verifie la pr&eacutesence d'une image &agrave; t&eacutel&eacutecharger
+                // Verifie la présence d'une image à télécharger
                 if ($_FILES['txtFileLoc']['size'] > 0 | (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal("txtFileURL"), $url_ary))) {
-                    if ($_FILES['txtFileLoc']['size'] > 0) { // un fichier &agrave; uploader
+                    if ($_FILES['txtFileLoc']['size'] > 0) { // un fichier à uploader
                         $img_couv = $this->imgCouvFromForm($lid_tome, $lid_edition);
-                    } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal("txtFileURL"), $url_ary)) { // un fichier &agrave; t&eacutel&eacutecharger
+                    } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal("txtFileURL"), $url_ary)) { // un fichier à télécharger
                         $img_couv = $this->imgCouvFromUrl($url_ary, $lid_tome, $lid_edition);
                     } else {
                         $img_couv = '';
                     }
 
-                    // met &agrave; jour la r&eacutef&eacuterence au fichier dans la table bd_edition
+                    // met à jour la référence au fichier dans la table bd_edition
                     $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
                     $this->Edition->update();
 
 
                     echo "Nouvelle image ins&eacuter&eacutee dans la base<br />";
                 } else {
-                    // v&eacuterifie si une image a &eacutet&eacute propos&eacutee
+                    // vérifie si une image a été proposée
                     if (($prop_img != '') && (postVal('chkDelete') != 'checked')) {// copie l'image dans les couvertures
                         $newfilename = "CV-" . sprintf("%06d", $lid_tome) . "-" . sprintf("%06d", $lid_edition);
                         $strLen = strlen($prop_img);
@@ -589,7 +589,7 @@ class Admin extends Bdo_Controller {
                         @copy(BDO_DIR_UPLOAD . $prop_img, BDO_DIR_COUV . $newfilename);
                         @unlink(BDO_DIR_UPLOAD . $prop_img);
 
-                        // met � jours la r�f�rence au fichier dans la table bd_edition
+                        // met à jour la référence au fichier dans la table bd_edition
                         $this->Edition->set_dataPaste(array("IMG_COUV" => $newfilename));
                         $this->Edition->update();
 
@@ -612,11 +612,11 @@ class Admin extends Bdo_Controller {
                         $imagelargeur = $imageproperties[0];
                         $imagehauteur = $imageproperties[1];
 
-                        //D�termine s'il y a lieu de redimensionner l'image
+                        //Détermine s'il y a lieu de redimensionner l'image
                         if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $maxsize)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
 
                             if ($imagelargeur < $imagehauteur) {
-                                // image de type panorama : on limite la largeur � 128
+                                // image de type panorama : on limite la largeur à 128
                                 $new_w = $max_size;
                                 $new_h = round($imagehauteur * $max_size / $imagelargeur);
                             } else {
@@ -663,7 +663,7 @@ class Admin extends Bdo_Controller {
                                 $img_couv = substr($newfilename, 0, strlen($newfilename) - 3) . "jpg";
                                 imagejpeg($new_image, BDO_DIR_COUV . $newfilename, 100);
 
-                                // met &agrave; jours la r&eacutef&eacuterence au fichier dans la table bd_edition
+                                // met à jour la référence au fichier dans la table bd_edition
 
                                 $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
                                 $this->Edition->update();
@@ -673,7 +673,7 @@ class Admin extends Bdo_Controller {
                     echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
                     echo "Image redimensionn&eacutee<br />";
                 }
-                // Ajoute l'album &agrave; la collection de l'utilisateur
+                // Ajoute l'album à la collection de l'utilisateur
                 if ($prop_action != 2) {
                     $this->loadModel("Useralbum");
                     $this->Useralbum->set_dataPaste(array(
@@ -690,7 +690,7 @@ class Admin extends Bdo_Controller {
                     echo "Album ajout&eacute dans la collection de l'utilisateur<br />";
                 }
 
-                //Efface le fichier de la base et passe le status de l'album &agrave; valider
+                //Efface le fichier de la base et passe le status de l'album à validé
                 if ($prop_img != '') {
                     if (file_exists(BDO_DIR_UPLOAD . $prop_img)) {
                         @unlink(BDO_DIR_UPLOAD . $prop_img);
@@ -742,7 +742,7 @@ class Admin extends Bdo_Controller {
     public function mergeProposition() {
         $idtome = postValInteger('txtFutAlbId');
         $id = getValInteger("ID"); // id de la proposition
-        // R&eacutecup&egrave;re l'utilisateur et l'image de couv
+        // Récupère l'utilisateur et l'image de couv
         $this->loadModel("User_album_prop");
         $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $id));
         $this->User_album_prop->load();
@@ -753,7 +753,7 @@ class Admin extends Bdo_Controller {
 
 
         // Ajoute l'album existant &agrave; la collection ou aux futurs achats de l'utilisateur
-        // V&eacuterifie la pr&eacutesence de l'album existant dans la collection de l'utilisateur
+        // Vérifie la présence de l'album existant dans la collection de l'utilisateur
         $this->loadModel("Useralbum");
         $this->Useralbum->load("c", " WHERE ua.user_id = " . $prop_user . " and bd_tome.ID_TOME =" . $idtome);
 
@@ -761,7 +761,7 @@ class Admin extends Bdo_Controller {
             echo GetMetaTag(1, "Cet album est d&eacutej&agrave; pr&eacutesent dans la collection de l'utilisateur", BDO_URL . "admin/adminproposals.php?act=valid&propid=" . $propid);
             exit();
         } else { // Ajoute l'album
-            // on r&eacutecup&egrave;re l'id &eacutedition par d&eacutefaut
+            // on récupère l'id édition par défaut
             $this->loadModel("Tome");
             $this->Tome->set_dataPaste(array("ID_TOME" => $idtome));
             $this->Tome->load();
@@ -794,12 +794,12 @@ class Admin extends Bdo_Controller {
                 var_dump($this->User_album_prop->error);
                 exit();
             }
-            // Envoie un mail si n�cessaire pour pr�venir l'utilisateur
+            // Envoie un mail si nécessaire pour prévenir l'utilisateur
             if ($notif_mail == 1) {
                 $mail_action[0] = "Cet album a &eacutet&eacute plac&eacute dans votre collection, comme demand&eacute.\n\n";
                 $mail_action[1] = "Cet album a &eacutet&eacute plac&eacute dans vos achats futurs, comme demand&eacute.\n\n";
 
-                // R&eacutecup&eacutere l'adresse du posteur et compose l'email
+                // Récupère l'adresse du posteur et compose l'email
 
                 $mail_adress = $this->User_album_prop->EMAIL;
                 $mail_sujet = "Ajout d'un album dans la base BDOVORE";
@@ -818,7 +818,7 @@ class Admin extends Bdo_Controller {
                 echo "Email d'information envoy&eacute &agrave; l'utilisateur<br />";
             }
 
-            // Pr�pare la redirection vers la proposition suivante
+            // Prépare la redirection vers la proposition suivante
             $this->User_album_prop->load("c", " WHERE 
                     id_proposal > " . $id . " 
                     AND status not in (98,99,1) 
@@ -832,7 +832,7 @@ class Admin extends Bdo_Controller {
                 $next_url = BDO_URL . "admin/editAlbum?id_tome=" . $lid_tome;
             }
         }
-        // echo GetMetaTag(1, "Bien jou&eacute !", $next_url);
+        // echo GetMetaTag(1, "Bien jou&eacute; !", $next_url);
     }
 
     public function commentProposition() {
@@ -912,7 +912,7 @@ class Admin extends Bdo_Controller {
 
     private function imgCouvFromUrl($url_ary, $lid_tome, $lid_edition) {
         /*
-         * R&eacutecup&egrave;re une image de couvertue et la copie dans le r&eacutepertoire fournit en param&egrave;tre
+         * Récupère une image de couvertue et la copie dans le répertoire fournit en paramètre
          * Return : nom du fichier
          */
         if (empty($url_ary[4])) {
@@ -921,14 +921,14 @@ class Admin extends Bdo_Controller {
         }
         $base_get = '/' . $url_ary[4];
         $port = (!empty($url_ary[3]) ) ? $url_ary[3] : 80;
-        // Connection au serveur h�bergeant l'image
+        // Connection au serveur hébergeant l'image
         if (!($fsock = @fsockopen($url_ary[2], $port, $errno, $errstr))) {
             $error = true;
             echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image innacessible. Vous allez �tre redirig�.';
             exit();
         }
 
-        // R�cup�re l'image
+        // Récupère l'image
         @fputs($fsock, "GET $base_get HTTP/1.1\r\n");
         @fputs($fsock, "HOST: " . $url_ary[2] . "\r\n");
         @fputs($fsock, "Connection: close\r\n\r\n");
@@ -939,7 +939,7 @@ class Admin extends Bdo_Controller {
         }
         @fclose($fsock);
 
-        // Check la validit� de l'image
+        // Check la validité de l'image
         if (!preg_match('#Content-Length\: ([0-9]+)[^ /][\s]+#i', $avatar_data, $file_data1) || !preg_match('#Content-Type\: image/[x\-]*([a-z]+)[\s]+#i', $avatar_data, $file_data2)) {
             $error = true;
             echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du t�l�chargement de l\'image. Vous allez �tre redirig�.';
@@ -982,8 +982,7 @@ class Admin extends Bdo_Controller {
         $imagetype = $imageproperties[2];
 
         $newfilename = "CV-" . sprintf("%06d", $lid_tome) . "-" . sprintf("%06d", $lid_edition);
-        // v&eacuterifie le type d'image
-        // v&eacuterifie le type d'image
+        // vérifie le type d'image
         switch ($imagetype) {
             case IMAGETYPE_GIF:
                 $newfilename .=".gif";
@@ -1000,7 +999,7 @@ class Admin extends Bdo_Controller {
                 break;
         }
 
-        //move_uploaded_file fait un copy(), mais en plus il v&eacuterifie que le fichier est bien un upload
+        //move_uploaded_file fait un copy(), mais en plus il vérifie que le fichier est bien un upload
         //et pas un fichier local (genre constante.php, au hasard)
         if (!move_uploaded_file($_FILES['txtFileLoc']['tmp_name'], BDO_DIR_COUV . $newfilename)) {
             echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez &ecirc;tre redirig&eacute.';
