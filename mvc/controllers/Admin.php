@@ -832,7 +832,7 @@ class Admin extends Bdo_Controller {
                 $next_url = BDO_URL . "admin/editAlbum?id_tome=" . $lid_tome;
             }
         }
-        // echo GetMetaTag(1, "Bien jou&eacute; !", $next_url);
+        echo GetMetaTag(1, "Bien jou&eacute; !", $next_url);
     }
 
     public function commentProposition() {
@@ -861,7 +861,43 @@ class Admin extends Bdo_Controller {
         header("Location:" . BDO_URL . "admin/editPropositionAjout?ID=$id");
         exit();
     }
+    
+    public function addSerie() {
+        /*
+         * Ajout rapide d'une série
+         */
+        $act = getVal("act");
+        // Mettre à jour les informations
+        if ($act=="insert"){
+                $tri = substr(trim(clean_article(postVal('txtNomSerie'))),0,3);
+                $this->loadModel("Serie");
+                $this->Serie->set_dataPaste(array(
+                    "NOM" => postVal('txtNomSerie'),
+                    "ID_GENRE" => postValInteger("txtGenreId"),
+                    "NOTE" => "0",
+                    "FLG_FINI" => "1",
+                    "TRI" => $tri
+                    
+                ));
+               $this->Serie->update();
+               
+                // fichier à utiliser
+                $this->view->set_var (array(
+                        "script" => "parent.$.fancybox.close();"
+                ));
+               
+        }
 
+        // Afficher le formulaire pré - remplis
+        elseif($act==""){
+                
+                $this->view->set_var (array(
+                        "URLACTION" => BDO_URL."admin/addserie?act=insert"
+                ));
+        }
+         $this->view->layout = "iframe";
+         $this->view->render();
+    }
     public function editEdition() {
         if (User::minAccesslevel(1)) {
             
