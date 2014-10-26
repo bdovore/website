@@ -215,8 +215,8 @@ class Admin extends Bdo_Controller {
                     break;
             }
 
-            $opt_action[0] = "Ins&eacuterer dans la collection";
-            $opt_action[1] = "Ins&eacuterer comme achat futur";
+            $opt_action[0] = "Ins&eacute;rer dans la collection";
+            $opt_action[1] = "Ins&eacute;rer comme achat futur";
             $opt_action[2] = "Aucune";
             $opt_type[0][0] = 0;
 
@@ -227,7 +227,7 @@ class Admin extends Bdo_Controller {
             $opt_status[2][0] = 3;
             $opt_status[2][1] = "Aide requise";
             $opt_status[3][0] = 4;
-            $opt_status[3][1] = "Aide apport&eacutee";
+            $opt_status[3][1] = "Aide apport&eacute;e";
 
             $opt_type[0][1] = 'Album';
             $opt_type[1][0] = 1;
@@ -333,16 +333,16 @@ class Admin extends Bdo_Controller {
             $mail_body = "Bonjour, \n";
             $mail_body .= "Votre proposition ";
             $mail_body .= '"' . $titre . '"';
-            $mail_body .= " a &eacutet&eacute refus&eacutee par l'&eacutequipe de correction. \n";
-            $mail_body .= "- Les informations que vous avez fournies n'&eacutetaient pas suffisantes. \n";
-            $mail_body .= "- La proposition d'un autre membre a &eacutet&eacute pr&eacutef&eacuter&eacutee ou valid&eacutee avant. \n";
-            $mail_body .= "- Nous consid&eacuterons que cet album n'a pas de rapport suffisamment proche &agrave; la bande dessin&eacutee pour &ecirc;tre int&eacutegr&eacute &agrave; la base de donn&eacutees du site. \n";
-            $mail_body .= "- Cet album figurait d&eacutej&agrave; dans votre collection. \n";
-            $mail_body .= "Si l'&eacutedition par d&eacutefaut de cet album ne correspond pas &agrave; celle que vous poss&eacutedez,";
-            $mail_body .= "	d'autres &eacuteditions sont peut-&ecirc;tre d&eacutej&agrave; pr&eacutesentes dans la base et peuvent &eacutetre s&eacutelectionn&eacutees en cliquant sur l'album en question depuis votre garde-manger (menu d&eacuteroulant [Mon &eacutedition] des fiches album). \n";
-            $mail_body .= "Si ce n'est pas le cas, vous pouvez faire une proposition de nouvelle &eacutedition via ce m&ecirc;me menu d&eacuteroulant.\n\n";
-            $mail_body .= "Merci de votre compr&eacutehension, \n";
-            $mail_body .= "L'&eacutequipe BDOVORE";
+            $mail_body .= " a &eacute;t&eacute; refus&eacute;e par l'&eacute;quipe de correction. \n";
+            $mail_body .= "- Les informations que vous avez fournies n'&eacute;taient pas suffisantes. \n";
+            $mail_body .= "- La proposition d'un autre membre a &eacute;t&eacute; pr&eacute;f&eacute;r&eacute;e ou valid&eacute;e avant. \n";
+            $mail_body .= "- Nous consid&eacute;rons que cet album n'a pas de rapport suffisamment proche &agrave; la bande dessin&eacute;e pour &ecirc;tre int&eacute;gr&eacute; &agrave; la base de donn&eacute;es du site. \n";
+            $mail_body .= "- Cet album figurait d&eacute;j&agrave; dans votre collection. \n";
+            $mail_body .= "Si l'&eacute;dition par d&eacute;faut de cet album ne correspond pas &agrave; celle que vous poss&eacute;dez,";
+            $mail_body .= "	d'autres &eacute;ditions sont peut-&ecirc;tre d&eacute;j&agrave; pr&eacute;sentes dans la base et peuvent &ecirc;tre s&eacute;lectionn&eacute;es en cliquant sur l'album en question depuis votre garde-manger (menu d&eacute;roulant [Mon &eacute;dition] des fiches album). \n";
+            $mail_body .= "Si ce n'est pas le cas, vous pouvez faire une proposition de nouvelle &eacute;dition via ce m&ecirc;me menu d&eacute;roulant.\n\n";
+            $mail_body .= "Merci de votre compr&eacute;hension, \n";
+            $mail_body .= "L'&eacute;quipe BDOVORE";
             $this->view->set_var(array(
                 "SUJET_EMAIL" => $mail_sujet,
                 "CORPS_EMAIL" => $mail_body
@@ -521,7 +521,7 @@ class Admin extends Bdo_Controller {
                         var_dump($this->Tome->error);
                         exit();
                     }
-                    echo "Album ajout&eacute dans la table bd_tome<br />";
+                    echo "Album ajout&eacute; dans la table bd_tome<br />";
 
                     // récupère la valeur de la dernière insertion
                     $lid_tome = $this->Tome->ID_TOME;
@@ -550,7 +550,7 @@ class Admin extends Bdo_Controller {
                     var_dump($this->Edition->error);
                     exit();
                 }
-                echo "Nouvelle &eacutedition ins&eacuter&eacutee dans la table id_edition<br />";
+                echo "Nouvelle &eacute;dition ins&eacute;r&eacute;e dans la table id_edition<br />";
 
                 // récupère la valeur de la dernière insertion
                 $lid_edition = $this->Edition->ID_EDITION;
@@ -579,7 +579,7 @@ class Admin extends Bdo_Controller {
                     $this->Edition->update();
 
 
-                    echo "Nouvelle image ins&eacuter&eacutee dans la base<br />";
+                    echo "Nouvelle image ins&eacute;r&eactue;e dans la base<br />";
                 } else {
                     // vérifie si une image a été proposée
                     if (($prop_img != '') && (postVal('chkDelete') != 'checked')) {// copie l'image dans les couvertures
@@ -594,7 +594,7 @@ class Admin extends Bdo_Controller {
                         $this->Edition->update();
 
 
-                        echo "Image propos&eacutee ins&eacuter&eacutee dans la base<br />";
+                        echo "Image propos&eacute;e ins&eacute;r&eacute;e dans la base<br />";
                     }
                 }
 
@@ -671,7 +671,7 @@ class Admin extends Bdo_Controller {
                     }
 
                     echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
-                    echo "Image redimensionn&eacutee<br />";
+                    echo "Image redimensionn&eacute;e<br />";
                 }
                 // Ajoute l'album à la collection de l'utilisateur
                 if ($prop_action != 2) {
@@ -687,7 +687,7 @@ class Admin extends Bdo_Controller {
                         var_dump($this->Useralbum->error);
                         exit();
                     }
-                    echo "Album ajout&eacute dans la collection de l'utilisateur<br />";
+                    echo "Album ajout&eacute; dans la collection de l'utilisateur<br />";
                 }
 
                 //Efface le fichier de la base et passe le status de l'album à validé
@@ -699,24 +699,24 @@ class Admin extends Bdo_Controller {
                 $this->User_album_prop->set_dataPaste(array("STATUS" => 1, "VALIDATOR" => $_SESSION["userConnect"]->user_id));
                 $this->User_album_prop->update();
 
-                // Envoie un mail si n�cessaire pour pr�venir l'utilisateur
+                // Envoie un mail si nécessaire pour prévenir l'utilisateur
                 if ($notif_mail == 1) {
-                    $mail_action[0] = "L'album a &eacutet&eacute ajout&eacute &agrave; votre collection, comme demand&eacute.\n\n";
-                    $mail_action[1] = "L'album a &eacutet&eacute ajout&eacute dans vos achats futurs, comme demand&eacute.\n\n";
-                    $mail_action[2] = "L'album n'a pas &eacutet&eacute ajout&eacute &agrave; votre collection, comme demand&eacute.";
+                    $mail_action[0] = "L'album a &eacute;t&eacute; ajout&eacute; &agrave; votre collection, comme demand&eacute;.\n\n";
+                    $mail_action[1] = "L'album a &eacute;t&eacute; ajout&eacute; dans vos achats futurs, comme demand&eacute;.\n\n";
+                    $mail_action[2] = "L'album n'a pas &eacute;t&eacute; ajout&eacute; &agrave; votre collection, comme demand&eacute;.";
 
 
                     $mail_adress = $this->User_album_prop->EMAIL;
                     $mail_sujet = "Ajout d'un album dans la base BDOVORE";
                     $mail_entete = "From: no-reply@bdovore.com";
                     $mail_text = "Bonjour, \n\n";
-                    $mail_text .="Votre proposition d'ajout &agrave; la base de donn&eacutees de BDOVORE a &eacutet&eacute valid&eacutee.\n\n";
+                    $mail_text .="Votre proposition d'ajout &agrave; la base de donn&eacute;es de BDOVORE a &eacute;t&eacute; valid&eacute;e.\n\n";
                     $mail_text .="Titre : " . $_POST['txtTitre'] . "\n";
                     $mail_text .=$mail_action[$prop_action];
                     $mail_text .="Merci pour votre participation\n\n";
-                    $mail_text .="L'&eacutequipe BDOVORE";
+                    $mail_text .="L'&eacute;quipe BDOVORE";
                     mail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
-                    echo "Email de confirmation envoy&eacute<br />";
+                    echo "Email de confirmation envoy&eacute;<br />";
                 }
 
 
@@ -734,7 +734,7 @@ class Admin extends Bdo_Controller {
                     $next_url = BDO_URL . "admin/editAlbum?id_tome=" . $lid_tome;
                 }
 
-                echo GetMetaTag(1, "L'album a &eacutet&eacute ajout&eacute", $next_url);
+                echo GetMetaTag(1, "L'album a &eacute;t&eacute; ajout&eacute;", $next_url);
             }
         }
     }
@@ -758,7 +758,7 @@ class Admin extends Bdo_Controller {
         $this->Useralbum->load("c", " WHERE ua.user_id = " . $prop_user . " and bd_tome.ID_TOME =" . $idtome);
 
         if ($this->Useralbum->nbLineResult > 0) {
-            echo GetMetaTag(1, "Cet album est d&eacutej&agrave; pr&eacutesent dans la collection de l'utilisateur", BDO_URL . "admin/adminproposals.php?act=valid&propid=" . $propid);
+            echo GetMetaTag(1, "Cet album est d&eacute;j&agrave; pr&eacute;sent dans la collection de l'utilisateur", BDO_URL . "admin/adminproposals.php?act=valid&propid=" . $propid);
             exit();
         } else { // Ajoute l'album
             // on récupère l'id édition par défaut
@@ -781,7 +781,7 @@ class Admin extends Bdo_Controller {
                 var_dump($this->Useralbum->error);
                 exit();
             }
-            echo "L'album s&eacutelectionn&eacute a &eacutet&eacute ajout&eacute &agrave; la collection de l'utilisateur<br />";
+            echo "L'album s&eacute;lectionn&eacute; a &eacute;t&eacute; ajout&eacute; &agrave; la collection de l'utilisateur<br />";
 
             // Archive la proposition
             $this->User_album_prop->set_dataPaste(array(
@@ -796,8 +796,8 @@ class Admin extends Bdo_Controller {
             }
             // Envoie un mail si nécessaire pour prévenir l'utilisateur
             if ($notif_mail == 1) {
-                $mail_action[0] = "Cet album a &eacutet&eacute plac&eacute dans votre collection, comme demand&eacute.\n\n";
-                $mail_action[1] = "Cet album a &eacutet&eacute plac&eacute dans vos achats futurs, comme demand&eacute.\n\n";
+                $mail_action[0] = "Cet album a &eacute;t&eacute; plac&eacute; dans votre collection, comme demand&eacute;.\n\n";
+                $mail_action[1] = "Cet album a &eacute;t&eacute; plac&eacute; dans vos achats futurs, comme demand&eacute;.\n\n";
 
                 // Récupère l'adresse du posteur et compose l'email
 
@@ -806,16 +806,16 @@ class Admin extends Bdo_Controller {
                 $mail_entete = "From: no-reply@bdovore.com";
                 $mail_text = "Bonjour, \n\n";
                 $mail_text .="Proposition : " . postVal('txtTitre') . "\n";
-                $mail_text .= "Votre proposition d'ajout &agrave; la base de donn&eacutees n'a pas &eacutet&eacute accept&eacutee car l'album en question y figurait d&eacuteja. \n";
+                $mail_text .= "Votre proposition d'ajout &agrave; la base de donn&eacute;es n'a pas &eacute;t&eacute; accept&eacute;e car l'album en question y figurait d&eacute;j&agrave;. \n";
                 $mail_text .=$mail_action[$prop_action];
-                $mail_text .= "Si l'&eacutedition par d&eacutefaut de cet album ne correspond pas &agrave; celle que vous poss&eacutedez,
-							d'autres &eacuteditions sont peut-&ecirc;tre d&eacutej&agrave; pr&eacutesentes dans la base et peuvent &ecirc;tre
-							s&eacutelectionn&eacutees en cliquant sur l'album en question depuis votre garde-manger (menu d&eacuteroulant [Mon &eacutedition]
-							des fiches album). Si ce n'est pas le cas, vous pouvez faire une proposition de nouvelle &eacutedition via ce m&ecirc;me
-							menu d&eacuteroulant.\n\n";
-                $mail_text .="L'&eacutequipe BDOVORE";
+                $mail_text .= "Si l'&eacute;dition par d&eacute;faut de cet album ne correspond pas &agrave; celle que vous poss&eacute;dez,
+							d'autres &eacute;ditions sont peut-&ecirc;tre d&eacute;j&agrave; pr&eacute;sentes dans la base et peuvent &ecirc;tre
+							s&eacute;lectionn&eacute;es en cliquant sur l'album en question depuis votre garde-manger (menu d&eacute;roulant [Mon &eacute;dition]
+							des fiches album). Si ce n'est pas le cas, vous pouvez faire une proposition de nouvelle &eacute;dition via ce m&ecirc;me
+							menu d&eacute;roulant.\n\n";
+                $mail_text .="L'&eacute;quipe BDOVORE";
                 mail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
-                echo "Email d'information envoy&eacute &agrave; l'utilisateur<br />";
+                echo "Email d'information envoy&eacute; &agrave; l'utilisateur<br />";
             }
 
             // Prépare la redirection vers la proposition suivante
@@ -916,7 +916,7 @@ class Admin extends Bdo_Controller {
          * Return : nom du fichier
          */
         if (empty($url_ary[4])) {
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incompl�te. Vous allez &ecirc;tre redirig&eacute.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incompl&egrave;te. Vous allez &ecirc;tre redirig&eacute;.';
             exit();
         }
         $base_get = '/' . $url_ary[4];
@@ -924,7 +924,7 @@ class Admin extends Bdo_Controller {
         // Connection au serveur hébergeant l'image
         if (!($fsock = @fsockopen($url_ary[2], $port, $errno, $errstr))) {
             $error = true;
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image innacessible. Vous allez �tre redirig�.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image innacessible. Vous allez &ecirc;tre redirig&eacute;.';
             exit();
         }
 
@@ -942,7 +942,7 @@ class Admin extends Bdo_Controller {
         // Check la validité de l'image
         if (!preg_match('#Content-Length\: ([0-9]+)[^ /][\s]+#i', $avatar_data, $file_data1) || !preg_match('#Content-Type\: image/[x\-]*([a-z]+)[\s]+#i', $avatar_data, $file_data2)) {
             $error = true;
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du t�l�chargement de l\'image. Vous allez �tre redirig�.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du t&eacute;l&eacute;chargement de l\'image. Vous allez &ecirc;tre redirig&eacute;.';
             exit();
         }
         $avatar_filesize = $file_data1[1];
@@ -956,7 +956,7 @@ class Admin extends Bdo_Controller {
 
         if ($bytes_written != $avatar_filesize) {
             @unlink($tmp_filename);
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Could not write avatar file to local storage. Please contact the board administrator with this message. Vous allez �tre redirig�.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Could not write avatar file to local storage. Please contact the board administrator with this message. Vous allez &ecirc;tre redirig&eacute;.';
             exit();
         }
 
@@ -994,7 +994,7 @@ class Admin extends Bdo_Controller {
                 $newfilename .=".png";
                 break;
             default:
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers PNG, JPEG ou GIF peuvent &ecirc;tre charg&eacutes. Vous allez &ecirc;tre redirig&eacute.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers PNG, JPEG ou GIF peuvent &ecirc;tre charg&eacute;s. Vous allez &ecirc;tre redirig&eacute;.';
                 exit();
                 break;
         }
@@ -1002,7 +1002,7 @@ class Admin extends Bdo_Controller {
         //move_uploaded_file fait un copy(), mais en plus il vérifie que le fichier est bien un upload
         //et pas un fichier local (genre constante.php, au hasard)
         if (!move_uploaded_file($_FILES['txtFileLoc']['tmp_name'], BDO_DIR_COUV . $newfilename)) {
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez &ecirc;tre redirig&eacute.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez &ecirc;tre redirig&eacute;.';
             exit();
         }
         return $newfilename;
