@@ -421,4 +421,17 @@ FROM bd_tome t
       
          return $this->load("c",$query);
     }
+    
+    public function updateGenreForSerie($id_serie, $id_genre) {
+        /*
+         * Fonction de mise à jour du genre de tous les albums d'une série
+         */
+        if ($id_serie > 0 and $id_genre > 0) {
+            $query = "UPDATE bd_tome SET";
+            $query .= " `id_genre` = ".intVal($id_genre);
+            $query .=" WHERE (`id_serie`=".intval($id_serie).");";
+            Db_query($query);
+            
+        }
+    }
 }

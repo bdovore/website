@@ -1240,6 +1240,234 @@ $opt_type[1][1] = 'Coffret';
         }
     }
 
+    public function updateCorrection() {
+        // Récupère l'utilisateur et l'image de couv
+        if (User::minAccesslevel(1)) {
+            $id = getValInteger("ID"); // id de la proposition
+            $this->loadModel("User_album_prop");
+
+            // Récupère l'utilisateur et l'image de couv
+            $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $id));
+            $this->User_album_prop->load();
+            $prop_user = $this->User_album_prop->USER_ID;
+            $prop_img = $this->User_album_prop->IMG_COUV;
+            $prop_action = $this->User_album_prop->IMG_COUV;
+            $notif_mail = $this->User_album_prop->NOTIF_MAIL;
+            
+            $prop_img = $this->User_album_prop->IMG_COUV;
+            $lid = $this->User_album_prop->ID_TOME;
+            $edition = $this->User_album_prop->ID_EDTION;
+            $def_edition = postValInteger('txtDefEdition');
+            
+	// Met à jour l'information propre à l'album
+	// Dans la base bd_tome
+               $this->loadModel("Tome");
+               $this->Tome->set_dataPaste(array("ID_TOME" => $lid));
+               $this->Tome->load();
+               $this->Tome->set_dataPaste(array(
+                   "TITRE" => postVal("txtTitre"),
+                   "NUM_TOME" => postVal("txtNumTome"),
+                   "FLG_INT" => (postVal("chkIntegrale") == "checkbox" ) ? "O" : "N" ,
+                   "FLG_TYPE" => postVal("lstType"),
+                   "ID_SERIE" => postVal("txtSerieId"),
+                   "ID_GENRE" => postVal("txtGenreId"),
+                   "ID_SCENAR" => postVal("txtScenarId") == "" ? "0" : postVal("txtScenarId"),
+                   "ID_SCENAR_ALT" => postVal("txtScenarAltId") == "" ? "0" : postVal("txtScenarAltId"),
+                   "ID_DESSIN" => postVal("txtDessiId") == "" ? "0" : postVal("txtDessiId"),
+                   "ID_DESSIN_ALT" => postVal("txtDessiAltId") == "" ? "0" : postVal("txtDessiAltId"),
+                   "ID_COLOR" => postVal("txtColorId") == "" ? "0" : postVal("txtColorId"),
+                   "ID_COLOR_ALT" => postVal("txtColorAltId") == "" ? "0" : postVal("txtColorAltId"),
+                   "HISTOIRE" => postVal("txtHistoire")
+               ));
+               $this->Tome->update();
+               if (issetNotEmpty($this->Tome->error)) {
+                   var_dump($this->Tome->error);
+                   exit();
+               }
+               echo 'Info album : base bd_tome mise a jour.<br />';
+
+
+	// Met à jour les informations série dans la table bd_tome
+	$this->Tome->updateGenreForSerie(postVal("txtSerieId"),postVal("txtGenreId") );
+	echo 'Info s&eacute;rie : base bd_tome mise a jour.<br>';
+
+        $this->loadModel("Serie");
+        $this->Serie->set_dataPaste(array("ID_SERIE" => postVal("txtSerieId")));
+        $this->Serie->load();
+        $this->Serie->set_dataPaste(array(
+            "NOM" => postVal('txtSerie'),
+            "ID_GENRE" => postVal("txtGenreId"),
+            "FLG_FINI" => postVal("lstStatus")
+        ));
+	// Enfin, met à jour la table série
+	$this->Serie->update();
+         if (issetNotEmpty($this->Serie->error)) {
+                   var_dump($this->Serie->error);
+                   exit();
+               }
+	echo 'Info s&eacute;rie : base bd_serie mise a jour.<br />';
+
+	// copie l'image dans les couvertures
+	if (($prop_img != '') && ($_POST['chkDelete'] != 'checked') && $edition != 0){
+		$newfilename = "CV-".sprintf("%06d",$lid)."-".sprintf("%06d",$edition);
+		$strLen =strlen ($prop_img);
+		$newfilename .= substr ($prop_img, $strLen - 4, $strLen);//file extension
+		@copy(BDO_DIR_UPLOAD."$prop_img", BDO_DIR_COUV."$newfilename");
+		@unlink(BDO_DIR_UPLOAD."$prop_img");
+	}
+
+	if (postVal('chkModifEdition') != 'checked'){
+                $this->loadModel("Edition");
+		// Mise à jour de la table bd_edition
+		if ($edition == 0){
+			// Mise à jour de la table bd_edition
+                        
+                        /*
+			$query = "UPDATE bd_edition SET ";
+			$query .= "`id_editeur` = ".$DB->escape($_POST['txtEditeurId']).", ";
+			$query .= "`id_collection` = ".$DB->escape($_POST['txtCollecId']).", ";
+			$query .= "`ean` = ".($_POST['txtEAN']=='' ? "NULL" :  "'".$DB->escape($_POST['txtEAN']). "'").", ";
+			$query .= "`isbn` = ".($_POST['txtISBN']=='' ? "NULL" :  "'".$DB->escape($_POST['txtISBN']). "'").", ";
+			$query .=" WHERE (`id_tome`=".$lid.");";
+			$DB->query($query);
+			echo 'Info édition : base bd_edition mise à jour.<br />';
+                         * 
+                         */
+
+		}else{
+			// Mise à jour de la table bd_edition
+                        $this->Edition;
+                        $this->Edition->set_dataPaste(array("ID_EDITION" =>$edition ));
+                        $this->Edition->load();
+                        $this->Edition->set_dataPaste(array(
+                            "ID_EDITEUR" => postVal('txtEditeurId'),
+                            "ID_COLLECTION" =>postVal('txtCollecId'),
+                            "EAN" => postVal('txtEAN'),
+                            "ISBN" => postVal('txtISBN'),
+                            "DTE_PARUTION" => postVal('txtDateParution')
+                                ));
+			
+			// vérifie si une image a été proposée
+			if (($prop_img != '') && (postVal('chkDelete') != 'checked'))
+			{
+                                $this->Edition->set_dataPaste(array("IMG_COUV" =>$newfilename ));
+				
+			}
+			$this->Edition->update();
+                        if (issetNotEmpty($this->Edition->error)) {
+                            var_dump($this->Edition->error);
+                            exit();
+                        }
+			echo 'Info &eacute;dition : base bd_edition mise &agrave; jour.<br>';
+		}
+	}
+
+	//Efface le fichier de la base et passe le status de l'album à valider
+	if ($prop_img != ''){
+		if (file_exists(BDO_DIR."images/tmp/$prop_img")){
+			@unlink(BDO_DIR."images/tmp/$prop_img");
+		}
+	}
+
+	if (postVal("chkResize") == "checked" && $edition != 0) {
+
+		//Redimensionnement
+		//*****************
+
+		$max_size = 180;
+		$imageproperties = getimagesize(BDO_DIR_COUV."$newfilename");
+		if ($imageproperties != false) {
+			$imagetype = $imageproperties[2];
+			$imagelargeur = $imageproperties[0];
+			$imagehauteur = $imageproperties[1];
+
+			//Détermine s'il y a lieu de redimensionner l'image
+			if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $maxsize)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
+
+				if ($imagelargeur < $imagehauteur) {
+					// image de type panorama : on limite la largeur à 128
+					$new_w = $max_size;
+					$new_h = round($imagehauteur * $max_size / $imagelargeur);
+				}else {
+					// imahe de type portrait : on limite la hauteur au maxi
+					$new_h = $max_size;
+					$new_w = round($imagelargeur * $max_size / $imagehauteur);
+				}
+			}else{
+				$new_h = $imagehauteur;
+				$new_w = $imagelargeur;
+			}
+
+			$new_image = imagecreatetruecolor($new_w, $new_h);
+			switch ($imagetype) {
+				case "1":
+					$source = imagecreatefromgif(BDO_DIR_COUV."$newfilename");
+					break;
+
+				case "2":
+					$source = imagecreatefromjpeg(BDO_DIR_COUV."$newfilename");
+					break;
+
+				case "3":
+					$source = imagecreatefrompng(BDO_DIR_COUV."$newfilename");
+					break;
+
+				case "6":
+					$source = imagecreatefrombmp(BDO_DIR_COUV."$newfilename");
+					break;
+			}
+
+			imagecopyresampled($new_image, $source, 0, 0, 0, 0, $new_w, $new_h, $imagelargeur, $imagehauteur);
+
+			switch ($imagetype) {
+				case "2":
+					unlink(BDO_DIR_COUV."$newfilename");
+					imagejpeg($new_image,BDO_DIR_COUV."$newfilename",100);
+					break;
+
+				case "1":
+				case "3":
+				case "6":
+					unlink(BDO_DIR_COUV."$newfilename");
+					$img_couv = substr($newfilename,0,strlen($newfilename)-3)."jpg";
+					imagejpeg($new_image,BDO_DIR_COUV."$img_couv",100);
+
+					// met à jours la référence au fichier dans la table bd_edition
+                                        $this->Edition;
+                                        $this->Edition->set_dataPaste(array("ID_EDITION" =>$edition ));
+                                        $this->Edition->set_dataPaste(array("IMG_COUV" =>$img_couv ));
+					$this->Edition->update();
+			}
+
+		}
+
+		echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
+		echo "Image redimensionnée<br />";
+	}
+
+        
+	$this->User_album_prop->set_dataPaste(array("STATUS" => 1, "VALIDATOR" => $_SESSION["userConnect"]->user_id));
+        $this->User_album_prop->update();
+
+	$this->User_album_prop->load("c", " WHERE 
+                    id_proposal > " . $id . " 
+                    AND status not in (98,99,1) 
+                    AND prop_type = 'CORRECTION' 
+            ORDER BY id_proposal asc limit 0,1
+            ");
+
+                if ($this->User_album_prop->ID_PROPOSAL > $id) {
+
+                    $next_url = BDO_URL . "admin/editPropositionCorrection?ID=" . $this->User_album_prop->ID_PROPOSAL;
+                } else {
+                    $next_url = BDO_URL . "admin/editAlbum?id_tome=" . $lid;
+                }
+
+                echo GetMetaTag(2, "L'album a &eacute;t&eacute; mis a jour", $next_url);
+        }
+    }
+    
+    
     private function imgCouvFromUrl($url_ary, $lid_tome, $lid_edition) {
         /*
          * Récupère une image de couvertue et la copie dans le répertoire fournit en paramètre

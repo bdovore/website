@@ -126,11 +126,11 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			            <td width="10%" class="label">Genre</td>
 			            <td width="8%">
 							<div align="center"> 
-				                <input name="txtGenreId" type="text" value="<?php echo $view->IDGENRE;?>" size="3" class="<?php echo $view->CLIDGENRE;?>" />
+				                <input name="txtGenreId" id="txtGenreId" type="text" value="<?php echo $view->IDGENRE;?>" size="3" class="<?php echo $view->CLIDGENRE;?>" />
 				            </div>
 						</td>
 			            <td width="66%">
-							<input name="txtGenre" type="text" value="<?php echo $view->GENRE;?>" size="30"class="<?php echo $view->CLGENRE;?>" />
+							<input name="txtGenre" id="txtGenre" type="text" value="<?php echo $view->GENRE;?>" size="30"class="<?php echo $view->CLGENRE;?>" />
 						</td>
 			            <td width="16%">
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('genre',document.myform.txtGenre.value,'myform','txtGenre',false)" alt="Loupe" />
@@ -167,10 +167,10 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			        <tr bordercolor="#FFFFCC"> 
 			            <td width="18%" class="label">Scenariste</td>
 			            <td width="10%">
-							<input name="txtScenarId" type="text" value="<?php echo $view->IDSCEN;?>" size="4" class="<?php echo $view->CLIDSCEN;?>" />
+							<input name="txtScenarId" id="txtScenarId" type="text" value="<?php echo $view->IDSCEN;?>" size="4" class="<?php echo $view->CLIDSCEN;?>" />
 						</td>
 			            <td width="59%">
-							<input name="txtScenar" type="text" value="<?php echo $view->SCENARISTE;?>" size="33"class="<?php echo $view->CLSCENARISTE;?>" />
+							<input name="txtScenar" id="txtScenar"  type="text" value="<?php echo $view->SCENARISTE;?>" size="33"class="<?php echo $view->CLSCENARISTE;?>" />
 						</td>
 			            <td width="13%">
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenar.value,'myform','txtScenar',true)" alt="Loupe" />
@@ -185,10 +185,10 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			        <tr bordercolor="#FFFFCC"> 
 			            <td class="label">Scenariste #2</td>
 			            <td>
-							<input name="txtScenarAltId" type="text" value="<?php echo $view->IDSCENALT;?>" size="4" class="<?php echo $view->CLIDSCENALT;?>" />
+							<input name="txtScenarAltId" id="txtScenarAltId" type="text" value="<?php echo $view->IDSCENALT;?>" size="4" class="<?php echo $view->CLIDSCENALT;?>" />
 						</td>
 			            <td>
-							<input name="txtScenarAlt" type="text" value="<?php echo $view->SCENARISTEALT;?>" size="33"class="<?php echo $view->CLSCENARISTEALT;?>" />
+							<input name="txtScenarAlt" id="txtScenarAlt" type="text" value="<?php echo $view->SCENARISTEALT;?>" size="33"class="<?php echo $view->CLSCENARISTEALT;?>" />
 						</td>
 			            <td>
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenarAlt.value,'myform','txtScenarAlt',true)" alt="Loupe" />
@@ -203,10 +203,10 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			        <tr bordercolor="#FFFFCC"> 
 			            <td class="label">Dessinateur</td>
 			            <td>
-							<input name="txtDessiId" type="text" value="<?php echo $view->IDDESS;?>" size="4" class="<?php echo $view->CLIDDESS;?>" />
+							<input name="txtDessiId" id="txtDessiId" type="text" value="<?php echo $view->IDDESS;?>" size="4" class="<?php echo $view->CLIDDESS;?>" />
 						</td>
 			            <td>
-							<input name="txtDessi" type="text" value="<?php echo $view->DESSINATEUR;?>" size="33" class="<?php echo $view->CLDESSINATEUR;?>" />
+							<input name="txtDessi" id="txtDessi" type="text" value="<?php echo $view->DESSINATEUR;?>" size="33" class="<?php echo $view->CLDESSINATEUR;?>" />
 						</td>
 			            <td>
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessi.value,'myform','txtDessi',true)" alt="Loupe" />
@@ -221,10 +221,10 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			        <tr bordercolor="#FFFFCC"> 
 			            <td class="label">Dessinateur #2</td>
 			            <td>
-							<input name="txtDessiAltId" type="text" value="<?php echo $view->IDDESSALT;?>" size="4" class="<?php echo $view->CLIDDESSALT;?>" />
+							<input name="txtDessiAltId" id="txtDessiAltId"  type="text" value="<?php echo $view->IDDESSALT;?>" size="4" class="<?php echo $view->CLIDDESSALT;?>" />
 						</td>
 			            <td>
-							<input name="txtDessiAlt" type="text" value="<?php echo $view->DESSINATEURALT;?>" size="33" class="<?php echo $view->CLDESSINATEURALT;?>" />
+							<input name="txtDessiAlt" id="txtDessiAlt" type="text" value="<?php echo $view->DESSINATEURALT;?>" size="33" class="<?php echo $view->CLDESSINATEURALT;?>" />
 						</td>
 			            <td>
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessiAlt.value,'myform','txtDessiAlt',true)" alt="Loupe" />
@@ -239,10 +239,10 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			        <tr bordercolor="#FFFFCC"> 
 			            <td class="label">Coloriste</td>
 			            <td>
-							<input name="txtColorId" type="text" value="<?php echo $view->IDCOLOR;?>" size="4" class="<?php echo $view->CLIDCOLOR;?>" />
+							<input name="txtColorId" id="txtColorId" type="text" value="<?php echo $view->IDCOLOR;?>" size="4" class="<?php echo $view->CLIDCOLOR;?>" />
 						</td>
 			            <td>
-							<input name="txtColor" type="text" value="<?php echo $view->COLORISTE;?>" size="33" class="<?php echo $view->CLCOLORISTE;?>" />
+							<input name="txtColor"  id="txtColor" type="text" value="<?php echo $view->COLORISTE;?>" size="33" class="<?php echo $view->CLCOLORISTE;?>" />
 						</td>
 			            <td>
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColor.value,'myform','txtColor',true)" alt="Loupe" />
@@ -280,10 +280,10 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			        <tr bordercolor="#FFFFCC"> 
 			            <td width="21%" class="label">Editeur</td>
 			            <td width="9%">
-							<input name="txtEditeurId" type="text" value="<?php echo $view->IDEDIT;?>" size="3" class="<?php echo $view->CLIDEDIT;?>" />
+							<input name="txtEditeurId"  id="txtEditeurId" type="text" value="<?php echo $view->IDEDIT;?>" size="3" class="<?php echo $view->CLIDEDIT;?>" />
 						</td>
 			            <td width="58%">
-							<input name="txtEditeur" type="text" value="<?php echo $view->EDITEUR;?>" size="33"class="<?php echo $view->CLEDITEUR;?>" />
+							<input name="txtEditeur" id="txtEditeur" type="text" value="<?php echo $view->EDITEUR;?>" size="33"class="<?php echo $view->CLEDITEUR;?>" />
 						</td>
 			            <td width="12%">
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('editeur',document.myform.txtEditeur.value,'myform','txtEditeur',true)" alt="Loupe" />
@@ -298,10 +298,10 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			        <tr bordercolor="#FFFFCC"> 
 			            <td class="label">Collection</td>
 			            <td> 
-							<input name="txtCollecId" type="text" value="<?php echo $view->IDCOLLEC;?>" size="3" class="<?php echo $view->CLIDCOLLEC;?>" />
+							<input name="txtCollecId" id="txtCollecId" type="text" value="<?php echo $view->IDCOLLEC;?>" size="3" class="<?php echo $view->CLIDCOLLEC;?>" />
 						</td>
 			            <td>
-							<input name="txtCollec" type="text" value="<?php echo $view->COLLECTION;?>" size="33" class="<?php echo $view->CLCOLLECTION;?>" />
+							<input name="txtCollec" id="txtCollec" type="text" value="<?php echo $view->COLLECTION;?>" size="33" class="<?php echo $view->CLCOLLECTION;?>" />
 						</td>
 					    <td>
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('collection',document.myform.txtCollec.value,'myform','txtCollec',false,document.myform.txtEditeurId.value)" alt="Loupe" />
@@ -473,7 +473,9 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
      addAutocomplete("txtFutAlb","txtFutAlbId","txtFutAlbId","<?php echo BDO_URL; ?>getjson?data=Album");
      changeEditeur();
     function changeEditeur() {
-        addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo $view->IDCOLLEC;?>);
+        addAutocomplete("txtCollec","spCollec","txtCollecId","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val());
+    
+        //addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo $view->IDCOLLEC;?>);
     
     }
 </script>
