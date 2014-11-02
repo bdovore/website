@@ -121,7 +121,7 @@ class Admin extends Bdo_Controller {
                  * Depuis la fiche d'édition : accès via POST, on récupère un email 
                  */
                 $id = postValInteger("ID", 0);
-                
+
                 $type = postVal("type", "");
                 $mail = postVal("txtMailRefus", "");
             }
@@ -177,11 +177,10 @@ class Admin extends Bdo_Controller {
                     $this->view->render();
                 } else {
                     // on charge la fiche suivante
-                    $next_url = BDO_URL."admin/proposition";
+                    $next_url = BDO_URL . "admin/proposition";
                     echo GetMetaTag(1, "La proposition a &eacute;t&eacute; supprim&eacute;", $next_url);
                 }
             }
-            
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }
@@ -240,7 +239,7 @@ class Admin extends Bdo_Controller {
             if (is_null($this->User_album_prop->IMG_COUV) | ($this->User_album_prop->IMG_COUV == '')) {
                 $url_image = BDO_URL_COUV . "default.png";
             } else {
-                $url_image = BDO_URL_IMAGE ."tmp/". $this->User_album_prop->IMG_COUV;
+                $url_image = BDO_URL_IMAGE . "tmp/" . $this->User_album_prop->IMG_COUV;
                 $dim_image = imgdim($url_image);
             }
 
@@ -447,36 +446,36 @@ class Admin extends Bdo_Controller {
             if ($check == "O") {
                 // simple mise à jour des données de la proposition
                 $this->User_album_prop->set_dataPaste(array(
-                    "SERIE"=> postVal("txtSerie"),
-                    "TITRE"=> postVal("txtTitre"),
-                    "FLG_TYPE"=> postVal("lstType"),
-                    "NUM_TOME"=> postVal("txtNumTome"),
+                    "SERIE" => postVal("txtSerie"),
+                    "TITRE" => postVal("txtTitre"),
+                    "FLG_TYPE" => postVal("lstType"),
+                    "NUM_TOME" => postVal("txtNumTome"),
                     "FLG_INT" => ((postVal("chkIntegrale") == "checkbox") ? "O" : "N"),
-                    "PRIX"=> postVal("txtPrixVente"),
-                    "HISTOIRE"=> postVal("txtHistoire"),
-                    "ID_GENRE"=> postVal("txtGenreId"),
-                    "GENRE"=> postVal("txtGenre"),
-                    "ID_SCENAR"=> postVal("txtScenarId"),
-                    "SCENAR"=> postVal("txtScenar"),
-                    "ID_SCENAR_ALT"=> postVal("txtScenarAltId"),
-                    "SCENAR_ALT"=> postVal("txtScenarAlt"),
-                    "ID_DESSIN"=> postVal("txtDessiId"),
-                    "DESSIN"=> postVal("txtDessi"),
-                    "ID_DESSIN_ALT"=> postVal("txtDessiAltId"),
-                    "DESSIN_ALT"=> postVal("txtDessiAlt"),
-                    "ID_COLOR"=> postVal("txtColorId"),
-                    "COLOR"=> postVal("txtColor"),
-                    "ID_COLOR_ALT"=> postVal("txtColorAltId"),
-                    "COLOR_ALT"=> postVal("txtColorAlt"),
-                    "ID_EDITEUR"=> postVal("txtEditeurId"),
-                    "EDITEUR"=> postVal("txtEditeur"),
-                    "ID_COLLECTION"=> postVal("txtCollecId"),
-                    "COLLECTION"=> postVal("txtCollec"),
-                    "ISBN"=> postVal("txtISBN"),
-                    "EAN"=> postVal("txtEAN"),
-                    "DTE_PARUTION"=> postVal("txtDateParution"),
+                    "PRIX" => postVal("txtPrixVente"),
+                    "HISTOIRE" => postVal("txtHistoire"),
+                    "ID_GENRE" => postVal("txtGenreId"),
+                    "GENRE" => postVal("txtGenre"),
+                    "ID_SCENAR" => postVal("txtScenarId"),
+                    "SCENAR" => postVal("txtScenar"),
+                    "ID_SCENAR_ALT" => postVal("txtScenarAltId"),
+                    "SCENAR_ALT" => postVal("txtScenarAlt"),
+                    "ID_DESSIN" => postVal("txtDessiId"),
+                    "DESSIN" => postVal("txtDessi"),
+                    "ID_DESSIN_ALT" => postVal("txtDessiAltId"),
+                    "DESSIN_ALT" => postVal("txtDessiAlt"),
+                    "ID_COLOR" => postVal("txtColorId"),
+                    "COLOR" => postVal("txtColor"),
+                    "ID_COLOR_ALT" => postVal("txtColorAltId"),
+                    "COLOR_ALT" => postVal("txtColorAlt"),
+                    "ID_EDITEUR" => postVal("txtEditeurId"),
+                    "EDITEUR" => postVal("txtEditeur"),
+                    "ID_COLLECTION" => postVal("txtCollecId"),
+                    "COLLECTION" => postVal("txtCollec"),
+                    "ISBN" => postVal("txtISBN"),
+                    "EAN" => postVal("txtEAN"),
+                    "DTE_PARUTION" => postVal("txtDateParution"),
                     "FLG_TT" => ((postVal("chkTT") == "checkbox") ? "O" : "N"),
-                    "DESCRIB_EDITION"=> postVal("txtCommentEdition")
+                    "DESCRIB_EDITION" => postVal("txtCommentEdition")
                 ));
                 $this->User_album_prop->update();
                 if (issetNotEmpty($this->User_album_prop->error)) {
@@ -484,15 +483,10 @@ class Admin extends Bdo_Controller {
                     exit();
                 }
                 // Retourne sur la page proposition
-                header("Location:".BDO_URL."admin/editPropositionAjout?ID=$id");
-                exit ();
-             
-	
-                
+                header("Location:" . BDO_URL . "admin/editPropositionAjout?ID=$id");
+                exit();
             } else { // validation de la proposition
                 // on crée l'album etc...
-
-
                 // n'insère dans bd_tome que s'il s'agit d'une nouvelle édition
                 if (postVal('txtExistingTomeId', '') == '') {
                     // Récupère le genre de la série
@@ -866,6 +860,7 @@ class Admin extends Bdo_Controller {
             exit();
         }
     }
+
     public function editPropositionCorrection() {
         /*
          * Edition d'une proposition de correction d'un album
@@ -873,20 +868,20 @@ class Admin extends Bdo_Controller {
          */
         // Tableau pour les choix d'options
 // Avancement de la série
-$opt_status[0][0] = 0;
-$opt_status[0][1] = 'Finie';
-$opt_status[1][0] = 1;
-$opt_status[1][1] = 'En cours';
-$opt_status[2][0] = 2;
-$opt_status[2][1] = 'One Shot';
-$opt_status[3][0] = 3;
-$opt_status[3][1] = 'Interrompue/Abandonnée';
+        $opt_status[0][0] = 0;
+        $opt_status[0][1] = 'Finie';
+        $opt_status[1][0] = 1;
+        $opt_status[1][1] = 'En cours';
+        $opt_status[2][0] = 2;
+        $opt_status[2][1] = 'One Shot';
+        $opt_status[3][0] = 3;
+        $opt_status[3][1] = 'Interrompue/Abandonnée';
 
 // Type d'album
-$opt_type[0][0] = 0;
-$opt_type[0][1] = 'Album';
-$opt_type[1][0] = 1;
-$opt_type[1][1] = 'Coffret';
+        $opt_type[0][0] = 0;
+        $opt_type[0][1] = 'Album';
+        $opt_type[1][0] = 1;
+        $opt_type[1][1] = 'Coffret';
         if (User::minAccesslevel(1)) {
             $id = getValInteger("ID");
             $this->loadModel("User_album_prop");
@@ -894,180 +889,178 @@ $opt_type[1][1] = 'Coffret';
             // chargement des données complètes
             $this->User_album_prop->setWithAlbumInfo($bool = true);
             $this->User_album_prop->load();
-            
-            
+
+
             $titre = stripslashes($this->User_album_prop->TITRE);
-            
-            $this->view->set_var (array(
-            "PROPID" => $this->User_album_prop->ID_PROPOSAL,
-            "TITRE" => $this->User_album_prop->TITRE,
-            "CLTITRE" => ($this->User_album_prop->TITRE)!='' ? "flat" : "to_be_corrected",
-            "IDSERIE" => $this->User_album_prop->ID_SERIE,
-            "CLIDSERIE" => (is_numeric($this->User_album_prop->ID_SERIE) & ($this->User_album_prop->SERIE==$this->User_album_prop->ACTUSERIE)) ? "flat" : "to_be_corrected",
-            "TOME" => $this->User_album_prop->NUM_TOME,
-            "IDGENRE" => $this->User_album_prop->ID_GENRE,
-            "CLIDGENRE" => (is_numeric($this->User_album_prop->ID_GENRE) & ($this->User_album_prop->GENRE==$this->User_album_prop->ACTUGENRE) ? "flat" : "to_be_corrected"),
-            "IDSCEN" => $this->User_album_prop->ID_SCENAR,
-            "CLIDSCEN" => (is_numeric($this->User_album_prop->ID_SCENAR) & ($this->User_album_prop->PSEUDO_SCENAR==$this->User_album_prop->SCENAR) ? "flat" : "to_be_corrected"),
-            "IDSCENALT" => $this->User_album_prop->ID_SCENAR_ALT,
-            "CLIDSCENALT" => (is_numeric($this->User_album_prop->ID_SCENAR_ALT) & ($this->User_album_prop->PSEUDO_SCENAR_ALT==$this->User_album_prop->SCENAR_ALT) ? "flat" : "to_be_corrected"),
-            "IDEDIT" => $this->User_album_prop->ID_EDITEUR,
-            "CLIDEDIT" => (is_numeric($this->User_album_prop->ID_EDITEUR) & ($this->User_album_prop->ACTUEDITEUR==$this->User_album_prop->EDITEUR)? "flat" : "to_be_corrected"),
-            "IDDESS" => $this->User_album_prop->ID_DESSIN,
-            "CLIDDESS" => (is_numeric($this->User_album_prop->ID_DESSIN) & ($this->User_album_prop->PSEUDO_DESSIN==$this->User_album_prop->DESSIN) ? "flat" : "to_be_corrected"),
-            "IDDESSALT" => $this->User_album_prop->ID_DESSIN_ALT,
-            "CLIDDESSALT" => (is_numeric($this->User_album_prop->ID_DESSIN_ALT) & ($this->User_album_prop->PSEUDO_DESSIN_ALT==$this->User_album_prop->DESSIN_ALT) ? "flat" : "to_be_corrected"),
-            "IDCOLOR" => $this->User_album_prop->ID_COLOR,
-            "CLIDCOLOR" => (is_numeric($this->User_album_prop->ID_COLOR) & ($this->User_album_prop->PSEUDO_COLOR==$this->User_album_prop->COLOR) ? "flat" : "to_be_corrected"),
-            "IDCOLLEC" => $this->User_album_prop->ID_COLLECTION,
-            "CLIDCOLLEC" => (is_numeric($this->User_album_prop->ID_COLLECTION) & ($this->User_album_prop->ACTUCOLLECTION==$this->User_album_prop->COLLECTION) ? "flat" : "to_be_corrected"),
-            "EAN" => $this->User_album_prop->EAN,
-            "ISBN" => $this->User_album_prop->ISBN,
-            "DTPAR" => $this->User_album_prop->DTE_PARUTION,
-            "HISTOIRE" => stripslashes($this->User_album_prop->HISTOIRE),
-            "USERCOMMENT" => stripslashes($this->User_album_prop->COMMENTAIRE),
-            "SERIE" => stripslashes($this->User_album_prop->SERIE),
-            "GENRE" => $this->User_album_prop->GENRE,
-            "SCENARISTE" => stripslashes($this->User_album_prop->SCENAR),
-            "SCENARISTEALT" => $this->User_album_prop->SCENAR_ALT,
-            "DESSINATEUR" => stripslashes($this->User_album_prop->DESSIN),
-            "DESSINATEURALT" => stripslashes($this->User_album_prop->DESSIN_ALT),
-            "COLORISTE" => stripslashes($this->User_album_prop->COLOR),
-            "EDITEUR" => stripslashes($this->User_album_prop->EDITEUR),
-            "COLLECTION" => $this->User_album_prop->COLLECTION,
-            "OPTSTATUS" => GetOptionValue($opt_status,$this->User_album_prop->FLG_FINI),
-            "OPTTYPE" => GetOptionValue($opt_type,$this->User_album_prop->FLG_TYPE),
-            "ISINT" => (($this->User_album_prop->FLG_INT=='O') ? 'checked' : ''),
-            "ACTIONNAME" => "Valider",
-            "URLACTION" => BDO_URL."admin/updatecorrection?ID=".$this->User_album_prop->ID_PROPOSAL,
-            "URLDELETE" => BDO_URL."admin/deleteProposition?ID=".$this->User_album_prop->ID_PROPOSAL
+
+            $this->view->set_var(array(
+                "PROPID" => $this->User_album_prop->ID_PROPOSAL,
+                "TITRE" => $this->User_album_prop->TITRE,
+                "CLTITRE" => ($this->User_album_prop->TITRE) != '' ? "flat" : "to_be_corrected",
+                "IDSERIE" => $this->User_album_prop->ID_SERIE,
+                "CLIDSERIE" => (is_numeric($this->User_album_prop->ID_SERIE) & ($this->User_album_prop->SERIE == $this->User_album_prop->ACTUSERIE)) ? "flat" : "to_be_corrected",
+                "TOME" => $this->User_album_prop->NUM_TOME,
+                "IDGENRE" => $this->User_album_prop->ID_GENRE,
+                "CLIDGENRE" => (is_numeric($this->User_album_prop->ID_GENRE) & ($this->User_album_prop->GENRE == $this->User_album_prop->ACTUGENRE) ? "flat" : "to_be_corrected"),
+                "IDSCEN" => $this->User_album_prop->ID_SCENAR,
+                "CLIDSCEN" => (is_numeric($this->User_album_prop->ID_SCENAR) & ($this->User_album_prop->PSEUDO_SCENAR == $this->User_album_prop->SCENAR) ? "flat" : "to_be_corrected"),
+                "IDSCENALT" => $this->User_album_prop->ID_SCENAR_ALT,
+                "CLIDSCENALT" => (is_numeric($this->User_album_prop->ID_SCENAR_ALT) & ($this->User_album_prop->PSEUDO_SCENAR_ALT == $this->User_album_prop->SCENAR_ALT) ? "flat" : "to_be_corrected"),
+                "IDEDIT" => $this->User_album_prop->ID_EDITEUR,
+                "CLIDEDIT" => (is_numeric($this->User_album_prop->ID_EDITEUR) & ($this->User_album_prop->ACTUEDITEUR == $this->User_album_prop->EDITEUR) ? "flat" : "to_be_corrected"),
+                "IDDESS" => $this->User_album_prop->ID_DESSIN,
+                "CLIDDESS" => (is_numeric($this->User_album_prop->ID_DESSIN) & ($this->User_album_prop->PSEUDO_DESSIN == $this->User_album_prop->DESSIN) ? "flat" : "to_be_corrected"),
+                "IDDESSALT" => $this->User_album_prop->ID_DESSIN_ALT,
+                "CLIDDESSALT" => (is_numeric($this->User_album_prop->ID_DESSIN_ALT) & ($this->User_album_prop->PSEUDO_DESSIN_ALT == $this->User_album_prop->DESSIN_ALT) ? "flat" : "to_be_corrected"),
+                "IDCOLOR" => $this->User_album_prop->ID_COLOR,
+                "CLIDCOLOR" => (is_numeric($this->User_album_prop->ID_COLOR) & ($this->User_album_prop->PSEUDO_COLOR == $this->User_album_prop->COLOR) ? "flat" : "to_be_corrected"),
+                "IDCOLLEC" => $this->User_album_prop->ID_COLLECTION,
+                "CLIDCOLLEC" => (is_numeric($this->User_album_prop->ID_COLLECTION) & ($this->User_album_prop->ACTUCOLLECTION == $this->User_album_prop->COLLECTION) ? "flat" : "to_be_corrected"),
+                "EAN" => $this->User_album_prop->EAN,
+                "ISBN" => $this->User_album_prop->ISBN,
+                "DTPAR" => $this->User_album_prop->DTE_PARUTION,
+                "HISTOIRE" => stripslashes($this->User_album_prop->HISTOIRE),
+                "USERCOMMENT" => stripslashes($this->User_album_prop->COMMENTAIRE),
+                "SERIE" => stripslashes($this->User_album_prop->SERIE),
+                "GENRE" => $this->User_album_prop->GENRE,
+                "SCENARISTE" => stripslashes($this->User_album_prop->SCENAR),
+                "SCENARISTEALT" => $this->User_album_prop->SCENAR_ALT,
+                "DESSINATEUR" => stripslashes($this->User_album_prop->DESSIN),
+                "DESSINATEURALT" => stripslashes($this->User_album_prop->DESSIN_ALT),
+                "COLORISTE" => stripslashes($this->User_album_prop->COLOR),
+                "EDITEUR" => stripslashes($this->User_album_prop->EDITEUR),
+                "COLLECTION" => $this->User_album_prop->COLLECTION,
+                "OPTSTATUS" => GetOptionValue($opt_status, $this->User_album_prop->FLG_FINI),
+                "OPTTYPE" => GetOptionValue($opt_type, $this->User_album_prop->FLG_TYPE),
+                "ISINT" => (($this->User_album_prop->FLG_INT == 'O') ? 'checked' : ''),
+                "ACTIONNAME" => "Valider",
+                "URLACTION" => BDO_URL . "admin/updatecorrection?ID=" . $this->User_album_prop->ID_PROPOSAL,
+                "URLDELETE" => BDO_URL . "admin/deleteProposition?ID=" . $this->User_album_prop->ID_PROPOSAL
             ));
-            if ($this->User_album_prop->ID_SERIE != 0){
-                    $this->view->set_var (
-                    "LIENEDITNEWSERIE" , "<a href='".BDO_URL."admin/editserie?serie_id=".stripslashes($this->User_album_prop->ID_SERIE)."'><img src='".BDO_URL_IMAGE."edit.gif' width='18' height='13' border='0'></a>"
-                    );
+            if ($this->User_album_prop->ID_SERIE != 0) {
+                $this->view->set_var(
+                        "LIENEDITNEWSERIE", "<a href='" . BDO_URL . "admin/editserie?serie_id=" . stripslashes($this->User_album_prop->ID_SERIE) . "'><img src='" . BDO_URL_IMAGE . "edit.gif' width='18' height='13' border='0'></a>"
+                );
             }
 
             $alb_id = $this->User_album_prop->ID_TOME;
             $edition_id = $this->User_album_prop->ID_EDITION;
             $user_id = $this->User_album_prop->USER_ID;
 
-           $this->loadModel("Useralbum");
+            $this->loadModel("Useralbum");
             // Determine le statut de l'utilisateur par rapport à l'album qu'il corrige
-           
-            $this->Useralbum->load("c", " WHERE ua.USER_ID= ".$user_id . " and bd_tome.ID_TOME =".$alb_id);
-         
-            if ($this->Useralbum->dbSelect->nbLineResult == 0){
-                    $user_owns = 'L\'utilisateur <strong>ne poss&egrave;de pas</strong> cet album.';
-            }else{
-                    $user_owns = 'L\'utilisateur <strong>poss&egrave;de</strong> cet album dans sa collection.';
-                    
-                    $user_edition = $this->Useralbum->ID_EDITION;
+
+            $this->Useralbum->load("c", " WHERE ua.USER_ID= " . $user_id . " and bd_tome.ID_TOME =" . $alb_id);
+
+            if ($this->Useralbum->dbSelect->nbLineResult == 0) {
+                $user_owns = 'L\'utilisateur <strong>ne poss&egrave;de pas</strong> cet album.';
+            } else {
+                $user_owns = 'L\'utilisateur <strong>poss&egrave;de</strong> cet album dans sa collection.';
+
+                $user_edition = $this->Useralbum->ID_EDITION;
             }
             $this->loadModel("Tome");
             $this->loadModel("Edition");
-            $this->Tome->set_dataPaste(array("ID_TOME" =>$alb_id ));
+            $this->Tome->set_dataPaste(array("ID_TOME" => $alb_id));
             $this->Tome->load();
             // Récupère l'édition définie par défaut
-            
+
             $def_edition = $this->Tome->ID_EDITION;
 
             // Récupère l'info actuelle
-            if ($edition_id == 0){
-                    // édition par défaut
-                    // Determine l'URL image courante
-                    if (is_null($this->Tome->IMG_COUV) | ($this->Tome->IMG_COUV=='')){
-                            $ori_url_image = BDO_URL_COUV."default.png";
-                    }else{
-                            $ori_url_image = BDO_URL_COUV.$this->Tome->IMG_COUV;
-                            $ori_dim_image = imgdim("$ori_url_image");
-                    }
-
-            }else{
-                    // force l'édition
-                    $this->Edition->set_dataPaste(array("ID_EDITION" => $edition_id));
-                    $this->Edition->load();
-                     // Determine l'URL image courante
-                    if (is_null($this->Edition->IMG_COUV) | ($this->Edition->IMG_COUV=='')){
-                            $ori_url_image = BDO_URL_COUV."default.png";
-                    }else{
-                            $ori_url_image = BDO_URL_COUV."".$this->Edition->IMG_COUV;
-                            $ori_dim_image = imgdim("$ori_url_image");
-                    }
+            if ($edition_id == 0) {
+                // édition par défaut
+                // Determine l'URL image courante
+                if (is_null($this->Tome->IMG_COUV) | ($this->Tome->IMG_COUV == '')) {
+                    $ori_url_image = BDO_URL_COUV . "default.png";
+                } else {
+                    $ori_url_image = BDO_URL_COUV . $this->Tome->IMG_COUV;
+                    $ori_dim_image = imgdim("$ori_url_image");
+                }
+            } else {
+                // force l'édition
+                $this->Edition->set_dataPaste(array("ID_EDITION" => $edition_id));
+                $this->Edition->load();
+                // Determine l'URL image courante
+                if (is_null($this->Edition->IMG_COUV) | ($this->Edition->IMG_COUV == '')) {
+                    $ori_url_image = BDO_URL_COUV . "default.png";
+                } else {
+                    $ori_url_image = BDO_URL_COUV . "" . $this->Edition->IMG_COUV;
+                    $ori_dim_image = imgdim("$ori_url_image");
+                }
             }
-            
 
-           
+
+
 
             // Determine l'URL image modifiée
-            if (is_null($this->User_album_prop->IMG_COUV) | ($this->User_album_prop->IMG_COUV=='')){
-                    $url_image = $ori_url_image;
-            }else{
-                    $url_image = BDO_URL_IMAGE."tmp/".$this->User_album_prop->IMG_COUV;
-                   $dim_image = imgdim("$url_image");
+            if (is_null($this->User_album_prop->IMG_COUV) | ($this->User_album_prop->IMG_COUV == '')) {
+                $url_image = $ori_url_image;
+            } else {
+                $url_image = BDO_URL_IMAGE . "tmp/" . $this->User_album_prop->IMG_COUV;
+                $dim_image = imgdim("$url_image");
             }
 
             // Détermine la nature de la correction
-            if ($edition_id == 0){
-                    $has_edition = 'La correction porte sur <strong>toutes</strong> les &eacute;ditions.';
-            }
-            elseif ($edition_id == $user_edition){
-                    $has_edition = 'La correction porte sur l\'&eacute;dition qu\'il poss&egrave;de.';
-            }else{
-                    $has_edition = 'La correction porte sur une &eacute;dition qu\'il <b>ne poss&egrave;de pas</b>.';
+            if ($edition_id == 0) {
+                $has_edition = 'La correction porte sur <strong>toutes</strong> les &eacute;ditions.';
+            } elseif ($edition_id == $user_edition) {
+                $has_edition = 'La correction porte sur l\'&eacute;dition qu\'il poss&egrave;de.';
+            } else {
+                $has_edition = 'La correction porte sur une &eacute;dition qu\'il <b>ne poss&egrave;de pas</b>.';
             }
 
             // Détermine s'il s'agit de l'édition par défaut
-            if (($edition_id == $def_edition) | ($edition_id == 0)){
-                    $is_def_edition = '<b>L\'&eacute;dition utilis&eacute;e par d&eacute;faut va &ecirc;tre modifi&eacute;e.</b>';
-            }else{
-                    $is_def_edition = 'L\'&eacute;dition utilis&eacute;e par d&eacute;faut ne sera pas modifi&eacute;e.';
+            if (($edition_id == $def_edition) | ($edition_id == 0)) {
+                $is_def_edition = '<b>L\'&eacute;dition utilis&eacute;e par d&eacute;faut va &ecirc;tre modifi&eacute;e.</b>';
+            } else {
+                $is_def_edition = 'L\'&eacute;dition utilis&eacute;e par d&eacute;faut ne sera pas modifi&eacute;e.';
             }
 
             // Récupère les données actuelles
-            $this->view->set_var (array(
-            "ORITITRE" => stripslashes($this->Tome->TITRE_TOME),
-            "CLTITRE" => ($this->User_album_prop->TITRE==$this->Tome->TITRE_TOME ? "flat" : "has_changed"),
-            "ORISERIE" => stripslashes($this->Tome->NOM_SERIE),
-            "CLSERIE" => ($this->User_album_prop->SERIE==$this->Tome->NOM_SERIE ? "flat" : "has_changed"),
-            "ORISERIEFINI" => ($this->Tome->FLG_FINI != '') ? $opt_status[$this->Tome->FLG_FINI][1]:'',
-            "NEW_FLG_FINI" => ($this->User_album_prop->FLG_FINI == $this->Tome->FLG_FINI ? "" : "*"),
-            "ORITOME" => $this->Tome->NUM_TOME,
-            "CLTOME" => ($this->User_album_prop->NUM_TOME==$this->Tome->NUM_TOME ? "flat" : "has_changed"),
-            "NEW_FLG_INT" => ($this->User_album_prop->FLG_INT==$this->Tome->FLG_INT ? "" : "*"),
-            "NEW_FLG_TYPE" => ($this->User_album_prop->FLG_TYPE==$this->Tome->FLG_TYPE ? "" : "*"),
-            "ORIGENRE" => $this->Tome->NOM_GENRE,
-            "CLGENRE" => ($this->User_album_prop->GENRE==$this->Tome->NOM_GENRE ? "flat" : "has_changed"),
-            "ORISCENARISTE" => stripslashes($this->Tome->scpseudo),
-            "CLSCENARISTE" => ($this->User_album_prop->SCENAR==$this->Tome->scpseudo ? "flat" : "has_changed"),
-            "ORISCENARISTEALT" => stripslashes($this->Tome->scapseudo),
-            "CLSCENARISTEALT" => ($this->User_album_prop->SCENAR_ALT==$this->Tome->scapseudo ? "flat" : "has_changed"),
-            "ORIEDITEUR" => stripslashes($this->Edition->NOM_EDITEUR),
-            "CLEDITEUR" => ($this->User_album_prop->EDITEUR==$this->Edition->NOM_EDITEUR ? "flat" : "has_changed"),
-            "ORIDESSINATEUR" => stripslashes($this->Tome->depseudo),
-            "CLDESSINATEUR" => ($this->User_album_prop->DESSIN==$this->Tome->depseudo ? "flat" : "has_changed"),
-            "ORIDESSINATEURALT" => stripslashes($this->Tome->deapseudo),
-            "CLDESSINATEURALT" => ($this->User_album_prop->DESSIN_ALT==$this->Tome->deapseudo ? "flat" : "has_changed"),
-            "ORICOLORISTE" => stripslashes(($this->Tome->copseudo)),
-            "CLCOLORISTE" => ($this->User_album_prop->COLOR==$this->Tome->copseudo ? "flat" : "has_changed"),
-            "ORICOLLECTION" => ($this->Edition->NOM_COLLECTION),
-            "CLCOLLECTION" => ($this->User_album_prop->COLLECTION==$this->Edition->NOM_COLLECTION ? "flat" : "has_changed"),
-            "ORIEAN" => ($this->Edition->EAN_EDITION=="") ? "&nbsp;" : $this->Edition->EAN_EDITION,
-            "CLEAN" => ($this->User_album_prop->EAN==$this->Edition->EAN_EDITION ? "flat" : "has_changed"),
-            "ORIISBN" => ($this->Tome->ISBN_EDITION=="") ? "&nbsp;" : $this->Edition->ISBN_EDITION,
-            "CLISBN" => ($this->User_album_prop->ISBN==$this->Edition->ISBN_EDITION ? "flat" : "has_changed"),
-            "ORIDTPAR" => $this->Edition->DTE_PARUTION,
-            "CLDTPAR" => ($this->User_album_prop->DTE_PARUTION==$this->Edition->DTE_PARUTION ? "flat" : "has_changed"),
-            "ORIHISTOIRE" => stripslashes($this->Edition->HISTOIRE),
-            "CLHISTOIRE" => ($this->User_album_prop->HISTOIRE==$this->Edition->HISTOIRE ? "flat" : "has_changed"),
-            "URLIMAGE" => $url_image,
-            "URLORIIMAGE" => $ori_url_image,
-            "DIMIMAGE" => $dim_image,
-            "ORIDIMIMAGE" => $ori_dim_image,
-            "USERHASEDITION" => $has_edition,
-            "MODIFONDEFAULT" => $is_def_edition,
-            "DEFEDITIONID" => $def_edition,
-            "USEROWN" => $user_owns
+            $this->view->set_var(array(
+                "ORITITRE" => stripslashes($this->Tome->TITRE_TOME),
+                "CLTITRE" => ($this->User_album_prop->TITRE == $this->Tome->TITRE_TOME ? "flat" : "has_changed"),
+                "ORISERIE" => stripslashes($this->Tome->NOM_SERIE),
+                "CLSERIE" => ($this->User_album_prop->SERIE == $this->Tome->NOM_SERIE ? "flat" : "has_changed"),
+                "ORISERIEFINI" => ($this->Tome->FLG_FINI != '') ? $opt_status[$this->Tome->FLG_FINI][1] : '',
+                "NEW_FLG_FINI" => ($this->User_album_prop->FLG_FINI == $this->Tome->FLG_FINI ? "" : "*"),
+                "ORITOME" => $this->Tome->NUM_TOME,
+                "CLTOME" => ($this->User_album_prop->NUM_TOME == $this->Tome->NUM_TOME ? "flat" : "has_changed"),
+                "NEW_FLG_INT" => ($this->User_album_prop->FLG_INT == $this->Tome->FLG_INT ? "" : "*"),
+                "NEW_FLG_TYPE" => ($this->User_album_prop->FLG_TYPE == $this->Tome->FLG_TYPE ? "" : "*"),
+                "ORIGENRE" => $this->Tome->NOM_GENRE,
+                "CLGENRE" => ($this->User_album_prop->GENRE == $this->Tome->NOM_GENRE ? "flat" : "has_changed"),
+                "ORISCENARISTE" => stripslashes($this->Tome->scpseudo),
+                "CLSCENARISTE" => ($this->User_album_prop->SCENAR == $this->Tome->scpseudo ? "flat" : "has_changed"),
+                "ORISCENARISTEALT" => stripslashes($this->Tome->scapseudo),
+                "CLSCENARISTEALT" => ($this->User_album_prop->SCENAR_ALT == $this->Tome->scapseudo ? "flat" : "has_changed"),
+                "ORIEDITEUR" => stripslashes($this->Edition->NOM_EDITEUR),
+                "CLEDITEUR" => ($this->User_album_prop->EDITEUR == $this->Edition->NOM_EDITEUR ? "flat" : "has_changed"),
+                "ORIDESSINATEUR" => stripslashes($this->Tome->depseudo),
+                "CLDESSINATEUR" => ($this->User_album_prop->DESSIN == $this->Tome->depseudo ? "flat" : "has_changed"),
+                "ORIDESSINATEURALT" => stripslashes($this->Tome->deapseudo),
+                "CLDESSINATEURALT" => ($this->User_album_prop->DESSIN_ALT == $this->Tome->deapseudo ? "flat" : "has_changed"),
+                "ORICOLORISTE" => stripslashes(($this->Tome->copseudo)),
+                "CLCOLORISTE" => ($this->User_album_prop->COLOR == $this->Tome->copseudo ? "flat" : "has_changed"),
+                "ORICOLLECTION" => ($this->Edition->NOM_COLLECTION),
+                "CLCOLLECTION" => ($this->User_album_prop->COLLECTION == $this->Edition->NOM_COLLECTION ? "flat" : "has_changed"),
+                "ORIEAN" => ($this->Edition->EAN_EDITION == "") ? "&nbsp;" : $this->Edition->EAN_EDITION,
+                "CLEAN" => ($this->User_album_prop->EAN == $this->Edition->EAN_EDITION ? "flat" : "has_changed"),
+                "ORIISBN" => ($this->Tome->ISBN_EDITION == "") ? "&nbsp;" : $this->Edition->ISBN_EDITION,
+                "CLISBN" => ($this->User_album_prop->ISBN == $this->Edition->ISBN_EDITION ? "flat" : "has_changed"),
+                "ORIDTPAR" => $this->Edition->DTE_PARUTION,
+                "CLDTPAR" => ($this->User_album_prop->DTE_PARUTION == $this->Edition->DTE_PARUTION ? "flat" : "has_changed"),
+                "ORIHISTOIRE" => stripslashes($this->Edition->HISTOIRE),
+                "CLHISTOIRE" => ($this->User_album_prop->HISTOIRE == $this->Edition->HISTOIRE ? "flat" : "has_changed"),
+                "URLIMAGE" => $url_image,
+                "URLORIIMAGE" => $ori_url_image,
+                "DIMIMAGE" => $dim_image,
+                "ORIDIMIMAGE" => $ori_dim_image,
+                "USERHASEDITION" => $has_edition,
+                "MODIFONDEFAULT" => $is_def_edition,
+                "DEFEDITIONID" => $def_edition,
+                "USEROWN" => $user_owns
             ));
 
             // Récupère l'adresse mail de l'utilisateur
@@ -1075,13 +1068,13 @@ $opt_type[1][1] = 'Coffret';
             $pseudo = $this->User_album_prop->USERNAME;
             $nom_album = $this->User_album_prop->TITRE;
 
-            $this->view->set_var (array(
-            "ADRESSEMAIL" => $mail_adress,
-            "MAILSUBJECT" => "Votre proposition BDovore : ".$nom_album,
-            "MEMBRE" => $pseudo
+            $this->view->set_var(array(
+                "ADRESSEMAIL" => $mail_adress,
+                "MAILSUBJECT" => "Votre proposition BDovore : " . $nom_album,
+                "MEMBRE" => $pseudo
             ));
 
-           // url suivant et précédent
+            // url suivant et précédent
             $this->User_album_prop->load("c", " WHERE 
                     id_proposal <" . $id . " 
                     AND status not in (98,99,1)
@@ -1111,19 +1104,20 @@ $opt_type[1][1] = 'Coffret';
                 $this->view->set_var("BOUTONSUIVANT", "<del>Suivant</del>");
             }
 
-            $this->view->set_var('PAGETITLE',"Validatoin d'une correction ");
+            $this->view->set_var('PAGETITLE', "Validatoin d'une correction ");
             $this->view->render();
         }
     }
+
     public function addSerie() {
         /*
          * Ajout rapide d'une série
          */
         if (User::minAccesslevel(1)) {
-        $act = getVal("act");
-        // Mettre à jour les informations
-        if ($act=="insert"){
-                $tri = substr(trim(clean_article(postVal('txtNomSerie'))),0,3);
+            $act = getVal("act");
+            // Mettre à jour les informations
+            if ($act == "insert") {
+                $tri = substr(trim(clean_article(postVal('txtNomSerie'))), 0, 3);
                 $this->loadModel("Serie");
                 $this->Serie->set_dataPaste(array(
                     "NOM" => postVal('txtNomSerie'),
@@ -1131,67 +1125,62 @@ $opt_type[1][1] = 'Coffret';
                     "NOTE" => "0",
                     "FLG_FINI" => "1",
                     "TRI" => $tri
-                    
                 ));
-               $this->Serie->update();
-               
+                $this->Serie->update();
+
                 // fichier à utiliser
-                $this->view->set_var (array(
-                        "script" => "parent.$.fancybox.close();"
+                $this->view->set_var(array(
+                    "script" => "parent.$.fancybox.close();"
                 ));
-               
-        }
-
-        // Afficher le formulaire pré - remplis
-        elseif($act==""){
-                
-                $this->view->set_var (array(
-                        "URLACTION" => BDO_URL."admin/addserie?act=insert"
-                ));
-        }
-         $this->view->layout = "iframe";
-         $this->view->render();
-        }
-    }
-    
-    public function addAuteur () {
-        if (User::minAccesslevel(1)) {
-            $act= getVal("act","");
-            if ($act=="insert")
-            {
-                    if (postVal('txtPrenom') != '')
-                    $long_name = postVal('txtNom').", ".postVal('txtPrenom');
-                    else
-                    $long_name = postVal('txtNom');
-
-                    $pseudo = notIssetOrEmpty(postVal('txtPseudo')) ?  $long_name : postVal('txtPseudo');
-                    $this->loadModel("Auteur");
-                    $this->Auteur->set_dataPaste(array(
-                        "PSEUDO" => $pseudo,
-                        "NOM" => postVal('txtNom'),
-                        "PRENOM" => postVal('txtPrenom')
-                    ));
-                    $this->Auteur->update();
-                    $this->view->set_var (array
-                    (
-                    "BODYONLOAD" => "parent.$.fancybox.close();"
-                    ));
-                   
-                    
             }
 
-            // Afficher le formulaire pr� - remplis
-            elseif($act=="")
-            {
-                    $this->view->set_var (array
-                    (
-                    "URLACTION" => BDO_URL."admin/addauteur?act=insert"
-                    ));                  
+            // Afficher le formulaire pré - remplis
+            elseif ($act == "") {
+
+                $this->view->set_var(array(
+                    "URLACTION" => BDO_URL . "admin/addserie?act=insert"
+                ));
             }
             $this->view->layout = "iframe";
             $this->view->render();
         }
     }
+
+    public function addAuteur() {
+        if (User::minAccesslevel(1)) {
+            $act = getVal("act", "");
+            if ($act == "insert") {
+                if (postVal('txtPrenom') != '')
+                    $long_name = postVal('txtNom') . ", " . postVal('txtPrenom');
+                else
+                    $long_name = postVal('txtNom');
+
+                $pseudo = notIssetOrEmpty(postVal('txtPseudo')) ? $long_name : postVal('txtPseudo');
+                $this->loadModel("Auteur");
+                $this->Auteur->set_dataPaste(array(
+                    "PSEUDO" => $pseudo,
+                    "NOM" => postVal('txtNom'),
+                    "PRENOM" => postVal('txtPrenom')
+                ));
+                $this->Auteur->update();
+                $this->view->set_var(array
+                    (
+                    "BODYONLOAD" => "parent.$.fancybox.close();"
+                ));
+            }
+
+            // Afficher le formulaire pr� - remplis
+            elseif ($act == "") {
+                $this->view->set_var(array
+                    (
+                    "URLACTION" => BDO_URL . "admin/addauteur?act=insert"
+                ));
+            }
+            $this->view->layout = "iframe";
+            $this->view->render();
+        }
+    }
+
     public function editEdition() {
         if (User::minAccesslevel(1)) {
             
@@ -1241,6 +1230,9 @@ $opt_type[1][1] = 'Coffret';
     }
 
     public function updateCorrection() {
+        /*
+         * Fonction de validation d'une proposition de correction d'un album
+         */
         // Récupère l'utilisateur et l'image de couv
         if (User::minAccesslevel(1)) {
             $id = getValInteger("ID"); // id de la proposition
@@ -1253,221 +1245,216 @@ $opt_type[1][1] = 'Coffret';
             $prop_img = $this->User_album_prop->IMG_COUV;
             $prop_action = $this->User_album_prop->IMG_COUV;
             $notif_mail = $this->User_album_prop->NOTIF_MAIL;
-            
+
             $prop_img = $this->User_album_prop->IMG_COUV;
             $lid = $this->User_album_prop->ID_TOME;
             $edition = $this->User_album_prop->ID_EDTION;
             $def_edition = postValInteger('txtDefEdition');
-            
-	// Met à jour l'information propre à l'album
-	// Dans la base bd_tome
-               $this->loadModel("Tome");
-               $this->Tome->set_dataPaste(array("ID_TOME" => $lid));
-               $this->Tome->load();
-               $this->Tome->set_dataPaste(array(
-                   "TITRE" => postVal("txtTitre"),
-                   "NUM_TOME" => postVal("txtNumTome"),
-                   "FLG_INT" => (postVal("chkIntegrale") == "checkbox" ) ? "O" : "N" ,
-                   "FLG_TYPE" => postVal("lstType"),
-                   "ID_SERIE" => postVal("txtSerieId"),
-                   "ID_GENRE" => postVal("txtGenreId"),
-                   "ID_SCENAR" => postVal("txtScenarId") == "" ? "0" : postVal("txtScenarId"),
-                   "ID_SCENAR_ALT" => postVal("txtScenarAltId") == "" ? "0" : postVal("txtScenarAltId"),
-                   "ID_DESSIN" => postVal("txtDessiId") == "" ? "0" : postVal("txtDessiId"),
-                   "ID_DESSIN_ALT" => postVal("txtDessiAltId") == "" ? "0" : postVal("txtDessiAltId"),
-                   "ID_COLOR" => postVal("txtColorId") == "" ? "0" : postVal("txtColorId"),
-                   "ID_COLOR_ALT" => postVal("txtColorAltId") == "" ? "0" : postVal("txtColorAltId"),
-                   "HISTOIRE" => postVal("txtHistoire")
-               ));
-               $this->Tome->update();
-               if (issetNotEmpty($this->Tome->error)) {
-                   var_dump($this->Tome->error);
-                   exit();
-               }
-               echo 'Info album : base bd_tome mise a jour.<br />';
+
+            // Met à jour l'information propre à l'album
+            // Dans la base bd_tome
+            $this->loadModel("Tome");
+            $this->Tome->set_dataPaste(array("ID_TOME" => $lid));
+            $this->Tome->load();
+            $this->Tome->set_dataPaste(array(
+                "TITRE" => postVal("txtTitre"),
+                "NUM_TOME" => postVal("txtNumTome"),
+                "FLG_INT" => (postVal("chkIntegrale") == "checkbox" ) ? "O" : "N",
+                "FLG_TYPE" => postVal("lstType"),
+                "ID_SERIE" => postVal("txtSerieId"),
+                "ID_GENRE" => postVal("txtGenreId"),
+                "ID_SCENAR" => postVal("txtScenarId") == "" ? "0" : postVal("txtScenarId"),
+                "ID_SCENAR_ALT" => postVal("txtScenarAltId") == "" ? "0" : postVal("txtScenarAltId"),
+                "ID_DESSIN" => postVal("txtDessiId") == "" ? "0" : postVal("txtDessiId"),
+                "ID_DESSIN_ALT" => postVal("txtDessiAltId") == "" ? "0" : postVal("txtDessiAltId"),
+                "ID_COLOR" => postVal("txtColorId") == "" ? "0" : postVal("txtColorId"),
+                "ID_COLOR_ALT" => postVal("txtColorAltId") == "" ? "0" : postVal("txtColorAltId"),
+                "HISTOIRE" => postVal("txtHistoire")
+            ));
+            $this->Tome->update();
+            if (issetNotEmpty($this->Tome->error)) {
+                var_dump($this->Tome->error);
+                exit();
+            }
+            echo 'Info album : base bd_tome mise a jour.<br />';
 
 
-	// Met à jour les informations série dans la table bd_tome
-	$this->Tome->updateGenreForSerie(postVal("txtSerieId"),postVal("txtGenreId") );
-	echo 'Info s&eacute;rie : base bd_tome mise a jour.<br>';
+            // Met à jour les informations série dans la table bd_tome
+            $this->Tome->updateGenreForSerie(postVal("txtSerieId"), postVal("txtGenreId"));
+            echo 'Info s&eacute;rie : base bd_tome mise a jour.<br>';
 
-        $this->loadModel("Serie");
-        $this->Serie->set_dataPaste(array("ID_SERIE" => postVal("txtSerieId")));
-        $this->Serie->load();
-        $this->Serie->set_dataPaste(array(
-            "NOM" => postVal('txtSerie'),
-            "ID_GENRE" => postVal("txtGenreId"),
-            "FLG_FINI" => postVal("lstStatus")
-        ));
-	// Enfin, met à jour la table série
-	$this->Serie->update();
-         if (issetNotEmpty($this->Serie->error)) {
-                   var_dump($this->Serie->error);
-                   exit();
-               }
-	echo 'Info s&eacute;rie : base bd_serie mise a jour.<br />';
+            $this->loadModel("Serie");
+            $this->Serie->set_dataPaste(array("ID_SERIE" => postVal("txtSerieId")));
+            $this->Serie->load();
+            $this->Serie->set_dataPaste(array(
+                "NOM" => postVal('txtSerie'),
+                "ID_GENRE" => postVal("txtGenreId"),
+                "FLG_FINI" => postVal("lstStatus")
+            ));
+            // Enfin, met à jour la table série
+            $this->Serie->update();
+            if (issetNotEmpty($this->Serie->error)) {
+                var_dump($this->Serie->error);
+                exit();
+            }
+            echo 'Info s&eacute;rie : base bd_serie mise a jour.<br />';
 
-	// copie l'image dans les couvertures
-	if (($prop_img != '') && ($_POST['chkDelete'] != 'checked') && $edition != 0){
-		$newfilename = "CV-".sprintf("%06d",$lid)."-".sprintf("%06d",$edition);
-		$strLen =strlen ($prop_img);
-		$newfilename .= substr ($prop_img, $strLen - 4, $strLen);//file extension
-		@copy(BDO_DIR_UPLOAD."$prop_img", BDO_DIR_COUV."$newfilename");
-		@unlink(BDO_DIR_UPLOAD."$prop_img");
-	}
+            // copie l'image dans les couvertures
+            if (($prop_img != '') && ($_POST['chkDelete'] != 'checked') && $edition != 0) {
+                $newfilename = "CV-" . sprintf("%06d", $lid) . "-" . sprintf("%06d", $edition);
+                $strLen = strlen($prop_img);
+                $newfilename .= substr($prop_img, $strLen - 4, $strLen); //file extension
+                @copy(BDO_DIR_UPLOAD . "$prop_img", BDO_DIR_COUV . "$newfilename");
+                @unlink(BDO_DIR_UPLOAD . "$prop_img");
+            }
 
-	if (postVal('chkModifEdition') != 'checked'){
+            if (postVal('chkModifEdition') != 'checked') {
                 $this->loadModel("Edition");
-		// Mise à jour de la table bd_edition
-		if ($edition == 0){
-			// Mise à jour de la table bd_edition
-                        
-                        /*
-			$query = "UPDATE bd_edition SET ";
-			$query .= "`id_editeur` = ".$DB->escape($_POST['txtEditeurId']).", ";
-			$query .= "`id_collection` = ".$DB->escape($_POST['txtCollecId']).", ";
-			$query .= "`ean` = ".($_POST['txtEAN']=='' ? "NULL" :  "'".$DB->escape($_POST['txtEAN']). "'").", ";
-			$query .= "`isbn` = ".($_POST['txtISBN']=='' ? "NULL" :  "'".$DB->escape($_POST['txtISBN']). "'").", ";
-			$query .=" WHERE (`id_tome`=".$lid.");";
-			$DB->query($query);
-			echo 'Info édition : base bd_edition mise à jour.<br />';
-                         * 
-                         */
+                // Mise à jour de la table bd_edition
+                if ($edition == 0) {
+                    // Mise à jour de la table bd_edition
 
-		}else{
-			// Mise à jour de la table bd_edition
-                        $this->Edition;
-                        $this->Edition->set_dataPaste(array("ID_EDITION" =>$edition ));
-                        $this->Edition->load();
-                        $this->Edition->set_dataPaste(array(
-                            "ID_EDITEUR" => postVal('txtEditeurId'),
-                            "ID_COLLECTION" =>postVal('txtCollecId'),
-                            "EAN" => postVal('txtEAN'),
-                            "ISBN" => postVal('txtISBN'),
-                            "DTE_PARUTION" => postVal('txtDateParution')
-                                ));
-			
-			// vérifie si une image a été proposée
-			if (($prop_img != '') && (postVal('chkDelete') != 'checked'))
-			{
-                                $this->Edition->set_dataPaste(array("IMG_COUV" =>$newfilename ));
-				
-			}
-			$this->Edition->update();
-                        if (issetNotEmpty($this->Edition->error)) {
-                            var_dump($this->Edition->error);
-                            exit();
+                    /*
+                      $query = "UPDATE bd_edition SET ";
+                      $query .= "`id_editeur` = ".$DB->escape($_POST['txtEditeurId']).", ";
+                      $query .= "`id_collection` = ".$DB->escape($_POST['txtCollecId']).", ";
+                      $query .= "`ean` = ".($_POST['txtEAN']=='' ? "NULL" :  "'".$DB->escape($_POST['txtEAN']). "'").", ";
+                      $query .= "`isbn` = ".($_POST['txtISBN']=='' ? "NULL" :  "'".$DB->escape($_POST['txtISBN']). "'").", ";
+                      $query .=" WHERE (`id_tome`=".$lid.");";
+                      $DB->query($query);
+                      echo 'Info édition : base bd_edition mise à jour.<br />';
+                     * 
+                     */
+                } else {
+                    // Mise à jour de la table bd_edition
+                    $this->Edition;
+                    $this->Edition->set_dataPaste(array("ID_EDITION" => $edition));
+                    $this->Edition->load();
+                    $this->Edition->set_dataPaste(array(
+                        "ID_EDITEUR" => postVal('txtEditeurId'),
+                        "ID_COLLECTION" => postVal('txtCollecId'),
+                        "EAN" => postVal('txtEAN'),
+                        "ISBN" => postVal('txtISBN'),
+                        "DTE_PARUTION" => postVal('txtDateParution')
+                    ));
+
+                    // vérifie si une image a été proposée
+                    if (($prop_img != '') && (postVal('chkDelete') != 'checked')) {
+                        $this->Edition->set_dataPaste(array("IMG_COUV" => $newfilename));
+                    }
+                    $this->Edition->update();
+                    if (issetNotEmpty($this->Edition->error)) {
+                        var_dump($this->Edition->error);
+                        exit();
+                    }
+                    echo 'Info &eacute;dition : base bd_edition mise &agrave; jour.<br>';
+                }
+            }
+
+            //Efface le fichier de la base et passe le status de l'album à valider
+            if ($prop_img != '') {
+                if (file_exists(BDO_DIR . "images/tmp/$prop_img")) {
+                    @unlink(BDO_DIR . "images/tmp/$prop_img");
+                }
+            }
+
+            if (postVal("chkResize") == "checked" && $edition != 0) {
+
+                //Redimensionnement
+                //*****************
+
+                $max_size = 180;
+                $imageproperties = getimagesize(BDO_DIR_COUV . "$newfilename");
+                if ($imageproperties != false) {
+                    $imagetype = $imageproperties[2];
+                    $imagelargeur = $imageproperties[0];
+                    $imagehauteur = $imageproperties[1];
+
+                    //Détermine s'il y a lieu de redimensionner l'image
+                    if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $maxsize)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
+
+                        if ($imagelargeur < $imagehauteur) {
+                            // image de type panorama : on limite la largeur à 128
+                            $new_w = $max_size;
+                            $new_h = round($imagehauteur * $max_size / $imagelargeur);
+                        } else {
+                            // imahe de type portrait : on limite la hauteur au maxi
+                            $new_h = $max_size;
+                            $new_w = round($imagelargeur * $max_size / $imagehauteur);
                         }
-			echo 'Info &eacute;dition : base bd_edition mise &agrave; jour.<br>';
-		}
-	}
+                    } else {
+                        $new_h = $imagehauteur;
+                        $new_w = $imagelargeur;
+                    }
 
-	//Efface le fichier de la base et passe le status de l'album à valider
-	if ($prop_img != ''){
-		if (file_exists(BDO_DIR."images/tmp/$prop_img")){
-			@unlink(BDO_DIR."images/tmp/$prop_img");
-		}
-	}
+                    $new_image = imagecreatetruecolor($new_w, $new_h);
+                    switch ($imagetype) {
+                        case "1":
+                            $source = imagecreatefromgif(BDO_DIR_COUV . "$newfilename");
+                            break;
 
-	if (postVal("chkResize") == "checked" && $edition != 0) {
+                        case "2":
+                            $source = imagecreatefromjpeg(BDO_DIR_COUV . "$newfilename");
+                            break;
 
-		//Redimensionnement
-		//*****************
+                        case "3":
+                            $source = imagecreatefrompng(BDO_DIR_COUV . "$newfilename");
+                            break;
 
-		$max_size = 180;
-		$imageproperties = getimagesize(BDO_DIR_COUV."$newfilename");
-		if ($imageproperties != false) {
-			$imagetype = $imageproperties[2];
-			$imagelargeur = $imageproperties[0];
-			$imagehauteur = $imageproperties[1];
+                        case "6":
+                            $source = imagecreatefrombmp(BDO_DIR_COUV . "$newfilename");
+                            break;
+                    }
 
-			//Détermine s'il y a lieu de redimensionner l'image
-			if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $maxsize)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
+                    imagecopyresampled($new_image, $source, 0, 0, 0, 0, $new_w, $new_h, $imagelargeur, $imagehauteur);
 
-				if ($imagelargeur < $imagehauteur) {
-					// image de type panorama : on limite la largeur à 128
-					$new_w = $max_size;
-					$new_h = round($imagehauteur * $max_size / $imagelargeur);
-				}else {
-					// imahe de type portrait : on limite la hauteur au maxi
-					$new_h = $max_size;
-					$new_w = round($imagelargeur * $max_size / $imagehauteur);
-				}
-			}else{
-				$new_h = $imagehauteur;
-				$new_w = $imagelargeur;
-			}
+                    switch ($imagetype) {
+                        case "2":
+                            unlink(BDO_DIR_COUV . "$newfilename");
+                            imagejpeg($new_image, BDO_DIR_COUV . "$newfilename", 100);
+                            break;
 
-			$new_image = imagecreatetruecolor($new_w, $new_h);
-			switch ($imagetype) {
-				case "1":
-					$source = imagecreatefromgif(BDO_DIR_COUV."$newfilename");
-					break;
+                        case "1":
+                        case "3":
+                        case "6":
+                            unlink(BDO_DIR_COUV . "$newfilename");
+                            $img_couv = substr($newfilename, 0, strlen($newfilename) - 3) . "jpg";
+                            imagejpeg($new_image, BDO_DIR_COUV . "$img_couv", 100);
 
-				case "2":
-					$source = imagecreatefromjpeg(BDO_DIR_COUV."$newfilename");
-					break;
+                            // met à jours la référence au fichier dans la table bd_edition
+                            $this->Edition;
+                            $this->Edition->set_dataPaste(array("ID_EDITION" => $edition));
+                            $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
+                            $this->Edition->update();
+                    }
+                }
 
-				case "3":
-					$source = imagecreatefrompng(BDO_DIR_COUV."$newfilename");
-					break;
+                echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
+                echo "Image redimensionnée<br />";
+            }
 
-				case "6":
-					$source = imagecreatefrombmp(BDO_DIR_COUV."$newfilename");
-					break;
-			}
 
-			imagecopyresampled($new_image, $source, 0, 0, 0, 0, $new_w, $new_h, $imagelargeur, $imagehauteur);
+            $this->User_album_prop->set_dataPaste(array("STATUS" => 1, "VALIDATOR" => $_SESSION["userConnect"]->user_id));
+            $this->User_album_prop->update();
 
-			switch ($imagetype) {
-				case "2":
-					unlink(BDO_DIR_COUV."$newfilename");
-					imagejpeg($new_image,BDO_DIR_COUV."$newfilename",100);
-					break;
-
-				case "1":
-				case "3":
-				case "6":
-					unlink(BDO_DIR_COUV."$newfilename");
-					$img_couv = substr($newfilename,0,strlen($newfilename)-3)."jpg";
-					imagejpeg($new_image,BDO_DIR_COUV."$img_couv",100);
-
-					// met à jours la référence au fichier dans la table bd_edition
-                                        $this->Edition;
-                                        $this->Edition->set_dataPaste(array("ID_EDITION" =>$edition ));
-                                        $this->Edition->set_dataPaste(array("IMG_COUV" =>$img_couv ));
-					$this->Edition->update();
-			}
-
-		}
-
-		echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
-		echo "Image redimensionnée<br />";
-	}
-
-        
-	$this->User_album_prop->set_dataPaste(array("STATUS" => 1, "VALIDATOR" => $_SESSION["userConnect"]->user_id));
-        $this->User_album_prop->update();
-
-	$this->User_album_prop->load("c", " WHERE 
+            $this->User_album_prop->load("c", " WHERE 
                     id_proposal > " . $id . " 
                     AND status not in (98,99,1) 
                     AND prop_type = 'CORRECTION' 
             ORDER BY id_proposal asc limit 0,1
             ");
 
-                if ($this->User_album_prop->ID_PROPOSAL > $id) {
+            if ($this->User_album_prop->ID_PROPOSAL > $id) {
 
-                    $next_url = BDO_URL . "admin/editPropositionCorrection?ID=" . $this->User_album_prop->ID_PROPOSAL;
-                } else {
-                    $next_url = BDO_URL . "admin/editAlbum?id_tome=" . $lid;
-                }
+                $next_url = BDO_URL . "admin/editPropositionCorrection?ID=" . $this->User_album_prop->ID_PROPOSAL;
+            } else {
+                $next_url = BDO_URL . "admin/editAlbum?id_tome=" . $lid;
+            }
 
-                echo GetMetaTag(2, "L'album a &eacute;t&eacute; mis a jour", $next_url);
+            echo GetMetaTag(2, "L'album a &eacute;t&eacute; mis a jour", $next_url);
         }
     }
-    
-    
+
     private function imgCouvFromUrl($url_ary, $lid_tome, $lid_edition) {
         /*
          * Récupère une image de couvertue et la copie dans le répertoire fournit en paramètre
