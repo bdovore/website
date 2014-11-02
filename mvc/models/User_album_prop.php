@@ -54,6 +54,8 @@ class User_album_prop extends Bdo_Db_Line
 		users_alb_prop.USER_ID, 
 		users_alb_prop.ID_PROPOSAL, 
 		users_alb_prop.ACTION, 
+                users_alb_prop.ID_TOME,
+                users_alb_prop.ID_EDITION,
 		users_alb_prop.TITRE, 
 		users_alb_prop.NUM_TOME, 
 		users_alb_prop.PRIX, 
@@ -101,7 +103,8 @@ class User_album_prop extends Bdo_Db_Line
 		users_alb_prop.CORR_COMMENT, 
 		users_alb_prop.STATUS,
                     users.USERNAME,
-                    users.EMAIL
+                    users.EMAIL,
+                    users_alb_prop.COMMENTAIRE
 	FROM 
 		users_alb_prop 
                 INNER JOIN users using(user_id)
