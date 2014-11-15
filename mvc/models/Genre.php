@@ -183,5 +183,16 @@ FROM " . $this->table_name . "
          return $this->load('c'," WHERE ORIGINE = 'Comics' ORDER BY `bd_genre`.`LIBELLE` ASC");
     }
     
+    public function getNbSerieForGenre($id_genre) {
+        /*
+         * Prend un id genre et fournit en sortie le nombre de série concernées par le genre
+         */
+        $query = "select count(*) as nbseries from bd_serie where id_genre =" . intval($id_genre);
+        $resultat = Db_query($query);
+        $obj = Db_fetch_object($resultat);
+        
+        return $obj->nbseries;
+    }
+    
 
 }

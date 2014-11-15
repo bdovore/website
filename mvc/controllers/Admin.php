@@ -27,7 +27,17 @@ class Admin extends Bdo_Controller {
 
         return $datebeforevalid;
     }
+    public function Ajout(){
+        if (User::minAccesslevel(1)) {
+            
 
+            
+            $this->view->set_var("PAGETITLE", "Administration Bdovore - Ajout");
+            $this->view->render();
+        } else {
+            die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+        }
+    }
     public function Proposition() {
         /*
          * Page principale de gestion des propositions
@@ -1199,7 +1209,20 @@ class Admin extends Bdo_Controller {
 
     public function editAuteur() {
         if (User::minAccesslevel(1)) {
-            
+            $action = getVal("action", "");
+            $mode = getVal("mode", "");
+
+            if ($action == "add") {
+                /*
+                 * Ajout d'un auteur
+                 */
+            }
+
+            if ($mode == "iframe") {
+                /*
+                 * Affichage en mode ajout rapide
+                 */
+            }
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }
@@ -1215,7 +1238,88 @@ class Admin extends Bdo_Controller {
 
     public function editGenre() {
         if (User::minAccesslevel(1)) {
-            
+            $this->loadModel("Genre");
+            $act = getVal("act","");
+            if ($act == "update") {
+                $this->Genre->set_dataPaste(array("ID_GENRE" => postValInteger("txtIdGenre") ));
+                $this->Genre->load();
+                $this->Genre->set_dataPaste(array("LIBELLE" => postVal('txtGenre'), "ORIGINE" => postVal('origine')));
+                $this->Genre->update();
+                if (issetNotEmpty($this->Genre->error)) {
+                    /*
+                     * Erreur : on envoit les infos
+                     */
+                    var_dump($this->Genre->error);
+                    exit;
+                }
+               
+                $this->view->addAlertPage("Mise &agrave; jour effectu&eacute;e");
+                $this->view->addPhtmlFile('alert', 'BODY');
+                $this->view->set_var("BODYONLOAD","history.go(-1);");
+               $this->view->layout = "iframe";
+                $this->view->render();
+            }
+        // EFFACEMENT D'UN GENRE
+            elseif ($act == "delete") {
+                if ($conf == "ok") {
+                    $genre_id = getValInteger("genre_id");
+                    $this->Genre->set_dataPaste(array("ID_GENRE" => $genre_id ));
+                    $this->Genre->load();
+                    $this->Genre->delete();
+                    $redirection = BDO_URL . "admin";
+                    echo '<META http-equiv="refresh" content="2; URL=' . $redirection . '">Le genre a &eacute;teacute; effac&eacute; de la base.';
+                    exit();
+                } else {// Affiche la demande de confirmation
+                    echo 'Etes-vous s&ucirc;r de vouloir effacer le genre n. ' . $genre_id . ' ? <a href="' . BDO_URL . 'admin/editgenre?act=delete&conf=ok&genre_id=' . $genre_id . '">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
+                    exit();
+                }
+            }
+            // AFFICHE UN FORMULAIRE VIDE
+            elseif ($act == "new") {
+                // Creation d'un nouveau Template
+
+                $this->view->set_var(array(
+                    "NBSERIES" => "0",
+                    "URLDELETE" => "javascript:alert('D�sactiv�');",
+                    "URLFUSION" => "javascript:alert('D�sactiv�');",
+                    "ACTIONNAME" => "Enregistrer",
+                    "URLACTION" => BDO_URL . "admin/editgenre.php?act=append"
+                ));
+                $this->view->layout = "iframe";
+               $this->view->render();
+                
+            }
+
+// INSERE UN NOUVEAU GENRE DANS LA BASE
+            elseif ($act == "append") {
+                $this->Genre->set_dataPaste(array("LIBELLE" => postVal('txtGenre')));
+                $this->Genre->update();
+                $lid = $this->Genre->ID_GENRE;
+                echo GetMetaTag(2, "Le nouveau genre a &eacute;t&eacute; ajout&eacute;", (BDO_URL . "admin/editgenre?genre_id=" . $lid));
+            }
+
+// AFFICHER UN GENRE
+            elseif ($act == "") {
+                
+                // Compte les albums pour lesquels les auteurs ont travaill�
+                $genre_id=getValInteger("genre_id");
+                $nb_serie = $this->Genre->getNbSerieForGenre($genre_id);
+
+                //r�cup�re les donn�es utilisateur dans la base de donn�e
+                $this->Genre->set_dataPaste(array("ID_GENRE" => $genre_id ));
+                $this->Genre->load();
+                $this->view->set_var(array(
+                    "IDGENRE" => $this->Genre->ID_GENRE,
+                    "GENRE" => htmlentities(stripslashes($this->Genre->LIBELLE)),
+                    "ORIGINE" => $this->Genre->ORIGINE,
+                    "NBSERIES" => $nb_serie,
+                    "URLDELETE" => BDO_URL . "admin/editgenre.php?act=delete&genre_id=" . $genre_id,
+                    "URLFUSION" => BDO_URL . "admin/mergegenre?source_id=" . $genre_id,
+                    "ACTIONNAME" => "Valider les Modifications",
+                    "URLACTION" => BDO_URL . "admin/editgenre?act=update"
+                ));
+                 $this->view->render();
+            }
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }

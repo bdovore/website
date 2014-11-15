@@ -1,0 +1,40 @@
+        
+<?php
+    $ficheAlbum = $view->getHelper('ficheAlbum');
+    $page = $view->getHelper('pagination');
+   
+    
+?>
+<div align="center" class="cadre1">
+   <?php echo $page->menuAdmin(); ?>
+    <h1>Tableau de bord de l'administration</h1>
+    Cette page vous permet d'ajouter un album, un auteur, une série, un auteur, un genre, un éditeur, une collection...
+    <h3>Genre</h3>
+    <a href='<?php echo BDO_URL; ?>admin/editGenre?act=new' class="fancybox fancybox.iframe {width:600,height:300}">Ajout rapide d'un genre</a><br>
+    
+    <b>Liste des genres disponibles</b>
+     <br>
+    <h3>Auteur</h3>
+    <p>Utilisez le BD Browser pour lister et modifier un auteur existant.</p>
+   <a href='<?php echo BDO_URL;?>admin/addauteur' class="fancybox fancybox.iframe {width:400,height:160}">
+                                        Ajout rapide d'un auteur
+                                    </a>
+     <br>
+    
+    <h3>Editeurs</h3>
+     <p>Utilisez le BD Browser pour lister et modifier un éditeur existant.</p>
+     <br>
+    <h3>Collection</h3>
+    <p>Utilisez le BD Browser pour lister et modifier une collection existante.</p>
+     <br>
+    <h3>Série</h3>
+    <p>Utilisez le BD Browser pour lister et modifier une série existante.</p>
+    <a href='<?php echo BDO_URL;?>admin/addserie' class="fancybox fancybox.iframe {width:400,height:160}">
+                                        Ajout rapide d'une série
+                                    </a>
+    <br>
+    
+    
+    <h3>Albums</h3>
+    <p>Utilisez le BD Browser pour lister et modifier un album existant.</p>
+</div>
