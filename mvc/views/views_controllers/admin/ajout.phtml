@@ -7,26 +7,60 @@
 ?>
 <div align="center" class="cadre1">
    <?php echo $page->menuAdmin(); ?>
-    <h1>Tableau de bord de l'administration</h1>
+    <h1>Ajout de nouvelles données dans la base</h1>
     Cette page vous permet d'ajouter un album, un auteur, une série, un auteur, un genre, un éditeur, une collection...
     <h3>Genre</h3>
     <a href='<?php echo BDO_URL; ?>admin/editGenre?act=new' class="fancybox fancybox.iframe {width:600,height:300}">Ajout rapide d'un genre</a><br>
     
-    <b>Liste des genres disponibles</b>
+    <b><a href="?list=genre">Lister les genres disponibles</a></b>
+    <?php if (issetNotEmpty($view->listGenreBD)) { ?>
+    <div id="listgenre">
+    
+        <h3>BD</h3>  <div>          
+    <?php foreach ($view->listGenreBD->a_dataQuery as $genre ) { ?>
+             <a href='<?php echo BDO_URL; ?>admin/editGenre?genre_id=<?php echo $genre->ID_GENRE;?>' class="fancybox fancybox.iframe {width:600,height:300}"><?php echo $genre->LIBELLE; ?></a><BR>
+    <?php  }?>
+        </div>
+      <h3>Mangas</h3> 
+      <div>
+    <?php foreach ($view->listGenreMangas->a_dataQuery as $genre ) { ?>
+             <a href='<?php echo BDO_URL; ?>admin/editGenre?genre_id=<?php echo $genre->ID_GENRE;?>' class="fancybox fancybox.iframe {width:600,height:300}"><?php echo $genre->LIBELLE; ?></a><BR>
+    <?php  }?>
+      </div>
+             <h3>Comics</h3>  
+             <div>
+             <?php foreach ($view->listGenreComics->a_dataQuery as $genre ) { ?>
+             <a href='<?php echo BDO_URL; ?>admin/editGenre?genre_id=<?php echo $genre->ID_GENRE;?>' class="fancybox fancybox.iframe {width:600,height:300}"><?php echo $genre->LIBELLE; ?></a><BR>
+    <?php  }?>
+             </div>
+    </div>  
+    <script>
+        $(function() {
+            $( "#listgenre" ).accordion({
+            collapsible: true,
+             heightStyle: "content"
+        });
+        });
+</script> 
+    <?php } ?>
      <br>
+      <hr>
     <h3>Auteur</h3>
     <p>Utilisez le BD Browser pour lister et modifier un auteur existant.</p>
+   
    <a href='<?php echo BDO_URL;?>admin/addauteur' class="fancybox fancybox.iframe {width:400,height:160}">
                                         Ajout rapide d'un auteur
                                     </a>
      <br>
-    
+     <hr>
     <h3>Editeurs</h3>
      <p>Utilisez le BD Browser pour lister et modifier un éditeur existant.</p>
      <br>
+      <hr>
     <h3>Collection</h3>
     <p>Utilisez le BD Browser pour lister et modifier une collection existante.</p>
      <br>
+      <hr>
     <h3>Série</h3>
     <p>Utilisez le BD Browser pour lister et modifier une série existante.</p>
     <a href='<?php echo BDO_URL;?>admin/addserie' class="fancybox fancybox.iframe {width:400,height:160}">
@@ -34,7 +68,7 @@
                                     </a>
     <br>
     
-    
+     <hr>
     <h3>Albums</h3>
     <p>Utilisez le BD Browser pour lister et modifier un album existant.</p>
 </div>

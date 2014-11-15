@@ -29,7 +29,18 @@ class Admin extends Bdo_Controller {
     }
     public function Ajout(){
         if (User::minAccesslevel(1)) {
-            
+            $list = getVal("list","");
+            if ($list == "genre") {
+                /*
+                 * On charge la liste des genres pour permettre leur édition
+                 */
+                $this->loadModel("Genre");
+                $this->view->set_var(array(
+                    "listGenreBD" => $this->Genre->BD(),
+                    "listGenreMangas" =>  $this->Genre->Mangas(),
+                    "listGenreComics" => $this->Genre->Comics()));
+                
+            }
 
             
             $this->view->set_var("PAGETITLE", "Administration Bdovore - Ajout");
@@ -1318,6 +1329,7 @@ class Admin extends Bdo_Controller {
                     "ACTIONNAME" => "Valider les Modifications",
                     "URLACTION" => BDO_URL . "admin/editgenre?act=update"
                 ));
+                  $this->view->layout = "iframe";
                  $this->view->render();
             }
         } else {
