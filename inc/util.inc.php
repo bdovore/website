@@ -601,15 +601,16 @@ function explodeDate ($s_date)
 function Verif_Date ($Date)
 {
     $Tableau = explodeDate($Date);
-    
-    if (is_numeric($Tableau[2])) {
+   
+    if (is_numeric($Tableau[2]) ) {
         $Jour = zeroFill($Tableau[2]);
+       
     }
     else {
         return false;
     }
     
-    if (is_numeric($Tableau[1])) {
+    if (is_numeric($Tableau[1]) ) {
         $Mois = zeroFill($Tableau[1]);
     }
     else {
@@ -643,7 +644,7 @@ function Verif_Date ($Date)
     
     $Date_SQL = $Jour . '/' . $Mois . '/' . $Annee;
     
-    if (checkdate($Mois, $Jour, $Annee)) {
+    if (checkdate($Mois, $Jour, $Annee) || ($Mois==0 and $Jour==0)) {
         return $Date_SQL;
     }
     else {

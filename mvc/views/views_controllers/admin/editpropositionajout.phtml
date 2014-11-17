@@ -224,7 +224,7 @@ function verifAddExisting(myIdTome,myAction) {
                         <tr> 
                             <td class="label">Collection</td>
                             <td align="center"><input name="txtCollecId" id="txtCollecId" type="text" value="<?php echo $view->IDCOLLEC;?>" size="3" class="<?php echo $view->CLIDCOLLEC;?>" /></td>
-                            <td><select name="txtCollec" id="txtCollec" class="<?php echo $view->CLCOLLECTION;?>" onchange="$('#txtCollectionId').text($('#txtCollec').val());"></select></td>
+                            <td><select name="txtCollec" id="txtCollec" class="<?php echo $view->CLCOLLECTION;?>" onchange="$('#txtCollecId').val($('#txtCollec').val());"></select></td>
                             <td><img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('collection',document.myform.txtCollec.value,'myform','txtCollec',false,document.myform.txtEditeurId.value)"></td>
                         </tr>
                         <tr> 
@@ -509,8 +509,8 @@ function verifAddExisting(myIdTome,myAction) {
      addAutocomplete("txtFutAlb","txtFutAlbId","txtFutAlbId","<?php echo BDO_URL; ?>getjson?data=Album");
      changeEditeur();
     function changeEditeur() {
-        addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo $view->IDCOLLEC;?>);
-    
+        addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo $view->IDCOLLEC + 0;?>);
+    //addAutocomplete("txtCollec","spCollec","txtCollecId","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val());
     }
 </script>
     

@@ -27,7 +27,16 @@ class Browser extends Bdo_Controller
     public $lev2_id = "";
 
     public $let = "";
-
+    
+    public $url_edit = array(
+                "ALBUM" => "admin/editalbum?alb_id=",
+                "SERIE" =>  "admin/editserie?serie_id=",
+                "GENRE" => "admin/editgenre?genre_id=",
+                "COLLECTION" => "admin/editcollection?collec_id=",
+                "AUTEUR" => "admin/editauteur?auteur_id=",
+                "EDITEUR" => "admin/editediteur?editeur_id="
+        );
+    
     public $a_searchType = array(
             'ser' => 'Série',
             'aut' => 'Auteur',
@@ -61,12 +70,12 @@ class Browser extends Bdo_Controller
         
         // URL des pages d'edition
         $url_edit = array(
-                "ALBUM" => BDO_URL . "admin/albums?alb_id=%d",
-                "SERIE" => BDO_URL . "admin/series?serie_id=%d",
-                "GENRE" => BDO_URL . "admin/genres?genre_id=%d",
-                "COLLECTION" => BDO_URL . "admin/collections?collec_id=%d",
-                "AUTEUR" => BDO_URL . "admin/auteurs?auteur_id=%d",
-                "EDITEUR" => BDO_URL . "admin/editeurs?editeur_id=%d"
+                "ALBUM" => BDO_URL . "admin/editalbum?alb_id=",
+                "SERIE" => BDO_URL . "admin/editserie?serie_id=",
+                "GENRE" => BDO_URL . "admin/editgenre?genre_id=",
+                "COLLECTION" => BDO_URL . "admin/editcollection?collec_id=",
+                "AUTEUR" => BDO_URL . "admin/editauteur?auteur_id=",
+                "EDITEUR" => BDO_URL . "admin/editediteur?editeur_id="
         );
     }
 
@@ -183,10 +192,13 @@ class Browser extends Bdo_Controller
         
         if (! $this->rb_browse or $this->rb_browse == 'ser') {
             $this->view->set_var("TYPBROWSE", "ser");
+            $url_edit = BDO_URL.$this->url_edit["SERIE"];
+            
         }
         if ($this->rb_browse == 'aut') {
             $this->view->set_var("AUTCHECK", "checked");
             $this->view->set_var("TYPBROWSE", "aut");
+            $url_edit = BDO_URL.$this->url_edit["AUTEUR"];
         }
         if ($this->rb_browse == 'genr') {
             $this->view->set_var("GENRCHECK", "checked");
@@ -195,6 +207,7 @@ class Browser extends Bdo_Controller
         if ($this->rb_browse == 'edit') {
             $this->view->set_var("EDITCHECK", "checked");
             $this->view->set_var("TYPBROWSE", "edit");
+             $url_edit = BDO_URL.$this->url_edit["EDITEUR"];
         }
         
         $query_string = "";
@@ -218,6 +231,7 @@ class Browser extends Bdo_Controller
                         "NAMELEVEL" => htmlspecialchars($row['name']),
                         "ACTLEVEL" => "",
                         "LEVSIGN" => "1L" . $row['id'],
+                     "URLEDIT" => (User::minAccesslevel(1)) ? "<a href='".$url_edit.$row['id']."'".' class="fancybox fancybox.iframe {width:600,height:300}" ><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>' : ""
                 );
                 $this->keyword .= htmlspecialchars($row['name']) . ",";
                 // //$t->parse("DBlock", "DataBlock", true);
@@ -234,6 +248,7 @@ class Browser extends Bdo_Controller
                         "NAMELEVEL" => htmlspecialchars(stripslashes($row['name'])),
                         "ACTLEVEL" => "",
                         "LEVSIGN" => "1L" . $row['id'],
+                    "URLEDIT" => (User::minAccesslevel(1)) ? "<a href='".$url_edit."'".'<img src="' . BDO_URL_IMAGE . 'edit.gif" border=0>' : ""
                 );
                 $this->keyword .= htmlspecialchars($row['name']) . ",";
             }

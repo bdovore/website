@@ -27,9 +27,10 @@ class Admin extends Bdo_Controller {
 
         return $datebeforevalid;
     }
-    public function Ajout(){
+
+    public function Ajout() {
         if (User::minAccesslevel(1)) {
-            $list = getVal("list","");
+            $list = getVal("list", "");
             if ($list == "genre") {
                 /*
                  * On charge la liste des genres pour permettre leur édition
@@ -37,18 +38,18 @@ class Admin extends Bdo_Controller {
                 $this->loadModel("Genre");
                 $this->view->set_var(array(
                     "listGenreBD" => $this->Genre->BD(),
-                    "listGenreMangas" =>  $this->Genre->Mangas(),
+                    "listGenreMangas" => $this->Genre->Mangas(),
                     "listGenreComics" => $this->Genre->Comics()));
-                
             }
 
-            
+
             $this->view->set_var("PAGETITLE", "Administration Bdovore - Ajout");
             $this->view->render();
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }
     }
+
     public function Proposition() {
         /*
          * Page principale de gestion des propositions
@@ -1250,9 +1251,10 @@ class Admin extends Bdo_Controller {
     public function editGenre() {
         if (User::minAccesslevel(1)) {
             $this->loadModel("Genre");
-            $act = getVal("act","");
+            $act = getVal("act", "");
+            $genre_id = getValInteger("genre_id");
             if ($act == "update") {
-                $this->Genre->set_dataPaste(array("ID_GENRE" => postValInteger("txtIdGenre") ));
+                $this->Genre->set_dataPaste(array("ID_GENRE" => postValInteger("txtIdGenre")));
                 $this->Genre->load();
                 $this->Genre->set_dataPaste(array("LIBELLE" => postVal('txtGenre'), "ORIGINE" => postVal('origine')));
                 $this->Genre->update();
@@ -1263,22 +1265,24 @@ class Admin extends Bdo_Controller {
                     var_dump($this->Genre->error);
                     exit;
                 }
-               
+
                 $this->view->addAlertPage("Mise &agrave; jour effectu&eacute;e");
                 $this->view->addPhtmlFile('alert', 'BODY');
-                $this->view->set_var("BODYONLOAD","history.go(-1);");
-               $this->view->layout = "iframe";
+                $this->view->set_var("BODYONLOAD", "history.go(-1);");
+                $this->view->layout = "iframe";
                 $this->view->render();
             }
-        // EFFACEMENT D'UN GENRE
+            // EFFACEMENT D'UN GENRE
             elseif ($act == "delete") {
+                $conf = getVal("conf");
                 if ($conf == "ok") {
-                    $genre_id = getValInteger("genre_id");
-                    $this->Genre->set_dataPaste(array("ID_GENRE" => $genre_id ));
+                    
+                    
+                    $this->Genre->set_dataPaste(array("ID_GENRE" => $genre_id));
                     $this->Genre->load();
                     $this->Genre->delete();
                     $redirection = BDO_URL . "admin";
-                    echo '<META http-equiv="refresh" content="2; URL=' . $redirection . '">Le genre a &eacute;teacute; effac&eacute; de la base.';
+                    echo 'Le genre a &eacute;t&eacute; effac&eacute; de la base.<script>window.close();</script>';
                     exit();
                 } else {// Affiche la demande de confirmation
                     echo 'Etes-vous s&ucirc;r de vouloir effacer le genre n. ' . $genre_id . ' ? <a href="' . BDO_URL . 'admin/editgenre?act=delete&conf=ok&genre_id=' . $genre_id . '">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
@@ -1291,19 +1295,18 @@ class Admin extends Bdo_Controller {
 
                 $this->view->set_var(array(
                     "NBSERIES" => "0",
-                    "URLDELETE" => "javascript:alert('D�sactiv�');",
-                    "URLFUSION" => "javascript:alert('D�sactiv�');",
+                    "URLDELETE" => "javascript:alert('D&eacute;sactiv&eacute;');",
+                    "URLFUSION" => "javascript:alert('D&eacute;sactiv&eacute;');",
                     "ACTIONNAME" => "Enregistrer",
-                    "URLACTION" => BDO_URL . "admin/editgenre.php?act=append"
+                    "URLACTION" => BDO_URL . "admin/editgenre?act=append"
                 ));
                 $this->view->layout = "iframe";
-               $this->view->render();
-                
+                $this->view->render();
             }
 
 // INSERE UN NOUVEAU GENRE DANS LA BASE
             elseif ($act == "append") {
-                $this->Genre->set_dataPaste(array("LIBELLE" => postVal('txtGenre')));
+                $this->Genre->set_dataPaste(array("LIBELLE" => postVal('txtGenre'), "ORIGINE" =>postVal('origine') ));
                 $this->Genre->update();
                 $lid = $this->Genre->ID_GENRE;
                 echo GetMetaTag(2, "Le nouveau genre a &eacute;t&eacute; ajout&eacute;", (BDO_URL . "admin/editgenre?genre_id=" . $lid));
@@ -1311,26 +1314,134 @@ class Admin extends Bdo_Controller {
 
 // AFFICHER UN GENRE
             elseif ($act == "") {
-                
+
                 // Compte les albums pour lesquels les auteurs ont travaill�
-                $genre_id=getValInteger("genre_id");
+                $genre_id = getValInteger("genre_id");
                 $nb_serie = $this->Genre->getNbSerieForGenre($genre_id);
 
                 //r�cup�re les donn�es utilisateur dans la base de donn�e
-                $this->Genre->set_dataPaste(array("ID_GENRE" => $genre_id ));
+                $this->Genre->set_dataPaste(array("ID_GENRE" => $genre_id));
                 $this->Genre->load();
                 $this->view->set_var(array(
                     "IDGENRE" => $this->Genre->ID_GENRE,
                     "GENRE" => htmlentities(stripslashes($this->Genre->LIBELLE)),
                     "ORIGINE" => $this->Genre->ORIGINE,
                     "NBSERIES" => $nb_serie,
-                    "URLDELETE" => BDO_URL . "admin/editgenre.php?act=delete&genre_id=" . $genre_id,
+                    "URLDELETE" => BDO_URL . "admin/editgenre?act=delete&genre_id=" . $genre_id,
                     "URLFUSION" => BDO_URL . "admin/mergegenre?source_id=" . $genre_id,
                     "ACTIONNAME" => "Valider les Modifications",
                     "URLACTION" => BDO_URL . "admin/editgenre?act=update"
                 ));
-                  $this->view->layout = "iframe";
-                 $this->view->render();
+                $this->view->layout = "iframe";
+                $this->view->render();
+            }
+        } else {
+            die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+        }
+    }
+
+    public function editEditeur() {
+        if (User::minAccesslevel(1)) {
+            $this->loadModel("Editeur");
+            $act = getVal("act", "");
+            $editeur_id = getValInteger("editeur_id");
+            // Mettre � jour les informations
+            if ($act == "update") {
+                $this->Editeur->set_dataPaste(array(
+                    "ID_EDITEUR" => postValInteger("txtIdEditeur"),
+                    "NOM" => postVal('txtNomEditeur'),
+                    "URL_SITE" => postVal('txtUrlSite')
+                ));
+                $this->Editeur->update();
+                if (notIssetOrEmpty($this->Editeur->error)) {
+                    var_dump($this->Editeur->error);
+                    exit;
+                }
+                 $this->view->addAlertPage("Mise &agrave; jour effectu&eacute;e");
+                $this->view->addPhtmlFile('alert', 'BODY');
+                //$this->view->set_var("BODYONLOAD", "history.go(-1);");
+                $this->view->layout = "iframe";
+                $this->view->render();
+                
+            }
+
+// EFFACEMENT D'UN ALBUM
+            elseif ($act == "delete") {
+                $conf = getVal("conf","");
+                if ($conf == "ok") {
+                    $this->Editeur->set_dataPaste(array("ID_EDITEUR" => $editeur_id));
+                    $this->Editeur->load();
+                    $this->Editeur->delete();
+                    
+                    echo 'L\'&eacutediteur a &eacutet&eacute effac&eacute de la base.';
+                    exit();
+                } else {// Affiche la demande de confirmation
+                    echo 'Etes-vous sur de vouloir effacer l\'&eacutediteur n. ' . $editeur_id . ' ? <a href="' . BDO_URL . 'admin/editediteur?act=delete&conf=ok&editeur_id=' . $editeur_id . '">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
+                    exit();
+                }
+            }
+// AFFICHE UN FORMULAIRE VIDE
+            elseif ($act == "new") {
+               
+                $this->view->set_var(array
+                    ("NBCOLLEC" => "0",
+                    "URLDELETE" => "javascript:alert('D&eacutesactiv&eacute');",
+                    "URLADDCOLLEC" => "javascript:alert('D&eacutesactiv&eacute');",
+                    "URLFUSION" => "javascript:alert('D&eacutesactiv&eacute');",
+                    "ACTIONNAME" => "Enregistrer",
+                    "URLACTION" => BDO_URL . "admin/editediteur?act=append"
+                ));
+                $this->view->layout = "iframe";
+                $this->view->render();
+               
+            }
+// INSERE UN NOUVEL EDITEUR DANS LA BASE
+            elseif ($act == "append") {
+                   $this->Editeur->set_dataPaste(array(
+                       "NOM" => postVal("txtNomEditeur"),
+                       "URL_SITE" => postVal("txtUrlSite")
+                   ));
+                $this->Editeur->update();
+                $lid = $this->Editeur->ID_EDITEUR;
+               
+                // on ajpute la collection par défaut
+                // Insère un collection <N/A> pour cet �diteur
+                $this->loadModel("Collection");
+                $this->Collection->set_dataPaste(array(
+                    "ID_EDITEUR" => $lid,
+                    "NOM" => "<N/A>"
+                ));
+                $this->Collection->update();
+                
+                echo GetMetaTag(2, "L'&eacute;diteur a &eacute;t&eacute; ajout&eacute;", (BDO_URL . "admin/editediteur?editeur_id=" . $lid));
+            }
+
+// AFFICHER UN EDITEUR
+            elseif ($act == "") {
+
+               $this->loadModel("Collection");
+               $dbs_collection = $this->Collection->load("c", " WHERE bd_editeur.id_editeur=" . $editeur_id);
+
+                
+                $nb_collec = $this->Collection->dbSelect->nbLineResult;
+               
+                //r�cup�re les donn�es editeur dans la base de donn�e
+                $this->Editeur->set_dataPaste(array("ID_EDITEUR" => $editeur_id));
+                $this->Editeur->load();
+                $this->view->set_var(array
+                    ("IDEDITEUR" =>  $this->Editeur->ID_EDITEUR,
+                    "NOM" => $this->Editeur->NOM,
+                    "URLWEBSITE" => $this->Editeur->URL_SITE,
+                    "NBCOLLEC" => $nb_collec,
+                    "URLDELETE" => BDO_URL . "admin/editediteur?act=delete&editeur_id=" . $editeur_id,
+                    "URLFUSION" => BDO_URL . "admin/mergeediteur?source_id=" . $editeur_id,
+                    "URLADDCOLLEC" => BDO_URL . "admin/editcollection?act=new&editeur_id=" . $editeur_id,
+                    "ACTIONNAME" => "Valider les Modifications",
+                    "dbs_collection" => $dbs_collection,
+                    "URLACTION" => BDO_URL . "admin/editediteur?act=update"));
+               $this->view->layout = "iframe";
+                $this->view->render();
+                
             }
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");

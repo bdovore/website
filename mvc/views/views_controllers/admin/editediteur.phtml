@@ -1,0 +1,52 @@
+<script type="text/javascript">
+function valider(){
+  // si la valeur du champ prenom est non vide
+  if(document.forms['input_form'].elements['txtNomEditeur'].value != "") {
+    // les données sont ok, on peut envoyer le formulaire    
+    return true;
+  }
+  else {
+    // sinon on affiche un message
+    alert("Saisissez les champs requis");
+    // et on indique de ne pas envoyer le formulaire
+    return false;
+  }
+}
+</script>
+<form action="<?php echo $view->URLACTION;?>" method="post" name="input_form" onSubmit="return valider()">
+    <div class="cadre1">
+        <table width="100%" border="1" bgcolor="#FFFFCC" valign="top">
+          <tr bordercolor="#FFFFCC"> 
+            <td width="18%" height="27">Nom</td>
+            <td width="82%"><input name="txtIdEditeur" type="hidden" value="<?php echo $view->IDEDITEUR;?>"> 
+              <input name="txtNomEditeur" type="text" value="<?php echo $view->NOM;?>" size="38"></td>
+          </tr>
+          <tr bordercolor="#FFFFCC"> 
+            <td height="28">Site WEB</td>
+            <td> <input name="txtUrlSite" type="text" id="txtUrlSite" value="<?php echo $view->URLWEBSITE;?>" size="35"></td>
+          </tr>
+          <tr bordercolor="#FFFFCC"> 
+            <td colspan="2"> <input type="submit" name="Submit" value="<?php echo $view->ACTIONNAME;?>"></td>
+          </tr>
+        </table>
+    </div>
+    <div class="cadre1">
+   <p>Nombre de collections 
+          : <?php echo $view->NBCOLLEC;?><br>
+		<?php if (issetNotEmpty($view->dbs_collection)) {
+                    foreach ($view->dbs_collection->a_dataQuery as $collection ) { ?>
+          <a href="<?php echo BDO_URL."admin/editcollection?collec_id=".$collection->ID_COLLECTION; ?>"><?php echo htmlspecialchars($collection->NOM);?></a><br>
+			
+                    <?php }} ?>
+        </p>
+    </div>
+    <div class="cadre1">
+        <p><strong>Menu Express</strong></p>
+        <p><a href="<?php echo $view->URLDELETE;?>">Supprimer cet editeur</a><br>
+		<a href="<?php echo $view->URLFUSION;?>">Fusionner cet editeur</a><br>
+          <a href="<?php echo $view->URLADDCOLLEC;?>">Ajouter une collection &agrave; cet &eacute;diteur</a> 
+        </p>
+       
+    </div>
+
+</form>
