@@ -124,10 +124,12 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 			
                                 <font size="-1"><?php if ($view->tome->NB_NOTE_TOME > 0) { ?> <span id="noteTome<?php echo $view->tome->ID_TOME; ?>"> </span> <script>$('#noteTome<?php echo $view->tome->ID_TOME; ?>').raty({score: <?php echo $view->tome->MOYENNE_NOTE_TOME/2.0; ?>, readOnly: true});</script> pour <?php echo $view->tome->NB_NOTE_TOME ?> notes. <?php ;} ?></font>
                                 <br>
-			<?php echo $view->tome->NOM_GENRE;?>  -   <?php echo $view->tome->scpseudo; if ($view->tome->scpseudo <> $view->tome->depseudo) echo "/".$view->tome->depseudo; ?>   
+			<?php echo $view->tome->NOM_GENRE;?>  -   <?php echo $view->tome->scpseudo. ($view->tome->scapseudo == "Aucun" ? "" : " - ".$view->tome->scapseudo); if ($view->tome->scpseudo <> $view->tome->depseudo || $view->tome->deapseudo <> "Aucun" ) echo "/".$view->tome->depseudo.($view->tome->deapseudo == "Aucun" ? "" : " - ". $view->tome->deapseudo); ?>  
+                        <?php if ($view->tome->copseudo <> $view->tome->depseudo and $view->tome->copseudo <> "Aucun" and $view->tome->copseudo <> "<indéterminé>") echo "<br>Couleur : ".htmlspecialchars ($view->tome->copseudo); ?>
 					<br> <b>Edition </b> <font size="-1">
 			                <?php if (count($view->dbs_edition->a_dataQuery) == 1) {
-                                                echo $view->tome->NOM_EDITION ;
+                                                $dateparution = new DateTime($view->tome->DTE_PARUTION);
+                                                echo $view->tome->NOM_EDITEUR." - ".$dateparution->format("d/m/Y") ;
                                                 $edition_selected = $view->tome->ID_EDITION;
                                         }
                                         else {
@@ -140,7 +142,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                             echo "</select>";
                                         }
                                         ?>
-						<?php echo $view->tome->NOM_COLLECTION;?>
+						<?php echo $view->tome->NOM_COLLECTION == "<N/A>" ? "" : "<br> Collection ".$view->tome->NOM_COLLECTION;?>
 					<br> 
 						<span class="petite_police">
 					ISBN-13 (EAN) : <?php echo $view->tome->EAN_EDITION;?> || ISBN-10 : <?php echo $view->ISBN_EDITION;?> || ID-BDovore : <?php echo $view->tome->ID_TOME;?> </span>
