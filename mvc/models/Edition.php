@@ -62,7 +62,9 @@ class Edition extends Bdo_Db_Line
         	bd_edition.ean as EAN_EDITION, 
         	bd_edition.isbn as ISBN_EDITION, 
                 bd_edition.DTE_PARUTION as DATE_PARUTION_EDITION, 
-        
+                bd_edition.FLAG_DTE_PARUTION,
+                bd_edition.COMMENT as COMMENT_EDITION, 
+                bd_tome.id_edition as ID_EDITION_DEFAULT, 
                 c.ID_COLLECTION,
         	c.nom as NOM_COLLECTION,
         	
@@ -121,10 +123,7 @@ class Edition extends Bdo_Db_Line
                         ua.flg_achat as FLG_ACHAT,
                         IFNULL(ua.date_achat,ua.date_ajout) as DATE_ACHAT,
                         ua.cote as COTE,
-                        ua.flg_cadeau as FLG_CADEAU, 
-                        ua.DTE_PARUTION as USER_EDITION_DTE_PARUTION,
-                        ua.IMG_COUV as USER_EDITION_IMG_COUV,
-                        ua.comment_edition as USER_EDITION_COMMENT
+                        ua.flg_cadeau as FLG_CADEAU
                 ";
             $from .= " 
                     LEFT JOIN (
@@ -139,11 +138,7 @@ class Edition extends Bdo_Db_Line
                                 flg_achat,
                                 date_achat,
                                 cote,
-                                flg_cadeau,
-                                bd_edition.DTE_PARUTION,
-                                bd_edition.IMG_COUV,
-                                bd_edition.COMMENT as comment_edition,
-                                bd_edition.id_tome
+                                flg_cadeau
                            from users_album inner join bd_edition using (id_edition)
                            where users_album.user_id = ". intval($_SESSION['userConnect']->user_id) ."
                                 ) ua 

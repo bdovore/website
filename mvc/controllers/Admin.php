@@ -51,6 +51,7 @@ class Admin extends Bdo_Controller {
     }
 
     public function Proposition() {
+        $this->view->set_var(array("PAGETITLE" => "Proposition : liste"));
         /*
          * Page principale de gestion des propositions
          * Affiche les listes de proposition en attente
@@ -102,7 +103,7 @@ class Admin extends Bdo_Controller {
                     $urledit = "./editPropositionCorrection?ID=";
                     break;
                 case "EDITION" :
-                    $urledit = "./editEdition?ID=";
+                    $urledit = "./editedition?edition_id=";
                     break;
             }
 
@@ -209,6 +210,7 @@ class Admin extends Bdo_Controller {
     }
 
     public function editPropositionAjout() {
+        $this->view->set_var(array("PAGETITLE" => "Proposition : Ajout"));
         /*
          * Affichage d'une proposition d'ajout 
          * Gère aussi les actions : 
@@ -888,6 +890,7 @@ class Admin extends Bdo_Controller {
          * Edition d'une proposition de correction d'un album
          * Permet ensuite les actions de validation
          */
+        $this->view->set_var(array("PAGETITLE" => "Proposition : correction"));
         // Tableau pour les choix d'options
 // Avancement de la série
         $opt_status[0][0] = 0;
@@ -1135,6 +1138,7 @@ class Admin extends Bdo_Controller {
         /*
          * Ajout rapide d'une série
          */
+        $this->view->set_var(array("PAGETITLE" => "Ajout rapide : serie"));
         if (User::minAccesslevel(1)) {
             $act = getVal("act");
             // Mettre à jour les informations
@@ -1169,6 +1173,7 @@ class Admin extends Bdo_Controller {
     }
 
     public function addAuteur() {
+        $this->view->set_var(array("PAGETITLE" => "Ajout rapide : auteur"));
         if (User::minAccesslevel(1)) {
             $act = getVal("act", "");
             if ($act == "insert") {
@@ -1204,8 +1209,267 @@ class Admin extends Bdo_Controller {
     }
 
     public function editEdition() {
+        /*
+         * Gestion de éditions
+         */
         if (User::minAccesslevel(1)) {
-            
+            $act = getVal("act");
+            $edition_id = getValInteger("edition_id");
+            $conf = getVal("conf", "");
+            $this->loadModel("Edition");
+            $this->loadModel("Tome");
+            $this->view->set_var(array("PAGETITLE" => "Administration des Editions"));
+
+            // Mettre � jour les informations
+            if ($act == "update") {
+                $tome_id = postValInteger("txtTomeId");
+                $edition_id = postValInteger("txtEditionId");
+                if (is_file($_FILES["txtFileLoc"]["tmp_name"])) {// un fichier � uploader
+                    $img_couv = $this->imgCouvFromForm($tome_id, $edition_id);
+                } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal('txtFileURL'), $url_ary)) { // un fichier � t�l�charger
+                    $img_couv = $this->imgCouvFromUrl($url_ary, $tome_id, $edition_id);
+                } else {
+                    $img_couv = '';
+                }
+
+                if (postVal('FLAG_DTE_PARUTION') != "1")
+                    $txtDateParution = completeDate(postVal('txtDateParution'));
+                else
+                    $txtDateParution = '';
+                
+                $this->Edition->set_dataPaste(array(
+                    "ID_EDITION" => $edition_id,
+                    'DTE_PARUTION' => $txtDateParution,
+                    'FLAG_DTE_PARUTION' => ((postVal('FLAG_DTE_PARUTION') == "1") ? "1" : ""),
+                    'ID_EDITEUR' => postVal('txtEditeurId'),
+                    'ID_COLLECTION' => postVal('txtCollecId'),
+                    'EAN' => postVal('txtEAN'),
+                    'ISBN' => postVal("txtISBN"),
+                    'COMMENT' => postVal("txtComment"),
+                    "FLG_TT" => ((postVal('chkTT') == "checkbox") ? "O" : "N"),
+                    "VALIDATOR" => $_SESSION["userConnect"]->user_id,
+                    "VALID_DTE" => date('d/m/Y H:i:s')
+                ));
+
+
+                // v�rifie si la couverture a �t� chang�e
+                if ($img_couv != '') {
+                    $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
+                }
+                $this->Edition->update();
+                if (issetNotEmpty($this->Edition->error)) {
+                    var_dump($this->Edition->error);
+                    exit();
+                }
+
+                echo 'Mise &agrave; jour effectu&eacute;e dans la table bd_edition<br />';
+
+
+                // On rajoute un redimensionnement si le correcteur l'a voulu
+                if (postVal("chkResize") == "checked") {
+                    $id_edition = intval(postVal("txtEditionId"));
+                    $this->resize_edition_image($id_edition, BDO_DIR_COUV);
+                }
+
+                $redirection = BDO_URL . "admin/editalbum?alb_id=" . postVal("txtTomeId");
+                echo GetMetaTag(1, "L'&eactue;dition a &eactue;t&eactue; mise &agrave; jour", $redirection);
+                exit();
+            } elseif ($act == "delete") {// EFFACEMENT D'UNE EDITION
+                if ($conf == "ok") {
+
+                    // Determine s'il y a lieu d'effacer l'image
+                    $this->Edition->set_dataPaste(array("ID_EDITION" => $edition_id));
+                    $this->Edition->load();
+                    $url_img = $this->Edition->IMG_COUV;
+                    $id_tome = $this->Edition->ID_TOME;
+                    if ($url_img != '') {
+                        $filename = $url_img;
+                        if (file_exists(BDO_DIR_COUV . "$filename")) {
+                            unlink(BDO_DIR_COUV . "$filename");
+                            echo "Couverture effac&eactue;e<br />";
+                        }
+                    }
+
+                    // Efface l'�dition de la base
+                    $this->Edition->delete();
+                    $redirection = BDO_URL . "admin/editalbum?alb_id=" . $id_tome;
+                    echo GetMetaTag(1, "L'&eactue;dition a &eactue;t&eacute; &eacute;ffac&eacute;e de la base", $redirection);
+                    exit();
+                } else {// Affiche la demande de confirmation
+                    echo 'Etes-vous s&ucirc;r de vouloir effacer l\'&eacute;dition n. ' . $edition_id . ' ? <a href="' . BDO_URL . 'admin/editedition?act=delete&conf=ok&edition_id=' . $edition_id . '">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
+                    exit();
+                }
+            } elseif ($act == "autorize") {// ACTIVATION D'UNE EDITION
+                // Commence par activer l'�dition dans la base
+                $this->Edition->set_dataPaste(array(
+                    "ID_EDITION" => $edition_id));
+                $this->Edition->load();
+                $this->Edition->set_dataPaste(array(
+                    "PROP_STATUS" => "1",
+                    "VALIDATOR" => $_SESSION["userConnect"]->user_id,
+                    "VALID_DTE" => date('d/m/Y H:i:s')
+                ));
+                $this->Edition->update();
+                echo GetMetaTag(1, "L'&eacute;dition a &eacute;t&eacute; activ&eacute;e", BDO_URL . "admin/editalbum?alb_id=" . $this->Edition->ID_TOME);
+                exit();
+            }
+// AFFICHE UN FORMULAIRE VIDE
+            elseif ($act == "new") {
+                // determine si une r�f�rence d'album a �t� pass�
+                if (getVal("alb_id", "") <> "") {
+                    $alb_id = getValInteger($alb_id);
+                    $this->Tome->set_dataPaste(array("ID_TOME" => $alb_id));
+
+                    $alb_titre = $this->Tome->TITRE_TOME;
+                } else {
+                    $alb_titre = '';
+                    $alb_id = '';
+                }
+
+                $url_image = BDO_URL_COUV . "default.png";
+                // Creation d'un nouveau Template
+                $this->view->set_var(array(
+                    "URLIMAGE" => $url_image,
+                    "NBUSERS" => "0",
+                    "IDTOME" => $alb_id,
+                    "TITRE" => $alb_titre,
+                    "URLDELETE" => "javascript:alert('D&eactue;sactiv&eacute;');",
+                    "ACTIONNAME" => "Enregistrer",
+                    "URLACTION" => BDO_URL . "admin/editedition?act=append"
+                ));
+                // assigne la barre de login
+                $this->view->render();
+            }
+
+// INSERE UNE NOUVELLE EDITION DANS LA BASE
+            elseif ($act == "append") {
+                $id_tome = postValInteger('txtTomeId');
+
+                $txtDateParution = completeDate(postVal('txtDateParution'));
+                if (postVal('txtDateParution') == "")
+                    $flag_dte_par = 1;
+                else
+                    $flag_dte_par = ((postVal('FLAG_DTE_PARUTION') == "1") ? "1" : "");
+
+                $this->Edition->set_dataPaste(array(
+                    "ID_TOME" => $id_tome,
+                    "ID_EDITEUR" => postValIntger('txtEditeurId'),
+                    "ID_COLLECTION" => postValInteger('txtCollecId'),
+                    "DTE_PARUTION" => $txtDateParution,
+                    "FLAG_DTE_PARUTION" => $flag_dte_par,
+                    "EAN" => postVal("txtEAN"),
+                    'ISBN' => postVal("txtISBN"),
+                    'COMMENT' => postVal("txtComment"),
+                    "FLG_TT" => ((postVal('chkTT') == "checkbox") ? "O" : "N"),
+                    "VALIDATOR" => $_SESSION["userConnect"]->user_id,
+                    "VALID_DTE" => date('d/m/Y H:i:s')
+                ));
+                $this->Edition->update();
+                if (notIssetOrEmpty($this->Edition->error)) {
+                    var_dump($this->Edition->error);
+                    exit();
+                }
+                // r�cup�re la valeur de la derni�re insertion
+                $lid = $this->Edition->ID_EDITION;
+
+                // Verifie la pr�sence d'une image � t�l�charger
+                if (is_file($_FILES["txtFileLoc"]["tmp_name"])) { // un fichier � uploader
+                    $img_couv = $this->imgCouvFromForm($id_tome, $lid);
+                } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)) { // un fichier � t�l�charger
+                    $img_couv = $this->imgCouvFromUrl($url_ary, $id_tome, $lid);
+                } else {
+                    $img_couv = '';
+                }
+
+                if ($img_couv != '') {
+                    // met � jours la r�f�rence au fichier dans la table bd_edition
+                    $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
+                    $this->Edition->update();
+                }
+
+                // On rajoute un redimensionnement si le correcteur l'a voulu
+                if (postVal("chkResize") == "checked") {
+                    $this->resize_edition_image($lid, BDO_DIR_COUV);
+                }
+
+                echo GetMetaTag(2, "L'&eacute;dition a &eacute;t&eacute; ajout&eacute;e", (BDO_URL . "admin/editalbum?alb_id=" . $id_tome));
+            }
+
+// AFFICHER UNE EDITION
+            elseif ($act == "") {
+
+                // r�cup�rer le nombres dutilisateurs avec cette edition dans leur collection
+                $this->Edition->set_dataPaste(array("ID_EDITION" => $edition_id));
+               
+                $this->Edition->load();
+                $nbusers = intval($this->Edition->NBR_USER_ID);
+
+                // R�cup�re l'adresse mail de l'utilisateur
+
+                $mail_adress = $this->Edition->EMAIL;
+                $mailsubject = "Votre proposition de nouvelle &eacute;dition pour l'album : " . $this->Edition->TITRE_TOME;
+                $pseudo = $this->Edition->USERNAME;
+
+
+
+
+                // Determine l'URL image
+                if (is_null($this->Edition->IMG_COUV) | ($this->Edition->IMG_COUV == '')) {
+                    $url_image = BDO_URL_COUV . "default.png";
+                } else {
+                    $url_image = BDO_URL_COUV . $this->Edition->IMG_COUV;
+                    $dim_image = imgdim("$url_image");
+                }
+
+                // d�termine s'il est possible d'effacer cet album
+                if (($this->Edition->ID_EDITION == $this->Edition->ID_EDITION_DEFAULT) | ($nbusers > 0)) {
+                    $url_delete = "javascript:alert('Impossible d\'effacer cette &eacute;dition');";
+                } else {
+                    $url_delete = BDO_URL . "admin/editedition?act=delete&edition_id=" . $edition_id;
+                }
+                // Activation de l'edition
+                if ($this->Edition->PROP_STATUS == 0) {
+                    $actionautorise = "<a href=\"" . BDO_URL . "admin/editedition?act=autorize&edition_id=" . $edition_id . "\">Activer cette &eacute;dition</a>";
+                    $contactuser = "propos&eacute;e par <a href=\"mailto:" . $mail_adress . "?subject=" . $mailsubject . "\" style=\"font-weight: bold;\">" . $pseudo . "</a> (" . $mail_adress . ")<br />";
+                }
+
+                $this->view->set_var(array(
+                    "IDTOME" => $this->Edition->ID_TOME,
+                    "IDEDITION" => $edition_id,
+                    "TITRE" => stripslashes($this->Edition->TITRE_TOME),
+                    "IDEDIT" => $this->Edition->ID_EDITEUR,
+                    "EDITEUR" => $this->Edition->NOM_EDITEUR,
+                    "IDCOLLEC" => $this->Edition->ID_COLLECTION,
+                    "COLLECTION" => $this->Edition->NOM_COLLECTION,
+                    "DTPAR" => $this->Edition->DATE_PARUTION_EDITION,
+                    "CHKFLAG_DTE_PARUTION" => (($this->Edition->FLAG_DTE_PARUTION == 1) ? 'CHECKED' : ''),
+                    "COMMENT" => stripslashes($this->Edition->COMMENT_EDITION),
+                    "ISTT" => (($this->Edition->FLG_TT == 'O') ? 'checked' : ''),
+                    "FLGDEF" => (($this->Edition->ID_EDITION == $this->Edition->ID_EDITION_DEFAULT ? 'O' : '')),
+                    "EAN" => $this->Edition->EAN_EDITION,
+                    "URLEAN" => "http://www.bdnet.com/" . $this->Edition->EAN_EDITION . "/alb.htm",
+                    "ISBN" => $this->Edition->ISBN_EDITION,
+                    "URLISBN" => "http://www.amazon.fr/exec/obidos/ASIN/" . $this->Edition->ISBN_EDITION,
+                    "URLIMAGE" => $url_image,
+                    "DIMIMAGE" => $dim_image,
+                    "NBUSERS" => $nbusers,
+                    "VIEWUSEREDITION" => "<a href='" . BDO_URL . "admin/viewUserEdition.php?id_edition=" . $edition_id . "'>(voir les utilisateurs)</a>",
+                    "ACTIONAUTORIZE" => $actionautorise,
+                    "CONTACTUSER" => $contactuser,
+                    "URLDELETE" => $url_delete,
+                    "URLFUSION" => BDO_URL . "admin/mergealbums?source_id=" . $this->Edition->ID_TOME,
+                    "URLFUSIONEDITION" => BDO_URL . "admin/mergeeditions?source_id=" . $edition_id,
+                    "URLEDITEDIT" => BDO_URL . "admin/editediteur?editeur_id=" . $this->Edition->ID_EDITEUR,
+                    "URLEDITCOLL" => BDO_URL . "admin/editcollection?collec_id=" . $this->Edition->ID_COLLECTION,
+                    "ACTIONNAME" => "Valider les Modifications",
+                    "URLACTION" => BDO_URL . "admin/editedition?act=update"
+                ));
+                if ($this->Edition->DTE_PARUTION == "0000-00-00") {
+                    $this->view->set_var("PARUTION_0", "to_be_corrected");
+                }
+
+                $this->view->render();
+            }
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }
@@ -1450,8 +1714,8 @@ class Admin extends Bdo_Controller {
          * Methode d'ajout / suppression / modification d'une collection
          */
         if (User::minAccesslevel(1)) {
-            $act = getVal("act","");
-            $conf = getVal("conf","");
+            $act = getVal("act", "");
+            $conf = getVal("conf", "");
             $collec_id = getValInteger("collec_id");
             $this->loadModel("Collection");
             // Mettre à jour les informations
@@ -1461,16 +1725,16 @@ class Admin extends Bdo_Controller {
                     "ID_EDITEUR" => postVal('txtEditeurId'),
                     "ID_COLLECTION" => postValInteger("txtIdColl")
                 ));
-               $this->Collection->update();
+                $this->Collection->update();
                 echo '<META http-equiv="refresh" content="2; URL=javascript:history.go(-1)">' . "Mise &agrave; jour effectu&eacute;e";
             }
 
 // EFFACEMENT D'UNE COLLECTION
             elseif ($act == "delete") {
                 if ($conf == "ok") {
-                    $this->Collection->set_dataPaste(array( "ID_COLLECTION" => $collec_id));
+                    $this->Collection->set_dataPaste(array("ID_COLLECTION" => $collec_id));
                     $this->Collection->delete();
-                    
+
                     echo 'La collection a &eacute;t&eacute; effac&eacute;e de la base.';
                     exit();
                 } else {
@@ -1481,11 +1745,11 @@ class Admin extends Bdo_Controller {
             }
 // AFFICHE UN FORMULAIRE VIDE
             elseif ($act == "new") {
-               $editeur_id = getValInteger("editeur_id",0);
+                $editeur_id = getValInteger("editeur_id", 0);
                 if ($editeur_id) {// Un �diteur a �t� pass� dans l'URL
                     $this->loadModel("Editeur");
                     $this->Editeur->set_dataPaste(array("ID_EDITEUR" => $editeur_id));
-                   $this->Editeur->load();
+                    $this->Editeur->load();
 
                     $this->view->set_var(array(
                         "IDEDITEUR" => $this->Editeur->ID_EDITEUR,
@@ -1504,16 +1768,16 @@ class Admin extends Bdo_Controller {
                 $this->view->render();
             }
 
-// INSERE UN NOUVEL ALBUM DANS LA BASE
+// INSERE UNE NOUVELLE COLLECTION DANS LA BASE
             elseif ($act == "append") {
                 $this->Collection->set_dataPaste(array(
-                    'NOM' => postVal('txtNomColl'), 
+                    'NOM' => postVal('txtNomColl'),
                     'ID_EDITEUR' => postValInteger("txtEditeurId")
                 ));
                 $this->Collection->update();
-                $lid= $this->Collection->ID_COLLECTION;
+                $lid = $this->Collection->ID_COLLECTION;
                 echo GetMetaTag(2, "La collection a &eacute;t&eacute; ajout&eacute", (BDO_URL . "admin/editcollection?collec_id=" . $lid));
-                 exit();
+                exit();
             }
 
 // AFFICHER UNE COLLECTION
@@ -1521,11 +1785,11 @@ class Admin extends Bdo_Controller {
                 // on compte le nombre d'albums dans la collection
                 $nb_albums = $this->Collection->getNbAlbumForCollection($collec_id);
                 $this->Collection->set_dataPaste(array("ID_COLLECTION" => $collec_id));
-               $this->Collection->load(); 
-               //r�cup�re les donn�es
-               
+                $this->Collection->load();
+                //r�cup�re les donn�es
 
-                
+
+
                 $this->view->set_var(array(
                     "IDCOLL" => $this->Collection->ID_COLLECTION,
                     "NOM" => htmlentities(stripslashes($this->Collection->NOM)),
@@ -1867,6 +2131,103 @@ class Admin extends Bdo_Controller {
             exit();
         }
         return $newfilename;
+    }
+
+    private function resize_edition_image($id_edition, $imagedir) {
+        //Redimensionnement
+        //*****************
+        global $DB;
+
+        // cherche les infos de cette �dition
+        $query = "SELECT id_tome, img_couv FROM bd_edition WHERE id_edition = " . $DB->escape($id_edition);
+        $DB->query($query);
+        $DB->next_record();
+        $id_tome = $DB->f("id_tome");
+        $url_img = $DB->f("img_couv");
+
+
+        if ($url_img == '') {
+            echo "error : no image in database<br/>";
+        } else {
+            $newfilename = $url_img;
+
+            $max_size = 180;
+
+            //if ($_SERVER["SERVER_NAME"] != 'localhost')
+            $imageproperties = getimagesize($imagedir . $newfilename);
+            //else $imageproperties = false;
+
+            if ($imageproperties != false) {
+                $imagetype = $imageproperties[2];
+                $imagelargeur = $imageproperties[0];
+                $imagehauteur = $imageproperties[1];
+
+                //D�termine s'il y a lieu de redimensionner l'image
+                if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $maxsize)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
+
+                    if ($imagelargeur < $imagehauteur) {
+                        // image de type panorama : on limite la largeur � 128
+                        $new_w = $max_size;
+                        $new_h = round($imagehauteur * $max_size / $imagelargeur);
+                    } else {
+                        // imahe de type portrait : on limite la hauteur au maxi
+                        $new_h = $max_size;
+                        $new_w = round($imagelargeur * $max_size / $imagehauteur);
+                    }
+                } else {
+                    $new_h = $imagehauteur;
+                    $new_w = $imagelargeur;
+                }
+
+                $new_image = imagecreatetruecolor($new_w, $new_h);
+
+                switch ($imagetype) {
+                    case "1":
+                        $source = imagecreatefromgif($imagedir . $newfilename);
+                        break;
+
+                    case "2":
+                        $source = imagecreatefromjpeg($imagedir . $newfilename);
+                        break;
+
+                    case "3":
+                        $source = imagecreatefrompng($imagedir . $newfilename);
+                        break;
+
+                    case "6":
+                        $source = imagecreatefrombmp($imagedir . $newfilename);
+                        break;
+                }
+
+                imagecopyresampled($new_image, $source, 0, 0, 0, 0, $new_w, $new_h, $imagelargeur, $imagehauteur);
+
+                switch ($imagetype) {
+                    case "2":
+                        unlink($imagedir . $newfilename);
+                        imagejpeg($new_image, $imagedir . $newfilename, 100);
+                        break;
+
+                    case "1":
+                    case "3":
+                    case "6":
+                        unlink($imagedir . $newfilename);
+                        $img_couv = substr($newfilename, 0, strlen($newfilename) - 3) . "jpg";
+                        imagejpeg($new_image, $imagedir . $img_couv, 100);
+
+
+                        // met � jours la r�f�rence au fichier dans la table bd_edition
+                        $query = "UPDATE bd_edition SET";
+                        $query .= " `img_couv` = '" . $DB->escape($img_couv) . "'";
+                        $query .=" WHERE (`id_edition`=" . $DB->escape($id_edition) . ")";
+                        $DB->query($query);
+                }
+            } else {
+                echo "error : no image properties <br/>";
+            }
+
+            echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
+            echo "Image redimensionn�e<br />";
+        }
     }
 
 }
