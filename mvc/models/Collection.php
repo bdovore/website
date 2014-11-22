@@ -92,4 +92,18 @@ LEFT JOIN `bd_editeur` USING(`ID_EDITEUR`)
         
         return $dbSearch;
     }
+    
+    public function getNbAlbumForCollection($id_collection) {
+        /*
+         * Fonction qui renvoie le nombre d'album dans une collection donnée
+         */
+        $query = "SELECT count(distinct(bd_tome.ID_TOME)) as numofalb
+	FROM bd_tome
+	INNER JOIN bd_edition ON bd_tome.ID_EDITION=bd_edition.ID_EDITION 
+	WHERE bd_edition.id_collection=" . intval($id_collection);
+        $resultat = Db_query($query);
+        $obj = Db_fetch_object($resultat);
+        
+        return $obj->numofalb;
+    }
 }

@@ -1276,8 +1276,8 @@ class Admin extends Bdo_Controller {
             elseif ($act == "delete") {
                 $conf = getVal("conf");
                 if ($conf == "ok") {
-                    
-                    
+
+
                     $this->Genre->set_dataPaste(array("ID_GENRE" => $genre_id));
                     $this->Genre->load();
                     $this->Genre->delete();
@@ -1306,7 +1306,7 @@ class Admin extends Bdo_Controller {
 
 // INSERE UN NOUVEAU GENRE DANS LA BASE
             elseif ($act == "append") {
-                $this->Genre->set_dataPaste(array("LIBELLE" => postVal('txtGenre'), "ORIGINE" =>postVal('origine') ));
+                $this->Genre->set_dataPaste(array("LIBELLE" => postVal('txtGenre'), "ORIGINE" => postVal('origine')));
                 $this->Genre->update();
                 $lid = $this->Genre->ID_GENRE;
                 echo GetMetaTag(2, "Le nouveau genre a &eacute;t&eacute; ajout&eacute;", (BDO_URL . "admin/editgenre?genre_id=" . $lid));
@@ -1357,22 +1357,21 @@ class Admin extends Bdo_Controller {
                     var_dump($this->Editeur->error);
                     exit;
                 }
-                 $this->view->addAlertPage("Mise &agrave; jour effectu&eacute;e");
+                $this->view->addAlertPage("Mise &agrave; jour effectu&eacute;e");
                 $this->view->addPhtmlFile('alert', 'BODY');
                 //$this->view->set_var("BODYONLOAD", "history.go(-1);");
                 $this->view->layout = "iframe";
                 $this->view->render();
-                
             }
 
 // EFFACEMENT D'UN ALBUM
             elseif ($act == "delete") {
-                $conf = getVal("conf","");
+                $conf = getVal("conf", "");
                 if ($conf == "ok") {
                     $this->Editeur->set_dataPaste(array("ID_EDITEUR" => $editeur_id));
                     $this->Editeur->load();
                     $this->Editeur->delete();
-                    
+
                     echo 'L\'&eacutediteur a &eacutet&eacute effac&eacute de la base.';
                     exit();
                 } else {// Affiche la demande de confirmation
@@ -1382,7 +1381,7 @@ class Admin extends Bdo_Controller {
             }
 // AFFICHE UN FORMULAIRE VIDE
             elseif ($act == "new") {
-               
+
                 $this->view->set_var(array
                     ("NBCOLLEC" => "0",
                     "URLDELETE" => "javascript:alert('D&eacutesactiv&eacute');",
@@ -1393,17 +1392,16 @@ class Admin extends Bdo_Controller {
                 ));
                 $this->view->layout = "iframe";
                 $this->view->render();
-               
             }
 // INSERE UN NOUVEL EDITEUR DANS LA BASE
             elseif ($act == "append") {
-                   $this->Editeur->set_dataPaste(array(
-                       "NOM" => postVal("txtNomEditeur"),
-                       "URL_SITE" => postVal("txtUrlSite")
-                   ));
+                $this->Editeur->set_dataPaste(array(
+                    "NOM" => postVal("txtNomEditeur"),
+                    "URL_SITE" => postVal("txtUrlSite")
+                ));
                 $this->Editeur->update();
                 $lid = $this->Editeur->ID_EDITEUR;
-               
+
                 // on ajpute la collection par défaut
                 // Insère un collection <N/A> pour cet �diteur
                 $this->loadModel("Collection");
@@ -1412,24 +1410,24 @@ class Admin extends Bdo_Controller {
                     "NOM" => "<N/A>"
                 ));
                 $this->Collection->update();
-                
+
                 echo GetMetaTag(2, "L'&eacute;diteur a &eacute;t&eacute; ajout&eacute;", (BDO_URL . "admin/editediteur?editeur_id=" . $lid));
             }
 
 // AFFICHER UN EDITEUR
             elseif ($act == "") {
 
-               $this->loadModel("Collection");
-               $dbs_collection = $this->Collection->load("c", " WHERE bd_editeur.id_editeur=" . $editeur_id);
+                $this->loadModel("Collection");
+                $dbs_collection = $this->Collection->load("c", " WHERE bd_editeur.id_editeur=" . $editeur_id);
 
-                
+
                 $nb_collec = $this->Collection->dbSelect->nbLineResult;
-               
+
                 //r�cup�re les donn�es editeur dans la base de donn�e
                 $this->Editeur->set_dataPaste(array("ID_EDITEUR" => $editeur_id));
                 $this->Editeur->load();
                 $this->view->set_var(array
-                    ("IDEDITEUR" =>  $this->Editeur->ID_EDITEUR,
+                    ("IDEDITEUR" => $this->Editeur->ID_EDITEUR,
                     "NOM" => $this->Editeur->NOM,
                     "URLWEBSITE" => $this->Editeur->URL_SITE,
                     "NBCOLLEC" => $nb_collec,
@@ -1439,9 +1437,8 @@ class Admin extends Bdo_Controller {
                     "ACTIONNAME" => "Valider les Modifications",
                     "dbs_collection" => $dbs_collection,
                     "URLACTION" => BDO_URL . "admin/editediteur?act=update"));
-               $this->view->layout = "iframe";
+                $this->view->layout = "iframe";
                 $this->view->render();
-                
             }
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
@@ -1449,8 +1446,100 @@ class Admin extends Bdo_Controller {
     }
 
     public function editCollection() {
+        /*
+         * Methode d'ajout / suppression / modification d'une collection
+         */
         if (User::minAccesslevel(1)) {
-            
+            $act = getVal("act","");
+            $conf = getVal("conf","");
+            $collec_id = getValInteger("collec_id");
+            $this->loadModel("Collection");
+            // Mettre à jour les informations
+            if ($act == "update") {
+                $this->Collection->set_dataPaste(array(
+                    "NOM" => postVal('txtNomColl'),
+                    "ID_EDITEUR" => postVal('txtEditeurId'),
+                    "ID_COLLECTION" => postValInteger("txtIdColl")
+                ));
+               $this->Collection->update();
+                echo '<META http-equiv="refresh" content="2; URL=javascript:history.go(-1)">' . "Mise &agrave; jour effectu&eacute;e";
+            }
+
+// EFFACEMENT D'UNE COLLECTION
+            elseif ($act == "delete") {
+                if ($conf == "ok") {
+                    $this->Collection->set_dataPaste(array( "ID_COLLECTION" => $collec_id));
+                    $this->Collection->delete();
+                    
+                    echo 'La collection a &eacute;t&eacute; effac&eacute;e de la base.';
+                    exit();
+                } else {
+                    // Affiche la demande de confirmation
+                    echo 'Etes-vous s&ucirc;r de vouloir effacer la collection  n. ' . $collec_id . ' ? <a href="' . BDO_URL . 'admin/editcollection?act=delete&conf=ok&collec_id=' . $collec_id . '">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
+                    exit();
+                }
+            }
+// AFFICHE UN FORMULAIRE VIDE
+            elseif ($act == "new") {
+               $editeur_id = getValInteger("editeur_id",0);
+                if ($editeur_id) {// Un �diteur a �t� pass� dans l'URL
+                    $this->loadModel("Editeur");
+                    $this->Editeur->set_dataPaste(array("ID_EDITEUR" => $editeur_id));
+                   $this->Editeur->load();
+
+                    $this->view->set_var(array(
+                        "IDEDITEUR" => $this->Editeur->ID_EDITEUR,
+                        "EDITEUR" => htmlentities(stripslashes($this->Editeur->NOM)),
+                    ));
+                }
+
+                $this->view->set_var(array(
+                    "NBCOLALB" => "0",
+                    "URLDELETE" => "javascript:alert('D&eacute;sactiv&eacute;');",
+                    "ACTIONNAME" => "Enregistrer",
+                    "URLEDITEDIT" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
+                    "URLACTION" => BDO_URL . "admin/editcollection?act=append"
+                ));
+                $this->view->layout = "iframe";
+                $this->view->render();
+            }
+
+// INSERE UN NOUVEL ALBUM DANS LA BASE
+            elseif ($act == "append") {
+                $this->Collection->set_dataPaste(array(
+                    'NOM' => postVal('txtNomColl'), 
+                    'ID_EDITEUR' => postValInteger("txtEditeurId")
+                ));
+                $this->Collection->update();
+                $lid= $this->Collection->ID_COLLECTION;
+                echo GetMetaTag(2, "La collection a &eacute;t&eacute; ajout&eacute", (BDO_URL . "admin/editcollection?collec_id=" . $lid));
+                 exit();
+            }
+
+// AFFICHER UNE COLLECTION
+            elseif ($act == "") {
+                // on compte le nombre d'albums dans la collection
+                $nb_albums = $this->Collection->getNbAlbumForCollection($collec_id);
+                $this->Collection->set_dataPaste(array("ID_COLLECTION" => $collec_id));
+               $this->Collection->load(); 
+               //r�cup�re les donn�es
+               
+
+                
+                $this->view->set_var(array(
+                    "IDCOLL" => $this->Collection->ID_COLLECTION,
+                    "NOM" => htmlentities(stripslashes($this->Collection->NOM)),
+                    "IDEDITEUR" => $this->Collection->ID_EDITEUR,
+                    "EDITEUR" => htmlentities(stripslashes($this->Collection->NOM_EDITEUR)),
+                    "NBCOLALB" => $nb_albums,
+                    "URLDELETE" => BDO_URL . "admin/editcollection?act=delete&collec_id=" . $this->Collection->ID_COLLECTION,
+                    "ACTIONNAME" => "Valider les Modifications",
+                    "URLEDITEDIT" => BDO_URL . "admin/editediteur?editeur_id=" . $this->Collection->ID_EDITEUR,
+                    "URLACTION" => BDO_URL . "admin/editcollection?act=update"
+                ));
+                $this->view->layout = "iframe";
+                $this->view->render();
+            }
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }
