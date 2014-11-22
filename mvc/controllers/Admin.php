@@ -621,7 +621,7 @@ class Admin extends Bdo_Controller {
 
                 // On rajoute un redimensionnement si le correcteur l'a voulu
 
-                if ($_POST["chkResize"] == "checked") {
+                if (postVal("chkResize") == "checked") {
 
                     //Redimensionnement
                     //*****************
@@ -732,7 +732,7 @@ class Admin extends Bdo_Controller {
                     $mail_entete = "From: no-reply@bdovore.com";
                     $mail_text = "Bonjour, \n\n";
                     $mail_text .="Votre proposition d'ajout &agrave; la base de donn&eacute;es de BDOVORE a &eacute;t&eacute; valid&eacute;e.\n\n";
-                    $mail_text .="Titre : " . $_POST['txtTitre'] . "\n";
+                    $mail_text .="Titre : " . postVal('txtTitre') . "\n";
                     $mail_text .=$mail_action[$prop_action];
                     $mail_text .="Merci pour votre participation\n\n";
                     $mail_text .="L'&eacute;quipe BDOVORE";
@@ -1236,7 +1236,7 @@ class Admin extends Bdo_Controller {
                     $txtDateParution = completeDate(postVal('txtDateParution'));
                 else
                     $txtDateParution = '';
-                
+
                 $this->Edition->set_dataPaste(array(
                     "ID_EDITION" => $edition_id,
                     'DTE_PARUTION' => $txtDateParution,
@@ -1375,7 +1375,7 @@ class Admin extends Bdo_Controller {
                 // Verifie la pr�sence d'une image � t�l�charger
                 if (is_file($_FILES["txtFileLoc"]["tmp_name"])) { // un fichier � uploader
                     $img_couv = $this->imgCouvFromForm($id_tome, $lid);
-                } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)) { // un fichier � t�l�charger
+                } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal('txtFileURL'), $url_ary)) { // un fichier � t�l�charger
                     $img_couv = $this->imgCouvFromUrl($url_ary, $id_tome, $lid);
                 } else {
                     $img_couv = '';
@@ -1400,7 +1400,7 @@ class Admin extends Bdo_Controller {
 
                 // r�cup�rer le nombres dutilisateurs avec cette edition dans leur collection
                 $this->Edition->set_dataPaste(array("ID_EDITION" => $edition_id));
-               
+
                 $this->Edition->load();
                 $nbusers = intval($this->Edition->NBR_USER_ID);
 
@@ -1485,19 +1485,114 @@ class Admin extends Bdo_Controller {
 
     public function editAuteur() {
         if (User::minAccesslevel(1)) {
-            $action = getVal("action", "");
-            $mode = getVal("mode", "");
+            $act = getVal("act");
+            $conf = getVal("conf");
+            $auteur_id = getVal("auteur_id");
+            $this->view->layout = "iframe";
+            $this->loadModel("Auteur");
+            // Mettre � jour les informations
+            if ($act == "update") {
+                $nom = postVal('txtNomAuteur');
+                $prenom = postVal('txtPrenomAuteur');
+                $pseudo = (postVal('txtPseudoAuteur') == '' ?  postVal('txtNomAuteur') . ", " .
+                                postVal('txtPrenomAuteur') . "'" : "'" . postVal('txtPseudoAuteur') );
 
-            if ($action == "add") {
-                /*
-                 * Ajout d'un auteur
-                 */
+                $this->Auteur->set_dataPaste(array(
+                    "ID_AUTEUR" => postVal("txtIdAuteur"),
+                    "PRENOM" => $prenom,
+                    "NOM" => $nom,
+                    "FLG_SCENAR" => postVal('chkScen') == 'checked' ? 1 : 0,
+                    "FLG_DESSIN" => postVal('chkDess') == 'checked' ? 1 : 0,
+                    "FLG_COLOR" => (postVal('chkColor') == 'checked' ? 1 : 0),
+                    "COMMENT" => postVal('txtCommentaire'),
+                    "DTE_NAIS" => postVal('txtDateNaiss'),
+                    "DTE_DECES" => postVal('txtDateDeces'),
+                    "NATIONALITE" => postVal('txtNation')
+                ));
+               $this->Auteur->update();
+                echo '<META http-equiv="refresh" content="1; URL=javascript:history.go(-1)">' . "Mise &agrave; jour effectu&eacute;e";
             }
 
-            if ($mode == "iframe") {
-                /*
-                 * Affichage en mode ajout rapide
-                 */
+// effacement d'un auteur
+            elseif ($act == "delete") {
+                if ($conf == "ok") {
+                    if (User::minAccesslevel(1)) {//Rev�rifie que c'est bien l'administrateur qui travaille
+                         $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $auteur_id));
+                        $this->Auteur->delete();
+                        echo 'L\'auteur a &eacute;t&eacute; effac&eacute;e de la base.';
+                        exit();
+                    }
+                } else {// Affiche la demande de confirmation
+                    echo 'Etes-vous s&ucirc;r de vouloir effacer l\'auteur n. ' . $auteur_id . ' ? <a href="' . BDO_URL . 'admin/editauteur?act=delete&conf=ok&auteur_id=' . $auteur_id . '">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
+                    exit();
+                }
+            }
+// AFFICHE UN FORMULAIRE VIDE
+            elseif ($act == "new") {
+               
+                $this->view->set_var(array
+                    ("NBALBUMS" => "0",
+                    "URLDELETE" => "javascript:alert('D&eacute;sactiv&eacute;');",
+                    "URLFUSION" => "javascript:alert('D&eacute;sactiv&eacute;');",
+                    "ACTIONNAME" => "Enregistrer",
+                    "URLACTION" => BDO_URL . "admin/editauteur?act=append"
+                ));
+                
+                $this->view->render();
+               
+            }
+
+// INSERE UN NOUVEL ALBUM DANS LA BASE
+            elseif ($act == "append") {
+               $nom = postVal('txtNomAuteur');
+                $prenom = postVal('txtPrenomAuteur');
+                $pseudo = (postVal('txtPseudoAuteur') == '' ?  postVal('txtNomAuteur') . ", " .
+                                postVal('txtPrenomAuteur') . "'" : "'" . postVal('txtPseudoAuteur') );
+
+               $this->Auteur->set_dataPaste(array(
+                    "PRENOM" => $prenom,
+                    "NOM" => $nom,
+                    "FLG_SCENAR" => postVal('chkScen') == 'checked' ? 1 : 0,
+                    "FLG_DESSIN" => postVal('chkDess') == 'checked' ? 1 : 0,
+                    "FLG_COLOR" => (postVal('chkColor') == 'checked' ? 1 : 0),
+                    "COMMENT" => postVal('txtCommentaire'),
+                    "DTE_NAIS" => postVal('txtDateNaiss'),
+                    "DTE_DECES" => postVal('txtDateDeces'),
+                    "NATIONALITE" => postVal('txtNation')
+                ));
+               $this->Auteur->update();
+                $lid =$this->Auteur->ID_AUTEUR ;
+                echo GetMetaTag(2, "L'auteur a &eacute;t&eacute; ajout&eacute;", (BDO_URL . "admin/editauteur?auteur_id=" . $lid));
+            }
+
+// AFFICHER UN AUTEUR
+            elseif ($act == "") {
+               
+                // Compte les albums pour lesquels les auteurs ont travaill�
+                $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $auteur_id));
+                $this->Auteur->load();
+                $nb_auteur = intval($this->Auteur->getNbAlbumForAuteur($auteur_id));
+                
+                
+                $this->view->set_var(array
+                    ("IDAUTEUR" => $this->Auteur->ID_AUTEUR,
+                    "PSEUDO" => stripslashes($this->Auteur->PSEUDO),
+                    "NOM" => (stripslashes($this->Auteur->NOM)),
+                    "PRENOM" => (stripslashes($this->Auteur->PRENOM)),
+                    "ISSCENAR" => $this->Auteur->FLG_SCENAR == 1 ? checked : '',
+                    "ISDESSIN" => $this->Auteur->FLG_DESSIN == 1 ? checked : '',
+                    "ISCOLOR" => $this->Auteur->FLG_COLOR == 1 ? checked : '',
+                    "COMMENT" => (stripslashes($this->Auteur->COMMENT)),
+                    "DTNAIS" => $this->Auteur->DTE_NAIS,
+                    "DTDECES" => $this->Auteur->DTE_DECES,
+                    "DTNATION" => $this->Auteur->NATIONALITE,
+                    "NBALBUMS" => $nb_auteur,
+                    "URLDELETE" => BDO_URL . "admin/editauteur?act=delete&auteur_id=" . $this->Auteur->ID_AUTEUR,
+                    "URLFUSION" => BDO_URL . "admin/mergeauteurs?source_id=" . $this->Auteur->ID_AUTEUR,
+                    "ACTIONNAME" => "Valider les Modifications",
+                    "URLACTION" => BDO_URL . "admin/editauteur?act=update"));
+                
+                $this->view->render();
             }
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
@@ -1880,7 +1975,7 @@ class Admin extends Bdo_Controller {
             echo 'Info s&eacute;rie : base bd_serie mise a jour.<br />';
 
             // copie l'image dans les couvertures
-            if (($prop_img != '') && ($_POST['chkDelete'] != 'checked') && $edition != 0) {
+            if (($prop_img != '') && (postVal('chkDelete') != 'checked') && $edition != 0) {
                 $newfilename = "CV-" . sprintf("%06d", $lid) . "-" . sprintf("%06d", $edition);
                 $strLen = strlen($prop_img);
                 $newfilename .= substr($prop_img, $strLen - 4, $strLen); //file extension
@@ -1896,10 +1991,10 @@ class Admin extends Bdo_Controller {
 
                     /*
                       $query = "UPDATE bd_edition SET ";
-                      $query .= "`id_editeur` = ".$DB->escape($_POST['txtEditeurId']).", ";
-                      $query .= "`id_collection` = ".$DB->escape($_POST['txtCollecId']).", ";
-                      $query .= "`ean` = ".($_POST['txtEAN']=='' ? "NULL" :  "'".$DB->escape($_POST['txtEAN']). "'").", ";
-                      $query .= "`isbn` = ".($_POST['txtISBN']=='' ? "NULL" :  "'".$DB->escape($_POST['txtISBN']). "'").", ";
+                      $query .= "`id_editeur` = ".$DB->escape(postVal('txtEditeurId']).", ";
+                      $query .= "`id_collection` = ".$DB->escape(postVal('txtCollecId']).", ";
+                      $query .= "`ean` = ".(postVal('txtEAN']=='' ? "NULL" :  "'".$DB->escape(postVal('txtEAN']). "'").", ";
+                      $query .= "`isbn` = ".(postVal('txtISBN']=='' ? "NULL" :  "'".$DB->escape(postVal('txtISBN']). "'").", ";
                       $query .=" WHERE (`id_tome`=".$lid.");";
                       $DB->query($query);
                       echo 'Info édition : base bd_edition mise à jour.<br />';

@@ -111,4 +111,20 @@ class Auteur extends Bdo_Db_Line
     public function searchJSON() {
         
     }
+    
+    public function getNbAlbumForAuteur($auteur_id) {
+        $query = "
+	select 
+		count(*) as nbtome 
+	from 
+		bd_tome 
+	where 
+		id_scenar = " . intval($auteur_id) . " 
+		or id_dessin = " . intval($auteur_id) . " 
+		or id_color = " . intval($auteur_id) . "";
+         $resultat = Db_query($query);
+        $obj = Db_fetch_object($resultat);
+        
+        return $obj->nbtome;
+    }
 }
