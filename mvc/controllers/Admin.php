@@ -1212,6 +1212,7 @@ class Admin extends Bdo_Controller {
         /*
          * Gestion de éditions
          */
+        $this->view->set_var(array("PAGETITLE" => "Admin : Edition"));
         if (User::minAccesslevel(1)) {
             $act = getVal("act");
             $edition_id = getValInteger("edition_id");
@@ -1480,6 +1481,7 @@ class Admin extends Bdo_Controller {
          * Methode d'édition / modification / suppression d'un album
          * 
          */
+        $this->view->set_var(array("PAGETITLE" => "Admin : Album"));
         if (User::minAccesslevel(1)) {
             $this->loadModel("Tome");
             $this->loadModel("Serie");
