@@ -246,7 +246,7 @@ class FicheAlbum {
                 case "albTitle": {
                         $html .= $o_tome->TITRE_TOME . '</a>';
                         if (Bdo_Cfg::user()->minAccessLevel(1)) {
-                            $html .= '&nbsp;&nbsp;<a href="' . '#' . '" ><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
+                            $html .= '&nbsp;&nbsp;<a href="' .BDO_URL. 'admin/editalbum?alb_id=' .$o_tome->ID_TOME. '" target="_blank"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
                         }
                         break;
                 }

@@ -27,7 +27,11 @@ class Tome extends Bdo_Db_Line
         	bd_edition_stat.NBR_USER_ID_TOME, 
                 
                 s.ID_SERIE, 
-        	s.nom as NOM_SERIE, 
+        	s.NOM as NOM_SERIE, 
+                s.TRI as TRI,
+                s.flg_fini as FLG_FINI,
+                s.nb_tome as NB_TOME,
+                s.HISTOIRE as HISTOIRE_SERIE,
         
         	g.ID_GENRE, 
         	g.libelle as NOM_GENRE, 
@@ -433,5 +437,10 @@ FROM bd_tome t
             Db_query($query);
             
         }
+    }
+    
+    public function deleteEditionForAlbum($id_tome) {
+         $query = "DELETE FROM bd_edition WHERE id_tome=" . intval($id_tome);
+         Db_query($query);
     }
 }
