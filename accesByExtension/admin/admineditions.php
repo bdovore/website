@@ -7,17 +7,17 @@ minAccessLevel(1);
 $act = $_GET["act"];
 $edition_id = intval($_GET["edition_id"]);
 
-// Mettre à jour les informations
+// Mettre ï¿½ jour les informations
 if ($act=="update"){
-	if (is_file($_FILES["txtFileLoc"]["tmp_name"])){// un fichier à uploader
+	if (is_file($_FILES["txtFileLoc"]["tmp_name"])){// un fichier ï¿½ uploader
 		$txtFileLoc = $_FILES["txtFileLoc"]["tmp_name"];
 		$imageproperties = getimagesize($txtFileLoc);
 		$imagetype = $imageproperties[2];
 		$imagelargeur = $imageproperties[0];
 		$imagehauteur = $imageproperties[1];
-		// vérifie le type d'image
+		// vï¿½rifie le type d'image
 		if (($imagetype != 1) and ($imagetype != 2)){
-			echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
+			echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent ï¿½tre chargï¿½s. Vous allez ï¿½tre redirigï¿½.';
 			exit();
 		}
 		$uploaddir = BDO_DIR."images/couv/";
@@ -28,13 +28,13 @@ if ($act=="update"){
 			$newfilename .=".jpg";
 		}
 		if(!copy($txtFileLoc,$uploaddir.$newfilename)){
-			echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez être redirigé.';
+			echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez ï¿½tre redirigï¿½.';
 			exit();
 		}else{
 			$img_couv=$newfilename;
 		}
 	}
-	else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)){ // un fichier à télécharger
+	else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)){ // un fichier ï¿½ tï¿½lï¿½charger
 		$newfilename = "CV-".sprintf("%06d",$_POST["txtTomeId"])."-".sprintf("%06d",$_POST["txtEditionId"]);
 		$newfilename = get_img_from_url($_POST['txtFileURL'],BDO_DIR."images/tmp/",$newfilename);
 		$tmp_filename = BDO_DIR."images/tmp/".$newfilename;
@@ -70,13 +70,13 @@ if ($act=="update"){
 	`valid_dte` = NOW()
 	";
 
-	// vérifie si la couverture a été changée
+	// vï¿½rifie si la couverture a ï¿½tï¿½ changï¿½e
 	if ($img_couv != ''){
 		$query .= ", `img_couv` = '".$DB->escape($img_couv)."'";
 	}
 	$query .=" WHERE `id_edition`=".$DB->escape($_POST["txtEditionId"]);
 	$DB->query($query);
-	echo 'Mise à jour effectuée dans la table bd_edition<br />';
+	echo 'Mise ï¿½ jour effectuï¿½e dans la table bd_edition<br />';
 
 
 	// On rajoute un redimensionnement si le correcteur l'a voulu
@@ -86,7 +86,7 @@ if ($act=="update"){
 	}
 
 	$redirection = BDO_URL."admin/adminalbums.php?alb_id=".$_POST["txtTomeId"];
-	echo GetMetaTag(1,"L'édition a été mise à jour",$redirection);
+	echo GetMetaTag(1,"L'ï¿½dition a ï¿½tï¿½ mise ï¿½ jour",$redirection);
 	exit();
 
 }elseif($act=="delete"){// EFFACEMENT D'UNE EDITION
@@ -103,26 +103,26 @@ if ($act=="update"){
 			$filename = $url_img;
 			if (file_exists(BDO_DIR."images/couv/$filename")){
 				unlink(BDO_DIR."images/couv/$filename");
-				echo "Couverture effacée<br />";
+				echo "Couverture effacï¿½e<br />";
 			}
 		}
 
-		// Efface l'édition de la base
+		// Efface l'ï¿½dition de la base
 		$query = "DELETE FROM bd_edition WHERE id_edition = ".$DB->escape($edition_id)." LIMIT 1";
 		$DB->query ($query);
 		$redirection = BDO_URL."admin/adminalbums.php?alb_id=".$id_tome;
-		echo GetMetaTag(1,"L'édition a été éffacée de la base",$redirection);
+		echo GetMetaTag(1,"L'ï¿½dition a ï¿½tï¿½ ï¿½ffacï¿½e de la base",$redirection);
 		exit();
 
 	}
 	else{// Affiche la demande de confirmation
-		echo 'Etes-vous s&ucirc;r de vouloir effacer l\'édition n. '.$edition_id.' ? <a href="'.BDO_URL.'admin/admineditions.php?act=delete&conf=ok&edition_id='.$edition_id.'">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
+		echo 'Etes-vous s&ucirc;r de vouloir effacer l\'ï¿½dition n. '.$edition_id.' ? <a href="'.BDO_URL.'admin/admineditions.php?act=delete&conf=ok&edition_id='.$edition_id.'">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
 		exit();
 	}
 
 }elseif($act=="autorize"){// ACTIVATION D'UNE EDITION
 
-	// Commence par activer l'édition dans la base
+	// Commence par activer l'ï¿½dition dans la base
 	$query = "
 		UPDATE bd_edition SET 
 		`prop_status` = '1', 
@@ -145,7 +145,7 @@ if ($act=="update"){
 	$DB->query($query);
 	$DB->next_record();
 
-	echo GetMetaTag(1,"L'édition a été activée",BDO_URL."admin/adminalbums.php?alb_id=".$DB->f("id_tome"));
+	echo GetMetaTag(1,"L'ï¿½dition a ï¿½tï¿½ activï¿½e",BDO_URL."admin/adminalbums.php?alb_id=".$DB->f("id_tome"));
 	exit();
 
 }
@@ -153,7 +153,7 @@ if ($act=="update"){
 
 // AFFICHE UN FORMULAIRE VIDE
 elseif($act=="new"){
-	// determine si une référence d'album a été passé
+	// determine si une rï¿½fï¿½rence d'album a ï¿½tï¿½ passï¿½
 	if (isset($_GET["alb_id"])){
 		$alb_id = intval($_GET["alb_id"]);
 
@@ -169,7 +169,7 @@ elseif($act=="new"){
 	$url_image = BDO_URL."images/couv/default.png";
 	// Creation d'un nouveau Template
 	$t = new Template(BDO_DIR."public/templates");
-	// fichier à utiliser
+	// fichier ï¿½ utiliser
 	$t->set_file(array(
 	"tpAdminEditionCouv" => "admin.edition.couv.tpl",
 	"tpAdminEditionDetail" => "admin.edition.detail.tpl",
@@ -182,7 +182,7 @@ elseif($act=="new"){
 	"NBUSERS" => "0",
 	"IDTOME" => $alb_id,
 	"TITRE" => $alb_titre,
-	"URLDELETE" => "javascript:alert('Désactivé');",
+	"URLDELETE" => "javascript:alert('Dï¿½sactivï¿½');",
 	"ACTIONNAME" => "Enregistrer",
 	"URLACTION" => BDO_URL."admin/admineditions.php?act=append"
 	));
@@ -226,19 +226,19 @@ elseif($act=="append"){
 	$query = insert_query("bd_edition",$query_el);
 	$DB->query ($query);
 
-	// récupère la valeur de la dernière insertion
+	// rï¿½cupï¿½re la valeur de la derniï¿½re insertion
 	$lid= mysql_insert_id();
 
-	// Verifie la présence d'une image à télécharger
-	if (is_file($_FILES["txtFileLoc"]["tmp_name"])){ // un fichier à uploader
+	// Verifie la prï¿½sence d'une image ï¿½ tï¿½lï¿½charger
+	if (is_file($_FILES["txtFileLoc"]["tmp_name"])){ // un fichier ï¿½ uploader
 		$txtFileLoc = $_FILES["txtFileLoc"]["tmp_name"];
 		$imageproperties = getimagesize($txtFileLoc);
 		$imagetype = $imageproperties[2];
 		$imagelargeur = $imageproperties[0];
 		$imagehauteur = $imageproperties[1];
-		// vérifie le type d'image
+		// vï¿½rifie le type d'image
 		if (($imagetype != 1) and ($imagetype != 2)){
-			echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
+			echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent ï¿½tre chargï¿½s. Vous allez ï¿½tre redirigï¿½.';
 			exit();
 		}
 		$uploaddir = BDO_DIR."images/couv/";
@@ -249,12 +249,12 @@ elseif($act=="append"){
 			$newfilename .=".jpg";
 		}
 		if(!copy($txtFileLoc,$uploaddir.$newfilename)){
-			echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez être redirigé.';
+			echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez ï¿½tre redirigï¿½.';
 			exit();
 		}else{
 			$img_couv=$newfilename;
 		}
-	}else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)){ // un fichier à télécharger
+	}else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)){ // un fichier ï¿½ tï¿½lï¿½charger
 		$newfilename = "CV-".sprintf("%06d",$id_tome)."-".sprintf("%06d",$lid);
 		$new_filename = get_img_from_url($_POST['txtFileURL'],BDO_DIR."images/tmp/",$newfilename);
 		$tmp_filename = BDO_DIR."images/tmp/".$new_filename;
@@ -274,7 +274,7 @@ elseif($act=="append"){
 	}
 
 	if ($img_couv != '') {
-		// met à jours la référence au fichier dans la table bd_edition
+		// met ï¿½ jours la rï¿½fï¿½rence au fichier dans la table bd_edition
 		$query = "
 		UPDATE bd_edition SET
 		`img_couv` = '".$DB->escape($img_couv)."'
@@ -288,20 +288,20 @@ elseif($act=="append"){
 		resize_edition_image($lid, BDO_DIR."images/couv/");
 	}
 
-	echo GetMetaTag(2,"L'édition a été ajoutée",(BDO_URL."admin/adminalbums.php?alb_id=".$id_tome));
+	echo GetMetaTag(2,"L'ï¿½dition a ï¿½tï¿½ ajoutï¿½e",(BDO_URL."admin/adminalbums.php?alb_id=".$id_tome));
 }
 
 // AFFICHER UNE EDITION
 elseif($act==""){
 
-	// récupérer le nombres dutilisateurs avec cette edition dans leur collection
+	// rï¿½cupï¿½rer le nombres dutilisateurs avec cette edition dans leur collection
 	$query = "SELECT count(user_id) as nb_tome FROM users_album WHERE id_edition = ".$DB->escape($edition_id);
 	$DB->query ($query);
 	$DB->next_record();
 
 	$nbusers = $DB->f("nb_tome");
 
-	// Récupère l'adresse mail de l'utilisateur
+	// Rï¿½cupï¿½re l'adresse mail de l'utilisateur
 	$query = "
 	SELECT 
 		e.id_edition, 
@@ -327,12 +327,12 @@ elseif($act==""){
 	$DB->query ($query);
 	$DB->next_record();
 	$mail_adress = $DB->f("email");
-	$mailsubject = "Votre proposition de nouvelle édition pour l'album : ".$DB->f("titre");
+	$mailsubject = "Votre proposition de nouvelle ï¿½dition pour l'album : ".$DB->f("titre");
 	$pseudo = $DB->f("username");
 	$DB->query ($query);
 	$DB->next_record();
 
-	// récupère les données principales
+	// rï¿½cupï¿½re les donnï¿½es principales
 	$query = q_edition("en.id_edition = ".$DB->escape($edition_id));
 	$DB->query ($query);
 	$DB->next_record();
@@ -346,23 +346,23 @@ elseif($act==""){
 	}
 	// Creation d'un nouveau Template
 	$t = new Template(BDO_DIR."public/templates");
-	// fichier à utiliser
+	// fichier ï¿½ utiliser
 	$t->set_file(array(
 	"tpAdminEditionCouv" => "admin.edition.couv.tpl",
 	"tpAdminEditionDetail" => "admin.edition.detail.tpl",
 	"tpBody" => "admin.edition.tpl",
 	"tpBase" => "body.tpl"
 	));
-	// détermine s'il est possible d'effacer cet album
+	// dï¿½termine s'il est possible d'effacer cet album
 	if (($DB->f("id_edition")==$DB->f("id_edition_default")) | ($nbusers > 0)){
-		$url_delete = "javascript:alert('Impossible d\'effacer cette édition');";
+		$url_delete = "javascript:alert('Impossible d\'effacer cette ï¿½dition');";
 	}else{
 		$url_delete = BDO_URL."admin/admineditions.php?act=delete&edition_id=".$edition_id;
 	}
-	// Activation de l'édition
+	// Activation de l'ï¿½dition
 	if ($DB->f("prop_status") == 0) {
-		$actionautorise = "<a href=\"".BDO_URL."admin/admineditions.php?act=autorize&edition_id=".$edition_id."\">Activer cette édition</a>";
-		$contactuser = "proposée par <a href=\"mailto:".$mail_adress."?subject=".$mailsubject."\" style=\"font-weight: bold;\">".$pseudo."</a> (".$mail_adress.")<br />";
+		$actionautorise = "<a href=\"".BDO_URL."admin/admineditions.php?act=autorize&edition_id=".$edition_id."\">Activer cette ï¿½dition</a>";
+		$contactuser = "proposï¿½e par <a href=\"mailto:".$mail_adress."?subject=".$mailsubject."\" style=\"font-weight: bold;\">".$pseudo."</a> (".$mail_adress.")<br />";
 	}
 
 	$t->set_var (array(
@@ -419,7 +419,7 @@ function resize_edition_image($id_edition,$imagedir) {
 	//*****************
 	global $DB;
 
-	// cherche les infos de cette édition
+	// cherche les infos de cette ï¿½dition
 	$query = "SELECT id_tome, img_couv FROM bd_edition WHERE id_edition = ". $DB->escape($id_edition);
 	$DB->query($query);
 	$DB->next_record();
@@ -444,11 +444,11 @@ function resize_edition_image($id_edition,$imagedir) {
 			$imagelargeur = $imageproperties[0];
 			$imagehauteur = $imageproperties[1];
 
-			//Détermine s'il y a lieu de redimensionner l'image
-			if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $maxsize)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
+			//Dï¿½termine s'il y a lieu de redimensionner l'image
+			if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $max_size)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
 
 				if ($imagelargeur < $imagehauteur) {
-					// image de type panorama : on limite la largeur à 128
+					// image de type panorama : on limite la largeur ï¿½ 128
 					$new_w = $max_size;
 					$new_h = round($imagehauteur * $max_size / $imagelargeur);
 				}else {
@@ -497,7 +497,7 @@ function resize_edition_image($id_edition,$imagedir) {
 					imagejpeg($new_image,$imagedir.$img_couv,100);
 
 
-					// met à jours la référence au fichier dans la table bd_edition
+					// met ï¿½ jours la rï¿½fï¿½rence au fichier dans la table bd_edition
 					$query = "UPDATE bd_edition SET";
 					$query .= " `img_couv` = '".$DB->escape($img_couv)."'";
 					$query .=" WHERE (`id_edition`=".$DB->escape($id_edition).")";
@@ -509,6 +509,6 @@ function resize_edition_image($id_edition,$imagedir) {
 		}
 
 		echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
-		echo "Image redimensionnée<br />";
+		echo "Image redimensionnï¿½e<br />";
 	}
 }

@@ -2653,16 +2653,16 @@ class Admin extends Bdo_Controller {
     }
 
     private function resize_edition_image($id_edition, $imagedir) {
-        //Redimensionnement
+        //Redimensionnement : à revoir
         //*****************
-        global $DB;
-
-        // cherche les infos de cette �dition
-        $query = "SELECT id_tome, img_couv FROM bd_edition WHERE id_edition = " . $DB->escape($id_edition);
-        $DB->query($query);
-        $DB->next_record();
-        $id_tome = $DB->f("id_tome");
-        $url_img = $DB->f("img_couv");
+         // cherche les infos de cette �dition
+        $this->loadModel("Edition");
+        $this->Edition->set_dataPaste(array("ID_EDITION" => $id_edition));
+        $this->Edition->load();
+       
+       
+        $id_tome = $this->Edition->ID_TOME;
+        $url_img = $this->Edition->IMG_COUV;
 
 
         if ($url_img == '') {
@@ -2682,7 +2682,7 @@ class Admin extends Bdo_Controller {
                 $imagehauteur = $imageproperties[1];
 
                 //D�termine s'il y a lieu de redimensionner l'image
-                if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $maxsize)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
+                if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $max_size)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
 
                     if ($imagelargeur < $imagehauteur) {
                         // image de type panorama : on limite la largeur � 128
@@ -2734,11 +2734,7 @@ class Admin extends Bdo_Controller {
                         imagejpeg($new_image, $imagedir . $img_couv, 100);
 
 
-                        // met � jours la r�f�rence au fichier dans la table bd_edition
-                        $query = "UPDATE bd_edition SET";
-                        $query .= " `img_couv` = '" . $DB->escape($img_couv) . "'";
-                        $query .=" WHERE (`id_edition`=" . $DB->escape($id_edition) . ")";
-                        $DB->query($query);
+                        
                 }
             } else {
                 echo "error : no image properties <br/>";
