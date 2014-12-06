@@ -2125,7 +2125,7 @@ class Admin extends Bdo_Controller {
                 $champ_form_style = 'champ_form_desactive';
                 $serie_id = getVal("serie_id");
                 // Selectionne les albums pr�sents dans la s�rie
-                $dbs_tome = $this->Tome->load("c", " WHERE BD_TOME.ID_SERIE=" . $serie_id);
+                $dbs_tome = $this->Tome->load("c", " WHERE bd_tome.ID_SERIE=" . $serie_id);
                 
                 $nb_tome = $this->Tome->dbSelect->nbLineResult;
                 
