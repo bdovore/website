@@ -127,4 +127,21 @@ class Auteur extends Bdo_Db_Line
         
         return $obj->nbtome;
     }
+    
+    public function getAuteurForSerie($serie_id) {
+        /* 
+         * Fournit la liste des auteurs contributeur sur une série
+         */
+        $query = "SELECT distinct ID_AUTEUR, PSEUDO 
+	FROM 
+	bd_auteur, bd_tome 
+	WHERE id_serie = " . $serie_id . " 
+	and (id_scenar = id_auteur or id_dessin = id_auteur)";
+        $resultat = Db_query($query);
+        $a_obj = array();
+        while ($obj = Db_fetch_object($resultat)) {
+            $a_obj[] = $obj;
+        }
+        return $a_obj;
+    }
 }

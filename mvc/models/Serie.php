@@ -70,7 +70,7 @@ class Serie extends Bdo_Db_Line
                 
                 CASE bd_serie.FLG_FINI WHEN 0 then 'Fini' when 1 then 'En cours' when 2 then 'One Shot' when 3 then 'Interrompue/Abandonn&eacute;e' ELSE '?' end LIB_FLG_FINI_SERIE,
 
-                max(bd_tome.NUM_TOME) as `NB_TOME` , 
+               IFNULL(bd_serie.NB_TOME, max(bd_tome.NUM_TOME))  as `NB_TOME` , 
 
                 `bd_serie`.`TRI` as `TRI_SERIE`,
 
