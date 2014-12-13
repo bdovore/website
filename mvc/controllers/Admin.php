@@ -2049,19 +2049,19 @@ class Admin extends Bdo_Controller {
                 ));
                 $this->Serie->update();
                 if (issetNotEmpty($this->Serie->error)) {
-                       var_dump($this->Serie->error);
-                       exit();
-                   }
+                    var_dump($this->Serie->error);
+                    exit();
+                }
                 $this->Tome->updateGenreForSerie(postValInteger("txtSerieId"), postValInteger('txtGenreId'));
-                
-                echo '<META http-equiv="refresh" content="1; URL=editserie?serie_id='.postVal("txtSerieId").'">' . "Mise &agrave; jour effectu&eacute;e";
+
+                echo '<META http-equiv="refresh" content="1; URL=editserie?serie_id=' . postVal("txtSerieId") . '">' . "Mise &agrave; jour effectu&eacute;e";
             }
 
 // EFFACEMENT D'UN ALBUM
             elseif ($act == "delete") {
                 if ($conf == "ok") {
-                    $this->Tome->load("c", " WHERE BD_TOME.ID_SERIE = ".$idserie);
-                    
+                    $this->Tome->load("c", " WHERE BD_TOME.ID_SERIE = " . $idserie);
+
                     $nb_tome = $this->Tome->dbSelect->nbLineResult;
                     if ($nb_tome > 0)
                         exit('La s&eacute;rie contient encore ' . $nb_tome . ' album(s). Suppression interdite.');
@@ -2073,8 +2073,7 @@ class Admin extends Bdo_Controller {
                     }
                     echo 'La serie a &eacute;t&eacute; effac&eacute;e de la base.';
                     exit();
-                }
-                else {// Affiche la demande de confirmation
+                } else {// Affiche la demande de confirmation
                     echo 'Etes-vous sur de vouloir effacer la s&eacute;rie n. ' . $idserie . ' ? <a href="' . BDO_URL . 'admin/editserie?act=delete&conf=ok&idserie=' . $idserie . '">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
 
                     exit();
@@ -2082,7 +2081,7 @@ class Admin extends Bdo_Controller {
             }
 // AFFICHE UN FORMULAIRE VIDE
             elseif ($act == "new") {
-               
+
                 $this->view->set_var(array(
                     "NBALBUMS" => "0",
                     "NBAUTEURS" => "0",
@@ -2097,7 +2096,7 @@ class Admin extends Bdo_Controller {
                 ));
                 // assigne la barre de login
                 $this->view->layout = "iframe";
-               $this->view->render();
+                $this->view->render();
             }
 
 // INSERE UNE NOUVELLE SERIE DANS LA BASE
@@ -2108,14 +2107,14 @@ class Admin extends Bdo_Controller {
                     $tri = postVal('txtTri');
                 }
                 $this->Serie->set_dataPaste(array(
-                     "NOM" => postVal("txtSerie"),
+                    "NOM" => postVal("txtSerie"),
                     "ID_GENRE" => postVal('txtGenreId'),
                     "FLG_FINI" => postVal('chkFini'),
                     "NB_TOME" => postVal('txtNbTome'),
                     "TRI" => $tri,
                     "HISTOIRE" => postVal("txtSerieHist")
                 ));
-               $this->Serie->update();
+                $this->Serie->update();
                 $lid = $this->Serie->ID_SERIE;
                 echo GetMetaTag(2, "La s&eacute;rie a &eacute;t&eacute; ajout&eacute;e", (BDO_URL . "admin/editserie?serie_id=" . $lid));
             }
@@ -2126,15 +2125,15 @@ class Admin extends Bdo_Controller {
                 $serie_id = getVal("serie_id");
                 // Selectionne les albums pr�sents dans la s�rie
                 $dbs_tome = $this->Tome->load("c", " WHERE bd_tome.ID_SERIE=" . $serie_id);
-                
+
                 $nb_tome = $this->Tome->dbSelect->nbLineResult;
-                
+
 
                 // Selectionne les auteurs ayant travaill� pour la s�rie
                 $this->loadModel("Auteur");
                 $dbs_auteur = $this->Auteur->getAuteurForSerie($serie_id);
                 $nb_auteur = count($dbs_auteur);
-                
+
 
                 //r�cup�re les donn�es dans la base
                 $this->Serie->set_dataPaste(array("ID_SERIE" => $serie_id));
@@ -2159,9 +2158,9 @@ class Admin extends Bdo_Controller {
                     "HISTOIRE_SERIE" => $this->Serie->HISTOIRE_SERIE,
                     "OPTSTATUS" => GetOptionValue($opt_status, $this->Serie->FLG_FINI),
                     "NBTOME" => $this->Serie->NB_TOME,
-                    "NBALBUMS" =>$this->Serie->NB_ALBUM ,
+                    "NBALBUMS" => $this->Serie->NB_ALBUM,
                     "NBAUTEURS" => $nb_auteur,
-                    "URLDELETE" => BDO_URL . "admin/editserie?act=delete&idserie=" .$this->Serie->ID_SERIE,
+                    "URLDELETE" => BDO_URL . "admin/editserie?act=delete&idserie=" . $this->Serie->ID_SERIE,
                     "ACTIONNAME" => "Valider les Modifications",
                     "URLEDITGENRE" => BDO_URL . "admin/editgenre?genre_id=" . $this->Serie->ID_GENRE,
                     "URLMASSDETAIL" => BDO_URL . "admin/mu_detail.php?serie=" . $this->Serie->ID_SERIE,
@@ -2173,9 +2172,9 @@ class Admin extends Bdo_Controller {
                     "dbs_tome" => $dbs_tome,
                     "dbs_auteur" => $dbs_auteur
                 ));
-                
-               $this->view->layout = "iframe";
-               $this->view->render();
+
+                $this->view->layout = "iframe";
+                $this->view->render();
             }
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
@@ -2891,6 +2890,287 @@ class Admin extends Bdo_Controller {
             echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
             echo "Image redimensionn�e<br />";
         }
+    }
+
+    public function Controle() {
+
+
+        if (User::minAccesslevel(1)) {
+            ob_start();
+
+            set_time_limit(360);
+
+            $a_queryRegle = array(
+                array(
+                    "title" => "Nom de série ne contenant pas la valeur de la colonne TRI",
+                    "query" => "
+            SELECT SQL_CALC_FOUND_ROWS 
+                    `ID_SERIE`,
+                    `NOM`,
+                    `TRI` 
+            FROM 
+                    `bd_serie` 
+            WHERE 
+                    `NOM` NOT LIKE concat( '%', `TRI`, '%' )",
+                    "url" => BDO_URL . "admin/editserie?serie_id=",
+                    "colUrl" => "ID_SERIE",
+                ),
+                array(
+                    "title" => "EAN référencés plusieurs fois dans la table des éditions pour des albums différents (parution >31/12/2006 ou non-renseignée)",
+                    "query" => "
+            SELECT SQL_CALC_FOUND_ROWS 
+                    COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums différents',
+                    `EAN` ,
+                    GROUP_CONCAT(distinct(`ID_EDITION`) SEPARATOR ';') as 'Liens vers les éditions (séparateur ;)'
+            FROM 
+                    `bd_edition` 
+            WHERE 
+                    `EAN` IS NOT NULL 
+                                    AND TRIM(`EAN`)<>''
+            AND (`DTE_PARUTION` > '2006-12-31' OR `DTE_PARUTION` IS NULL )
+            GROUP BY `EAN` 
+            HAVING COUNT(DISTINCT(`ID_TOME`))>1  
+            ORDER BY 1 DESC",
+                    "colExplode" => 'Liens vers les éditions (séparateur ;)',
+                    "urlExplode" => "<a href='" . BDO_URL . "admin/editedition?edition_id={col}' target='_blank'>{col}</a>",
+                ),
+                array(
+                    "title" => "ISBN référencés plusieurs fois dans la table des éditions pour des albums différents (parution >31/12/1973 ou non-renseignée)",
+                    "query" => "
+            SELECT SQL_CALC_FOUND_ROWS 
+                    COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums différents', 
+                    `ISBN` ,
+                    GROUP_CONCAT(distinct(`ID_EDITION`) SEPARATOR ';') as 'Liens vers les �ditions (s�parateur ;)'
+            FROM 
+                    `bd_edition` 
+            WHERE 
+                    `ISBN` IS NOT NULL 
+                    AND TRIM(`ISBN`)<>''
+            AND (`DTE_PARUTION` > '1973-12-31' OR `DTE_PARUTION` IS NULL) 
+
+            GROUP BY `ISBN`  
+            HAVING COUNT(DISTINCT(`ID_TOME`))>1  
+            ORDER BY 1 DESC",
+                    "colExplode" => 'Liens vers les éditions (séparateur ;)',
+                    "urlExplode" => "<a href='" . BDO_URL . "admin/editedition?edition_id={col}' target='_blank'>{col}</a>",
+                ),
+                array(
+                    "title" => "Triplet PSEUDO, NOM, PRENOM référencés plusieurs fois dans la table des auteurs",
+                    "query" => "
+            SELECT 
+                    bd_auteur.ID_AUTEUR,
+                    bd_auteur.`PSEUDO`,
+                    bd_auteur.`PRENOM`,
+                    bd_auteur.`NOM`  
+            FROM `bd_auteur`, 
+            (
+                    SELECT 
+                    `PSEUDO`,
+                    `PRENOM`,
+                    `NOM` 
+                    FROM `bd_auteur` 
+                    GROUP BY `PSEUDO`,`PRENOM`,`NOM` 
+                    HAVING count(*)>1
+            ) withDoublon
+            WHERE 
+                    bd_auteur.`PSEUDO`=withDoublon.`PSEUDO`
+                    AND bd_auteur.`PRENOM`=withDoublon.`PRENOM`
+                    AND bd_auteur.`NOM`=withDoublon.`NOM`",
+                    "url" => BDO_URL . "admin/adminauteurs.php?auteur_id=",
+                    "colUrl" => "ID_AUTEUR",
+                ),
+                array(
+                    "title" => "PSEUDO référencés plusieurs fois dans la table des auteurs",
+                    "query" => "
+            SELECT SQL_CALC_FOUND_ROWS 
+                    COUNT(*) AS `Enregistrements`, 
+                    `PSEUDO` 
+            FROM 
+                    `bd_auteur` 
+            GROUP BY `PSEUDO` 
+            HAVING count(*)>1  
+            ORDER BY `Enregistrements` DESC",
+                ),
+                array(
+                    "title" => "Couple NOM, PRENOM référencés plusieurs fois dans la table des auteurs",
+                    "query" => "
+            SELECT SQL_CALC_FOUND_ROWS 
+                    COUNT(*) AS `Enregistrements`, 
+                    `NOM`,
+                    `PRENOM`,
+                    GROUP_CONCAT(`PSEUDO` SEPARATOR ' ; ') as 'Liste des pseudos (séparateur ;)' 
+            FROM 
+                    `bd_auteur`
+            WHERE 
+                    `NOM` IS NOT NULL
+                    AND `PRENOM` IS NOT NULL
+            GROUP BY `NOM`,`PRENOM` 
+            HAVING count(*)>1 
+            ORDER BY `Enregistrements` DESC",
+                ),
+                array(
+                    "title" => "Couple NOM, ID_EDITEUR référencés plusieurs fois dans la table des collections",
+                    "query" => "
+            SELECT SQL_CALC_FOUND_ROWS
+                    `bd_collection`.`ID_COLLECTION`,
+                    `bd_collection`.`NOM`,
+                    `bd_collection`.`ID_EDITEUR`  
+            FROM `bd_collection`, 
+            (
+                    SELECT 
+                            `NOM`,
+                            `ID_EDITEUR` 
+                    FROM 
+                            `bd_collection` 
+                    GROUP BY `NOM`,`ID_EDITEUR` 
+                    HAVING count(*)>1
+            ) withDoublon
+            WHERE 
+                    `bd_collection`.`NOM`=withDoublon.`NOM`
+                    AND `bd_collection`.`ID_EDITEUR`=withDoublon.`ID_EDITEUR`",
+                    "url" => BDO_URL . "admin/editcollection?collec_id=",
+                    "colUrl" => "ID_COLLECTION",
+                ),
+                array(
+                    "title" => "triplet date / collection / Tome présent dans la table des éditions",
+                    "query" => "
+            SELECT SQL_CALC_FOUND_ROWS 
+                    COUNT(*) AS `Enregistrements`, 
+                    `ID_TOME` 
+            FROM 
+                    `bd_edition` 
+            GROUP BY `ID_TOME`,`ID_COLLECTION`,`DTE_PARUTION` 
+            HAVING COUNT(*)>1  
+            ORDER BY `Enregistrements` DESC",
+                    "url" => BDO_URL . "admin/editalbum?alb_id=",
+                    "colUrl" => "ID_TOME",
+                ),
+                array(
+                    "title" => "Séries déclarées one-shot (FLG_FINI=2) avec plus de 1 tome",
+                    "query" => "
+            SELECT SQL_CALC_FOUND_ROWS
+                    `bd_serie`.`ID_SERIE` , 
+                    count( bd_tome.ID_TOME ) as 'nbr de tomes'
+            FROM 
+                    `bd_serie`
+                    INNER JOIN `bd_tome` ON `bd_tome`.`ID_SERIE` = `bd_serie`.`ID_SERIE`
+            WHERE 
+                    `bd_serie`.`FLG_FINI` =2
+            GROUP BY `bd_serie`.`ID_SERIE`
+            HAVING count( `bd_tome`.`ID_TOME` ) >1  
+            ORDER BY 2 DESC",
+                    "url" => BDO_URL . "admin/editserie?serie_id=",
+                    "colUrl" => "ID_SERIE",
+                ),
+                array(
+                    "title" => "Albums de série one-shot (1 seul album) titre différent de celui de la série",
+                    "query" => "
+            SELECT SQL_CALC_FOUND_ROWS 
+                    `bd_serie`.`ID_SERIE` , 
+                    `bd_serie`.`NOM` AS 'Titre de la série', 
+                    `bd_tome`.`ID_TOME` , 
+                    `bd_tome`.`TITRE` AS 'Titre de l''album'
+            FROM 
+                    `bd_serie`
+                    INNER JOIN `bd_tome` ON `bd_tome`.`ID_SERIE` = `bd_serie`.`ID_SERIE`
+            WHERE 
+                    `bd_serie`.`FLG_FINI` =2
+                    AND `bd_serie`.`NOM` <> `bd_tome`.`TITRE`
+            GROUP BY `bd_serie`.`ID_SERIE`
+            HAVING count(`bd_tome`.`ID_TOME`)=1",
+                    "url" => BDO_URL . "admin/editalbum?alb_id=",
+                    "colUrl" => "ID_TOME",
+                ),
+                array(
+                    "title" => "Editions dont la date de parution n'est pas renseignée (ou < 1800-01-01) (non marquées 'Introuvable')",
+                    "query" => "
+            SELECT SQL_CALC_FOUND_ROWS
+                    `ID_EDITION` , 
+                    `DTE_PARUTION`
+            FROM `bd_edition`
+            WHERE 
+                    (`DTE_PARUTION` IS NULL
+                    OR `DTE_PARUTION` < '1800-01-01')
+                    AND `FLAG_DTE_PARUTION` IS NULL
+            ORDER BY `bd_edition`.`DTE_PARUTION` DESC",
+                    "url" => BDO_URL . "admin/editedition?edition_id=",
+                    "colUrl" => "ID_EDITION"
+            ));
+
+
+          
+            echo '(Le resultat est limit&eacute; &agrave; 200 lignes)';
+
+            echo '<form name="formregle" method="post">
+                <div>
+                Controle : 
+                <select name="id_queryRegle">';
+            foreach ($a_queryRegle as $id_queryRegle => $queryRegle) {
+                $selected = ($id_queryRegle == $_POST['id_queryRegle']) ? 'SELECTED' : '';
+                echo '<option value="' . $id_queryRegle . '" ' . $selected . ' >' . $queryRegle['title'] . '</option>';
+            };
+            echo '</select><br />
+            <label for="viewQuery"><input type="checkbox" id="viewQuery" name="viewQuery" value="checked" ' . postVal('viewQuery') . '> voir la requete</label>
+            <br /><input type="submit" name="execformvalue" value="Chercher">
+            </div>
+            </form>';
+
+
+            if (issetNotEmpty(postVal('execformvalue')) and issetNotEmpty(postVal('id_queryRegle')) ) {
+                $title = $a_queryRegle[postVal('id_queryRegle]')]["title"];
+                if (isset($a_queryRegle[postVal('id_queryRegle')]["url"])) $url = $a_queryRegle[postVal('id_queryRegle')]["url"];
+                if (isset($a_queryRegle[postVal('id_queryRegle')]["colUrl"]))
+                    $colUrl = $a_queryRegle[postVal('id_queryRegle')]["colUrl"];
+                if (isset($a_queryRegle[postVal('id_queryRegle')]["colExplode"]))
+                    $colExplode = $a_queryRegle[postVal('id_queryRegle')]["colExplode"];
+                if (isset($a_queryRegle[postVal('id_queryRegle')]["urlExplode"]))
+                    $urlExplode = $a_queryRegle[postVal('id_queryRegle')]["urlExplode"];
+
+                $query = $a_queryRegle[postVal('id_queryRegle')]["query"];
+                $query .= " LIMIT 0,200";
+
+                if (issetNotEmpty(postVal('viewQuery'))) {
+                    echo_pre($query);
+                }
+
+                $resultat = Db_query($query);
+
+                $nbr = Db_CountRow($resultat);
+
+                $a_obj = array();
+                $cmpt = 0;
+                while ($obj = Db_fetch_object($resultat)) {
+                    if (isset($colUrl)) {
+                        $obj->voir = '<a href="' . $url . $obj->$colUrl . '" target="_blank">Voir</a>';
+                    }
+                    if (isset($colExplode)) {
+                        $a_fieldData = explode(';', $obj->{$colExplode});
+                        foreach ($a_fieldData as $key => $data) {
+                            $a_fieldData[$key] = str_replace('{col}', $data, $urlExplode);
+                        }
+                        $obj->{$colExplode} = implode(' ; ', $a_fieldData);
+                    }
+                    $a_obj[] = $obj;
+                    $cmpt++;
+                }
+
+
+                if ($nbr > 0) {
+                    echo '<h3>' . $title . '</h3>';
+                    echo $cmpt . ' lignes sur ' . $nbr;
+                    tableOfFetchObj($a_obj, $a_onlyCol, false);
+                } else {
+                    echo 'Aucune ligne de resultat !';
+                }
+               
+            }
+
+
+
+            $this->view->set_var("PAGE_OB", ob_get_clean());
+
+            $this->view->render();
+        };
     }
 
 }
