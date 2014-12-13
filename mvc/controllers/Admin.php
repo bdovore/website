@@ -3116,7 +3116,7 @@ class Admin extends Bdo_Controller {
             </form>';
 
 
-            if (issetNotEmpty(postVal('execformvalue')) and issetNotEmpty(postVal('id_queryRegle')) ) {
+            if (issetNotEmpty(postVal('execformvalue'))  ) {
                 $title = $a_queryRegle[postVal('id_queryRegle]')]["title"];
                 if (isset($a_queryRegle[postVal('id_queryRegle')]["url"])) $url = $a_queryRegle[postVal('id_queryRegle')]["url"];
                 if (isset($a_queryRegle[postVal('id_queryRegle')]["colUrl"]))
