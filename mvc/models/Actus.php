@@ -95,7 +95,6 @@ class Actus
 
     public function actuAir ()
     {
-        
         // dernier topactu recharger si cree avant 0h00
         $file = BDO_DIR . "cache/actualite.html";
         if (! file_exists($file) or @filemtime($file) < mktime(0, 0, 0, date("m"), date("d"), date("Y")) or (@filesize($file) == 0)) {
@@ -205,7 +204,15 @@ class Actus
         }
         
         $html .= '</div>';
-        
+
+        //le cache généré pour le moment contient l'URL complète avec http(s)://
+        //ça cause des problèmes pour les utilisateurs (~ 99%) qui sont en HTTP
+        //et qui n'ont pas accepté le certificat de OVH pour bdovore (pas d'image).
+        //Pour résoudre ça, il suffit de toujours avoir le cache en HTTP. 
+        //Au pire, ceux qui utilisent HTTPS auront un simple avertissement du genre 
+        //"attention il y a du contenu non-sécurisé sur cette page".
+        $html = preg_replace("/^https:/i", "http:", $html);
+
         return file_put_contents($file, $html);
     }
 
@@ -239,7 +246,10 @@ ORDER BY id_tome DESC LIMIT 0,10) lasttome USING (ID_TOME)";
             $html .=urlAlbum ($obj,'albTitle').'<br />';
         }
         $html .= '</div></div>';
-        
+
+        //cf. setTopActu()
+        $html = preg_replace("/^https:/i", "http:", $html);
+
         return file_put_contents($file, $html);
     }
 }
