@@ -100,7 +100,9 @@ function setTopActu($DB, $file) {
 	$html .= '
 	</div>
 	';
-	
+
+    $html = preg_replace("/https:/i", "http:", $html);
+
 	return file_put_contents ( $file, $html );
 }
 function setLastAjout($DB, $file) {
@@ -126,5 +128,7 @@ function setLastAjout($DB, $file) {
 	}
 	$html .= '</div></div>';
 	
+    $html = preg_replace("/https:/i", "http:", $html);
+
 	return file_put_contents ( $file, $html );
 }

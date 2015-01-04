@@ -211,7 +211,7 @@ class Actus
         //Pour résoudre ça, il suffit de toujours avoir le cache en HTTP. 
         //Au pire, ceux qui utilisent HTTPS auront un simple avertissement du genre 
         //"attention il y a du contenu non-sécurisé sur cette page".
-        $html = preg_replace("/^https:/i", "http:", $html);
+        $html = preg_replace("/https:/i", "http:", $html);
 
         return file_put_contents($file, $html);
     }
@@ -248,7 +248,7 @@ ORDER BY id_tome DESC LIMIT 0,10) lasttome USING (ID_TOME)";
         $html .= '</div></div>';
 
         //cf. setTopActu()
-        $html = preg_replace("/^https:/i", "http:", $html);
+        $html = preg_replace("/https:/i", "http:", $html);
 
         return file_put_contents($file, $html);
     }
