@@ -118,12 +118,14 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 		
 	    <div class="contentalb" id="alb-description">
 			
-			<h3><?php echo $view->tome->TITRE_TOME;?>  <br>  
-                            <a href="#" onclick="openSerie();">	<?php echo $view->tome->NOM_SERIE;?></a> 
+			<h3 align="center"><?php echo $view->tome->TITRE_TOME;?>  <br>  
+                            <a href="#" onclick="openSerie();">	<?php echo $view->tome->NOM_SERIE;
+                                if ($view->tome->NUM_TOME ) echo ", Tome ". $view->tome->NUM_TOME;           
+                            ?></a> 
                         </h3>
-			
-                                <font size="-1"><?php if ($view->tome->NB_NOTE_TOME > 0) { ?> <span id="noteTome<?php echo $view->tome->ID_TOME; ?>"> </span> <script>$('#noteTome<?php echo $view->tome->ID_TOME; ?>').raty({score: <?php echo $view->tome->MOYENNE_NOTE_TOME/2.0; ?>, readOnly: true});</script> pour <?php echo $view->tome->NB_NOTE_TOME ?> notes. <?php ;} ?></font>
-                                <br>
+                <p align="center">
+                                <font size="-1"><?php if ($view->tome->NB_NOTE_TOME > 0) { ?> <span id="noteTome<?php echo $view->tome->ID_TOME; ?>" style="vertical-align: -3px;"> </span> <script>$('#noteTome<?php echo $view->tome->ID_TOME; ?>').raty({score: <?php echo $view->tome->MOYENNE_NOTE_TOME/2.0; ?>, readOnly: true});</script> pour <?php echo $view->tome->NB_NOTE_TOME ?> notes. <?php ;} ?></font>
+                </p> 
 			<?php echo $view->tome->NOM_GENRE;?>  -   <?php echo $view->tome->scpseudo. ($view->tome->scapseudo == "Aucun" ? "" : " - ".$view->tome->scapseudo); if ($view->tome->scpseudo <> $view->tome->depseudo || $view->tome->deapseudo <> "Aucun" ) echo "/".$view->tome->depseudo.($view->tome->deapseudo == "Aucun" ? "" : " - ". $view->tome->deapseudo); ?>  
                         <?php if ($view->tome->copseudo <> $view->tome->depseudo and $view->tome->copseudo <> "Aucun" and $view->tome->copseudo <> "<indéterminé>") echo "<br>Couleur : ".htmlspecialchars ($view->tome->copseudo); ?>
 					<br> <b>Edition </b> <font size="-1">
