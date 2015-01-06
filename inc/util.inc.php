@@ -1,22 +1,32 @@
 <?php
 
-function __autoload ($class_name)
+// charge automatiquement la classe 'Bdo_Name' à partir de 'library/Bdo/Name.php'
+// (ou, plus généralement, 'Foo_Name' de 'library/Foo/Name.php')
+// grâce à cette fonction, les classes sont chargées automatiquement lorsqu'elles sont appellées
+// par exemple le premier appel à Bdo_Cfg déclenche un "require_once library/Bdo/Cfg.php"
+function __autoload_classes ($class_name)
 {
-    $a_className = explode('_', $class_name);
-    $classFile = implode(DS, $a_className);
+    //$a_className = explode('_', $class_name);
+    //$classFile = implode(DS, $a_className);
+    // "__Bdo_Name_" --> "Bdo/Name"
+    $classFile = str_replace( '_', DS, trim($class_name, '_') );
     $file = BDO_DIR . 'library' . DS . $classFile . '.php';
     
-    if (file_exists($file))   {
-    return require_once $file; }
-    else{ 
-        return false;
+    if (is_file($file)) {
+        require_once $file;
+    } else {
+        echo "Erreur : classe manquante: <b>" . htmlentities($class_name) . "</b><br/>" ;
     }
-    
 }
+
+// __autoload est 'deprecated', il est recommandé d'utiliser spl_autoload_register() à la place
+spl_autoload_register('__autoload_classes');
+
 function htmlPrepaTexte($val)
 {
     return htmlspecialchars($val, ENT_QUOTES, "UTF-8");
 }
+
 function NlToBrWordWrap($txt,$long=0,$hpt=true)
 {
     if (0==$long)

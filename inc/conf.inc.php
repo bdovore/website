@@ -69,8 +69,10 @@ else {
     Bdo_Cfg::setVar('controller', $controller);
     Bdo_Cfg::setVar('action', $action);
 
-    return;
+    return; //exit conf.inc.php (retourne dans index.php)
 }
+
+// dans le cas non-MVC
 
 // demarrage systematique de la session
 
