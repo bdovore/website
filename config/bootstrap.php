@@ -65,10 +65,10 @@ if (!in_array($_SESSION['ID_LANG'], array('_FR','_EN'))) {
     $_SESSION['ID_LANG'] = '_FR';
     
 }
- include_once (BDO_DIR . "language".DS.$_SESSION['ID_LANG'].".inc.php");
-// ---------------------------------------------------------------
- 
 
+include_once (BDO_DIR . "language".DS.$_SESSION['ID_LANG'].".inc.php");
+
+// ---------------------------------------------------------------
 
 /*
 $a_uri = explode('?',$_SERVER['REQUEST_URI']);
@@ -96,39 +96,38 @@ if (stristr($_SERVER['REQUEST_URI'],'script/fckeditor')) {
 }
 */
  
- if (Bdo_Cfg::debug()) Bdo_Debug::execTime("chargement page");
- 
- $fileController = BDO_DIR . 'mvc' . DS . 'controllers' . DS . $controller . '.php';
- if (file_exists($fileController)) {
-     require_once $fileController;
- 
-     $o_controller = new $controller();
-     if (method_exists($o_controller, $action)) {
- 
-         unset($params[0]);
-         unset($params[1]);
-         call_user_func_array(array(
-         $o_controller,
-         $action
-         ), $params);
-     }
-     else {
-         new Bdo_Error(404);
-     }
- }
- else {
-     new Bdo_Error(404);
- }
- 
-  Bdo_Debug::execTime("sortie du bootstrap");
- // ---------------------------------------------------------------
- if (Bdo_Cfg::debug()) {
-     echo Bdo_Debug::saveInfoVar($_SESSION, '_SESSION', '_SESSION en sortie');
-     echo Bdo_Debug::affExecTime();
-     echo Bdo_Debug::viewInclude();
-     echo Bdo_Debug::viewInfoVar();
-     echo Bdo_Debug::bilanQuery();
- }
- // echo '<pre>';
- // print_r(cfg::schema());
- 
+if (Bdo_Cfg::debug()) Bdo_Debug::execTime("chargement page");
+
+$fileController = BDO_DIR . 'mvc' . DS . 'controllers' . DS . $controller . '.php';
+if (is_file($fileController)) {
+    require_once $fileController;
+
+    $o_controller = new $controller();
+    if (method_exists($o_controller, $action)) {
+        unset($params[0]);
+        unset($params[1]);
+        call_user_func_array(array(
+            $o_controller,
+            $action
+            ), $params);
+    }
+    else {
+        new Bdo_Error(404);
+    }
+}
+else {
+    new Bdo_Error(404);
+}
+
+Bdo_Debug::execTime("sortie du bootstrap");
+// ---------------------------------------------------------------
+if (Bdo_Cfg::debug()) {
+    echo Bdo_Debug::saveInfoVar($_SESSION, '_SESSION', '_SESSION en sortie');
+    echo Bdo_Debug::affExecTime();
+    echo Bdo_Debug::viewInclude();
+    echo Bdo_Debug::viewInfoVar();
+    echo Bdo_Debug::bilanQuery();
+}
+// echo '<pre>';
+// print_r(cfg::schema());
+

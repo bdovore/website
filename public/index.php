@@ -4,7 +4,7 @@ include_once ('..' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'conf.i
 
 if (stristr(BDO_DIR_REDIRECT, '.php')) {
     //Ancien système (non-MVC)
-    if (file_exists(BDO_DIR_REDIRECT)) {
+    if (is_file(BDO_DIR_REDIRECT)) {
         include (BDO_DIR . 'inc' . DS . 'template.php');
         include (BDO_DIR_REDIRECT);
     }
