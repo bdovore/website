@@ -10,10 +10,8 @@
  */
 
 function addAlbum(id_tome, id_edition, flg_achat) {
-    var baseurl = document.URL.substring(0,document.URL.indexOf("/")+1);
-	$("#addAlbum"+id_edition).html("<img src='"+baseurl +"script/ajax-loader.gif'>");    
-    
-    var url = baseurl + "Macollection/majcollection?id_edition="+id_edition+"&id_tome="+id_tome+"&flg_achat="+flg_achat;
+	$("#addAlbum"+id_edition).html("<img src='./script/ajax-loader.gif'>");
+    var url = "./macollection/majcollection?id_edition="+id_edition+"&id_tome="+id_tome+"&flg_achat="+flg_achat;
     
     $.getJSON(url, function (data) {
         
@@ -44,7 +42,7 @@ function isValidEmailAddress(emailAddress) {
 function deleteEdition(id_edition){
     if (confirm("Supprimer l'édition de votre collection ?")) {
         $("#addAlbum"+id_edition).html("<img src='./script/ajax-loader.gif'>");  
-        var url = "./Macollection/deleteAlbum?id_edition="+id_edition;
+        var url = "./macollection/deleteAlbum?id_edition="+id_edition;
         
         $.getJSON(url, function (data) {
             if (data.length == 0) {
