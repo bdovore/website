@@ -226,7 +226,7 @@ class Pagination{
         
       
         // tableaux contenant les liens d'accès et le texte à afficher
-        $tab_menu_lien = array( "admin", "admin/proposition", "admin/controle", "admin/ajout", "admin/news", "admin/user");
+        $tab_menu_lien = array( "admin", "adminproposition", "controle", "admin/ajout", "admin/news", "admin/user");
         $tab_menu_texte = array( "Tableau de bord", "Propositions", "Contrôles", "Ajout",  "News","Utilisateurs" );
         
         // informations sur la page

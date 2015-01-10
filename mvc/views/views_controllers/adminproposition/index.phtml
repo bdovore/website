@@ -29,7 +29,7 @@
 <script>
 
 function deleteProposition(idpropale,typeprop){
-    var url = "<?php echo BDO_URL ?>admin/deleteproposition?src=list&ID="+idpropale+"&type="+typeprop;
+    var url = "<?php echo BDO_URL ?>adminproposition/deleteproposition?src=list&ID="+idpropale+"&type="+typeprop;
     $.getJSON(url, function(data){
         if (data.length == 0) {
             alert("Proposition supprimée !");
@@ -48,8 +48,8 @@ function deleteProposition(idpropale,typeprop){
     
     <div class="cadre1">
         <h3>Propositions en attente : </h3>
-         Il y a actuellement <a href="./proposition?type=AJOUT"><b><?php echo $view->NBAJOUT;?> propositions d'album</b></a>, <a href="./proposition?type=EDITION"><b><?php echo $view->NBEDITION;?> propositions de nouvelle édition</b></a>
-             et <a href="./proposition?type=CORRECTION"><b><?php echo $view->NBCORRECTION;?> propositions de correction</b></a>
+         Il y a actuellement <a href="?type=AJOUT"><b><?php echo $view->NBAJOUT;?> propositions d'album</b></a>, <a href="?type=EDITION"><b><?php echo $view->NBEDITION;?> propositions de nouvelle édition</b></a>
+             et <a href="?type=CORRECTION"><b><?php echo $view->NBCORRECTION;?> propositions de correction</b></a>
              en cours de traitement pour l'ensemble de la communauté BDovore.
             <br />
     </div>
