@@ -31,7 +31,7 @@ $user_status = array(
 
 // str_replace utile uniquement en local
 if (defined('BDO_URL_RELATIVE') && strlen(BDO_URL_RELATIVE) > 0)
-	$_SERVER['REQUEST_URI'] = str_replace(BDO_URL_RELATIVE, '', $_SERVER['REQUEST_URI']);
+    $_SERVER['REQUEST_URI'] = str_replace(BDO_URL_RELATIVE, '', $_SERVER['REQUEST_URI']);
 
 //
 $a_request_uri = explode('?',$_SERVER['REQUEST_URI']);
@@ -54,17 +54,21 @@ if (stristr($request_uri, '.php')) {
 else {
     // si l'url ne contient pas .php on bascule sur le model MVC
     define('BDO_DIR_REDIRECT', '');
-    $request_uri = (strpos($request_uri,'/')===0) ? substr($request_uri,1) : $request_uri;
-	
-	if ($request_uri) {
+    // ltrim enlève le ou les '/' en début de $requete_uri
+    // nb: trim() enlèverait aussi à la fin, mais un '/' final *pourrait* être une partie importante de la requête
+    $request_uri = ltrim($request_uri,'/');
+
+    if ($request_uri) {
         $params = explode('/', $request_uri);
     }
     else {
         $params = array();
     }
-	
-	$controller = isset($params[0]) ? ucfirst(strtolower($params[0])) : 'Accueil';
-    $action = isset($params[1]) ? ucfirst(strtolower($params[1])) : 'Index';
+
+    $controller = isset($params[0]) ? ucfirst(strtolower($params[0])) : 'Accueil';
+    // nb une URL du type http://bdovore.com/admin/ donne $params[1] == ''
+    // --> erreur 404 si on ne vérifie pas la longueur de $params[1]
+    $action = ( isset($params[1]) && strlen($params[1]) ) ? ucfirst(strtolower($params[1])) : 'Index';
 
     Bdo_Cfg::setVar('controller', $controller);
     Bdo_Cfg::setVar('action', $action);
@@ -113,7 +117,7 @@ foreach ($a_GLOBALVAR as $GLOBALVAR) {
                 $corrVal = stripSlUtf8($val);
             }
 			
-			${$GLOBALVAR}[$key] = $corrVal;
+            ${$GLOBALVAR}[$key] = $corrVal;
 
             $$key = $corrVal;
         }
