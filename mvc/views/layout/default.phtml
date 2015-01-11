@@ -47,7 +47,9 @@ $jquery = $view->getHelper('jquery');
 
 <script src="<?php echo BDO_URL;?>jquery/bxslider/jquery.bxslider.min.js" type="text/javascript"></script>
 <link href="<?php echo BDO_URL;?>jquery/bxslider/jquery.bxslider.css" rel="stylesheet">
-		
+	
+<link rel="stylesheet" href="<?php echo BDO_URL;?>jquery/responsivemobilemenu/rmm-css/responsivemobilemenu.css" type="text/css"/>
+<script type="text/javascript" src="<?php echo BDO_URL;?>jquery/responsivemobilemenu/rmm-js/responsivemobilemenu.js"></script>
 <!-- Add mousewheel plugin (this is optional) -->
 <script type="text/javascript" src="<?php echo BDO_URL;?>jquery/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
 
@@ -258,7 +260,7 @@ div.verticaltext {
 				src="<?php echo BDO_URL_IMAGE;?>site/bdovore4.gif" border="0"
 				alt="logo BDovore" id="logo" /></a>
 		</div>
-		<div id="searchtable">
+		<div id="searchtable" class="rmm">
 			<ul id="menusite1">
 				
 				<li><a class="menuGene" href="<?php echo BDO_URL;?>browser"
