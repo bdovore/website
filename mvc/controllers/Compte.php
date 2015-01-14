@@ -105,6 +105,7 @@ class Compte extends Bdo_Controller {
                         $texte = "Inscription r&eacute;ussie sur le site <u>ainsi que sur le forum</u> (meme identifiants de connexion).
                         <br />Vous pouvez fermer cette fenêtre et vous connecter avec votre identifiant et mot de passe !";
                         //echo GetMetaTag(15, $texte, (BDO_URL . "compte"));
+                        echo $texte;
                         exit();
                     }
                     $errornum = 7;
