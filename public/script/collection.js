@@ -10,8 +10,8 @@
  */
 
 function addAlbum(id_tome, id_edition, flg_achat) {
-	$("#addAlbum"+id_edition).html("<img src='./script/ajax-loader.gif'>");
-    var url = "./macollection/majcollection?id_edition="+id_edition+"&id_tome="+id_tome+"&flg_achat="+flg_achat;
+	$("#addAlbum"+id_edition).html("<img src='"+$.bdovore.URL+ "script/ajax-loader.gif'>");
+    var url = $.bdovore.URL+"macollection/majcollection?id_edition="+id_edition+"&id_tome="+id_tome+"&flg_achat="+flg_achat;
     
     $.getJSON(url, function (data) {
         
