@@ -334,4 +334,26 @@ FROM " . $this->table_name . "
             return true;
         }
     }
+    
+    public function setForumAccount($username,$password, $email) {
+        $connexion = DB_Connect(array( 
+                'login' => FORUM_DB_USER,
+                'password' => FORUM_DB_PWD,
+                'sid' => FORUM_DB_SID,
+                'server' => FORUM_DB_HOST));
+        $verif = "select count(*) nb from phpbb_users where username='" . Db_Escape_String($username) . "'";
+        $result = DB_query($verif,$connexion);
+        $o = Db_fetch_object($result);
+        if ($o->nb == 0) {
+            $query = "SELECT MAX(user_id) AS total FROM phpbb_users";
+            $result = DB_query($query,$connexion);
+            $o = Db_fetch_object($result);
+            $id = $o->total + 1;
+            $query = "insert into phpbb_users (
+					user_id , username,user_password, user_email, user_regdate ) values (
+					$new_id,'" . Db_Escape_String($username) . "', '" . md5($password) . "', '" . Db_Escape_String($email) . "'," . time() . "
+					)";
+            $result = DB_query($query,$conexion);
+        }
+    }
 }
