@@ -61,7 +61,7 @@ class Adminproposition extends Bdo_Controller {
                     $urledit = "./adminproposition/editPropositionCorrection?ID=";
                     break;
                 case "EDITION" :
-                    $urledit = BRO_URL."./Admin/editedition?edition_id=";
+                    $urledit = BDO_URL."./Admin/editedition?edition_id=";
                     break;
             }
 
