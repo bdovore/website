@@ -139,7 +139,7 @@ $(document).ready(function() {
   $(function() {
 	    var cache = {};
 	    $( "#search" ).catcomplete({
-	      minLength: 2,
+	      minLength: 4,
 	      source: function( request, response ) {
 	        var term = request.term;
 	        if ( term in cache ) {
