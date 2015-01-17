@@ -19,7 +19,7 @@ class Search extends Bdo_Controller
         $term = Db_Escape_String(getVal("term",""));
 
         $this->loadModel ("Serie");
-        $this->Serie->load('c'," WHERE NOM LIKE '". $term ."%' GROUP BY ID_SERIE ORDER BY NOM LIMIT 0,10");
+        $this->Serie->load('c'," WHERE NOM LIKE '%". $term ."%' GROUP BY ID_SERIE ORDER BY NBR_USER_ID_SERIE desc, NOM LIMIT 0,10");
 
         foreach ($this->Serie->dbSelect->a_dataQuery as $obj) {
             $arr[] = (object) array(
@@ -30,7 +30,7 @@ class Search extends Bdo_Controller
         }
 
         $this->loadModel ("Tome");
-        $this->Tome->load('c'," WHERE (TITRE LIKE '". $term ."%' ) ORDER BY TITRE LIMIT 0,10");
+        $this->Tome->load('c'," WHERE (TITRE LIKE '". $term ."%' ) ORDER BY NBR_USER_ID_TOME desc, TITRE LIMIT 0,10");
 
         foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
             $arr[] = (object) array(
@@ -61,7 +61,7 @@ class Search extends Bdo_Controller
         }
         
         $this->loadModel ("Auteur");
-        $this->Auteur->load('c'," WHERE PSEUDO IS NOT NULL AND PSEUDO LIKE '". $term ."%' ORDER BY PSEUDO LIMIT 0,10");
+        $this->Auteur->load('c'," WHERE (PSEUDO LIKE '". $term ."%') OR (CONCAT(PRENOM, ' ', NOM) LIKE '". $term ."%')  ORDER BY PSEUDO LIMIT 0,10");
 
         foreach ($this->Auteur->dbSelect->a_dataQuery as $obj) {
             $arr[] = (object) array(

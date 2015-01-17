@@ -6,10 +6,10 @@ include_once (BDO_DIR."inc/bdovore.php");
 include (BDO_DIR."inc/queryfunction.php");
 
 
-// vérifie qu'une variable a été passée
+// vï¿½rifie qu'une variable a ï¿½tï¿½ passï¿½e
 $alb_id = $_GET["alb_id"];
 
-// prépare le template
+// prï¿½pare le template
 $t = new Template(BDO_DIR."public/templates");
 $t->set_file(array(
 "tpBase" => "public_fiche.tpl"
@@ -25,7 +25,7 @@ $scenar = stripslashes($DB->f("scpseudo"));
 $dessin = stripslashes($DB->f("depseudo"));
 $color = stripslashes($DB->f("copseudo"));
 
-// affichage de la série
+// affichage de la sï¿½rie
 if ($DB->f("flg_fini")==2) {
 	$titre = stripslashes($DB->f("titre"))." (One-Shot)";
 	$serie = "";
@@ -33,10 +33,10 @@ if ($DB->f("flg_fini")==2) {
 }else{
 	$titre = stripslashes($DB->f("titre"));
 	$serie = stripslashes($DB->f("s_nom"));
-	$lbl_serie = "Série :";
+	$lbl_serie = "S&eacute;rie :";
 }
 
-//affichage de l'éditeur
+//affichage de l'ï¿½diteur
 if ($DB->f("cnom")!="<N/A>")
 $editeur = stripslashes($DB->f("enom"))." - ".stripslashes($DB->f("cnom"));
 else
@@ -80,7 +80,7 @@ $t->set_var (array(
 ));
 
 
-// Envoie les info générales et publie la page
+// Envoie les info gï¿½nï¿½rales et publie la page
 $css_sheets = array("fiche.css");
 $t->set_var (array(
 "URLSITE" => BDO_URL,
