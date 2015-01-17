@@ -13,6 +13,156 @@ class Compte extends Bdo_Controller {
         /*
          * Affichage des informations du compte ou création de compte
          */
+        if (User::minAccesslevel(2)) {
+            $user_id = getVal("user_id", "");
+            $act=getVal("act","");
+            $this->loadModel("User");
+            if ($user_id != "" && $user_id != $_SESSION["userConnect"]->user_id) {
+                //un username et un userid ont �t� pass�s via l'URL
+                //On v�rifie que l'utilisateur est authoris� � ouvrir cette page
+                
+                $this->User->set_dataPaste(array("user_id" =>$user_id ));
+                $this->User->load();
+                $currentstatus = $this->User->level;
+                $username = $this->User->username;
+
+                if ($currentstatus <= $_SESSION["userConnect"]->level) {
+                    echo GetMetaTag(3, "Vous n'avez pas les authorisations n&eacute;cessaire pour afficher cette page.", (BDO_URL ));
+                    exit();
+                } else {
+                    $profile_user_id = $user_id;
+                    $profile_user_username = $username;
+                }
+            } else {
+                $profile_user_id = $_SESSION["userConnect"]->user_id;
+                $profile_user_username = $_SESSION["userConnect"]->username;
+            }
+
+
+// Mettre � jour les informations
+
+            if ($act == "update") {
+                // v�rifie que ni nom, pr�nom ou email ne sont nuls
+                if (postVal("txtemail") == '' or !Checkmail(postVal("txtemail"))) {
+                    echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">' . "L'adresse email n'est pas valide. Vous allez etre redirig&eacute;.";
+                } else {
+                    // proc�de � la mise � jour
+                    $this->User->set_dataPaste(array("user_id" =>$user_id,
+                       "email" => postVal("txtemail"), 
+                        "birthday" => postVal("txtanniv"),
+                        "OPEN_COLLEC" => postVal("lstOpenCollec"),
+                        "ABT_NEWS" => (postVal("txtNewsletter") == "checked" ? "1" : "0")  ,
+                        "location" => postVal("txtlocation"),
+                        "CARRE_TYPE" => postVal("lstCarre")));
+                    $this->User->update();
+                    echo GetMetaTag(2, "Votre profil a &eacute;t&eacute; mis &agrave; jour.", (BDO_URL . "Compte"));
+                }
+            }
+
+
+            // suppression du compte
+            else if (($act == "delete") and (User::minAccesslevel(1) or $profile_user_id == $_SESSION["userConnect"]->user_id)) {
+                $this->User->set_dataPaste(array("user_id" => $profile_user_id));
+                $this->User->load();
+                $useremail = $this->User->email;
+                $username = $this->User->username;
+
+                // si user correcteur ou admin
+
+                User::deleteAllDataForUser($profile_user_id);
+                $this->User->logout();
+                $mail_adress = $useremail;
+                $mail_sujet = "BDOVORE - suppression de votre compte";
+                $mail_entete = "From: BDoVore <no-reply@bdovore.com>";
+                $mail_text = "Bonjour " . $username . ", \n\n";
+                $mail_text .="Votre compte BDoVore a &eactue;t&eactue; supprim&eactue;.\n\n";
+                $mail_text .="Votre compte sur le forum BDoVore n'a pas &eacute;t&eacute; supprim&eacute;.\nSi vous le d&eacute;sirez, merci de nous faire part des raisons ayant motiv&eacute;es votre d&eacute;part.\n\n";
+                $mail_text .="Nous respectons votre d&eacute;cision et esperons vous revoir tr&eacute;s bientot.\n\n";
+                $mail_text .="L'&eacute;quipe BDOVORE";
+
+                mail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
+
+                $mail_adress = 'tomlameche@gmail.com';
+                $mail_sujet = "BDOVORE - suppression de compte";
+                $mail_entete = "From: BDoVore <no-reply@bdovore.com>";
+                $mail_text = "id : " . $profile_user_id . ", \n";
+                $mail_text .= "username : " . $username . ", \n";
+                $mail_text .= "email : " . $useremail . ", \n";
+
+                mail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
+
+                echo "Votre profil BDoVore a &eacute;t&eacute; supprim&eacute; d&eacute;finitivement.";
+            }
+
+
+// Mofidifcation du mot de passe
+            else if ($act == "newpass") {
+                // control du mot de pass et udpate
+                    $newpass1 = postVal("txtpass1");
+                    $newpass2 = postVal("txtpass2");
+                    $validpassword = checkpassword($newpass1);
+                    if ($validpassword != 1) {
+                        echo GetMetaTag(5, $validpassword . ' Vous allez etre redirig&eacute;.', (BDO_URL . "Compte"));
+                    } elseif (($newpass1 != $newpass2) and ($validpassword == 1)) {
+                        echo GetMetaTag(5, "Les mots de passes ne sont pas identiques. Vous allez etre redirig&eacute;", (BDO_URL . "Compte"));
+                    } elseif (($validpassword == 1) and ($newpass1 == $newpass2)) {
+                        $this->User->set_dataPaste(array(
+                            "user_id" => Db_Escape_String($profile_user_id),
+                            "password" => md5($newpass1)
+                        ));
+                        $this->User->update();
+                        
+                        echo GetMetaTag(2, "Votre mot de passe est modifi&eacute;.", (BDO_URL . "Compte"));
+                    }
+                
+            }     
+            // Afficher le formulaire pr� - remplis
+            elseif ($act == "") {
+                //r�cup�re les donn�es utilisateur dans la base de donn�e
+                $this->User->set_dataPaste(array("user_id" =>$profile_user_id ));
+                $this->User->load();
+
+                //cr�e le tableau d'options
+                $my_options[0][0] = 10;
+                $my_options[0][1] = 10;
+                $my_options[1][0] = 20;
+                $my_options[1][1] = 20;
+                $my_options[2][0] = 30;
+                $my_options[2][1] = 30;
+
+                $other_options[0][0] = 5;
+                $other_options[0][1] = 5;
+                $other_options[1][0] = 10;
+                $other_options[1][1] = 10;
+                $other_options[2][0] = 15;
+                $other_options[2][1] = 15;
+
+                $carre_options[0][0] = "0";
+                $carre_options[0][1] = "Automatique";
+                $carre_options[1][0] = "1";
+                $carre_options[1][1] = "Manuel";
+              
+
+                $this->view->set_var(array
+                    ("USERID" => $profile_user_id,
+                    "UTILISATEUR" => $this->User->username,
+                    "EMAIL" => $this->User->email,
+                    "LOCATION" => $this->User->location,
+                    "BIRTHDAY" => $this->User->birthday,
+                    "YESISSELECTED" => ($this->User->OPEN_COLLEC == 'Y' ? 'Selected' : ''),
+                    "NOISSELECTED" => ($this->User->OPEN_COLLEC == 'N' ? 'Selected' : ''),
+                    "URLCOLLEC" => BDO_URL . 'guest?user=' . encodeUserId($profile_user_id),
+                    "OPTIONDISPLAY" => GetOptionValue($my_options, $this->User->row_display),
+                    "OPTIONDISPLAYSERIE" => GetOptionValue($other_options, $this->User->rowserie),
+                    "IS_NEWSLETTER" => ($this->User->ABT_NEWS == 1 ? 'Checked' : ''),
+                    "PICTURE" => $pathimage,
+                    "OPTIONCARRE" => GetOptionValue($carre_options, $this->User->CARRE_TYPE)));
+
+                $this->view->set_var("PAGETITLE", "BDOVORE.com : Mon profil");
+                $this->view->layout = "iframe";
+                $this->view->render();
+            }
+        }
     }
 
     public function Inscription() {
@@ -83,9 +233,9 @@ class Compte extends Bdo_Controller {
             // v�rifie que login choisi n'est pas r�serv� et qu'il n'est pas d�j� utilis�
             if ($errornum == 0) {
                 $user = New user();
-                $user->load("c"," WHERE username='" . Db_Escape_String($default_username)."'" );
-                
-                if (AuthorisedLogin($default_username) != true or (issetNotEmpty($user->USER_ID))) {
+                $user->load("c", " WHERE LCASE(username)= LCASE('" . Db_Escape_String($default_username) . "')");
+
+                if (AuthorisedLogin($default_username) != true or (issetNotEmpty($user->user_id))) {
                     $errornum = 6;
                     $color["NewUser"] = "#FF0000";
                 } else {
@@ -97,15 +247,19 @@ class Compte extends Bdo_Controller {
                         "level" => 2
                     ));
                     $user->update();
-                    
+                   
                     if (notIssetOrEmpty($user->error)) {
                         //ajout dans le forum si besoin
                         $user->setForumAccount(Db_Escape_String($default_username), $defaut_pass1, $defaut_email);
-                        
+
                         $texte = "Inscription r&eacute;ussie sur le site <u>ainsi que sur le forum</u> (meme identifiants de connexion).
                         <br />Vous pouvez fermer cette fenêtre et vous connecter avec votre identifiant et mot de passe !";
                         //echo GetMetaTag(15, $texte, (BDO_URL . "compte"));
                         echo $texte;
+                        exit();
+                    } else
+                    {
+                        var_dump($user->error);
                         exit();
                     }
                     $errornum = 7;
@@ -113,7 +267,7 @@ class Compte extends Bdo_Controller {
             }
         }
 
-        
+
 
         $errortext = $stringerror[$errornum];
 

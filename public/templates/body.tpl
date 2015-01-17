@@ -39,31 +39,7 @@
 <body onLoad="{BODYONLOAD}">
 
 
-	<div id="header" style="position: relative; z-index: 10;">
-   <div class="fondNoir"></div>
-		<div id="logo">
-			<a href="{URLSITE}"><img src="{URLSITEIMAGE}site/logo_bdovore2.gif" border="0" alt="logo BDovore" id="logo" /></a>
-		</div>
-		<div id="searchtable" style="position: relative; z-index: 10;">
-   <div class="fond"></div>
-			<ul id="menusite1">
-				<li><a class="menuGene" href="{URLSITE}bdovore-tuto.php" title="C'est quoi ce bidule ?">Présentation</a></li>
-				<li><a class="menuGene" href="http://forum.bdovore.com/index.php" title="Le forum">Forum</a></li>
-				<li><a class="menuGene" href="{URLSITE}contacts.php" title="Les coordonnées des tauliers du bidule au cas où...">Contacts</a></li>
-				<li><a class="menuGene" href="{URLSITE}browser.php" title="Le BDo'Browser ! Oh Yeah!">L'index BD</a></li>
-				<li><a class="menuGene" href="{URLSITE}listop.php" title="Le top des votes, les albums les plus répandus, les derniers commentaires, les dernières sorties...">Le Guide BD</a></li>
-				{ACCESADMIN}
-			</ul>
-			<form action="{URLSITE}membres/search.php" method="post" name="search" target="_self">
-			<input name="str_search" type="text" id="str_search" onblur="if (!this.value) this.value='Rechercher...';" onfocus="if (this.value=='Rechercher...') this.value='';" size="20" maxlength="50" value="Rechercher..." /> 
-			<input type="submit" name="Submit" value="Ok" />
-			</form>
-		</div>
-		<div id="login">
-			{LOGINBARRE}
-		</div>
-		<hr class="expSep"/>
-	</div>
+	
 	
 
 		
@@ -78,15 +54,7 @@
 					<!-- Column 1 end -->
 	            </div>
 	        </div>
-	        <!-- Debut de la partie de droite -->
-	        <div class="col2">
-	            <!-- Column 2 start -->
-	            {MENUBARRE}
-	            {ACTUAIR}
-	            {LASTAVIS}
-				<!-- Column 2 end -->
-	        </div>
-	        <!-- Fin de la partie de droite -->
+	        
 	    </div>
 	</div>	
 	</div>	

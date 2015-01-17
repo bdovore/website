@@ -4,13 +4,13 @@
 
 minAccessLevel(1);
 
-$error_msg[0] = "Album à supprimer non défini";
-$error_msg[1] = "Album à garder non défini";
-$error_msg[2] = "Album à garder et album à supprimer identiques";
+$error_msg[0] = "Album ï¿½ supprimer non dï¿½fini";
+$error_msg[1] = "Album ï¿½ garder non dï¿½fini";
+$error_msg[2] = "Album ï¿½ garder et album ï¿½ supprimer identiques";
 
 // Fusionne les albums
 if ($act=="merge"){
-	// vérifie que source_id et dest_id ont été definis
+	// vï¿½rifie que source_id et dest_id ont ï¿½tï¿½ definis
 	if ((is_null($dest_id)) | ($dest_id=="")){
 		header("Location:".BDO_URL."admin/mergealbums.php?source_id=$source_id&error=1");
 	}
@@ -22,7 +22,7 @@ if ($act=="merge"){
 	}
 	if ($conf=="ok"){
 
-		// Récupère la valeur de l'album à mettre à jour
+		// Rï¿½cupï¿½re la valeur de l'album ï¿½ mettre ï¿½ jour
 		$query = q_editionDefaultByIdTome($DB->escape($dest_id));
 
 		$DB->query($query);
@@ -35,23 +35,23 @@ if ($act=="merge"){
 		$id_genre = $DB->f("id_genre");
 		$id_edition = $DB->f("id_edition");
 
-		// Met à jour les commentaires
+		// Met ï¿½ jour les commentaires
 		$DB->query("UPDATE IGNORE users_comment SET `id_tome` = ".$DB->escape($dest_id)." WHERE `id_tome`=".$DB->escape($source_id));
-		echo "Nombre de records modifiées dans la table users_comment : ".$DB->affected_rows()."<br />";
+		echo "Nombre de records modifiï¿½es dans la table users_comment : ".$DB->affected_rows()."<br />";
 
-		// Met à jour les carres
+		// Met ï¿½ jour les carres
 		$DB->query("UPDATE IGNORE users_list_carre SET `id_tome` = ".$DB->escape($dest_id) ." WHERE `id_tome`=".$DB->escape($source_id));
-		echo "Nombre de records modifiées dans la table users_list_carre : ".$DB->affected_rows()."<br />";
+		echo "Nombre de records modifiï¿½es dans la table users_list_carre : ".$DB->affected_rows()."<br />";
 		
-		// Met à jour les exclusions
+		// Met ï¿½ jour les exclusions
 		$DB->query("UPDATE IGNORE users_exclusions SET `id_tome` = ".$DB->escape($dest_id) ." WHERE `id_tome`=".$DB->escape($source_id));
-		echo "Nombre de records modifiées dans la table users_exclusions : ".$DB->affected_rows()."<br />";
+		echo "Nombre de records modifiï¿½es dans la table users_exclusions : ".$DB->affected_rows()."<br />";
 
-		// Fusionne les albums (restera ensuite à fusionner les éditions redondantes, cf. mergeeditions)
+		// Fusionne les albums (restera ensuite ï¿½ fusionner les ï¿½ditions redondantes, cf. mergeeditions)
 		$DB->query("UPDATE IGNORE bd_edition SET `id_tome` = ".$DB->escape($dest_id) ." WHERE `id_tome`=".$DB->escape($source_id));
-		echo "Nombre de records modifiées dans la table bd_edition : ".$DB->affected_rows()."<br />";
+		echo "Nombre de records modifiï¿½es dans la table bd_edition : ".$DB->affected_rows()."<br />";
 
-		// Efface les éditions et les couvertures correspondantes
+		// Efface les ï¿½ditions et les couvertures correspondantes
 		//$query = "SELECT id_edition, img_couv FROM bd_edition WHERE id_tome=" . $DB->escape($source_id);
 		//$DB->query ($query);
 		//while ($DB->next_record()){
@@ -60,31 +60,31 @@ if ($act=="merge"){
 		//		$filename = $DB->f("img_couv");
 		//		if (file_exists(BDO_DIR."images/couv/$filename")){
 		//			@unlink(BDO_DIR."images/couv/$filename");
-		//			echo "Couverture effacée pour l'édition N°".$DB->f("id_edition")."<br />";
+		//			echo "Couverture effacï¿½e pour l'ï¿½dition Nï¿½".$DB->f("id_edition")."<br />";
 		//		}
 		//	}
 		//}
 		
 		//$DB->query("DELETE users_album.* FROM users_album INNER JOIN bd_edition USING(id_edition)
 		//WHERE bd_edition.`id_tome`=".$DB->escape($source_id));
-		//echo "Nombre de records supprimés dans la table users_album : ".$DB->affected_rows()."<br />";
+		//echo "Nombre de records supprimï¿½s dans la table users_album : ".$DB->affected_rows()."<br />";
 	
 		// vide la table bd_edition
 		$query = "DELETE FROM bd_edition WHERE id_tome =" . $DB->escape($source_id);
 		$DB->query ($query);
-		echo 'Référence(s) à l\'album supprimée(s) dans la table bd_edition<br />';
+		echo 'Rï¿½fï¿½rence(s) ï¿½ l\'album supprimï¿½e(s) dans la table bd_edition<br />';
 
 		$query = "DELETE FROM bd_tome WHERE id_tome=" . $DB->escape($source_id);
 		$DB->query ($query);
-		echo 'Référence(s) à l\'album supprimée(s) dans la table bd_tome<br />';
+		echo 'Rï¿½fï¿½rence(s) ï¿½ l\'album supprimï¿½e(s) dans la table bd_tome<br />';
 		
 		
-		echo '<META http-equiv="refresh" content="4; URL='.BDO_URL.'admin/index.php">Les albums ont été fusionnés.';
+		echo '<META http-equiv="refresh" content="4; URL='.BDO_URL.'admin/index.php">Les albums ont ï¿½tï¿½ fusionnï¿½s.';
 	}
 	else
 	{
 		// Demande de confirmation
-		echo 'Etes-vous s&ucirc;r de vouloir fusionner les albums n°'.$source_id.' et '.$dest_id.'? <a href="'.BDO_URL.'admin/mergealbums.php?act=merge&conf=ok&source_id='.$source_id.'&dest_id='.$dest_id.'">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
+		echo 'Etes-vous s&ucirc;r de vouloir fusionner les albums nï¿½'.$source_id.' et '.$dest_id.'? <a href="'.BDO_URL.'admin/mergealbums.php?act=merge&conf=ok&source_id='.$source_id.'&dest_id='.$dest_id.'">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
 		exit();
 	}
 }
@@ -94,7 +94,7 @@ elseif($act==""){
 
 	// Creation d'un nouveau Template
 	$t = new Template(BDO_DIR."public/templates");
-	// fichier à utiliser
+	// fichier ï¿½ utiliser
 	$t->set_file(array(
 	"tpBody" => "merge.albums.tpl",
 	"tpBase" => "body.tpl"
@@ -102,10 +102,10 @@ elseif($act==""){
 
 	// REMPLISSAGE PARTIE GAUCHE
 	if ((!is_null($source_id)) & ($source_id!='')){
-		// récupère le nombre d'utilisateurs
+		// rï¿½cupï¿½re le nombre d'utilisateurs
 		$nb_comments1 = countUserBy("tomeComment",$source_id);
 		
-		// récupère les données principales
+		// rï¿½cupï¿½re les donnï¿½es principales
 		$query = q_tome("t.id_tome = ".$DB->escape($source_id));
 		
 		$DB->query ($query);
@@ -156,13 +156,13 @@ elseif($act==""){
 
 	//REMPLISSAGE DE LA PARTIE DROITE
 	if ((!is_null($dest_id)) & ($dest_id!='')){
-		// récupère le nombre d'utilisateurs
+		// rï¿½cupï¿½re le nombre d'utilisateurs
 		$nb_users2 = countUserBy("tome",$dest_id);
 		
-		// récupère le nombre de commentaires
+		// rï¿½cupï¿½re le nombre de commentaires
 		$nb_comments2 = countUserBy("tomeComment",$dest_id);
 		
-		// récupère les données principales
+		// rï¿½cupï¿½re les donnï¿½es principales
 		$query = q_tome("t.id_tome = ".$DB->escape($dest_id));
 				
 		$DB->query ($query);
@@ -214,7 +214,7 @@ elseif($act==""){
 	if (!is_null($error)){
 		$t->set_var ("ERRORMESSAGE",$error_msg[$error]);
 	}
-	// variables misesà jour dans tous les cas
+	// variables misesï¿½ jour dans tous les cas
 	$t->set_var (array(
 	"URLREFRESH" => BDO_URL."admin/mergealbums.php",
 	"URLECHANGE" => BDO_URL."admin/mergealbums.php?source_id=$dest_id&dest_id=$source_id",
@@ -222,8 +222,7 @@ elseif($act==""){
 	));
 	// assigne la barre de login
 	$t->set_var (array(
-	"LOGINBARRE" => GetIdentificationBar(),
-	"MENUBARRE" => admin_menu(),
+	
 	"URLSITE" => BDO_URL,
 	"URLSITEIMAGE" => BDO_URL_IMAGE,
 	));

@@ -356,4 +356,25 @@ FROM " . $this->table_name . "
             $result = DB_query($query,$conexion);
         }
     }
+    
+    public static function deleteAllDataForUser($profile_user_id) {
+        /*
+         * Suppression de toute les données d'un utilisateur
+         */
+        DB_query("UPDATE `bd_edition` SET `USER_ID`=NULL WHERE `user_id`='" . Db_Escape_String($profile_user_id) . "'");
+        DB_query("UPDATE `bd_edition` SET `VALIDATOR`=NULL WHERE `VALIDATOR`='" . Db_Escape_String($profile_user_id) . "'");
+        DB_query("UPDATE `newsletter` SET `USR_CREA`=NULL WHERE `USR_CREA`='" . Db_Escape_String($profile_user_id) . "'");
+        DB_query("UPDATE `newsletter` SET `USR_MODIF`=NULL WHERE `USR_MODIF`='" . Db_Escape_String($profile_user_id) . "'");
+        DB_query("UPDATE `users_alb_prop` SET `VALIDATOR`=NULL WHERE `VALIDATOR`='" . Db_Escape_String($profile_user_id) . "'");
+
+        // dans tout les cas
+        DB_query("DELETE FROM `serie_comment` WHERE `user_id`='" . Db_Escape_String($profile_user_id) . "'");
+        DB_query("DELETE FROM `users_album` WHERE `user_id`='" . Db_Escape_String($profile_user_id) . "'");
+        DB_query("DELETE FROM `users_exclusions` WHERE `user_id`='" . Db_Escape_String($profile_user_id) . "'");
+        DB_query("DELETE FROM `users_list_aut` WHERE `user_id`='" . Db_Escape_String($profile_user_id) . "'");
+        DB_query("DELETE FROM `users_list_carre` WHERE `user_id`='" . Db_Escape_String($profile_user_id) . "'");
+        DB_query("DELETE FROM `users_comment` WHERE `USER_ID`='" . Db_Escape_String($profile_user_id) . "'");
+        DB_query("DELETE FROM `users_alb_prop` WHERE `USER_ID`='" . Db_Escape_String($profile_user_id) . "'");
+        DB_query("DELETE FROM `users` WHERE `user_id`='" . Db_Escape_String($profile_user_id) . "'");
+    }
 }
