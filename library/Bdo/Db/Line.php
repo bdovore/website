@@ -599,7 +599,7 @@ class Bdo_Db_Line
         if (empty($this->error)) {            
             // ----------------- cas UPDATE ------------------------
             if (! is_null($this->entite) and (0 < count($this->a_updateColumn))) { 
-                 echo "check 1";
+                
                 $typeQuery = "UPDATE";
                 $tab = array();
                 foreach ($this->a_updateColumn as $key => $val) {
