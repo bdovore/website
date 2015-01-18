@@ -286,6 +286,53 @@ class Compte extends Bdo_Controller {
         $this->view->layout = "iframe";
         $this->view->render();
     }
+    
+    public function forgotPass() {
+        $email = getVal("email");
+        $this->view->layout = "iframe";
+        if ($email=="ok")
+	{//initialise la proc�dure de renvoie
+		$user_username = postVal("txtusername");
+		$user_email = postVal("txtemail");
+                $this->loadModel("User");
+                $this->User->load("c", " WHERE username= '".Db_Escape_String($user_username)."' and email = '".Db_Escape_String($user_email)."'");
+		
+		//Verifie qu'un nom a �t� retourn� par la query
+		if (notIssetOrEmpty($this->User->user_id))
+		{
+			 $this->view->addAlertPage("L'utilisateur n'existe pas ou l'adresse e-mail est erron&eacute;e !");
+                        $this->view->addPhtmlFile('alert', 'BODY');
+                       
+		}
+                else {
+
+		//g�n�re un nouveau mot de passe et l'envoie � l'utilisateur
+		
+		
+		$newpassword = passgen(8);
+                $this->User->set_dataPaste(array("password" =>$newpassword ));
+                $this->User->update();
+		
+
+		//Pr�pare l'email � envoyer
+		$textemail = "Bonjour,\n\n";
+		$textemail .= "Suite &agrave; votre demande, votre mot de passe pour acc&eacute;der &eacgrave; www.bdovore.com a &eacute;t&eacute; chang&eacute;.\n";
+		$textemail .= "Votre nouveau mot de passe est :\n\n";
+		$textemail .= "$newpassword\n\n";
+		$textemail .= "N'oubliez pas de changer votre mot de passe dans votre profil lors de votre prochain login.\n";
+		$textemail .= "Amicalement\n";
+
+
+		mail($user_email,"Votre nouveau mot de passe",$textemail);
+
+		echo  "Votre nouveau mot de passe a &eacute;t&eacute; envoy&eacute;. Vous pouvez fermer cette fenêtre.";
+		exit();
+                }
+	}
+		
+                $this->view->render();
+	
+    }
 
 }
 
