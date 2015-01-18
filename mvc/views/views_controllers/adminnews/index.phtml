@@ -1,0 +1,49 @@
+<?php
+$page = $view->getHelper('pagination');
+?>
+<script src="<?php echo BDO_URL; ?>jquery/datatable/js/jquery.dataTables.min.js" type="text/javascript"></script>
+<div align="center" class="cadre1">
+    <?php echo $page->menuAdmin(); ?>
+    <h1>Administration des news</h1>
+    <div class="cadre1"><h3>Publication des news</h3>
+        <p><a href="<?php echo BDO_URL; ?>adminnews/editnews" class="fancybox2 fancybox.iframe {width:600,height:400}" >Publier une nouvelle news</a></p>
+    </div>
+    <div class="cadre1">
+<h3>Liste des news</h3>
+        <!-- BEGIN NewsBlock -->
+
+        <table id="t_news" class="display dataTable">
+            <thead>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Auteur</th>
+            <th>Publication</th>
+            <th>Titre</th>       
+            <th><img src="<?php echo BDO_URL_IMAGE; ?>poubelle.gif" width="25" height="24"> </th>
+            </thead>
+            <?php foreach ($view->dbs_news->a_dataQuery as $news) { ?>
+                <tr> 
+                    <td> <?php echo $news->news_id; ?></td>
+                    <td><?php echo $news->news_date; ?></td>
+                    <td><?php echo $news->news_posteur; ?></font></div></td>
+                    <td><?php echo $news->news_level; ?></td>
+                    <td><a href="<?php echo BDO_URL; ?>adminnews/editnews?newsid=<?php echo $news->news_id; ?>" class="fancybox fancybox.iframe {width:600,height:400}" ><?php echo $news->news_titre; ?></a></td>
+                    <td> <a href="?act=supprim&newsid=<?php echo $news->news_id; ?>"><img src="<?php echo BDO_URL_IMAGE; ?>poubelle.gif" width="20" height="21" border="0"></a></td>
+                </tr>
+            <?php } ?>
+        </table>
+        <!-- END NewsBlock -->
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#t_news').dataTable({
+            "paging": true,
+            "ordering": true,
+            "info": false,
+            "searching": false,
+            "order": [[0, "desc"]]
+        });
+    });
+
+</script>
