@@ -310,7 +310,7 @@ class Compte extends Bdo_Controller {
 		
 		
 		$newpassword = passgen(8);
-                $this->User->set_dataPaste(array("password" =>md5($newpassword) ));
+                $this->User->set_dataPaste(array("user_id" => $this->User->user_id, "password" =>md5($newpassword) ));
                 $this->User->update();
 		
                 if (issetNotEmpty($this->User->error)) {

@@ -301,7 +301,7 @@ class Bdo_Db_Line
             if (! isset($obj->EXTRA_CHAMP)) $obj->EXTRA_CHAMP = '';
             
             if (array_key_exists($column_name, $this->a_dataColumn) and (is_null($this->entite) or ($this->entite->{$column_name} != $this->a_dataColumn[$column_name]))) {
-
+                
                 if (is_null($this->a_dataColumn[$column_name])) {
                     if ('YES' == $obj->IS_NULLABLE) $this->a_updateColumn[$column_name] = "NULL";
                     else
@@ -309,6 +309,7 @@ class Bdo_Db_Line
                 }
                 else {
                     // vérification par type
+                    
                     switch ($obj->DATA_TYPE) {
                         case 'timestamp':
                         case 'date':
@@ -416,57 +417,57 @@ class Bdo_Db_Line
                         case 'longtext':
                             {
                                 switch ($obj->EXTRA_CHAMP) {
-                                    case 'password': // modification d'un mot
-                                                      // de passe
-                                        {
-                                            if (isset($this->a_dataPaste['SALT_USER'])) $salt_password = $this->a_dataPaste['SALT_USER'];
-                                            else
-                                                $salt_password = CFG_SALT_PASSWORD;
-                                            
-                                            if (is_null($this->entite)) {
-                                                if (isset($this->a_dataPaste[$column_name . '_OLD']) and isset($this->a_dataPaste[$column_name])) {
-                                                    
-                                                    if (! empty($this->a_dataPaste[$column_name . '_OLD']) and ($this->a_dataPaste[$column_name . '_OLD'] == $this->a_dataPaste[$column_name])) {
-                                                        $this->a_updateColumn[$column_name] = "'" . sha1($salt_password . $this->a_dataPaste[$column_name]) . "'";
-                                                    }
-                                                    else {
-                                                        $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR12;
-                                                    }
-                                                }
-                                                
-                                                else if (! empty($this->a_dataPaste[$column_name])) {
-                                                    $mdp_user_clair = $this->a_dataPaste[$column_name];
-                                                    $this->a_updateColumn[$column_name] = "'" . sha1($salt_password . $this->a_dataPaste[$column_name]) . "'";
-                                                }
-                                                else {
-                                                    $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR8;
-                                                }
-                                            }
-                                            else if (issetNotEmpty($this->a_dataPaste[$column_name . '_OLD'])) {
-                                                if ($this->entite->{$column_name} == sha1($this->entite->SALT_USER . $this->a_dataPaste[$column_name . '_OLD'])) {
-                                                    if (! empty($this->a_dataPaste[$column_name])) {
-                                                        $this->a_updateColumn[$column_name] = "'" . sha1($salt_password . $this->a_dataPaste[$column_name]) . "'";
-                                                    }
-                                                    else {
-                                                        $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR12;
-                                                    }
-                                                }
-                                                else {
-                                                    $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR9;
-                                                }
-                                            }
-                                            else if (! isset($this->a_dataPaste[$column_name . '_OLD']) and isset($this->a_dataPaste[$column_name])) {
-                                                if (! empty($this->a_dataPaste[$column_name])) {
-                                                    $this->a_updateColumn[$column_name] = "'" . sha1($salt_password . $this->a_dataPaste[$column_name]) . "'";
-                                                }
-                                                else {
-                                                    // le mot de passe existe et
-                                                // ne doit pas etre change : pas
-                                                // d'erreur
-                                                }
-                                            }
-                                            break;
-                                        }
+//                                    case 'password': // modification d'un mot
+//                                                      // de passe
+//                                        {
+//                                            if (isset($this->a_dataPaste['SALT_USER'])) $salt_password = $this->a_dataPaste['SALT_USER'];
+//                                            else
+//                                                $salt_password = CFG_SALT_PASSWORD;
+//                                            
+//                                            if (is_null($this->entite)) {
+//                                                if (isset($this->a_dataPaste[$column_name . '_OLD']) and isset($this->a_dataPaste[$column_name])) {
+//                                                    
+//                                                    if (! empty($this->a_dataPaste[$column_name . '_OLD']) and ($this->a_dataPaste[$column_name . '_OLD'] == $this->a_dataPaste[$column_name])) {
+//                                                        $this->a_updateColumn[$column_name] = "'" . sha1($salt_password . $this->a_dataPaste[$column_name]) . "'";
+//                                                    }
+//                                                    else {
+//                                                        $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR12;
+//                                                    }
+//                                                }
+//                                                
+//                                                else if (! empty($this->a_dataPaste[$column_name])) {
+//                                                    $mdp_user_clair = $this->a_dataPaste[$column_name];
+//                                                    $this->a_updateColumn[$column_name] = "'" . sha1($salt_password . $this->a_dataPaste[$column_name]) . "'";
+//                                                }
+//                                                else {
+//                                                    $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR8;
+//                                                }
+//                                            }
+//                                            else if (issetNotEmpty($this->a_dataPaste[$column_name . '_OLD'])) {
+//                                                if ($this->entite->{$column_name} == sha1($this->entite->SALT_USER . $this->a_dataPaste[$column_name . '_OLD'])) {
+//                                                    if (! empty($this->a_dataPaste[$column_name])) {
+//                                                        $this->a_updateColumn[$column_name] = "'" . sha1($salt_password . $this->a_dataPaste[$column_name]) . "'";
+//                                                    }
+//                                                    else {
+//                                                        $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR12;
+//                                                    }
+//                                                }
+//                                                else {
+//                                                    $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR9;
+//                                                }
+//                                            }
+//                                            else if (! isset($this->a_dataPaste[$column_name . '_OLD']) and isset($this->a_dataPaste[$column_name])) {
+//                                                if (! empty($this->a_dataPaste[$column_name])) {
+//                                                    $this->a_updateColumn[$column_name] = "'" . sha1($salt_password . $this->a_dataPaste[$column_name]) . "'";
+//                                                }
+//                                                else {
+//                                                    // le mot de passe existe et
+//                                                // ne doit pas etre change : pas
+//                                                // d'erreur
+//                                                }
+//                                            }
+//                                            break;
+//                                        }
                                     default:
                                         {
                                             if (stristr($obj->COLUMN_NAME, 'EMAIL')) {
@@ -595,9 +596,10 @@ class Bdo_Db_Line
         if (empty($this->error)) $this->controlUk();
         if (empty($this->error)) $this->ctrlDataPost();
         
-        if (empty($this->error)) {
+        if (empty($this->error)) {            
             // ----------------- cas UPDATE ------------------------
-            if (! is_null($this->entite) and (0 < count($this->a_updateColumn))) {
+            if (! is_null($this->entite) and (0 < count($this->a_updateColumn))) { 
+                 echo "check 1";
                 $typeQuery = "UPDATE";
                 $tab = array();
                 foreach ($this->a_updateColumn as $key => $val) {
