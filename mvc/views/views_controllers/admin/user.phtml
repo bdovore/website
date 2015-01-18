@@ -18,13 +18,15 @@
         <?php 
         if ($view->users) {
             foreach ($view->users->a_dataQuery as $user) { ?>
-                <p><?php echo $user->username; ?></p>
+                <p>
+                <a href='<?php echo BDO_URL;?>compte?user_id=<?php echo $user->user_id;?>' class="fancybox fancybox.iframe {width:600,height:480}">
+                <?php echo $user->username; ?>
+                </a>
+                </p>
             <?php } ?>
         <?php } ?>
 
 
-    <a href='<?php echo BDO_URL;?>admin/addauteur' class="fancybox fancybox.iframe {width:400,height:160}">
-    Ajout rapide d'un auteur
     </a>
     <br>
     <hr>
