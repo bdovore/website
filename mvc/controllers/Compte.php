@@ -300,7 +300,7 @@ class Compte extends Bdo_Controller {
 		//Verifie qu'un nom a �t� retourn� par la query
 		if (notIssetOrEmpty($this->User->user_id))
 		{
-			 $this->view->addAlertPage("L'utilisateur n'existe pas ou l'adresse e-mail est erron&eacute;e !");
+			$this->view->addAlertPage("L'utilisateur n'existe pas ou l'adresse e-mail est erron&eacute;e !");
                         $this->view->addPhtmlFile('alert', 'BODY');
                        
 		}
@@ -310,13 +310,17 @@ class Compte extends Bdo_Controller {
 		
 		
 		$newpassword = passgen(8);
-                $this->User->set_dataPaste(array("password" =>$newpassword ));
+                $this->User->set_dataPaste(array("password" =>md5($newpassword) ));
                 $this->User->update();
 		
+                if (issetNotEmpty($this->User->error)) {
+                    var_dump($this->User->error);
+                    exit;
+                }
 
 		//Pr�pare l'email � envoyer
 		$textemail = "Bonjour,\n\n";
-		$textemail .= "Suite &agrave; votre demande, votre mot de passe pour acc&eacute;der &eacgrave; www.bdovore.com a &eacute;t&eacute; chang&eacute;.\n";
+		$textemail .= "Suite à votre demande, votre mot de passe pour accéder à www.bdovore.com a été changé.\n";
 		$textemail .= "Votre nouveau mot de passe est :\n\n";
 		$textemail .= "$newpassword\n\n";
 		$textemail .= "N'oubliez pas de changer votre mot de passe dans votre profil lors de votre prochain login.\n";
