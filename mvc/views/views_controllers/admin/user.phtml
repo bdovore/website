@@ -15,9 +15,12 @@
     </div>
     </form>
     <h3>Utilisateurs</h3>
-    <?php foreach ($view->users->a_dataQuery as $user) { ?>
-        <p><?php echo $user->username; ?></p>
-    <?php } ?>
+        <?php 
+        if ($view->users) {
+            foreach ($view->users->a_dataQuery as $user) { ?>
+                <p><?php echo $user->username; ?></p>
+            <?php } ?>
+        <?php } ?>
 
 
     <a href='<?php echo BDO_URL;?>admin/addauteur' class="fancybox fancybox.iframe {width:400,height:160}">

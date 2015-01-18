@@ -51,7 +51,8 @@ class Admin extends Bdo_Controller {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }
 
-        $username = Db_Escape_String(getVal("username","" ));
+        $username = Db_Escape_String(getVal("username",""));
+        $this->view->set_var("users",null);
 
         if ($username != "") {
             $this->loadModel("User");
