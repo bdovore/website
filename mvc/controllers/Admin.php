@@ -46,6 +46,28 @@ class Admin extends Bdo_Controller {
     }
 
    
+    public function User() {
+        if (!User::minAccesslevel(1)) {
+            die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+        }
+
+        $username = Db_Escape_String(getVal("username","" ));
+
+        if ($username != "") {
+            $this->loadModel("User");
+
+            $orderby = " ORDER BY username";
+            $limit = " LIMIT 0, 10";
+            $where = " WHERE username LIKE '%" . $username . "%'";
+            $users = $this->User->load("c", $where . $orderby . $limit);
+
+            $this->view->set_var("users", $users); 
+        }
+
+        $this->view->set_var("PAGETITLE", "Administration Bdovore - Utilisateurs");
+        $this->view->set_var("searchvalue",$username);
+        $this->view->render();
+    }
 
     
     public function addSerie() {

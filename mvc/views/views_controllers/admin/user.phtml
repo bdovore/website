@@ -1,0 +1,28 @@
+<?php
+    $ficheAlbum = $view->getHelper('ficheAlbum');
+    $page = $view->getHelper('pagination');
+?>
+<div align="center" class="cadre1">
+    <?php echo $page->menuAdmin(); ?>
+    <h1>Gestion des utilisateurs de bdovore</h1>
+    Cette page vous permet d'accéder et éditer les données des utilisateurs.
+    <form id="f_collection" method="GET" action="" >
+    <div id="filter" class="userTables_filter">
+        <label>
+            Rechercher:
+            <input class="" type="search" placeholder="" id="l_search" name="username" value="<?php echo $view->searchvalue; ?>" />
+        </label>
+    </div>
+    </form>
+    <h3>Utilisateurs</h3>
+    <?php foreach ($view->users->a_dataQuery as $user) { ?>
+        <p><?php echo $user->username; ?></p>
+    <?php } ?>
+
+
+    <a href='<?php echo BDO_URL;?>admin/addauteur' class="fancybox fancybox.iframe {width:400,height:160}">
+    Ajout rapide d'un auteur
+    </a>
+    <br>
+    <hr>
+</div>
