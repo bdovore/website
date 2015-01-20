@@ -461,7 +461,7 @@ class Admin extends Bdo_Controller {
                     "ID_COLOR_ALT" => postValInteger("txtColorAltId") ? postValInteger("txtColorAltId") : "0",
                     "FLG_INT" => (postVal("chkIntegrale") == "checkbox") ? "O" : "N",
                     "FLG_TYPE" => postVal("lstType"),
-                    "HISTOIRE" => stripslashes(postVal("txtHistoire")),
+                    "HISTOIRE" => postVal("txtHistoire"),
                     "ID_GENRE" => $this->Serie->ID_GENRE,
                     "ID_EDITION" => postVal("btnDefEdit")
                 ));
@@ -982,7 +982,7 @@ class Admin extends Bdo_Controller {
                     "FLG_FINI" => postVal('chkFini'),
                     "NB_TOME" => postVal('txtNbTome'),
                     "TRI" => postVal('txtTri'),
-                    "HISTOIRE" => stripslashes(postVal("txtSerieHist"))
+                    "HISTOIRE" => postVal("txtSerieHist")
                 ));
                 $this->Serie->update();
                 if (issetNotEmpty($this->Serie->error)) {
@@ -1049,7 +1049,7 @@ class Admin extends Bdo_Controller {
                     "FLG_FINI" => postVal('chkFini'),
                     "NB_TOME" => postVal('txtNbTome'),
                     "TRI" => $tri,
-                    "HISTOIRE" => stripslashes(postVal("txtSerieHist"))
+                    "HISTOIRE" => postVal("txtSerieHist")
                 ));
                 $this->Serie->update();
                 $lid = $this->Serie->ID_SERIE;
