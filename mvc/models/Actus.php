@@ -235,11 +235,12 @@ class Actus
                 bd_tome.ID_TOME, 
                 bd_tome.MOYENNE 
                 from bd_tome 
-INNER JOIN (SELECT 
-MAX(ID_TOME) ID_TOME
-from bd_tome 
-GROUP BY ID_SERIE
-ORDER BY id_tome DESC LIMIT 0,10) lasttome USING (ID_TOME)";
+                INNER JOIN (SELECT 
+                MAX(bd_tome.ID_TOME) ID_TOME
+                from bd_tome inner join bd_edition using (id_edition)
+                WHERE PROP_STATUS = 1
+                GROUP BY ID_SERIE
+                ORDER BY id_tome DESC LIMIT 0,10) lasttome USING (ID_TOME)";
         $resultat = Db_query($requete);
         while ($obj = Db_fetch_object($resultat)) {
             $obj->TITRE_TOME = ' - '.$obj->TITRE_TOME;
