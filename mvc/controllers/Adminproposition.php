@@ -717,7 +717,7 @@ private function getDateBeforeValid() {
 
                     $next_url = BDO_URL . "adminproposition/editProposition?ID=" . $this->User_album_prop->ID_PROPOSAL;
                 } else {
-                    $next_url = BDO_URL . "admin/editAlbum?id_tome=" . $lid_tome;
+                    $next_url = BDO_URL . "admin/editAlbum?alb_id=" . $lid_tome;
                 }
 
                 echo GetMetaTag(1, "L'album a &eacute;t&eacute; ajout&eacute;", $next_url);
@@ -815,7 +815,7 @@ private function getDateBeforeValid() {
             if ($this->User_album_prop->ID_PROPOSAL > $id) {
                 $next_url = BDO_URL . "adminproposition/editProposition?ID=" . $this->User_album_prop->ID_PROPOSAL;
             } else {
-                $next_url = BDO_URL . "admin/editAlbum?id_tome=" . $lid_tome;
+                $next_url = BDO_URL . "admin/editAlbum?alb_id=" . $lid_tome;
             }
         }
         echo GetMetaTag(1, "Bien jou&eacute; !", $next_url);
@@ -1318,7 +1318,7 @@ private function getDateBeforeValid() {
 
                 $next_url = BDO_URL . "admin/editPropositionCorrection?ID=" . $this->User_album_prop->ID_PROPOSAL;
             } else {
-                $next_url = BDO_URL . "admin/editAlbum?id_tome=" . $lid;
+                $next_url = BDO_URL . "admin/editAlbum?alb_id=" . $lid;
             }
 
             echo GetMetaTag(2, "L'album a &eacute;t&eacute; mis a jour", $next_url);
