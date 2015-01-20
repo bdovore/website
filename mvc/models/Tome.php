@@ -15,69 +15,69 @@ class Tome extends Bdo_Db_Line
     public $error = '';
     var $default_select = "
         SELECT 
-          	bd_tome.ID_TOME,
-        	bd_tome.TITRE as TITRE_TOME, 
-        	bd_tome.NUM_TOME, 
-        	bd_tome.PRIX_BDNET, 
-        	bd_tome.FLG_INT as FLG_INT_TOME, 
-        	bd_tome.FLG_TYPE as FLG_TYPE_TOME,
-        	bd_tome.HISTOIRE as HISTOIRE_TOME, 
-        	note_tome.NB_NOTE_TOME, 
-        	note_tome.MOYENNE_NOTE_TOME, 
-        	bd_edition_stat.NBR_USER_ID_TOME, 
+            bd_tome.ID_TOME,
+            bd_tome.TITRE as TITRE_TOME, 
+            bd_tome.NUM_TOME, 
+            bd_tome.PRIX_BDNET, 
+            bd_tome.FLG_INT as FLG_INT_TOME, 
+            bd_tome.FLG_TYPE as FLG_TYPE_TOME,
+            bd_tome.HISTOIRE as HISTOIRE_TOME, 
+            note_tome.NB_NOTE_TOME, 
+            note_tome.MOYENNE_NOTE_TOME, 
+            bd_edition_stat.NBR_USER_ID_TOME, 
                 
-                s.ID_SERIE, 
-        	s.NOM as NOM_SERIE, 
-                s.TRI as TRI,
-                s.flg_fini as FLG_FINI,
-                s.nb_tome as NB_TOME,
-                s.HISTOIRE as HISTOIRE_SERIE,
-        
-        	g.ID_GENRE, 
-        	g.libelle as NOM_GENRE, 
-        
-        	en.ID_EDITION,
-        	en.IMG_COUV,
-        	en.ean as EAN_EDITION, 
-        	en.isbn as ISBN_EDITION, 
-                en.DTE_PARUTION,
-        
-                c.ID_COLLECTION,
-        	c.nom as NOM_COLLECTION,
-        	
-        	er.ID_EDITEUR,
-        	er.nom as NOM_EDITEUR, 
-                concat_ws(' ',er.nom, year(en.DTE_PARUTION)) as NOM_EDITION,
-        	bd_tome.ID_SCENAR, 
-        	sc.pseudo as scpseudo, 
-        	bd_tome.ID_DESSIN, 
-        	de.pseudo as depseudo, 
-        	bd_tome.ID_COLOR, 
-        	co.pseudo as copseudo,
-        	bd_tome.ID_SCENAR_ALT, 
-        	sca.pseudo as scapseudo, 
-        	bd_tome.ID_DESSIN_ALT, 	
-        	dea.pseudo as deapseudo, 
-        	bd_tome.ID_COLOR_ALT, 
-        	coa.pseudo as coapseudo";
+            s.ID_SERIE, 
+            s.NOM as NOM_SERIE, 
+            s.TRI as TRI,
+            s.flg_fini as FLG_FINI,
+            s.nb_tome as NB_TOME,
+            s.HISTOIRE as HISTOIRE_SERIE,
+
+            g.ID_GENRE, 
+            g.libelle as NOM_GENRE, 
+
+            en.ID_EDITION,
+            en.IMG_COUV,
+            en.ean as EAN_EDITION, 
+            en.isbn as ISBN_EDITION, 
+            en.DTE_PARUTION,
+
+            c.ID_COLLECTION,
+            c.nom as NOM_COLLECTION,
+            
+            er.ID_EDITEUR,
+            er.nom as NOM_EDITEUR, 
+            concat_ws(' ',er.nom, year(en.DTE_PARUTION)) as NOM_EDITION,
+            bd_tome.ID_SCENAR, 
+            sc.pseudo as scpseudo, 
+            bd_tome.ID_DESSIN, 
+            de.pseudo as depseudo, 
+            bd_tome.ID_COLOR, 
+            co.pseudo as copseudo,
+            bd_tome.ID_SCENAR_ALT, 
+            sca.pseudo as scapseudo, 
+            bd_tome.ID_DESSIN_ALT,  
+            dea.pseudo as deapseudo, 
+            bd_tome.ID_COLOR_ALT, 
+            coa.pseudo as coapseudo";
     var $defaut_from="
-                FROM bd_tome
-        	INNER JOIN bd_serie s ON bd_tome.id_serie = s.id_serie
-        	INNER JOIN bd_genre g ON s.id_genre = g.id_genre
-        	
-        	INNER JOIN bd_edition en ON bd_tome.id_edition = en.id_edition
-        	INNER JOIN bd_collection c ON en.id_collection = c.id_collection
-        	INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
-        	 
-        	LEFT JOIN bd_edition_stat ON bd_tome.id_edition = bd_edition_stat.ID_EDITION
-        	LEFT JOIN note_tome ON bd_tome.ID_TOME = note_tome.ID_TOME
-                
-                LEFT JOIN bd_auteur sc ON bd_tome.id_scenar = sc.id_auteur
-        	LEFT JOIN bd_auteur de ON bd_tome.id_dessin = de.id_auteur 
-        	LEFT JOIN bd_auteur co ON bd_tome.id_color = co.id_auteur
-        	LEFT JOIN bd_auteur sca ON bd_tome.id_scenar_alt = sca.id_auteur
-        	LEFT JOIN bd_auteur dea ON bd_tome.id_dessin_alt = dea.id_auteur
-        	LEFT JOIN bd_auteur coa ON bd_tome.id_color_alt = coa.id_auteur 
+            FROM bd_tome
+            INNER JOIN bd_serie s ON bd_tome.id_serie = s.id_serie
+            INNER JOIN bd_genre g ON s.id_genre = g.id_genre
+            
+            INNER JOIN bd_edition en ON bd_tome.id_edition = en.id_edition
+            INNER JOIN bd_collection c ON en.id_collection = c.id_collection
+            INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
+
+            LEFT JOIN bd_edition_stat ON bd_tome.id_edition = bd_edition_stat.ID_EDITION
+            LEFT JOIN note_tome ON bd_tome.ID_TOME = note_tome.ID_TOME
+
+            LEFT JOIN bd_auteur sc ON bd_tome.id_scenar = sc.id_auteur
+            LEFT JOIN bd_auteur de ON bd_tome.id_dessin = de.id_auteur 
+            LEFT JOIN bd_auteur co ON bd_tome.id_color = co.id_auteur
+            LEFT JOIN bd_auteur sca ON bd_tome.id_scenar_alt = sca.id_auteur
+            LEFT JOIN bd_auteur dea ON bd_tome.id_dessin_alt = dea.id_auteur
+            LEFT JOIN bd_auteur coa ON bd_tome.id_color_alt = coa.id_auteur 
                 ";
     
     // initialisation
@@ -168,65 +168,65 @@ class Tome extends Bdo_Db_Line
         $dbSearch = new Bdo_Db_Search();
         
         $dbSearch->select = "
-SELECT 
-	t.id_tome,
-	t.titre, 
-	t.num_tome, 
-	t.prix_bdnet, 
-	t.flg_int, 
-	t.flg_type,
-	t.histoire, 
-	t.nb_vote, 
-	t.moyenne, 
-	
-	s.id_serie, 
-	s.nom s_nom, 
+            SELECT 
+                t.id_tome,
+                t.titre, 
+                t.num_tome, 
+                t.prix_bdnet, 
+                t.flg_int, 
+                t.flg_type,
+                t.histoire, 
+                t.nb_vote, 
+                t.moyenne, 
+                
+                s.id_serie, 
+                s.nom s_nom, 
 
-	g.id_genre, 
-	g.libelle, 
+                g.id_genre, 
+                g.libelle, 
 
-	en.id_edition,
-	en.img_couv,
-	en.ean, 
-	en.isbn, 
+                en.id_edition,
+                en.img_couv,
+                en.ean, 
+                en.isbn, 
 
-    c.id_collection,
-	c.nom cnom,
-	
-	er.id_editeur,
-	er.nom enom, 
+                c.id_collection,
+                c.nom cnom,
+                
+                er.id_editeur,
+                er.nom enom, 
 
-	t.id_scenar, 
-	sc.pseudo as scpseudo, 
-	t.id_dessin, 
-	de.pseudo as depseudo, 
-	t.id_color, 
-	co.pseudo as copseudo,
-	t.id_scenar_alt, 
-	sca.pseudo as scapseudo, 
-	t.id_dessin_alt, 	
-	dea.pseudo as deapseudo, 
-	t.id_color_alt, 
-	coa.pseudo as coapseudo
-        ";
+                t.id_scenar, 
+                sc.pseudo as scpseudo, 
+                t.id_dessin, 
+                de.pseudo as depseudo, 
+                t.id_color, 
+                co.pseudo as copseudo,
+                t.id_scenar_alt, 
+                sca.pseudo as scapseudo, 
+                t.id_dessin_alt,    
+                dea.pseudo as deapseudo, 
+                t.id_color_alt, 
+                coa.pseudo as coapseudo
+                    ";
         
         // dans les tables
         $dbSearch->from = "
-FROM bd_tome t
-	INNER JOIN bd_serie s ON t.id_serie = s.id_serie
-	INNER JOIN bd_genre g ON s.id_genre = g.id_genre
-	
-	INNER JOIN bd_edition en ON t.id_edition = en.id_edition
-	INNER JOIN bd_collection c ON en.id_collection = c.id_collection
-	INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
-	 
-	LEFT JOIN bd_auteur sc ON t.id_scenar = sc.id_auteur
-	LEFT JOIN bd_auteur de ON t.id_dessin = de.id_auteur 
-	LEFT JOIN bd_auteur co ON t.id_color = co.id_auteur
-	LEFT JOIN bd_auteur sca ON t.id_scenar_alt = sca.id_auteur
-	LEFT JOIN bd_auteur dea ON t.id_dessin_alt = dea.id_auteur
-	LEFT JOIN bd_auteur coa ON t.id_color_alt = coa.id_auteur
-        ";
+            FROM bd_tome t
+                INNER JOIN bd_serie s ON t.id_serie = s.id_serie
+                INNER JOIN bd_genre g ON s.id_genre = g.id_genre
+                
+                INNER JOIN bd_edition en ON t.id_edition = en.id_edition
+                INNER JOIN bd_collection c ON en.id_collection = c.id_collection
+                INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
+                 
+                LEFT JOIN bd_auteur sc ON t.id_scenar = sc.id_auteur
+                LEFT JOIN bd_auteur de ON t.id_dessin = de.id_auteur 
+                LEFT JOIN bd_auteur co ON t.id_color = co.id_auteur
+                LEFT JOIN bd_auteur sca ON t.id_scenar_alt = sca.id_auteur
+                LEFT JOIN bd_auteur dea ON t.id_dessin_alt = dea.id_auteur
+                LEFT JOIN bd_auteur coa ON t.id_color_alt = coa.id_auteur
+                    ";
         
         $dbSearch->where = "WHERE 1";
         
@@ -268,91 +268,88 @@ FROM bd_tome t
          * Mode : 1=Serie, 2=Auteur, 3=Intégrales/Coffret
          */
         
-		$user_id = intval($_SESSION["userConnect"]->user_id);
-		$mode = intval($mode);
-		$nb_mois = intval($nb_mois);
-		$page = intval($page);
+        $user_id = intval($_SESSION["userConnect"]->user_id);
+        $mode = intval($mode);
+        $nb_mois = intval($nb_mois);
+        $page = intval($page);
 
-		// Récupère le nombre d'albums
+        // Récupère le nombre d'albums
         if ($mode == 1)
         {
-	$query = "
-	
-		INNER JOIN
-		(
-			SELECT DISTINCT t.id_serie,s.nom,s.id_genre
-			FROM
-				users_album ua 
-				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-				INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-				INNER JOIN bd_serie s ON s.id_serie = t.id_serie
-			WHERE
-				ua.user_id=".$user_id."
-				AND NOT EXISTS (
-							SELECT NULL FROM users_exclusions ues
-							WHERE s.id_serie=ues.id_serie 
-							AND ues.id_tome = 0 
-							AND ues.user_id = ".$user_id."
-						) 	
-		) list_serie ON bd_tome.id_serie=list_serie.id_serie
-		
-	WHERE 
-		NOT EXISTS (
-			SELECT NULL 
-			FROM users_album ua
-			INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
-			WHERE 
-			ua.user_id = ".$user_id."
-			AND bd_tome.id_tome=en.id_tome 
-		)
-		AND NOT EXISTS (
-			SELECT NULL 
-			FROM users_exclusions uet
-			WHERE uet.user_id = ".$user_id."
-			AND bd_tome.id_tome=uet.id_tome
-		)  
-                ";
-	
+            $query = "
+    
+                INNER JOIN
+                (
+                    SELECT DISTINCT t.id_serie,s.nom,s.id_genre
+                    FROM
+                        users_album ua 
+                        INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+                        INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+                        INNER JOIN bd_serie s ON s.id_serie = t.id_serie
+                    WHERE
+                        ua.user_id=".$user_id."
+                        AND NOT EXISTS (
+                                    SELECT NULL FROM users_exclusions ues
+                                    WHERE s.id_serie=ues.id_serie 
+                                    AND ues.id_tome = 0 
+                                    AND ues.user_id = ".$user_id."
+                                )   
+                ) list_serie ON bd_tome.id_serie=list_serie.id_serie
+        
+                WHERE 
+                    NOT EXISTS (
+                        SELECT NULL 
+                        FROM users_album ua
+                        INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
+                        WHERE 
+                        ua.user_id = ".$user_id."
+                        AND bd_tome.id_tome=en.id_tome 
+                    )
+                    AND NOT EXISTS (
+                        SELECT NULL 
+                        FROM users_exclusions uet
+                        WHERE uet.user_id = ".$user_id."
+                        AND bd_tome.id_tome=uet.id_tome
+                    )  
+                            ";
+    
         }
         elseif ($mode == 2) {
 
-                    // recherche des auteurs preferes
-                   
-                    // liste auteur
-                    $query = "
+            // recherche des auteurs preferes
+           
+            // liste auteur
+            $query = "
+            
                     
-                            
-                    WHERE 
-                            (bd_tome.id_scenar IN (SELECT id_auteur FROM users_list_aut WHERE user_id = ". $user_id .") OR 
-                                bd_tome.id_dessin IN (SELECT id_auteur FROM users_list_aut WHERE user_id = ". $user_id ."))
+            WHERE 
+                    (bd_tome.id_scenar IN (SELECT id_auteur FROM users_list_aut WHERE user_id = ". $user_id .") OR 
+                        bd_tome.id_dessin IN (SELECT id_auteur FROM users_list_aut WHERE user_id = ". $user_id ."))
 
-                           and ua.id_edition is null 
-                            AND NOT EXISTS (
-                                    SELECT NULL 
-                                    FROM users_exclusions uet
-									WHERE uet.user_id = ". $user_id ."
-                                    AND bd_tome.id_tome=uet.id_tome
-                            )  
-                    ";
-            }
-            elseif ($mode == 3) {
-                    // liste integrale et coffrets
-                    $query = "
-                   
-                           
-                            
-                    WHERE 
-                            (bd_tome.flg_int ='O' OR bd_tome.flg_type = 1)
+                   and ua.id_edition is null 
+                    AND NOT EXISTS (
+                            SELECT NULL 
+                            FROM users_exclusions uet
+                            WHERE uet.user_id = ". $user_id ."
+                            AND bd_tome.id_tome=uet.id_tome
+                    )  
+            ";
+        }
+        elseif ($mode == 3) {
+            // liste integrale et coffrets
+            $query = "
+            WHERE 
+                (bd_tome.flg_int ='O' OR bd_tome.flg_type = 1)
 
-                            AND	ua.id_edition is null
-                            AND NOT EXISTS (
-                                    SELECT NULL 
-                                    FROM users_exclusions uet
-                                    WHERE uet.user_id = ". $user_id ."
-                                    AND bd_tome.id_tome=uet.id_tome
-                            )  
-                    ";
-            }
+                AND ua.id_edition is null
+                AND NOT EXISTS (
+                        SELECT NULL 
+                        FROM users_exclusions uet
+                        WHERE uet.user_id = ". $user_id ."
+                        AND bd_tome.id_tome=uet.id_tome
+                )  
+            ";
+        }
         
         $query .= "AND en.dte_parution >= DATE_SUB(NOW(), INTERVAL ". $nb_mois." MONTH)";
         $query .= " ORDER BY en.dte_parution";
@@ -364,29 +361,29 @@ FROM bd_tome t
         
     }
     
-    
-	public function getListAlbumToComplete($user_id, $id_serie=0) {
+    public function getListAlbumToComplete($user_id, $id_serie=0) {
+        
         $user_id = intval($user_id);
         $id_serie = intval($id_serie);
 
         if ($id_serie == 0) {
             $query = " , (
-		SELECT DISTINCT
-			s.*
-		FROM 
-			users_album ua 
-			INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-			INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-			INNER JOIN bd_serie s ON t.ID_SERIE=s.ID_SERIE 
-		WHERE 
-			ua.user_id = ".$user_id."
-			AND NOT EXISTS (
-						SELECT NULL FROM users_exclusions ues
-						WHERE s.id_serie=ues.id_serie 
-						AND ues.id_tome = 0 
-						AND ues.user_id = ".$user_id."
-					)
-		) s_lim WHERE 
+        SELECT DISTINCT
+            s.*
+        FROM 
+            users_album ua 
+            INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+            INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+            INNER JOIN bd_serie s ON t.ID_SERIE=s.ID_SERIE 
+        WHERE 
+            ua.user_id = ".$user_id."
+            AND NOT EXISTS (
+                        SELECT NULL FROM users_exclusions ues
+                        WHERE s.id_serie=ues.id_serie 
+                        AND ues.id_tome = 0 
+                        AND ues.user_id = ".$user_id."
+                    )
+        ) s_lim WHERE 
                 s.id_serie = s_lim.id_serie AND
             NOT EXISTS (
                     SELECT NULL 
@@ -423,8 +420,7 @@ FROM bd_tome t
             order by en.dte_parution desc";
         }
         
-      
-         return $this->load("c",$query);
+        return $this->load("c",$query);
     }
     
     public function updateGenreForSerie($id_serie, $id_genre) {
@@ -436,7 +432,6 @@ FROM bd_tome t
             $query .= " `id_genre` = ".intval($id_genre);
             $query .=" WHERE (`id_serie`=".intval($id_serie).");";
             Db_query($query);
-            
         }
     }
     
