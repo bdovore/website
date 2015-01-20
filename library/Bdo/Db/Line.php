@@ -476,7 +476,11 @@ class Bdo_Db_Line
                                                 }
                                             }
                                             if ($obj->CHARACTER_MAXIMUM_LENGTH >= mb_strlen($this->a_dataColumn[$column_name])) {
-                                                $this->a_updateColumn[$column_name] = "'" . Db_Escape_String($this->a_dataColumn[$column_name]) . "'";
+                                                $datavalue = $this->a_dataColumn[$column_name];
+                                                if (get_magic_quotes_gpc()) {
+                                                    $datavalue = stripslashes($datavalue);
+                                                }
+                                                $this->a_updateColumn[$column_name] = "'" . Db_Escape_String($datavalue) . "'";
                                             }
                                             else {
                                                 $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR11;
