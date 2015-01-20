@@ -233,11 +233,20 @@ class Leguide extends Bdo_Controller
                     {
                         $this->loadModel('Tome');
 
-                        $dbs_tome = $this->Tome->load('c', "
-                            WHERE 1
-                            ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                                     and g.origine = '".$filter_origine ."'
-                            ORDER BY `bd_edition_stat`.`ID_EDITION` DESC ".$limit);
+                        //this doesn't use the cache in bd_edition_stat (seems light though)
+                        $where = " WHERE g.origine = '" . $filter_origine . "' ";
+                        if ($_GET['a_idGenre']) {
+                            $where .= " AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])) . ")";
+                        }
+                        $order = " ORDER BY en.valid_dte DESC ";
+
+                        $dbs_tome = $this->Tome->load('c', $where .$order . $limit);
+                        //this uses the cache:    
+//"
+//                            WHERE 1
+//                            ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
+//                                     and g.origine = '".$filter_origine ."'
+//                            ORDER BY `bd_edition_stat`.`ID_EDITION` DESC ".$limit);
 
                         $this->view->set_var('dbs_tome', $dbs_tome);
                     }

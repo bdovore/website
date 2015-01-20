@@ -88,7 +88,24 @@ FROM bd_edition
 INNER JOIN bd_tome  ON bd_tome.ID_TOME = bd_edition.ID_TOME
 INNER JOIN bd_serie ON bd_tome.ID_SERIE = bd_serie.ID_SERIE
 INNER JOIN bd_collection ON bd_edition.ID_COLLECTION = bd_collection.ID_COLLECTION
-WHERE bd_edition.ID_EDITION>69999);
+WHERE bd_edition.ID_EDITION>69999 AND bd_edition.ID_EDITION<140000);
+
+INSERT INTO `bd_edition_stat` (
+SELECT
+bd_edition.ID_EDITION,
+bd_edition.ID_TOME,
+bd_serie.ID_SERIE,
+bd_serie.ID_GENRE,
+bd_collection.ID_EDITEUR,
+bd_collection.ID_COLLECTION,
+0,
+0,
+0
+FROM bd_edition
+INNER JOIN bd_tome  ON bd_tome.ID_TOME = bd_edition.ID_TOME
+INNER JOIN bd_serie ON bd_tome.ID_SERIE = bd_serie.ID_SERIE
+INNER JOIN bd_collection ON bd_edition.ID_COLLECTION = bd_collection.ID_COLLECTION
+WHERE bd_edition.ID_EDITION>139999);
 
 ALTER TABLE `bd_edition_stat` ENABLE KEYS;
 ";
