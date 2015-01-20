@@ -366,8 +366,9 @@ FROM bd_tome t
     
     
 	public function getListAlbumToComplete($user_id, $id_serie=0) {
+        $user_id = intval($user_id);
+        $id_serie = intval($id_serie);
 
-		$user_id = intval($user_id);
         if ($id_serie == 0) {
             $query = " , (
 		SELECT DISTINCT
@@ -432,7 +433,7 @@ FROM bd_tome t
          */
         if ($id_serie > 0 and $id_genre > 0) {
             $query = "UPDATE bd_tome SET";
-            $query .= " `id_genre` = ".intVal($id_genre);
+            $query .= " `id_genre` = ".intval($id_genre);
             $query .=" WHERE (`id_serie`=".intval($id_serie).");";
             Db_query($query);
             
