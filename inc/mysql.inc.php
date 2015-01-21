@@ -167,12 +167,6 @@ function Db_Escape_String ($chaine,$connexion=false)
 	if ($connexion === false)
 	$connexion = Bdo_Cfg::getVar('connexion');
 
-    // Si les Magic Quotes sont activées, retirer les "\" en trop avant de passer à la moulinette
-    // NB: les Magic Quotes n'existent plus pour PHP >= 5.4.0
-    if (get_magic_quotes_gpc()) {
-        $chaine = stripslashes($chaine);
-    }
-
 	return $connexion->real_escape_string($chaine);
 }
 

@@ -407,7 +407,14 @@ function notIssetOrEmpty (&$var)
 function getVal ($nomvar, $default = '')
 {
     $val = isset($_GET[$nomvar]) ? $_GET[$nomvar] : $default;
-    return $val;
+
+    // Si les Magic Quotes sont activées, retirer les "\" en trop avant de passer à la moulinette
+    // NB: les Magic Quotes n'existent plus pour PHP >= 5.4.0
+    if (get_magic_quotes_gpc()) {
+        return stripslashes($val);
+    } else {
+        return $val;
+    }
 }
 
 function getValInteger ($nomvar, $default = 0)
@@ -419,7 +426,14 @@ function getValInteger ($nomvar, $default = 0)
 function postVal ($nomvar, $default = '')
 {
     $val = isset($_POST[$nomvar]) ? $_POST[$nomvar] : $default;
-    return $val;
+
+    // Si les Magic Quotes sont activées, retirer les "\" en trop avant de passer à la moulinette
+    // NB: les Magic Quotes n'existent plus pour PHP >= 5.4.0
+    if (get_magic_quotes_gpc()) {
+        return stripslashes($val);
+    } else {
+        return $val;
+    }
 }
 
 function postValInteger ($nomvar, $default = 0)
