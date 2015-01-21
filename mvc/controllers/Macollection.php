@@ -150,7 +150,8 @@ class Macollection extends Bdo_Controller {
            
             $page = getValInteger("page",1);
             $length = getValInteger("length",10);
-            $searchvalue = Db_Escape_String(getVal("l_search","" ));
+            //TODO mettre une longueur max. pour la recherche ?
+            $l_search = getVal("l_search","" );
            
             
             // variable $sort donne la colonne pour le tri
@@ -193,8 +194,12 @@ class Macollection extends Bdo_Controller {
             if ($eo == "O") $where .= " and flg_tete = 'O' ";
             if ($dedicace== "O") $where .= " and flg_dedicace = 'O' ";
             
-            if(searchvalue <> "") $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
-           // echo  $this->Useralbum->select()." where ua.user_id = ".$user_id ." and flg_achat = 'N' ".$orderby. $limit;
+            if($l_search <> "") {
+                $searchvalue = Db_Escape_String($l_search);
+                $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
+            }
+
+            // echo  $this->Useralbum->select()." where ua.user_id = ".$user_id ." and flg_achat = 'N' ".$orderby. $limit;
             $dbs_tome = $this->Useralbum->load("c",$where.$orderby. $limit);
             
             $nbr = Db_CountRow($this->Useralbum->select().$where);
@@ -210,10 +215,8 @@ class Macollection extends Bdo_Controller {
                 "cadeau" => $cadeau,
                 "eo" => $eo,
                 "dedicace" => $dedicace,
-                "searchvalue" => $searchvalue
-               
-                    )
-                  )     ;
+                "searchvalue" => $l_search
+                ));
         }
         else {
             die("Vous devez vous authentifier pour accéder à cette page.");
@@ -230,7 +233,7 @@ class Macollection extends Bdo_Controller {
              
             $page = getValInteger("page",1);
             $length = getValInteger("length",10);
-            $searchvalue = Db_Escape_String(getVal("l_search","" ));
+            $l_search = getVal("l_search","" );
 
             //TODO remplacer les 3 lignes suivantes par getValInArray 
             $order = getVal("order","DESC");
@@ -261,7 +264,10 @@ class Macollection extends Bdo_Controller {
             $where = " where ua.user_id = ".$user_id ." and flg_achat = 'O' ";
             
             
-            if(searchvalue <> "") $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
+            if($l_search <> "") {
+                $searchvalue = Db_Escape_String($l_search);
+                $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
+            }
            // echo  $this->Useralbum->select()." where ua.user_id = ".$user_id ." and flg_achat = 'N' ".$orderby. $limit;
             $dbs_tome = $this->Useralbum->load("c",$where.$orderby. $limit);
             
@@ -278,7 +284,7 @@ class Macollection extends Bdo_Controller {
                 "cadeau" => $cadeau,
                 "eo" => $eo,
                 "dedicace" => $dedicace,
-                "searchvalue" => $searchvalue
+                "searchvalue" => $l_search
                 ));
         }
         else {

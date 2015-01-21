@@ -51,10 +51,11 @@ class Admin extends Bdo_Controller {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }
 
-        $username = Db_Escape_String(getVal("username",""));
+        $searchvalue = getVal("username","");
         $this->view->set_var("users",null);
 
-        if ($username != "") {
+        if ($searchvalue != "") {
+            $username = Db_Escape_String($searchvalue);
             $this->loadModel("User");
 
             $orderby = " ORDER BY username";
@@ -66,7 +67,7 @@ class Admin extends Bdo_Controller {
         }
 
         $this->view->set_var("PAGETITLE", "Administration Bdovore - Utilisateurs");
-        $this->view->set_var("searchvalue",$username);
+        $this->view->set_var("searchvalue",$searchvalue);
         $this->view->render();
     }
 
