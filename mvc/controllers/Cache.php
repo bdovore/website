@@ -126,7 +126,7 @@ class Cache extends Bdo_Controller
         ));
         
         if (isset($_GET['noRender'])) {
-            $boucle = getVal('boucle', 1) + 0;
+            $boucle = getValInteger('boucle', 1);
             
             // retour sur cron
             if ($continuer != 'non') {
@@ -177,7 +177,7 @@ WHERE bd_edition_stat.ID_EDITION BETWEEN " . $nbruser_ID_EDITION_next . " AND " 
         
         
         if (isset($_GET['noRender'])) {
-            $boucle = getVal('boucle', 1) + 0;
+            $boucle = getValInteger('boucle', 1);
         
             // retour sur cron
             if ($continuer != 'non') {
@@ -227,7 +227,7 @@ WHERE bd_edition_stat.ID_EDITION BETWEEN " . $nbruser_ID_EDITION_next . " AND " 
         ));
         
         if (isset($_GET['noRender'])) {
-            $boucle = getVal('boucle', 1) + 0;
+            $boucle = getValInteger('boucle', 1);
         
             // retour sur cron
             if ($continuer != 'non') {

@@ -159,16 +159,18 @@ class Browser extends Bdo_Controller
         // echo $query_limit;
         $query_limit = $query_select . $query_where . $query_order . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows);
         $RecAuteur = Db_query($query_limit);
-        
-        if (isset($_GET['totalRows'])) {
-            $totalRows = $_GET['totalRows'];
-        }
-        else {
+
+        $totalRows = getValInteger('totalRows',-1);
+
+        if ($totalRows < 0) {
             $all = Db_query("SELECT FOUND_ROWS() as nbr");
             if ($row = Db_fetch_array($all)) {
                 $totalRows = $row['nbr'];
+            } else {
+                $totalRows = 0;
             }
         }
+
         $totalPages = ceil($totalRows / $this->maxRows) - 1;
         
         
@@ -355,15 +357,17 @@ class Browser extends Bdo_Controller
         $query_limit = $query_select . $query_where . $query_order . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows);
         $RecAuteur = Db_query($query_limit);
         
-        if (isset($_GET['totalRows'])) {
-            $totalRows = $_GET['totalRows'];
-        }
-        else {
+        $totalRows = getValInteger('totalRows',-1);
+
+        if ($totalRows < 0) {
             $all = Db_query("SELECT FOUND_ROWS() as nbr");
             if ($row = Db_fetch_array($all)) {
                 $totalRows = $row['nbr'];
+            } else {
+                $totalRows = 0;
             }
         }
+
         $totalPages = ceil($totalRows / $this->maxRows) - 1;
         
         
