@@ -2,7 +2,7 @@
 
 function aff_bouton_recherche ()
 {
-    if (isset($_POST['baff']) and ! isset($baff)) $baff = $_POST['baff'];
+    if (isset($_POST['baff']) and ! isset($baff)) $baff = intval($_POST['baff']);
     
     if (($baff < BDO_NBLINEBYPAGE_MIN) or ($baff > BDO_NBLINEBYPAGE_MAX)) $baff = BDO_NBLINEBYPAGE_DEFAULT;
     
