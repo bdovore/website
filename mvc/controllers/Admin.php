@@ -55,15 +55,8 @@ class Admin extends Bdo_Controller {
         $this->view->set_var("users",null);
 
         if ($searchvalue != "") {
-            $username = Db_Escape_String($searchvalue);
             $this->loadModel("User");
-
-            $orderby = " ORDER BY username";
-            $limit = " LIMIT 0, 10";
-            $where = " WHERE username LIKE '%" . $username . "%'";
-            $users = $this->User->load("c", $where . $orderby . $limit);
-
-            $this->view->set_var("users", $users); 
+            $this->view->set_var("users", $this->User->getUserList($searchvalue)); 
         }
 
         $this->view->set_var("PAGETITLE", "Administration Bdovore - Utilisateurs");

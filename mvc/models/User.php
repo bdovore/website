@@ -377,4 +377,20 @@ FROM " . $this->table_name . "
         DB_query("DELETE FROM `users_alb_prop` WHERE `USER_ID`='" . Db_Escape_String($profile_user_id) . "'");
         DB_query("DELETE FROM `users` WHERE `user_id`='" . Db_Escape_String($profile_user_id) . "'");
     }
+
+    public function getUserList($search,$exactmatch=false,$max=10) {
+
+        $username = Db_Escape_String($search);
+
+        if ($exactmatch)
+            $where = " WHERE username LIKE '" . $username . "'";
+        else
+            $where = " WHERE username LIKE '%" . $username . "%'";
+
+        $orderby = " ORDER BY username";
+        $limit = " LIMIT 0, " . intval($max);
+
+        return $this->load("c", $where . $orderby . $limit);
+
+    }
 }
