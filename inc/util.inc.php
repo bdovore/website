@@ -411,7 +411,7 @@ function getVal ($nomvar, $default = '')
     // Si les Magic Quotes sont activées, retirer les "\" en trop avant de passer à la moulinette
     // NB: les Magic Quotes n'existent plus pour PHP >= 5.4.0
     if (get_magic_quotes_gpc() ) {
-        if (is_array($val)
+        if (is_array($val))
             return $val;//TODO
         else
             return stripslashes($val);
@@ -433,7 +433,7 @@ function postVal ($nomvar, $default = '')
     // Si les Magic Quotes sont activées, retirer les "\" en trop avant de passer à la moulinette
     // NB: les Magic Quotes n'existent plus pour PHP >= 5.4.0
     if (get_magic_quotes_gpc()) {
-        if (is_array($val)
+        if (is_array($val))
             return $val;//TODO
         else
             return stripslashes($val);
