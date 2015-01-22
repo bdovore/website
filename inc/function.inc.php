@@ -87,7 +87,9 @@ function Checkpassword ($password)
  */
 function CheckChars ($login)
 {
-    return ! ((strrpos($login, ' ') > 0) or (strspn($login, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_@") != strlen($login)));
+    //seul les caractères [A-Z], [a-z], [0-9], '_', '@' et '-' sont authorisés (pas les espaces !!)
+    return preg_match('/^[A-Za-z0-9_@\-]+$/',$login);
+    //return ! ((strrpos($login, ' ') > 0) or (strspn($login, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_@") != strlen($login)));
 }
 
 /**
