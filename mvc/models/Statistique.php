@@ -57,9 +57,7 @@ class Statistique
      */
     public function editionAttente ()
     {
-        $this->nbEditionAttente = Db_CountRow("select * from users_album u 
-                INNER JOIN bd_edition en ON en.id_edition = u.id_edition 
-                where en.prop_status = 0");
+        $this->nbEditionAttente = Db_CountRow("SELECT * FROM bd_edition WHERE prop_status not in ( 98,99,1) ");
         return $this->nbEditionAttente;
     }
 
