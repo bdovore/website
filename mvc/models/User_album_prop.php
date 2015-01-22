@@ -182,6 +182,7 @@ class User_album_prop extends Bdo_Db_Line
     }
     
     public function getUserStat($user_id){
+        $user_id = intval($user_id);
         $user_prop_alb = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'AJOUT' and user_id=" . $user_id );
         $user_prop_corr = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'CORRECTION' and user_id=" . $user_id );
 
@@ -192,7 +193,7 @@ class User_album_prop extends Bdo_Db_Line
     }
     
     public function supprProposition($id, $user_id) {
-        $query = "UPDATE users_alb_prop SET `STATUS` = 98, `VALIDATOR`=".  Db_Escape_String($user_id)." , `VALID_DTE` = NOW() WHERE id_proposal=".intval($id);
+        $query = "UPDATE users_alb_prop SET `STATUS` = 98, `VALIDATOR`=". intval($user_id)." , `VALID_DTE` = NOW() WHERE id_proposal=".intval($id);
         Db_query($query);
     }
 
