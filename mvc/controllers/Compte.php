@@ -100,14 +100,14 @@ class Compte extends Bdo_Controller {
                 // control du mot de pass et udpate
                     $newpass1 = postVal("txtpass1");
                     $newpass2 = postVal("txtpass2");
-                    $validpassword = checkpassword($newpass1);
+                    $validpassword = Checkpassword($newpass1);
                     if ($validpassword != 1) {
                         echo GetMetaTag(5, $validpassword . ' Vous allez etre redirig&eacute;.', (BDO_URL . "Compte"));
                     } elseif (($newpass1 != $newpass2) and ($validpassword == 1)) {
                         echo GetMetaTag(5, "Les mots de passes ne sont pas identiques. Vous allez etre redirig&eacute;", (BDO_URL . "Compte"));
-                    } elseif (($validpassword == 1) and ($newpass1 == $newpass2)) {
+                    } elseif (($validpassword == 1) and ($newpass1 === $newpass2)) {
                         $this->User->set_dataPaste(array(
-                            "user_id" => Db_Escape_String($profile_user_id),
+                            "user_id" => intval($profile_user_id),
                             "password" => md5($newpass1)
                         ));
                         $this->User->update();

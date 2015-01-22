@@ -116,7 +116,7 @@ else if ($act=="newpass")
 	{// control du mot de pass et udpate
 		$newpass1 = $_POST["txtpass1"];
 		$newpass2 = $_POST["txtpass2"];
-		$validpassword = checkpassword($newpass1);
+		$validpassword = Checkpassword($newpass1);
 		if ($validpassword != 1)
 		{
 			echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">'.$validpassword.' Vous allez être redirigé.';

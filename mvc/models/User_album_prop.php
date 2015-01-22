@@ -188,7 +188,7 @@ class User_album_prop extends Bdo_Db_Line
 
         return (array(
             "user_prop_alb" => $user_prop_alb,
-           "user_prop_corr" => $user_prop_corr
+            "user_prop_corr" => $user_prop_corr
         ));
     }
     
