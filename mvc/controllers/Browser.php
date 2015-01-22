@@ -54,16 +54,8 @@ class Browser extends Bdo_Controller
         $this->lev_id = getValInteger('lev_id',0);//comme ça il est 'clean' pour toutes les utilisations
         $this->lev2_id = getVal('lev2_id');//à vérifier cf. 'TODO' ci-dessus
         $this->let = getVal('let');
-        $this->a_idGenre = getVal('a_idGenre',null);
+        $this->a_idGenre = getValInteger('a_idGenre',null);//NB a_idGenre est habituellement un array
         
-        if ($this->a_idGenre)
-        {
-            if ( is_array($this->a_idGenre) )
-                $this->a_idGenre = array_map("intval",$this->a_idGenre);
-            else
-                $this->a_idGenre = intval($this->a_idGenre);
-        }
-
         $this->startRow = $this->pageNum * $this->maxRows;
         
         if (! isset($this->a_searchType[$this->rb_browse])) $this->rb_browse = "ser";

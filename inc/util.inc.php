@@ -412,7 +412,7 @@ function getVal ($nomvar, $default = '')
     // NB: les Magic Quotes n'existent plus pour PHP >= 5.4.0
     if (get_magic_quotes_gpc() ) {
         if (is_array($val))
-            return $val;//TODO
+            return array_map('stripslashes',$val);//NB: non-recursif --> suppose que $_GET['nom'] est un array simple 
         else
             return stripslashes($val);
     } else {
@@ -423,7 +423,11 @@ function getVal ($nomvar, $default = '')
 function getValInteger ($nomvar, $default = 0)
 {
     $val = isset($_GET[$nomvar]) ? $_GET[$nomvar] : $default;
-    return intval($val);
+
+    if (is_array($val))
+        return array_map('intval',$val); //NB: non recursif --> suppose que $_GET['nom'] est un array simple 
+    else
+        return intval($val);
 }
 
 function postVal ($nomvar, $default = '')
@@ -434,7 +438,7 @@ function postVal ($nomvar, $default = '')
     // NB: les Magic Quotes n'existent plus pour PHP >= 5.4.0
     if (get_magic_quotes_gpc()) {
         if (is_array($val))
-            return $val;//TODO
+            return array_map('stripslashes',$val);//NB: non-recursif --> suppose que $_POST['nom'] est un array simple 
         else
             return stripslashes($val);
     } else {
@@ -445,7 +449,11 @@ function postVal ($nomvar, $default = '')
 function postValInteger ($nomvar, $default = 0)
 {
     $val = isset($_POST[$nomvar]) ? $_POST[$nomvar] : $default;
-    return intval($val);
+
+    if (is_array($val))
+        return array_map('intval',$val); //NB: non recursif --> suppose que $_POST['nom'] est un array simple 
+    else
+        return intval($val);
 }
 
 function var_dump_pre ($var)
