@@ -71,21 +71,21 @@ class Statistique
      */
     public function ajoutCorrection ()
     {
+        $this->nbajout = 0;
+        $this->nbcorrect = 0;
+
         // AJOUT & CORRECTION
-        $resultat = Db_query("
-        	select
-        		sum(case when PROP_TYPE = 'AJOUT' then 1 else 0 end) nbajout,
-        		sum(case when PROP_TYPE = 'CORRECTION' then 1 else 0 end) nbcorrect
-        	from
-        		users_alb_prop
-        	where
-        		status = 0
-        	");
-        if ($obj = Db_fetch_object($resultat)) {
-            $this->nbajout = $obj->nbajout;
-            $this->nbcorrect = $obj->nbcorrect;
+        $query = "SELECT COUNT(ID_PROPOSAL) as c, PROP_TYPE as p FROM users_alb_prop WHERE STATUS = 0 OR STATUS = 2 GROUP BY PROP_TYPE";
+        $resultat = Db_query($query);
+
+        while ($row = Db_fetch_array($resultat)) {
+            if ($row['p'] == 'CORRECTION')
+                $this->nbcorrect = $row['c'];
+            if ($row['p'] == 'AJOUT')
+                $this->nbajout = $row['c'];
         }
-        return $obj;
+
+        return;
     }
 
     /**
