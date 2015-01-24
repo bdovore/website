@@ -23,8 +23,8 @@ $status[0] = "En attente";
 
 											  
             <h3>Historique des propositions</h3>									  
-            Il y a actuellement <a href="http://www.bdovore.com/listpropal?type=AJOUT"><b><?php echo $view->NBAJOUT;?> propositions d'album</b></a>, <a href="http://www.bdovore.com/listpropal?type=EDITION"><b><?php echo $view->NBEDITION;?> propositions de nouvelle édition</b></a>
-             et <a href="http://www.bdovore.com/listpropal?type=CORRECTION"><b><?php echo $view->NBCORRECTION;?> propositions de correction</b></a>
+            Il y a actuellement <a href="<?php echo BDO_URL;?>proposition/listpropal?type=AJOUT"><b><?php echo $view->NBAJOUT;?> propositions d'album</b></a>, <a href="<?php echo BDO_URL;?>proposition/listpropal?type=EDITION"><b><?php echo $view->NBEDITION;?> propositions de nouvelle édition</b></a>
+             et <a href="<?php echo BDO_URL;?>proposition/listpropal?type=CORRECTION"><b><?php echo $view->NBCORRECTION;?> propositions de correction</b></a>
              en cours de traitement pour l'ensemble de la communauté BDovore.
             <br />
             <a href="<?php echo BDO_URL; ?>Proposition" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only fancybox fancybox.iframe {width:600,height:400}"> Saisir une nouvelle proposition</a>

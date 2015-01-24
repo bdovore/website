@@ -104,7 +104,8 @@ class User_album_prop extends Bdo_Db_Line
 		users_alb_prop.STATUS,
                     users.USERNAME,
                     users.EMAIL,
-                    users_alb_prop.COMMENTAIRE
+                    users_alb_prop.COMMENTAIRE,
+                    users_alb_prop.PROP_DTE
 	FROM 
 		users_alb_prop 
                 INNER JOIN users using(user_id)

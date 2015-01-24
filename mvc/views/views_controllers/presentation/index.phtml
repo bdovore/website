@@ -216,11 +216,11 @@
 			<br />
 	        Nombre de séries : <a href="browser"><?php echo $view->NBSERIE;?></a>
 			<br />
-	        Nombre d'albums en attente d'ajout actuellement : <a href="listpropal?type=AJOUT"><?php echo $view->NBAJOUT;?></a>
+	        Nombre d'albums en attente d'ajout actuellement : <a href="proposition/listpropal?type=AJOUT"><?php echo $view->NBAJOUT;?></a>
 			<br />
-	        Nombre d'albums en attente de correction actuellement : <a href="listpropal?type=CORRECTION"><?php echo $view->NBCORRECT;?></a>
+	        Nombre d'albums en attente de correction actuellement : <a href="proposition/listpropal?type=CORRECTION"><?php echo $view->NBCORRECT;?></a>
 	        <br />
-	        Nombre d'éditions d'album en attente d'ajout actuellement : <a href="listpropal?type=EDITION"><?php echo $view->NBEDITION;?></a>
+	        Nombre d'éditions d'album en attente d'ajout actuellement : <a href="proposition/listpropal?type=EDITION"><?php echo $view->NBEDITION;?></a>
 	    </p>
 	    <p>
 			<font color="#990000" size="-1">
@@ -241,13 +241,11 @@
 			</font>
 		</p>
 	    <p>
-			Nombre de notes d'albums : <a href="listop?rb_mode=top_vote"><?php echo $view->NBNOTEALBUM;?></a>
+			Nombre de notes d'albums : <a href="leguide?origine=1&rb_mode=1&rb_list=album"><?php echo $view->NBNOTEALBUM;?></a>
 			<br />
-		    Nombre de commentaires d'albums : <a href="listlast?rb_mode=last_cmt"><?php echo $view->NBCOMMENTALBUM;?></a> 
+		    Nombre de commentaires d'albums : <a href="leguide"><?php echo $view->NBCOMMENTALBUM;?></a> 
 	        <br />
-	        Nombre de notes de séries : <a href="listop?rb_mode=top_vote"><?php echo $view->NBNOTESERIE;?></a> 
-	        <br />
-	        Nombre de commentaires de séries : <?php echo $view->NBCOMMENTSERIE;?> 
+	       
 	    </p>
 	</p>
 
