@@ -57,14 +57,26 @@ else {
     // ltrim enlève le ou les '/' en début de $requete_uri
     // nb: trim() enlèverait aussi à la fin, mais un '/' final *pourrait* être une partie importante de la requête
     $request_uri = ltrim($request_uri,'/');
-
+    /*
+     * Réécriture spécifique pour les pages SerieBD : on veut du URL rewriting contenant le titre des séries pour meilleurs indexation googlge
+     */
+    
+    if (preg_match('/^serie-bd-([0-9-]+)-([^0-9](?:.+))$/', $request_uri, $match)) {
+        $parametre = explode('-',$match[1]);
+       
+       $request_uri = "seriebd";
+       $_GET["id_serie"]= $parametre[0];
+       if (isset($parametre[1])) {
+           $_GET["page"]=$parametre[1];
+       }
+    }
     if ($request_uri) {
         $params = explode('/', $request_uri);
     }
     else {
         $params = array();
     }
-
+   
     $controller = isset($params[0]) ? ucfirst(strtolower($params[0])) : 'Accueil';
     // nb une URL du type http://bdovore.com/admin/ donne $params[1] == ''
     // --> erreur 404 si on ne vérifie pas la longueur de $params[1]

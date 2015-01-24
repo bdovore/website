@@ -119,9 +119,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 	    <div class="contentalb" id="alb-description">
 			
 			<h3 align="center"><?php echo $view->tome->TITRE_TOME;?>  <br>  
-                            <a href="#" onclick="openSerie();">	<?php echo $view->tome->NOM_SERIE;
-                                if ($view->tome->NUM_TOME ) echo ", Tome ". $view->tome->NUM_TOME;           
-                            ?></a> 
+                            <?php echo $ficheAlbum->urlSerie($view->tome,"_parent");?>
+                           
                         </h3>
                 <p align="center">
                                 <font size="-1"><?php if ($view->tome->NB_NOTE_TOME > 0) { ?> <span id="noteTome<?php echo $view->tome->ID_TOME; ?>" style="vertical-align: -3px;"> </span> <script>$('#noteTome<?php echo $view->tome->ID_TOME; ?>').raty({score: <?php echo $view->tome->MOYENNE_NOTE_TOME/2.0; ?>, readOnly: true});</script> pour <?php echo $view->tome->NB_NOTE_TOME ?> notes. <?php ;} ?></font>

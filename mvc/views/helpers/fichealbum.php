@@ -260,12 +260,12 @@ class FicheAlbum {
         }
     }
     
-    public function urlSerie($o_serie) {
+    public function urlSerie($o_serie,$target="") {
         if (is_array($o_serie)) {
             $o_serie = (object) $o_serie;
         }
-
-        $html = '<a href="' . BDO_URL . 'SerieBD?id_serie=' . $o_serie->ID_SERIE . '" title="' . $o_serie->NOM_SERIE . '">
+       
+        $html = '<a href="' . BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-'.clean_url($o_serie->NOM_SERIE) .'" title="' . $o_serie->NOM_SERIE . '"'.( $target ? 'target="'. $target.'"' : '') .'>
             ' . $o_serie->NOM_SERIE . '</a>';
 
         if (Bdo_Cfg::user()->minAccessLevel(1)) {

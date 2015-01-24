@@ -969,7 +969,37 @@ function urlSerie ($o_serie)
     if (is_array($o_serie)) {
         $o_serie = (object) $o_serie;
     }
-    return '<a href="' . BDO_URL . 'SerieBD/?id_serie=' . $o_serie->ID_SERIE . '" title="' . $o_serie->NOM_SERIE . '">
+    return '<a href="' . BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE .'-'.clean_url($o_serie->NOM_SERIE) . '" title="' . $o_serie->NOM_SERIE . '">
            ' . $o_serie->NOM_SERIE . '</a>';
 }
 
+function clean_url($texte) {
+	//Suppression des espaces en début et fin de chaîne
+	$texte = trim($texte);
+ 
+	//Suppression des accents
+	$texte = htmlentities($texte, ENT_NOQUOTES, "UTF-8");
+    
+        $texte = preg_replace('#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $texte);
+        $texte = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $texte); // pour les ligatures e.g. '&oelig;'
+        $texte = preg_replace('#&[^;]+;#', '', $texte); // supprime les autres caractères
+	//mise en minuscule
+	$texte = strtolower($texte);
+ 
+	//Suppression des espaces et caracteres spéciaux
+	$texte = str_replace(" ",'_',$texte);
+	$texte = preg_replace('#([^a-z0-9-])#','-',$texte);
+ 
+	//Suppression des tirets multiples
+	$texte = preg_replace('#([-]+)#','-',$texte);
+ 
+	//Suppression du premier caractère si c'est un tiret
+	if($texte{0} == '-')
+		$texte = substr($texte,1);
+ 
+	//Suppression du dernier caractère si c'est un tiret
+	if(substr($texte, -1, 1) == '-')
+		$texte = substr($texte, 0, -1);
+ 
+	return $texte;
+}

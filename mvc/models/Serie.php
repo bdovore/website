@@ -273,5 +273,25 @@ FROM " . $this->table_name . "
         return $a_obj;
         
     }
+    
+    public function getListSerie($lettre="A") {
+        $select = "SELECT 
+
+                `bd_serie`.`ID_SERIE`  , 
+
+                `bd_serie`.`NOM` as NOM_SERIE 
+                FROM BD_SERIE
+                WHERE NOM like '".$lettre."%' order by NOM";
+        $resultat = Db_query($select);
+        $a_obj = array();
+
+        while ($obj = Db_fetch_object($resultat)) {
+
+            $a_obj[] = $obj;
+
+        }
+
+        return $a_obj;
+    }
 
 }
