@@ -98,6 +98,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
            <?php echo $ficheAlbum->urlalbum($tome,'albTitle'); ?> </strong><br>
                 <span id='noteTome<?php echo $tome->ID_TOME ;?>'> </span>
            <p class="fiche_album">
+            S&eacute;rie : <?php echo $ficheAlbum->urlSerie($tome); ?> <br>
             Publié par <a href='./guest?user=<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
            </p>
             </td>
@@ -136,6 +137,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
            <?php echo $ficheAlbum->urlalbum($tome,'albTitle'); ?> </strong><br>
                 <span id='noteTome<?php echo $tome->ID_TOME ;?>'> </span>
            <p class="fiche_album">
+               S&eacute;rie : <?php echo $ficheAlbum->urlSerie($tome); ?> <br>
             Publié par <a href='./guest?user=<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
            </p>
             </td>
@@ -174,6 +176,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 <span id='noteTome<?php echo $tome->ID_TOME ;?>'> </span>
             <br>
             <p class="fiche_album">
+                S&eacute;rie : <?php echo $ficheAlbum->urlSerie($tome); ?> <br>
             Publié par <a href='./guest?user=<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?>
             </p>
             </td>
@@ -203,7 +206,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             $tr = true;
             foreach ($view->a_lastSorties as $lastSorties) {
                 if ($tr) echo "<tr>";
-                 echo "<td class='mw50'>" . $ficheAlbum->big($lastSorties,$sep=true,$getUrlSerie=false) . "</td>";
+                 echo "<td class='mw50'>" . $ficheAlbum->big($lastSorties,$sep=true,$getUrlSerie=true) . "</td>";
 
                 if (!$tr) {
                     echo "</tr>";
@@ -226,7 +229,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             $tr = true;
             foreach ($view->a_futurSorties as $futurSorties) {
                 if ($tr) echo "<tr>";
-                 echo "<td class='mw50'>" . $ficheAlbum->big($futurSorties,$sep=true,$getUrlSerie=false) . "</td>";
+                 echo "<td class='mw50'>" . $ficheAlbum->big($futurSorties,$sep=true,$getUrlSerie=true) . "</td>";
 
                 if (!$tr) {
                     echo "</tr>";

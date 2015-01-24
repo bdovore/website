@@ -17,25 +17,29 @@ $page = $view->getHelper('pagination');
 if (isset($view->dbs_comment)) {
     //echo ("<table>");
 
-    foreach ($view->dbs_comment->a_dataQuery as $tome) {
+    foreach ($view->dbs_comment->a_dataQuery as $tome) { ?>
 
-        echo ("<div class='cadre1'>");
-        echo ("<table width='50%'>");
-        echo ("<tr><td style='vertical-align:top'>");
-        echo $ficheAlbum->urlalbum($tome, 'couvBig');
+        <div class='cadre1'>
+        <table>
+       <tr><td style='vertical-align:top'>
+       <?php echo $ficheAlbum->urlalbum($tome, 'couvBig'); ?>
 
 
-        echo ("</td>");
-        echo("<td style='vertical-align:top'>");
+        </td>
+       
+       <td style='vertical-align:top'>
 
-        echo $ficheAlbum->urlalbum($tome, 'albTitle');
-        echo ("<br>");
-        echo ("<strong>Note : " . $tome->NOTE . "</strong> publié par <a href='./guest?user=" . $tome->user_id . "'>" . $tome->username . "</a> le " . $tome->DTE_POST);
-        echo ("<p>" . (stripslashes(nl2br($tome->COMMENT))) . "</p>");
-        echo ("</td>");
-        echo ("</table>");
-        echo ("</div>");
-    }
+                                    <strong><?php echo $ficheAlbum->urlalbum($tome, 'albTitle'); ?></strong>
+                                    <span id='noteTome<?php echo $tome->ID_TOME; ?>'> </span>                                    
+                                    <p class="fiche_album">
+                                     S&eacute;rie : <?php echo $ficheAlbum->urlSerie($tome); ?> <br>
+                                    Publié par <a href='./guest?user=<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?></p>
+                                    <p> <?php echo (stripslashes(nl2br($tome->COMMENT))); ?>
+                                </td>
+                        </table>
+            <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE / 2; ?>, readOnly: true});</script>
+                    </div>
+ <?php   }
 }
 ?><div align="center">
     <?php
