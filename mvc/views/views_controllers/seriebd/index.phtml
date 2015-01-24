@@ -115,17 +115,17 @@ foreach ($view->dbs_tome->a_dataQuery as $tome) {
 <?php
 if ($view->serie->NB_ALBUM > 20) {
     $max_page = ceil($view->serie->NB_ALBUM / 20);
-
+    $titre_url = clean_url($view->serie->NOM_SERIE);
     if ($view->NUM_PAGE > 1) {
-        echo "<a href='SerieBD?id_serie=" . $view->serie->ID_SERIE . "&page=" . ($view->NUM_PAGE - 1) . "'>Précédent </a>";
+        echo "<a href='serie-bd-" . $view->serie->ID_SERIE ."-". $titre_url ."?page=" . ($view->NUM_PAGE - 1) . "'>Précédent </a>";
     }
 
     // pagination suivant / précedent etc.
     for ($i = 1; $i <= $max_page; $i++) {
-        echo "<a href='SerieBD?id_serie=" . $view->serie->ID_SERIE . "&page=" . $i . "'>" . $i . "&nbsp;</a>";
+        echo "<a href='serie-bd-" . $view->serie->ID_SERIE ."-". $titre_url . "?page=" . $i . "'>" . $i . "&nbsp;</a>";
     }
     if ($view->NUM_PAGE < $max_page) {
-        echo "<a href='SerieBD?id_serie=" . $view->serie->ID_SERIE . "&page=" . ($view->NUM_PAGE + 1) . "'> Suivant</a>";
+        echo "<a href='serie-bd-" . $view->serie->ID_SERIE ."-". $titre_url . "?page=" . ($view->NUM_PAGE + 1) . "'> Suivant</a>";
     }
 }
 ?> </div>
