@@ -280,7 +280,7 @@ FROM " . $this->table_name . "
                 `bd_serie`.`ID_SERIE`  , 
 
                 `bd_serie`.`NOM` as NOM_SERIE 
-                FROM BD_SERIE
+                FROM bd_serie
                 WHERE NOM like '".$lettre."%' order by NOM";
         $resultat = Db_query($select);
         $a_obj = array();
