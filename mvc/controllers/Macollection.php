@@ -84,6 +84,7 @@ class Macollection extends Bdo_Controller {
             $email_pret = getVal('email_pret','');
             $flg_dedicace = getVal("flg_dedicace",'N');
             $flg_tete = getVal("flg_tete",'N');
+            $flg_lu = getVal("flg_lu",'N');
             
             $flg_cadeau = getVal("flg_cadeau",'N');
             $cote = getVal("cote",'');
@@ -126,6 +127,7 @@ class Macollection extends Bdo_Controller {
                             'date_achat' => $date_achat,
                             'cote' => $cote,
                             'flg_cadeau' => $flg_cadeau,
+                           'FLG_LU' => $flg_lu
                             
                     )
 
@@ -183,6 +185,7 @@ class Macollection extends Bdo_Controller {
             $cadeau = getVal("cb_cadeau","N");
             $eo = getVal("cb_tete","N");
             $dedicace = getVal("cb_dedicace","N");
+            $non_lu = getVal("cb_lu","N");
             
             $limit = " limit ".(($page - 1)*$length).", ".$length;
             $orderby = " order by ".$a_order[$sort-1]." ".$order;
@@ -193,6 +196,7 @@ class Macollection extends Bdo_Controller {
             if ($cadeau == "O") $where .= " and flg_cadeau = 'O' ";
             if ($eo == "O") $where .= " and flg_tete = 'O' ";
             if ($dedicace== "O") $where .= " and flg_dedicace = 'O' ";
+            if ($non_lu== "O") $where .= " and FLG_LU <> 'O' ";
             
             if($l_search <> "") {
                 $searchvalue = Db_Escape_String($l_search);
@@ -214,6 +218,7 @@ class Macollection extends Bdo_Controller {
                 "pret" => $pret,
                 "cadeau" => $cadeau,
                 "eo" => $eo,
+                "non_lu" => $non_lu,
                 "dedicace" => $dedicace,
                 "searchvalue" => $l_search
                 ));

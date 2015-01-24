@@ -86,6 +86,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 url+= "&flg_dedicace="+($("#cb_dedicace").is(':checked') ? "O" : "N");
                 url+= "&flg_tete="+($("#cb_tete").is(':checked') ? "O" : "N");
                 url+= "&flg_cadeau="+ ($("#cb_cadeau").is(':checked') ? "O" : "N");
+                url+= "&flg_lu="+ ($("#cb_lu").is(':checked') ? "O" : "N");
                 url+= "&date_achat="+$("#date_achat").val();
                 url+= "&email_pret="+$("#email_pret").val();
                 url+= "&nom_pret="+$("#nom_pret").val();
@@ -204,6 +205,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 					E.O :	<input name="cb_tete" id="cb_tete" value="O" type="checkbox" <?php if ($view->tome->FLG_TETE == 'O') echo "checked"; ?> >
                                         Dédicace : <input name="cb_dedicace" id="cb_dedicace" value="O" type="checkbox" <?php if ($view->tome->FLG_DEDICACE == 'O') echo "checked"; ?>>
                                          Cadeau :<input name="cb_cadeau" id="cb_cadeau" value="checkbox" type="checkbox" <?php if ($view->tome->FLG_CADEAU == 'O') echo "checked"; ?>>
+                                         Lu :<input name="cb_lu" id="cb_lu" value="checkbox" type="checkbox" <?php if ($view->tome->FLG_LU == 'O') echo "checked"; ?>>
 					</td>
                                     </tr>
                                    	    

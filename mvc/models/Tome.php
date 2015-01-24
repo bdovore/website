@@ -118,7 +118,8 @@ class Tome extends Bdo_Db_Line
                         ua.flg_cadeau as FLG_CADEAU, 
                         ua.DTE_PARUTION as USER_EDITION_DTE_PARUTION,
                         ua.IMG_COUV as USER_EDITION_IMG_COUV,
-                        ua.comment_edition as USER_EDITION_COMMENT
+                        ua.comment_edition as USER_EDITION_COMMENT,
+                        ua.FLG_LU
                 ";
             $from .= " 
                     LEFT JOIN (
@@ -137,7 +138,8 @@ class Tome extends Bdo_Db_Line
                                 bd_edition.DTE_PARUTION,
                                 bd_edition.IMG_COUV,
                                 bd_edition.COMMENT as comment_edition,
-                                bd_edition.id_tome
+                                bd_edition.id_tome,
+                                FLG_LU
                            from users_album inner join bd_edition using (id_edition)
                            where users_album.user_id = ". intval($_SESSION['userConnect']->user_id) ."
                                 group by bd_edition.id_tome) ua 
