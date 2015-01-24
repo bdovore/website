@@ -54,6 +54,19 @@ class Album extends Bdo_Controller {
         $this->view->render();
     }
     
+    public function Fiche () {
+        $ID_TOME = getValInteger('id_tome',1);
+        $this->loadModel('Tome');
+            $this->Tome->set_dataPaste(array(
+                "ID_TOME" => $ID_TOME
+            ));
+            $this->Tome->load();
+            $this->view->set_var(array(
+            'tome' => $this->Tome,
+            'PAGETITLE' => "Fiche Album : " . $this->Tome->TITRE_TOME ));
+            $this->view->layout = "fiche";
+            $this->view->render();
+    } 
     public function getJSON (){
         $ID_TOME = getValInteger('id_tome',0); 
         $id_edition = getValInteger('id_edition',0);

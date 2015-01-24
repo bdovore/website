@@ -1,0 +1,47 @@
+<?php 
+
+$ficheAlbum = $view->getHelper('ficheAlbum');
+
+
+
+?>
+<link href="http://www.bdovore.com/style/fiche.css" rel="stylesheet" type="text/css">
+<div id="fiche">
+    <div id="couv">
+        <img id="couv2" src="<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : "default.png";?>" alt="Couverture" />
+        <br />
+        &copy; <?php echo $view->tome->NOM_EDITEUR;?>
+    </div>
+    <table id="info">
+        <tr>
+            <td class="album" colspan="2"><?php echo $ficheAlbum->urlAlbum($view->tome,$class="albTitle");?></td>
+        </tr>
+        <tr>
+            <td class="entete">Série :</td>
+            <td class="contenu"><?php echo $ficheAlbum->urlSerie($view->tome,"_blank"); ?></td>
+        </tr>
+        <tr>
+            <td class="entete">Scénario :</td>
+            <td class="contenu"><?php echo $view->tome->scpseudo; ?></td>
+        </tr>
+        <tr>
+            <td class="entete">Dessin :</td>
+            <td class="contenu"><?php echo $view->tome->depseudo;?></td>
+        </tr>
+        <tr>
+            <td class="entete">Couleurs :</td>
+            <td class="contenu"><?php echo $view->tome->copseudo;?></td>
+        </tr>
+        <tr>
+            <td class="entete">Editeur :</td>
+            <td class="contenu"><?php echo $view->tome->NOM_EDITEUR ;?></td>
+        </tr>
+        <tr>
+            <td class="entete">Parution :</td>
+            <td class="contenu"><?php $dateparution = new DateTime($view->tome->DTE_PARUTION); echo $dateparution->format("d/m/Y") ;?></td>
+        </tr>
+        
+    </table>
+    <div class="space">&nbsp;</div>
+</div>
+<div class="space">&nbsp;</div>
