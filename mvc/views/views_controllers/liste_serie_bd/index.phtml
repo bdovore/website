@@ -1,0 +1,11 @@
+<?php $fiche = $view->getHelper('ficheAlbum'); ?>
+<div class="cadre1">
+    <?php if (isset($view->dbs_serie)) { 
+        foreach ($view->dbs_serie as $serie) { 
+            echo $fiche->urlSerie($serie);
+     ?>
+    <Br>
+    
+    <?php }} ?>
+
+</div>
