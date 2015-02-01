@@ -300,10 +300,10 @@ td.bordure {
 td.bord_gauche {
 
 
-    background-image: url(http://www.bdovore.com/images/site/gauche.gif);
+    /*background-image: url(http://www.bdovore.com/images/site/gauche.gif);
 
+    background-repeat: repeat-y;*/
 
-    background-repeat: repeat-y;
 
 
     height: 13px;
