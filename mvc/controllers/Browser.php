@@ -78,7 +78,10 @@ class Browser extends Bdo_Controller
         // liste des genres
 
         $this->loadModel('Genre');
-
+        $search = postVal("search","");
+        if ($search <> "") {
+            $this->let = $search;
+        }
         $dbs_genre = $this->Genre->all();
         
         $this->view->set_var(array(
