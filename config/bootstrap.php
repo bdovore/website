@@ -28,13 +28,13 @@ get_include_path () );
 // ---------------------------------------------------------------
 // connexion base
 Bdo_Cfg::Db_connect();
-Bdo_Debug::execTime("apres connexion");
+if (Bdo_Cfg::debug()) Bdo_Debug::execTime("apres connexion");
 // ---------------------------------------------------------------
 // ---------------------------------------------------------------
 // chargement du schema de base de donnee
 $schema = new Bdo_Db_Schema();
 Bdo_Cfg::setVar('schema', $schema);
-Bdo_Debug::execTime("apres charg schema");
+if (Bdo_Cfg::debug()) Bdo_Debug::execTime("apres charg schema");
 // ---------------------------------------------------------------
 // chargement des acl
 /*$acl = new Bdo_Acl();
@@ -51,7 +51,7 @@ $user->autoLogin();
 Bdo_Error::add($user->error);
 
 Bdo_Cfg::setVar('user',$user);
-Bdo_Debug::execTime("apres charg user");
+if (Bdo_Cfg::debug()) Bdo_Debug::execTime("apres charg user");
 
 // ---------------------------------------------------------------
 // declaration de la langue
@@ -119,7 +119,7 @@ else {
     new Bdo_Error(404);
 }
 
-Bdo_Debug::execTime("sortie du bootstrap");
+if (Bdo_Cfg::debug()) Bdo_Debug::execTime("sortie du bootstrap");
 // ---------------------------------------------------------------
 if (Bdo_Cfg::debug()) {
     echo Bdo_Debug::saveInfoVar($_SESSION, '_SESSION', '_SESSION en sortie');
