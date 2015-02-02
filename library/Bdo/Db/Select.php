@@ -129,6 +129,8 @@ class Bdo_Db_Select
 
 		if (!$resultat) {
 			$resultat = Db_query($this->select.' '.$this->from.' '.$this->where.' '.$this->groupby.' limit 0,0');
+			if (!$resultat)
+				return null;
 		}
 
 		//$finfo = mysqli_fetch_fields($resultat);
