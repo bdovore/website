@@ -499,6 +499,10 @@ class Bdo_Db_Line
 
     public function delete ()
     {
+        if (READONLY) {
+            return;
+        }
+
         $this->wherePk();
         if (empty($this->error)) $this->controlPk();
         
