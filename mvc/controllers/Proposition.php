@@ -314,9 +314,9 @@ class Proposition extends Bdo_Controller {
         $type = getVal("type","AJOUT");
         if ($type == "EDITION") {
             $this->loadModel("Edition");
-            $this->Edition->load("c"," WHERE PROP_STATUS in (0,2,3,4)");
+            $dbs_edition = $this->Edition->load("c"," WHERE PROP_STATUS in (0,2,3,4)");
             
-            $this->view->set_var("dbs_edition",$this->Edition);
+            $this->view->set_var("dbs_edition",$dbs_edition);
         }
        else {
            $this->loadModel("User_album_prop");
