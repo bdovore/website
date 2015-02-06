@@ -318,17 +318,29 @@ class Proposition extends Bdo_Controller {
             
             $this->view->set_var("dbs_edition",$dbs_edition);
         }
-       else {
-           $this->loadModel("User_album_prop");
-           //echo $this->User_album_prop->select()." WHERE STATUS in (0,2,3,4) and PROP_TYPE = '".  Db_Escape_String($type)."'";
-           $dbs_prop = $this->User_album_prop->load("c"," WHERE STATUS in (0,2,3,4) and PROP_TYPE = '".  Db_Escape_String($type)."'");
+        else {
+            $this->loadModel("User_album_prop");
+            //echo $this->User_album_prop->select()." WHERE STATUS in (0,2,3,4) and PROP_TYPE = '".  Db_Escape_String($type)."'";
+            $dbs_prop = $this->User_album_prop->load("c"," WHERE STATUS in (0,2,3,4) and PROP_TYPE = '".  Db_Escape_String($type)."'");
             $this->view->set_var("dbs_prop", $dbs_prop);
-           
-       }
-       $this->view->set_var($this->User_album_prop->getAllStat());
-       $this->view->set_var("type",$type);
-       $this->view->set_var("PAGETITLE","Liste des proposition : ".Db_Escape_String($type));
-       $this->view->render();
+        }
+
+        $this->loadModel('Statistique');
+        $this->Statistique->editionAttente();
+        $this->Statistique->ajoutCorrection();
+
+        $this->view->set_var(
+            array(
+                'NBEDITION' => $this->Statistique->nbEditionAttente,
+                "NBAJOUT" => $this->Statistique->nbajout,
+                "NBCORRECTION" => $this->Statistique->nbcorrect,
+            )
+        );
+        
+        //$this->view->set_var($this->User_album_prop->getAllStat());
+        $this->view->set_var("type",$type);
+        $this->view->set_var("PAGETITLE","Liste des proposition : ".Db_Escape_String($type));
+        $this->view->render();
         
     }
 }

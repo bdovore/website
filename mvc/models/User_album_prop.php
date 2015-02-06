@@ -201,6 +201,7 @@ class User_album_prop extends Bdo_Db_Line
     public function getAllStat() {
          $prop_alb = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'AJOUT' and status not in ( 98,99,1) ");
          $prop_corr = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'CORRECTION' and status not in ( 98,99,1)");
+         //c'est un peu bizarre d'avoir un accès à bd_edition dans le modèle user_album_prop --> plutôt utiliser statistique.php
          $NBEDITION = Db_CountRow("SELECT * FROM bd_edition WHERE prop_status not in ( 98,99,1) ");
          return (array(
              "NBAJOUT" =>  $prop_alb,
