@@ -66,10 +66,12 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             </font>
 <?php echo $view->serie->LIB_FLG_FINI_SERIE; ?>
             <br />
+            <?php if ($view->serie->HISTOIRE_SERIE) { ?>
             <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
             <strong>Synopsis : </strong>
             </font>
             <?php echo $view->serie->HISTOIRE_SERIE; ?>
+            <?php } ?>
             </p>
             </div>
 <?php echo $view->SERNOTE; ?>
@@ -77,12 +79,12 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 <hr class="expSep" />
                 <!-- END CommentBlock -->
 
-               
+              <br> 
         </div>
 
        
-            <div class="cadre1">
-
+            <div class="cadre1"><div class="middle_title">
+ <h3>Albums </h3> </div>
                 <!-- BEGIN AlbBlock -->
                 <table class="list_album">
 <?php
