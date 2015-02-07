@@ -110,53 +110,7 @@ class Edition extends Bdo_Db_Line
         	LEFT JOIN bd_auteur coa ON bd_tome.id_color_alt = coa.id_auteur
                 LEFT JOIN users us on us.user_id = bd_edition.USER_ID 
                 ";
-        if (Bdo_Cfg::user()->minAccesslevel(2)) {
-            // ajout des champs de la collection de l'utilisateur
-            $select .= " , ua.id_edition as USER_EDITION,
-                        ua.flg_pret FLG_PRET,
-                        ua.nom_pret as NOM_PRET,
-                        ua.email_pret as EMAIL_PRET,
-                        ua.flg_dedicace as FLG_DEDICACE,
-                        ua.flg_tete as FLG_TETE,
-                        ua.comment as USER_COMMENT,
-                        ua.date_ajout as DATE_AJOUT,
-                        ua.flg_achat as FLG_ACHAT,
-                        IFNULL(ua.date_achat,ua.date_ajout) as DATE_ACHAT,
-                        ua.cote as COTE,
-                        ua.flg_cadeau as FLG_CADEAU, 
-                        ua.DTE_PARUTION as USER_EDITION_DTE_PARUTION,
-                        ua.IMG_COUV as USER_EDITION_IMG_COUV,
-                        ua.comment_edition as USER_EDITION_COMMENT,
-                        ua.FLG_LU
-                ";
-            $from .= " 
-                    LEFT JOIN (
-                        select users_album.id_edition, 
-                                flg_pret, 
-                                nom_pret, 
-                                email_pret, 
-                                flg_dedicace, 
-                                flg_tete, 
-                                users_album.comment,
-                                date_ajout,
-                                flg_achat,
-                                date_achat,
-                                cote,
-                                flg_cadeau,
-                                bd_edition.DTE_PARUTION,
-                                bd_edition.IMG_COUV,
-                                bd_edition.COMMENT as comment_edition,
-                                bd_edition.id_tome,
-                                FLG_LU
-                           from users_album inner join bd_edition using (id_edition)
-                           where users_album.user_id = ". intval($_SESSION['userConnect']->user_id) ."
-                                ) ua 
-                               on ua.id_edition = bd_edition.id_edition 
-                            
-                            ";
-            
-        }
-        
+       
         
         return $select.$from;
     }

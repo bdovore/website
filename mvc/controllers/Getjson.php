@@ -13,6 +13,7 @@
 class GetJSON extends Bdo_Controller {
 
     public function Index() {
+       Bdo_Cfg::setVar('debug',false);
         $data = getVal("data", "");
         switch ($data) {
             case "Auteur" :
@@ -36,6 +37,9 @@ class GetJSON extends Bdo_Controller {
                 break;
             case "Serie" :
                 $this->Serie();
+                break;
+            case "Useralbum" :
+                $this->Useralbum();
                 break;
             default :
                 break;
@@ -274,6 +278,29 @@ class GetJSON extends Bdo_Controller {
 
         $this->view->layout = "ajax";
         $this->view->render();
+    }
+    
+    private function Useralbum(){
+        $id_tome = getValInteger("id_tome",0);
+        $id_edition = getValInteger("id_edition",0);
+        $this->loadModel("Useralbum");
+        if (Bdo_Cfg::user()->minAccesslevel(2)) {
+            if ($id_edition) {
+                // selection par edition
+                $this->Useralbum->load("c"," WHERE ua.user_id = ".intval($_SESSION['userConnect']->user_id). " AND ua.id_edition = ".$id_edition);
+                
+            } else {
+                // selection par id_tome
+                $this->Useralbum->load("c"," WHERE ua.user_id = ".intval($_SESSION['userConnect']->user_id). " AND bd_tome.id_tome = ".$id_tome);
+            }
+              $this->view->set_var('json', json_encode($this->Useralbum->dbSelect->a_dataQuery));   
+            
+        }
+        
+        $this->view->layout = "ajax";
+        $this->view->render();
+        
+        
     }
 
 }

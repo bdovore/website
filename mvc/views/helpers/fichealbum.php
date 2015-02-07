@@ -280,24 +280,26 @@ class FicheAlbum {
         $html = "";
 
         if (User::minAccesslevel(2)) {
-            $id_source = "addAlbum" . $o_tome->ID_EDITION;
-            $html = "<div id='" . $id_source . "' style='font-size:0.9em;'>";
-
-            if ($o_tome->DATE_AJOUT) {
-                if ($o_tome->FLG_ACHAT == "O") {
-                    $html.= "ajouté à vos futurs achats le " . date_format(date_create($o_tome->DATE_AJOUT), "d/m/Y");
-                } else {
-                    $html.= "ajouté à votre collection le " . date_format(date_create($o_tome->DATE_AJOUT), "d/m/Y");
-                }
-
-                $html .= " - <a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' title='Supprimer l'édition de ma collection' onclick='deleteEdition(" . $o_tome->ID_EDITION . ")'>Supprimer</a>";
-            } else {
-
-                $html .= "<a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' href='javascript:addAlbum(" . $o_tome->ID_TOME . "," . $o_tome->ID_EDITION . ',"N")' . "'" . ' title="Ajouter cet album dans votre collection">Dans ma collection</a>';
-                $html .= " - <a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' href='javascript:addAlbum(" . $o_tome->ID_TOME . "," . $o_tome->ID_EDITION . ',"O")' . "'" . ' title="A acheter prochainement">Futur Achat</a>';
-            }
-
-            $html.= "</div>";
+//            $id_source = "addAlbum" . $o_tome->ID_EDITION;
+//            $html = "<div id='" . $id_source . "' style='font-size:0.9em;'>";
+//
+//            if ($o_tome->DATE_AJOUT) {
+//                if ($o_tome->FLG_ACHAT == "O") {
+//                    $html.= "ajouté à vos futurs achats le " . date_format(date_create($o_tome->DATE_AJOUT), "d/m/Y");
+//                } else {
+//                    $html.= "ajouté à votre collection le " . date_format(date_create($o_tome->DATE_AJOUT), "d/m/Y");
+//                }
+//
+//                $html .= " - <a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' title='Supprimer l'édition de ma collection' onclick='deleteEdition(" . $o_tome->ID_EDITION . ")'>Supprimer</a>";
+//            } else {
+//
+//                $html .= "<a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' href='javascript:addAlbum(" . $o_tome->ID_TOME . "," . $o_tome->ID_EDITION . ',"N")' . "'" . ' title="Ajouter cet album dans votre collection">Dans ma collection</a>';
+//                $html .= " - <a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' href='javascript:addAlbum(" . $o_tome->ID_TOME . "," . $o_tome->ID_EDITION . ',"O")' . "'" . ' title="A acheter prochainement">Futur Achat</a>';
+//            }
+//
+//            $html.= "</div>";
+            $id_source = "infoCollection" . $o_tome->ID_TOME;
+            $html= "<div id='".$id_source."'></div><script>getInfoCollectionFromTome(".$o_tome->ID_TOME.",".$o_tome->ID_EDITION.")</script>";
 
         } else {
             $html = "<i>Connectez vous pour ajouter cet album dans votre collection !</i>";
