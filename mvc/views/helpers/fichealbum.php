@@ -128,7 +128,7 @@ class FicheAlbum {
 
         $html .= "</p>";
         
-        if (Bdo_Cfg::user()->minAccessLevel(2)) {
+        if (Bdo_Cfg::user()->minAccesslevel(2)) {
             // ajout des liens d'ajout dans la collection
             $html .= '<br>' . $this->linkCollection($o_tome);
         }
@@ -245,7 +245,7 @@ class FicheAlbum {
                 }
                 case "albTitle": {
                         $html .= $o_tome->TITRE_TOME . '</a>';
-                        if (Bdo_Cfg::user()->minAccessLevel(1)) {
+                        if (Bdo_Cfg::user()->minAccesslevel(1)) {
                             $html .= '&nbsp;&nbsp;<a href="' .BDO_URL. 'admin/editalbum?alb_id=' .$o_tome->ID_TOME. '" target="_blank"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
                         }
                         break;
@@ -268,7 +268,7 @@ class FicheAlbum {
         $html = '<a href="' . BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-'.clean_url($o_serie->NOM_SERIE) .'" title="' . $o_serie->NOM_SERIE . '"'.( $target ? 'target="'. $target.'"' : '') .'>
             ' . $o_serie->NOM_SERIE . '</a>';
 
-        if (Bdo_Cfg::user()->minAccessLevel(1)) {
+        if (Bdo_Cfg::user()->minAccesslevel(1)) {
             $html .= '&nbsp;&nbsp;<a href="' . '#' . '"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
         }
 

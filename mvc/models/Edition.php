@@ -110,7 +110,7 @@ class Edition extends Bdo_Db_Line
         	LEFT JOIN bd_auteur coa ON bd_tome.id_color_alt = coa.id_auteur
                 LEFT JOIN users us on us.user_id = bd_edition.USER_ID 
                 ";
-        if (Bdo_Cfg::user()->minAccessLevel(2)) {
+        if (Bdo_Cfg::user()->minAccesslevel(2)) {
             // ajout des champs de la collection de l'utilisateur
             $select .= " , ua.id_edition as USER_EDITION,
                         ua.flg_pret FLG_PRET,

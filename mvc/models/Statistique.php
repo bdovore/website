@@ -73,7 +73,7 @@ class Statistique
         $this->nbcorrect = 0;
 
         // AJOUT & CORRECTION
-        $query = "SELECT COUNT(ID_PROPOSAL) as c, PROP_TYPE as p FROM users_alb_prop WHERE STATUS = 0 OR STATUS = 2 GROUP BY PROP_TYPE";
+        $query = "SELECT COUNT(ID_PROPOSAL) as c, PROP_TYPE as p FROM users_alb_prop WHERE STATUS in (0,2,3,4) GROUP BY PROP_TYPE";
         $resultat = Db_query($query);
 
         while ($row = Db_fetch_array($resultat)) {
