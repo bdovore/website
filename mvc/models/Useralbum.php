@@ -62,6 +62,7 @@ class Useralbum extends Bdo_Db_Line
                 IFNULL(ua.date_achat, ua.date_ajout) as DATE_ACHAT,
                 ua.cote,
                 ua.flg_cadeau as FLG_CADEAU,
+                ua.FLG_LU as FLG_LU,
         	
         	
         	bd_tome.PRIX_BDNET, 
