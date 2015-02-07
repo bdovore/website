@@ -102,7 +102,7 @@ class Tome extends Bdo_Db_Line
         $select = $this->default_select;
         $from = $this->defaut_from;
         
-        if (Bdo_Cfg::user()->minAccessLevel(2)) {
+        if (Bdo_Cfg::user()->minAccesslevel(2)) {
             // ajout des champs de la collection de l'utilisateur
             $select .= " , ua.id_edition as USER_EDITION,
                         ua.flg_pret FLG_PRET,
