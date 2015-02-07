@@ -283,7 +283,14 @@ class Tome extends Bdo_Db_Line
                     (bd_tome.id_scenar IN (SELECT id_auteur FROM users_list_aut WHERE user_id = ". $user_id .") OR 
                         bd_tome.id_dessin IN (SELECT id_auteur FROM users_list_aut WHERE user_id = ". $user_id ."))
 
-                   and ua.id_edition is null 
+                AND NOT EXISTS (
+                        SELECT NULL 
+                        FROM users_album ua
+                        INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
+                        WHERE 
+                        ua.user_id = ".$user_id."
+                        AND bd_tome.id_tome=en.id_tome 
+                    )
                     AND NOT EXISTS (
                             SELECT NULL 
                             FROM users_exclusions uet
