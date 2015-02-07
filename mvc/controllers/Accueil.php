@@ -52,7 +52,7 @@ class Accueil extends Bdo_Controller
     private function lastSorties ($max=5)
     {
         $this->loadModel("Tome");
-        $dbs = $this->Tome->load("c"," WHERE en.DTE_PARUTION <= CURDATE() and en.DTE_PARUTION > DATE_ADD(CURDATE(), INTERVAL -12 MONTH) and bd_tome.id_genre not in (17,55) order by en.DTE_PARUTION desc limit 0,".intval($max));
+        $dbs = $this->Tome->load("c"," WHERE en.DTE_PARUTION <= CURDATE() and en.DTE_PARUTION > DATE_ADD(CURDATE(), INTERVAL -2 MONTH) and bd_tome.id_genre not in (17,55) order by en.DTE_PARUTION desc limit 0,".intval($max));
 
         return $dbs->a_dataQuery;
     }
