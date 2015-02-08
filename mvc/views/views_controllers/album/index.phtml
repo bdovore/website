@@ -315,6 +315,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 </div>
 <script language="javascript">
    $("#writecomment").hide();
+   $("#info_collection").hide();
+   <?php if (User::minAccesslevel(2)) { ?>
      var url = $.bdovore.URL+"getjson?data=Useralbum&id_edition=<?php echo $view->tome->ID_EDITION?>";
       $.getJSON(url, function (data) {
           if (data.length == 0) {               
@@ -326,6 +328,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                
            }
            else {
+               $("#info_collection").show();
                $("#actionCollection").html('<div id="addAlbum<?php echo $view->tome->ID_EDITION; ?>" style="font-size:0.9em;">ajouté à votre collection le '+data[0].DATE_ACHAT.substring(0,10) +' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(<?php echo $view->tome->ID_EDITION; ?>)">Supprimer</a></div>');
           
                // on renseigne chaque champs du formulaire
@@ -360,5 +363,6 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         }
 
     );
+   <?php } ?>
          
 </script>
