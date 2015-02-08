@@ -17,7 +17,8 @@ class FicheAlbum {
         
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
-            if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME, $o_tome->NUM_TOME))) {
+            //if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME, $o_tome->NUM_TOME))) {
+            if ($o_tome->NUM_TOME) {
                 $html .= '<i>tome ' . $o_tome->NUM_TOME . ' -</i> ';
             }
             $html .= $this->urlAlbum($o_tome, 'albTitle') . '<br>';
@@ -50,7 +51,8 @@ class FicheAlbum {
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
             $html .= '<tr><td>Titre : </td><td>';
-            if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME, $o_tome->NUM_TOME))) {
+            //if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME, $o_tome->NUM_TOME))) {
+            if ($o_tome->NUM_TOME) {
                 $html .= '<i>tome ' . $o_tome->NUM_TOME . ' -</i> ';
             }
             $html .=$this->urlAlbum($o_tome, 'albTitle') . '</td></tr>';
@@ -217,7 +219,8 @@ class FicheAlbum {
             if ($o_tome->NOM_SERIE AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME))) {
                 $titleHtml = $o_tome->NOM_SERIE;
 
-                if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME, $o_tome->NUM_TOME))) {
+                //if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME, $o_tome->NUM_TOME))) {
+                if ($o_tome->NUM_TOME) {
                     $titleHtml .= ' - ' . 'tome ' . $o_tome->NUM_TOME;
                 }
 
