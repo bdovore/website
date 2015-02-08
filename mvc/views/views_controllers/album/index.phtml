@@ -317,6 +317,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
    $("#writecomment").hide();
    $("#info_collection").hide();
    <?php if (User::minAccesslevel(2)) { ?>
+       $("#actionCollection").html("<img src='"+$.bdovore.URL+ "script/ajax-loader.gif'>");
      var url = $.bdovore.URL+"getjson?data=Useralbum&id_edition=<?php echo $view->tome->ID_EDITION?>";
       $.getJSON(url, function (data) {
           if (data.length == 0) {               
