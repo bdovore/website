@@ -81,7 +81,11 @@ class FicheAlbum {
 
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
-            if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME, $o_tome->NUM_TOME))) {
+            //cette condition pose problème notamment quand il y a des années dans le titre.
+            //par ex. "The complete Peanuts 1950 to 1952 (HC)" est le Tome 1 et donc l'info disparait
+            //puisque NUM_TOME ("1") est présent dans le TITRE_TOME ...
+            //if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME, $o_tome->NUM_TOME))) {
+            if ($o_tome->NUM_TOME) {
                 $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
             }
             $html .= "<strong>" . $this->urlAlbum($o_tome, 'albTitle') . '</strong><br>';
