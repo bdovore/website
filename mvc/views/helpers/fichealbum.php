@@ -17,7 +17,7 @@ class FicheAlbum {
         
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
-            if ($o_tome->NUM_TOME AND !(stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME))) {
+            if ($o_tome->NUM_TOME AND stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
             //if ($o_tome->NUM_TOME) {
                 $html .= '<i>tome ' . $o_tome->NUM_TOME . ' -</i> ';
             }
@@ -51,7 +51,7 @@ class FicheAlbum {
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
             $html .= '<tr><td>Titre : </td><td>';
-            if ($o_tome->NUM_TOME AND !(stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME))) {
+            if ($o_tome->NUM_TOME AND stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
             //if ($o_tome->NUM_TOME) {
                 $html .= '<i>tome ' . $o_tome->NUM_TOME . ' -</i> ';
             }
@@ -83,7 +83,7 @@ class FicheAlbum {
 
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
-            if ($o_tome->NUM_TOME AND !(stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME))) {
+            if ($o_tome->NUM_TOME AND stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
             //if ($o_tome->NUM_TOME) {
                 $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
             }
@@ -216,7 +216,7 @@ class FicheAlbum {
             if ($o_tome->NOM_SERIE AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME))) {
                 $titleHtml = $o_tome->NOM_SERIE;
 
-                if ($o_tome->NUM_TOME AND !(stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME))) {
+                if ($o_tome->NUM_TOME AND stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
                 //if ($o_tome->NUM_TOME) {
                     $titleHtml .= ' - ' . 'tome ' . $o_tome->NUM_TOME;
                 }
