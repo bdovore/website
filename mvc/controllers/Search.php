@@ -19,7 +19,7 @@ class Search extends Bdo_Controller
         $term = Db_Escape_String(getVal("term",""));
 
         $this->loadModel ("Serie");
-        $this->Serie->load('c'," WHERE NOM RLIKE '(^". $term ."|[ \'-]". $term .")' GROUP BY ID_SERIE ORDER BY NBR_USER_ID_SERIE desc, NOM LIMIT 0,10");
+        $this->Serie->load('c'," WHERE (NOM LIKE '".$term ."%' OR NOM LIKE '% ".$term ."%' OR NOM LIKE '%''".$term ."%') GROUP BY ID_SERIE ORDER BY NBR_USER_ID_SERIE desc, NOM LIMIT 0,10");
 
         foreach ($this->Serie->dbSelect->a_dataQuery as $obj) {
             $arr[] = (object) array(
