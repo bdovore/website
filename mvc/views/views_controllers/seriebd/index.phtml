@@ -1,5 +1,6 @@
 <?php
 $ficheAlbum = $view->getHelper('ficheAlbum');
+$pageinate = $view->getHelper('Pagination');
 ?>
 
 <SCRIPT language="Javascript">
@@ -115,19 +116,10 @@ foreach ($view->dbs_tome->a_dataQuery as $tome) {
 <?php
 if ($view->serie->NB_ALBUM > 20) {
     $max_page = ceil($view->serie->NB_ALBUM / 20);
-    $titre_url = clean_url($view->serie->NOM_SERIE);
-    if ($view->NUM_PAGE > 1) {
-        echo "<a href='serie-bd-" . $view->serie->ID_SERIE ."-". $titre_url ."?page=" . ($view->NUM_PAGE - 1) . "'>Précédent </a>";
+    if ($max_page > 1) {
+        echo($pageinate->paginate($ficheAlbum->getURLSerie($view->serie ),"?page=",$max_page,$view->NUM_PAGE,$adj=3));
     }
-
-    // pagination suivant / précedent etc.
-    for ($i = 1; $i <= $max_page; $i++) {
-        echo "<a href='serie-bd-" . $view->serie->ID_SERIE ."-". $titre_url . "?page=" . $i . "'>" . $i . "&nbsp;</a>";
-    }
-    if ($view->NUM_PAGE < $max_page) {
-        echo "<a href='serie-bd-" . $view->serie->ID_SERIE ."-". $titre_url . "?page=" . ($view->NUM_PAGE + 1) . "'> Suivant</a>";
-    }
-}
+   }
 ?> </div>
                 <div align="center"></div>
                 <div align="center"> </div>

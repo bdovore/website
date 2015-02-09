@@ -263,13 +263,19 @@ class FicheAlbum {
             return $html;
         }
     }
+    public function getURLSerie($o_serie,$page=1) {
+        if (is_array($o_serie)) {
+            $o_serie = (object) $o_serie;
+        }
+        return BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-'.$page.'-'.clean_url($o_serie->NOM_SERIE);
+    }
     
-    public function urlSerie($o_serie,$target="") {
+    public function urlSerie($o_serie,$target="",$page=1) {
         if (is_array($o_serie)) {
             $o_serie = (object) $o_serie;
         }
        
-        $html = '<a href="' . BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-1-'.clean_url($o_serie->NOM_SERIE) .'" title="' . $o_serie->NOM_SERIE . '"'.( $target ? 'target="'. $target.'"' : '') .'>
+        $html = '<a href="' . $this->getURLSerie($o_serie,$page) .'" title="' . $o_serie->NOM_SERIE . '"'.( $target ? 'target="'. $target.'"' : '') .'>
             ' . $o_serie->NOM_SERIE . '</a>';
 
         if (Bdo_Cfg::user()->minAccesslevel(1)) {
@@ -278,6 +284,8 @@ class FicheAlbum {
 
         return $html;
     }
+    
+    
 
     public function linkCollection($o_tome) {
         // fonction pour ajouter les liens d'ajouts dans la collection
