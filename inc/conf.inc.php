@@ -66,9 +66,11 @@ else {
     if (preg_match('/^serie-bd-(\d+)(?:-?)(\d*)/', $request_uri, $match)) {
         $request_uri = "seriebd";
         $_GET["id_serie"] = $match[1];
-        $parametre = intval($match[2]);
-
-        $_GET["page"] = ($parametre > 0) ? $parametre : 1;
+        
+        if (!isset($_GET["page"])) {
+            $parametre = intval($match[2]);
+            $_GET["page"] = ($parametre > 0) ? $parametre : 1;
+        }
     }
 
     if ($request_uri) {
