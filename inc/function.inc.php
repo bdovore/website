@@ -969,7 +969,7 @@ function urlSerie ($o_serie)
     if (is_array($o_serie)) {
         $o_serie = (object) $o_serie;
     }
-    return '<a href="' . BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE .'-'.clean_url($o_serie->NOM_SERIE) . '" title="' . $o_serie->NOM_SERIE . '">
+    return '<a href="' . BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE .'-1-'.clean_url($o_serie->NOM_SERIE) . '" title="' . $o_serie->NOM_SERIE . '">
            ' . $o_serie->NOM_SERIE . '</a>';
 }
 

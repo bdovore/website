@@ -155,7 +155,7 @@ $(document).ready(function() {
 	      select: function( event, ui ) {
 	        //alert( ui.item.category + ' ' + ui.item.label);
 		        if (ui.item.category=='Séries') {
-			        window.location.href = "<?php echo BDO_URL;?>serie-bd-"+ encodeURIComponent(ui.item.ID_SERIE)+"-"+string_to_slug(ui.item.label);
+			        window.location.href = "<?php echo BDO_URL;?>serie-bd-"+ encodeURIComponent(ui.item.ID_SERIE)+"-1-"+string_to_slug(ui.item.label);
 		        }
 		        if (ui.item.category=='Auteurs') {
 			        window.location.href = "<?php echo BDO_URL;?>browser?rb_browse=aut&let="+ encodeURIComponent(ui.item.label);

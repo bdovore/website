@@ -269,7 +269,7 @@ class FicheAlbum {
             $o_serie = (object) $o_serie;
         }
        
-        $html = '<a href="' . BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-'.clean_url($o_serie->NOM_SERIE) .'" title="' . $o_serie->NOM_SERIE . '"'.( $target ? 'target="'. $target.'"' : '') .'>
+        $html = '<a href="' . BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-1-'.clean_url($o_serie->NOM_SERIE) .'" title="' . $o_serie->NOM_SERIE . '"'.( $target ? 'target="'. $target.'"' : '') .'>
             ' . $o_serie->NOM_SERIE . '</a>';
 
         if (Bdo_Cfg::user()->minAccesslevel(1)) {
