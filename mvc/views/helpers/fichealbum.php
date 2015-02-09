@@ -17,8 +17,8 @@ class FicheAlbum {
         
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
-            //if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME, $o_tome->NUM_TOME))) {
-            if ($o_tome->NUM_TOME) {
+            if ($o_tome->NUM_TOME AND !(stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME))) {
+            //if ($o_tome->NUM_TOME) {
                 $html .= '<i>tome ' . $o_tome->NUM_TOME . ' -</i> ';
             }
             $html .= $this->urlAlbum($o_tome, 'albTitle') . '<br>';
@@ -51,8 +51,8 @@ class FicheAlbum {
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
             $html .= '<tr><td>Titre : </td><td>';
-            //if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME, $o_tome->NUM_TOME))) {
-            if ($o_tome->NUM_TOME) {
+            if ($o_tome->NUM_TOME AND !(stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME))) {
+            //if ($o_tome->NUM_TOME) {
                 $html .= '<i>tome ' . $o_tome->NUM_TOME . ' -</i> ';
             }
             $html .=$this->urlAlbum($o_tome, 'albTitle') . '</td></tr>';
@@ -83,11 +83,8 @@ class FicheAlbum {
 
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
-            //cette condition pose problème notamment quand il y a des années dans le titre.
-            //par ex. "The complete Peanuts 1950 to 1952 (HC)" est le Tome 1 et donc l'info disparait
-            //puisque NUM_TOME ("1") est présent dans le TITRE_TOME ...
-            //if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME, $o_tome->NUM_TOME))) {
-            if ($o_tome->NUM_TOME) {
+            if ($o_tome->NUM_TOME AND !(stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME))) {
+            //if ($o_tome->NUM_TOME) {
                 $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
             }
             $html .= "<strong>" . $this->urlAlbum($o_tome, 'albTitle') . '</strong><br>';
@@ -219,8 +216,8 @@ class FicheAlbum {
             if ($o_tome->NOM_SERIE AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME))) {
                 $titleHtml = $o_tome->NOM_SERIE;
 
-                //if ($o_tome->NUM_TOME AND !(stristr($o_tome->TITRE_TOME, $o_tome->NUM_TOME))) {
-                if ($o_tome->NUM_TOME) {
+                if ($o_tome->NUM_TOME AND !(stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME))) {
+                //if ($o_tome->NUM_TOME) {
                     $titleHtml .= ' - ' . 'tome ' . $o_tome->NUM_TOME;
                 }
 
