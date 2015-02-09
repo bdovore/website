@@ -61,14 +61,14 @@ else {
      * Réécriture spécifique pour les pages SerieBD : on veut du URL rewriting contenant le titre des séries pour meilleurs indexation google
      */
     
-    if (preg_match('/^serie-bd-([0-9-]+)-([^0-9](?:.+))$/', $request_uri, $match)) {
-        $parametre = explode('-',$match[1]);
-
+    //if (preg_match('/^serie-bd-([0-9-]+)-([^0-9](?:.+))$/', $request_uri, $match)) {
+    // regex pour serie-bd-id-page serie-bd-id-page-titre et serie-bd-id et serie-bd-id-titre (si le titre ne commence pas par un n° !!)
+    if (preg_match('/^serie-bd-(\d+)(?:-?)(\d*)/', $request_uri, $match)) {
         $request_uri = "seriebd";
-        $_GET["id_serie"]= $parametre[0];
-        if (isset($parametre[1])) {
-            $_GET["page"]=$parametre[1];
-        }
+        $_GET["id_serie"] = $match[1];
+        $parametre = intval($match[2]);
+
+        $_GET["page"] = ($parametre > 0) ? $parametre : 1;
     }
 
     if ($request_uri) {
