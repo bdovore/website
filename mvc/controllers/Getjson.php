@@ -13,7 +13,8 @@
 class GetJSON extends Bdo_Controller {
 
     public function Index() {
-       Bdo_Cfg::setVar('debug',false);
+        Bdo_Cfg::setVar('debug',false);
+
         $data = getVal("data", "");
         switch ($data) {
             case "Auteur" :

@@ -267,7 +267,7 @@ class FicheAlbum {
         if (is_array($o_serie)) {
             $o_serie = (object) $o_serie;
         }
-        return BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-'.$page.'-'.clean_url($o_serie->NOM_SERIE);
+        return BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-' .clean_url($o_serie->NOM_SERIE);
     }
     
     public function urlSerie($o_serie,$target="",$page=1) {

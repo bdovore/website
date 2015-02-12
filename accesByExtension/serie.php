@@ -9,6 +9,6 @@ $DB->query ($query);
 $DB->next_record();
 $titre = $DB->f("NOM");
 
-$url = BDO_URL."serie-bd-".intval($_GET["id_serie"])."-1-".clean_url($titre);
+$url = BDO_URL."serie-bd-".intval($_GET["id_serie"])."-".clean_url($titre);
 header('Location: '.$url);      
 ?>
