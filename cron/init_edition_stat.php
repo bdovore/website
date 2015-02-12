@@ -14,7 +14,7 @@ $_SERVER['SERVER_NAME'] = "beta.bdovore.com";
 require_once ('..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'constante.php');
 // ----------------------------------------------------
 // time Zone
-date_default_timezone_set ( 'Europe/Paris' );
+//date_default_timezone_set ( 'Europe/Paris' );
 
 // fichiers de fonctions
 include_once (BDO_DIR . 'inc' . DS . 'util.inc.php');
