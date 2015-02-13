@@ -75,8 +75,12 @@ else {
    
     $controller = isset($params[0]) ? ucfirst(strtolower($params[0])) : 'Accueil';
 
+    //TODO ça devrait vraiment être dans .htaccess un truc pareil ...
     if ($controller === "Forum") {
         header("Location: " . BDO_PROTOCOL . "://forum.bdovore.com/");
+        die();
+    } elseif ($controller === "Phone") {
+        header("Location: " . BDO_PROTOCOL . "://phone.bdovore.com/");
         die();
     }
     // nb une URL du type http://bdovore.com/admin/ donne $params[1] == ''
