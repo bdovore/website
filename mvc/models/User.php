@@ -342,18 +342,18 @@ FROM " . $this->table_name . "
                 'sid' => FORUM_DB_SID,
                 'server' => FORUM_DB_HOST));
         $verif = "select count(*) nb from phpbb_users where username='" . Db_Escape_String($username) . "'";
-        $result = DB_query($verif,$connexion);
+        $result = Db_query($verif,$connexion);
         $o = Db_fetch_object($result);
         if ($o->nb == 0) {
             $query = "SELECT MAX(user_id) AS total FROM phpbb_users";
-            $result = DB_query($query,$connexion);
+            $result = Db_query($query,$connexion);
             $o = Db_fetch_object($result);
             $id = $o->total + 1;
             $query = "insert into phpbb_users (
 					user_id , username,user_password, user_email, user_regdate ) values (
 					$new_id,'" . Db_Escape_String($username) . "', '" . md5($password) . "', '" . Db_Escape_String($email) . "'," . time() . "
 					)";
-            $result = DB_query($query,$connexion);
+            $result = Db_query($query,$connexion);
         }
     }
     
@@ -364,21 +364,21 @@ FROM " . $this->table_name . "
 
         $user_id = intval($profile_user_id);
 
-        DB_query("UPDATE `bd_edition` SET `USER_ID`=NULL WHERE `user_id`='" . $user_id . "'");
-        DB_query("UPDATE `bd_edition` SET `VALIDATOR`=NULL WHERE `VALIDATOR`='" . $user_id . "'");
-        DB_query("UPDATE `newsletter` SET `USR_CREA`=NULL WHERE `USR_CREA`='" . $user_id . "'");
-        DB_query("UPDATE `newsletter` SET `USR_MODIF`=NULL WHERE `USR_MODIF`='" . $user_id . "'");
-        DB_query("UPDATE `users_alb_prop` SET `VALIDATOR`=NULL WHERE `VALIDATOR`='" . $user_id . "'");
+        Db_query("UPDATE `bd_edition` SET `USER_ID`=NULL WHERE `user_id`='" . $user_id . "'");
+        Db_query("UPDATE `bd_edition` SET `VALIDATOR`=NULL WHERE `VALIDATOR`='" . $user_id . "'");
+        Db_query("UPDATE `newsletter` SET `USR_CREA`=NULL WHERE `USR_CREA`='" . $user_id . "'");
+        Db_query("UPDATE `newsletter` SET `USR_MODIF`=NULL WHERE `USR_MODIF`='" . $user_id . "'");
+        Db_query("UPDATE `users_alb_prop` SET `VALIDATOR`=NULL WHERE `VALIDATOR`='" . $user_id . "'");
 
         // dans tout les cas
-        DB_query("DELETE FROM `serie_comment` WHERE `user_id`='" . $user_id . "'");
-        DB_query("DELETE FROM `users_album` WHERE `user_id`='" . $user_id . "'");
-        DB_query("DELETE FROM `users_exclusions` WHERE `user_id`='" . $user_id . "'");
-        DB_query("DELETE FROM `users_list_aut` WHERE `user_id`='" . $user_id . "'");
-        DB_query("DELETE FROM `users_list_carre` WHERE `user_id`='" . $user_id . "'");
-        DB_query("DELETE FROM `users_comment` WHERE `USER_ID`='" . $user_id . "'");
-        DB_query("DELETE FROM `users_alb_prop` WHERE `USER_ID`='" . $user_id . "'");
-        DB_query("DELETE FROM `users` WHERE `user_id`='" . $user_id . "'");
+        Db_query("DELETE FROM `serie_comment` WHERE `user_id`='" . $user_id . "'");
+        Db_query("DELETE FROM `users_album` WHERE `user_id`='" . $user_id . "'");
+        Db_query("DELETE FROM `users_exclusions` WHERE `user_id`='" . $user_id . "'");
+        Db_query("DELETE FROM `users_list_aut` WHERE `user_id`='" . $user_id . "'");
+        Db_query("DELETE FROM `users_list_carre` WHERE `user_id`='" . $user_id . "'");
+        Db_query("DELETE FROM `users_comment` WHERE `USER_ID`='" . $user_id . "'");
+        Db_query("DELETE FROM `users_alb_prop` WHERE `USER_ID`='" . $user_id . "'");
+        Db_query("DELETE FROM `users` WHERE `user_id`='" . $user_id . "'");
     }
 
     public function getUserList($search,$exactmatch=false,$max=10) {
