@@ -353,7 +353,7 @@ FROM " . $this->table_name . "
 					user_id , username,user_password, user_email, user_regdate ) values (
 					$new_id,'" . Db_Escape_String($username) . "', '" . md5($password) . "', '" . Db_Escape_String($email) . "'," . time() . "
 					)";
-            $result = DB_query($query,$connexion)
+            $result = DB_query($query,$connexion);
         }
     }
     
