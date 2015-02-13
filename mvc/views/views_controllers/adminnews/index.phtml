@@ -2,6 +2,18 @@
 $page = $view->getHelper('pagination');
 ?>
 <script src="<?php echo BDO_URL; ?>jquery/datatable/js/jquery.dataTables.min.js" type="text/javascript"></script>
+<script>
+$(document).ready(function() {
+	$(".fancybox2")
+    .fancybox({
+        type: 'iframe',
+        autoSize : false,
+        afterClose: function () {
+                parent.location.reload(true);
+            }
+    });
+});
+</script>
 <div align="center" class="cadre1">
     <?php echo $page->menuAdmin(); ?>
     <h1>Administration des news</h1>
@@ -26,8 +38,8 @@ $page = $view->getHelper('pagination');
                     <td> <?php echo $news->news_id; ?></td>
                     <td><?php echo $news->news_date; ?></td>
                     <td><?php echo $news->news_posteur; ?></font></div></td>
-                    <td><?php echo $news->news_level; ?></td>
-                    <td><a href="<?php echo BDO_URL; ?>adminnews/editnews?newsid=<?php echo $news->news_id; ?>" class="fancybox fancybox.iframe {width:600,height:400}" ><?php echo $news->news_titre; ?></a></td>
+                    <td><?php echo $news->news_level; ?></td> 
+                    <td><a href="<?php echo BDO_URL; ?>adminnews/editnews?newsid=<?php echo $news->news_id; ?>" class="fancybox2 fancybox.iframe {width:600,height:400}" ><?php echo $news->news_titre; ?></a></td>
                     <td> <a href="?act=supprim&newsid=<?php echo $news->news_id; ?>"><img src="<?php echo BDO_URL_IMAGE; ?>poubelle.gif" width="20" height="21" border="0"></a></td>
                 </tr>
             <?php } ?>
