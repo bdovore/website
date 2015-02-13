@@ -45,13 +45,14 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             <td class="addTitleMiddle">Qté</td>
             <td class="addTitle">Coût</td>
           </tr>
-         <?php foreach($view->a_depense as $key => $value) { ?>
+         <?php if (issetNotEmpty($view->a_depense)) { 
+             foreach($view->a_depense as $key => $value) { ?>
           <tr> 
             <td class="addData"><a href="?<?php echo "annee=".$key."&info=".$view->info."&mois=1";?>"><?php echo ($key == $view->annee) ? "<b>$key</b>" : $key;?></a></td>
             <td class="addData"><?php echo $view->a_nbalbum[$key];?></td>
             <td class="addDataRight"><?php echo number_format($value,2,".",",");?></td>
           </tr>
-         <?php } ?>
+         <?php }} ?>
         </table>
       </div>
 
