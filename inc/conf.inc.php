@@ -74,6 +74,11 @@ else {
     }
    
     $controller = isset($params[0]) ? ucfirst(strtolower($params[0])) : 'Accueil';
+
+    if ($controller === "Forum") {
+        header("Location: " . BDO_PROTOCOL . "://forum.bdovore.com/");
+        die();
+    }
     // nb une URL du type http://bdovore.com/admin/ donne $params[1] == ''
     // --> erreur 404 si on ne vérifie pas la longueur de $params[1]
     $action = ( isset($params[1]) && strlen($params[1]) ) ? ucfirst(strtolower($params[1])) : 'Index';
