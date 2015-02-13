@@ -19,3 +19,4 @@ public/.htaccess
 Collection au*
 *.xls
 *.pdf
+!/mvc/views/views_controllers/cache/

@@ -1,0 +1,183 @@
+<div class="cadre1">	
+<h2>Cache - Tomes similaires</h2>
+<button id="lancerSimil">lancer</button>
+
+<form id="cacheSimil" name="cacheSimil" method="get">
+<input type="hidden" name="continuer" value="">
+</form>  
+  
+<div id='ddcacheSimil'>vide</div>
+<script>
+  $(function() {
+	    $( "#lancerSimil" ).button({
+	        icons: {
+	          primary: "ui-icon-play"
+	        }
+	      })
+	      .click(function() {
+	        var options;
+	        if ( $( this ).text() === "lancer" ) {
+		        document.cacheSimil.continuer.value = "oui";
+	        	$.get("<?php echo BDO_URL;?>cache/simil", $("#cacheSimil").serialize(), function(data) {
+	         		 $("#ddcacheSimil").html(data);
+	          		//alert("Data Loaded: " + data);
+	         		});
+	          options = {
+	            label: "pause",
+	            icons: {
+	              primary: "ui-icon-pause"
+	            }
+	          };
+	        } else {
+		        document.cacheSimil.continuer.value = "";
+	        options = {
+	            label: "lancer",
+	            icons: {
+	              primary: "ui-icon-play"
+	            }
+	          };
+	        }
+	        $( this ).button( "option", options );
+	      })
+  });
+  </script>
+<hr> 
+			
+<h2>Cache - nbr user by tome</h2>
+<button id="lancernbuserbytome">lancer</button>
+<form id="cachenbuserbytome" name="cachenbuserbytome" method="get">
+<input type="text" name="nbruser_ID_TOME" value="<?php echo $view->nbruser_ID_TOME;?>">
+<input type="hidden" name="continuer" value="">
+</form>  
+  
+<div id='ddcachenbuserbytome'>vide</div>
+<script>
+  $(function() {
+	    $( "#lancernbuserbytome" ).button({
+	        icons: {
+	          primary: "ui-icon-play"
+	        }
+	      })
+	      .click(function() {
+	        var options;
+	        if ( $( this ).text() === "lancer" ) {
+		        document.cachenbuserbytome.continuer.value = "oui";
+	        	$.get("<?php echo BDO_URL;?>cache/nbuserbytome", $("#cachenbuserbytome").serialize(), function(data) {
+	         		 $("#ddcachenbuserbytome").html(data);
+	          		//alert("Data Loaded: " + data);
+	         		});
+	          options = {
+	            label: "pause",
+	            icons: {
+	              primary: "ui-icon-pause"
+	            }
+	          };
+	        } else {
+		        document.cachenbuserbytome.continuer.value = "";
+	        options = {
+	            label: "lancer",
+	            icons: {
+	              primary: "ui-icon-play"
+	            }
+	          };
+	        }
+	        $( this ).button( "option", options );
+	      })
+  });
+  </script>
+<hr> 
+				
+
+<h2>Cache - nbr user by edition</h2>
+<button id="lancernbuserbyedition">lancer</button>
+<form id="cachenbuserbyedition" name="cachenbuserbyedition" method="get">
+<input type="text" name="nbruser_ID_EDITION" value="<?php echo $view->nbruser_ID_EDITION;?>">
+<input type="hidden" name="continuer" value="">
+</form>
+
+<div id='ddcachenbuserbyedition'>vide</div>
+<script>
+  $(function() {
+	    $( "#lancernbuserbyedition" ).button({
+	        icons: {
+	          primary: "ui-icon-play"
+	        }
+	      })
+	      .click(function() {
+	        var options;
+	        if ( $( this ).text() === "lancer" ) {
+		        document.cachenbuserbyedition.continuer.value = "oui";
+	        	$.get("<?php echo BDO_URL;?>cache/nbuserbyedition", $("#cachenbuserbyedition").serialize(), function(data) {
+	         		 $("#ddcachenbuserbyedition").html(data);
+	          		//alert("Data Loaded: " + data);
+	         		});
+	          options = {
+	            label: "pause",
+	            icons: {
+	              primary: "ui-icon-pause"
+	            }
+	          };
+	        } else {
+		        document.cachenbuserbyedition.continuer.value = "";
+	        options = {
+	            label: "lancer",
+	            icons: {
+	              primary: "ui-icon-play"
+	            }
+	          };
+	        }
+	        $( this ).button( "option", options );
+	      })
+  });
+  </script>
+<hr>
+
+<h2>Cache - nbr user by serie</h2>
+<button id="lancernbuserbyserie">lancer</button>
+<form id="cachenbuserbyserie" name="cachenbuserbyserie" method="get">
+<input type="text" name="nbruser_ID_SERIE" value="<?php echo $view->nbruser_ID_SERIE;?>">
+<input type="hidden" name="continuer" value="">
+</form>
+
+<div id='ddcachenbuserbyserie'>vide</div>
+<script>
+  $(function() {
+	    $( "#lancernbuserbyserie" ).button({
+	        icons: {
+	          primary: "ui-icon-play"
+	        }
+	      })
+	      .click(function() {
+	        var options;
+	        if ( $( this ).text() === "lancer" ) {
+		        document.cachenbuserbyserie.continuer.value = "oui";
+	        	$.get("<?php echo BDO_URL;?>cache/nbuserbyserie", $("#cachenbuserbyserie").serialize(), function(data) {
+	         		 $("#ddcachenbuserbyserie").html(data);
+	          		//alert("Data Loaded: " + data);
+	         		});
+	          options = {
+	            label: "pause",
+	            icons: {
+	              primary: "ui-icon-pause"
+	            }
+	          };
+	        } else {
+		        document.cachenbuserbyserie.continuer.value = "";
+	        options = {
+	            label: "lancer",
+	            icons: {
+	              primary: "ui-icon-play"
+	            }
+	          };
+	        }
+	        $( this ).button( "option", options );
+	      })
+  });
+  </script>
+
+
+</div>
+
+
+
+

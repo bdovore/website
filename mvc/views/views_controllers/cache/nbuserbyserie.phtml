@@ -1,0 +1,31 @@
+<?php
+echo date('d/m/Y H:i:s').'
+<br />continuer ? '.$view->continuer
+."<br />nbuser_id = ".$view->nbuser;
+
+if ($view->continuer == "oui") {
+    ?>
+<script>
+document.cachenbuserbyserie.nbruser_ID_SERIE.value = "<?php echo $view->nbruser_ID_SERIE;?>"; 
+    $.get("<?php echo BDO_URL;?>cache/nbuserbyserie", $("#cachenbuserbyserie").serialize(), function(data) {
+	 $("#ddcachenbuserbyserie").html(data);
+	//alert("Data Loaded: " + data);
+	});
+  </script>
+<?php
+}
+else {
+    ?>
+<script>
+document.cachenbuserbyserie.continuer.value = ""; 
+document.cachenbuserbyserie.nbruser_ID_SERIE.value = "<?php echo $view->nbruser_ID_SERIE;?>"; 
+var options;
+options =
+{ label: "lancer", 
+icons: { 
+	primary: "ui-icon-play" 
+		} 
+}; 
+$("#lancernbuserbyserie").button( "option", options );
+</script>
+<?php }?>

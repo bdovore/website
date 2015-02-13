@@ -1,0 +1,15 @@
+<?php 
+echo date('d/m/Y H:i:s').'
+<br />continuer ? '.$view->continuer;
+if ($view->a_tome) var_dump_pre($view->a_tome);
+if ($view->continuer == "oui") {
+
+?>
+
+<script>
+$.get("<?php echo BDO_URL;?>cache/simil", $("#cacheSimil").serialize(), function(data) {
+	 $("#ddcacheSimil").html(data);
+	//alert("Data Loaded: " + data);
+	});
+  </script>
+<?php }?>
