@@ -3,7 +3,7 @@
 
 Header("content-type: application/xml");
 
-echo '<?xml version="1.0" encoding="iso-8859-1"?>';
+echo '<?xml version="1.0" encoding="utf-8"?>';
 echo '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">';
 //echo '   xmlns="http://www.bdovore.com/">';
 //echo '   xmlns:Comics="http://www.bdovore.com/">';
