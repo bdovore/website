@@ -544,10 +544,10 @@ class Admin extends Bdo_Controller {
 
 
                 $id_serie = getValInteger("id_serie");
-                $this->Tome->load("c", " WHERE bd_serie.id_serie =" . $id_serie . " ORDER BY t.num_tome DESC LIMIT 1");
+                $this->Tome->load("c", " WHERE bd_tome.id_serie =" . $id_serie . " ORDER BY bd_tome.num_tome DESC LIMIT 1");
 
 
-                $t->set_var(array(
+                $this->view->set_var(array(
                     "CHAMPFORMSTYLE" => $champ_form_style,
                     "CHAMPFORMSTYLE_NEWFSERIE" => $champ_form_style_newfserie,
                     "URLIMAGE" => $url_image,

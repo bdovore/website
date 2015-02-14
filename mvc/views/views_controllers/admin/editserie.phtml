@@ -12,9 +12,9 @@ function valider(){
     } 
 }
 //--></SCRIPT>
-
+<script src="<?php echo BDO_URL; ?>jquery/jQuery-TE_v.1.4.0/jquery-te-1.4.0.min.js" type="text/javascript"></script>
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
-
+<link rel="stylesheet" type="text/css" href="<?php echo BDO_URL;?>jquery/jQuery-TE_v.1.4.0/jquery-te-1.4.0.css" />
 <form action="<?php echo $view->URLACTION; ?>" method="post" name="input_form" onSubmit="return valider();">
     <table class="tableaux_admin">
                     <tr class="petite_police" align="center"> 
@@ -83,7 +83,7 @@ function valider(){
                 <a href="editalbum?alb_id=<?php echo $tome->ID_TOME; ?>" target="_blank"><?php echo $tome->TITRE_TOME; ?></a> - &nbsp;
                 <?php }} ?>
                 <!-- END AlbBlock -->
-                <p><div class="b"><a href="<?php echo $view->URLAJOUTALB; ?>">Ajouter un album dans la série</a></div></p>
+                <p><div class="b"><a href="<?php echo $view->URLAJOUTALB; ?>" target="_parent">Ajouter un album dans la série</a></div></p>
           
                
                 <p>
@@ -108,3 +108,4 @@ function valider(){
    
   addAutocomplete("txtGenre","txtGenreId","txtGenreId","<?php echo BDO_URL; ?>getjson?data=Genre");
 </script>
+<script>$("#txtSerieHist").jqte(); </script>
