@@ -336,12 +336,16 @@ FROM " . $this->table_name . "
     }
     
     public function setForumAccount($username,$password, $email) {
-        $connexion = DB_Connect(array( 
+        $connexion = Db_connect(array(
                 'login' => FORUM_DB_USER,
                 'password' => FORUM_DB_PWD,
                 'sid' => FORUM_DB_SID,
                 'server' => FORUM_DB_HOST));
-        $verif = "select count(*) nb from phpbb_users where username='" . Db_Escape_String($username) . "'";
+
+        $username = Db_Escape_String($username);
+        $email = Db_Escape_String($email);
+
+        $verif = "SELECT count(*) AS nb FROM phpbb_users WHERE username='" . $username . "'";
         $result = Db_query($verif,$connexion);
         $o = Db_fetch_object($result);
         if ($o->nb == 0) {
@@ -349,9 +353,9 @@ FROM " . $this->table_name . "
             $result = Db_query($query,$connexion);
             $o = Db_fetch_object($result);
             $id = $o->total + 1;
-            $query = "insert into phpbb_users (
-					user_id , username,user_password, user_email, user_regdate ) values (
-					$new_id,'" . Db_Escape_String($username) . "', '" . md5($password) . "', '" . Db_Escape_String($email) . "'," . time() . "
+            $query = "INSERT INTO phpbb_users (
+					user_id , username,user_password, user_email, user_regdate ) VALUES (
+					$new_id, '" . $username . "', '" . md5($password) . "', '" . $email . "'," . time() . "
 					)";
             $result = Db_query($query,$connexion);
         }

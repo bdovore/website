@@ -250,7 +250,7 @@ class Compte extends Bdo_Controller {
                    
                     if (notIssetOrEmpty($user->error)) {
                         //ajout dans le forum si besoin
-                        $user->setForumAccount(Db_Escape_String($default_username), $defaut_pass1, $defaut_email);
+                        $user->setForumAccount($default_username, $defaut_pass1, $defaut_email);
 
                         $texte = "Inscription r&eacute;ussie sur le site <u>ainsi que sur le forum</u> (meme identifiants de connexion).
                         <br />Vous pouvez fermer cette fenêtre et vous connecter avec votre identifiant et mot de passe !";
