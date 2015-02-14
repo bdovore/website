@@ -342,6 +342,12 @@ FROM " . $this->table_name . "
                 'sid' => FORUM_DB_SID,
                 'server' => FORUM_DB_HOST));
 
+        if ($connexion === false) {
+            echo "Forum : connexion impossible. Seul le compte bdovore a été créé.<br/>";
+            return;
+        }
+
+
         $username = Db_Escape_String($username);
         $email = Db_Escape_String($email);
 
@@ -355,7 +361,7 @@ FROM " . $this->table_name . "
             $id = $o->total + 1;
             $query = "INSERT INTO phpbb_users (
 					user_id , username,user_password, user_email, user_regdate ) VALUES (
-					$new_id, '" . $username . "', '" . md5($password) . "', '" . $email . "'," . time() . "
+					$id, '" . $username . "', '" . md5($password) . "', '" . $email . "'," . time() . "
 					)";
             $result = Db_query($query,$connexion);
         }
