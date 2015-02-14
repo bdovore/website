@@ -279,7 +279,7 @@ class FicheAlbum {
             ' . $o_serie->NOM_SERIE . '</a>';
 
         if (Bdo_Cfg::user()->minAccesslevel(1)) {
-            $html .= '&nbsp;&nbsp;<a href="' . '#' . '"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
+            $html .= '&nbsp;&nbsp;<a class="fancybox fancybox.iframe {width:600,height:600}" href="' .BDO_URL .'admin/editserie?serie_id=' . $o_serie->ID_SERIE . '"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
         }
 
         return $html;
