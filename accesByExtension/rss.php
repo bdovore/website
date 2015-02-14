@@ -1,6 +1,4 @@
 <?php
-
-
 Header("content-type: application/xml");
 
 echo '<?xml version="1.0" encoding="utf-8"?>';
@@ -12,12 +10,12 @@ echo '<channel>';
 echo '<atom:link href="http://www.bdovore.com/rss.php" rel="self" type="application/rss+xml" />';
 echo '<title>Bdovore - Albums</title>';
 echo '<link>'.BDO_URL.'</link>';
-echo '<description>Les derniers albums, coffrets, magazines, fascicules, etc... ajoutés sur le site</description>';
+echo '<description>Les derniers albums, coffrets, magazines, fascicules, etc... ajoutÃ©s sur le site</description>';
 echo '<copyright>Bdovore</copyright>';
 echo '<language>fr</language>';
 
 
-// Requête pour récupérer les 50 derniers albums avec leurs couvertures
+// RequÃªte pour rÃ©cupÃ©rer les 50 derniers albums avec leurs couvertures
 $select = "
 SELECT 
 	t.titre, 
