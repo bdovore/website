@@ -916,7 +916,7 @@ class Admin extends Bdo_Controller {
             $nb = $this->Useralbum->deleteTome($old_idtome);
             echo "Nombre de records supprim&eacute;s dans la table users_album : " . $nb . "<br />";
 
-            //echo GetMetaTag(2, "Fusion effectu�e.", (BDO_URL . "admin/editalbum?alb_id=" . intval($new_idtome)));
+            echo GetMetaTag(2, "Fusion effectu&eacute;e.", (BDO_URL . "admin/editalbum?alb_id=" . intval($new_idtome)));
         }
 
 // AFFICHER UN ALBUM
