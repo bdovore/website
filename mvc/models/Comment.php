@@ -80,7 +80,7 @@ class Comment extends Bdo_Db_Line
          /*
          * Suppresio d'id tome dans users_album
          */
-        Db_query("UPDATE IGNORE users_comment SET `id_tome` = " . intval($new_idtome) . " WHERE `id_tome`=" . intval($old_idtome));
+        Db_query("UPDATE IGNORE users_comment SET ID_TOME = " . intval($new_idtome) . " WHERE ID_TOME =" . intval($old_idtome));
         
         return Db_affected_rows();
     }

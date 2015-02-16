@@ -227,17 +227,9 @@ FROM bd_edition en
         
     }
     
-    public function updateTome($id_edition, $id_tome, $img_couv) {
-        /*
-         * Mise à jour des id_tome d'une édition lors d'une fusion
-         */
-        $query = "
-		UPDATE bd_edition SET 
-			ID_TOME = ".intval($id_tome).", 
-			IMG_COUV = '".  Db_Escape_String($img_couv)."' 
-		WHERE ID_EDITION =". intval($id_edition) ;
-       
-        Db_query($query);
+    public function replaceIdTome($old_idtome, $new_idtome) {
+           Db_query("UPDATE IGNORE bd_edition SET ID_TOME = " . intval($new_idtome) . " WHERE ID_TOME=" . intval($old_idtome));
+        
         return Db_affected_rows();
-    }
+       }
 }
