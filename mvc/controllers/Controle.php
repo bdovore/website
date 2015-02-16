@@ -56,7 +56,7 @@ class Controle extends Bdo_Controller
             SELECT SQL_CALC_FOUND_ROWS 
                     COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums différents', 
                     `ISBN` ,
-                    GROUP_CONCAT(distinct(`ID_EDITION`) SEPARATOR ';') as 'Liens vers les �ditions (s�parateur ;)'
+                    GROUP_CONCAT(distinct(`ID_EDITION`) SEPARATOR ';') as 'Liens vers les éditions (séparateur ;)'
             FROM 
                     `bd_edition` 
             WHERE 
