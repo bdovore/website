@@ -203,7 +203,11 @@ class Users_exclusions extends Bdo_Db_Line
          */
         
     }
-    
+     public function replaceIdTome($old_idtome, $new_idtome) {
+           Db_query("UPDATE IGNORE users_exclusions SET `id_tome` = " . intval($new_idtome) . " WHERE `id_tome`=" . intval($old_idtome));
+        
+        return Db_affected_rows();
+       }
     
 }
 ?>

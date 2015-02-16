@@ -218,5 +218,26 @@ FROM bd_edition en
         return $dbSearch;
     }
     
-
+    public function deleteTome($id_tome) {
+        /* 
+         * Supprime les éditions liés à cet id_tome
+         */
+        Db_query("DELETE FROM bd_edition WHERE id_tome=" . intval($id_tome));
+        return Db_affected_rows();
+        
+    }
+    
+    public function updateTome($id_edition, $id_tome, $img_couv) {
+        /*
+         * Mise à jour des id_tome d'une édition lors d'une fusion
+         */
+        $query = "
+		UPDATE bd_edition SET 
+			ID_TOME = ".intval($id_tome).", 
+			IMG_COUV = '".  Db_Escape_String($img_couv)."' 
+		WHERE ID_EDITION =". intval($id_edition) ;
+       
+        Db_query($query);
+        return Db_affected_rows();
+    }
 }

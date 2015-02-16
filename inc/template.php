@@ -570,30 +570,30 @@ class Template
 
 global $DB;
 		// thanaos ajout systematique pour admin
-		if (minAccessLevel(1,false)) $this->set_var('ACCESADMIN', '<li><a class="menuGene" href="'.BDO_URL.'admin/index.php" title="Pour ceux qui ont les clefs...">Administration</a></li>');
+		//if (minAccessLevel(1,false)) $this->set_var('ACCESADMIN', '<li><a class="menuGene" href="'.BDO_URL.'admin/index.php" title="Pour ceux qui ont les clefs...">Administration</a></li>');
 		// ajout info droite
 
-		if ($target == "BODY") {
-			// dernier topactu recharger si cree avant 0h00
-			$file = BDO_DIR."cache/actualite.html";
-			if (!file_exists($file)
-			or @filemtime($file) < mktime(0, 0, 0, date("m") , date("d"), date("Y"))
-			or  (@filesize($file) == 0 )) {
-				include_once (BDO_DIR."inc/function.stat.php");
-				$size = setTopActu($DB, $file);
-			}
-			$this->set_var("ACTUAIR",file_get_contents($file));
-
-			// dernier ajout recharger toutes les 10min
-			$file = BDO_DIR."cache/lastajout.html";
-			if (!file_exists($file)
-			or (@filemtime($file) < (time()-600))
-			or  (@filesize($file) == 0 )) {
-				include_once (BDO_DIR."inc/function.stat.php");
-				setLastAjout($DB, $file);
-			}
-			$this->set_var("LASTAVIS",file_get_contents($file));
-		}
+//		if ($target == "BODY") {
+//			// dernier topactu recharger si cree avant 0h00
+//			$file = BDO_DIR."cache/actualite.html";
+//			if (!file_exists($file)
+//			or @filemtime($file) < mktime(0, 0, 0, date("m") , date("d"), date("Y"))
+//			or  (@filesize($file) == 0 )) {
+//				include_once (BDO_DIR."inc/function.stat.php");
+//				$size = setTopActu($DB, $file);
+//			}
+//			$this->set_var("ACTUAIR",file_get_contents($file));
+//
+//			// dernier ajout recharger toutes les 10min
+//			$file = BDO_DIR."cache/lastajout.html";
+//			if (!file_exists($file)
+//			or (@filemtime($file) < (time()-600))
+//			or  (@filesize($file) == 0 )) {
+//				include_once (BDO_DIR."inc/function.stat.php");
+//				setLastAjout($DB, $file);
+//			}
+//			$this->set_var("LASTAVIS",file_get_contents($file));
+//		}
 
 
 

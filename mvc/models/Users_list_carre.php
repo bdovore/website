@@ -68,6 +68,11 @@ class Users_list_carre extends Bdo_Db_Line
            Db_query($query);
        }
 
+       public function replaceIdTome($old_idtome, $new_idtome) {
+           Db_query("UPDATE IGNORE users_list_carre SET `id_tome` = " . intval($new_idtome) . " WHERE `id_tome`=" . intval($old_idtome));
+        
+        return Db_affected_rows();
+       }
 
 }
 ?>
