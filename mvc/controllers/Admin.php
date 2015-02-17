@@ -792,7 +792,7 @@ class Admin extends Bdo_Controller {
                     "COLLECTION" => $this->Tome->NOM_COLLECTION,
                     "HISTOIRE" => $this->Tome->HISTOIRE_TOME,
                     "ID_EDITION" => $this->Tome->ID_EDITION,
-                    "ISINT" => (($this->Tome->FLG_INT == 'O') ? 'checked' : ''),
+                    "ISINT" => (($this->Tome->FLG_INT_TOME == 'O') ? 'checked' : ''),
                     "OPTTYPE" => GetOptionValue($opt_type, $this->Tome->FLG_TYPE),
                     "NBUSERS" => $nb_users,
                     "NBUSERS2" => $nb_comments,
