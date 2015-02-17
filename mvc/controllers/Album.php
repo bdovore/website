@@ -63,6 +63,9 @@ class Album extends Bdo_Controller {
 
         $this->view->set_var(array(
             'tome' => notIssetOrEmpty($this->Tome) ? $this->Edition : $this->Tome,
+            //TODO rendre ça plus 'clean'. Pourquoi avoir deux noms différents ? 
+            //(pour les cas où on présente album *et* éditions sur une même vue ?
+            'dateparution' => notIssetOrEmpty($this->Tome) ? $this->Edition->DATE_PARUTION_EDITION : $this->Tome->DTE_PARUTION,
             'PAGETITLE' => "Album BD : " . ( notIssetOrEmpty($this->Tome) ? $this->Edition->TITRE_TOME : $this->Tome->TITRE_TOME),
             'connected' => (!empty($_SESSION['userConnect']->user_id))
         ));
