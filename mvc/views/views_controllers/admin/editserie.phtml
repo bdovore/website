@@ -53,9 +53,9 @@ function valider(){
                         <td align="center">Nb final</td>
                         <td colspan="4"><input name="txtNbTome" type="text" id="txtNbTome" value="<?php echo $view->NBTOME; ?>" size="2" class="<?php echo $view->CHAMPFORMSTYLE; ?>" style="text-align: center;" /> tomes</td>
                     </tr>
-                    <tr align="center"> 
+                    <tr> 
                         <td>Intro Série</td>
-                        <td colspan="4"><textarea name="txtSerieHist" id="txtSerieHist" class="<?php echo $view->CHAMPFORMSTYLE; ?>champ_commentaire"><?php echo $view->HISTOIRE_SERIE; ?></textarea></td>
+                        <td colspan="4"><textarea name="txtSerieHist" id="txtSerieHist" class="<?php echo $view->CHAMPFORMSTYLE; ?>champ_commentaire"><?php echo nl2br($view->HISTOIRE_SERIE); ?></textarea></td>
                     </tr>
                 </table>
     <div class="submit"> 
