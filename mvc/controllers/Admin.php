@@ -714,7 +714,7 @@ class Admin extends Bdo_Controller {
                             imagecopyresampled($new_image, $source, 0, 0, 0, 0, $new_w, $new_h, $imagelargeur, $imagehauteur);
                             switch ($imagetype) {
                                 case "2":
-                                    unlink(BBDO_DIR_COUV . $img_couv);
+                                    unlink(BDO_DIR_COUV . $img_couv);
                                     imagejpeg($new_image, BDO_DIR_COUV . $img_couv, 100);
                                     break;
                                 case "1":
