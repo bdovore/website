@@ -23,7 +23,7 @@ class Adminproposition extends Bdo_Controller {
             }
             $type = getVal("type", "AJOUT");
 
-            $validationdelay = 21; //nbre de jours après lesquels on ne valide pas (pour les parutions futures)
+            $validationdelay = 30; //nbre de jours après lesquels on ne valide pas (pour les parutions futures)
             // LISTE LES PROPOSALS
             $this->loadModel("User_album_prop");
             switch ($type) {
@@ -82,7 +82,7 @@ class Adminproposition extends Bdo_Controller {
     }
 
 private function getDateBeforeValid() {
-        $validationdelay = 21; //nbre de jours après lesquels on ne valide pas (pour les parutions futures)
+        $validationdelay = 30; //nbre de jours après lesquels on ne valide pas (pour les parutions futures)
         $datebeforevalid = "Ne pas valider les albums qui paraissent apr&egrave;s le " . date("d/m/Y", mktime(0, 0, 0, date("m"), date("d") + $validationdelay, date("Y"))) . " ($validationdelay jours)";
 
         return $datebeforevalid;

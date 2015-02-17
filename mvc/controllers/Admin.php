@@ -656,9 +656,12 @@ class Admin extends Bdo_Controller {
                     var_dump($this->Tome->error);
                     exit();
                 }
+                
+                
+                
                 // Verifie la pr�sence d'une image � t�l�charger
-                if (is_file($txtFileLoc) | (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postval('txtFileURL'), $url_ary))) {
-                    if (is_file($txtFileLoc)) { // un fichier � uploader
+                if (is_file($_FILES["txtFileLoc"]["tmp_name"]) | (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postval('txtFileURL'), $url_ary))) {
+                    if (is_file($_FILES["txtFileLoc"]["tmp_name"])) { // un fichier � uploader
                         $img_couv = imgCouvFromForm($lid_tome, $lid_edition);
                     } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)) { // un fichier � t�l�charger
                         if (empty($url_ary[4])) {
@@ -696,30 +699,30 @@ class Admin extends Bdo_Controller {
                             $new_image = imagecreatetruecolor($new_w, $new_h);
                             switch ($imagetype) {
                                 case "1":
-                                    $source = imagecreatefromgif(BDO_DIR . "images/couv/$img_couv");
+                                    $source = imagecreatefromgif(BDO_DIR_COUV . $img_couv);
                                     break;
                                 case "2":
-                                    $source = imagecreatefromjpeg(BDO_DIR . "images/couv/$img_couv");
+                                    $source = imagecreatefromjpeg(BDO_DIR_COUV . $img_couv);
                                     break;
                                 case "3":
-                                    $source = imagecreatefrompng(BDO_DIR . "images/couv/$img_couv");
+                                    $source = imagecreatefrompng(BDO_DIR_COUV . $img_couv);
                                     break;
                                 case "6":
-                                    $source = imagecreatefrombmp(BDO_DIR . "images/couv/$img_couv");
+                                    $source = imagecreatefrombmp(BDO_DIR_COUV . $img_couv);
                                     break;
                             }
                             imagecopyresampled($new_image, $source, 0, 0, 0, 0, $new_w, $new_h, $imagelargeur, $imagehauteur);
                             switch ($imagetype) {
                                 case "2":
-                                    unlink(BDO_DIR . "images/couv/$img_couv");
-                                    imagejpeg($new_image, BDO_DIR . "images/couv/$img_couv", 100);
+                                    unlink(BBDO_DIR_COUV . $img_couv);
+                                    imagejpeg($new_image, BDO_DIR_COUV . $img_couv, 100);
                                     break;
                                 case "1":
                                 case "3":
                                 case "6":
-                                    unlink(BDO_DIR . "images/couv/$img_couv");
+                                    unlink(BDO_DIR_COUV . $img_couv);
                                     $img_couv = substr($img_couv, 0, strlen($img_couv) - 3) . "jpg";
-                                    imagejpeg($new_image, BDO_DIR . "images/couv/$img_couv", 100);
+                                    imagejpeg($new_image, BDO_DIR_COUV . $img_couv, 100);
                             }
                         }
                         echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
@@ -864,7 +867,7 @@ class Admin extends Bdo_Controller {
                     $new_filename = "";
                 } else {
                     $new_filename = "CV-" . sprintf("%06d", $new_idtome) . "-" . sprintf("%06d", $idedition) . substr($old_filename, -4);
-                    rename(BDO_DIR . "images/couv/" . $old_filename, BDO_DIR . "images/couv/" . $new_filename);
+                    rename(BDO_DIR_COUV . $old_filename, BDO_DIR_COUV .  $new_filename);
                 }
                 // on met à jour l'édition
                 //$nb =  $this->Edition->updateTome($idedition,$new_idtome,$new_filename);  
