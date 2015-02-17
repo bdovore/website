@@ -21,8 +21,6 @@ class Admin extends Bdo_Controller {
         }
     }
 
-    
-
     public function Ajout() {
         if (User::minAccesslevel(1)) {
             $list = getVal("list", "");
@@ -45,26 +43,24 @@ class Admin extends Bdo_Controller {
         }
     }
 
-   
     public function User() {
         if (!User::minAccesslevel(1)) {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }
 
-        $searchvalue = getVal("username","");
-        $this->view->set_var("users",null);
+        $searchvalue = getVal("username", "");
+        $this->view->set_var("users", null);
 
         if ($searchvalue != "") {
             $this->loadModel("User");
-            $this->view->set_var("users", $this->User->getUserList($searchvalue)); 
+            $this->view->set_var("users", $this->User->getUserList($searchvalue));
         }
 
         $this->view->set_var("PAGETITLE", "Administration Bdovore - Utilisateurs");
-        $this->view->set_var("searchvalue",$searchvalue);
+        $this->view->set_var("searchvalue", $searchvalue);
         $this->view->render();
     }
 
-    
     public function addSerie() {
         /*
          * Ajout rapide d'une série
@@ -204,7 +200,7 @@ class Admin extends Bdo_Controller {
                 }
 
                 $redirection = BDO_URL . "admin/editalbum?alb_id=" . postVal("txtTomeId");
-                echo GetMetaTag(1, "L'&eactue;dition a &eactue;t&eactue; mise &agrave; jour", $redirection);
+                echo GetMetaTag(1, "L'&eacute;dition a &eacute;t&eacute; mise &agrave; jour", $redirection);
                 exit();
             } elseif ($act == "delete") {// EFFACEMENT D'UNE EDITION
                 if ($conf == "ok") {
@@ -798,9 +794,9 @@ class Admin extends Bdo_Controller {
                     "NBUSERS" => $nb_users,
                     "NBUSERS2" => $nb_comments,
                     "URLDELETE" => $url_delete,
-                    "URLFUSION" => BDO_URL . "admin/mergealbum?source_id=" . $this->Tome->ID_TOME,
+                    "URLFUSION" => BDO_URL . "admin/mergealbums?source_id=" . $this->Tome->ID_TOME,
                     "URLSPLIT" => BDO_URL . "admin/split?alb_id=" . $this->Tome->ID_TOME,
-                    "URLFUSIONDELETE" => BDO_URL . "admin/fusion.delete?alb_id=" . $this->Tome->ID_TOME,
+                    "URLFUSIONDELETE" => BDO_URL . "admin/fusiondelete?alb_id=" . $this->Tome->ID_TOME,
                     "URLEDITSERIE" => BDO_URL . "admin/editserie?serie_id=" . $this->Tome->ID_SERIE,
                     "URLEDITGENRE" => BDO_URL . "admin/editgenre?genre_id=" . $this->Tome->ID_GENRE,
                     "URLEDITSCEN" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_SCENAR,
@@ -831,6 +827,365 @@ class Admin extends Bdo_Controller {
             }
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+        }
+    }
+
+    public function fusionDelete() {
+        /*
+         * Fusion d'album en conservant certaines éditions
+         */
+        // Fusionne les albums et transf�re les �ditions coch�es
+        if (!User::minAccesslevel(1)) {
+            die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+        }
+
+        $act = getVal("act", "");
+        if ($act == "update") {
+            $old_idtome = postValInteger("txtTomeId");
+            $new_idtome = postValInteger("txtTome2Id");
+            if (postValInteger("txtTome2Id") == "") {
+                echo GetMetaTag(2, "L'ID de l'album &agrave; conserver n'a pas &eacute;t&eacute; pr&eacute;cis&eacute;.", (BDO_URL . "admin/editalbum?alb_id=" . $old_idtome));
+                exit();
+            }
+
+            $this->loadModel("Tome");
+            $this->Tome->add_dataPaste("ID_TOME", $new_idtome);
+            $this->Tome->load();
+            // on récupère l'id edition à remplacer pour les utilisateurs qui auraient encore l'ancien id_tome dans leur collection
+            $new_idedition = $this->Tome->ID_EDITION;
+            $this->loadModel("Edition");
+
+            $chkEdition = postVal("chkEdition");
+            $txtCouv = postVal("txtCouv");
+            foreach ($chkEdition as $idedition) {
+                // Modifie les couvertures
+                $old_filename = $txtCouv[$idedition];
+                if ($old_filename == "") {
+                    $new_filename = "";
+                } else {
+                    $new_filename = "CV-" . sprintf("%06d", $new_idtome) . "-" . sprintf("%06d", $idedition) . substr($old_filename, -4);
+                    rename(BDO_DIR . "images/couv/" . $old_filename, BDO_DIR . "images/couv/" . $new_filename);
+                }
+                // on met à jour l'édition
+                //$nb =  $this->Edition->updateTome($idedition,$new_idtome,$new_filename);  
+                $this->Edition->set_dataPaste(array(
+                    "ID_EDITION" => $idedition,
+                    "ID_TOME" => $new_idtome,
+                    "IMG_COUV" => $new_filename
+                ));
+                $this->Edition->update();
+                echo "Nombre de records modifi&eacute;es dans la table bd_edition : " . $this->Edition->affected_rows . " <br />";
+            }
+
+            // Met � jour les commentaires
+            $this->loadModel("Comment");
+            $nb = $this->Comment->replaceIdTome($old_idtome, $new_idtome);
+
+            echo "Nombre de records modifi&eacute;es dans la table users_comment : " . $nb . "<br />";
+
+            // Met � jour les carres
+            $this->loadModel("Users_list_carre");
+            $nb = $this->Users_list_carre->replaceIdTome($old_idtome, $new_idtome);
+            echo "Nombre de records modifi&eacute;es dans la table users_list_carre : " . $nb . "<br />";
+
+            // Met à jour les exclusions
+            $this->loadModel("Users_exclusions");
+            $nb = $this->Users_exclusions->replaceIdTome($old_idtome, $new_idtome);
+            echo "Nombre de records modifi&eacute;es dans la table users_exclusions : " . $nb . "<br />";
+
+            $this->loadModel("Useralbum");
+            $nb = $this->Useralbum->replaceEdition($old_idtome, $new_idedition);
+            echo "Nombre de records modifi&eacute;es dans la table users_album : " . $nb . "<br />";
+            // Efface les éditions et les couvertures correspondantes qui peuvent rester
+            // on charge les éditions retantes de l'ancien tome
+            $this->Edition->load("c", " WHERE bd_tome.id_tome = " . intval($old_idtome));
+            if (issetNotEmpty($this->Edition->a_dataQuery)) {
+                foreach ($this->Edition->a_dataQuery as $edition) {
+
+                    if ($edition->IMG_COUV != '') {
+                        $filename = $edition->IMG_COUV;
+                        if (file_exists(BDO_DIR_COUV . $filename)) {
+                            @unlink(file_exists(BDO_DIR_COUV . $filename));
+                            echo "Couverture effac&eacute;e pour l'&eacute;dition N°" . $edition->ID_EDITION . "<br />";
+                        }
+                    }
+                }
+            }
+
+            // vide la table bd_edition
+            $this->Edition->deleteTome($old_idtome);
+            echo 'R&eacute;f&eacute;rence(s) &agrave; l\'album supprim&eacute;e(s) dans la table bd_edition<br />';
+
+            $this->Tome->add_dataPaste("ID_TOME", $old_idtome);
+            $this->Tome->delete();
+
+            echo 'R&eacute;f&eacute;rence(s) &eagrave; l\'album supprim&eacute;e(s) dans la table bd_tome<br />';
+
+
+
+            $nb = $this->Useralbum->deleteTome($old_idtome);
+            echo "Nombre de records supprim&eacute;s dans la table users_album : " . $nb . "<br />";
+
+            echo GetMetaTag(2, "Fusion effectu&eacute;e.", (BDO_URL . "admin/editalbum?alb_id=" . intval($new_idtome)));
+        }
+
+// AFFICHER UN ALBUM
+        elseif ($act == "") {
+
+            // r�cup�re les donn�es principales
+            $alb_id = getValInteger("alb_id");
+            $report_id = getValInteger("report_id");
+            $this->loadModel("Tome");
+            $this->Tome->add_dataPaste("ID_TOME", $alb_id);
+            $this->Tome->load();
+
+            // D�termine l'affichage des infos
+            $scenaristes1 = ($this->Tome->ID_SCENAR_ALT == 0) ? $this->Tome->scpseudo : $this->Tome->scpseudo . " / " . $this->Tome->scapseudo;
+            $dessinateurs1 = ($this->Tome->ID_DESSIN_ALT == 0) ? $this->Tome->depseudo : $this->Tome->scdeeudo . " / " . $this->Tome->deapseudo;
+            $coloristes1 = ($this->Tome->ID_COLOR_ALT == 0) ? $this->Tome->copseudo : $this->Tome->codeeudo . " / " . $this->Tome->coapseudo;
+            $edcollec1 = ($this->Tome->NOM_COLLECTION == "<N/A>") ? $this->Tome->NOM_EDITEUR : $this->Tome->NOM_EDITEUR . " / " . $this->Tome->NOM_COLLECTION;
+
+            $this->view->set_var(array(
+                "IDTOME" => $this->Tome->ID_TOME,
+                "TITRE" => $this->Tome->TITRE_TOME,
+                "TOME" => $this->Tome->NUM_TOME,
+                "SERIE" => $this->Tome->NOM_SERIE,
+                "SCENARISTES" => $scenaristes1,
+                "DESSINATEURS" => $dessinateurs1,
+                "COLORISTES" => $coloristes1,
+                "EDCOLLEC" => $edcollec1,
+            ));
+
+            if ($report_id != "") {
+                // r�cup�re les donn�es sur le nouveau tome
+                $this->Tome->add_dataPaste("ID_TOME", $report_id);
+                $this->Tome->load();
+
+                // D�termine l'affichage des infos
+                $scenaristes2 = ($this->Tome->ID_SCENAR_ALT == 0) ? $this->Tome->scpseudo : $this->Tome->scpseudo . " / " . $this->Tome->scapseudo;
+                $dessinateurs2 = ($this->Tome->ID_DESSIN_ALT == 0) ? $this->Tome->depseudo : $this->Tome->scdeeudo . " / " . $this->Tome->deapseudo;
+                $coloristes2 = ($this->Tome->ID_COLOR_ALT == 0) ? $this->Tome->copseudo : $this->Tome->codeeudo . " / " . $this->Tome->coapseudo;
+                $edcollec2 = ($this->Tome->NOM_COLLECTION == "<N/A>") ? $this->Tome->NOM_EDITEUR : $this->Tome->NOM_EDITEUR . " / " . $this->Tome->NOM_COLLECTION;
+
+                $this->view->set_var(array(
+                    "IDTOME2" => $this->Tome->ID_TOME,
+                    "TITRE2" => $this->Tome->TITRE_TOME,
+                    "TOME2" => $this->Tome->NUM_TOME,
+                    "SERIE2" => $this->Tome->NOM_SERIE,
+                    "SCENARISTES2" => $scenaristes2,
+                    "DESSINATEURS2" => $dessinateurs2,
+                    "COLORISTES2" => $coloristes2,
+                    "EDCOLLEC2" => $edcollec2,
+                ));
+
+                // Affiche les informations relatives aux diff�rentes �ditions
+                $this->loadModel("Edition");
+                $dbs_edition2 = $this->Edition->load("c", " WHERE bd_tome.id_tome = " . intval($report_id));
+
+                $nb_editions2 = count($dbs_edition2->a_dataQuery);
+            }
+
+            // Affiche les informations relatives aux diff�rentes �ditions
+            $this->loadModel("Edition");
+            $dbs_edition = $this->Edition->load("c", " WHERE bd_tome.id_tome = " . intval($alb_id));
+
+            // on d�clare le block � utiliser
+
+            $this->view->set_var(array(
+                "dbs_edition" => $dbs_edition,
+                "dbs_edition2" => $dbs_edition2,
+                "NBEDITIONS" => count($dbs_edition->a_dataQuery),
+                "NBEDITIONS2" => $nb_editions2,
+                "REFRESHPAGE" => "fusiondelete?alb_id=" . $alb_id,
+                "URLRETOURFICHE" => BDO_URL . "admin/editalbum?alb_id=" . $alb_id,
+                "ACTIONNAME" => "Transf&eacute;rer les &eacute;ditions et effacer l'album",
+                "URLACTION" => BDO_URL . "admin/fusiondelete?act=update",
+                "PAGETITLE" => "Admin : delete / fusion"
+            ));
+
+            $this->view->render();
+        }
+    }
+
+    public function mergeAlbums() {
+        if (!User::minAccesslevel(1)) {
+            die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+        }
+        $error_msg[0] = "Album &agrave; supprimer non d&eacute;fini";
+        $error_msg[1] = "Album &agrave; garder non d&eacute;fini";
+        $error_msg[2] = "Album &agrave; garder et album &agrave; supprimer identiques";
+        $act = getVal("act");
+        $conf = getVal("conf");
+        $dest_id = getValInteger("dest_id",0);
+        $source_id = getValInteger("source_id",0);
+// Fusionne les albums
+        if ($act == "merge") {
+            // v�rifie que source_id et dest_id ont �t� definis
+            if ((is_null($dest_id)) | ($dest_id == 0)) {
+                header("Location:" . BDO_URL . "admin/mergealbums?source_id=$source_id&error=1");
+            }
+            if ((is_null($source_id)) | ($source_id == "")) {
+                header("Location:" . BDO_URL . "admin/mergealbums?dest_id=$dest_id&error=0");
+            }
+            if ($source_id == $dest_id) {
+                header("Location:" . BDO_URL . "admin/mergealbums?source_id=$source_id&dest_id=$dest_id&error=2");
+            }
+            if ($conf == "ok") {
+
+                // R�cup�re la valeur de l'album � mettre � jour
+                               
+
+                // Met à jour les commentaires
+                $this->loadModel("Comment");
+                $nb = $this->Comment->replaceIdTome($source_id, $dest_id);                
+                echo "Nombre de records modifi&eacute;s dans la table users_comment : " . $nb . "<br />";
+
+                // Met à jour les carres
+                $this->loadModel("Users_list_carre");
+                $nb = $this->Users_list_carre->replaceIdTome($source_id, $dest_id);                
+                echo "Nombre de records modifi&eacute;s dans la table users_list_carre : " . $nb . "<br />";
+
+                // Met à jour les exclusions
+                $this->loadModel("Users_exclusions");
+                $nb = $this->Users_exclusions->replaceIdTome($source_id, $dest_id);
+                echo "Nombre de records modifi&eacute;es dans la table users_exclusions : " . $nb . "<br />";
+
+                // Fusionne les albums (restera ensuite � fusionner les �ditions redondantes, cf. mergeeditions)
+                $this->loadModel("Edition");
+                $nb = $this->Edition->replaceIdTome($source_id, $dest_id);
+                echo "Nombre de records modifi&eacute;es dans la table bd_edition : " . $nb . "<br />";
+                
+                $this->loadModel("Tome");
+                $this->Tome->add_dataPaste("ID_TOME", $source_id);
+                $this->Tome->delete();
+                echo 'R&eacute;f&eacute;rence(s) &agrave; l\'album supprim&eacute;e(s) dans la table bd_tome<br />';
+
+                echo GetMetaTag(4, "Fusion effectu&eacute;e.", (BDO_URL . "admin/editalbum?alb_id=" . $dest_id));
+                
+            } else {
+                // Demande de confirmation
+                echo 'Etes-vous s&ucirc;r de vouloir fusionner les albums n ' . $source_id . ' et ' . $dest_id . '? <a href="' . BDO_URL . 'admin/mergealbums?act=merge&conf=ok&source_id=' . $source_id . '&dest_id=' . $dest_id . '">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
+                exit();
+            }
+        }
+
+// AFFICHER UN ALBUM
+        elseif ($act == "") {
+
+           // REMPLISSAGE PARTIE GAUCHE
+            if ((!is_null($source_id)) & ($source_id != '')) {
+                $this->loadModel("Tome");
+                $this->Tome->add_dataPaste("ID_TOME",$source_id);
+                $this->Tome->load();
+                // r�cup�re le nombre d'utilisateurs
+                $nb_comments1 = $this->Tome->NB_NOTE_TOME;
+                
+                // Determine l'URL image
+                if (is_null($this->Tome->IMG_COUV) | ($this->Tome->IMG_COUV == '')) {
+                    $url_image1 = BDO_URL_COUV . "default.png";
+                } else {
+                    $url_image1 = BDO_URL_COUV . $this->Tome->IMG_COUV;
+                }
+                $this->view->set_var(array(
+                    "TOMEID1" => $this->Tome->ID_TOME,
+                    "TITRE1" => $this->Tome->TITRE_TOME,
+                    "IDSERIE1" => $this->Tome->ID_SERIE,
+                    "SERIE1" => $this->Tome->NOM_SERIE,
+                    "TOME1" => $this->Tome->NUM_TOME,
+                    "IDGENRE1" => $this->Tome->ID_GENRE,
+                    "GENRE1" => $this->Tome->NOM_GENRE,
+                    "IDSCENAR1" => $this->Tome->ID_SCENAR,
+                    "SCENAR1" => $this->Tome->scpseudo,
+                    "IDSCENARALT1" => $this->Tome->ID_SCENAR_ALT,
+                    "SCENARALT1" => $this->Tome->scapseudo,
+                    "IDEDIT1" => $this->Tome->ID_EDITEUR,
+                    "EDIT1" => $this->Tome->NOM_EDITEUR,
+                    "IDDESS1" => $this->Tome->ID_DESSIN,
+                    "DESS1" => $this->Tome->depseudo,
+                    "IDDESSALT1" => $this->Tome->ID_DESSIN_ALT,
+                    "DESSALT1" => $this->Tome->deapseudo,
+                    "IDCOLOR1" => $this->Tome->ID_COLOR,
+                    "COLOR1" => $this->Tome->copseudo,
+                    "IDCOLORALT1" => $this->Tome->ID_COLOR_ALT,
+                    "COLORALT1" => $this->Tome->coapseudo,
+                    "IDCOLL1" => $this->Tome->ID_COLLECTION,
+                    "COLL1" => $this->Tome->NOM_COLLECTION,
+                    "DTEPAR1" => $this->Tome->DTE_PARUTION,
+                    "URLIMAGE1" => $url_image1,
+                    "HISTOIRE1" => $this->Tome->HISTOIRE_TOME,
+                    "SOURCEID" => $this->Tome->ID_TOME,
+                    "NBUSERS1" => $this->Tome->NBR_USER_ID_TOME,
+                    "NBCOMMENT1" => $nb_comments1
+                ));
+            } else {
+                $this->view->set_var(array(
+                    "NBUSERS1" => "0",
+                    "NBCOMMENT1" => "0"
+                ));
+            }
+
+            //REMPLISSAGE DE LA PARTIE DROITE
+            if ((!is_null($dest_id)) & ($dest_id != '')) {
+                 $this->loadModel("Tome");
+                $this->Tome->add_dataPaste("ID_TOME",$dest_id);
+                $this->Tome->load();
+
+                
+                // Determine l'URL image
+                if (is_null($this->Tome->IMG_COUV) | ($this->Tome->IMG_COUV == '')) {
+                    $url_image2 = BDO_URL_COUV . "default.png";
+                } else {
+                    $url_image2 = BDO_URL_COUV . $this->Tome->IMG_COUV;
+                }
+                 $this->view->set_var(array(
+                    "TOMEID2" => $this->Tome->ID_TOME,
+                    "TITRE2" => $this->Tome->TITRE_TOME,
+                    "IDSERIE2" => $this->Tome->ID_SERIE,
+                    "SERIE2" => $this->Tome->NOM_SERIE,
+                    "TOME2" => $this->Tome->NUM_TOME,
+                    "IDGENRE2" => $this->Tome->ID_GENRE,
+                    "GENRE2" => $this->Tome->NOM_GENRE,
+                    "IDSCENAR2" => $this->Tome->ID_SCENAR,
+                    "SCENAR2" => $this->Tome->scpseudo,
+                    "IDSCENARALT2" => $this->Tome->ID_SCENAR_ALT,
+                    "SCENARALT2" => $this->Tome->scapseudo,
+                    "IDEDIT2" => $this->Tome->ID_EDITEUR,
+                    "EDIT2" => $this->Tome->NOM_EDITEUR,
+                    "IDDESS2" => $this->Tome->ID_DESSIN,
+                    "DESS2" => $this->Tome->depseudo,
+                    "IDDESSALT2" => $this->Tome->ID_DESSIN_ALT,
+                    "DESSALT2" => $this->Tome->deapseudo,
+                    "IDCOLOR2" => $this->Tome->ID_COLOR,
+                    "COLOR2" => $this->Tome->copseudo,
+                    "IDCOLORALT2" => $this->Tome->ID_COLOR_ALT,
+                    "COLORALT2" => $this->Tome->coapseudo,
+                    "IDCOLL2" => $this->Tome->ID_COLLECTION,
+                    "COLL2" => $this->Tome->NOM_COLLECTION,
+                    "DTEPAR2" => $this->Tome->DTE_PARUTION,
+                    "URLIMAGE2" => $url_image2,
+                    "HISTOIRE2" => $this->Tome->HISTOIRE_TOME,
+                    "DESTID" => $this->Tome->ID_TOME,
+                    "NBUSERS2" => $this->Tome->NBR_USER_ID_TOME,
+                    "NBCOMMENT2" => $this->Tome->NB_NOTE_TOME
+                ));
+            } else {
+                $this->view->set_var(array(
+                    "NBUSERS2" => "0",
+                    "NBCOMMENT2" => "0"
+                ));
+            }
+            $error = getVal("error","");
+            // Message d'erreur
+            if ($error) {
+                $this->view->set_var("ERRORMESSAGE", $error_msg[$error]);
+            }
+            // variables mises� jour dans tous les cas
+            $this->view->set_var(array(
+                "URLREFRESH" => BDO_URL . "admin/mergealbums",
+                "URLECHANGE" => BDO_URL . "admin/mergealbums?source_id=$dest_id&dest_id=$source_id",
+                "URLFUSION" => BDO_URL . "admin/mergealbums?act=merge&source_id=$source_id&dest_id=$dest_id"
+            ));
+            $this->view->render();
         }
     }
 
@@ -1409,10 +1764,6 @@ class Admin extends Bdo_Controller {
         }
     }
 
-    
-
-    
-
     private function resize_edition_image($id_edition, $imagedir) {
         //Redimensionnement : à revoir
         //*****************
@@ -1502,8 +1853,6 @@ class Admin extends Bdo_Controller {
             echo "Image redimensionn�e<br />";
         }
     }
-
-    
 
 }
 

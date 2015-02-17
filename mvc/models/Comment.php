@@ -76,6 +76,14 @@ class Comment extends Bdo_Db_Line
 
     }
 
+    public function replaceIdTome($old_idtome, $new_idtome) {
+         /*
+         * Suppresio d'id tome dans users_album
+         */
+        Db_query("UPDATE IGNORE users_comment SET ID_TOME = " . intval($new_idtome) . " WHERE ID_TOME =" . intval($old_idtome));
+        
+        return Db_affected_rows();
+    }
     
 
    

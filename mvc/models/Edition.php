@@ -218,5 +218,18 @@ FROM bd_edition en
         return $dbSearch;
     }
     
-
+    public function deleteTome($id_tome) {
+        /* 
+         * Supprime les éditions liés à cet id_tome
+         */
+        Db_query("DELETE FROM bd_edition WHERE id_tome=" . intval($id_tome));
+        return Db_affected_rows();
+        
+    }
+    
+    public function replaceIdTome($old_idtome, $new_idtome) {
+           Db_query("UPDATE IGNORE bd_edition SET ID_TOME = " . intval($new_idtome) . " WHERE ID_TOME=" . intval($old_idtome));
+        
+        return Db_affected_rows();
+       }
 }

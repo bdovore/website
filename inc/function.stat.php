@@ -105,30 +105,30 @@ function setTopActu($DB, $file) {
 
 	return file_put_contents ( $file, $html );
 }
-function setLastAjout($DB, $file) {
-	
-	// insertion des 10 derniers albums ajoutés
-	$select = "select titre, id_tome, moyenne from bd_tome order by id_tome desc limit 0,10";
-	$DB->query ( $select );
-	$nb = 1;
-	$html = '
-<div id="last" class="right" style="position: relative; z-index: 10;">
-   <div class="fond"></div>
-   	<div class="middle_title">
-	<h3><a href="' . BDO_URL . 'listlast.php">Derniers ajouts</a>
-	<a href="' . BDO_URL . 'rss.php">
-	<img src="' . BDO_URL_IMAGE . 'site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l\'actualité des ajouts d\'albums sur le site grace à ce fil rss" />
-	</a></h3>
-	</div>
-	<div class="middle_list">
-';
-	while ( $DB->next_record () ) {
-		$html .= '<a href="' . getAlbumUrl ( $DB->f ( "id_tome" ) ) . '">' . $nb . ' - ' . stripslashes ( $DB->f ( "titre" ) ) . '</a><br />';
-		$nb ++;
-	}
-	$html .= '</div></div>';
-	
-    $html = preg_replace("/https:/i", "http:", $html);
-
-	return file_put_contents ( $file, $html );
-}
+//function setLastAjout($DB, $file) {
+//	
+//	// insertion des 10 derniers albums ajoutés
+//	$select = "select titre, id_tome, moyenne from bd_tome order by id_tome desc limit 0,10";
+//	$DB->query ( $select );
+//	$nb = 1;
+//	$html = '
+//<div id="last" class="right" style="position: relative; z-index: 10;">
+//   <div class="fond"></div>
+//   	<div class="middle_title">
+//	<h3><a href="' . BDO_URL . 'listlast.php">Derniers ajouts</a>
+//	<a href="' . BDO_URL . 'rss.php">
+//	<img src="' . BDO_URL_IMAGE . 'site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l\'actualité des ajouts d\'albums sur le site grace à ce fil rss" />
+//	</a></h3>
+//	</div>
+//	<div class="middle_list">
+//';
+//	while ( $DB->next_record () ) {
+//		$html .= '<a href="' . getAlbumUrl ( $DB->f ( "id_tome" ) ) . '">' . $nb . ' - ' . stripslashes ( $DB->f ( "titre" ) ) . '</a><br />';
+//		$nb ++;
+//	}
+//	$html .= '</div></div>';
+//	
+//    $html = preg_replace("/https:/i", "http:", $html);
+//
+//	return file_put_contents ( $file, $html );
+//}
