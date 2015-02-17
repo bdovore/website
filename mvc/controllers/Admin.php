@@ -675,7 +675,7 @@ class Admin extends Bdo_Controller {
                     if (postVal("chkResize") == "checked" && $img_couv != '') {
                         //Redimensionnement
                         $max_size = 180;
-                        $imageproperties = getimagesize(BDO_DIR . "images/couv/$img_couv");
+                        $imageproperties = getimagesize(BDO_DIR_COUV . $img_couv);
                         if ($imageproperties != false) {
                             $imagetype = $imageproperties[2];
                             $imagelargeur = $imageproperties[0];
@@ -726,7 +726,7 @@ class Admin extends Bdo_Controller {
                             }
                         }
                         echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
-                        echo "Image redimensionn&eaccute;e<br />";
+                        echo "Image redimensionn&eacute;e<br />";
                     }
 
                     // met � jours la r�f�rence au fichier dans la table bd_edition
