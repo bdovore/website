@@ -1,9 +1,6 @@
-/*Classes g?n?riques*/
-
-
+/*Classes génériques*/
 /* ---------- balises de base */
 html {
-
     font-size: 0.9em;
     font-family:  Trebuchet MS, Helvetica,Arial, sans-serif;
     line-height: 1.5em;
@@ -11,12 +8,7 @@ html {
     padding: 0;
 }
 
-
-
-
-
 body {
-
     font-size: 1em;
     color: #000000;
     background-color: #3D201C;
@@ -29,7 +21,6 @@ body {
     padding: 0;
 }
 
-
 ul {
     list-style: disc outside;
     margin: 0;
@@ -37,22 +28,14 @@ ul {
 }
 
 li {
-
     list-style-type: none;
-
 }
 
-
-
-
-
-
 a {
-    color: #3D201C;
+    color: #888;
     cursor: pointer;
     text-decoration: none;
 }
-
 
 a:link {
     text-decoration: none;
@@ -64,7 +47,6 @@ a:visited {
 }
 
 a:hover {
-
     color: #770000;
     text-decoration: underline;
 }
@@ -83,7 +65,6 @@ h3,h3.a {
 }
 
 h2 {
-
     color: #990000;
     font-size: 1.2em;
     margin: 0;
@@ -91,7 +72,6 @@ h2 {
 }
 
 h1 {
-
     color: #990000;
     font-size: 22px;
     text-align: center;
@@ -111,9 +91,6 @@ textarea {
     padding: 3px;
 }
 
-
-
-
 /* ---------- fin balises de base */
 
 /* ---------- entites par leur id */
@@ -131,7 +108,6 @@ textarea {
     padding-bottom: 0;
 }
 
-
 #content {
     width: 90%;
     min-width: 920px;
@@ -141,10 +117,6 @@ textarea {
     margin-top: 5px;
     margin-bottom: 5px;
 }
-
-
-
-
 
 #footer {
     width: 90%;
@@ -156,11 +128,7 @@ textarea {
     margin-bottom: 10px;
     font-size: 0.7em;
     clear: both;
-
 }
-
-
-
 
 /* searchtable */
 #searchtable {
@@ -169,11 +137,8 @@ textarea {
     float: left;
 }
 
-
-
 #searchtable ul {
     margin-top:-10px;
-
 }
 
 #searchtable ul li {
@@ -224,14 +189,9 @@ textarea {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-
-
-
-
 .champ_avis {
     font-size: 0.9em;
 }
-
 
 .petite_police {
     font-size: 0.7em;
@@ -245,13 +205,11 @@ textarea {
     font-style: italic;
 }
 
-
 .fond {
     background-color: #fff;
     opacity: 1;
     border-radius: 5px;
 }
-
 
 .fondNoir {
     background-color: #FFFFFF;
@@ -275,1000 +233,315 @@ hr.expSep {
     padding: 0;
 }
 
-
-
-
-
-
 td.bordure {
-
-
     background-color: #5D1614;
-
-
     height: 11px;
-
-
-
-
 }
-
-
-
-
 
 td.bord_gauche {
-
-
     /*background-image: url(http://www.bdovore.com/images/site/gauche.gif);
-
     background-repeat: repeat-y;*/
-
-
-
     height: 13px;
-
-
     width: 13px;
-
-
-
-
 }
-
-
-
-
 
 #avertissement a {
-
-
     font-size: 1em;
-
-
-
-
 }
-
-
-
-
 
 #avertissement a:hover {
-
-
     text-decoration: none;
-
-
-
-
 }
-
-
-
-
 
 #titre_avertissement {
-
-
     color: #990000;
-
-
     font-size: 1.2em;
-
-
     font-weight: bold;
-
-
     text-align: center;
-
-
     padding: 5px;
-
-
-
-
 }
-
-
-
-
 
 #texte_avertissement {
-
-
     text-align: justify;
-
-
     padding: 5px;
-
-
-
-
 }
-
-
-
-
 
 /* Tableau page d'accueil*/
 table.browser {
-
-
     border-collapse: collapse;
-
-
     padding: 0;
-
-
     margin: 0;
-
-
     border: 0;
-
-
     line-height: 13px;
-
-
-
-
 }
-
-
-
-
 
 .browser div {
-
-
     margin: 0;
-
-
     padding: 0;
-
-
     border: 0;
-
-
     overflow: hidden;
-
-
     text-align: left;
-
-
-
-
 }
-
-
-
-
 
 table.main {
-
-
     border-collapse: collapse;
-
-
     border: 0;
-
-
     padding-top: 5px;
-
-
     padding-bottom: 10px;
-
-
-
-
 }
-
-
-
-
 
 table.rubrique {
-
-
     border-collapse: collapse;
-
-
     border: 0;
-
-
     width: 100%;
-
-
-
-
 }
-
-
-
-
 
 td.leftframe {
-
-
     width: 150px;
-
-
     padding-right: 10px;
-
-
     padding-left: 10px;
-
-
     vertical-align: top;
-
-
-
-
 }
-
-
-
-
 
 /*Autres Tableaux*/
 table.donnees {
-
-
     border-collapse: collapse;
-
-
     margin-bottom: 10px;
-
-
-
-
 }
-
-
-
-
 
 td.label {
-
-
     font-size: 1.1em;
-
-
-
-
 }
-
-
-
-
-
 
 table.table_form_public {
-
-
     width: 100%;
-
-
     border: 1px solid #FFFFCC;
-
-
     background-color: #DAC1B3;
-
-
-
-
 }
-
-
-
-
 
 .table_form_public td {
-
-
     padding: 3px;
-
-
-
-
 }
-
-
-
-
 
 .enonce_tr_form_public {
-
-
     color: #990000;
-
-
     font-size: 0.9em;
-
-
     font-weight: bold;
-
-
     text-align: center;
-
-
-
-
 }
-
-
-
-
 
 span.ftitle {
-
-
     font-weight: bold;
-
-
     color: #990000;
-
-
     text-align: center;
-
-
-
-
 }
-
-
-
 
 /* Table de menu */
 table.menu {
-
-
     width: 150px;
-
-
     border: 0;
-
-
     border-collapse: collapse;
-
-
     padding: 0;
-
-
     border-spacing: 0;
-
-
-
-
 }
-
-
-
-
-
-
 
 /* Tableau de type tableur */
 table.Tableur {
-
-
     border: Black;
-
-
     border-collapse: collapse;
-
-
-
-
 }
-
-
-
-
 
 td.EnteteTableur {
-
-
     background-color: #8B0000;
-
-
     color: #FFA500;
-
-
     font: Verdana;
-
-
     text-align: center;
-
-
-
-
 }
-
-
-
-
 
 td.DataTableur {
-
-
     background-color: #E5D7D1;
-
-
     color: #000000;
-
-
     font: Verdana;
-
-
     text-align: center;
-
-
-
-
 }
-
-
-
-
-
 
 a.menu {
-
-
     font-size: 14px;
-
-
     color: #FFFFFF;
-
-
-
-
 }
-
-
-
-
 
 a.menuGene:link {
-
-
     color: #880000;
-
-
     text-decoration: none;
-
-
     font-weight: bold;
-
-
-
-
 }
-
-
-
-
 
 a.menuGene:visited {
-
-
     color: #880000;
-
-
     text-decoration: none;
-
-
     font-weight: bold;
-
-
-
-
 }
-
-
-
-
 
 a.menuGene:hover {
-
-
     color: #000;
-
-
     text-decoration: none;
-
-
     font-weight: bold;
-
-
-
-
 }
-
-
-
-
 
 a.menuGene:active {
-
-
     text-decoration: none;
-
-
     font-weight: bold;
-
-
-
-
 }
-
-
-
-
 
 div.edito {
-
-
     font-size: 0.8em;
-
-
     /* letter-spacing: 1px;
-
-
     line-height: 15px;
-
     */
     background: #ECE1CD;
-
-
-
-
 }
-
-
-
-
 
 /*Headers*/
-
 /* Formulaires */
-
 input.textfield {
-
-
     border: 1px solid;
-
-
-
-
 }
-
-
-
-
 
 input.noborder {
-
-
     border: 0px solid;
-
-
-
-
 }
-
-
-
-
 
 .rub_title {
-
-
     position: relative;
-
-
     top: -0.5em;
-
-
     left: 53%;
-
-
     margin: 0;
-
-
-
-
 }
-
-
-
-
 
 .rub_title2 {
-
-
     position: relative;
-
-
     top: 0em;
-
-
     left: 30%;
-
-
     margin: 0;
-
-
-
-
 }
-
-
-
-
 
 .rub_title3 {
-
-
     position: relative;
-
-
     top: 12px;
-
-
     left: 73%;
-
-
-
-
 }
-
-
-
-
 
 /* Environnement du guest */
 .MainPanel {
-
-
-
-
-
 }
-
-
-
-
 
 .GuestName {
-
-
     background-color: #C8857C;
-
-
     font: normal small-caps bold large Verdana;
-
-
     color: #990000;
-
-
     padding-left: 5px;
-
-
-
-
 }
-
-
-
-
 
 .AnnonceBD {
-
-
     background-color: #C8857C;
-
-
     font: normal bold Verdana;
-
-
     color: #000000;
-
-
     float: right;
-
-
     width: 250px;
-
-
-
-
 }
-
-
-
-
 
 .CarreMagique {
-
-
     border: 1px solid #fff;
-
-
     background-color: #fff;
-
-
     text-align:center;
-
-
-
-
 }
-
-
-
-
 
 .MenuGuest {
-
-
     background-color: #DAC1B3;
-
-
     padding: 5px 5px 5px 5px;
-
-
     color: Black;
-
-
     border: solid #B64045;
-
-
-
-
 }
-
-
-
-
 
 /*
 * Environnement Public divers *
 */
 td.entete {
-
-
     font-size: small;
-
-
     height: 25px;
-
-
     border: 1px solid Silver;
-
-
     border-collapse: collapse;
-
-
     background-color: #C8857C;
-
-
     padding-left: 5px;
-
-
-
-
 }
-
-
-
-
 
 td.data {
-
-
     font-size: small;
-
-
     height: 25px;
-
-
     border: 1px solid Silver;
-
-
     border-collapse: collapse;
-
-
     padding-left: 5px;
-
-
     background-color: #E7CCBD;
-
-
-
-
 }
-
-
-
-
 
 .cadre_fiche {
-
-
     width: 100%;
-
-
     border: 2px solid #FFFFCC;
-
-
     margin: 0;
-
-
     background-color: #DAC1B3;
-
-
-
-
 }
-
-
-
-
 
 .case_entete_fonce {
-
-
     background-color: #C8857C;
-
-
     color: #990000;
-
-
     font-weight: bold;
-
-
     font-size: 0.8em;
-
-
-
-
 }
-
-
-
-
 
 .case_fond_clair {
-
-
     background-color: #DAC1B3;
-
-
     font-size: 0.8em;
-
-
-
-
 }
-
-
-
-
 
 .champ_commentaire {
-
-
     font-size: 90%;
-
-
     width: 100%;
-
-
     height: 10em;
-
-
     border: 1px solid #888888;
-
-
-
-
 }
-
-
-
-
 
 /*
 * Environnement Admin *
 */
-
 /* Menu Admin */
 #cadre_menu_admin {
-
-
     width: 100%;
-
-
     padding: 5px;
-
-
     background-color: #A34848;
-
-
     margin-bottom: 5px;
-
-
     text-align: left;
-
-
-
-
 }
-
-
-
-
 
 #cadre_menu_admin a {
-
-
     color: #DAC1B3 !important;
-
-
     font-weight: bold;
-
-
-
-
 }
-
-
-
-
 
 .hr_menu_admin {
-
-
     width: 80%;
-
-
     color: #DAC1B3;
-
-
-
-
 }
-
-
-
-
 
 .fond_admin {
-
-
     width: 100%;
-
-
     border: 2px solid #D35E5E;
-
-
     margin-top: 18px;
-
-
     padding: 0 0 0 5px;
-
-
     background-color: #A34848;
-
-
-
-
 }
+
 .status0{
     background-color: #E7CCBD !important;
-
 }
 .status1{
 
@@ -1283,234 +556,74 @@ td.data {
     background-color: #82FF70 !important;
 }
 
-
-
-
-
 .titre_admin {
-
-
     margin: 6px 0 5px 11px;
-
-
     font-size: 1.3em;
-
-
     font-weight: bold;
-
-
     color: #FFFFFF;
-
-
-
-
 }
-
-
-
-
 
 .date_before_valid {
-
-
     margin: 0 0 7px 14px;
-
-
     font-weight: bold;
-
-
     text-align: center;
-
-
-
-
 }
-
-
-
-
 
 .cadre_texte-admin {
-
-
     width: 100%;
-
-
-
-
 }
-
-
-
-
 
 .cadre_texte-admin td,td.cadre_texte-admin {
-
-
     background-color: #D35E5E;
-
-
     padding: 10px 5px 5px 10px;
-
-
-
-
 }
-
-
-
-
 
 .cadre_texte-admin td a,td.cadre_texte-admin a,.cadre_texte-admin td a:hover,td.cadre_texte-admin a:hover
 {
-
-
     color: #F7E4D9 !important;
-
-
-
-
 }
-
-
-
-
 
 /* Tableaux Admin */
 .tableaux_admin {
-
-
     background-color: #F7D1BA;
-
-
     margin: 7px 0 7px 0;
-
-
     width: 99%;
-
-
-
-
 }
-
-
-
-
 
 .tableaux_admin td {
-
-
     border: 1px inset #DDDDDD;
-
-
     padding: 2px;
-
-
-
-
 }
-
-
-
-
 
 .tableaux_admin_sans-bord {
-
-
     width: 100%;
-
-
-
-
 }
-
-
-
-
 
 .tableaux_admin_sans-bord td {
-
-
     border: 0px;
-
-
     padding: 2px;
-
-
-
-
 }
-
-
-
-
 
 .textarea_description_edition {
-
-
     font-size: 90%;
-
-
     width: 100%;
-
-
     height: 7em;
-
-
     border: 1px solid #888888;
-
-
-
-
 }
 
-
-
-
-
-/* D?sactivation de champ */
+/* Désactivation de champ */
 .champ_form_desactive,.champ_form_desactive_newfserie {
-
-
     background-color: #F7D1BA;
-
-
     border: 0;
-
-
-
-
 }
-
-
-
-
 
 .champ_form_desactivechamp_commentaire {
-
-
     font-size: 90%;
-
-
     width: 100%;
-
-
     height: 10em;
-
-
     background-color: #F7D1BA;
-
-
     border: 0;
-
-
-
-
 }
-
-
-
-
 
 td.entete_admin {
     height: 25px;
@@ -1522,10 +635,6 @@ td.entete_admin {
     font-size: 0.9em;
 }
 
-
-
-
-
 td.data_admin {
     height: 25px;
     border: 1px solid Silver;
@@ -1535,12 +644,7 @@ td.data_admin {
     font-size: 0.9em;
 }
 
-
-
-
-
 td.data_admin_petit {
-
     height: 25px;
     border: 1px solid Silver;
     border-collapse: collapse;
@@ -1549,10 +653,6 @@ td.data_admin_petit {
     font-size: 0.8em;
 }
 
-
-
-
-
 td.original {
     background-color: #CCCCCC;
     font: 80%;
@@ -1560,36 +660,22 @@ td.original {
     padding: 2px;
 }
 
-
 input.to_be_corrected,.to_be_corrected {
     background-color: #FF7B7B;
     border: 1px inset #DDDDDD;
     padding: 2px;
 }
 
-
-
-
-
 input.has_changed,.has_changed {
     background-color: #FFE759;
     border: 1px inset #DDDDDD;
     padding: 2px;
-
 }
-
-
-
-
 
 .submit {
     margin: 10px;
     text-align: center;
 }
-
-
-
-
 
 div.contenu {
     border: 0;
@@ -1597,10 +683,6 @@ div.contenu {
     border-color: #B64045;
     line-height: 25px;
 }
-
-
-
-
 
 div.cadre1 {
     background-color: #ffffff;
@@ -1611,18 +693,10 @@ div.cadre1 {
     height:95%;
 }
 
-
-
-
-
 span.flabel {
     color: #990000;
     font-size: 10px;
 }
-
-
-
-
 
 div.contenu>.clear {
     clear: both;
@@ -1630,11 +704,6 @@ div.contenu>.clear {
     overflow: hidden;
 
 }
-
-
-
-
-
 
 div.conteneuralb {
     width: 100%;
@@ -1644,19 +713,11 @@ div.conteneuralb {
     float: left;
 }
 
-
-
-
-
 div.alb-fiche {
     float: left;
     width: 190px;
     padding-left: 10px;
 }
-
-
-
-
 
 div.alb-img {
     float: left;
@@ -1665,18 +726,10 @@ div.alb-img {
 
 }
 
-
-
-
-
 div.contentalb {
     float: left;
     width: 340px;
 }
-
-
-
-
 
 div.synopsis {
     margin-top: 20px;
@@ -1686,10 +739,6 @@ div.synopsis {
     width: 530px;
 }
 
-
-
-
-
 div.comment {
     margin-top: 20px;
     float: left;
@@ -1698,17 +747,9 @@ div.comment {
     padding-right: 5px;
 }
 
-
-
-
-
 div.action {
     float: left;
 }
-
-
-
-
 
 div.middle {
     float: left;
@@ -1716,12 +757,7 @@ div.middle {
     text-align: center;
     padding-top: 5px;
     margin-left: 5px;
-
 }
-
-
-
-
 
 div.middle-align-left {
     float: left;
@@ -1731,21 +767,12 @@ div.middle-align-left {
     margin-left: 5px;
 }
 
-
-
-
-
 div.right {
-
     float: left;
     text-align: center;
     padding-top: 5px;
     width: 100%;
 }
-
-
-
-
 
 div.copyright {
     text-align: center;
@@ -1753,10 +780,6 @@ div.copyright {
     padding: 2px;
     max-width: 90px;
 }
-
-
-
-
 
 div.middle_content {
     padding-top: 1px;
@@ -1766,18 +789,11 @@ div.middle_content {
     margin: 0;
 }
 
-
-
-
-
 img.couvBig {
     border: 1px solid #000;
     max-height: 160px;
     width: 120px;
 }
-
-
-
 
 img.couvMedium {
     border: 1px solid #000;
@@ -1785,17 +801,10 @@ img.couvMedium {
     width: 97px;
 }
 
-
-
-
 img.couvSmall {
     border: 1px solid #000;
     max-width:70px;
 }
-
-
-
-
 
 div.top_content {
     padding-top: 5px;
@@ -1804,10 +813,6 @@ div.top_content {
     width: 200px;
     margin: auto;
 }
-
-
-
-
 
 div.middle_title {
     width: 100%;
@@ -1818,26 +823,17 @@ div.middle_title {
 
 }
 
-
-
-
-
 .middle_title a {
     color: #FFFFFF;
-
 }
 .middle_title h3 {
     color: #FFFFFF;
 }
 
-
-
-
 #bienvenu {
     width: 81%;
     float: left;
 }
-
 
 /* style de la div d'accueil actualit? (partie droite) */
 #actu2 {
@@ -1863,31 +859,16 @@ div.middle_title {
 
 }
 
-
-
-
-
 #top {
     margin: auto;
 }
 
-
-
-
-
 #actu {
-
     clear: left;
     width: 100%;
     margin-top: 0;
     margin-bottom: 5px;
-
-
 }
-
-
-
-
 
 #last {
     clear: left;
@@ -1896,12 +877,10 @@ div.middle_title {
     margin-bottom: 5px;
 }
 
-
 div.idea {
     font-size : 0.9em;
     color : #555;
 }
-
 
 div.middle_list {
     float: left;
@@ -1928,7 +907,6 @@ div.genTitle {
 }
 
 .genBlock {
-    
     text-align: left;
     border: thin solid #C8857C;
     font: 8pt Verdana;
@@ -1952,19 +930,10 @@ td.genTitle {
     text-align: center;
 }
 
-
-
-
-
 td.genData {
-
     text-align: center;
     padding: 2px 5px 2px 5px;
-
 }
-
-
-
 
 /* fin bloc generic.css */
 ul.menu {
@@ -1972,11 +941,9 @@ ul.menu {
     margin: 5px 0 0 0;
 }
 
-
 ul.menu li {
     display: inline;
 }
-
 
 ul.menu li a {
     border: 1px solid #fff;
@@ -1987,16 +954,13 @@ ul.menu li a {
     color: #fff;
 }
 
-
 ul.menu li a:hover {
     background-color: #000000;
 }
 
-
 font.pucenum {
     color: #999;
 }
-
 
 /* column container */
 .colmask {
@@ -2008,23 +972,16 @@ font.pucenum {
     /* width of whole page */
     overflow: hidden;
     /* This chops off any overhanging divs */
-
-
 }
 
-
 .rightmenu .colleft {
-
     float: left;
     width: 200%;
     margin-left: -200px;
     position: relative;
     right: 100%;
     min-height: 600px;
-
 }
-
-
 
 .rightmenu .col1wrap {
     float: left;
@@ -2040,7 +997,6 @@ font.pucenum {
     padding: 5px;
     border-radius:5px;
 }
-
 
 .rightmenu .col2 {
     float: right;
@@ -2163,16 +1119,16 @@ table.list_album {
     height:100%;
     width:100%;
 }
+
 table.list_album td {
     height:95%;
 
     padding: 1px;
 
 }
+
 table.list_album tr {
     height:100%;
-
-
 }
 
 .mw50{
@@ -2198,7 +1154,6 @@ table.list_album tr {
 }
 
 .fiche_big{
-
 
 }
 
