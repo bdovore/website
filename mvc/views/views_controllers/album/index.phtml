@@ -130,7 +130,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                         <?php if ($view->tome->copseudo <> $view->tome->depseudo and $view->tome->copseudo <> "Aucun" and $view->tome->copseudo <> "<indéterminé>") echo "<br>Couleur : ".htmlspecialchars ($view->tome->copseudo); ?>
 					<br> <b>Edition </b> <font size="-1">
 			                <?php if (count($view->dbs_edition->a_dataQuery) == 1) {
-                                                $dateparution = new DateTime($view->tome->DTE_PARUTION);
+                                                $dateparution = new DateTime($view->dateparution);
                                                 echo $view->tome->NOM_EDITEUR." - ".$dateparution->format("d/m/Y") ;
                                                 $edition_selected = $view->tome->ID_EDITION;
                                         }
