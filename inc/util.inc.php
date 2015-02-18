@@ -15,7 +15,8 @@ function __autoload_classes ($class_name)
     if (is_file($file)) {
         require_once $file;
     } else {
-        echo "Erreur : classe manquante: <b>" . htmlentities($class_name) . "</b><br/>" ;
+        //echo "Erreur : classe manquante: <b>" . htmlentities($class_name) . "</b><br/>" ;
+        return false;
     }
 }
 

@@ -196,8 +196,8 @@ class Export extends Bdo_Controller {
                             $txtCol .= $sep.$tome->NUM_TOME;
                             $txtCol .= $sep.$tome->ISBN_EDITION;
                             $txtCol .= $sep.$tome->NOM_GENRE;
-                            $txtCol .= $sep.$tome->scpeudo;
-                            $txtCol .= $sep.$tome->depsceudo;
+                            $txtCol .= $sep.$tome->scpseudo;
+                            $txtCol .= $sep.$tome->depseudo;
                             $txtCol .= $sep.$tome->NOM_EDITEUR;
                             $txtCol .= $sep.$tome->NOM_COLLECTION;
                             $txtCol .= $sep.$tome->DTE_PARUTION;
