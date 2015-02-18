@@ -103,7 +103,7 @@ class Proposition extends Bdo_Controller {
                 "ID_TOME" => postValInteger("txtTomeId"),
                 "ID_EDITION" => postValInteger("txtEditionId"),
                 "TITRE" => postVal("txtTitre"),
-                "NUM_TOME" => postVal("txtNumTome"),
+                "NUM_TOME" => postValInteger("txtNumTome"),
                 "FLG_INT" => ((postVal("chkIntegrale") == "checkbox") ? "O" : "N"),
                 "FLG_TYPE" => postVal("lstType"),
                 "ID_SERIE" => postValInteger("txtSerieId"),
