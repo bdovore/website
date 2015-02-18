@@ -122,8 +122,8 @@ class Export extends Bdo_Controller {
                             $a_line[] = $tome->NUM_TOME;
                             $a_line[] = $tome->ISBN_EDITION;
                             $a_line[] = $tome->NOM_GENRE;
-                            $a_line[] = $tome->scpeudo;
-                            $a_line[] = $tome->depsceudo;
+                            $a_line[] = $tome->scpseudo;
+                            $a_line[] = $tome->depseudo;
                             $a_line[] = $tome->NOM_EDITEUR;
                             $a_line[] = $tome->NOM_COLLECTION;
                             $a_line[] = $tome->DTE_PARUTION;
