@@ -135,6 +135,9 @@ class Proposition extends Bdo_Controller {
             ));
 
             $this->User_album_prop->update();
+            if (issetNotEmpty($this->User_album_prop->error)) {
+                return $this->User_album_prop->error;
+            }
             $lid = $this->User_album_prop->ID_PROPOSAL;
         }
 
