@@ -5,18 +5,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 
 ?>
-    <link href="<?php BDO_URL . "style/fiche.css" ?>" rel="stylesheet" type="text/css">
+    <link href="<?php echo BDO_URL . "style/fiche.css" ?>" rel="stylesheet" type="text/css">
 <div id="fiche">
-    <table>
-    <tr>
-    <td>
     <div id="couv">
         <img id="couv2" src="<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : "default.png";?>" alt="Couverture" />
         <br />
         &copy; <?php echo $view->tome->NOM_EDITEUR;?>
     </div>
-    </td>
-    <td>
     <table id="info">
         <tr>
             <td class="album" colspan="2"><?php echo $ficheAlbum->urlAlbum($view->tome,$class="albTitle");?></td>
@@ -45,9 +40,6 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             <td class="entete">Parution :</td>
             <td class="contenu"><?php $dateparution = new DateTime($view->tome->DTE_PARUTION); echo $dateparution->format("d/m/Y") ;?></td>
         </tr>
-    </table>
-    </td>
-    </tr>
     </table>
     <div class="space">&nbsp;</div>
 </div>
