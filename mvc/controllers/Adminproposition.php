@@ -1224,7 +1224,7 @@ private function getDateBeforeValid() {
             //Efface le fichier de la base et passe le status de l'album à valider
             if ($prop_img != '') {
                 if (file_exists(BDO_DIR_UPLOAD . $prop_img)) {
-                    @unlink(BDO_DIR_UPLOAD . $prop_img");
+                    @unlink(BDO_DIR_UPLOAD . $prop_img);
                 }
             }
 
