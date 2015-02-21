@@ -46,8 +46,13 @@ $pageinate = $view->getHelper('Pagination');
            
 <?php echo $view->serie->NOM_SERIE; ?> <?php if (User::minAccesslevel(1)) { ?><a class="fancybox fancybox.iframe {width:600,height:600}" href="admin/editserie?serie_id=<?php echo $view->serie->ID_SERIE; ?>"> <img src="<?php echo BDO_URL_IMAGE; ?>edit.gif" /></a> <?php } ?></h3></div>
             <br />
+            <table><tr><td style="vertical-align:top">
           <img src="<?php echo BDO_URL_COUV.$view->serie->IMG_COUV_SERIE; ?>" class="couvBig" style="float:left; margin:2px;">
-            <div ><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+                    </td> 
+                <td style="vertical-align:top">
+                   <?php if ($view->serie->NB_NOTE_SERIE > 0) { ?> <span id="note_serie"></span>
+                   <script>$("#note_serie").raty({score: <?php echo $view->serie->NOTE_SERIE/2.0; ?>, readOnly: true});</script> <?php } ?>
+                    <div ><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
             <strong>Genre : </strong>
             </font>
 <?php echo $view->serie->NOM_GENRE; ?>
@@ -75,6 +80,8 @@ $pageinate = $view->getHelper('Pagination');
             <?php } ?>
             </p>
             </div>
+                </td>
+          </table>
 <?php echo $view->SERNOTE; ?>
                 <br />
 <hr class="expSep" />
