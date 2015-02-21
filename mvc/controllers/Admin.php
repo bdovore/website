@@ -796,7 +796,7 @@ class Admin extends Bdo_Controller {
                     "HISTOIRE" => $this->Tome->HISTOIRE_TOME,
                     "ID_EDITION" => $this->Tome->ID_EDITION,
                     "ISINT" => (($this->Tome->FLG_INT_TOME == 'O') ? 'checked' : ''),
-                    "OPTTYPE" => GetOptionValue($opt_type, $this->Tome->FLG_TYPE),
+                    "OPTTYPE" => GetOptionValue($opt_type, $this->Tome->FLG_TYPE_TOME),
                     "NBUSERS" => $nb_users,
                     "NBUSERS2" => $nb_comments,
                     "URLDELETE" => $url_delete,
@@ -1321,7 +1321,7 @@ class Admin extends Bdo_Controller {
             $opt_status[2][0] = 2;
             $opt_status[2][1] = 'One Shot';
             $opt_status[3][0] = 3;
-            $opt_status[3][1] = 'Interrompue/Abandonn�e';
+            $opt_status[3][1] = 'Interrompue/Abandonn&eacute;e';
 
             $act = getVal("act");
             $conf = getVal("conf");
