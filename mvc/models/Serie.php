@@ -83,15 +83,19 @@ class Serie extends Bdo_Db_Line
 
                 `bd_edition_stat`.`NBR_USER_ID_SERIE`,
                 
+                
                 count(distinct bd_tome.ID_TOME) as NB_ALBUM,
-                max(img_couv) as IMG_COUV_SERIE
+                max(img_couv) as IMG_COUV_SERIE,
+                avg(MOYENNE_NOTE_TOME) NOTE_SERIE,
+                sum(NB_NOTE_TOME) NB_NOTE_SERIE
 
                 FROM `" . $this->table_name . "`
 
           LEFT JOIN `bd_genre` USING(`ID_GENRE`)
           LEFT JOIN (SELECT `ID_SERIE`,NBR_USER_ID_SERIE FROM `bd_edition_stat` group by id_serie) `bd_edition_stat` USING(`ID_SERIE`)
         LEFT JOIN bd_tome using (ID_SERIE)
-        LEFT JOIN bd_edition using(id_tome) 
+        LEFT JOIN bd_edition using (id_edition)
+        LEFT JOIN note_tome on (bd_tome.ID_TOME =note_tome.ID_TOME)
         ";
 
     }
