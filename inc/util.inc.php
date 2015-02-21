@@ -809,7 +809,10 @@ function translate_date ($val, $type = false)
 }
 
 function completeDate ($date)
-{
+{   
+    if(substr($date,-2) == "-0" ) {
+        $date = substr($date,0,strlen($date)-2)."-00";
+    }
     if (stristr($date, '-00')) {
         $date = str_replace('-00', '-01', $date);
     }

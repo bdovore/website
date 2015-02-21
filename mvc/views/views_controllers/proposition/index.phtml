@@ -5,6 +5,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 
 ?>
+<script src="<?php echo BDO_URL;?>jquery/jquery.mask.min" type="text/javascript"></script>
 <div class="cadre1">
     <div class="middle_title"><h3>Proposition d'ajout et de correction</h3></div>
    <?php if(IssetNotEmpty($view->edition)) { ?> <a href="#null" onclick="javascript:history.back();"> Retour à la fiche Album</a> <?php } ?>
@@ -462,6 +463,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         //addSelectOption("txtCollec1","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo issetNotEmpty($view->edition) ? $view->edition->ID_COLLECTION : 0;?>);
     
     }
+     $(document).ready(function(){
+  $('#txtDateParution').mask('0000-00-00', {placeholder: "0000-00-00"});
+});
 </script>
     
     

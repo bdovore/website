@@ -621,11 +621,10 @@ class Admin extends Bdo_Controller {
                 $lid_tome = $this->Tome->ID_TOME;
 
 
-                // ins�re un champ dans la table id_edition
+                // insère un champ dans la table id_edition
                 $this->loadModel("Edition");
                 $txtDateParution = completeDate(postVal('txtDateParution'));
-
-
+                
                 $this->Edition->set_dataPaste(array(
                     'DTE_PARUTION' => $txtDateParution,
                     'FLAG_DTE_PARUTION' => ((postVal('FLAG_DTE_PARUTION') == "1") ? "1" : ""),

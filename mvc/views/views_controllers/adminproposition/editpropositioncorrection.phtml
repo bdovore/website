@@ -2,6 +2,7 @@
     
     $page = $view->getHelper('pagination');
     ?>
+<script src="<?php echo BDO_URL;?>jquery/jquery.mask.min" type="text/javascript"></script>
 <SCRIPT LANGUAGE="JavaScript"><!--
 
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
@@ -478,4 +479,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
         //addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo $view->IDCOLLEC;?>);
     
     }
+     $(document).ready(function(){
+  $('#txtDateParution').mask('0000-00-00', {placeholder: "0000-00-00"});
+});
 </script>
