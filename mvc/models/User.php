@@ -179,6 +179,8 @@ FROM " . $this->table_name . "
                             if (isset($_POST['chkvisit'])) {
                                 setcookie("pass", $this->password, time() + 31104000, "/");
                             }
+                            // on retourne à la page d'origine de la connexion
+                             header('Location: '.$_SERVER['HTTP_REFERER']); 
                         }
                         else {
                             $this->error = 'Compte bloqué';
