@@ -50,8 +50,8 @@ $pageinate = $view->getHelper('Pagination');
           <img src="<?php echo BDO_URL_COUV.$view->serie->IMG_COUV_SERIE; ?>" class="couvBig" style="float:left; margin:2px;">
                     </td> 
                 <td style="vertical-align:top">
-                    <span id="note_serie"></span>
-                    <script>$("#note_serie").raty({score: <?php echo $view->serie->NOTE_SERIE/2.0; ?>, readOnly: true});</script>
+                   <?php if ($view->serie->NB_NOTE_SERIE > 0) { ?> <span id="note_serie"></span>
+                   <script>$("#note_serie").raty({score: <?php echo $view->serie->NOTE_SERIE/2.0; ?>, readOnly: true});</script> <?php } ?>
                     <div ><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
             <strong>Genre : </strong>
             </font>
