@@ -870,7 +870,13 @@ class Admin extends Bdo_Controller {
                     $new_filename = "";
                 } else {
                     $new_filename = "CV-" . sprintf("%06d", $new_idtome) . "-" . sprintf("%06d", $idedition) . substr($old_filename, -4);
-                    rename(BDO_DIR_COUV . $old_filename, BDO_DIR_COUV .  $new_filename);
+                    if (rename(BDO_DIR_COUV . $old_filename, BDO_DIR_COUV .  $new_filename) === false) {
+                        //TODO une fonction echo_utf8() qui fait tout ça :
+                        $text = "Le fichier " . BDO_DIR_COUV . $old_filename . " ne peut pas être renommé.";
+                        echo htmlentities($text, ENT_COMPAT, 'UTF-8') . "<br/>";
+                        $text = "Le fichier " . BDO_DIR_COUV . $new_filename . " n'a donc pas été être créé.";
+                        echo htmlentities($text, ENT_COMPAT, 'UTF-8') . "<br/>";
+                    }
                 }
                 // on met à jour l'édition
                 //$nb =  $this->Edition->updateTome($idedition,$new_idtome,$new_filename);  
