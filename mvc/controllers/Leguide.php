@@ -217,33 +217,7 @@ class Leguide extends Bdo_Controller
             case 6: // Derniers ajouts
                 {
                     $title .= "derniers ajouts dans la base";
-                    if ($_GET['rb_list'] == 'serie')
-                    {
-                        $this->loadModel('Serie');
-
-                        $where = " WHERE";
-
-                        if ($_GET['a_idGenre']) {
-                            $where .= " bd_genre.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])) . ") AND";
-                        }
-
-                        $where .= " bd_genre.origine = '".$filter_origine ."'";
-
-                        $group = " GROUP BY id_serie";
-                        $order = " ORDER BY id_serie DESC ";
-
-                        $dbs_serie = $this->Serie->load('c',$where . $group . $order . $limit);
-
-//"
-//                            WHERE 1
-//                            ".($_GET['a_idGenre'] ? "AND bd_genre.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-//                            and bd_genre.origine = '".$filter_origine ."'
-//                           group by id_serie ORDER BY `bd_edition_stat`.`ID_EDITION` DESC ".$limit);
-
-                        $this->view->set_var('dbs_serie', $dbs_serie);
-                    }
-                    else
-                    {
+                   $_GET['rb_list'] = 'album';
                         $this->loadModel('Tome');
 
                         //this doesn't use the cache in bd_edition_stat (seems light though)
@@ -266,7 +240,7 @@ class Leguide extends Bdo_Controller
 //                            ORDER BY `bd_edition_stat`.`ID_EDITION` DESC ".$limit);
 
                         $this->view->set_var('dbs_tome', $dbs_tome);
-                    }
+                   
 
                     break;
                 }
