@@ -230,7 +230,7 @@ class Leguide extends Bdo_Controller
                         $where .= " bd_genre.origine = '".$filter_origine ."'";
 
                         $group = " GROUP BY id_serie";
-                        $order = " ORDER BY bd_tome.id_tome DESC ";
+                        $order = " ORDER BY id_serie DESC ";
 
                         $dbs_serie = $this->Serie->load('c',$where . $group . $order . $limit);
 
@@ -255,7 +255,7 @@ class Leguide extends Bdo_Controller
 
                         $where .= " g.origine = '" . $filter_origine . "'";
 
-                        $order = " ORDER BY en.valid_dte DESC ";
+                        $order = " ORDER BY bd_tome.id_tome DESC ";
 
                         $dbs_tome = $this->Tome->load('c', $where .$order . $limit);
                         //this uses the cache:    

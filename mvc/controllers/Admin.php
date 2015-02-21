@@ -12,8 +12,12 @@ class Admin extends Bdo_Controller {
 
         if (User::minAccesslevel(1)) {
             $this->loadModel("User_album_prop");
-
+            
             $this->view->set_var($this->User_album_prop->getAllStat());
+            
+            $this->loadModel("Edition");
+            $dbs_tome = $this->Edition->load("c"," ORDER BY bd_edition.VALID_DTE desc limit 0,100");
+            $this->view->set_var("dbs_tome", $dbs_tome);
             $this->view->set_var("PAGETITLE", "Administration Bdovore - Accueil");
             $this->view->render();
         } else {
