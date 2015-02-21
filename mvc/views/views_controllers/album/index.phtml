@@ -53,21 +53,28 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 }
 }
         //-->	
-            getComment(page=1, id_tome=<?php echo $view->tome->ID_TOME;?>);
+            getComment(page=1, id_tome=<?php echo $view->tome->ID_TOME;?> );
             
             
             
             function viewComment() {
+                
+                <?php  if ($view->connected) { ?>
+                                       
                 $("#writecomment").show(100);
                 offset = $("#writecomment").offset().top;
                 $('html, body').animate({scrollTop: offset}, 'slow');
+                <?php }
+                 else { 
+                                            echo "alert('Vous devez vous authentifier pour écrire un avis de lecture !');";
+                                        }
+                                        ?>
             }
             
             function myComment(){
-                writeComment($("#id_tome").val(),$("#note").val(), $("#t_comment").val() );
-                $("#listcomment").empty();
+                writeComment($("#id_tome").val(),$("input[name='note']").val()*2, $("#t_comment").val() );
+                $("#listcomment").empty();             
                 
-                $("#writecomment").hide(100);
                 
                 getComment(page=1, id_tome=<?php echo $view->tome->ID_TOME;?>);
             }
@@ -241,12 +248,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
       
         <div class="comment" id="comment">
                 <font color="#990000" face="Arial, Helvetica, sans-serif" size="-1">
-                        <strong>Commentaires des membres :</strong> <a href="#" onclick="<?php 
-                                        if ($view->connected) { echo "viewComment();";}
-                                        else {
-                                            echo "alert('Vous devez vous authentifier pour écrire un avis de lecture !');";
-                                        }
-                                        ?>">
+                        <strong>Commentaires des membres :</strong> <a onclick="viewComment();">
 						
 							(vous pouvez également donner un avis de lecture)
 						
@@ -263,48 +265,37 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                     <table width="100%" border="0" align="center">			
 				<tr> 						    
 					<td width="70%">					
-						<p>							
+													
 							<strong>Noter et donner votre avis de lecture pour <font color="#990000"><?php echo $view->tome->TITRE_TOME;?> </font></strong>						
-						</p>					
+										
 					</td>				    		
 				</tr>				
 								
 				    <tr> 									    
 						<td>						
-							Note: 					        
-							<select name="note" id="note"><option value="1" >1</option><option value="2" >2</option><option value="3" >3</option><option value="4" >4</option><option value="5" selected>5</option><option value="6" >6</option><option value="7" >7</option><option value="8" >8</option><option value="9" >9</option><option value="10" >10</option></select>					        
-							<em>(notez de 1-bof &agrave; 10 - culte)</em>							
-							<br />						
+							Note: 
+                                                        <div id="commentRaty"></div>
+                                                        <script>$("#commentRaty").raty({ scoreName: 'note', half : true})</script>							
+												
 						</td>					    		   
 					</tr>				    
 					<tr>					  			    
-						<td>Avis de lecture * : </td>					    		    
+						<td>Avis de lecture * : 
+                                                 <textarea id="t_comment" class="champ_commentaire"></textarea></td>					    		    
 					</tr>				    
-					<tr> 					 				    
-						<td>						
-							<p align="left">						    
-							    <textarea id="t_comment" class="champ_commentaire"></textarea>					        
-							</p>				        
-						</td>					    			   
-					</tr>				    
-					<tr>				    			    	
-						<td>				    	
-							<p>							
-								<em>								
-									<font size="-1">									
-										* : Avis de lecture qui apparaîtra pour tous les visiteurs sur le site
-										<br />									
-									</font>								
-								</em>							
-							</p>						
-						</td>					
-					</tr>				    
+							    
+							    
 					<tr>			    
 						<td>						
 							 			
 								<input name="id_tome" type="hidden" id="id_tome" value="<?php echo $view->tome->ID_TOME ?>" />						        
-								<input type="submit" name="Submit" value="Valider" onclick="myComment();"/>					        
-										
+								<input type="submit" name="Submit" value="Enregistrer note/avis" onclick="myComment();"/>					        
+							<em>								
+                                                            <br><font size="-1">									
+										* : Avis de lecture qui apparaîtra pour tous les visiteurs sur le site
+										<br />									
+									</font>								
+								</em>				
 						</td>					    			   
 					</tr>				
 			</table>	
@@ -317,7 +308,18 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
    $("#writecomment").hide();
    $("#info_collection").hide();
    <?php if (User::minAccesslevel(2)) { ?>
-       $("#actionCollection").html("<img src='"+$.bdovore.URL+ "script/ajax-loader.gif'>");
+      // récupération de l'éventuelle commentaire du membre
+       var url = "./AlbumComment?page=1&id_tome=<?php echo $view->tome->ID_TOME; ?>&user_id=<?php echo $_SESSION['userConnect']->user_id;?>";
+       $.getJSON(url,function (data) {
+        if (data.length > 0) {
+            $("#commentRaty").raty({ scoreName: 'note', half : true, score : data[0].NOTE / 2});
+            $("#t_comment").val(data[0].COMMENT);
+            $("#writecomment").show();
+        }
+        });
+        
+     function getInfoCollection () {
+          $("#actionCollection").html("<img src='"+$.bdovore.URL+ "script/ajax-loader.gif'>");
      var url = $.bdovore.URL+"getjson?data=Useralbum&id_edition=<?php echo $view->tome->ID_EDITION?>";
       $.getJSON(url, function (data) {
           if (data.length == 0) {               
@@ -330,7 +332,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
            }
            else {
                $("#info_collection").show();
-               $("#actionCollection").html('<div id="addAlbum<?php echo $view->tome->ID_EDITION; ?>" style="font-size:0.9em;">ajouté à votre collection le '+data[0].DATE_ACHAT.substring(0,10) +' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(<?php echo $view->tome->ID_EDITION; ?>)">Supprimer</a></div>');
+                var dte = data[0].DATE_AJOUT.substring(8,10) + "/" +   data[0].DATE_AJOUT.substring(5,7) + "/" +  data[0].DATE_AJOUT.substring(0,4);
+                if (data[0].FLG_ACHAT === "O") {
+                    $("#actionCollection" ).html('<div id="addAlbum' + <?php echo $view->tome->ID_EDITION; ?> + '" style="font-size:0.9em;">ajouté à vos futurs achats le ' +dte + '<br><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="#" onclick="addAlbum(' + <?php echo $view->tome->ID_TOME; ?> + ', ' + <?php echo $view->tome->ID_EDITION; ?> + ',\'N\');$(\'#cb_achat\').attr(\'checked\', false);" title="Ajouter cet album dans votre collection">Dans ma collection</a>  - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(' + <?php echo $view->tome->ID_EDITION; ?> + ')">Supprimer</a></div>');
+                } else {
+                    $("#actionCollection").html('<div id="addAlbum' + <?php echo $view->tome->ID_EDITION; ?> + '" style="font-size:0.9em;">ajouté à votre collection le ' + dte + ' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(' + <?php echo $view->tome->ID_EDITION; ?> + ')">Supprimer</a></div>');
+                }
+              // $("#actionCollection").html('<div id="addAlbum<?php echo $view->tome->ID_EDITION; ?>" style="font-size:0.9em;">ajouté à votre collection le '+data[0].DATE_ACHAT.substring(0,10) +' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(<?php echo $view->tome->ID_EDITION; ?>)">Supprimer</a></div>');
           
                // on renseigne chaque champs du formulaire
                if (data[0].FLG_ACHAT == 'O') {
@@ -364,6 +372,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         }
 
     );
+    }
+    getInfoCollection ();
    <?php } ?>
          
 </script>

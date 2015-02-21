@@ -64,8 +64,11 @@ function getComment(page,id_tome,user_id) {
     if (typeof(page) != "undefined") url = url + "page=" + page;
     if (typeof(id_tome) != "undefined") url = url + "&id_tome="+ id_tome;
     if (typeof(user_id) != "undefined") url = url + "&user_id=" + user_id;
-    
+    $("#listcomment").html(""); // on vide la liste
     $.getJSON(url,function (data) {
+        if (data.length == 0) {
+            $("#listcomment").append("<i>Aucun commentaire pour cet album actuellement. <a onclick='viewComment();'>Soyez le premier !</a><i>");
+        }
         $.each(data,function (i, item) {
             $("#listcomment").append("<div class='listcomment'> <strong>Note : "+ item.NOTE + "</strong> \n\
              Posté par <a href='./guest?user="+item.user_id + "' target='parent'>"+ item.username + "</a> le "+ item.DTE_POST +"  <p>     \n\
@@ -85,10 +88,9 @@ function writeComment(id_tome,note,comment) {
     url += "&note="+note;
     url += "&comment="+encodeURIComponent(comment);
     $.getJSON(url, function(data){
+       
         if (data.length == 0) {
             alert("Commentaire / note enregistré !");
-            
-            
         }
     });
     
