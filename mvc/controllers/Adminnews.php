@@ -37,7 +37,7 @@ class Adminnews extends Bdo_Controller {
                     echo GetMetaTag(2, "La news a &eacute;t&eacute; effac&eacute;e", (BDO_URL . "adminnews"));
                     exit;
                 } else {
-                    // affiche la confirmation de la demande d'�ffacement
+                    // affiche la confirmation de la demande d'effacement
                     echo 'Etes-vous s&ucirc;r de vouloir effacer la news n&deg;' . $newsid . '  ?   <a href="adminnews?act=supprim&newsid=' . $newsid . '&status=ok">oui</a>
           - <a href="javascript:history.go(-1)">non</a>';
                     exit();

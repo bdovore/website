@@ -18,8 +18,8 @@ class Compte extends Bdo_Controller {
             $act=getVal("act","");
             $this->loadModel("User");
             if ($user_id != "" && $user_id != $_SESSION["userConnect"]->user_id) {
-                //un username et un userid ont �t� pass�s via l'URL
-                //On v�rifie que l'utilisateur est authoris� � ouvrir cette page
+                //un username et un userid ont été passés via l'URL
+                //On vérifie que l'utilisateur est authorisé à ouvrir cette page
                 
                 $this->User->set_dataPaste(array("user_id" =>$user_id ));
                 $this->User->load();
@@ -39,14 +39,14 @@ class Compte extends Bdo_Controller {
             }
 
 
-// Mettre � jour les informations
+// Mettre à jour les informations
 
             if ($act == "update") {
-                // v�rifie que ni nom, pr�nom ou email ne sont nuls
+                // vérifie que ni nom, prénom ou email ne sont nuls
                 if (postVal("txtemail") == '' or !Checkmail(postVal("txtemail"))) {
                     echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">' . "L'adresse email n'est pas valide. Vous allez etre redirig&eacute;.";
                 } else {
-                    // proc�de � la mise � jour
+                    // procède à la mise à jour
                     $this->User->set_dataPaste(array("user_id" =>$user_id,
                        "email" => postVal("txtemail"), 
                         "birthday" => postVal("txtanniv"),
@@ -116,13 +116,13 @@ class Compte extends Bdo_Controller {
                     }
                 
             }     
-            // Afficher le formulaire pr� - remplis
+            // Afficher le formulaire pré-remplis
             elseif ($act == "") {
-                //r�cup�re les donn�es utilisateur dans la base de donn�e
+                //récupère les données utilisateur dans la base de données
                 $this->User->set_dataPaste(array("user_id" =>$profile_user_id ));
                 $this->User->load();
 
-                //cr�e le tableau d'options
+                //crée le tableau d'options
                 $my_options[0][0] = 10;
                 $my_options[0][1] = 10;
                 $my_options[1][0] = 20;
@@ -172,7 +172,7 @@ class Compte extends Bdo_Controller {
         $color["Newpass2"] = "#000000";
         $color["NewEmail"] = "#000000";
 
-//initialisation des valeurs par d�faut
+//initialisation des valeurs par défaut
         $default_username = postVal("NewUser");
         $defaut_pass1 = postVal("NewPass1");
         $defaut_pass2 = postVal("Newpass2");
@@ -192,7 +192,7 @@ class Compte extends Bdo_Controller {
 
 //traitement des exceptions en cas de post
         $act = getVal("act");
-        if ($act == "post") {//D�termine le nombre de champs vides
+        if ($act == "post") {//Détermine le nombre de champs vides
             $champvide = 0;
             reset($_POST);
             while (list ($key, $val) = each($_POST)) {
@@ -205,32 +205,32 @@ class Compte extends Bdo_Controller {
             if ($champvide != 0) {
                 $errornum = 1;
             }
-            //Verifie la validit� du password
+            //Verifie la validité du password
             if ((Checkpassword($defaut_pass1) != 1) && ($errornum == 0)) {
                 $errornum = 2;
                 $defaut_pass1 = "";
                 $defaut_pass2 = "";
             }
-            // V�rifie que les passwords concordent
+            // Vérifie que les passwords concordent
             if (($defaut_pass1 != $defaut_pass2) && ($errornum == 0)) {
                 $errornum = 3;
                 $defaut_pass1 = "";
                 $defaut_pass2 = "";
             }
 
-            //V�rifie la validit� de l'adresse e-mail
+            //Vérifie la validité de l'adresse e-mail
             if ((Checkmail($defaut_email) != 1) && ($errornum == 0)) {
                 $errornum = 4;
                 $color["NewEmail"] = "#FF0000";
             }
-            //V�rifie la validit� du login
-            //V�rifie que le login ne comprend que des caract�res authoris�s et aucun espace
+            //Vérifie la validité du login
+            //Vérifie que le login ne comprend que des caractères authorisés et aucun espace
             if ((CheckChars($default_username) != true) && ($errornum == 0)) {
                 $errornum = 5;
                 $color["NewUser"] = "#FF0000";
             }
 
-            // v�rifie que login choisi n'est pas r�serv� et qu'il n'est pas d�j� utilis�
+            // vérifie que login choisi n'est pas réservé et qu'il n'est pas déjà utilisé
             if ($errornum == 0) {
                 $user = New user();
                 $user->load("c", " WHERE LCASE(username)= LCASE('" . Db_Escape_String($default_username) . "')");
@@ -291,13 +291,13 @@ class Compte extends Bdo_Controller {
         $email = getVal("email");
         $this->view->layout = "iframe";
         if ($email=="ok")
-	{//initialise la proc�dure de renvoie
+	{//initialise la procédure de renvoi
 		$user_username = postVal("txtusername");
 		$user_email = postVal("txtemail");
                 $this->loadModel("User");
                 $this->User->load("c", " WHERE username= '".Db_Escape_String($user_username)."' and email = '".Db_Escape_String($user_email)."'");
 		
-		//Verifie qu'un nom a �t� retourn� par la query
+		//Verifie qu'un nom a été retourné par la query
 		if (notIssetOrEmpty($this->User->user_id))
 		{
 			$this->view->addAlertPage("L'utilisateur n'existe pas ou l'adresse e-mail est erron&eacute;e !");
@@ -306,7 +306,7 @@ class Compte extends Bdo_Controller {
 		}
                 else {
 
-		//g�n�re un nouveau mot de passe et l'envoie � l'utilisateur
+		//génère un nouveau mot de passe et l'envoie à l'utilisateur
 		
 		
 		$newpassword = passgen(8);
@@ -318,7 +318,7 @@ class Compte extends Bdo_Controller {
                     exit;
                 }
 
-		//Pr�pare l'email � envoyer
+		//Prépare l'email à envoyer
 		$textemail = "Bonjour,\n\n";
 		$textemail .= "Suite à votre demande, votre mot de passe pour accéder à www.bdovore.com a été changé.\n";
 		$textemail .= "Votre nouveau mot de passe est :\n\n";

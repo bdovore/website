@@ -127,7 +127,7 @@ class Admin extends Bdo_Controller {
                 ));
             }
 
-            // Afficher le formulaire pr� - remplis
+            // Afficher le formulaire pré-remplis
             elseif ($act == "") {
                 $this->view->set_var(array
                     (
@@ -152,13 +152,13 @@ class Admin extends Bdo_Controller {
             $this->loadModel("Tome");
             $this->view->set_var(array("PAGETITLE" => "Administration des Editions"));
 
-            // Mettre � jour les informations
+            // Mettre à jour les informations
             if ($act == "update") {
                 $tome_id = postValInteger("txtTomeId");
                 $edition_id = postValInteger("txtEditionId");
-                if (is_file($_FILES["txtFileLoc"]["tmp_name"])) {// un fichier � uploader
+                if (is_file($_FILES["txtFileLoc"]["tmp_name"])) {// un fichier à uploader
                     $img_couv = imgCouvFromForm($tome_id, $edition_id);
-                } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal('txtFileURL'), $url_ary)) { // un fichier � t�l�charger
+                } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal('txtFileURL'), $url_ary)) { // un fichier à télécharger
                     $img_couv = imgCouvFromUrl($url_ary, $tome_id, $edition_id);
                 } else {
                     $img_couv = '';
@@ -184,7 +184,7 @@ class Admin extends Bdo_Controller {
                 ));
 
 
-                // v�rifie si la couverture a �t� chang�e
+                // vérifie si la couverture a été changée
                 if ($img_couv != '') {
                     $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
                 }
@@ -222,7 +222,7 @@ class Admin extends Bdo_Controller {
                         }
                     }
 
-                    // Efface l'�dition de la base
+                    // Efface l'édition de la base
                     $this->Edition->delete();
                     $redirection = BDO_URL . "admin/editalbum?alb_id=" . $id_tome;
                     echo GetMetaTag(1, "L'&eactue;dition a &eactue;t&eacute; &eacute;ffac&eacute;e de la base", $redirection);
@@ -232,7 +232,7 @@ class Admin extends Bdo_Controller {
                     exit();
                 }
             } elseif ($act == "autorize") {// ACTIVATION D'UNE EDITION
-                // Commence par activer l'�dition dans la base
+                // Commence par activer l'édition dans la base
                 $this->Edition->set_dataPaste(array(
                     "ID_EDITION" => $edition_id));
                 $this->Edition->load();
@@ -247,7 +247,7 @@ class Admin extends Bdo_Controller {
             }
 // AFFICHE UN FORMULAIRE VIDE
             elseif ($act == "new") {
-                // determine si une r�f�rence d'album a �t� pass�
+                // determine si une référence d'album a été passée
                 if (getVal("alb_id", "") <> "") {
                     $alb_id = getValInteger(alb_id);
                     $this->Tome->set_dataPaste(array("ID_TOME" => $alb_id));
@@ -301,20 +301,20 @@ class Admin extends Bdo_Controller {
                     var_dump($this->Edition->error);
                     exit();
                 }
-                // r�cup�re la valeur de la derni�re insertion
+                // récupère la valeur de la dernière insertion
                 $lid = $this->Edition->ID_EDITION;
 
-                // Verifie la pr�sence d'une image � t�l�charger
-                if (is_file($_FILES["txtFileLoc"]["tmp_name"])) { // un fichier � uploader
+                // Verifie la présence d'une image à télécharger
+                if (is_file($_FILES["txtFileLoc"]["tmp_name"])) { // un fichier à uploader
                     $img_couv = imgCouvFromForm($id_tome, $lid);
-                } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal('txtFileURL'), $url_ary)) { // un fichier � t�l�charger
+                } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal('txtFileURL'), $url_ary)) { // un fichier à télécharger
                     $img_couv = imgCouvFromUrl($url_ary, $id_tome, $lid);
                 } else {
                     $img_couv = '';
                 }
 
                 if ($img_couv != '') {
-                    // met � jours la r�f�rence au fichier dans la table bd_edition
+                    // met à jour la référence au fichier dans la table bd_edition
                     $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
                     $this->Edition->update();
                 }
@@ -330,13 +330,13 @@ class Admin extends Bdo_Controller {
 // AFFICHER UNE EDITION
             elseif ($act == "") {
 
-                // r�cup�rer le nombres dutilisateurs avec cette edition dans leur collection
+                // récupérer le nombres dutilisateurs avec cette edition dans leur collection
                 $this->Edition->set_dataPaste(array("ID_EDITION" => $edition_id));
 
                 $this->Edition->load();
                 $nbusers = intval($this->Edition->NBR_USER_ID);
 
-                // R�cup�re l'adresse mail de l'utilisateur
+                // Récupère l'adresse mail de l'utilisateur
 
                 $mail_adress = $this->Edition->EMAIL;
                 $mailsubject = "Votre proposition de nouvelle &eacute;dition pour l'album : " . $this->Edition->TITRE_TOME;
@@ -353,7 +353,7 @@ class Admin extends Bdo_Controller {
                     $dim_image = imgdim(BDO_DIR_COUV . $this->Edition->IMG_COUV);
                 }
 
-                // d�termine s'il est possible d'effacer cet album
+                // détermine s'il est possible d'effacer cet album
                 if (($this->Edition->ID_EDITION == $this->Edition->ID_EDITION_DEFAULT) | ($nbusers > 0)) {
                     $url_delete = "javascript:alert('Impossible d\'effacer cette &eacute;dition');";
                 } else {
@@ -436,7 +436,7 @@ class Admin extends Bdo_Controller {
             $act = getVal("act");
             $conf = getVal("conf");
             $idtome = getValInteger("idtome");
-// Mettre � jour les informations
+// Mettre à jour les informations
             if ($act == "update") {
                 $this->Serie->set_dataPaste(array("ID_SERIE" => postValInteger("txtSerieId")));
                 $this->Serie->load(); // chargement de la série pour récupérer le genre de l'album
@@ -472,7 +472,7 @@ class Admin extends Bdo_Controller {
 // EFFACEMENT D'UN ALBUM
             elseif ($act == "delete") {
                 if ($conf == "ok") {
-                    //Rev�rifie que c'est bien l'administrateur qui travaille
+                    //Revérifie que c'est bien l'administrateur qui travaille
                     if (User::minAccesslevel(1)) {
                         // Efface les éditions et les couvertures correspondantes
                         $this->loadModel("Edition");
@@ -535,7 +535,7 @@ class Admin extends Bdo_Controller {
             }
 
 
-// AFFICHE UN FORMULAIRE pr�rempli
+// AFFICHE UN FORMULAIRE prérempli
             elseif ($act == "newfserie") {
                 $url_image = BDO_URL . "images/couv/default.png";
                 $champ_form_style = 'champ_form_desactive';
@@ -621,7 +621,7 @@ class Admin extends Bdo_Controller {
                     var_dump($this->Tome->error);
                     exit();
                 }
-                // r�cup�re la valeur de la derni�re insertion
+                // récupère la valeur de la dernière insertion
                 $lid_tome = $this->Tome->ID_TOME;
 
 
@@ -649,7 +649,7 @@ class Admin extends Bdo_Controller {
                     exit();
                 }
 
-                // r�cup�re la valeur de la derni�re insertion
+                // récupère la valeur de la dernière insertion
                 $lid_edition = $this->Edition->ID_EDITION;
 
                 // renseigne cette edition comme defaut pour bd_tome
@@ -662,11 +662,11 @@ class Admin extends Bdo_Controller {
                 
                 
                 
-                // Verifie la pr�sence d'une image � t�l�charger
+                // Verifie la présence d'une image à télécharger
                 if (is_file($_FILES["txtFileLoc"]["tmp_name"]) | (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postval('txtFileURL'), $url_ary))) {
-                    if (is_file($_FILES["txtFileLoc"]["tmp_name"])) { // un fichier � uploader
+                    if (is_file($_FILES["txtFileLoc"]["tmp_name"])) { // un fichier à uploader
                         $img_couv = imgCouvFromForm($lid_tome, $lid_edition);
-                    } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)) { // un fichier � t�l�charger
+                    } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)) { // un fichier à télécharger
                         if (empty($url_ary[4])) {
                             echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplete. Vous allez etre redirige.';
                             exit();
@@ -684,10 +684,10 @@ class Admin extends Bdo_Controller {
                             $imagelargeur = $imageproperties[0];
                             $imagehauteur = $imageproperties[1];
 
-                            //D�termine s'il y a lieu de redimensionner l'image
+                            //Détermine s'il y a lieu de redimensionner l'image
                             if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $maxsize)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
                                 if ($imagelargeur < $imagehauteur) {
-                                    // image de type panorama : on limite la largeur � 128
+                                    // image de type panorama : on limite la largeur à 128
                                     $new_w = $max_size;
                                     $new_h = round($imagehauteur * $max_size / $imagelargeur);
                                 } else {
@@ -732,7 +732,7 @@ class Admin extends Bdo_Controller {
                         echo "Image redimensionn&eacute;e<br />";
                     }
 
-                    // met � jours la r�f�rence au fichier dans la table bd_edition
+                    // met à jours la référence au fichier dans la table bd_edition
                     $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
                     $this->Edition->update();
                 }
@@ -745,7 +745,7 @@ class Admin extends Bdo_Controller {
                 $alb_id = getValInteger("alb_id");
                 $this->Tome->set_dataPaste(array("ID_TOME" => $alb_id));
                 $this->Tome->load();
-                // r�cup�re le nombre d'utilisateurs
+                // récupère le nombre d'utilisateurs
 
                 $nb_users = $this->Tome->NBR_USER_ID_TOME;
 
@@ -756,7 +756,7 @@ class Admin extends Bdo_Controller {
 
                 $champ_form_style = 'champ_form_desactive';
 
-                // d�termine s'il est possible d'effacer cet album
+                // détermine s'il est possible d'effacer cet album
                 if (($nb_users == 0) & ($nb_comments == 0)) {
                     $url_delete = BDO_URL . "admin/editalbum?act=delete&idtome=" . $this->Tome->ID_TOME;
                 } else {
@@ -817,7 +817,7 @@ class Admin extends Bdo_Controller {
                     "URLACTION" => BDO_URL . "admin/editalbum?act=update"
                 ));
 
-                // Affiche les informations relatives aux diff�rentes �ditions
+                // Affiche les informations relatives aux différentes éditions
                 $this->loadModel("Edition");
                 $dbs_edition = $this->Edition->load(c, "where bd_tome.id_tome =" . $this->Tome->ID_TOME);
 
@@ -963,7 +963,7 @@ class Admin extends Bdo_Controller {
             ));
 
             if ($report_id != "") {
-                // récupère les donn�es sur le nouveau tome
+                // récupère les données sur le nouveau tome
                 $this->Tome->add_dataPaste("ID_TOME", $report_id);
                 $this->Tome->load();
 
@@ -984,18 +984,18 @@ class Admin extends Bdo_Controller {
                     "EDCOLLEC2" => $edcollec2,
                 ));
 
-                // Affiche les informations relatives aux diff�rentes �ditions
+                // Affiche les informations relatives aux différentes éditions
                 $this->loadModel("Edition");
                 $dbs_edition2 = $this->Edition->load("c", " WHERE bd_tome.id_tome = " . intval($report_id));
 
                 $nb_editions2 = count($dbs_edition2->a_dataQuery);
             }
 
-            // Affiche les informations relatives aux diff�rentes �ditions
+            // Affiche les informations relatives aux différentes éditions
             $this->loadModel("Edition");
             $dbs_edition = $this->Edition->load("c", " WHERE bd_tome.id_tome = " . intval($alb_id));
 
-            // on d�clare le block � utiliser
+            // on déclare le block à utiliser
 
             $this->view->set_var(array(
                 "dbs_edition" => $dbs_edition,
@@ -1026,7 +1026,7 @@ class Admin extends Bdo_Controller {
         $source_id = getValInteger("source_id",0);
 // Fusionne les albums
         if ($act == "merge") {
-            // v�rifie que source_id et dest_id ont �t� definis
+            // vérifie que source_id et dest_id ont été definis
             if ((is_null($dest_id)) | ($dest_id == 0)) {
                 header("Location:" . BDO_URL . "admin/mergealbums?source_id=$source_id&error=1");
             }
@@ -1038,7 +1038,7 @@ class Admin extends Bdo_Controller {
             }
             if ($conf == "ok") {
 
-                // R�cup�re la valeur de l'album � mettre � jour
+                // Récupère la valeur de l'album à mettre à jour
                                
 
                 // Met à jour les commentaires
@@ -1056,7 +1056,7 @@ class Admin extends Bdo_Controller {
                 $nb = $this->Users_exclusions->replaceIdTome($source_id, $dest_id);
                 echo "Nombre de records modifi&eacute;es dans la table users_exclusions : " . $nb . "<br />";
 
-                // Fusionne les albums (restera ensuite � fusionner les �ditions redondantes, cf. mergeeditions)
+                // Fusionne les albums (restera ensuite à fusionner les éditions redondantes, cf. mergeeditions)
                 $this->loadModel("Edition");
                 $nb = $this->Edition->replaceIdTome($source_id, $dest_id);
                 echo "Nombre de records modifi&eacute;es dans la table bd_edition : " . $nb . "<br />";
@@ -1083,7 +1083,7 @@ class Admin extends Bdo_Controller {
                 $this->loadModel("Tome");
                 $this->Tome->add_dataPaste("ID_TOME",$source_id);
                 $this->Tome->load();
-                // r�cup�re le nombre d'utilisateurs
+                // récupère le nombre d'utilisateurs
                 $nb_comments1 = $this->Tome->NB_NOTE_TOME;
                 
                 // Determine l'URL image
@@ -1185,7 +1185,7 @@ class Admin extends Bdo_Controller {
             if ($error) {
                 $this->view->set_var("ERRORMESSAGE", $error_msg[$error]);
             }
-            // variables mises� jour dans tous les cas
+            // variables mises à jour dans tous les cas
             $this->view->set_var(array(
                 "URLREFRESH" => BDO_URL . "admin/mergealbums",
                 "URLECHANGE" => BDO_URL . "admin/mergealbums?source_id=$dest_id&dest_id=$source_id",
@@ -1202,7 +1202,7 @@ class Admin extends Bdo_Controller {
             $auteur_id = getVal("auteur_id");
             $this->view->layout = "iframe";
             $this->loadModel("Auteur");
-            // Mettre � jour les informations
+            // Mettre à jour les informations
             if ($act == "update") {
                 $nom = postVal('txtNomAuteur');
                 $prenom = postVal('txtPrenomAuteur');
@@ -1228,7 +1228,7 @@ class Admin extends Bdo_Controller {
 // effacement d'un auteur
             elseif ($act == "delete") {
                 if ($conf == "ok") {
-                    if (User::minAccesslevel(1)) {//Rev�rifie que c'est bien l'administrateur qui travaille
+                    if (User::minAccesslevel(1)) {//Revérifie que c'est bien l'administrateur qui travaille
                         $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $auteur_id));
                         $this->Auteur->delete();
                         echo 'L\'auteur a &eacute;t&eacute; effac&eacute;e de la base.';
@@ -1279,7 +1279,7 @@ class Admin extends Bdo_Controller {
 // AFFICHER UN AUTEUR
             elseif ($act == "") {
 
-                // Compte les albums pour lesquels les auteurs ont travaill�
+                // Compte les albums pour lesquels les auteurs ont travaillé
                 $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $auteur_id));
                 $this->Auteur->load();
                 $nb_auteur = intval($this->Auteur->getNbAlbumForAuteur($auteur_id));
@@ -1328,7 +1328,7 @@ class Admin extends Bdo_Controller {
             $idserie = getVal("idserie");
             $this->loadModel("Serie");
             $this->loadModel("Tome");
-// Mettre � jour les informations
+// Mettre à jour les informations
             if ($act == "update") {
                 $this->Serie->set_dataPaste(array(
                     "ID_SERIE" => postVal("txtSerieId"),
@@ -1415,19 +1415,19 @@ class Admin extends Bdo_Controller {
             elseif ($act == "") {
                 $champ_form_style = 'champ_form_desactive';
                 $serie_id = getVal("serie_id");
-                // Selectionne les albums pr�sents dans la s�rie
+                // Selectionne les albums présents dans la série
                 $dbs_tome = $this->Tome->load("c", " WHERE bd_tome.ID_SERIE=" . $serie_id);
 
                 $nb_tome = $this->Tome->dbSelect->nbLineResult;
 
 
-                // Selectionne les auteurs ayant travaill� pour la s�rie
+                // Selectionne les auteurs ayant travaillé pour la série
                 $this->loadModel("Auteur");
                 $dbs_auteur = $this->Auteur->getAuteurForSerie($serie_id);
                 $nb_auteur = count($dbs_auteur);
 
 
-                //r�cup�re les donn�es dans la base
+                //récupère les données dans la base
                 $this->Serie->set_dataPaste(array("ID_SERIE" => $serie_id));
                 $this->Serie->load();
 
@@ -1540,11 +1540,11 @@ class Admin extends Bdo_Controller {
 // AFFICHER UN GENRE
             elseif ($act == "") {
 
-                // Compte les albums pour lesquels les auteurs ont travaill�
+                // Compte les albums pour lesquels les auteurs ont travaillé
                 $genre_id = getValInteger("genre_id");
                 $nb_serie = $this->Genre->getNbSerieForGenre($genre_id);
 
-                //r�cup�re les donn�es utilisateur dans la base de donn�e
+                //récupère les données utilisateur dans la base de données
                 $this->Genre->set_dataPaste(array("ID_GENRE" => $genre_id));
                 $this->Genre->load();
                 $this->view->set_var(array(
@@ -1570,7 +1570,7 @@ class Admin extends Bdo_Controller {
             $this->loadModel("Editeur");
             $act = getVal("act", "");
             $editeur_id = getValInteger("editeur_id");
-            // Mettre � jour les informations
+            // Mettre à jour les informations
             if ($act == "update") {
                 $this->Editeur->set_dataPaste(array(
                     "ID_EDITEUR" => postValInteger("txtIdEditeur"),
@@ -1628,7 +1628,7 @@ class Admin extends Bdo_Controller {
                 $lid = $this->Editeur->ID_EDITEUR;
 
                 // on ajpute la collection par défaut
-                // Insère un collection <N/A> pour cet �diteur
+                // Insère un collection <N/A> pour cet éditeur
                 $this->loadModel("Collection");
                 $this->Collection->set_dataPaste(array(
                     "ID_EDITEUR" => $lid,
@@ -1648,7 +1648,7 @@ class Admin extends Bdo_Controller {
 
                 $nb_collec = $this->Collection->dbSelect->nbLineResult;
 
-                //r�cup�re les donn�es editeur dans la base de donn�e
+                //récupère les données editeur dans la base de données
                 $this->Editeur->set_dataPaste(array("ID_EDITEUR" => $editeur_id));
                 $this->Editeur->load();
                 $this->view->set_var(array
@@ -1707,7 +1707,7 @@ class Admin extends Bdo_Controller {
 // AFFICHE UN FORMULAIRE VIDE
             elseif ($act == "new") {
                 $editeur_id = getValInteger("editeur_id", 0);
-                if ($editeur_id) {// Un �diteur a �t� pass� dans l'URL
+                if ($editeur_id) {// Un éditeur a été passé dans l'URL
                     $this->loadModel("Editeur");
                     $this->Editeur->set_dataPaste(array("ID_EDITEUR" => $editeur_id));
                     $this->Editeur->load();
@@ -1747,7 +1747,7 @@ class Admin extends Bdo_Controller {
                 $nb_albums = $this->Collection->getNbAlbumForCollection($collec_id);
                 $this->Collection->set_dataPaste(array("ID_COLLECTION" => $collec_id));
                 $this->Collection->load();
-                //r�cup�re les donn�es
+                //récupère les données
 
 
 
@@ -1773,7 +1773,7 @@ class Admin extends Bdo_Controller {
     private function resize_edition_image($id_edition, $imagedir) {
         //Redimensionnement : à revoir
         //*****************
-        // cherche les infos de cette �dition
+        // cherche les infos de cette édition
         $this->loadModel("Edition");
         $this->Edition->set_dataPaste(array("ID_EDITION" => $id_edition));
         $this->Edition->load();
@@ -1799,11 +1799,11 @@ class Admin extends Bdo_Controller {
                 $imagelargeur = $imageproperties[0];
                 $imagehauteur = $imageproperties[1];
 
-                //D�termine s'il y a lieu de redimensionner l'image
+                //Détermine s'il y a lieu de redimensionner l'image
                 if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $max_size)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
 
                     if ($imagelargeur < $imagehauteur) {
-                        // image de type panorama : on limite la largeur � 128
+                        // image de type panorama : on limite la largeur à 128
                         $new_w = $max_size;
                         $new_h = round($imagehauteur * $max_size / $imagelargeur);
                     } else {
@@ -1856,7 +1856,7 @@ class Admin extends Bdo_Controller {
             }
 
             echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
-            echo "Image redimensionn�e<br />";
+            echo "Image redimensionnée<br />";
         }
     }
 
