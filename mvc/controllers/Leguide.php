@@ -230,7 +230,7 @@ class Leguide extends Bdo_Controller
                         $where .= " bd_genre.origine = '".$filter_origine ."'";
 
                         $group = " GROUP BY id_serie";
-                        $order = " ORDER BY bd_edition.valid_dte DESC ";
+                        $order = " ORDER BY bd_tome.id_tome DESC ";
 
                         $dbs_serie = $this->Serie->load('c',$where . $group . $order . $limit);
 
