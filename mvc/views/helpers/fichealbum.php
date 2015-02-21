@@ -2,6 +2,27 @@
 
 class FicheAlbum {
     
+    public function getTitreTome ($o_tome,$url=true) {
+        $html = "";
+        if ($o_tome->TITRE_TOME) {
+            if ($o_tome->NUM_TOME AND stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
+            //if ($o_tome->NUM_TOME) {
+                $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
+            } else if ($o_tome->FLG_INT_TOME == "O" and stripos(strtolower($o_tome->TITRE_TOME),"intégrale") === false) {
+                $html .= '<i>Intégrale - </i> ';
+                
+            }
+            
+            if ($url) {
+                $html .=  "<strong>".$this->urlAlbum($o_tome, 'albTitle')."</strong>" ;
+            } else {
+                $html .=  $o_tome->TITRE_TOME;
+            }
+            
+        }
+        return $html;
+    }
+    
     public function small($o_tome, $getUrlSerie = true) {
         
         if (is_array($o_tome)) {
@@ -17,11 +38,8 @@ class FicheAlbum {
         
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
-            if ($o_tome->NUM_TOME AND stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
-            //if ($o_tome->NUM_TOME) {
-                $html .= '<i>tome ' . $o_tome->NUM_TOME . ' -</i> ';
-            }
-            $html .= $this->urlAlbum($o_tome, 'albTitle') . '<br>';
+            
+            $html .= $this->getTitreTome($o_tome) . '<br>';
         }
         
         // nom de la serie
@@ -55,7 +73,7 @@ class FicheAlbum {
             //if ($o_tome->NUM_TOME) {
                 $html .= '<i>tome ' . $o_tome->NUM_TOME . ' -</i> ';
             }
-            $html .=$this->urlAlbum($o_tome, 'albTitle') . '</td></tr>';
+            $html .= $this->getTitreTome($o_tome)  . '</td></tr>';
         }
         
         // nom de la serie
@@ -83,11 +101,8 @@ class FicheAlbum {
 
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
-            if ($o_tome->NUM_TOME AND stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
-            //if ($o_tome->NUM_TOME) {
-                $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
-            }
-            $html .= "<strong>" . $this->urlAlbum($o_tome, 'albTitle') . '</strong><br>';
+           
+            $html .=  $this->getTitreTome($o_tome) . '<br>';
         }
 
         // note/votes

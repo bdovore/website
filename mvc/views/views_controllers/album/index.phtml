@@ -119,7 +119,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 		
 	    <div class="contentalb" id="alb-description">
 			
-			<h3 align="center"><?php echo $view->tome->TITRE_TOME;?>  <br>  
+			<h3 align="center"><?php echo $ficheAlbum->getTitreTome($view->tome,$url=false);?>  <br>  
                             <?php echo $ficheAlbum->urlSerie($view->tome,"_parent");?>
                            
                         </h3>
