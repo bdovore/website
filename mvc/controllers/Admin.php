@@ -350,7 +350,7 @@ class Admin extends Bdo_Controller {
                     $url_image = BDO_URL_COUV . "default.png";
                 } else {
                     $url_image = BDO_URL_COUV . $this->Edition->IMG_COUV;
-                    $dim_image = imgdim("$url_image");
+                    $dim_image = imgdim(BDO_DIR_COUV . $this->Edition->IMG_COUV);
                 }
 
                 // d�termine s'il est possible d'effacer cet album
@@ -840,7 +840,7 @@ class Admin extends Bdo_Controller {
         /*
          * Fusion d'album en conservant certaines éditions
          */
-        // Fusionne les albums et transf�re les �ditions coch�es
+        // Fusionne les albums et transfère les éditions cochées
         if (!User::minAccesslevel(1)) {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }
@@ -883,13 +883,13 @@ class Admin extends Bdo_Controller {
                 echo "Nombre de records modifi&eacute;es dans la table bd_edition : " . $this->Edition->affected_rows . " <br />";
             }
 
-            // Met � jour les commentaires
+            // Met à jour les commentaires
             $this->loadModel("Comment");
             $nb = $this->Comment->replaceIdTome($old_idtome, $new_idtome);
 
             echo "Nombre de records modifi&eacute;es dans la table users_comment : " . $nb . "<br />";
 
-            // Met � jour les carres
+            // Met à jour les carres
             $this->loadModel("Users_list_carre");
             $nb = $this->Users_list_carre->replaceIdTome($old_idtome, $new_idtome);
             echo "Nombre de records modifi&eacute;es dans la table users_list_carre : " . $nb . "<br />";
@@ -938,14 +938,14 @@ class Admin extends Bdo_Controller {
 // AFFICHER UN ALBUM
         elseif ($act == "") {
 
-            // r�cup�re les donn�es principales
+            // récupère les données principales
             $alb_id = getValInteger("alb_id");
             $report_id = getValInteger("report_id");
             $this->loadModel("Tome");
             $this->Tome->add_dataPaste("ID_TOME", $alb_id);
             $this->Tome->load();
 
-            // D�termine l'affichage des infos
+            // Détermine l'affichage des infos
             $scenaristes1 = ($this->Tome->ID_SCENAR_ALT == 0) ? $this->Tome->scpseudo : $this->Tome->scpseudo . " / " . $this->Tome->scapseudo;
             $dessinateurs1 = ($this->Tome->ID_DESSIN_ALT == 0) ? $this->Tome->depseudo : $this->Tome->scdeeudo . " / " . $this->Tome->deapseudo;
             $coloristes1 = ($this->Tome->ID_COLOR_ALT == 0) ? $this->Tome->copseudo : $this->Tome->codeeudo . " / " . $this->Tome->coapseudo;
@@ -963,11 +963,11 @@ class Admin extends Bdo_Controller {
             ));
 
             if ($report_id != "") {
-                // r�cup�re les donn�es sur le nouveau tome
+                // récupère les donn�es sur le nouveau tome
                 $this->Tome->add_dataPaste("ID_TOME", $report_id);
                 $this->Tome->load();
 
-                // D�termine l'affichage des infos
+                // Détermine l'affichage des infos
                 $scenaristes2 = ($this->Tome->ID_SCENAR_ALT == 0) ? $this->Tome->scpseudo : $this->Tome->scpseudo . " / " . $this->Tome->scapseudo;
                 $dessinateurs2 = ($this->Tome->ID_DESSIN_ALT == 0) ? $this->Tome->depseudo : $this->Tome->scdeeudo . " / " . $this->Tome->deapseudo;
                 $coloristes2 = ($this->Tome->ID_COLOR_ALT == 0) ? $this->Tome->copseudo : $this->Tome->codeeudo . " / " . $this->Tome->coapseudo;

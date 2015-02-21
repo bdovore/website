@@ -151,7 +151,7 @@ private function getDateBeforeValid() {
                 if ($prop_img != '') {
 
                     if (file_exists(BDO_DIR_UPLOAD . $prop_img)) {
-                        unlink(BDO_DIR_UPLOAD . $prop_img);
+                        @unlink(BDO_DIR_UPLOAD . $prop_img);
                     }
                 }
                 if ($mail <> "") {
@@ -228,8 +228,8 @@ private function getDateBeforeValid() {
             if (is_null($this->User_album_prop->IMG_COUV) | ($this->User_album_prop->IMG_COUV == '')) {
                 $url_image = BDO_URL_COUV . "default.png";
             } else {
-                $url_image = BDO_URL_IMAGE . "tmp/" . $this->User_album_prop->IMG_COUV;
-                $dim_image = imgdim($url_image);
+                $url_image = BDO_URL_IMAGE . "tmp" . DS . $this->User_album_prop->IMG_COUV;
+                $dim_image = imgdim(BDO_DIR_UPLOAD . $this->User_album_prop->IMG_COUV);
             }
 
             $this->view->set_var(array(
@@ -965,7 +965,7 @@ private function getDateBeforeValid() {
                     $ori_url_image = BDO_URL_COUV . "default.png";
                 } else {
                     $ori_url_image = BDO_URL_COUV . $this->Tome->IMG_COUV;
-                    $ori_dim_image = imgdim("$ori_url_image");
+                    $ori_dim_image = imgdim(BDO_DIR_COUV . $this->Tome->IMG_COUV);
                 }
             } else {
                 // force l'édition
@@ -975,8 +975,8 @@ private function getDateBeforeValid() {
                 if (is_null($this->Edition->IMG_COUV) | ($this->Edition->IMG_COUV == '')) {
                     $ori_url_image = BDO_URL_COUV . "default.png";
                 } else {
-                    $ori_url_image = BDO_URL_COUV . "" . $this->Edition->IMG_COUV;
-                    $ori_dim_image = imgdim("$ori_url_image");
+                    $ori_url_image = BDO_URL_COUV . $this->Edition->IMG_COUV;
+                    $ori_dim_image = imgdim(BDO_DIR_COUV . $this->Edition->IMG_COUV);
                 }
             }
 
@@ -987,8 +987,8 @@ private function getDateBeforeValid() {
             if (is_null($this->User_album_prop->IMG_COUV) | ($this->User_album_prop->IMG_COUV == '')) {
                 $url_image = $ori_url_image;
             } else {
-                $url_image = BDO_URL_IMAGE . "tmp/" . $this->User_album_prop->IMG_COUV;
-                $dim_image = imgdim("$url_image");
+                $url_image = BDO_URL_IMAGE . "tmp" . DS . $this->User_album_prop->IMG_COUV;
+                $dim_image = imgdim(BDO_DIR_UPLOAD . $this->User_album_prop->IMG_COUV);
             }
 
             // Détermine la nature de la correction
@@ -1223,8 +1223,8 @@ private function getDateBeforeValid() {
 
             //Efface le fichier de la base et passe le status de l'album à valider
             if ($prop_img != '') {
-                if (file_exists(BDO_DIR . "images/tmp/$prop_img")) {
-                    @unlink(BDO_DIR . "images/tmp/$prop_img");
+                if (file_exists(BDO_DIR_UPLOAD . $prop_img)) {
+                    @unlink(BDO_DIR_UPLOAD . $prop_img");
                 }
             }
 
