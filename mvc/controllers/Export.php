@@ -6,9 +6,8 @@
  * On ajoute seulement le choix du caractère de séparation "," ou ";" avec ";" par défaut plus souvent utilisé en fr
  */
 
-
 class Export extends Bdo_Controller {
-     
+
     public function Index() {
         if (User::minAccesslevel(2)) {
             $act = getVal("act", "");
@@ -225,82 +224,97 @@ class Export extends Bdo_Controller {
                         break;
                     case 3:
                         // Export en PDF
-                      
                         
+                        require_once(BDO_DIR . "vendors/mpdf60/mpdf.php");
+                        ob_implicit_flush(true);
                         $opt_status[0][0] = 0;
                         $opt_status[0][1] = 'Finie';
                         $opt_status[1][0] = 1;
                         $opt_status[1][1] = 'En cours';
                         $opt_status[2][0] = 2;
                         $opt_status[2][1] = 'One Shot';
-                        ob_implicit_flush(true);
+
                         $info = array();
                         echo "La création du fichier est en cours ...<br/>\n";
 
-                        $pdfdir = BDO_DIR."public/tmp/";
-                        $filename =  $_SESSION["userConnect"]->user_id . "-" . sha1(uniqid(mt_rand(), true)) . ".pdf";
+                        $pdfdir = BDO_DIR . "public/tmp/";
+                        $filename = $_SESSION["userConnect"]->user_id . "-" . sha1(uniqid(mt_rand(), true)) . ".pdf";
                         $this->removeOldFiles($pdfdir, $_SESSION["userConnect"]->user_id, 7200);
 
-                        $p = PDF_new();
-                        PDF_set_parameter($p,"textformat", "utf8");
+                        $p = new mPDF();
+
                         /* open new PDF file; insert a file name to create the PDF on disk */
-                        if (PDF_open_file($p, $pdfdir .$filename) == 0) {
-                            die("Error: " . PDF_get_errmsg($p));
-                        }
-                        PDF_set_info($p, "Creator", "Bdovore");
-                        PDF_set_info($p, "Author", "BDovore");
-                        PDF_set_info($p, "Title", "Collection au 31.12.2004");
-                        PDF_begin_page($p, 595, 842); /* start a new page */
 
-
+                        $p->SetAuthor("Bdovore", true);
+                        $p->SetCreator("Bdovore.com");
+                        $p->setTitle("Collection de Bandes-Dessinées ", true);
+                        $p->AddPage($size = "A4");
+                        //PDF_begin_page($p, 595, 842); /* start a new page */
 // Initialise l'emplacement
                         $nb_col_max = 1;
-                        $line = 800;
+                        $line = 6;
                         $colonne_num = 0;
                         $current_id_serie = 0;
-
+                        $balise_open = false; // pour tracer que l'on a ouvert une balise "table" pour les colonnes
+                        $tr_open = false;
+                       
                         foreach ($dbs_tome->a_dataQuery as $tome) {
                             if ($tome->ID_SERIE != $current_id_serie) {
-                                if ($line <= 250) { // New page
-                                    PDF_end_page($p);
-                                    PDF_begin_page($p, 595, 842); /* start a new page */
-                                    $line = 800;
-                                    $new_page = true;
+                                
+                                 if ($tr_open) { // on ferme la table à deux colonnes
+                                    $p->WriteHTML("</tr>", 2, false, false);
+                                    $tr_open = false;
                                 }
-                                //Affiche un nouveau bandeau série
-                                if ($line <> 800)
-                                    $line -= 40;
+                                if ($balise_open) { // on ferme la table à deux colonnes
+                                    $p->WriteHTML("</table>", 2, false, true);
+                                    $balise_open = false;
+                                }
+                                if ($line <= 2) { // New page
+                                   $p->AddPage($size = "A4"); /* start a new page */
+                                    $line = 6;
+                                   
+                                }
+                                //Affiche un nouveau bandeau série                      
+                                
                                 $nom_série = stripslashes($tome->NOM_SERIE);
                                 $this->AddBandeauSerie($p, $line, $nom_série);
                                 // Affiche le détail des infos séries
-                                $line -=50;
+                                $line -=3;
                                 $info["AVANCEMENT"] = $opt_status[$tome->FLG_FINI][1];
                                 $info["GENRE"] = $tome->NOM_GENRE;
+
                                 $this->AddInfoSerie($p, $line, $info);
                                 // Reinitialise les variables
                                 $current_id_serie = $tome->ID_SERIE;
-                                $line -= 120;
+                                
                                 $colonne_num = 0;
                                 $new_line = false;
-                            }
-
-                            if ($new_line == true) {
-                                $line -= 120;
+                            } else if ($new_line == true) { // nouvelle ligne d'album pour la série
+                                // on ouvre la nouvelle ligne
+                                $line -= 2;
                                 $new_line = false;
                             }
 
                             //fwrite( $fp, 'Après test serie:'.$colonne_num."\n" );
                             // vérifie si il y a la place d'afficher un autre album
-                            if (($colonne_num == 0) & ($line <= 30)) {
-                                PDF_end_page($p);
-                                PDF_begin_page($p, 595, 842); /* start a new page */
-                                $line = 800;
+                           if (($colonne_num == 0) & ($line < 0)) {
+
+                                
                                 //Affiche un nouveau bandeau série
                                 $nom_série = stripslashes($tome->NOM_SERIE);
+                                if ($tr_open) { // on ferme la table à deux colonnes
+                                    $p->WriteHTML("</tr>",2,false,false);
+                                    $tr_open = false;
+                                }
+                                if ($balise_open) { // on ferme la table à deux colonnes
+                                    $p->WriteHTML("</table><br>",2,false,true);
+                                    $balise_open = false;
+                                }
+                                $p->AddPage($size = "A4"); /* start a new page */
+                                $line = 6;
                                 $this->AddBandeauSerie($p, $line, $nom_série);
-                                $line -= 120;
+                                $line -= 2.5;
                             }
-
                             //fwrite( $fp, 'Après test place:'.$colonne_num."\n" );
 
                             $colonne = $colonne_num * 290;
@@ -317,17 +331,36 @@ class Export extends Bdo_Controller {
                             $info["ISBN"] = (issetNotEmpty($tome->ISBN) ? $tome->ISBN : $tome->EAN);
                             $info["IMG_COUV"] = $tome->IMG_COUV;
                             $cat = ($tome->FLG_ACHAT == 'O') ? 1 : 0;
+                            if (!$balise_open) { // on ouvre la table à deux colonnes
+                                $p->WriteHTML("<table border=0 cellspacing=20 cellpadding=10><tr>", 2, true, false);
+                                $balise_open = true;
+                                $tr_open = true;
+                            }
+                            if (!$tr_open) {
+                                $p->WriteHTML("<tr>", 2, false, false);
+                                $tr_open = true;
+                            }
+                            $p->WriteHTML("<td>", 2, false, false);
                             $this->AddAlbumDetaille($p, $line, $colonne, $info, $cat);
-
+                            $p->WriteHTML("</td>", 2, false, false);
                             if ($colonne_num == 0) {
                                 $colonne_num = 1;
                             } else {
+                                $p->WriteHTML("</tr>", 2, false, false);
+                                $tr_open = false;
                                 $colonne_num = 0;
                                 $new_line = true;
                             }
                         }
-                        PDF_end_page($p); /* close page */
-                        PDF_close($p); /* close PDF document */
+                        if ($tr_open) { // on ferme la table à deux colonnes
+                                    $p->WriteHTML("</tr>",2,false,false);
+                                    $tr_open = false;
+                                }
+                                if ($balise_open) { // on ferme la table à deux colonnes
+                                    $p->WriteHTML("</table><br>",2,false,true);
+                                    $balise_open = false;
+                                }
+                        $p->output($pdfdir . $filename); /* close PDF document */
                         /* $buf = PDF_get_buffer($p);
                           $len = strlen($buf);
                           header("Content-type: application/pdf");
@@ -383,18 +416,9 @@ class Export extends Bdo_Controller {
     }
 
     private function AddBandeauSerie(&$PDF, $line, $text) {
-        $f = PDF_load_font($PDF,"Helvetica","unicode","");
-        PDF_setfont($PDF, $f, 12);
-        // Block de couleur
-        PDF_setcolor($PDF, 'fill', 'rgb', 0.5, 0.0, 0.0, 0);
-        PDF_setcolor($PDF, 'stroke', 'rgb', 0, 0, 0, 0);
-        PDF_setlinewidth($PDF, 0.5);
-        PDF_rect($PDF, 25, $line - 4, 520, 15);
-        PDF_fill_stroke($PDF);
-
-        // Nom de la série
-        PDF_setcolor($PDF, 'both', 'rgb', 1, 0.8, 0, 0);
-        PDF_show_xy($PDF, $text, 30, $line);
+        $html = '<div style="background-color:#990000;border:1 px solid #000;font-size: 16;color:#FFCC00;font-family:Helvetica;">' . htmlspecialchars($text) . '</div>';
+        $PDF->WriteHTML($html,2,true,true);
+        //PDF_show_xy($PDF, $text, 30, $line);
     }
 
     /* Fonction AddInfoSerie
@@ -405,19 +429,10 @@ class Export extends Bdo_Controller {
 
     private function AddInfoSerie(&$PDF, $line, $infos) {
         // Cadre autour des infos série
-        PDF_setcolor($PDF, 'both', 'rgb', 0, 0, 0, 0);
-        PDF_rect($PDF, 25, $line - 3, 520, 25);
-        PDF_stroke($PDF);
-
-        // afiche le descriptif de la série
-        $f = PDF_load_font($PDF,"Helvetica","unicode","");
-        PDF_setfont($PDF, $f, 10);
-        PDF_setcolor($PDF, 'both', 'rgb', 0, 0, 0, 0);
-        $colonne = 30;
-        $text = "Avancement : " . $infos["AVANCEMENT"];
-        PDF_show_xy($PDF, $text, 30, $line + 12);
-        $text = "Genre : " . $infos["GENRE"];
-        PDF_show_xy($PDF, $text, 30, $line + 2);
+        //PDF_setcolor($PDF, 'both', 'rgb', 0, 0, 0, 0);
+        $html = "<p style='border:1px solid #000;font-size:12; font-family:Helvetica;'>" . "Avancement : " . $infos["AVANCEMENT"] . "<br>" . "Genre : " . $infos["GENRE"]."</p>";
+        $PDF->WriteHTML($html, 2, true, true);
+        //PDF_show_xy($PDF, $text, 30, $line + 2);
     }
 
     /* Fonction AddInfoSerie
@@ -427,131 +442,67 @@ class Export extends Bdo_Controller {
      */
 
     private function AddAlbumDetaille(&$PDF, $line, $colonne, $infos, $cat) {
-        // Verifie s'il y a lieu de faire un cadre gris
-        switch ($cat) {
-            case 1:
-                // Achat futur
-                // Block de couleur
-                PDF_setcolor($PDF, 'fill', 'rgb', 0.8, 0.8, 0.8, 0);
-                PDF_setcolor($PDF, 'stroke', 'rgb', 0, 0, 0, 0);
-                PDF_setlinewidth($PDF, 0.5);
-                PDF_rect($PDF, $colonne + 25, $line - 4, 275, 103);
-                PDF_fill_stroke($PDF);
-                break;
-
-            case 2:
-                // Achat Alb manquant
-                // Block de couleur
-                PDF_setcolor($PDF, 'fill', 'rgb', 0.5, 0.5, 0.5, 0);
-                PDF_setcolor($PDF, 'stroke', 'rgb', 0, 0, 0, 0);
-                PDF_setlinewidth($PDF, 0.5);
-                PDF_rect($PDF, $colonne + 25, $line - 4, 275, 103);
-                PDF_fill_stroke($PDF);
-                break;
-        }
-
-        // Place un bloc avec le numéro du tome
-        PDF_setcolor($PDF, 'both', 'rgb', 1, 0.8, 0, 0);
-        PDF_rect($PDF, 53 + $colonne, $line + 80, 24, 15);
-        PDF_fill($PDF);
-         $f = PDF_load_font($PDF,"Helvetica","unicode","");
-        PDF_setfont($PDF, $f, 10);
-        PDF_setcolor($PDF, 'both', 'rgb', 0, 0, 0, 0);
-        $text = $infos["NUM_TOME"];
-        if (($text == "0") | ($text == ""))
-            $text = "HS";
-        $lenght = strlen($text);
-        PDF_show_xy($PDF, $text, 65 - ($lenght * 3) + $colonne, $line + 86);
-
-        // Détermine l'echelle à utiliser
         $imagefile = BDO_DIR_COUV . $infos["IMG_COUV"];
-
-        if ((file_exists($imagefile)) & ($infos["IMG_COUV"] != "")) {
-            $file_ext = strtolower(getFileExtension($infos["IMG_COUV"]));
-            switch ($file_ext) {
-                case 'gif':
-                    $file_type = 'gif';
-                    break;
-                case 'jpeg':
-                case 'jpg':
-                    $file_type = 'jpeg';
-                    break;
-                case 'png':
-                    $file_type = 'png';
-                    break;
-            }
-
-            $image = PDF_open_image_file($PDF, $file_type, $imagefile, "", "");
-
-            $width = PDF_get_value($PDF, "imagewidth", $image);
-            $height = PDF_get_value($PDF, "imageheight", $image);
-
-            $scale_x = 84 / $height; // Hauteur maximum de l'image = 84
-            $scale_y = 70 / $width; // Largeur maximum de l'image = 70
-            if ($scale_x < $scale_y)
-                $scale_a = $scale_x;
-            else
-                $scale_a = $scale_y;
-
-            $width = (int) $width * $scale_a * 0.5;
-            $height = (int) $height * $scale_a;
-
-            PDF_place_image($PDF, $image, 65 - $width + $colonne, $line + (84 - $height), $scale_a);
+        if ((file_exists($imagefile))) {
+            $im = file_get_contents($imagefile);
+            $imdata = base64_encode($im); 
+        } else {
+            
+            $im  = file_get_contents(BDO_DIR_COUV . "default.png");
+             $imdata = base64_encode($im);
         }
-
-        // Affiche la colonne de titre
-         $f = PDF_load_font($PDF,"Helvetica-Bold","unicode","");
-        PDF_setfont($PDF, $f, 10);
-        $line += 87;
-        $text = $infos["TITRE"];
-        if (strlen($text) > 35)
-            $text = substr($text, 0, 35) . " (...)";
-        PDF_show_xy($PDF, $text, 105 + $colonne, $line);
-
-         $f = PDF_load_font($PDF,"Helvetica","unicode","");
-        PDF_setfont($PDF, $f, 9);
-
-        $line -= 14;
-        $text = "Scénariste";
-        PDF_show_xy($PDF, $text, 105 + $colonne, $line);
-        $text = $infos["SCENARISTE"];
-        PDF_show_xy($PDF, $text, 163 + $colonne, $line);
-
-        $line -= 12;
-        $text = "Dessinateur";
-        PDF_show_xy($PDF, $text, 105 + $colonne, $line);
-        $text = $infos["DESSINATEUR"];
-        PDF_show_xy($PDF, $text, 163 + $colonne, $line);
-
-        $line -= 12;
-        $text = "Coloriste";
-        PDF_show_xy($PDF, $text, 105 + $colonne, $line);
-        $text = $infos["COLORISTE"];
-        PDF_show_xy($PDF, $text, 163 + $colonne, $line);
-
-        $line -= 12;
-        $text = "Editeur";
-        PDF_show_xy($PDF, $text, 105 + $colonne, $line);
-        $text = $infos["EDITEUR"];
-        PDF_show_xy($PDF, $text, 163 + $colonne, $line);
-
-        $line -= 12;
-        $text = "Collection";
-        PDF_show_xy($PDF, $text, 105 + $colonne, $line);
-        $text = $infos["COLLECTION"];
-        PDF_show_xy($PDF, $text, 163 + $colonne, $line);
-
-        $line -= 12;
-        $text = "Dépôt Légal";
-        PDF_show_xy($PDF, $text, 105 + $colonne, $line);
-        $text = $infos["DATE_PARUTION"];
-        PDF_show_xy($PDF, $text, 163 + $colonne, $line);
-
-        $line -= 12;
-        $text = "ISBN";
-        PDF_show_xy($PDF, $text, 105 + $colonne, $line);
-        $text = $infos["ISBN"];
-        PDF_show_xy($PDF, $text, 163 + $colonne, $line);
+                    switch (substr($infos["IMG_COUV"],-3)) { 
+                        case "jpg" :
+                        case "jpeg" :
+                            $extension = "jpg";
+                            break;
+                        case "gif" :
+                            $extension = "gif";
+                            break;
+                        case "png" :
+                            $extension = "png";
+                            break;
+                        
+                            
+                    };
+            ;
+       
+        $html = ' <table border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                            <td align="center"><div style="background-color:#FFCC00; width: 40px; font-size:14px;font-weight: bold;">' . ($infos["NUM_TOME"] ?  $infos["NUM_TOME"]: "HS") . '</div></td>
+                            <td style="font-weight: bold;font-size:14px;">' . htmlspecialchars($infos["TITRE"]) . '</td>
+                    </tr>
+                    <tr>
+                            <td valign="top"><img src="data:image/'.$extension. ';base64, '. $imdata. '" style="width:100px;" /> </td>
+                            <td valign="top"><table border="0" style="font-size:12px;">
+                                    <tr>
+                                            <td>Scénariste </td><td> '. htmlspecialchars($infos["SCENARISTE"]) .' </td>
+                                    </tr>
+                                    <tr>
+                                            <td>Dessinateur </td><td>'. htmlspecialchars($infos["DESSINATEUR"]) .' </td>
+                                    </tr>
+                                     <tr>
+                                                    <td>Coloriste </td><td> '. htmlspecialchars($infos["COLORISTE"]) .'</td>
+                                    </tr>
+                                     <tr>
+                                                    <td>Editeur </td><td>'. htmlspecialchars($infos["EDITEUR"]) .'</td>
+                                    </tr>
+                                     <tr>
+                                                    <td>Collection </td><td> '. htmlspecialchars($infos["COLLECTION"]) .'</td>
+                                            </tr>
+                                    
+                                    <tr>
+                                                    <td>Dépôt Légal  </td><td> '. htmlspecialchars($infos["DATE_PARUTION"]) .' </td>
+                                    </tr>
+                                    <tr>
+                                                    <td>ISBN  </td><td> '. htmlspecialchars($infos["ISBN"]) .'  </td>
+                                    </tr>
+                                    </table>
+                            </td>	
+                    </tr>	
+            </table>';
+        $PDF->WriteHTML($html, 0, false, false);
+        
     }
 
     private function removeOldFiles($dir, $user_id, $timelimit) {
