@@ -372,7 +372,7 @@ class Export extends Bdo_Controller {
                         //fclose( $fp );
 
                         echo "Vous pouvez télécharger le fichier <a href=\"" . BDO_URL . "tmp/" . $filename . "\">ici<a/> (clic droit / Enregistrer la cible du lien sous)<br/>\n";
-                        echo "<br/><a href=\"" . BDO_URL . "macollection/export\">Retour au site<a/><br/>\n";
+                        echo "<br/><a href=\"" . BDO_URL . "export\">Retour au site<a/><br/>\n";
                         break;
                 }
             } else {
