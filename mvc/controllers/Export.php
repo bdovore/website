@@ -328,7 +328,7 @@ class Export extends Bdo_Controller {
                             $info["EDITEUR"] = $tome->NOM_EDITEUR;
                             $info["COLLECTION"] = $tome->NOM_COLLECTION;
                             $info["DATE_PARUTION"] = $tome->DTE_PARUTION;
-                            $info["ISBN"] = (issetNotEmpty($tome->ISBN) ? $tome->ISBN : $tome->EAN);
+                            $info["ISBN"] = (issetNotEmpty($tome->ISBN_EDITION) ? $tome->ISBN_EDITION : $tome->EAN_EDITION);
                             $info["IMG_COUV"] = $tome->IMG_COUV;
                             $cat = ($tome->FLG_ACHAT == 'O') ? 1 : 0;
                             if (!$balise_open) { // on ouvre la table à deux colonnes
