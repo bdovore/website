@@ -159,13 +159,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 			<div class="action" id="action-menu">
 				<div align="center">
 					<div id="actionCollection"></div>
-                                    <?php if ($view->tome->DATE_AJOUT) { ?> 
-                                     <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
-                                            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><i>Votre édition est différente ? Vous pouvez 
-                                                    <a href="<?php echo BDO_URL; ?>Proposition?type=EDITION&id_tome=<?php echo $view->tome->ID_TOME; ?>">
-								<b>proposer une édition</b>
-										</a></i></p></div>
-                                    <?php } ?>
+                                   
 				</div>
                           
                         </div>
@@ -182,9 +176,12 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                         </font>
             <?php } ?>
                                         <br><div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
-                                            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><i>Une erreur sur cette fiche ? Vous pouvez 
+                                            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><i>Une erreur sur cette fiche ou votre édition est différente ? Vous pouvez 
                                                     <a href="<?php echo BDO_URL; ?>Proposition?id_edition=<?php echo $edition_selected; ?>" >
-								<b>proposer une correction</b>
+								<b>proposer une correction</b>  
+										</a></i> ou  <i>
+                                                    <a href="<?php echo BDO_URL; ?>Proposition?type=EDITION&id_tome=<?php echo $view->tome->ID_TOME; ?>">
+								<b>proposer l'ajout d'une autre édition</b>
 										</a></i></p></div>
 
 
