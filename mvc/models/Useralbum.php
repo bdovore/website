@@ -71,7 +71,7 @@ class Useralbum extends Bdo_Db_Line
         	bd_tome.HISTOIRE as HISTOIRE_TOME, 
                 
                 s.ID_SERIE, 
-        	
+        	s.flg_fini as FLG_FINI,
         
         	g.ID_GENRE, 
         	g.libelle as NOM_GENRE, 
