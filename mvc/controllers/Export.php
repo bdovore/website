@@ -224,22 +224,155 @@ class Export extends Bdo_Controller {
                         break;
                     case 3:
                         // Export en PDF
+                        
+                        require_once(BDO_DIR . "vendors/mpdf60/mpdf.php");
+                        ob_implicit_flush(true);
+                        $opt_status[0][0] = 0;
+                        $opt_status[0][1] = 'Finie';
+                        $opt_status[1][0] = 1;
+                        $opt_status[1][1] = 'En cours';
+                        $opt_status[2][0] = 2;
+                        $opt_status[2][1] = 'One Shot';
 
-                        require_once (BDO_DIR . "vendors/html2pdf_v4.03/html2pdf.class.php");
-                        ob_start();
+                        $info = array();
+                        echo "La création du fichier est en cours ...<br/>\n";
 
+                        $pdfdir = BDO_DIR . "public/tmp/";
+                        $filename = $_SESSION["userConnect"]->user_id . "-" . sha1(uniqid(mt_rand(), true)) . ".pdf";
+                        $this->removeOldFiles($pdfdir, $_SESSION["userConnect"]->user_id, 7200);
 
-                        include "pdf_html2.php";
+                        $p = new mPDF();
 
+                        /* open new PDF file; insert a file name to create the PDF on disk */
 
-                        $content = ob_get_clean();
-                        echo $content;
-                        exit();
-                        $html2pdf = new HTML2PDF('P', 'A4', 'fr', false, 'ISO-8859-15');
-                        $html2pdf->pdf->SetDisplayMode('fullpage');
-                        $html2pdf->WriteHTML($content);
-                        $html2pdf->Output($nomFichier . ".pdf", 'D');
+                        $p->SetAuthor("Bdovore", true);
+                        $p->SetCreator("Bdovore.com");
+                        $p->setTitle("Collection de Bandes-Dessinées ", true);
+                        $p->AddPage($size = "A4");
+                        //PDF_begin_page($p, 595, 842); /* start a new page */
+// Initialise l'emplacement
+                        $nb_col_max = 1;
+                        $line = 6;
+                        $colonne_num = 0;
+                        $current_id_serie = 0;
+                        $balise_open = false; // pour tracer que l'on a ouvert une balise "table" pour les colonnes
+                        $tr_open = false;
+                       
+                        foreach ($dbs_tome->a_dataQuery as $tome) {
+                            if ($tome->ID_SERIE != $current_id_serie) {
+                                
+                                 if ($tr_open) { // on ferme la table à deux colonnes
+                                    $p->WriteHTML("</tr>", 2, false, false);
+                                    $tr_open = false;
+                                }
+                                if ($balise_open) { // on ferme la table à deux colonnes
+                                    $p->WriteHTML("</table>", 2, false, true);
+                                    $balise_open = false;
+                                }
+                                if ($line <= 2) { // New page
+                                   $p->AddPage($size = "A4"); /* start a new page */
+                                    $line = 6;
+                                   
+                                }
+                                //Affiche un nouveau bandeau série                      
+                                
+                                $nom_série = stripslashes($tome->NOM_SERIE);
+                                $this->AddBandeauSerie($p, $line, $nom_série);
+                                // Affiche le détail des infos séries
+                                $line -=3;
+                                $info["AVANCEMENT"] = $opt_status[$tome->FLG_FINI][1];
+                                $info["GENRE"] = $tome->NOM_GENRE;
 
+                                $this->AddInfoSerie($p, $line, $info);
+                                // Reinitialise les variables
+                                $current_id_serie = $tome->ID_SERIE;
+                                
+                                $colonne_num = 0;
+                                $new_line = false;
+                            } else if ($new_line == true) { // nouvelle ligne d'album pour la série
+                                // on ouvre la nouvelle ligne
+                                $line -= 2;
+                                $new_line = false;
+                            }
+
+                            //fwrite( $fp, 'Après test serie:'.$colonne_num."\n" );
+                            // vérifie si il y a la place d'afficher un autre album
+                           if (($colonne_num == 0) & ($line < 0)) {
+
+                                
+                                //Affiche un nouveau bandeau série
+                                $nom_série = stripslashes($tome->NOM_SERIE);
+                                if ($tr_open) { // on ferme la table à deux colonnes
+                                    $p->WriteHTML("</tr>",2,false,false);
+                                    $tr_open = false;
+                                }
+                                if ($balise_open) { // on ferme la table à deux colonnes
+                                    $p->WriteHTML("</table><br>",2,false,true);
+                                    $balise_open = false;
+                                }
+                                $p->AddPage($size = "A4"); /* start a new page */
+                                $line = 6;
+                                $this->AddBandeauSerie($p, $line, $nom_série);
+                                $line -= 2.5;
+                            }
+                            //fwrite( $fp, 'Après test place:'.$colonne_num."\n" );
+
+                            $colonne = $colonne_num * 290;
+                            // Affiche l'album
+                            //Construit l'array d'info
+                            $info["TITRE"] = $tome->TITRE_TOME;
+                            $info["NUM_TOME"] = $tome->NUM_TOME;
+                            $info["SCENARISTE"] = $tome->scpseudo;
+                            $info["DESSINATEUR"] = $tome->depseudo;
+                            $info["COLORISTE"] = $tome->copseudo;
+                            $info["EDITEUR"] = $tome->NOM_EDITEUR;
+                            $info["COLLECTION"] = $tome->NOM_COLLECTION;
+                            $info["DATE_PARUTION"] = $tome->DTE_PARUTION;
+                            $info["ISBN"] = (issetNotEmpty($tome->ISBN) ? $tome->ISBN : $tome->EAN);
+                            $info["IMG_COUV"] = $tome->IMG_COUV;
+                            $cat = ($tome->FLG_ACHAT == 'O') ? 1 : 0;
+                            if (!$balise_open) { // on ouvre la table à deux colonnes
+                                $p->WriteHTML("<table border=0 cellspacing=20 cellpadding=10><tr>", 2, true, false);
+                                $balise_open = true;
+                                $tr_open = true;
+                            }
+                            if (!$tr_open) {
+                                $p->WriteHTML("<tr>", 2, false, false);
+                                $tr_open = true;
+                            }
+                            $p->WriteHTML("<td>", 2, false, false);
+                            $this->AddAlbumDetaille($p, $line, $colonne, $info, $cat);
+                            $p->WriteHTML("</td>", 2, false, false);
+                            if ($colonne_num == 0) {
+                                $colonne_num = 1;
+                            } else {
+                                $p->WriteHTML("</tr>", 2, false, false);
+                                $tr_open = false;
+                                $colonne_num = 0;
+                                $new_line = true;
+                            }
+                        }
+                        if ($tr_open) { // on ferme la table à deux colonnes
+                                    $p->WriteHTML("</tr>",2,false,false);
+                                    $tr_open = false;
+                                }
+                                if ($balise_open) { // on ferme la table à deux colonnes
+                                    $p->WriteHTML("</table><br>",2,false,true);
+                                    $balise_open = false;
+                                }
+                        $p->output($pdfdir . $filename); /* close PDF document */
+                        /* $buf = PDF_get_buffer($p);
+                          $len = strlen($buf);
+                          header("Content-type: application/pdf");
+                          header("Content-Length: $len");
+                          header("Content-Disposition: inline; filename=hello.pdf");
+                          print $buf;
+                          PDF_delete($p); /* delete the PDFlib object */
+
+                        //fclose( $fp );
+
+                        echo "Vous pouvez télécharger le fichier <a href=\"" . BDO_URL . "tmp/" . $filename . "\">ici<a/> (clic droit / Enregistrer la cible du lien sous)<br/>\n";
+                        echo "<br/><a href=\"" . BDO_URL . "macollection/export\">Retour au site<a/><br/>\n";
                         break;
                 }
             } else {
@@ -282,6 +415,121 @@ class Export extends Bdo_Controller {
             die("Vous devez vous authentifier pour accéder à cette page.");
         }
     }
+
+    private function AddBandeauSerie(&$PDF, $line, $text) {
+        $html = '<div style="background-color:#990000;border:1 px solid #000;font-size: 16;color:#FFCC00;font-family:Helvetica;">' . htmlspecialchars($text) . '</div>';
+        $PDF->WriteHTML($html,2,true,true);
+        //PDF_show_xy($PDF, $text, 30, $line);
+    }
+
+    /* Fonction AddInfoSerie
+      Affiche le cadre avancement / genre
+      Les variables sont passées dans un array.
+      Clé : "AVANCEMENT" et "GENRE"
+     */
+
+    private function AddInfoSerie(&$PDF, $line, $infos) {
+        // Cadre autour des infos série
+        //PDF_setcolor($PDF, 'both', 'rgb', 0, 0, 0, 0);
+        $html = "<p style='border:1px solid #000;font-size:12; font-family:Helvetica;'>" . "Avancement : " . $infos["AVANCEMENT"] . "<br>" . "Genre : " . $infos["GENRE"]."</p>";
+        $PDF->WriteHTML($html, 2, true, true);
+        //PDF_show_xy($PDF, $text, 30, $line + 2);
+    }
+
+    /* Fonction AddInfoSerie
+      Affiche couv + information sur un albums
+      Les variables sont passées dans un array.
+      Clé : "TITRE", "NUM_TOME", "SCENARISTE", "DESSINATEUR", "COLORISTE", "EDITEUR", "COLLECTION", "DATE_PARUTION", "ISBN", "IMG_COUV"
+     */
+
+    private function AddAlbumDetaille(&$PDF, $line, $colonne, $infos, $cat) {
+        $imagefile = BDO_DIR_COUV . $infos["IMG_COUV"];
+        if ((file_exists($imagefile))) {
+            $im = file_get_contents($imagefile);
+            $imdata = base64_encode($im); 
+        } else {
+            
+            $im  = file_get_contents(BDO_DIR_COUV . "default.png");
+             $imdata = base64_encode($im);
+        }
+                    switch (substr($infos["IMG_COUV"],-3)) { 
+                        case "jpg" :
+                        case "jpeg" :
+                            $extension = "jpg";
+                            break;
+                        case "gif" :
+                            $extension = "gif";
+                            break;
+                        case "png" :
+                            $extension = "png";
+                            break;
+                        
+                            
+                    };
+            ;
+       
+        $html = ' <table border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                            <td align="center"><div style="background-color:#FFCC00; width: 40px; font-size:14px;font-weight: bold;">' . ($infos["NUM_TOME"] ?  $infos["NUM_TOME"]: "HS") . '</div></td>
+                            <td style="font-weight: bold;font-size:14px;">' . htmlspecialchars($infos["TITRE"]) . '</td>
+                    </tr>
+                    <tr>
+                            <td valign="top"><img src="data:image/'.$extension. ';base64, '. $imdata. '" style="width:100px;" /> </td>
+                            <td valign="top"><table border="0" style="font-size:12px;">
+                                    <tr>
+                                            <td>Scénariste </td><td> '. htmlspecialchars($infos["SCENARISTE"]) .' </td>
+                                    </tr>
+                                    <tr>
+                                            <td>Dessinateur </td><td>'. htmlspecialchars($infos["DESSINATEUR"]) .' </td>
+                                    </tr>
+                                     <tr>
+                                                    <td>Coloriste </td><td> '. htmlspecialchars($infos["COLORISTE"]) .'</td>
+                                    </tr>
+                                     <tr>
+                                                    <td>Editeur </td><td>'. htmlspecialchars($infos["EDITEUR"]) .'</td>
+                                    </tr>
+                                     <tr>
+                                                    <td>Collection </td><td> '. htmlspecialchars($infos["COLLECTION"]) .'</td>
+                                            </tr>
+                                    
+                                    <tr>
+                                                    <td>Dépôt Légal  </td><td> '. htmlspecialchars($infos["DATE_PARUTION"]) .' </td>
+                                    </tr>
+                                    <tr>
+                                                    <td>ISBN  </td><td> '. htmlspecialchars($infos["ISBN"]) .'  </td>
+                                    </tr>
+                                    </table>
+                            </td>	
+                    </tr>	
+            </table>';
+        $PDF->WriteHTML($html, 0, false, false);
+        
+    }
+
+    private function removeOldFiles($dir, $user_id, $timelimit) {
+        if (($dh = opendir($dir))) {
+            while (($file = readdir($dh)) !== false) {
+                if (($file != '.') && ($file != '..')) {
+                    //this user files
+                    $parts = explode("-", $file);
+                    if ($user_id == intval($parts[0])) {
+                        unlink($dir . $file);
+                        continue;
+                    }
+
+                    //too old files
+                    $filetime = filemtime($dir . $file);
+                    //echo "time : " . $filetime . "<br/>";
+                    $time = date("U");
+                    if ($time - $filetime > $timelimit) {
+                        unlink($dir . $file);
+                    }
+                }
+            }
+            closedir($dh);
+        }
+    }
+
 }
 
 ?>
