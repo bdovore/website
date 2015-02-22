@@ -72,7 +72,7 @@ class Useralbum extends Bdo_Db_Line
                 
                 s.ID_SERIE, 
         	
-        
+                s.FLG_FINI, 
         	g.ID_GENRE, 
         	g.libelle as NOM_GENRE, 
         
