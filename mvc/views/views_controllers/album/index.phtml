@@ -118,10 +118,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 			<div class="alb-img">
 				<img src="<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : "default.png";?>" width="160" border="1" name="imgEdition" id="imgEdition" alt="couverture"> 
                                 <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
-                                <div id="sponsor"><?php echo $ficheAlbum->getSponsor($view->tome); ?></div>
+                                <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION;?></div>
+                                <div id="sponsor" align="center"><?php echo $ficheAlbum->getSponsor($view->tome); ?></div>
                  
-                <?php echo $view->COMMENT_EDITION;?>
-                <a href="<?php echo BDO_URL;?>simil?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">vous devriez aimer aussi...</a>
+               
+             
 			</div>
 		
 	    <div class="contentalb" id="alb-description">
@@ -175,6 +176,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                         <?php echo nl2br($view->tome->HISTOIRE_TOME);?>
                                         </font>
             <?php } ?>
+                                        <br>   <a href="<?php echo BDO_URL;?>simil?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">Vous devriez aimer aussi...</a> 
                                         <br><div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
                                             <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><i>Une erreur sur cette fiche ou votre édition est différente ? Vous pouvez 
                                                     <a href="<?php echo BDO_URL; ?>Proposition?id_edition=<?php echo $edition_selected; ?>" >

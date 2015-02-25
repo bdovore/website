@@ -248,6 +248,7 @@ class FicheAlbum {
                 case "couvBig": {
                         $html .= '<img src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
                         $html .= '</a>' . ($o_tome->NOM_EDITEUR ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
+                        $html .= "<div align=center>". $this->getSponsor($o_tome,false)."</div>";
                         break;
                 }
 
@@ -335,7 +336,7 @@ class FicheAlbum {
         return $html;
     }
 
-    public function getSponsor($o_tome) {
+    public function getSponsor($o_tome, $img=true) {
         $html = "<a href='";
 
         if ($o_tome->ISBN_EDITION) {
@@ -345,7 +346,11 @@ class FicheAlbum {
         } else {
             $html .= "http://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=" . htmlspecialchars(stripslashes($o_tome->TITRE_TOME)) . "&mode=books-fr";
         }
-        $html .= "' target='_blank'><img src='" . BDO_URL_IMAGE . "amazon.gif'></a>";
+        if ($img) {
+            $html .= "' target='_blank'><img src='" . BDO_URL_IMAGE . "amazon.gif'></a>";
+        } else {
+            $html .= "' target='_blank'>Commandez sur Amazon</a>";
+        }
 
         return $html;
     }
@@ -367,5 +372,24 @@ class FicheAlbum {
         }
 
         return $dte_parution;
+    }
+    
+    public function getFicheWithComment($tome) {
+         $html = "<div class='cadre1'>
+                <table>
+            <tr class='listAlbum'>
+                <td style='vertical-align:top'>".$this->urlalbum($tome,'couvBig')."</td>
+            <td style='vertical-align:top'>
+                <strong>".$this->urlalbum($tome,'albTitle')."</strong><br>
+                <span id='noteTome".$tome->ID_TOME."'> </span>
+                <p class='fiche_album'>
+                S&eacute;rie : ".$this->urlSerie($tome)." <br>
+                Publié par <a href='./guest?user=$tome->user_id'>$tome->username</a> le $tome->DTE_POST
+           </p>
+            </td>
+            </table>
+             </div>
+             <script>$('#noteTome$tome->ID_TOME').raty({score: ".($tome->NOTE/2).", readOnly: true});</script>";
+         return $html;
     }
 }

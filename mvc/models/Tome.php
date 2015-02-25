@@ -41,7 +41,7 @@ class Tome extends Bdo_Db_Line
             en.ean as EAN_EDITION, 
             en.isbn as ISBN_EDITION, 
             en.DTE_PARUTION,
-
+            en.COMMENT as COMMENT_EDITION,
             c.ID_COLLECTION,
             c.nom as NOM_COLLECTION,
             

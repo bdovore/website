@@ -721,7 +721,7 @@ div.alb-fiche {
 
 div.alb-img {
     float: left;
-    width: 190px;
+    max-width: 190px;
     padding-left: 10px;
 
 }
@@ -1157,6 +1157,9 @@ table.list_album tr {
 
 }
 
+#list-last-critique {
+    border-spacing: 5px;
+}
 @media screen and (max-width: 1100px) {
     .colleft {
         float: left;
@@ -1208,7 +1211,7 @@ table.list_album tr {
         margin: auto !important;
         min-width: 0 !important;
     }
-    #lastcomics {
+    .alb-col3 {
         display:none;
     }
     .mw30 {
