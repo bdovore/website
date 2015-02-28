@@ -716,6 +716,20 @@ class Macollection extends Bdo_Controller {
         $this->view->set_var("PAGETITLE","Suivi des mes propositions");
         $this->view->render();
     }
+    
+     public function statistiques () {
+        // statistiques sur la collection : on appelle les graphes jpgrap
+         if (User::minAccesslevel(2)) {
+            $user_id = intval($_SESSION["userConnect"]->user_id);
+            $this->loadModel('Useralbum');
+         
+            $this->view->set_var("stat",$this->Useralbum->getStatistiques($user_id));
+
+             $this->view->set_var("PAGETITLE","Statistiques de ma collection");
+            $this->view->render();
+         }
+     }
+        
 
 }
 ?>
