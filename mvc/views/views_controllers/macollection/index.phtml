@@ -131,8 +131,8 @@ $(document).ready(function() {
             <?php
 
             foreach ($view->a_lastAchat->a_dataQuery as $o_tome) {
-
-                echo "<td>".$ficheAlbum->urlAlbum($o_tome,"couvBig", true)."</td>";
+                // on affiche pas le sponsor sur la collection de l'utilisateur
+                echo "<td>".$ficheAlbum->urlAlbum($o_tome,"couvBig", true, $sponsor=false)."</td>";
 
             }
 
@@ -152,8 +152,8 @@ $(document).ready(function() {
             <?php
 
             foreach ($view->a_lastFuturAchat->a_dataQuery as $o_tome) {
-
-                echo "<td>".$ficheAlbum->urlAlbum($o_tome,"couvBig", true)."</td>";
+// on affiche pas le sponsor sur la collection de l'utilisateur
+                echo "<td>".$ficheAlbum->urlAlbum($o_tome,"couvBig", true, false)."</td>";
 
             }
 

@@ -202,7 +202,7 @@ class FicheAlbum {
      * fournit l'url d'un lien vers la iframe album
      *
      */
-    public function urlAlbum($o_tome, $class = 'couvBig', $is_edition = false)
+    public function urlAlbum($o_tome, $class = 'couvBig', $is_edition = false, $sponsor=true)
     /*
      *  Fonction de construction d'une url d'un album
      *  Si la variable $is_edition = true, on ajoute l'id édition dans les liens
@@ -248,7 +248,7 @@ class FicheAlbum {
                 case "couvBig": {
                         $html .= '<img src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
                         $html .= '</a>' . ($o_tome->NOM_EDITEUR ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
-                        $html .= "<div align=center>". $this->getSponsor($o_tome,false)."</div>";
+                        if ($sponsor) $html .= "<div align=center>". $this->getSponsor($o_tome,false)."</div>";
                         break;
                 }
 
