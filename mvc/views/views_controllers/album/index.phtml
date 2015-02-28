@@ -309,7 +309,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
    $("#info_collection").hide();
    <?php if (User::minAccesslevel(2)) { ?>
       // récupération de l'éventuelle commentaire du membre
-       var url = "./AlbumComment?page=1&id_tome=<?php echo $view->tome->ID_TOME; ?>&user_id=<?php echo $_SESSION['userConnect']->user_id;?>";
+       var url = "./AlbumComment?page=1&id_tome=<?php echo $view->tome->ID_TOME; ?>&user_id=<?php echo $_SESSION['userConnect']->user_id;?>&all=1";
        $.getJSON(url,function (data) {
         if (data.length > 0) {
             $("#commentRaty").raty({ scoreName: 'note', half : true, score : data[0].NOTE / 2});
