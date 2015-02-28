@@ -265,28 +265,30 @@ class Export extends Bdo_Controller {
                             $xml .= "<isbn>" . $isbn . "</isbn>";
                             $xml .= "<couv>" . $img_couv . "</couv>";
 
-                            $ajout = $tome->DATE_AJOUT;
-                            $comment = htmlspecialchars($tome->comment,ENT_QUOTES,"UTF-8");
-                            $pret = $tome->FLG_PRET;
-                            $emprunteur .= htmlspecialchars($tome->NOM_PRET,ENT_QUOTES,"UTF-8");
-                            $achat = $tome->DATE_ACHAT;
-                            $prix = $tome->cote;
-                            $cadeau = $tome->FLG_CADEAU;
-                            $tete = $tome->FLG_TETE;
+                            if ($contenu == 0) {
+                                $ajout = $tome->DATE_AJOUT;
+                                $comment = htmlspecialchars($tome->comment,ENT_QUOTES,"UTF-8");
+                                $pret = $tome->FLG_PRET;
+                                $emprunteur .= htmlspecialchars($tome->NOM_PRET,ENT_QUOTES,"UTF-8");
+                                $achat = $tome->DATE_ACHAT;
+                                $prix = $tome->cote;
+                                $cadeau = $tome->FLG_CADEAU;
+                                $tete = $tome->FLG_TETE;
 
-                            $xml_private = "<private>";
-                            $xml_private .= "<ajout>". $ajout . "</ajout>";
-                            $xml_private .= "<achat>" . $achat . "</achat>";
-                            //$xml_private .= "<note>" . . "</note>";
-                            $xml_private .= "<comment>" . $comment . "</comment>";
-                            $xml_private .= "<pret>" . $pret . "</pret>";
-                            $xml_private .= "<emprunteur>" . $emprunteur . "</emprunteur>";
-                            $xml_private .= "<prix>" . $prix . "</prix>";
-                            $xml_private .= "<cadeau>" . $cadeau . "</cadeau>";
-                            //$xml_private .= "<eo>" . . "</eo>";
-                            $xml_private .= "</private>";
+                                $xml_private = "<private>";
+                                $xml_private .= "<ajout>". $ajout . "</ajout>";
+                                $xml_private .= "<achat>" . $achat . "</achat>";
+                                //$xml_private .= "<note>" . . "</note>";
+                                $xml_private .= "<comment>" . $comment . "</comment>";
+                                $xml_private .= "<pret>" . $pret . "</pret>";
+                                $xml_private .= "<emprunteur>" . $emprunteur . "</emprunteur>";
+                                $xml_private .= "<prix>" . $prix . "</prix>";
+                                $xml_private .= "<cadeau>" . $cadeau . "</cadeau>";
+                                //$xml_private .= "<eo>" . . "</eo>";
+                                $xml_private .= "</private>";
 
-                            $xml .= $xml_private;
+                                $xml .= $xml_private;
+                            }
                             $xml .= "</tome>\n";
 
                             echo $xml;
