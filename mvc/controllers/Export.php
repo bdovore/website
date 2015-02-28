@@ -220,7 +220,84 @@ class Export extends Bdo_Controller {
 
                     case 2:
                         // Export en XML
-                        echo "export xml";
+                        $nomFichier .=".xml";
+                        $current_id_serie = 0;
+
+                        // Construction du header HTTP
+                        header("Content-Type: application/xml; charset=utf-8");
+                        header("Content-Disposition: attaichment; filename=\"$nomFichier\"");
+
+                        // Construction du header XML
+                        echo "<?xml version='1.0' encoding='UTF-8'?>\n";
+                        echo "<collection>\n";
+
+                        foreach ($dbs_tome->a_dataQuery as $tome) {
+                            if ($current_id_serie == 0) {
+                                $current_id_serie = $tome->ID_SERIE;
+                                $nom_serie = htmlspecialchars($tome->NOM_SERIE,ENT_QUOTES,"UTF-8");
+                                echo "<serie><nom>" . $nom_serie . "</nom>\n";
+                            } elseif ($tome->ID_SERIE != $current_id_serie) {
+                                $current_id_serie = $tome->ID_SERIE;
+                                $nom_serie = htmlspecialchars($tome->NOM_SERIE,ENT_QUOTES,"UTF-8");
+                                echo "</serie>\n<serie><nom>" . $nom_serie . "</nom>\n";
+                            }
+
+                            $titre_tome = htmlspecialchars($tome->TITRE_TOME,ENT_QUOTES,"UTF-8");
+                            $num_tome = htmlspecialchars($tome->NUM_TOME,ENT_QUOTES,"UTF-8");
+                            $scenariste = htmlspecialchars($tome->scpseudo,ENT_QUOTES,"UTF-8");
+                            $dessinateur = htmlspecialchars($tome->depseudo,ENT_QUOTES,"UTF-8");
+                            $coloriste = htmlspecialchars($tome->copseudo,ENT_QUOTES,"UTF-8");
+                            $editeur = htmlspecialchars($tome->NOM_EDITEUR,ENT_QUOTES,"UTF-8");
+                            $collection = htmlspecialchars($tome->NOM_COLLECTION,ENT_QUOTES,"UTF-8");
+                            $dte_parution = htmlspecialchars($tome->DTE_PARUTION,ENT_QUOTES,"UTF-8");
+                            $isbn = (issetNotEmpty($tome->ISBN_EDITION) ? $tome->ISBN_EDITION : $tome->EAN_EDITION);
+                            $img_couv = $tome->IMG_COUV;
+
+                            $xml = "  <tome>";
+                            $xml .= "<titre>" . $titre_tome . "</titre>";
+                            $xml .= "<num>" . $num_tome . "</num>";
+                            $xml .= "<scenario>" . $scenariste . "</scenario>";
+                            $xml .= "<dessin>" . $dessinateur . "</dessin>";
+                            $xml .= "<couleur>" . $coloriste . "</couleur>";
+                            $xml .= "<editeur>" . $editeur . "</editeur>";
+                            $xml .= "<collection>" . $collection . "</collection>";
+                            $xml .= "<parution>" . $dte_parution . "</parution>";
+                            $xml .= "<isbn>" . $isbn . "</isbn>";
+                            $xml .= "<couv>" . $img_couv . "</couv>";
+
+                            $ajout = $tome->DATE_AJOUT;
+                            $comment = htmlspecialchars($tome->comment,ENT_QUOTES,"UTF-8");
+                            $pret = $tome->FLG_PRET;
+                            $emprunteur .= htmlspecialchars($tome->NOM_PRET,ENT_QUOTES,"UTF-8");
+                            $achat = $tome->DATE_ACHAT;
+                            $prix = $tome->cote;
+                            $cadeau = $tome->FLG_CADEAU;
+                            $tete = $tome->FLG_TETE;
+
+                            $xml_private = "<private>";
+                            $xml_private .= "<ajout>". $ajout . "</ajout>";
+                            $xml_private .= "<achat>" . $achat . "</achat>";
+                            //$xml_private .= "<note>" . . "</note>";
+                            $xml_private .= "<comment>" . $comment . "</comment>";
+                            $xml_private .= "<pret>" . $pret . "</pret>";
+                            $xml_private .= "<emprunteur>" . $emprunteur . "</emprunteur>";
+                            $xml_private .= "<prix>" . $prix . "</prix>";
+                            $xml_private .= "<cadeau>" . $cadeau . "</cadeau>";
+                            //$xml_private .= "<eo>" . . "</eo>";
+                            $xml_private .= "</private>";
+
+                            $xml .= $xml_private;
+                            $xml .= "</tome>\n";
+
+                            echo $xml;
+                        }
+
+                        if ($current_id_serie != 0)
+                            echo "</serie>";
+
+                        echo "</collection>\n";
+
+                        die();
                         break;
                     case 3:
                         // Export en PDF
@@ -276,8 +353,8 @@ class Export extends Bdo_Controller {
                                 }
                                 //Affiche un nouveau bandeau série                      
                                 
-                                $nom_série = stripslashes($tome->NOM_SERIE);
-                                $this->AddBandeauSerie($p, $line, $nom_série);
+                                $nom_serie = stripslashes($tome->NOM_SERIE);
+                                $this->AddBandeauSerie($p, $line, $nom_serie);
                                 // Affiche le détail des infos séries
                                 $line -=3;
                                 $info["AVANCEMENT"] = $opt_status[$tome->FLG_FINI][1];
@@ -301,7 +378,7 @@ class Export extends Bdo_Controller {
 
                                 
                                 //Affiche un nouveau bandeau série
-                                $nom_série = stripslashes($tome->NOM_SERIE);
+                                $nom_serie = stripslashes($tome->NOM_SERIE);
                                 if ($tr_open) { // on ferme la table à deux colonnes
                                     $p->WriteHTML("</tr>",2,false,false);
                                     $tr_open = false;
@@ -312,7 +389,7 @@ class Export extends Bdo_Controller {
                                 }
                                 $p->AddPage($size = "A4"); /* start a new page */
                                 $line = 6;
-                                $this->AddBandeauSerie($p, $line, $nom_série);
+                                $this->AddBandeauSerie($p, $line, $nom_serie);
                                 $line -= 2.5;
                             }
                             //fwrite( $fp, 'Après test place:'.$colonne_num."\n" );
