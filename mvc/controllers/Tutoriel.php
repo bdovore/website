@@ -18,7 +18,7 @@ class Tutoriel extends Bdo_Controller
         if ($page!=1) {
             $this->view->layout = "ajax";
         }
-            
+        $this->view->set_var("PAGETITLE","Bdovore : le tutoriel");
         $this->view->render();
     }
 
