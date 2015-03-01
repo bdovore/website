@@ -13,6 +13,7 @@ function valider(){
   }
 }
 </script>
+<h2>Modification/ajout d'un éditeur</h2>
 <form action="<?php echo $view->URLACTION;?>" method="post" name="input_form" onSubmit="return valider()">
     <div class="cadre1">
         <table width="100%" border="1" bgcolor="#FFFFCC" valign="top">
@@ -43,7 +44,7 @@ function valider(){
     <div class="cadre1">
         <p><strong>Menu Express</strong></p>
         <p><a href="<?php echo $view->URLDELETE;?>">Supprimer cet editeur</a><br>
-		<a href="<?php echo $view->URLFUSION;?>">Fusionner cet editeur</a><br>
+		<a href="<?php echo $view->URLFUSION;?>" target="_blank">Fusionner cet editeur</a><br>
           <a href="<?php echo $view->URLADDCOLLEC;?>">Ajouter une collection &agrave; cet &eacute;diteur</a> 
         </p>
        

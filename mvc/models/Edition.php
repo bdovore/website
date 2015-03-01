@@ -234,4 +234,11 @@ FROM bd_edition en
         
         return Db_affected_rows();
        }
+       
+    public function replaceIdEditeur($source_id, $dest_id) {
+        // Focntion qui remplace un editeur par un autre dans toutes les éditions
+         Db_query("UPDATE bd_edition SET id_editeur = " . intval($dest_id) . " where id_editeur = " . intval($source_id));
+        
+        return Db_affected_rows();
+    }   
 }
