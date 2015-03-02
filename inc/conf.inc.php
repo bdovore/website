@@ -36,7 +36,6 @@ if (defined('BDO_URL_RELATIVE') && strlen(BDO_URL_RELATIVE) > 0)
 //
 $a_request_uri = explode('?',$_SERVER['REQUEST_URI']);
 $request_uri = $a_request_uri[0];
-$query_string = $a_request_uri[1];
 
 if (stristr($request_uri, '.php')) {
     $request_url = parse_url($request_uri, PHP_URL_PATH);

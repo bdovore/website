@@ -11,7 +11,8 @@ class Export extends Bdo_Controller {
     public function Index() {
         if (User::minAccesslevel(2)) {
             $act = getVal("act","");
-            $sel_field = postVal("sel_field","");
+            $sel_field = postVal("sel_field");
+           // echo is_array($sel_field);
             $memsel = postVal("memsel","");
             $contenu = postValInteger("contenu",0);
             $info = postValInteger("info",0);

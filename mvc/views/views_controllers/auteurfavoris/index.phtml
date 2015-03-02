@@ -33,14 +33,14 @@
             response( cache[ term ] );
             return;
             }
-            $.getJSON( "<?php echo BDO_URL; ?>Getjson/Auteur", request, function( data, status, xhr ) {
+            $.getJSON( "<?php echo BDO_URL; ?>Getjson?data=Auteur", request, function( data, status, xhr ) {
             cache[ term ] = data;
             response( data );
             });
         },
         select: function( event, ui ) {
-            $("#txtAuteurId"+id).val(ui.item.ID_AUTEUR);
-            $("#spAuteurId"+id).text(ui.item.ID_AUTEUR);
+            $("#txtAuteurId"+id).val(ui.item.id);
+            $("#spAuteurId"+id).text(ui.item.id);
         }
         });
     }

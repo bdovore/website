@@ -140,9 +140,11 @@ class Bdo_Db_Select
 		if (!is_array($finfo)) $finfo = array();
 
 		$tab_liste_champ = array();
-
+                
+               
 		foreach ($finfo as $col)
 		{
+                        $champ = new stdClass;
 			$champ->COLUMN_NAME = $col->name;
 			$champ->TABLE_NAME = $col->table;
 
