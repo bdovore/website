@@ -163,7 +163,7 @@ class Admin extends Bdo_Controller {
                 } else {
                     $img_couv = '';
                 }
-
+                // vérifie si l'image et temporaire et que la proposition est validée => on copie l'image
                 if (postVal('FLAG_DTE_PARUTION') != "1")
                     $txtDateParution = completeDate(postVal('txtDateParution'));
                 else
@@ -236,12 +236,25 @@ class Admin extends Bdo_Controller {
                 $this->Edition->set_dataPaste(array(
                     "ID_EDITION" => $edition_id));
                 $this->Edition->load();
+                $prop_img = $this->Edition->IMG_COUV;
                 $this->Edition->set_dataPaste(array(
                     "PROP_STATUS" => "1",
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
                     "VALID_DTE" => date('d/m/Y H:i:s')
                 ));
                 $this->Edition->update();
+                // vérifit l'image 
+                if (substr($prop_img,0,3)=="tmp") {
+                    $newfilename = "CV-" . sprintf("%06d", $this->Edition->ID_TOME) . "-" . sprintf("%06d", $this->Edition->ID_EDITION);
+                    $strLen = strlen($prop_img);
+                    $newfilename .= substr($prop_img, $strLen - 4, $strLen);
+                    @copy(BDO_DIR_UPLOAD . $prop_img, BDO_DIR_COUV . $newfilename);
+                    @unlink(BDO_DIR_UPLOAD . $prop_img);
+
+                    // met à jour la référence au fichier dans la table bd_edition
+                    $this->Edition->set_dataPaste(array("IMG_COUV" => $newfilename));
+                    $this->Edition->update();
+                }
                 echo GetMetaTag(1, "L'&eacute;dition a &eacute;t&eacute; activ&eacute;e", BDO_URL . "admin/editalbum?alb_id=" . $this->Edition->ID_TOME);
                 exit();
             }
@@ -349,8 +362,13 @@ class Admin extends Bdo_Controller {
                 if (is_null($this->Edition->IMG_COUV) | ($this->Edition->IMG_COUV == '')) {
                     $url_image = BDO_URL_COUV . "default.png";
                 } else {
-                    $url_image = BDO_URL_COUV . $this->Edition->IMG_COUV;
-                    $dim_image = imgdim(BDO_DIR_COUV . $this->Edition->IMG_COUV);
+                    if  (substr($this->Edition->IMG_COUV,0,3) == "tmp") { // image temporaire dans le repertoire upload
+                        $url_image = BDO_URL_IMAGE."tmp/" . $this->Edition->IMG_COUV;
+                        $dim_image = imgdim(BDO_DIR_UPLOAD . $this->Edition->IMG_COUV);
+                    } else {
+                        $url_image = BDO_URL_COUV . $this->Edition->IMG_COUV;
+                        $dim_image = imgdim(BDO_DIR_COUV . $this->Edition->IMG_COUV);
+                    }
                 }
 
                 // détermine s'il est possible d'effacer cet album

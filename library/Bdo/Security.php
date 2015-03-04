@@ -256,7 +256,7 @@ class Bdo_Security {
 	}
 	
 	
-	public function verifDecimal($column,$data)
+	public static function verifDecimal($column,$data)
 	{
 		$dataeurs = preg_replace("#decimal|\(|\)| unsigned#i", "$1", $column->COLUMN_TYPE);
 		list($tot,$dec)= explode(",", $dataeurs);
@@ -285,7 +285,7 @@ class Bdo_Security {
 		}
 	}
 	
-	public function verifInteger($column,$data)
+	public static function verifInteger($column,$data)
 	{
 		$base = 256;
 	
