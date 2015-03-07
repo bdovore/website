@@ -461,10 +461,10 @@ class Admin extends Bdo_Controller {
 
                 $this->Tome->set_dataPaste(array(
                     "ID_TOME" => postValInteger("txtTomeId"),
-                    "TITRE" => postVal("txtTitre"),
+                    "TITRE" => htmlentities(postVal("txtTitre"),ENT_QUOTES,"UTF-8"),
                     "NUM_TOME" => postVal("txtNumTome", ""),
                     "ID_SERIE" => postValInteger("txtSerieId"),
-                    "PRIX_BDNET" => postVal("txtPrixVente"),
+                    "PRIX_BDNET" => floatval(postVal("txtPrixVente")),
                     "ID_SCENAR" => postValInteger("txtScenarId"),
                     "ID_DESSIN" => postValInteger("txtDessiId"),
                     "ID_DESSIN_ALT" => postValInteger('txtDessiAltId') ? postValInteger('txtDessiAltId') : '0',
