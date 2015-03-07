@@ -461,7 +461,7 @@ class Admin extends Bdo_Controller {
 
                 $this->Tome->set_dataPaste(array(
                     "ID_TOME" => postValInteger("txtTomeId"),
-                    "TITRE" => htmlentities(postVal("txtTitre"),ENT_QUOTES,"UTF-8"),
+                    "TITRE" => postVal("txtTitre"),
                     "NUM_TOME" => postVal("txtNumTome", ""),
                     "ID_SERIE" => postValInteger("txtSerieId"),
                     "PRIX_BDNET" => floatval(postVal("txtPrixVente")),
@@ -619,7 +619,7 @@ class Admin extends Bdo_Controller {
                 $this->Serie->load(); // chargement de la série pour récupérer le genre de l'album
 
                 $this->Tome->set_dataPaste(array(
-                    "TITRE" => htmlentities(postVal("txtTitre"),ENT_QUOTES,"UTF-8"),
+                    "TITRE" => postVal("txtTitre"),
                     "NUM_TOME" => postVal("txtNumTome", ""),
                     "ID_SERIE" => postValInteger("txtSerieId"),
                     "PRIX_BDNET" => floatval(postVal("txtPrixVente")),
