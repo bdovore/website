@@ -732,5 +732,3 @@ class Macollection extends Bdo_Controller {
         
 
 }
-?>
-
