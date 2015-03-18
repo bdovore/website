@@ -48,7 +48,7 @@ class Edition extends Bdo_Db_Line
         	bd_tome.HISTOIRE as HISTOIRE_TOME, 
         	note_tome.NB_NOTE_TOME, 
         	note_tome.MOYENNE_NOTE_TOME, 
-        	bd_edition_stat.NBR_USER_ID_TOME as NBR_USER_ID, 
+        	bd_edition_stat.NBR_USER_ID_EDITION as NBR_USER_ID, 
                 
                 s.ID_SERIE, 
         	s.nom as NOM_SERIE, 
