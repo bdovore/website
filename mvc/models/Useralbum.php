@@ -390,12 +390,23 @@ class Useralbum extends Bdo_Db_Line
         
     }
     
-    public function replaceEdition($id_tome,$id_edition) {
+    public function replaceEditionFromTome($id_tome,$id_edition) {
         /*
          * Suppresion d'id tome : on transfert les édition existantes d'un album vers une éditoin par défaut, si l'album n'est pas déjà référencé
          */
         Db_query("UPDATE IGNORE users_album INNER JOIN bd_edition using(id_edition)
-	SET ID_EDITION = ". intval($id_edition)." WHERE  bd_edition.id_tome = ". intval($id_tome));
+	SET id_edition = ". intval($id_edition)." WHERE  bd_edition.id_tome = ". intval($id_tome));
+        
+        return Db_affected_rows();
+        
+    }
+    
+    public function replaceEditionFromEdition($source_id,$dest_id) {
+        /*
+         * Suppresion d'id tome : on transfert les édition existantes d'un album vers une éditoin par défaut, si l'album n'est pas déjà référencé
+         */
+        Db_query("UPDATE IGNORE users_album 
+	SET id_edition = ". intval($dest_id)." WHERE  id_edition = ". intval($source_id));
         
         return Db_affected_rows();
         
