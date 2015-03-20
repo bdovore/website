@@ -225,7 +225,7 @@ class Admin extends Bdo_Controller {
                     // Efface l'édition de la base
                     $this->Edition->delete();
                     $redirection = BDO_URL . "admin/editalbum?alb_id=" . $id_tome;
-                    echo GetMetaTag(1, "L'&eactue;dition a &eactue;t&eacute; &eacute;ffac&eacute;e de la base", $redirection);
+                    echo GetMetaTag(1, "L'&eacute;dition a &eacute;t&eacute; &eacute;ffac&eacute;e de la base", $redirection);
                     exit();
                 } else {// Affiche la demande de confirmation
                     echo 'Etes-vous s&ucirc;r de vouloir effacer l\'&eacute;dition n. ' . $edition_id . ' ? <a href="' . BDO_URL . 'admin/editedition?act=delete&conf=ok&edition_id=' . $edition_id . '">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
