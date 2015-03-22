@@ -935,7 +935,7 @@ class Admin extends Bdo_Controller {
                     if ($edition->IMG_COUV != '') {
                         $filename = $edition->IMG_COUV;
                         if (file_exists(BDO_DIR_COUV . $filename)) {
-                            @unlink(file_exists(BDO_DIR_COUV . $filename));
+                            @unlink(BDO_DIR_COUV . $filename);
                             echo "Couverture effac&eacute;e pour l'&eacute;dition N°" . $edition->ID_EDITION . "<br />";
                         }
                     }
