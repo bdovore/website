@@ -426,7 +426,7 @@ private function getDateBeforeValid() {
             $this->User_album_prop->load();
             $prop_user = $this->User_album_prop->USER_ID;
             $prop_img = $this->User_album_prop->IMG_COUV;
-            $prop_action = $this->User_album_prop->IMG_COUV;
+            $prop_action = $this->User_album_prop->ACTION;
             $notif_mail = $this->User_album_prop->NOTIF_MAIL;
 
             // On vérifie s'il s'agit d'une mise à jour simple ou d'une validation
@@ -734,7 +734,7 @@ private function getDateBeforeValid() {
         $this->User_album_prop->load();
         $prop_user = $this->User_album_prop->USER_ID;
 
-        $prop_action = $this->User_album_prop->IMG_COUV;
+        $prop_action = $this->User_album_prop->ACTION;
         $notif_mail = $this->User_album_prop->NOTIF_MAIL;
 
 

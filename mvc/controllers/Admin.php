@@ -1231,7 +1231,7 @@ class Admin extends Bdo_Controller {
         $this->loadModel("Edition");
 // Fusionne les editions
         if ($act == "merge") {
-            // v�rifie que source_id et dest_id ont �t� definis
+            // vérifie que source_id et dest_id ont été definis
             if ((is_null($dest_id)) | ($dest_id == "")) {
                 header("Location:" . BDO_URL . "admin/mergeeditions?source_id=$source_id&error=1");
             }
@@ -1243,10 +1243,10 @@ class Admin extends Bdo_Controller {
             }
             if ($conf == "ok") {
                 
-                // R�cup�re les donn�es de l'edition � mettre � jour (de destination)
+                // Récupère les données de l'edition à mettre à jour (de destination)
                 $this->Edition->add_dataPaste("ID_EDITION",$source_id);
                 $this->Edition->load();
-               // Efface les �ditions et les couvertures correspondantes
+               // Efface les éditions et les couvertures correspondantes
                 if ($this->Edition->IMG_COUV != '') {
                         $filename = $this->Edition->IMG_COUV;
                         if (file_exists(BDO_DIR_COUV . $filename)) {
