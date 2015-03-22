@@ -116,7 +116,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
       </form></td></td>
     <td width="287" bordercolor="#333333" bgcolor="#FFFFCC" > <p><strong>Aide</strong></p>
       <p>Les éditions cochées seront reportées sur un nouvel album : les utilisateurs 
-        en possession des éditions cochées se retrouvereront avec le nouvel album 
+        en possession des éditions cochées se retrouveront avec le nouvel album 
         dans la nouvelle série. <br>
         <br>
         Aucun changement ne sera enregistrés par les utilisateurs en possession d'une édition non cochée. <br>
