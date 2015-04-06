@@ -52,9 +52,9 @@ class Export extends Bdo_Controller {
 
                         // Construction de la query
                         $this->loadModel("Useralbum");
-                        
+                        $this->Useralbum->setWithUserComment(true);
                         $dbs_tome = $this->Useralbum->load("c"," WHERE ua.user_id = ".$_SESSION["userConnect"]->user_id." and flg_achat = '$flg_achat' ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME" );
-                        $entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution', 'Date d\'ajout', 'Remarque', 'Pret', 'Emprunteur', 'Date d\'achat', 'Prix', 'Cadeau', 'Edition originale');
+                        $entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution', 'Date d\'ajout', 'Note', 'Remarque', 'Pret', 'Emprunteur', 'Date d\'achat', 'Prix', 'Cadeau', 'Edition originale');
                         $largeur = array(20, 20, 5, 10, 15, 15, 15, 15, 15, 15, 15, 5, 20, 5, 10, 15, 10, 5, 5);
                         $nbpages = 100;
                         break;
@@ -131,6 +131,7 @@ class Export extends Bdo_Controller {
                             
                             if ($contenu <> 2) {
                                 $a_line[] = $tome->DATE_AJOUT;
+                                $a_line[] = $tome->USER_NOTE;
                                 $a_line[] = $tome->comment;
                                 $a_line[] = $tome->FLG_PRET;
                                 $a_line[] = $tome->NOM_PRET;
@@ -205,6 +206,7 @@ class Export extends Bdo_Controller {
                             
                             if ($contenu <> 2) {
                                 $txtCol .= $sep.$tome->DATE_AJOUT;
+                                $a_line[] = $tome->USER_NOTE;
                                 $txtCol .= $sep.$tome->comment;
                                 $txtCol .= $sep.$tome->FLG_PRET;
                                 $txtCol .= $sep.$tome->NOM_PRET;
@@ -275,11 +277,11 @@ class Export extends Bdo_Controller {
                                 $prix = $tome->cote;
                                 $cadeau = $tome->FLG_CADEAU;
                                 $tete = $tome->FLG_TETE;
-
+                                
                                 $xml_private = "<private>";
                                 $xml_private .= "<ajout>". $ajout . "</ajout>";
                                 $xml_private .= "<achat>" . $achat . "</achat>";
-                                //$xml_private .= "<note>" . . "</note>";
+                                $xml_private .= "<note>" . $prix = $tome->USER_NOTE . "</note>";
                                 $xml_private .= "<comment>" . $comment . "</comment>";
                                 $xml_private .= "<pret>" . $pret . "</pret>";
                                 $xml_private .= "<emprunteur>" . $emprunteur . "</emprunteur>";

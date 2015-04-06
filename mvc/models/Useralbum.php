@@ -16,6 +16,7 @@ class Useralbum extends Bdo_Db_Line
 
     /**
      */
+    private $withUserComment = false;
     public $table_name = 'users_album';
 
     public $error = '';
@@ -34,10 +35,12 @@ class Useralbum extends Bdo_Db_Line
         }
         parent::__construct($this->table_name, $a_data);
     }
-
+    public function setWithUserComment ($b) {
+        $this->withUserComment = $b;
+    }
     public function select ()
     {
-        return "
+        $select = "
         SELECT 
                 bd_tome.ID_TOME,
                 en.IMG_COUV,
@@ -101,8 +104,10 @@ class Useralbum extends Bdo_Db_Line
         	coa.pseudo as coapseudo,
                 DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%Y') as annee_achat, 
 
-                DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%m') as mois_achat
-        FROM    users_album ua
+                DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%m') as mois_achat";
+        
+        $from = " 
+                FROM    users_album ua
                 INNER JOIN bd_edition en ON ua.id_edition = en.id_edition
                 INNER JOIN bd_tome ON  en.id_tome = bd_tome.id_tome
         	INNER JOIN bd_serie s ON bd_tome.id_serie = s.id_serie
@@ -116,9 +121,16 @@ class Useralbum extends Bdo_Db_Line
         	LEFT JOIN bd_auteur co ON bd_tome.id_color = co.id_auteur
         	LEFT JOIN bd_auteur sca ON bd_tome.id_scenar_alt = sca.id_auteur
         	LEFT JOIN bd_auteur dea ON bd_tome.id_dessin_alt = dea.id_auteur
-        	LEFT JOIN bd_auteur coa ON bd_tome.id_color_alt = coa.id_auteur
-
-                ";
+        	LEFT JOIN bd_auteur coa ON bd_tome.id_color_alt = coa.id_auteur";
+        
+        if ($this->withUserComment) {
+            $select .= ",
+                uco.NOTE USER_NOTE,
+                uco.COMMENT USER_COMMENT";
+            $from .= "
+                 LEFT JOIN users_comment uco on (uco.USER_ID = ua.user_id and uco.ID_TOME = bd_tome.ID_TOME) ";
+        }
+        return $select.$from;
     }
 
     public function getStatistiques($user_id,$stat="all") {
