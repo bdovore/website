@@ -82,6 +82,35 @@ class AlbumComment extends Bdo_Controller {
         }
     }
     
+    public function setCommentPrivate() {
+        /*
+         * Pour passer un commentaire en privé
+         */
+        if (User::minAccesslevel(1)) {
+            // seulement l'admin
+            $id_tome = getValInteger("id_tome");
+            $user_id = decodeUserId(getValInteger("user_id"));
+            $this->loadModel('Comment');
+            
+            $this->Comment->load(c," WHERE c.user_id = ".$user_id . " and c.id_tome = ".$id_tome);
+            $comment = $this->Comment->COMMENT;
+            $this->Comment->set_dataPaste(array("USER_ID" => $user_id, "ID_TOME" => $id_tome));
+            $this->Comment->delete();
+            
+            $this->loadModel("Useralbum");
+            $this->Useralbum->load(c," WHERE ua.user_id = ".$user_id . " and bd_tome.ID_TOME = ".$id_tome);
+            $id_edition = $this->Useralbum->ID_EDITION;
+            $comment .= " ".$this->Useralbum->comment;
+           
+            $this->Useralbum->set_dataPaste(array("comment"=> $comment, "user_id" => $user_id,"id_edition" => $id_edition ));
+            $this->Useralbum->update();
+           
+           
+            $this->view->set_var('json', json_encode($this->Comment->error));
+            $this->view->layout = "ajax";
+            $this->view->render();
+        }
+    }
     
 }
 ?>
