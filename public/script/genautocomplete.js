@@ -36,14 +36,8 @@ function addSelectOption(idInput,url,id_select){
     $.getJSON( url, function( data) {
         
        $.each(data, function( item ) {
-           
-           if (id_select == data[item].id) {
-               select = "selected";
-           }
-           else {
-               select = "";
-           }
-           $("#"+idInput).append("<option value='"+data[item].id+"'"+ select + ">"+htmlEscape(data[item].label)+"</option>")
+           $("#"+idInput).append("<option value='"+data[item].id+"'>"+htmlEscape(data[item].label)+"</option>");
+           $("#"+idInput).val(id_select);
        });
        }); 
     }

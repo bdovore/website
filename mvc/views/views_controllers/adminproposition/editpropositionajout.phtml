@@ -511,6 +511,7 @@ function verifAddExisting(myIdTome,myAction) {
      changeEditeur();
     function changeEditeur() {
         addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo $view->IDCOLLEC + 0;?>);
+        $('#txtCollecId').val(<?php echo $view->IDCOLLEC + 0;?>);
         //addAutocomplete("txtCollec","spCollec","txtCollecId","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val());
     }
     
