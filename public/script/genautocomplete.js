@@ -44,9 +44,15 @@ function addAutocomplete (idInput, idSpan, idHiddenField, url, min){
                else {
                    select = "";
                }
-               $("#"+idInput).append("<option value='"+data[item].id+"'"+ select + ">"+data[item].label+"</option>")
+               $("#"+idInput).append("<option value='"+data[item].id+"'"+ select + ">"+htmlEscape(data[item].label)+"</option>")
            });
            }); 
         }
-    
-	
+function htmlEscape(str) {
+    return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+}
