@@ -55,10 +55,10 @@ class Adminproposition extends Bdo_Controller {
             }
             switch ($type) {
                 case "AJOUT" :
-                    $urledit = "./adminproposition/editPropositionAjout?ID=";
+                    $urledit =  BDO_URL . "adminproposition/editPropositionAjout?ID=";
                     break;
                 case "CORRECTION" :
-                    $urledit = "./adminproposition/editPropositionCorrection?ID=";
+                    $urledit =  BDO_URL . "adminproposition/editPropositionCorrection?ID=";
                     break;
                 case "EDITION" :
                     $urledit = BDO_URL."./Admin/editedition?edition_id=";
