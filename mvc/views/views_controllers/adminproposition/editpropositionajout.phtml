@@ -509,9 +509,14 @@ function verifAddExisting(myIdTome,myAction) {
      
      addAutocomplete("txtFutAlb","txtFutAlbId","txtFutAlbId","<?php echo BDO_URL; ?>getjson?data=Album");
      changeEditeur();
-    function changeEditeur() {
-        addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo $view->IDCOLLEC + 0;?>);
-        $('#txtCollecId').val(<?php echo $view->IDCOLLEC + 0;?>);
+     function changeEditeur() {
+         if ($("#txtEditeurId").val()) {
+             addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo $view->IDCOLLEC + 0;?>);
+             $('#txtCollecId').val(<?php echo $view->IDCOLLEC + 0;?>);
+         } else {
+             $('#txtCollecId').val(null);
+             $('#txtCollec').empty();
+         }
         //addAutocomplete("txtCollec","spCollec","txtCollecId","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val());
     }
     
