@@ -809,8 +809,8 @@ function translate_date ($val, $type = false)
 }
 
 function completeDate ($date)
-{   
-    if(substr($date,-2) == "-0" ) {
+{
+    if(substr($date,-2) === "-0" ) {
         $date = substr($date,0,strlen($date)-2)."-00";
     }
     if (stristr($date, '-00')) {
@@ -819,7 +819,7 @@ function completeDate ($date)
     if (stristr($date, '00/')) {
         $date = str_replace('00/', '01/', $date);
     }
-    
+
     if (preg_match('#^[0-9]{4}\-[0-9]{2}$#', $date)) {
         $date .= '-01';
     }
@@ -829,7 +829,7 @@ function completeDate ($date)
     if (preg_match('#^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$#', $date)) {
         $date = date("Y-m-d", TimestampDate($date));
     }
-    
+
     return $date;
 }
 
