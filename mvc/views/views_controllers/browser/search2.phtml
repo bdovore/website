@@ -50,6 +50,11 @@ $.get("<?php echo $row['URLEVEL'];?># <?php echo $row['LEVSIGN'];?>", function(d
         }
         ?>
         <!-- END DataBlock -->
+        <tr>
+		<td class="milieu" align="center"><br />
+                <?php echo $view->URLPREVPAGE;?> <?php echo $view->URLNEXTPAGE;?>
+            </td>
+	</tr>
 </table>
 <br />
 <div id="livesearch"></div>
