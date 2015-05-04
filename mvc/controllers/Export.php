@@ -325,6 +325,7 @@ class Export extends Bdo_Controller {
                         $this->removeOldFiles($pdfdir, $_SESSION["userConnect"]->user_id, 7200);
 
                         $p = new mPDF('','A4');
+                        $max_num_lines = 10;
 
                         /* open new PDF file; insert a file name to create the PDF on disk */
 
@@ -335,7 +336,7 @@ class Export extends Bdo_Controller {
                         //PDF_begin_page($p, 595, 842); /* start a new page */
 // Initialise l'emplacement
                         $nb_col_max = 1;
-                        $line = 10;
+                        $line = $max_num_lines;
                         $colonne_num = 0;
                         $current_id_serie = 0;
                         $balise_open = false; // pour tracer que l'on a ouvert une balise "table" pour les colonnes
@@ -354,7 +355,7 @@ class Export extends Bdo_Controller {
                                 }
                                 if ($line <= 2) { // New page
                                    $p->AddPage(); /* start a new page */
-                                   $line = 10;
+                                   $line = $max_num_lines;
                                 }
                                 //Affiche un nouveau bandeau série                      
                                 
@@ -391,7 +392,7 @@ class Export extends Bdo_Controller {
                                     $balise_open = false;
                                 }
                                 $p->AddPage(); /* start a new page */
-                                $line = 10;
+                                $line = $max_num_lines;
                                 $this->AddBandeauSerie($p, $line, $nom_serie);
                                 $line -= 2.5;
                             }
