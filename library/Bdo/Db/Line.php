@@ -300,7 +300,7 @@ class Bdo_Db_Line
         foreach ($this->a_column as $column_name => $obj) {
             if (! isset($obj->EXTRA_CHAMP)) $obj->EXTRA_CHAMP = '';
             
-            if (array_key_exists($column_name, $this->a_dataColumn) and (is_null($this->entite) or ($this->entite->{$column_name} != $this->a_dataColumn[$column_name]))) {
+            if (array_key_exists($column_name, $this->a_dataColumn) and (is_null($this->entite) or ($this->entite->{$column_name} !== $this->a_dataColumn[$column_name]))) {
                 
                 if (is_null($this->a_dataColumn[$column_name])) {
                     if ('YES' == $obj->IS_NULLABLE) $this->a_updateColumn[$column_name] = "NULL";
@@ -607,11 +607,10 @@ class Bdo_Db_Line
         if (empty($this->error)) $this->controlPk();
         if (empty($this->error)) $this->controlUk();
         if (empty($this->error)) $this->ctrlDataPost();
-        
+
         if (empty($this->error)) {            
             // ----------------- cas UPDATE ------------------------
             if (! is_null($this->entite) and (0 < count($this->a_updateColumn))) { 
-                
                 $typeQuery = "UPDATE";
                 $tab = array();
                 foreach ($this->a_updateColumn as $key => $val) {
