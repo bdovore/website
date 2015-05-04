@@ -288,7 +288,8 @@ class Export extends Bdo_Controller {
                             $editeur = htmlspecialchars($tome->NOM_EDITEUR,ENT_QUOTES,"UTF-8");
                             $collection = htmlspecialchars($tome->NOM_COLLECTION,ENT_QUOTES,"UTF-8");
                             $dte_parution = htmlspecialchars($tome->DTE_PARUTION,ENT_QUOTES,"UTF-8");
-                            $isbn = (issetNotEmpty($tome->ISBN_EDITION) ? $tome->ISBN_EDITION : $tome->EAN_EDITION);
+                            $isbn = $tome->ISBN_EDITION;
+                            $ean = $tome->EAN_EDITION;
                             $img_couv = $tome->IMG_COUV;
 
                             $xml = "  <tome>";
@@ -301,6 +302,7 @@ class Export extends Bdo_Controller {
                             $xml .= "<collection>" . $collection . "</collection>";
                             $xml .= "<parution>" . $dte_parution . "</parution>";
                             $xml .= "<isbn>" . $isbn . "</isbn>";
+                            $xml .= "<ean>" . $ean . "</ean>";
                             $xml .= "<couv>" . $img_couv . "</couv>";
 
                             if ($contenu == 0) {
