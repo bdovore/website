@@ -318,23 +318,24 @@ class Export extends Bdo_Controller {
 
                         $info = array();
                         echo "La création du fichier est en cours ...<br/>\n";
+                        ob_implicit_flush(true);
 
                         $pdfdir = BDO_DIR . "public/tmp/";
                         $filename = $_SESSION["userConnect"]->user_id . "-" . sha1(uniqid(mt_rand(), true)) . ".pdf";
                         $this->removeOldFiles($pdfdir, $_SESSION["userConnect"]->user_id, 7200);
 
-                        $p = new mPDF();
+                        $p = new mPDF('','A4');
 
                         /* open new PDF file; insert a file name to create the PDF on disk */
 
                         $p->SetAuthor("Bdovore", true);
                         $p->SetCreator("Bdovore.com");
                         $p->setTitle("Collection de Bandes-Dessinées ", true);
-                        $p->AddPage($size = "A4");
+                        $p->AddPage();
                         //PDF_begin_page($p, 595, 842); /* start a new page */
 // Initialise l'emplacement
                         $nb_col_max = 1;
-                        $line = 6;
+                        $line = 10;
                         $colonne_num = 0;
                         $current_id_serie = 0;
                         $balise_open = false; // pour tracer que l'on a ouvert une balise "table" pour les colonnes
@@ -343,7 +344,7 @@ class Export extends Bdo_Controller {
                         foreach ($dbs_tome->a_dataQuery as $tome) {
                             if ($tome->ID_SERIE != $current_id_serie) {
                                 
-                                 if ($tr_open) { // on ferme la table à deux colonnes
+                                if ($tr_open) { // on ferme la table à deux colonnes
                                     $p->WriteHTML("</tr>", 2, false, false);
                                     $tr_open = false;
                                 }
@@ -352,9 +353,8 @@ class Export extends Bdo_Controller {
                                     $balise_open = false;
                                 }
                                 if ($line <= 2) { // New page
-                                   $p->AddPage($size = "A4"); /* start a new page */
-                                    $line = 6;
-                                   
+                                   $p->AddPage(); /* start a new page */
+                                   $line = 10;
                                 }
                                 //Affiche un nouveau bandeau série                      
                                 
@@ -379,9 +379,7 @@ class Export extends Bdo_Controller {
 
                             //fwrite( $fp, 'Après test serie:'.$colonne_num."\n" );
                             // vérifie si il y a la place d'afficher un autre album
-                           if (($colonne_num == 0) & ($line < 0)) {
-
-                                
+                            if (($colonne_num == 0) && ($line < 0)) {
                                 //Affiche un nouveau bandeau série
                                 $nom_serie = stripslashes($tome->NOM_SERIE);
                                 if ($tr_open) { // on ferme la table à deux colonnes
@@ -392,8 +390,8 @@ class Export extends Bdo_Controller {
                                     $p->WriteHTML("</table><br>",2,false,true);
                                     $balise_open = false;
                                 }
-                                $p->AddPage($size = "A4"); /* start a new page */
-                                $line = 6;
+                                $p->AddPage(); /* start a new page */
+                                $line = 10;
                                 $this->AddBandeauSerie($p, $line, $nom_serie);
                                 $line -= 2.5;
                             }
@@ -435,13 +433,13 @@ class Export extends Bdo_Controller {
                             }
                         }
                         if ($tr_open) { // on ferme la table à deux colonnes
-                                    $p->WriteHTML("</tr>",2,false,false);
-                                    $tr_open = false;
-                                }
-                                if ($balise_open) { // on ferme la table à deux colonnes
-                                    $p->WriteHTML("</table><br>",2,false,true);
-                                    $balise_open = false;
-                                }
+                            $p->WriteHTML("</tr>",2,false,false);
+                            $tr_open = false;
+                        }
+                        if ($balise_open) { // on ferme la table à deux colonnes
+                            $p->WriteHTML("</table><br>",2,false,true);
+                            $balise_open = false;
+                        }
                         $p->output($pdfdir . $filename); /* close PDF document */
                         /* $buf = PDF_get_buffer($p);
                           $len = strlen($buf);
