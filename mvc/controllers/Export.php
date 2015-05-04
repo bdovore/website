@@ -20,7 +20,7 @@ class Export extends Bdo_Controller {
 
                 // met à jour la sélection
                 $codesel = "";
-                for ($i = 0; $i <= 18; $i++) {
+                for ($i = 0; $i <= 19; $i++) {
                     if (in_array($i, $sel_field)) {
                         $codesel .="1";
                     } else {
@@ -32,7 +32,7 @@ class Export extends Bdo_Controller {
                     $user = new User($_SESSION["userConnect"]->user_id);
 
                     $user->load();
-                    $user->set_dataPaste(array("pref_export" => $codesel));
+                    $user->set_dataPaste(array("PREF_EXPORT" => $codesel));
                     $user->update();
                 }
 
@@ -54,8 +54,29 @@ class Export extends Bdo_Controller {
                         $this->loadModel("Useralbum");
                         $this->Useralbum->setWithUserComment(true);
                         $dbs_tome = $this->Useralbum->load("c"," WHERE ua.user_id = ".$_SESSION["userConnect"]->user_id." and flg_achat = '$flg_achat' ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME" );
-                        $entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution', 'Date d\'ajout', 'Note', 'Remarque', 'Pret', 'Emprunteur', 'Date d\'achat', 'Prix', 'Cadeau', 'Edition originale');
-                        $largeur = array(20, 20, 5, 10, 15, 15, 15, 15, 15, 15, 15, 5, 20, 5, 10, 15, 10, 5, 5);
+                        $entete = array(0 => 'Serie',
+                            1 => 'Titre',
+                            2 => 'Tome',
+                            3 => 'ISBN', 
+                            19 => 'EAN',
+                            4 => 'Genre', 
+                            5 => 'Scenariste',
+                            6 => 'Dessinateur',
+                            7 => 'Editeur',
+                            8 => 'Collection',
+                            9 => 'Date parution',
+                            10 => 'Date d\'ajout',
+                            11 => 'Note',
+                            12 => 'Remarque',
+                            13 => 'Prêté',
+                            14 => 'Emprunteur',
+                            15 => 'Date d\'achat',
+                            16 => 'Prix',
+                            17 => 'Cadeau',
+                            18 => 'Edition originale');
+                        $largeur = array(15,15,5,10,15,15,15,15,15,15,15,15,5,20,5,10,15,10,5,5);
+                        //$entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution', 'Date d\'ajout', 'Note', 'Remarque', 'Pret', 'Emprunteur', 'Date d\'achat', 'Prix', 'Cadeau', 'Edition originale');
+                        //$largeur = array(20, 20, 5, 10, 15, 15, 15, 15, 15, 15, 15, 5, 20, 5, 10, 15, 10, 5, 5);
                         $nbpages = 100;
                         break;
 
@@ -63,8 +84,20 @@ class Export extends Bdo_Controller {
                         $this->loadModel("Tome");
                         
                         $dbs_tome = $this->Tome->getListAlbumToComplete($_SESSION["userConnect"]->user_id); 
-                        $entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution');
-                        $largeur = array(20, 20, 5, 10, 15, 15, 15, 15, 18, 15);
+                        $entete = array(0 => 'Serie',
+                            1 => 'Titre', 
+                            2 => 'Tome', 
+                            3 => 'ISBN', 
+                            19 => 'EAN', 
+                            4 => 'Genre', 
+                            5 => 'Scenariste', 
+                            6 => 'Dessinateur', 
+                            7 => 'Editeur', 
+                            8 => 'Collection', 
+                            9 => 'Date parution');
+                        $largeur = array(15,15,5,10,15,15,15,15,15,15,15);
+                        //$entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution');
+                        //$largeur = array(20, 20, 5, 10, 15, 15, 15, 15, 18, 15);
                         $nbpages = 100;
                         $nomFichier = "Albums manquants au " . strftime("%d-%m-%Y");
                 }
@@ -122,6 +155,7 @@ class Export extends Bdo_Controller {
                             $a_line[] = $tome->TITRE_TOME;
                             $a_line[] = $tome->NUM_TOME;
                             $a_line[] = $tome->ISBN_EDITION;
+                            $a_line[] = $tome->EAN_EDITION;
                             $a_line[] = $tome->NOM_GENRE;
                             $a_line[] = $tome->scpseudo;
                             $a_line[] = $tome->depseudo;
@@ -197,6 +231,7 @@ class Export extends Bdo_Controller {
                             $txtCol .= $sep.$tome->TITRE_TOME;
                             $txtCol .= $sep.$tome->NUM_TOME;
                             $txtCol .= $sep.$tome->ISBN_EDITION;
+                            $txtCol .= $sep.$tome->EAN_EDITION;
                             $txtCol .= $sep.$tome->NOM_GENRE;
                             $txtCol .= $sep.$tome->scpseudo;
                             $txtCol .= $sep.$tome->depseudo;
@@ -465,7 +500,7 @@ class Export extends Bdo_Controller {
                 $codesel = $user->PREF_EXPORT;
 
                 // Prérempli les cases à cocher
-                for ($i = 0; $i <= 18; $i++) {
+                for ($i = 0; $i <= 19; $i++) {
                     if (substr($codesel, $i, 1) == "1") {
                         $this->view->set_var("SELFIELD" . $i, 'checked');
                     }
