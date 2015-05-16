@@ -97,8 +97,8 @@ class Edition extends Bdo_Db_Line
                 INNER JOIN bd_serie s ON bd_tome.id_serie = s.id_serie
         	INNER JOIN bd_genre g ON s.id_genre = g.id_genre
         	
-        	INNER JOIN bd_collection c ON bd_edition.id_collection = c.id_collection
-        	INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
+        	LEFT JOIN bd_collection c ON bd_edition.id_collection = c.id_collection
+        	LEFT JOIN bd_editeur er ON c.id_editeur = er.id_editeur
         	 
         	LEFT JOIN bd_edition_stat ON bd_edition.id_edition = bd_edition_stat.ID_EDITION
         	LEFT JOIN note_tome ON bd_tome.ID_TOME = note_tome.ID_TOME
