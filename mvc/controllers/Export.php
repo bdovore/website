@@ -148,7 +148,8 @@ class Export extends Bdo_Controller {
 
                         //Ecrit le contenu
                         $dataArray = array();
-                        
+
+                        //TODO n'exporter que ce qui a été demandé
                         foreach ($dbs_tome->a_dataQuery as $tome ) {
                             $a_line = array();
                             $a_line[] = $tome->NOM_SERIE;
@@ -311,6 +312,7 @@ class Export extends Bdo_Controller {
                                 $pret = $tome->FLG_PRET;
                                 $emprunteur .= htmlspecialchars($tome->NOM_PRET,ENT_QUOTES,"UTF-8");
                                 $achat = $tome->DATE_ACHAT;
+                                $note = $tome->USER_NOTE;
                                 $prix = $tome->cote;
                                 $cadeau = $tome->FLG_CADEAU;
                                 $tete = $tome->FLG_TETE;
@@ -318,7 +320,7 @@ class Export extends Bdo_Controller {
                                 $xml_private = "<private>";
                                 $xml_private .= "<ajout>". $ajout . "</ajout>";
                                 $xml_private .= "<achat>" . $achat . "</achat>";
-                                $xml_private .= "<note>" . $prix = $tome->USER_NOTE . "</note>";
+                                $xml_private .= "<note>" . $note . "</note>";
                                 $xml_private .= "<comment>" . $comment . "</comment>";
                                 $xml_private .= "<pret>" . $pret . "</pret>";
                                 $xml_private .= "<emprunteur>" . $emprunteur . "</emprunteur>";
