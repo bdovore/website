@@ -213,11 +213,11 @@ class Export extends Bdo_Controller {
                         // Titre des colonnes
                         $txtTitre = "";
                         $pointeur = 0;
-                        $sep = postVal("sep",",");
+                        $sep = postVal("sep","|");
                         foreach ($entete as $element) {
                             //teste si le pointeur est dans l'array
                             if (in_array($pointeur, $sel_field)) {
-                                $txtTitre.='"' . $element . '"'.$sep;
+                                $txtTitre.='"' . $element . '"' . $sep;
                             }
                             $pointeur++;
                         }
@@ -242,8 +242,8 @@ class Export extends Bdo_Controller {
                             
                             if ($contenu <> 2) {
                                 $txtCol .= $sep.$tome->DATE_AJOUT;
-                                $a_line[] = $tome->USER_NOTE;
-                                $txtCol .= $sep.$tome->comment;
+                                $txtCol .= $sep.$tome->USER_NOTE;
+                                $txtCol .= $sep.preg_replace("/\r|\n/"," ",$tome->comment);
                                 $txtCol .= $sep.$tome->FLG_PRET;
                                 $txtCol .= $sep.$tome->NOM_PRET;
                                 $txtCol .= $sep.$tome->DATE_ACHAT;
@@ -254,6 +254,8 @@ class Export extends Bdo_Controller {
                            
                             echo $txtCol . "\n";
                         }
+
+                        die();
 
                         break;
 
