@@ -267,7 +267,7 @@ class Export extends Bdo_Controller {
 
                         // Construction du header HTTP
                         header("Content-Type: application/xml; charset=utf-8");
-                        header("Content-Disposition: attaichment; filename=\"$nomFichier\"");
+                        header("Content-Disposition: attachment; filename=\"$nomFichier\"");
 
                         // Construction du header XML
                         echo "<?xml version='1.0' encoding='UTF-8'?>\n";
