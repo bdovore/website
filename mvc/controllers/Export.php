@@ -213,7 +213,7 @@ class Export extends Bdo_Controller {
                         // Titre des colonnes
                         $txtTitre = "";
                         $pointeur = 0;
-                        $sep = postVal("sep","|");
+                        $sep = postVal("sep",",");
                         foreach ($entete as $element) {
                             //teste si le pointeur est dans l'array
                             if (in_array($pointeur, $sel_field)) {
@@ -228,28 +228,29 @@ class Export extends Bdo_Controller {
                         
                         foreach ($dbs_tome->a_dataQuery as $tome ) {
                             $txtCol = "";
-                            $txtCol .= $tome->NOM_SERIE;
-                            $txtCol .= $sep.$tome->TITRE_TOME;
-                            $txtCol .= $sep.$tome->NUM_TOME;
-                            $txtCol .= $sep.$tome->ISBN_EDITION;
-                            $txtCol .= $sep.$tome->EAN_EDITION;
-                            $txtCol .= $sep.$tome->NOM_GENRE;
-                            $txtCol .= $sep.$tome->scpseudo;
-                            $txtCol .= $sep.$tome->depseudo;
-                            $txtCol .= $sep.$tome->NOM_EDITEUR;
-                            $txtCol .= $sep.$tome->NOM_COLLECTION;
-                            $txtCol .= $sep.$tome->DTE_PARUTION;
+                            $txtCol .= '"'.preg_replace('/"/','""',$tome->NOM_SERIE).'"';
+                            $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->TITRE_TOME).'"';
+                            $txtCol .= $sep.'"'.$tome->NUM_TOME.'"';
+                            $txtCol .= $sep.'"'.$tome->ISBN_EDITION.'"';
+                            $txtCol .= $sep.'"'.$tome->EAN_EDITION.'"';
+                            $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->NOM_GENRE).'"';
+                            $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->scpseudo).'"';
+                            $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->depseudo).'"';
+                            $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->NOM_EDITEUR).'"';
+                            $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->NOM_COLLECTION).'"';
+                            $txtCol .= $sep.'"'.$tome->DTE_PARUTION.'"';
                             
                             if ($contenu <> 2) {
-                                $txtCol .= $sep.$tome->DATE_AJOUT;
-                                $txtCol .= $sep.$tome->USER_NOTE;
-                                $txtCol .= $sep.preg_replace("/\r|\n/"," ",$tome->comment);
-                                $txtCol .= $sep.$tome->FLG_PRET;
-                                $txtCol .= $sep.$tome->NOM_PRET;
-                                $txtCol .= $sep.$tome->DATE_ACHAT;
-                                $txtCol .= $sep.$tome->cote;
-                                $txtCol .= $sep.$tome->FLG_CADEAU;
-                                $txtCol .= $sep.$tome->FLG_TETE;
+                                $txtCol .= $sep.'"'.$tome->DATE_AJOUT.'"';
+                                $txtCol .= $sep.'"'.$tome->USER_NOTE.'"';
+                                //$txtCol .= $sep.preg_replace("/\r|\n/"," ",$tome->comment);
+                                $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->comment).'"';
+                                $txtCol .= $sep.'"'.$tome->FLG_PRET.'"';
+                                $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->NOM_PRET).'"';
+                                $txtCol .= $sep.'"'.$tome->DATE_ACHAT.'"';
+                                $txtCol .= $sep.'"'.$tome->cote.'"';
+                                $txtCol .= $sep.'"'.$tome->FLG_CADEAU.'"';
+                                $txtCol .= $sep.'"'.$tome->FLG_TETE.'"';
                             }
                            
                             echo $txtCol . "\n";
