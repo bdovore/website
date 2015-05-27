@@ -318,7 +318,7 @@ class Export extends Bdo_Controller {
                                 $note = $tome->USER_NOTE;
                                 $prix = $tome->cote;
                                 $cadeau = $tome->FLG_CADEAU;
-                                $tete = $tome->FLG_TETE;
+                                $eo = $tome->FLG_TETE;
                                 
                                 $xml_private = "<private>";
                                 $xml_private .= "<ajout>". $ajout . "</ajout>";
@@ -329,7 +329,7 @@ class Export extends Bdo_Controller {
                                 $xml_private .= "<emprunteur>" . $emprunteur . "</emprunteur>";
                                 $xml_private .= "<prix>" . $prix . "</prix>";
                                 $xml_private .= "<cadeau>" . $cadeau . "</cadeau>";
-                                //$xml_private .= "<eo>" . . "</eo>";
+                                $xml_private .= "<eo>" . $eo . "</eo>";
                                 $xml_private .= "</private>";
 
                                 $xml .= $xml_private;
