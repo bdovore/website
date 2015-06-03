@@ -61,6 +61,7 @@ class User_album_prop extends Bdo_Db_Line
 		users_alb_prop.PRIX, 
 		users_alb_prop.ID_SERIE, 
 		users_alb_prop.SERIE, 
+		users_alb_prop.FLG_FINI, 
 		bd_serie.NOM AS ACTUSERIE, 
 		users_alb_prop.DTE_PARUTION, 
 		users_alb_prop.ID_GENRE, 

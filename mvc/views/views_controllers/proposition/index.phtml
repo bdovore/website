@@ -192,13 +192,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                     <tr bordercolor="#DAC1B3">
 
-                      <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Achevée</strong></font></td>
+                    <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Achevée</strong></font></td>
 
                       <td>&nbsp;</td>
 
                       <td><select name="lstAchevee" size="1">
 
-                          <option value="0" <?php if ($view->edition->FLG_FINI == 0) echo "selected='O'"; ?>>Finie</option><option value="1" <?php if ($view->edition->FLG_TYP_TOME == 1) echo "selected='O'"; ?>>En cours</option><option value="2" <?php if ($view->edition->FLG_TYP_TOME == 2) echo "selected='O'"; ?>>One Shot</option><option value="3">Interrompue/Abandonnée</option>
+                      <option value="0" <?php if ($view->edition->FLG_FINI == 0) echo "selected"; ?>>Finie</option><option value="1" <?php if ($view->edition->FLG_FINI == 1) echo "selected"; ?>>En cours</option><option value="2" <?php if ($view->edition->FLG_FINI == 2) echo "selected"; ?>>One Shot</option><option value="3" <?php if ($view->edition->FLG_FINI == 3) echo "selected"; ?>>Interrompue/Abandonnée</option>
 
                         </select></td>
 
