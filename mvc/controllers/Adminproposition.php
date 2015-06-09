@@ -13,7 +13,7 @@ class Adminproposition extends Bdo_Controller {
         /*
          * Page principale de gestion des propositions
          * Affiche les listes de proposition en attente
-         * La gestion proprement dite est effectuée dans editPropositoin
+         * La gestion proprement dite est effectuée dans editProposition
          */
         if (User::minAccesslevel(1)) {
             $act = getVal("act", "");
@@ -606,7 +606,7 @@ private function getDateBeforeValid() {
                                 $new_w = $max_size;
                                 $new_h = round($imagehauteur * $max_size / $imagelargeur);
                             } else {
-                                // imahe de type portrait : on limite la hauteur au maxi
+                                // image de type portrait : on limite la hauteur au maxi
                                 $new_h = $max_size;
                                 $new_w = round($imagelargeur * $max_size / $imagehauteur);
                             }
@@ -705,16 +705,14 @@ private function getDateBeforeValid() {
                     echo "Email de confirmation envoy&eacute;<br />";
                 }
 
-
                 $this->User_album_prop->load("c", " WHERE 
                     id_proposal > " . $id . " 
                     AND status not in (98,99,1) 
                     AND prop_type = 'AJOUT' 
-            ORDER BY id_proposal asc limit 0,1
-            ");
+                    ORDER BY id_proposal ASC LIMIT 0,1
+                    ");
 
                 if ($this->User_album_prop->ID_PROPOSAL > $id) {
-
                     $next_url = BDO_URL . "adminproposition/editProposition?ID=" . $this->User_album_prop->ID_PROPOSAL;
                 } else {
                     $next_url = BDO_URL . "admin/editAlbum?alb_id=" . $lid_tome;
@@ -857,7 +855,7 @@ private function getDateBeforeValid() {
          */
         $this->view->set_var(array("PAGETITLE" => "Proposition : correction"));
         // Tableau pour les choix d'options
-// Avancement de la série
+        // Avancement de la série
         $opt_status[0][0] = 0;
         $opt_status[0][1] = 'Finie';
         $opt_status[1][0] = 1;
@@ -867,7 +865,7 @@ private function getDateBeforeValid() {
         $opt_status[3][0] = 3;
         $opt_status[3][1] = 'Interrompue/Abandonnée';
 
-// Type d'album
+        // Type d'album
         $opt_type[0][0] = 0;
         $opt_type[0][1] = 'Album';
         $opt_type[1][0] = 1;
@@ -981,8 +979,6 @@ private function getDateBeforeValid() {
             }
 
 
-
-
             // Determine l'URL image modifiée
             if (is_null($this->User_album_prop->IMG_COUV) | ($this->User_album_prop->IMG_COUV == '')) {
                 $url_image = $ori_url_image;
@@ -1094,7 +1090,7 @@ private function getDateBeforeValid() {
                 $this->view->set_var("BOUTONSUIVANT", "<del>Suivant</del>");
             }
 
-            $this->view->set_var('PAGETITLE', "Validatoin d'une correction ");
+            $this->view->set_var('PAGETITLE', "Validation d'une correction ");
             $this->view->render();
         }
     }
