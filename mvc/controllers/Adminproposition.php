@@ -647,10 +647,9 @@ private function getDateBeforeValid() {
                             case "6":
                                 unlink(BDO_DIR_COUV . $newfilename);
                                 $img_couv = substr($newfilename, 0, strlen($newfilename) - 3) . "jpg";
-                                imagejpeg($new_image, BDO_DIR_COUV . $newfilename, 100);
+                                imagejpeg($new_image, BDO_DIR_COUV . $img_couv, 100);
 
                                 // met à jour la référence au fichier dans la table bd_edition
-
                                 $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
                                 $this->Edition->update();
                         }
