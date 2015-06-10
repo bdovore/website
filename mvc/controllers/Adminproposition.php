@@ -1113,7 +1113,7 @@ private function getDateBeforeValid() {
 
             $prop_img = $this->User_album_prop->IMG_COUV;
             $lid = $this->User_album_prop->ID_TOME;
-            $edition = $this->User_album_prop->ID_EDTION;
+            $edition = $this->User_album_prop->ID_EDITION;
             $def_edition = postValInteger('txtDefEdition');
 
             // Met à jour l'information propre à l'album
