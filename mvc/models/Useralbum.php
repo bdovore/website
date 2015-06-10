@@ -107,21 +107,21 @@ class Useralbum extends Bdo_Db_Line
                 DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%m') as mois_achat";
         
         $from = " 
-                FROM    users_album ua
+                FROM users_album ua
                 INNER JOIN bd_edition en ON ua.id_edition = en.id_edition
                 INNER JOIN bd_tome ON  en.id_tome = bd_tome.id_tome
-        	INNER JOIN bd_serie s ON bd_tome.id_serie = s.id_serie
-        	INNER JOIN bd_genre g ON s.id_genre = g.id_genre
-        	
-        	INNER JOIN bd_collection c ON en.id_collection = c.id_collection
-        	INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
+                INNER JOIN bd_serie s ON bd_tome.id_serie = s.id_serie
+                INNER JOIN bd_genre g ON s.id_genre = g.id_genre
                 
+                LEFT JOIN bd_collection c ON en.id_collection = c.id_collection
+                LEFT JOIN bd_editeur er ON c.id_editeur = er.id_editeur
+                    
                 LEFT JOIN bd_auteur sc ON bd_tome.id_scenar = sc.id_auteur
-        	LEFT JOIN bd_auteur de ON bd_tome.id_dessin = de.id_auteur 
-        	LEFT JOIN bd_auteur co ON bd_tome.id_color = co.id_auteur
-        	LEFT JOIN bd_auteur sca ON bd_tome.id_scenar_alt = sca.id_auteur
-        	LEFT JOIN bd_auteur dea ON bd_tome.id_dessin_alt = dea.id_auteur
-        	LEFT JOIN bd_auteur coa ON bd_tome.id_color_alt = coa.id_auteur";
+                LEFT JOIN bd_auteur de ON bd_tome.id_dessin = de.id_auteur 
+                LEFT JOIN bd_auteur co ON bd_tome.id_color = co.id_auteur
+                LEFT JOIN bd_auteur sca ON bd_tome.id_scenar_alt = sca.id_auteur
+                LEFT JOIN bd_auteur dea ON bd_tome.id_dessin_alt = dea.id_auteur
+                LEFT JOIN bd_auteur coa ON bd_tome.id_color_alt = coa.id_auteur";
         
         if ($this->withUserComment) {
             $select .= ",

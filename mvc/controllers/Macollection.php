@@ -205,7 +205,7 @@ class Macollection extends Bdo_Controller {
 
             // echo  $this->Useralbum->select()." where ua.user_id = ".$user_id ." and flg_achat = 'N' ".$orderby. $limit;
             $dbs_tome = $this->Useralbum->load("c",$where.$orderby. $limit);
-            
+
             $nbr = Db_CountRow($this->Useralbum->select().$where);
            
             $this->view->set_var( array (
