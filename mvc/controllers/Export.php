@@ -40,20 +40,24 @@ class Export extends Bdo_Controller {
 
                     case 0:
                     case 1:
-
+                    case 3:
                         // Determine le flag achat
+                        $where = " WHERE ua.user_id = ".$_SESSION["userConnect"]->user_id;
                         if ($contenu == 0) {
-                            $flg_achat = 'N';
                             $nomFichier = "Collection au " . strftime("%d-%m-%Y");
-                        } else {
-                            $flg_achat = 'O';
+                            $where .= " and flg_achat = 'N' ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME";
+                        } else if ($contenu == 1) {
                             $nomFichier = "Achats futurs au " . strftime("%d-%m-%Y");
+                            $where .= " and flg_achat = 'O' ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME";
+                        } else {
+                            $nomFichier = "Collection et Achats futurs au " . strftime("%d-%m-%Y");
+                            $where .= " ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME";
                         }
 
                         // Construction de la query
                         $this->loadModel("Useralbum");
                         $this->Useralbum->setWithUserComment(true);
-                        $dbs_tome = $this->Useralbum->load("c"," WHERE ua.user_id = ".$_SESSION["userConnect"]->user_id." and flg_achat = '$flg_achat' ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME" );
+                        $dbs_tome = $this->Useralbum->load("c",$where);
                         $entete = array(0 => 'Serie',
                             1 => 'Titre',
                             2 => 'Tome',
@@ -308,8 +312,8 @@ class Export extends Bdo_Controller {
                             $xml .= "<isbn>" . $isbn . "</isbn>";
                             $xml .= "<ean>" . $ean . "</ean>";
                             $xml .= "<couv>" . $img_couv . "</couv>";
-
-                            if ($contenu == 0) {
+                            
+                            if ($contenu <> 2) {
                                 $ajout = $tome->DATE_AJOUT;
                                 $comment = htmlspecialchars($tome->comment,ENT_QUOTES,"UTF-8");
                                 $pret = $tome->FLG_PRET;
@@ -319,10 +323,16 @@ class Export extends Bdo_Controller {
                                 $prix = $tome->cote;
                                 $cadeau = $tome->FLG_CADEAU;
                                 $eo = $tome->FLG_TETE;
+                                $flg_achat = ($tome->FLG_ACHAT === "O") ? true : false;
                                 
                                 $xml_private = "<private>";
                                 $xml_private .= "<ajout>". $ajout . "</ajout>";
-                                $xml_private .= "<achat>" . $achat . "</achat>";
+                                
+                                if ($flg_achat)
+                                    $xml_private .= "<flg_achat/>";
+                                else
+                                    $xml_private .= "<achat>" . $achat . "</achat>";
+
                                 $xml_private .= "<note>" . $note . "</note>";
                                 $xml_private .= "<comment>" . $comment . "</comment>";
                                 $xml_private .= "<pret>" . $pret . "</pret>";
@@ -523,6 +533,7 @@ class Export extends Bdo_Controller {
                     "CONTENU0" => ($contenu == 0) ? 'checked' : '',
                     "CONTENU1" => ($contenu == 1) ? 'checked' : '',
                     "CONTENU2" => ($contenu == 2) ? 'checked' : '',
+                    "CONTENU3" => ($contenu == 3) ? 'checked' : '',
                 ));
 
                 // assigne la barre de login
