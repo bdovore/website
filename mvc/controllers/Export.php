@@ -277,15 +277,28 @@ class Export extends Bdo_Controller {
                         echo "<?xml version='1.0' encoding='UTF-8'?>\n";
                         echo "<collection>\n";
 
+                        $infoserie = false;
                         foreach ($dbs_tome->a_dataQuery as $tome) {
                             if ($current_id_serie == 0) {
                                 $current_id_serie = $tome->ID_SERIE;
                                 $nom_serie = htmlspecialchars($tome->NOM_SERIE,ENT_QUOTES,"UTF-8");
                                 echo "<serie><nom>" . $nom_serie . "</nom>\n";
+                                $infoserie = true;
                             } elseif ($tome->ID_SERIE != $current_id_serie) {
                                 $current_id_serie = $tome->ID_SERIE;
                                 $nom_serie = htmlspecialchars($tome->NOM_SERIE,ENT_QUOTES,"UTF-8");
                                 echo "</serie>\n<serie><nom>" . $nom_serie . "</nom>\n";
+                                $infoserie = true; 
+                            }
+
+                            if ($infoserie) {
+                                // info serie
+                                $fini = $tome->FLG_FINI;
+                                $genre = $tome->NOM_GENRE;
+                                //$orig = $tome->ORIGINE_GENRE; //not implemented yet
+                                echo "<fini>".intval($fini)."</fini>";
+                                echo "<genre>".$genre."</genre>";
+                                //echo "<orig>".$orig."</orig>";
                             }
 
                             $titre_tome = htmlspecialchars($tome->TITRE_TOME,ENT_QUOTES,"UTF-8");
@@ -299,6 +312,8 @@ class Export extends Bdo_Controller {
                             $isbn = $tome->ISBN_EDITION;
                             $ean = $tome->EAN_EDITION;
                             $img_couv = $tome->IMG_COUV;
+                            $integrale = ($tome->FLG_INT_TOME === 'O') ? true : false;
+                            $coffret = ($tome->FLG_TYPE_TOME == 1) ? true : false;
 
                             $xml = "  <tome>";
                             $xml .= "<titre>" . $titre_tome . "</titre>";
@@ -312,6 +327,11 @@ class Export extends Bdo_Controller {
                             $xml .= "<isbn>" . $isbn . "</isbn>";
                             $xml .= "<ean>" . $ean . "</ean>";
                             $xml .= "<couv>" . $img_couv . "</couv>";
+
+                            if ($integrale && !$coffret)
+                                $xml .= "<int/>";
+                            else if ($coffret)
+                                $xml .= "<cof/>";
                             
                             if ($contenu <> 2) {
                                 $ajout = $tome->DATE_AJOUT;
