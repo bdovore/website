@@ -159,7 +159,7 @@ class Macollection extends Bdo_Controller {
             // variable $sort donne la colonne pour le tri
             // on s'assure que la variable est dans le bon intervale de valeur
             $sort = getValInteger("sort",9);
-            $sort = max(min($sort,9),1);
+            $sort = max(min($sort,17),1);
             //if ($sort <= 0) $sort = 1;//inutile grace a max(min()) juste au-dessus 
 
             //TODO getValInArray("order",array("ASC","DESC")); ou quelque chose du genre
@@ -179,6 +179,15 @@ class Macollection extends Bdo_Controller {
             $a_order[6]= "scpseudo";
             $a_order[7]= "depseudo";
             $a_order[8]= "DATE_ACHAT";
+            $a_order[9]= "cote";
+            $a_order[10]= "FLG_PRET";
+            $a_order[11]= "FLG_CADEAU";
+            $a_order[12]= "FLG_LU";
+            $a_order[13]= "FLG_TETE";
+            $a_order[14]= "FLG_DEDICACE";
+            $a_order[15]= "comment";
+            $a_order[16]= "NOM_PRET";
+            $a_order[17]= "EMAIL_PRET";
             
             $pret = getVal("cb_pret","N");
             
