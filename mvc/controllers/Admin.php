@@ -112,8 +112,8 @@ class Admin extends Bdo_Controller {
                     $long_name = postVal('txtNom') . ", " . postVal('txtPrenom');
                 else
                     $long_name = postVal('txtNom');
-
-                $pseudo = notIssetOrEmpty(postVal('txtPseudo')) ? $long_name : postVal('txtPseudo');
+                $pseudo = postVal('txtPseudo');
+                $pseudo = notIssetOrEmpty($pseudo) ? $long_name : $pseudo;
                 $this->loadModel("Auteur");
                 $this->Auteur->set_dataPaste(array(
                     "PSEUDO" => $pseudo,
@@ -1411,12 +1411,13 @@ class Admin extends Bdo_Controller {
                 $nom = postVal('txtNomAuteur');
                 $prenom = postVal('txtPrenomAuteur');
                 $pseudo = (postVal('txtPseudoAuteur') == '' ? postVal('txtNomAuteur') . ", " .
-                                postVal('txtPrenomAuteur') . "'" : "'" . postVal('txtPseudoAuteur') );
+                                postVal('txtPrenomAuteur')  :  postVal('txtPseudoAuteur') );
 
                 $this->Auteur->set_dataPaste(array(
                     "ID_AUTEUR" => postVal("txtIdAuteur"),
                     "PRENOM" => $prenom,
                     "NOM" => $nom,
+                    "PSEUDO" => $pseudo,
                     "FLG_SCENAR" => postVal('chkScen') == 'checked' ? 1 : 0,
                     "FLG_DESSIN" => postVal('chkDess') == 'checked' ? 1 : 0,
                     "FLG_COLOR" => (postVal('chkColor') == 'checked' ? 1 : 0),
@@ -1426,7 +1427,12 @@ class Admin extends Bdo_Controller {
                     "NATIONALITE" => postVal('txtNation')
                 ));
                 $this->Auteur->update();
-                echo '<META http-equiv="refresh" content="1; URL=javascript:history.go(-1)">' . "Mise &agrave; jour effectu&eacute;e";
+                if (issetNotEmpty($this->Auteur->error)) {
+                    var_dump($this->Auteur->error);
+                    exit();
+                }
+                echo GetMetaTag(2, "Mise &agrave; jour effectu&eacute;e", (BDO_URL . "admin/editauteur?auteur_id=" . postVal("txtIdAuteur")));
+               
             }
 
 // effacement d'un auteur
@@ -1477,7 +1483,7 @@ class Admin extends Bdo_Controller {
                 ));
                 $this->Auteur->update();
                 $lid = $this->Auteur->ID_AUTEUR;
-                echo GetMetaTag(2, "L'auteur a &eacute;t&eacute; ajout&eacute;", (BDO_URL . "admin/editauteur?auteur_id=" . $lid));
+                //echo GetMetaTag(2, "L'auteur a &eacute;t&eacute; ajout&eacute;", (BDO_URL . "admin/editauteur?auteur_id=" . $lid));
             }
 
 // AFFICHER UN AUTEUR
