@@ -184,6 +184,21 @@ $page = $view->getHelper('pagination');
                 <a href="#selcolumn"  id="inline" >Afficher/Masquer les colonnes</a>
 
             </div> 
+        
+            <div id="filter" class="dataTables_filter">
+
+                <label>
+
+                    Rechercher:
+
+                    <input class="" type="search" placeholder="" id="l_search" name="l_search" value="<?php echo $view->searchvalue; ?>" />
+                </label>
+
+            </div>
+
+            <input type="hidden" id="sort" name="sort" value="<?php echo $view->sort; ?>" />
+            <input type="hidden" id="order" name="order" value="<?php echo $view->order; ?>" />
+       </form>
             <div style="display:none;"><div id="selcolumn" height="500px">
                    
                         <label>
@@ -219,20 +234,6 @@ $page = $view->getHelper('pagination');
                     <p align="center"><input type="button" value="Ok" onclick="$.fancybox.close();"></p>
                 </div>
             </div>
-            <div id="filter" class="dataTables_filter">
-
-                <label>
-
-                    Rechercher:
-
-                    <input class="" type="search" placeholder="" id="l_search" name="l_search" value="<?php echo $view->searchvalue; ?>" />
-                </label>
-
-            </div>
-
-            <input type="hidden" id="sort" name="sort" value="<?php echo $view->sort; ?>" />
-            <input type="hidden" id="order" name="order" value="<?php echo $view->order; ?>" />
-       
         <table id="t_collection" class="display dataTable">
             <thead>
                 <tr>
