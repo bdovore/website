@@ -1,104 +1,221 @@
-
+<script src="<?php echo BDO_URL;?>jquery/jquery.cookie.js" type="text/javascript"></script>
 <script language ='javascript'>
- var order = "<?php echo $view->order; ?>";
- var column = <?php echo $view->sort ?>;
- 
- 
- 
- $(document).ready(function() {
-    
-    
-   
-   $("#length").on('change', function (e) {
-       /*e.preventDefault();
-       page = $("#page").val();
-       length = $("#length").val();
-       window.location = "./macollection?page="+page+"&length="+length+"&order="+order+"&sort="+column;
-       */
-      $("#f_collection").submit();
-      
-   });
-   
-   var uri = "./mesetageres?";
-   
-   q = param();
-   for (k in q) {
-       if (k.substring(0,4) != "sort" && k.substring(0,5) != "order") {
-           uri += k + "=" + encodeURIComponent( q[k][0]) + "&";
-       }
-   }
+    var order = "<?php echo $view->order; ?>";
+    var column = <?php echo $view->sort ?>;
+    var changeEdition = new Array;
+    $("#length").on('change', function (e) {
+        $("#f_collection").submit();
+    });
+    var uri = "./mesetageres?";
+    q = param();
+    for (k in q) {
+        if (k.substring(0, 4) != "sort" && k.substring(0, 5) != "order") {
+        uri += k + "=" + encodeURIComponent(q[k][0]) + "&";
+        }
+    }
 
-   $("th").each(function () {
+    $("th").each(function () {
         $(this).on("click", function (e) {
-             e.preventDefault();
-             var index = $("th").index(this);
-             
-             length = $("#length").val();
-             if (index + 1 == <?php echo $view->sort ?>) {
-               if (order == "ASC") {
-                   lorder = "DESC";
-               }
-               else {
-                   lorder = "ASC";
-               }
-             } else {
-                 lorder = "ASC";
-             }
-             window.location = uri +"order="+lorder+"&sort="+ (index + 1);
+            e.preventDefault();
+            var index = $("th").index(this);
+            length = $("#length").val();
+            if (index + 1 == <?php echo $view->sort ?>) {
+            if (order == "ASC") {
+            lorder = "DESC";
+            }
+            else {
+            lorder = "ASC";
+            }
+            } else {
+            lorder = "ASC";
+            }
+            window.location = uri + "order=" + lorder + "&sort=" + (index + 1);
         });
-        
-   });
-   
-   $("#t_collection th:eq( <?php echo ($view->sort - 1) ?>)").attr("aria-sort","<?php if ($view->order == 'ASC') {echo "ascending";} else{echo "descending";} ?>");
-   
-   $("#t_collection th:eq( <?php echo ($view->sort - 1) ?> )").addClass( "sorting_"+order.toLowerCase());
-} );
-
-
-</script>
-        
-<?php
-    $ficheAlbum = $view->getHelper('ficheAlbum');
-    $page = $view->getHelper('pagination');
-   
+    });
+    $("#t_collection th:eq( <?php echo ($view->sort - 1) ?>)").attr("aria-sort", "<?php if ($view->order == 'ASC') {
+        echo "ascending";
+        } else {
+            echo "descending";
+        } ?>");
+    $("#t_collection th:eq( <?php echo ($view->sort - 1) ?> )").addClass("sorting_" + order.toLowerCase());
     
+    function changeColumn() {
+            var nb = $('#column>option').length;
+            var pref = "";
+            for (var i = 1; i <= nb; i++) {
+                var col = 'col' + (i + 3);
+                if ($('#column option[value="' + i + '"]').is(':selected')) {
+                    $("td[name='" + col + "']").show();
+                    $("th[name='" + col + "']").show();
+                    pref += "1";
+                } else {
+                $("td[name='" + col + "']").hide();
+                        $("th[name='" + col + "']").hide();
+                        pref += "0";
+                }
+            }
+            $.cookie('prefcollection', pref, { expires: 365 });
+    }
+
+    function addChange (idedition) {
+    // changement dans les forms : on active le boutton enregistrer et on ajoute l'édition à la liste des trucs à changer
+        $("#bsave").button("enable");
+        if (changeEdition.indexOf(idedition) == - 1) {
+             changeEdition[changeEdition.length] = idedition;
+        }
+       
+    }
+    
+    function saveCollection() {
+         $("#save_collection").html("<img src='./script/ajax-loader.gif'>"); 
+         
+         for (var i=0;i< changeEdition.length;i++) {
+                var url = $.bdovore.URL + "Macollection/majcollection?id_edition="+changeEdition[i];
+                
+                url += "&flg_achat="+ ($("#cb_achat_"+changeEdition[i]).is(':checked') ? "O" : "N");
+                url+= "&flg_pret="+($("#cb_pret_"+changeEdition[i]).is(':checked') ? "O" : "N");
+                url+= "&flg_dedicace="+($("#cb_dedicace_"+changeEdition[i]).is(':checked') ? "O" : "N");
+                url+= "&flg_tete="+($("#cb_tete_"+changeEdition[i]).is(':checked') ? "O" : "N");
+                url+= "&flg_cadeau="+ ($("#cb_cadeau_"+changeEdition[i]).is(':checked') ? "O" : "N");
+                url+= "&flg_lu="+ ($("#cb_lu_"+changeEdition[i]).is(':checked') ? "O" : "N");
+                url+= "&date_achat="+$("#date_achat_"+changeEdition[i]).val();
+                url+= "&email_pret="+$("#email_pret_"+changeEdition[i]).val();
+                url+= "&nom_pret="+$("#nom_pret_"+changeEdition[i]).val();
+                url+= "&cote="+$("#prix_"+changeEdition[i]).val();
+                url+= "&comment="+encodeURIComponent($("#remarque_"+changeEdition[i]).val());
+                
+
+
+                $.getJSON(url, function (data) {  });
+         }
+         $("#save_collection").html('<input type="button" value="Enregistrer les modifications" onclick="saveCollection();"/> <br>Données mises à jour !');   
+
+       }
+    
+    $(document).ready(function() {
+        $('.numbersOnly').keyup(function () { 
+            this.value = this.value.replace(/[^0-9\.]/g,'');
+        });
+        $("a#inline").fancybox({
+        'autoDimensions': false,
+                'minHeight': 320,
+                'maxWidth' : 500,
+        });
+                // get coockie preference
+        var pref = "";
+        if (typeof($.cookie('prefcollection')) == "undefined") {
+            pref = "111110000100000";
+        } else {
+            pref = $.cookie('prefcollection');
+        }
+        
+        var nb = pref.length;
+        for (var i = 0; i < nb; i++) {
+            if (pref[i] == "1") {
+                $('#column option[value="' + (i+1) + '"]').prop("selected", true);
+            } else {
+                $('#column option[value="' + (i+1) + '"]').prop("selected", false);
+            }
+        }
+        changeColumn();
+        $("#column").chosen({max_selected_options: 12});
+           
+        $("#bsave").button("disable");
+        $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
+    
+        $(function() {
+            $( "[name='date_achat']" ).datepicker({dateFormat: "dd/mm/yy"});
+        });
+    });
+</script>
+
+
+<?php
+$ficheAlbum = $view->getHelper('ficheAlbum');
+$page = $view->getHelper('pagination');
 ?>
 <div align="center" class="cadre1">
-     <?php echo $page->menuCollection(); ?>
-    
-    
+<?php echo $page->menuCollection(); ?>
+
+
     <div class="middle_title"><h3 >Mes Albums</h3></div>
-    
+
     <b> <?php echo $view->nbr; ?> albums dans la collection. </b>
-        
+
     <br>
-     <input type="hidden" name="page" id="page" value="<?php echo $view->page; ?>" />
+    <input type="hidden" name="page" id="page" value="<?php echo $view->page; ?>" />
     <br>
     <div class="dataTables_wrapper">
         <form id="f_collection" method="GET" action="" >
             <div id="filtre">
                 Filtrer :  
-                E.O :<input id="cb_tete" type="checkbox" value="O" name="cb_tete" onChange='$("#f_collection").submit();' <?php if ($view->eo == "O") echo "checked";  ?>/>
-            Dédicace : <input id="cb_dedicace" type="checkbox" value="O" name="cb_dedicace" onChange='$("#f_collection").submit();'  <?php if ($view->dedicace == "O") echo "checked";  ?> />
-            Cadeau :<input id="cb_cadeau" name="cb_cadeau" type="checkbox" value="O" onChange='$("#f_collection").submit();' <?php if ($view->cadeau == "O") echo "checked";  ?>/>
-            Prêt :<input id="cb_pret" name="cb_pret" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->pret == "O") echo "checked";  ?>/>
-            Non lu :<input id="cb_lu" name="cb_lu" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->non_lu == "O") echo "checked";  ?>/>
+                E.O :<input id="cb_tete" type="checkbox" value="O" name="cb_tete" onChange='$("#f_collection").submit();' <?php if ($view->eo == "O") echo "checked"; ?>/>
+                Dédicace : <input id="cb_dedicace" type="checkbox" value="O" name="cb_dedicace" onChange='$("#f_collection").submit();'  <?php if ($view->dedicace == "O") echo "checked"; ?> />
+                Cadeau :<input id="cb_cadeau" name="cb_cadeau" type="checkbox" value="O" onChange='$("#f_collection").submit();' <?php if ($view->cadeau == "O") echo "checked"; ?>/>
+                Prêt :<input id="cb_pret" name="cb_pret" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->pret == "O") echo "checked"; ?>/>
+                Non lu :<input id="cb_lu" name="cb_lu" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->non_lu == "O") echo "checked"; ?>/>
             </div><br>
             <div id="data_length" class="dataTables_length">
+                Voir : 
                 <label>
 
-                    Voir :  
+
 
                     <select class="" id="length" name="length">
-                        <option value="10" <?php if ($view->length== 10) {echo "selected" ;}?> >  10</option>
-                        <option value="25" <?php if ($view->length== 25) {echo "selected" ;}?>>  25</option>
-                        <option value="50" <?php if ($view->length== 50) {echo "selected" ;}?>>  50</option>
-                        <option value="100" <?php if ($view->length== 100) {echo "selected" ;}?>> 100</option>
+                        <option value="10" <?php if ($view->length == 10) {
+    echo "selected";
+} ?> >  10</option>
+                        <option value="25" <?php if ($view->length == 25) {
+    echo "selected";
+} ?>>  25</option>
+                        <option value="50" <?php if ($view->length == 50) {
+    echo "selected";
+} ?>>  50</option>
+                        <option value="100" <?php if ($view->length == 100) {
+    echo "selected";
+} ?>> 100</option>
                     </select>
 
-                     lignes
+                    lignes
 
-                </label>
+                </label> | 
+                <a href="#selcolumn"  id="inline" >Afficher/Masquer les colonnes</a>
+
+            </div> 
+            <div style="display:none;"><div id="selcolumn" height="500px">
+                   
+                        <label>
+
+                            Colonnes à afficher : 
+
+                            <select multiple class="" style="width: 350px;" size="12" id="column" name="column" onchange='changeColumn();'>
+                                <option value="1" selected >  Tome </option>
+                                <option value="2" selected >  Edition </option>
+                                <option value="3" selected >  Collection </option>
+                                <option value="4" selected >  Scenario </option>
+                                <option value="5" selected >  Dessin </option>                       
+                                <option value="6" selected >  Date d'achat </option>
+                                <option value="7" >  Prix </option>
+                                <option value="8" >  Prêt </option>
+                                <option value="9" >  Cadeau </option>
+                                <option value="10">  Lu </option>
+                                <option value="11">  E.O. </option>
+                                <option value="12">  Dedicace </option>
+                                <option value="13">  Commentaire </option>
+                                <option value="14">Dernier emprunteur</option>
+                                <option value="15">Email</option>
+
+
+                            </select>
+
+
+
+                        </label>
+
+                    
+                    <p>S&eacute;lectionnez les colonnes à afficher dans le tableau de résultat puis cliquez sur "Ok" pour enregistrer vos préférences.</p>
+                    <p align="center"><input type="button" value="Ok" onclick="$.fancybox.close();"></p>
+                </div>
             </div>
             <div id="filter" class="dataTables_filter">
 
@@ -110,72 +227,94 @@
                 </label>
 
             </div>
-               
-                <input type="hidden" id="sort" name="sort" value="<?php echo $view->sort; ?>" />
-                <input type="hidden" id="order" name="order" value="<?php echo $view->order; ?>" />
-        </form>
+
+            <input type="hidden" id="sort" name="sort" value="<?php echo $view->sort; ?>" />
+            <input type="hidden" id="order" name="order" value="<?php echo $view->order; ?>" />
+       
         <table id="t_collection" class="display dataTable">
             <thead>
                 <tr>
-                    
-                    <th class="sorting">Couv.</th>
-                    <th class="sorting">Titre</th>
-                    <th class="sorting">Série</th>
-                    <th class="sorting">Tome</th>
-                    <th class="sorting">Edition</th>
-                   
-                    <th class="sorting">Collection</th>
-                    <th class="sorting">Scenario</th>
-                    <th class="sorting">Dessin</th>
-                    <th class="sorting">Date d'achat</th>
 
+                    <th class="sorting" name="col1">Couv.</th>
+                    <th class="sorting" name="col2">Titre</th>
+                    <th class="sorting" name="col3">Série</th>
+                    <th class="sorting" name="col4">Tome</th>
+                    <th class="sorting" name="col5">Edition</th>
+
+                    <th class="sorting" name="col6">Collection</th>
+                    <th class="sorting" name="col7">Scenario</th>
+                    <th class="sorting" name="col8">Dessin</th>
+                    <th class="sorting" name="col9">Date d'achat</th>
+                    <th class="sorting" name="col10">Prix</th>
+                    <th class="sorting" name="col11">Prêt</th>
+                    <th class="sorting" name="col12">Cadeau</th>
+                    <th class="sorting" name="col13">Lu</th>
+                    <th class="sorting" name="col14">E.O.</th>
+                    <th class="sorting" name="col15">Dedicace</th>
+                    <th class="sorting" name="col16">Commentaire</th>
+                    <th class="sorting" name="col17">Emprunteur</th>
+                    <th class="sorting" name="col18">Email</th>
 
                 </tr>
             </thead>
             <tbody>
-                <?php 
-                $i = 0;
-                foreach ($view->dbs_tome->a_dataQuery as $album) { $i++; ?>
-                <tr class="<?php if($i%2 == 0) {echo "even";} else {echo "odd";}  ?>" role="row">
-                    
-                    <td><?php echo $ficheAlbum->urlAlbum($album,"couvSmall", true); ?></td>
-                    <td><?php echo $ficheAlbum->urlAlbum($album,"albTitle", true); ?></td>
-                    <td><?php echo $ficheAlbum->urlSerie($album); ?></td>
-                    <td><?php echo $album->NUM_TOME; ?></td>
-                    <td><?php echo $album->NOM_EDITION; ?></td>
-                    
-                    <td><?php echo $album->NOM_COLLECTION; ?></td>
-                    <td><?php echo $album->scpseudo ; ?></td>
-                    <td><?php echo $album->depseudo ; ?></td>
-                    <td><?php echo date('d/m/Y',strtotime($album->DATE_ACHAT)); ?></td>
+<?php
+    $i = 0;
+    foreach ($view->dbs_tome->a_dataQuery as $album) {
+        $i++;
+        ?>
+      <tr class="<?php if ($i % 2 == 0) {
+          echo "even";
+        } else {
+            echo "odd";
+        } ?>" role="row">
 
+                        <td  name="col1"><?php echo $ficheAlbum->urlAlbum($album, "couvSmall", true); ?></td>
+                        <td  name="col2"><?php echo $ficheAlbum->urlAlbum($album, "albTitle", true); ?></td>
+                        <td  name="col3"><?php echo $ficheAlbum->urlSerie($album); ?></td>
+                        <td  name="col4"><?php echo $album->NUM_TOME; ?></td>
+                        <td  name="col5"><?php echo $album->NOM_EDITION; ?></td>
 
-                </tr>
-               <?php 
+                        <td  name="col6"><?php echo htmlspecialchars( $album->NOM_COLLECTION); ?></td>
+                        <td  name="col7"><?php echo $album->scpseudo; ?></td>
+                        <td  name="col8"><?php echo $album->depseudo; ?></td>
+                        <td  name="col9"><input name="date_achat" id="date_achat_<?php echo $album->ID_EDITION; ?>" value="<?php echo date('d/m/Y', strtotime($album->DATE_ACHAT)); ?>" size="10" maxlength="10" type="text" onchange="addChange(<?php echo $album->ID_EDITION; ?>);">	</td>
+                        <td  name="col10"><input name="prix" class="numbersOnly" id="prix_<?php echo $album->ID_EDITION; ?>" value="<?php echo $album->cote; ?>" size="4" maxlength="8" type="text" onchange="addChange(<?php echo $album->ID_EDITION; ?>);"></td>
+                        <td  name="col11"><input name="cb_pret" id="cb_pret_<?php echo $album->ID_EDITION; ?>" value="checkbox" type="checkbox" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" <?php if ($album->FLG_PRET == 'O') echo "checked"; ?>> </td>
+                        <td  name="col12"><input name="cb_cadeau" id="cb_cadeau_<?php echo $album->ID_EDITION; ?>" value="checkbox" type="checkbox" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" <?php if ($album->FLG_CADEAU == 'O') echo "checked"; ?>> </td>
+                        <td  name="col13"><input name="cb_lu" id="cb_lu_<?php echo $album->ID_EDITION; ?>" value="checkbox" type="checkbox" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" <?php if ($album->FLG_LU == 'O') echo "checked"; ?>> </td>
+                        <td  name="col14"><input name="cb_tete" id="cb_tete_<?php echo $album->ID_EDITION; ?>" value="checkbox" type="checkbox" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" <?php if ($album->FLG_TETE == 'O') echo "checked"; ?>> </td>
+                        <td  name="col15"><input name="cb_dedicace" id="cb_dedicace_<?php echo $album->ID_EDITION; ?>" value="checkbox" type="checkbox" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" <?php if ($album->FLG_DEDICACE == 'O') echo "checked"; ?>> </td>
+                        <td  name="col16"><textarea name="remarque" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" id="remarque_<?php echo $album->ID_EDITION; ?>" class="champ_commentaire"><?php echo $album->comment; ?></textarea> </td>
+                        <td  name="col17"> <input name="nom_pret" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" id="nom_pret_<?php echo $album->ID_EDITION; ?>" value="<?php echo $album->NOM_PRET; ?>" size="15" maxlength="100" type="text" > </td>
+                        <td  name="col18"> <input name="email_pret" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" id="email_pret_<?php echo $album->ID_EDITION; ?>" value="<?php echo $album->EMAIL_PRET; ?>" size="15" maxlength="100" type="text"> </td>
 
-                }     
-                ?>
+                    </tr>
+    <?php
+}
+?>
             </tbody>
 
         </table>
-            <div align="center">
-              <?php 
-                    $nbpage = ceil($view->nbr / $view->length);
-                    $uri = "";
-                    $a_uri = explode("?",$_SERVER['REQUEST_URI']);
-                    $a_uri = explode("&", $a_uri [1]);
-                    foreach($a_uri as $key => $value) {
-                        
-                        if (substr($a_uri[$key],0,4) <> "page" and $a_uri[$key] <> "") {
-                            $uri .= "&".$a_uri[$key];
-                        }
-                        
-                    }
-                    //$url = BDO_URL."macollection/mesetageres?length=".$view->length."&order=".$view->order."&sort=".$view->sort."&";
-                    $url = BDO_URL."macollection/mesetageres?".$uri."&";
-                   
-                    echo $page->paginate($url,"page=",$nbpage,$view->page);
-                ?>
-            </div>
+        <div align="center" id="save_collection"><input type="button" id="bssave" value="Enregistrer les modifications" onclick="saveCollection();"/></div>
+
+        <div align="center">
+<?php
+$nbpage = ceil($view->nbr / $view->length);
+$uri = "";
+$a_uri = explode("?", $_SERVER['REQUEST_URI']);
+$a_uri = explode("&", $a_uri [1]);
+foreach ($a_uri as $key => $value) {
+
+    if (substr($a_uri[$key], 0, 4) <> "page" and $a_uri[$key] <> "") {
+        $uri .= "&" . $a_uri[$key];
+    }
+}
+//$url = BDO_URL."macollection/mesetageres?length=".$view->length."&order=".$view->order."&sort=".$view->sort."&";
+$url = BDO_URL . "macollection/mesetageres?" . $uri . "&";
+
+echo $page->paginate($url, "page=", $nbpage, $view->page);
+?>
+        </div>
     </div>
 </div>

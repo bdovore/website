@@ -8,7 +8,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 	<script language="JavaScript">
 		
                 $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
-    
+                
 		$(function() {
                     $( "#date_achat" ).datepicker({dateFormat: "dd/mm/yy"});
                 });
@@ -210,7 +210,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 					Date d'achat : <span class="petite_police">(dd/mm/aaaa)</span>	<input name="date_achat" id="date_achat" value="" size="10" maxlength="10" type="text">	
 	
 										
-					Prix/cote :<input name="prix" id="prix" value="" size="4" maxlength="8" type="text">
+					Prix/cote :<input class="numbersOnly" name="prix" id="prix" value="" size="4" maxlength="8" type="text">
                                     </td>
                                 </tr>	
                                     <tr>
@@ -384,5 +384,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     }
     getInfoCollection ();
    <?php } ?>
-         
+         $('.numbersOnly').keyup(function () { 
+                       this.value = this.value.replace(/[^0-9\.]/g,'');
+                   });
 </script>
