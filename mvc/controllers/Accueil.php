@@ -19,7 +19,7 @@ class Accueil extends Bdo_Controller
         // TODO : créer model News, gérer le cache des top directement dans Accueil
        
         $this->loadModel('Actus');
-
+        $this->loadModel("Tome");
         $this->view->set_var(array(
                 'ACTUAIR' => $this->Actus->actuAir(),
                 'LASTAJOUT' => $this->Actus->lastAjout()
@@ -33,6 +33,7 @@ class Accueil extends Bdo_Controller
                         'a_lastManga' => $this->lastCommentaires(3,"Mangas"),
                         'a_lastComics' => $this->lastCommentaires(3,"Comics"),
                         'a_futurSorties' => $this->futurSorties(6),
+                        'nbTome' => $this->Tome->getNbTotalTome(),
                         'PAGETITLE' => "BDOVORE.com - gestion de collection de BD, actualité BD et forums BD"
                 ));
         

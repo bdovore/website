@@ -403,4 +403,10 @@ class Tome extends Bdo_Db_Line
          $query = "DELETE FROM bd_edition WHERE id_tome=" . intval($id_tome);
          Db_query($query);
     }
+    
+    public static function getNbTotalTome() {
+        // fournit le count des Tome en base
+        $nb = Db_CountRow("SELECT * FROM bd_tome");
+        return $nb;
+    }
 }
