@@ -292,6 +292,7 @@ class Export extends Bdo_Controller {
                             }
 
                             if ($infoserie) {
+                                $infoserie = false;
                                 // info serie
                                 $fini = $tome->FLG_FINI;
                                 $genre = $tome->NOM_GENRE;
