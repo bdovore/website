@@ -194,7 +194,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                         
                                         $file_headers = @get_headers("http://images.izneo.com/page/".$view->tome->EAN_EDITION."/300/1.jpg");
                                         
-                                        if($file_headers[0] != 'HTTP/1.0 404 Not Found') { 
+                                        if($file_headers[0] != 'HTTP/1.0 404 Not Found' and $file_headers[0] != 'HTTP/1.1 404 Not Found') { 
                                         ?>
                                         <div id="slider-izneo" >
                                             <br>
