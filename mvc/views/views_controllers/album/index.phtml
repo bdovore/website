@@ -5,6 +5,10 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 
 ?>
+<script src="<?php echo BDO_URL;?>jquery/AnythingSlider/js/jquery.anythingslider.min.js" type="text/javascript"></script>
+<!--
+
+-->
 	<script language="JavaScript">
 		
                 $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
@@ -113,10 +117,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             }
 	</script>
 
+
 <div class="conteneuralb">
       
 			<div class="alb-img">
-				<img src="<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : "default.png";?>" width="160" border="1" name="imgEdition" id="imgEdition" alt="couverture"> 
+				<img src="<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : "default.png";?>" width="180" border="1" name="imgEdition" id="imgEdition" alt="couverture"> 
                                 <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
                                 <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION;?></div>
                                 <div id="sponsor" align="center"><?php echo $ficheAlbum->getSponsor($view->tome); ?></div>
@@ -175,7 +180,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                         </div>
 		
 	</div>		
-    
+                    
     
         <div class="synopsis">
             <?php if ($view->tome->HISTOIRE_TOME <> "") { ?>
@@ -185,8 +190,48 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                         <?php echo nl2br($view->tome->HISTOIRE_TOME);?>
                                         </font>
             <?php } ?>
+                                        <?php // test existence d'image Izneo 
+                                        
+                                        $file_headers = @get_headers("http://images.izneo.com/page/".$view->tome->EAN_EDITION."/300/1.jpg");
+                                        
+                                        if($file_headers[0] != 'HTTP/1.0 404 Not Found') { 
+                                        ?>
+                                        <div id="slider-izneo" >
+                                            <br>
+                                            <strong>Preview avec <img src="http://www.izneo.com/images/desktop/logo-izneo.png" width="80px" style="vertical-align:middle;"></strong>  </div>
+                                        <script type="text/javascript">
+                                        $(window).load(function(){
+                                                            $("head").append($("<link/>").attr("rel", "stylesheet").attr("href", "http://www.izneo.com/css/anythingslider.css"));
+                                                            var container = $("#slider-izneo");
+                                                            container.width(300);
+                                                            var wrapper = $("<div/>");
+                                                            container.append(wrapper);
+                                                            wrapper.hide();
+                                                            wrapper.width(340);
+                                                            var list = $("<ul/>");
+                                                            wrapper.append($("<a/>").attr("href", "http://player.izneo.com/read/<?php echo $view->tome->EAN_EDITION;?>-<?php echo IZNEO_ID; ?>.html").attr("target","_blank").append(list));list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/1.jpg\" / /></li>");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/2.jpg\" / /></li>");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/3.jpg\" / /></li>");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/4.jpg\" / /></li>");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/5.jpg\" / /></li>");var launchSlider = function() {list.anythingSlider({resizeContents : false,
+                                                                                        buildNavigation : true,
+                                                                                        aspectRatio : true,
+                                                                autoPlay     : true,
+                                                                hashTags     : false,
+                                                                playRtl      : false,
+                                                                width        : 300
+                                                            });
+                                                                    };var i=0; list.find("img").load(function(){
+                                            i++;
+                                            if (i === 5) {
+                                                wrapper.show();
+                                                launchSlider();
+                                            }
+                                        })});
+                                        
+                                        </script>
+                                        <?php } ?>
                                         <br>   <a href="<?php echo BDO_URL;?>simil?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">Vous devriez aimer aussi...</a> 
-                                        <br><div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+                                        
+                                        <br>
+                                        <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+                                            
                                             <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><i>Une erreur sur cette fiche ou votre édition est différente ? Vous pouvez 
                                                     <a href="<?php echo BDO_URL; ?>Proposition?id_edition=<?php echo $edition_selected; ?>" >
 								<b>proposer une correction</b>  
