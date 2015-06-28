@@ -121,7 +121,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 <div class="conteneuralb">
       
 			<div class="alb-img">
-				<img src="<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : "default.png";?>" width="180" border="1" name="imgEdition" id="imgEdition" alt="couverture"> 
+                            <div id="couv"></div>
                                 <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
                                 <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION;?></div>
                                 <div id="sponsor" align="center"><?php echo $ficheAlbum->getSponsor($view->tome); ?></div>
@@ -196,26 +196,26 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                         
                                         if($file_headers[0] != 'HTTP/1.0 404 Not Found' and $file_headers[0] != 'HTTP/1.1 404 Not Found') { 
                                         ?>
-                                        <div id="slider-izneo" >
-                                            <br>
-                                            <strong>Preview avec <img src="http://www.izneo.com/images/desktop/logo-izneo.png" width="80px" style="vertical-align:middle;"></strong>  </div>
-                                        <script type="text/javascript">
+                                         <script type="text/javascript">
                                         $(window).load(function(){
                                                             $("head").append($("<link/>").attr("rel", "stylesheet").attr("href", "http://www.izneo.com/css/anythingslider.css"));
-                                                            var container = $("#slider-izneo");
-                                                            container.width(300);
+                                                            var container = $("#couv");
+                                                            container.width(200);
                                                             var wrapper = $("<div/>");
                                                             container.append(wrapper);
                                                             wrapper.hide();
-                                                            wrapper.width(340);
+                                                            wrapper.width(240);
                                                             var list = $("<ul/>");
-                                                            wrapper.append($("<a/>").attr("href", "http://player.izneo.com/read/<?php echo $view->tome->EAN_EDITION;?>-<?php echo IZNEO_ID; ?>.html").attr("target","_blank").append(list));list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/1.jpg\" / /></li>");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/2.jpg\" / /></li>");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/3.jpg\" / /></li>");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/4.jpg\" / /></li>");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/5.jpg\" / /></li>");var launchSlider = function() {list.anythingSlider({resizeContents : false,
+                                                            wrapper.append($("<a/>").attr("href", "http://player.izneo.com/read/<?php echo $view->tome->EAN_EDITION;?>-<?php echo IZNEO_ID; ?>.html").attr("target","_blank").append(list));list.append("<li><img src='<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : 'default.png';?>' width='180' border='1' name='imgEdition' id='imgEdition' alt='couverture'> ");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/1.jpg\" / width='180' /></li>");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/2.jpg\" / width='180' /></li>");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/3.jpg\" / width='180' /></li>");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/4.jpg\" / width='180' /></li>");list.append("<li><img src=\"http://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/5.jpg\" / width='180' /></li>");var launchSlider = function() {list.anythingSlider({resizeContents : false,
                                                                                         buildNavigation : true,
+                                                                                        buildArrows         : false,
                                                                                         aspectRatio : true,
-                                                                autoPlay     : true,
+                                                                autoPlay     : false,
                                                                 hashTags     : false,
                                                                 playRtl      : false,
-                                                                width        : 300
+                                                                toggleArrows        : true,
+                                                                width        : 200,
+                                                                buildStartStop      : false, 
                                                             });
                                                                     };var i=0; list.find("img").load(function(){
                                             i++;
@@ -224,8 +224,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                                 launchSlider();
                                             }
                                         })});
-                                        
+                                        $("#sponsor").append($("<a/>").attr("href", "http://player.izneo.com/read/<?php echo $view->tome->EAN_EDITION;?>-<?php echo IZNEO_ID; ?>.html").attr("target","_blank").append("<img src='http://www.izneo.com/images/desktop/logo-izneo.png' width='80' >"));
                                         </script>
+                                        <?php } 
+                                        else { ?>
+                                       <script> $("#couv").append("<li><img src='<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : 'default.png';?>' width='180' border='1' name='imgEdition' id='imgEdition' alt='couverture'> ");</script>
                                         <?php } ?>
                                         <br>   <a href="<?php echo BDO_URL;?>simil?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">Vous devriez aimer aussi...</a> 
                                         
