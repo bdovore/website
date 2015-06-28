@@ -932,7 +932,7 @@ function urlAlbum ($o_album, $class = 'couvBig')
         return '#" onclick="window.open(' . "'" . BDO_URL . "Album?id_tome=" . $o_album->ID_TOME . "','Album','width=600,height=600,scrollbars=1')" . ';return false;';
     }
     else {
-        $html = '<a class="fancybox fancybox.iframe {width:600,height:400}" 
+        $html = '<a class="fancybox fancybox.iframe {width:600,height:600}" 
                 href="' . BDO_URL . 'Album?id_tome=' . $o_album->ID_TOME . '" title="' . $o_album->TITRE_TOME . '">';
         switch ($class) {
             case "couvBig":
