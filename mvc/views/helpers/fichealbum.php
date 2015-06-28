@@ -225,7 +225,7 @@ class FicheAlbum {
         $x = getenv("HTTP_USER_AGENT");
         
         if (strpos($x, 'MSIE 7.0') || strpos($x, 'MSIE 6.0')) {
-            return '#" onclick="window.open(' . "'" . BDO_URL . $id_link . "','Album','width=600,height=600,scrollbars=1')" . ';return false;';
+            return '#" onclick="window.open(' . "'" . BDO_URL . $id_link . "','Album','width=600,height=700,scrollbars=1')" . ';return false;';
         } else {
             // titre html
             if ($o_tome->NOM_SERIE AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME))) {
@@ -241,7 +241,7 @@ class FicheAlbum {
                 $titleHtml = $o_tome->TITRE_TOME;
             }
 
-            $html = '<a class="fancybox fancybox.iframe {width:600,height:500}"
+            $html = '<a class="fancybox fancybox.iframe {width:600,height:600}"
                 href="' . BDO_URL . $id_link . '" title="' . $titleHtml . '">';
             
             switch ($class) {
