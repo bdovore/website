@@ -161,23 +161,37 @@ class FicheAlbum {
         return $html;
     }
     
-    public function serie($o_serie) {
+    public function serie($o_serie, $size="small") {
         if (is_array($o_serie)) {
             $o_serie = (object) $o_serie;
         }
+        if ($size == "big") {
+            $couv = "couvBig";
+        } else {
+            $couv = "couvSmall";
+        }
+        $html = '
+            <div class="cadre1 fiche_big">
+            <div style="float:left" class="mw50">
+            ' . '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="'.$couv.'" style="float:left;margin=2px">' . '
+            </div>
+            <div style="float:left;margin-left: 5px;" class="mw50">';
 
-        $html = '<div class="cadre1">';
+        
 
-        if ($o_serie->IMG_COUV_SERIE)
-            $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="couvSmall" style="float:left;margin=2px">';
-
-        $html .= '<div><table><tr><td class="fiche_h2l">';
-        $html .= $this->urlSerie($o_serie);
-        $html .= '</td></tr>';
+        
+        $html .= "<strong>".$this->urlSerie($o_serie)."</strong><br>";
+        if ($o_serie->NB_NOTE_SERIE > 0 and $size == "big") {
+             $html .= '<div align="center" id=noteSerie' . $o_serie->ID_SERIE . '> </div>';
+            $html .= "<script>$('#noteSerie" . $o_serie->ID_SERIE . "').raty({score: " . $o_serie->NOTE_SERIE/2.0 . ", readOnly: true});</script>";
+        
+        }
+        $html.="<p class='fiche_album'>";
 
         // genre
         if ($o_serie->NOM_GENRE) {
-            $html .= '<tr><td class="fiche_h3l">Genre : <i>' . $o_serie->NOM_GENRE . '</i></td></tr>';
+            if ($size == "big") $html.= "Genre : ";
+            $html .= '<i>' . $o_serie->NOM_GENRE . '</i><br>';
         }
 
         //avancement 0: Finie, 1: En cours, 2: One-shot, 3:Interrompue
@@ -188,9 +202,13 @@ class FicheAlbum {
                 2 => 'One-shot',
                 3 => 'Interrompue',
             );
-            $html .= '<tr><td class="fiche_h3l">Avancement : ' . $a_avancement[$o_serie->FLG_FINI_SERIE] . '</td></tr>';
+            if ($size == "big") $html.= "Avancement : ";
+            $html .= "<i>" .$a_avancement[$o_serie->FLG_FINI_SERIE] . '</i><br>';
         }
-        $html .= '</table>';
+        
+        if ($size== "big") {
+            $html.= "Albums dans la base : ".$o_serie->NB_ALBUM;
+        }
         $html .= '</div><hr class="expSep" />';
         $html .= '</div>';
 
