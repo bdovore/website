@@ -100,6 +100,8 @@ class Leguide extends Bdo_Controller
             case 1: // top des votes
                 {
                     $title .= "le top des votes";
+                    // force le type de liste
+                    $_GET['rb_list'] = 'album';
                     if ($_GET['rb_list'] == 'serie')
                     {
                         $this->loadModel('Serie');
@@ -132,6 +134,7 @@ class Leguide extends Bdo_Controller
             case 2: // Les plus repandus
                 {
                     $title .= "les plus répandus";
+                    $_GET['rb_list'] = 'serie';
                     if ($_GET['rb_list'] == 'serie')
                     {
                         $this->loadModel('Serie');
