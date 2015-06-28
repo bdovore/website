@@ -173,7 +173,7 @@ class FicheAlbum {
         $html = '
             <div class="cadre1 fiche_big">
             <div style="float:left" class="mw50">
-            ' . '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="'.$couv.'" style="float:left;margin=2px">' . '
+            ' . ($o_serie->IMG_COUV_SERIE ? '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="'.$couv.'" style="float:left;margin=2px">' : "") . '
             </div>
             <div style="float:left;margin-left: 5px;" class="mw50">';
 
