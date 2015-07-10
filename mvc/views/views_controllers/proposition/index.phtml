@@ -299,6 +299,22 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                     </tr>
 
+                    <tr bordercolor="#DAC1B3">
+
+                      <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1">&nbsp;</font></td>
+
+                      <td> <input name="txtColorAltId" id="txtColorAltId"  value="<?php echo $view->edition->ID_COLOR_ALT; ?>" size="5" type="hidden">
+                      <span id="spColorAlt"></span>
+                      </td>
+
+                      <td> <input name="txtColorAlt" id="txtColorAlt" value="<?php echo $view->edition->coapseudo; ?>" size="40" class="flat" type="text">
+
+                      </td>
+
+                     
+
+                    </tr>
+
                   </tbody>
 
                 </table>
@@ -454,6 +470,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     addAutocomplete("txtDessi","spDessi","txtDessiId","<?php echo BDO_URL; ?>getjson?data=Auteur");
     
      addAutocomplete("txtColor","spColor","txtColorId","<?php echo BDO_URL; ?>getjson?data=Auteur");
+     addAutocomplete("txtColorAlt","spColorAlt","txtColorAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
       <?php } ?>
      addAutocomplete("txtEditeur","spEditeur","txtEditeurId","<?php echo BDO_URL; ?>getjson?data=Editeur");
      

@@ -124,6 +124,8 @@ class Proposition extends Bdo_Controller {
                 "DESSIN_ALT" => postVal("txtDessiAlt"),
                 "ID_COLOR" => postValInteger("txtColorId"),
                 "COLOR" => postVal("txtColor"),
+                "ID_COLOR_ALT" => postValInteger("txtColorAltId"),
+                "COLOR_ALT" => postVal("txtColorAlt"),
                 "ID_COLLECTION" => postValInteger("txtCollecId"),
                 "COLLECTION" => postVal("txtCollec"),
                 "EAN" => postVal("txtEAN"),
