@@ -987,7 +987,7 @@ function clean_url($texte) {
 	$texte = strtolower($texte);
  
 	//Suppression des espaces et caracteres spéciaux
-	$texte = str_replace(" ",'_',$texte);
+	$texte = str_replace(" ",'-',$texte);
 	$texte = preg_replace('#([^a-z0-9-])#','-',$texte);
  
 	//Suppression des tirets multiples

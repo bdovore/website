@@ -1181,7 +1181,7 @@ table.list_album tr {
     }
 }
 
-@media screen and (max-width: 920px) {
+@media screen and (max-width: 920px), screen and (max-device-width: 667px) {
     .colleft {
         float: left;
         width: 200%;
