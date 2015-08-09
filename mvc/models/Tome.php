@@ -409,4 +409,65 @@ class Tome extends Bdo_Db_Line
         $nb = Db_CountRow("SELECT * FROM bd_tome");
         return $nb;
     }
+    
+    public function getAlbumAsScenariste($id_auteur, $limit = "") {
+        // filtre et renvoie la liste des albums d'un auteur en tant que scénariste
+        $order = " order by NOM_SERIE, NUM_TOME";
+        return $this->load("c"," WHERE bd_tome.id_scenar = ".intval($id_auteur). " OR bd_tome.id_scenar_alt = ".intval($id_auteur).$order." ".$limit);
+        
+    }
+    
+    public function getAlbumAsDessinateur($id_auteur, $limit = "") {
+        // filtre et renvoie la liste des albums d'un auteur en tant que dessinateur
+       
+        $order = " order by NOM_SERIE, NUM_TOME";
+        return $this->load("c"," WHERE bd_tome.id_dessin = ".intval($id_auteur). " OR bd_tome.id_dessin_alt = ".intval($id_auteur).$order." ".$limit);
+        
+    }
+    
+    public function getAlbumAsColoriste($id_auteur, $limit = "") {
+        // filtre et renvoie la liste des albums d'un auteur en tant que coloriste
+       
+        $order = " order by NOM_SERIE, NUM_TOME";
+        return $this->load("c"," WHERE bd_tome.id_color = ".intval($id_auteur). " OR bd_tome.id_color_alt = ".intval($id_auteur).$order." ".$limit);
+        
+    }
+    
+    public function getNbAlbumForAuteur($id_auteur,$activite=0) {
+        // retourne le nombre d'album pour un auteur, et eventuellement pour l'activité donnée
+        switch ($activite) {
+            case 0: 
+                $where = "WHERE bd_tome.id_scenar = ".intval($id_auteur). " OR bd_tome.id_scenar_alt  = ".intval($id_auteur). " OR bd_tome.id_dessin = ".intval($id_auteur). 
+                 " OR bd_tome.id_dessin_alt = ".intval($id_auteur) . " OR bd_tome.id_color = ".intval($id_auteur). " OR bd_tome.id_color_alt = ".intval($id_auteur);
+                break;
+            case 1: 
+                // scenariste
+                $where = "WHERE bd_tome.id_scenar = ".intval($id_auteur). " OR bd_tome.id_scenar_alt  = ".intval($id_auteur);                
+                break;
+            
+            case 2 : 
+                // dessinateur
+                $where = "WHERE  bd_tome.id_dessin = ".intval($id_auteur)." OR bd_tome.id_dessin_alt = ".intval($id_auteur) ;
+                
+                break;
+            
+            case 3 : 
+                // coloriste
+                $where = "WHERE bd_tome.id_color = ".intval($id_auteur). " OR bd_tome.id_color_alt = ".intval($id_auteur); 
+                break;
+        }
+         $nb = Db_CountRow($this->select().$where );
+    
+         return $nb;
+    }
+    
+    public function getLastAlbumForAuteur($id_auteur, $nb=5) {
+        // retourne les $nb derniers ajout dans la bae pour l'auteur
+       $where = " WHERE bd_tome.id_scenar = ".intval($id_auteur). " OR bd_tome.id_scenar_alt  = ".intval($id_auteur). " OR bd_tome.id_dessin = ".intval($id_auteur). 
+                 " OR bd_tome.id_dessin_alt = ".intval($id_auteur) . " OR bd_tome.id_color = ".intval($id_auteur). " OR bd_tome.id_color_alt = ".intval($id_auteur);
+       
+       $order = " ORDER BY bd_tome.ID_TOME desc";
+       return $this->load("c",$where.$order." limit 0,".intval($nb));
+    }
+    
 }

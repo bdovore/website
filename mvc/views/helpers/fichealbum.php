@@ -31,10 +31,10 @@ class FicheAlbum {
 
         $html = '
             <div class="cadre1 fiche_small">
-            <div style="float:left" class="mw50">
+            <div style="float:left;margin-right:5px;" class="mw50">
             ' . $this->urlAlbum($o_tome, 'couvSmall') . '
             </div>
-            <div style="float:left;font-size:0.9em" class="mw50">';
+            <div style="float:left;font-size:0.9em;" class="mw50">';
         
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
@@ -124,7 +124,9 @@ class FicheAlbum {
         }
         if ($o_tome->scpseudo) {
             $html .= 'Auteur(s) : ';
-            $html .= '<i>' . $o_tome->scpseudo . ($o_tome->ID_SCENAR == $o_tome->ID_DESSIN ? '' : " / " . $o_tome->depseudo ) . '</i><br>';
+            $url_scenar = $this->urlAuteur(array("ID_AUTEUR" => $o_tome->ID_SCENAR, "PSEUDO" =>$o_tome->scpseudo ));
+            $url_dessin = $this->urlAuteur(array("ID_AUTEUR" => $o_tome->ID_DESSIN, "PSEUDO" =>$o_tome->depseudo ));
+            $html .= '<i>' . $url_scenar . ($o_tome->ID_SCENAR == $o_tome->ID_DESSIN ? '' : " / " . $url_dessin ) . '</i><br>';
         }
         
         // editeur
@@ -319,7 +321,27 @@ class FicheAlbum {
         return $html;
     }
     
-    
+    public function getURLAuteur($o_auteur) {
+         if (is_array($o_auteur)) {
+            $o_auteur = (object) $o_auteur;
+        }
+         $url =  BDO_URL . 'auteur-bd-' . $o_auteur->ID_AUTEUR . '-' .clean_url($o_auteur->PSEUDO);
+         return $url;
+    }
+    public function urlAuteur($o_auteur,$target="") {
+        if (is_array($o_auteur)) {
+            $o_auteur = (object) $o_auteur;
+        }
+       $url =  $this->getURLAuteur($o_auteur);
+        $html = '<a href="' . $url.'" title="Tous les albums de ' . $o_auteur->PSEUDO . '"' .( $target ? 'target="'. $target.'"' : '')  .'>
+            ' . $o_auteur->PSEUDO . '</a>';
+
+        if (Bdo_Cfg::user()->minAccesslevel(1)) {
+            $html .= '&nbsp;&nbsp;<a class="fancybox fancybox.iframe {width:600,height:600}" href="' .BDO_URL .'admin/editauteur?auteur_id=' . $o_auteur->ID_AUTEUR . '"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
+        }
+
+        return $html;
+    }
 
     public function linkCollection($o_tome) {
         // fonction pour ajouter les liens d'ajouts dans la collection

@@ -66,6 +66,7 @@ class Search extends Bdo_Controller
         foreach ($this->Auteur->dbSelect->a_dataQuery as $obj) {
             $arr[] = (object) array(
                     'label' => $obj->PSEUDO,
+                "ID_AUTEUR" => $obj->ID_AUTEUR,
                     'category' => "Auteurs"
             );
         }

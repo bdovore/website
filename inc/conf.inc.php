@@ -64,6 +64,11 @@ else {
         $request_uri = "seriebd";
         $_GET["id_serie"] = $match[1];
     }
+    // regex pour URLs du type auteur-bd-id-...
+    if (preg_match('/^auteur-bd[-]*(\d+)/', $request_uri, $match)) {
+        $request_uri = "auteurbd";
+        $_GET["id_auteur"] = $match[1];
+    }
 
     if ($request_uri) {
         $params = explode('/', $request_uri);
