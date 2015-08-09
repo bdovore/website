@@ -332,12 +332,16 @@ class FicheAlbum {
         if (is_array($o_auteur)) {
             $o_auteur = (object) $o_auteur;
         }
-       $url =  $this->getURLAuteur($o_auteur);
-        $html = '<a href="' . $url.'" title="Tous les albums de ' . $o_auteur->PSEUDO . '"' .( $target ? 'target="'. $target.'"' : '')  .'>
-            ' . $o_auteur->PSEUDO . '</a>';
+        if ($o_auteur->ID_AUTEUR == 885 OR $o_auteur->ID_AUTEUR < 4 ) {
+            $html = htmlspecialchars($o_auteur->PSEUDO);
+        } else {
+        $url =  $this->getURLAuteur($o_auteur);
+         $html = '<a href="' . $url.'" title="Tous les albums de ' . $o_auteur->PSEUDO . '"' .( $target ? 'target="'. $target.'"' : '')  .'>
+             ' . $o_auteur->PSEUDO . '</a>';
 
-        if (Bdo_Cfg::user()->minAccesslevel(1)) {
-            $html .= '&nbsp;&nbsp;<a class="fancybox fancybox.iframe {width:600,height:600}" href="' .BDO_URL .'admin/editauteur?auteur_id=' . $o_auteur->ID_AUTEUR . '"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
+         if (Bdo_Cfg::user()->minAccesslevel(1)) {
+             $html .= '&nbsp;&nbsp;<a class="fancybox fancybox.iframe {width:600,height:600}" href="' .BDO_URL .'admin/editauteur?auteur_id=' . $o_auteur->ID_AUTEUR . '"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
+         }
         }
 
         return $html;
