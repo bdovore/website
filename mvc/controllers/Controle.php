@@ -92,7 +92,7 @@ class Controle extends Bdo_Controller
                     bd_auteur.`PSEUDO`=withDoublon.`PSEUDO`
                     AND bd_auteur.`PRENOM`=withDoublon.`PRENOM`
                     AND bd_auteur.`NOM`=withDoublon.`NOM`",
-                    "url" => BDO_URL . "admin/adminauteurs.php?auteur_id=",
+                    "url" => BDO_URL . "admin/editauteur?auteur_id=",
                     "colUrl" => "ID_AUTEUR",
                 ),
                 array(
