@@ -224,7 +224,7 @@ class Actus
 	<div id="last" class="right fond">
 	<div class="middle_title">
 	<h3><a href="' . BDO_URL . 'leguide?rb_mode=6&rb_list=album&submitGuide=Envoyer">Derniers ajouts</a>
-	<a href="' . BDO_URL . 'rss.php">
+	<a href="' . BDO_URL . 'rss">
 	<img src="' . BDO_URL_IMAGE . 'site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l\'actualité des ajouts d\'albums sur le site grace à ce fil rss" />
 	</a></h3>
 	</div>

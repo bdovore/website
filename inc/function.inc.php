@@ -1003,3 +1003,12 @@ function clean_url($texte) {
  
 	return $texte;
 }
+function clean_rss ($str) {
+    // remplace les caractères " par '
+    $str_ret = $str;
+    $str_ret = str_replace ( chr(0x92), '\'',  $str_ret );	
+    $str_ret = str_replace ( chr(0x85), '\'',  $str_ret );	
+    $str_ret = str_replace ( chr(0x9c), '\'',  $str_ret );
+    return $str_ret;
+	
+}

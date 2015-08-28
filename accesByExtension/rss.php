@@ -45,9 +45,9 @@ while ($DB->next_record()) {
 
 	$titre = str_replace ( chr(0x92), '\'',  $titre );
 	$histoire = str_replace ( chr(0x92), '\'',  $histoire );
-    $titre = str_replace ( chr(0x85), '\'',  $titre );
+        $titre = str_replace ( chr(0x85), '\'',  $titre );
 	$histoire = str_replace ( chr(0x85), '\'',  $histoire );
-    $titre = str_replace ( chr(0x9c), '\'',  $titre );
+        $titre = str_replace ( chr(0x9c), '\'',  $titre );
 	$histoire = str_replace ( chr(0x9c), '\'',  $histoire );
 
 	echo '<item>'."\n";

@@ -1,0 +1,21 @@
+<atom:link href="http://www.bdovore.com/rss/dernieres_sorties" rel="self" type="application/rss+xml" />
+<title><?php echo $view->title; ?></title>
+<link><?php echo BDO_URL; ?></link>
+<description>Les albums récents, coffrets, magazines, fascicules, etc... ajoutés sur le site</description>
+<copyright>Bdovore</copyright>
+<language>fr</language>
+<?php foreach($view->dbs_tome->a_dataQuery as $tome) { ?>
+<item>
+    <title><?php echo clean_rss($tome->TITRE_TOME. "(". $tome->NOM_SERIE.")"); ?></title>
+    <link><?php echo BDO_URL;?>Album?id_tome=<?php echo $tome->ID_TOME; ?> </link>
+    <description><![CDATA["<?php echo clean_rss($tome->HISTOIRE_TOME); ?>"]]></description>
+    <guid isPermaLink="true"><?php echo BDO_URL;?>Album?id_tome=<?php echo $tome->ID_TOME; ?></guid>
+    <?php if ($tome->IMG_COUV !=NULL) { 
+        $taille_couv = filesize(BDO_DIR_COUV.$tome->IMG_COUV);
+        ?>
+        <enclosure url="<?php echo BDO_URL_COUV.$tome->IMG_COUV; ?>" type="image/jpeg" length="<?php echo $taille_couv; ?>"/>
+    <?php } ?>
+</item>
+
+
+<?php } ?>
