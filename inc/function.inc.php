@@ -1012,6 +1012,6 @@ function clean_rss ($str) {
     $str_ret = str_replace ( chr(0x93), '\'',  $str_ret );
     $str_ret = str_replace ( chr(0x94), '\'',  $str_ret );
     $str_ret = str_replace ( chr(0x22), '\'',  $str_ret );
-    return $str_ret;
+    return nl2br($str_ret);
 	
 }
