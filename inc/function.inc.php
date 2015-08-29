@@ -1009,6 +1009,9 @@ function clean_rss ($str) {
     $str_ret = str_replace ( chr(0x92), '\'',  $str_ret );	
     $str_ret = str_replace ( chr(0x85), '\'',  $str_ret );	
     $str_ret = str_replace ( chr(0x9c), '\'',  $str_ret );
+    $str_ret = str_replace ( chr(0x93), '\'',  $str_ret );
+    $str_ret = str_replace ( chr(0x94), '\'',  $str_ret );
+    $str_ret = str_replace ( chr(0x22), '\'',  $str_ret );
     return $str_ret;
 	
 }
