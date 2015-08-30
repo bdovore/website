@@ -17,7 +17,7 @@ class Album extends Bdo_Controller {
 
         $ID_TOME = getValInteger('id_tome', 1);
         $id_edition = getValInteger('id_edition', 0);
-
+        $frame = getVal("frame","iframe");
         if ($id_edition > 0) {
             // ajout du filtre edition 
             $this->loadModel('Edition');
@@ -76,8 +76,15 @@ class Album extends Bdo_Controller {
         $dbs_edition = $this->Edition->load(c, "where PROP_STATUS not in ('0','99','98') and bd_tome.id_tome =" . $ID_TOME);
 
         $this->view->set_var(array("dbs_edition" => $dbs_edition));
-
-        $this->view->layout = "iframe";
+        // set frame
+        $url_referer = parse_url($_SERVER["HTTP_REFERER"]);
+        $domaine = $url_referer['host'];      
+        if ($domaine != parse_url(BDO_URL)['host']) {
+            $frame = "default";
+        }
+        if ($frame == "iframe") {
+            $this->view->layout = "iframe";
+        }
         $this->view->render();
     }
 
