@@ -78,8 +78,9 @@ class Album extends Bdo_Controller {
         $this->view->set_var(array("dbs_edition" => $dbs_edition));
         // set frame
         $url_referer = parse_url($_SERVER["HTTP_REFERER"]);
-        $domaine = $url_referer['host'];      
-        if ($domaine != parse_url(BDO_URL)['host']) {
+        $domaine = $url_referer['host'];  
+        $url_host =  parse_url(BDO_URL);
+        if ($domaine != $url_host['host']) {
             $frame = "default";
         }
         if ($frame == "iframe") {
