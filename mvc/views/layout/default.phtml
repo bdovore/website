@@ -67,12 +67,13 @@ $jquery = $view->getHelper('jquery');
 <script type="text/javascript" src="<?php echo BDO_URL;?>jquery/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
 <link href="<?php echo BDO_URL;?>jquery/datatable/css/jquery.dataTables.css" rel="stylesheet"
 	type="text/css" />
+<script src="<?php echo BDO_URL;?>script/comment.js" type="text/javascript"></script>
 <?php 
 if (User::minAccesslevel(2)) {
 ?>
    
     <script src="<?php echo BDO_URL;?>script/collection.js" type="text/javascript"></script>
-     <script src="<?php echo BDO_URL;?>script/comment.js" type="text/javascript"></script>
+    
     
 <?php
 }
