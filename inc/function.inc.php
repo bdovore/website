@@ -1006,12 +1006,13 @@ function clean_url($texte) {
 function clean_rss ($str) {
     // remplace les caractères " par '
     $str_ret = $str;
-    $str_ret = str_replace ( chr(0x92), '\'',  $str_ret );	
-    $str_ret = str_replace ( chr(0x85), '\'',  $str_ret );	
-    $str_ret = str_replace ( chr(0x9c), '\'',  $str_ret );
-    $str_ret = str_replace ( chr(0x93), '\'',  $str_ret );
-    $str_ret = str_replace ( chr(0x94), '\'',  $str_ret );
-    $str_ret = str_replace ( chr(0x22), '\'',  $str_ret );
-    return nl2br($str_ret);
+//    $str_ret = str_replace ( chr(0x92), '\'',  $str_ret );	
+//    $str_ret = str_replace ( chr(0x85), '\'',  $str_ret );	
+  //  $str_ret = str_replace ( chr(0x9c), '\'',  $str_ret );
+ //   $str_ret = str_replace ( chr(0x93), '\'',  $str_ret );
+ //   $str_ret = str_replace ( chr(0x94), '\'',  $str_ret );
+//    $str_ret = str_replace ( chr(0x22), '\'',  $str_ret );
+   // $str_ret=  strtr( $str_ret,'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜ¯àâãäåçèéêëìíîï©£òóôõöùúûü~ÿ','AAAAAACEEEEIIIIOOOOOUUUUYaaaaaceeeeiiiioooooouuuuyyy');
+    return $str_ret;
 	
 }
