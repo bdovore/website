@@ -3,9 +3,7 @@
     var order = "<?php echo $view->order; ?>";
     var column = <?php echo $view->sort ?>;
     var changeEdition = new Array;
-    $("#length").on('change', function (e) {
-        $("#f_collection").submit();
-    });
+    
     var uri = "./mesetageres?";
     q = param();
     for (k in q) {
@@ -70,6 +68,9 @@
        }
     
     $(document).ready(function() {
+        $("#length").on('change', function (e) {
+             $("#f_collection").submit();
+        });
         $('.numbersOnly').keyup(function () { 
             this.value = this.value.replace(/[^0-9\.]/g,'');
         });
@@ -78,7 +79,7 @@
                 'minHeight': 320,
                 'maxWidth' : 500,
         });
-                // get coockie preference
+        // get coockie preference
         var pref = "";
         if (typeof($.cookie('prefcollection')) == "undefined") {
             pref = "111111000100000";

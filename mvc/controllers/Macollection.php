@@ -151,8 +151,18 @@ class Macollection extends Bdo_Controller {
             $this->loadModel('Useralbum');
            
             $page = getValInteger("page",1);
-            $length = getValInteger("length",10);
+            $length = getValInteger("length",0);
             //TODO mettre une longueur max. pour la recherche ?
+            if (!$length) {
+                if ($_COOKIE["l_etageres"] ) {
+                    // récupére la valeur dans un coockie
+                    $length = $_COOKIE["l_etageres"];
+                } else {
+                    $length = 10;                
+                }
+            }
+            setcookie("l_etageres",$length,time()+2592000);
+            
             $l_search = getVal("l_search","" );
            
             
