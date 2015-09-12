@@ -128,23 +128,25 @@ class Actus
 	SELECT
 		t.TITRE as TITRE_TOME,
 		t.ID_TOME,
-		t.MOYENNE as MOYENNE_TOME,
+		note_tome.MOYENNE_NOTE_TOME as MOYENNE_TOME,
 		en.IMG_COUV,
-		t.NB_VOTE as NB_VOTE_TOME,
+		note_tome.NB_NOTE_TOME as NB_VOTE_TOME,
 		s.NOM as NOM_SERIE,
 		s.ID_SERIE,
-		g.ORIGINE as ORIGINE_GENRE
+		g.ORIGINE as ORIGINE_GENRE,
+                note_tome.MOYENNE_NOTE_TOME*log(note_tome.NB_NOTE_TOME + 1) score
 	FROM
 		bd_tome t
 		INNER JOIN bd_edition en ON en.id_edition = t.id_edition
 		INNER JOIN bd_serie s ON s.id_serie = t.id_serie
 		INNER JOIN bd_genre g ON s.id_genre = g.id_genre
+                INNER JOIN note_tome on note_tome.ID_TOME= t.id_tome
 	WHERE
 		en.dte_parution >= DATE_SUB(NOW(),INTERVAL 2 MONTH) AND 
                 en.dte_parution <= NOW()
 	";
         
-        $order_actu = " ORDER BY t.moyenne desc, en.dte_parution DESC LIMIT 0,1";
+        $order_actu = " ORDER BY score desc, en.dte_parution DESC LIMIT 0,1";
         
         // requete select de base pour dans l'air
         $select_topair = "
