@@ -140,7 +140,8 @@ class Actus
 		INNER JOIN bd_serie s ON s.id_serie = t.id_serie
 		INNER JOIN bd_genre g ON s.id_genre = g.id_genre
 	WHERE
-		en.dte_parution >= DATE_SUB(NOW(),INTERVAL 2 MONTH)
+		en.dte_parution >= DATE_SUB(NOW(),INTERVAL 2 MONTH) AND 
+                en.dte_parution <= NOW()
 	";
         
         $order_actu = " ORDER BY t.moyenne desc, en.dte_parution DESC LIMIT 0,1";
@@ -164,7 +165,8 @@ class Actus
 		INNER JOIN bd_genre g ON s.id_genre=g.id_genre
 	WHERE
 		ua.date_ajout >= DATE_SUB(NOW(),INTERVAL 1 MONTH)
-		and en.dte_parution >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
+		and en.dte_parution >= DATE_SUB(NOW(),INTERVAL 3 MONTH) AND
+                en.dte_parution <= NOW()
 		";
         
         $order_air = "
