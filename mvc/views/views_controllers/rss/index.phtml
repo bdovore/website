@@ -6,7 +6,7 @@
 <language>fr</language>
 <?php foreach($view->dbs_tome->a_dataQuery as $tome) { ?>
 <item>
-    <title><?php echo $tome->TITRE_TOME. "(". $tome->NOM_SERIE.")"; ?></title>
+    <title><?php echo clean_rss($tome->TITRE_TOME. "(". $tome->NOM_SERIE.")"); ?></title>
     <link><?php echo BDO_URL;?>Album?id_tome=<?php echo $tome->ID_TOME; ?> </link>
     <description><![CDATA["<?php echo $tome->HISTOIRE_TOME; ?>"]]></description>
     <guid isPermaLink="true"><?php echo BDO_URL;?>Album?id_tome=<?php echo $tome->ID_TOME; ?></guid>

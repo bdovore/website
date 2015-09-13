@@ -1007,3 +1007,10 @@ function is_dateFr( $value )
 {
 	return preg_match('`^(((0[1-9])|(1\d)|(2\d)|(3[0-1]))\/((0[1-9])|(1[0-2]))\/(\d{4}))$`',$value);
 }
+function clean_rss ($str) {
+    // remplace les caractères " par '
+    $str_ret = $str;
+    $str_ret = str_replace ( "&", ' et ',  $str_ret );	
+    
+    return $str_ret;	
+}
