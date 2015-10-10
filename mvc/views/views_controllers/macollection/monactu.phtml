@@ -64,11 +64,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 <?php 
 
 if (isset($view->dbs_tome)){
-
+        $mois = "";
         foreach ($view->dbs_tome->a_dataQuery as $tome) {
-
-        echo $ficheAlbum->big($tome);
-
+            $dateparution = new DateTime($tome->DTE_PARUTION);
+            $mois_current = strftime("%b %Y", $dateparution->getTimestamp());
+            if ($mois <> $mois_current) echo "<strong>$mois_current</strong><br>";
+            echo $ficheAlbum->big($tome);
+            $mois = $mois_current;
         }
 
         }
