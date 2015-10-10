@@ -470,4 +470,9 @@ class Tome extends Bdo_Db_Line
        return $this->load("c",$where.$order." limit 0,".intval($nb));
     }
     
+    public function renameAlbum($id_tome, $nouv_titre) {
+        $query = "UPDATE bd_tome SET titre = '".  Db_Escape_String($nouv_titre)."' WHERE id_tome = ".  intval($id_tome);
+        return Db_query($query);
+    }
+    
 }

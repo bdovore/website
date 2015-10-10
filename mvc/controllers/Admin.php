@@ -1667,7 +1667,7 @@ class Admin extends Bdo_Controller {
                     "URLEDITGENRE" => BDO_URL . "admin/editgenre?genre_id=" . $this->Serie->ID_GENRE,
                     "URLMASSDETAIL" => BDO_URL . "admin/mu_detail.php?serie=" . $this->Serie->ID_SERIE,
                     "URLMASSUPDATE" => BDO_URL . "admin/mu_serie.php?serie=" . $this->Serie->ID_SERIE,
-                    "URLMASSRENAME" => BDO_URL . "admin/mu_rename.php?serie=" . $this->Serie->ID_SERIE,
+                    "URLMASSRENAME" => BDO_URL . "admin/murenameserie?serie=" . $this->Serie->ID_SERIE,
                     "URLMASSCOUV" => BDO_URL . "admin/mu_couv.php?serie=" . $this->Serie->ID_SERIE,
                     "URLAJOUTALB" => BDO_URL . "admin/editalbum?act=newfserie&id_serie=" . $this->Serie->ID_SERIE,
                     "URLACTION" => BDO_URL . "admin/editserie?act=update",
@@ -2191,6 +2191,63 @@ class Admin extends Bdo_Controller {
             echo "Image redimensionnée<br />";
         }
     }
+    
+    public function muRenameSerie() {
+         if (!User::minAccesslevel(1)) {
+             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+             
+         }
+         $this->loadModel("Serie");
+         $this->loadModel("Tome");
+         $act = getVal("act","");
+          $serie = getVal("serie","");
+        // Mettre à jour les informations
+        if ($act=="update"){
+                $nb = 0;
+                $num_tome  = postVal("num_tome");
+                $alb_id = postVal("alb_id");
+                $newtitre = postVal("txtNouvTitre");
+                foreach ($alb_id as $idtome){
+                        $nouv_titre = ereg_replace("#tome#", $num_tome[$idtome], $newtitre);
+                        $this->Tome->renameAlbum($idtome, $nouv_titre);
+                        $nb++;
+                }
+                echo GetMetaTag(2,"$nb albums ont été traités.",(BDO_URL."admin/murenameserie?serie=".$serie));
+        }
+
+        // AFFICHER UNE FICHE SERIE
+        elseif($act==""){                
+                if ($serie != ""){
+                    $this->Serie->set_dataPaste(array(
+                        "ID_SERIE" => $serie
+                    ));
+                    $this->Serie->load();
+                        
+                        $this->view->set_var (array(
+                        "SERIE" => stripslashes($this->Serie->NOM_SERIE),
+                        "IDSERIE" => $serie,
+                        "NOUVTITRE" => stripslashes($this->Serie->NOM_SERIE).", Tome #tome#"
+                        ));
+
+                        $dbs_tome = $this->Tome->load('c', " 
+                            WHERE bd_tome.id_serie=
+                            ".$serie." 
+                             ORDER BY bd_tome.id_tome");
+                         // selection des albums
+                         $this->view->set_var('dbs_tome', $dbs_tome);
+                }
+
+                $this->view->set_var (array(
+                "ACTIONNAME" => "Mettre à Jour",
+                "URLACTION" => BDO_URL."admin/murenameserie?act=update&serie=".$serie,
+                "URLREFRESH" => BDO_URL."admin/murenameserie",
+                "URLEDITSERIE" => BDO_URL."admin/editserie?serie_id=".$serie
+                ));
+                $this->view->layout = "iframe";
+                $this->view->render();
+               
+        }
+    } 
 
 }
 
