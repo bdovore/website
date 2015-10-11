@@ -13,7 +13,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                                 <h3>Actualités BD liées à vos séries et auteurs favoris </h3>
                                                 </div>
 
-<form name="selType" action="" method="get">
+<form name="selType" id="selType" action="" method="get">
 			<div class="genBlock">
 				<table border="0">
 				    <tbody><tr> 
@@ -34,14 +34,19 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 				    </tr>
 				    <tr> 
 					    <td> 
-					        <select name="mode" size="1">
+					        <select name="mode" size="1" onchange="$('#selType').submit();">
 						        <option value="1" <?php if ($view->mode == 1) echo "selected"; ?>>Mes Séries</option><option value="2" <?php if ($view->mode == 2) echo "selected"; ?>>Mes Auteurs Favoris</option><option value="3" <?php if ($view->mode == 3) echo "selected"; ?>>Intégrales/Coffrets</option>
 					        </select>
 						</td>
 						<td>&nbsp;</td>
 					    <td> 
-					        <select name="nb_mois">
-						        <option value="1" <?php if ($view->nb_mois == 1) echo "selected"; ?>>1 mois</option><option value="3" <?php if ($view->nb_mois == 3) echo "selected"; ?>>3 mois</option><option value="6" <?php if ($view->nb_mois == 6) echo "selected"; ?>>6 mois</option><option value="12" <?php if ($view->nb_mois == 12) echo "selected"; ?>>1 an</option>
+					        <select name="nb_mois" onchange="$('#selType').submit();">
+						      <option value="-1" <?php if ($view->nb_mois == -1) echo "selected"; ?>>à paraitre</option>                                                    
+                                                    <option value="1" <?php if ($view->nb_mois == 1) echo "selected"; ?>>1 mois</option>
+                                                        <option value="3" <?php if ($view->nb_mois == 3) echo "selected"; ?>>3 mois</option>
+                                                        <option value="6" <?php if ($view->nb_mois == 6) echo "selected"; ?>>6 mois</option>
+                                                        <option value="12" <?php if ($view->nb_mois == 12) echo "selected"; ?>>1 an</option>
+                                                      
 					        </select>
 						</td>
 						<td>&nbsp;</td>
@@ -68,7 +73,7 @@ if (isset($view->dbs_tome)){
         foreach ($view->dbs_tome->a_dataQuery as $tome) {
             $dateparution = new DateTime($tome->DTE_PARUTION);
             $mois_current = strftime("%b %Y", $dateparution->getTimestamp());
-            if ($mois <> $mois_current) echo "<strong>$mois_current</strong><br>";
+            if ($mois <> $mois_current) echo "<h3>$mois_current</h3><br>";
             echo $ficheAlbum->big($tome);
             $mois = $mois_current;
         }
