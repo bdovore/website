@@ -69,9 +69,14 @@ function Chargement() {
 				$poids .="Ko";
 				$imagename = $tome->IMG_COUV;
 			}
+                        if ( !issetNotEmpty( $tome->ISBN_EDITION) and issetNotEmpty($tome->EAN_EDITION)) {
+                            $isbn = EAN_to_ISBN($tome->EAN_EDITION);
+                        } else {
+                            $isbn = $tome->ISBN_EDITION;
+                        }
 			// Vérifie l'existence d'une couv chez amazon
-			$url_page_amazon = "http://www.amazon.fr/exec/obidos/ASIN/".$tome->ISBN_EDITION;
-			$url_img_amazon = get_couv_url($url_page_amazon,$tome->ISBN_EDITION);
+			$url_page_amazon = "http://www.amazon.fr/exec/obidos/ASIN/".$isbn;
+			$url_img_amazon = get_couv_url($url_page_amazon,$isbn);
 			if ($url_img_amazon == "") $url_img_amazon = BDO_URL_COUV."default.png";
          
          ?>
