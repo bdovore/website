@@ -1,3 +1,5 @@
+<?php include_once (BDO_DIR . 'inc' . DS . 'function.amazon.inc.php');?>
+<script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
 <SCRIPT LANGAUGE="JavaScript"><!--
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 	if ((isMandatory == true) && (myText.length < 3)) {
@@ -32,10 +34,10 @@ function Chargement() {
  }
 }
 //--></SCRIPT>
-<table width="100%" border="1">
-  <tr> 
-    <!-- Debut colonne Gauche-->
-    <td width="50%" valign="top"> <form name="form1" method="post" action="" onSubmit="return urlsource()">
+ <p><strong>Menu Express</strong><br>
+              <a href="<?php echo $view->URLEDITSERIE;?>">Retour à la fiche série</a><br>
+            </p>
+         <form name="form1" method="post" action="" onSubmit="return urlsource()">
         <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
           <tr bordercolor="#FFFFCC"> 
             <td width="10%" class="label"> <div align="center">Serie</div></td>
@@ -50,31 +52,47 @@ function Chargement() {
       </form>
       <br> <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
         <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
-          <tr bordercolor="#FFFFCC"> 
-            <td width="24%">Nouveau titre</td>
-            <td width="76%"> 
-              <input name="txtNouvTitre" type="text" value="<?php echo $view->NOUVTITRE;?>" size="50"></td>
-          </tr>
-        </table>
-        <br>
-        <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
+         <?php  
+         foreach ($view->dbs_tome->a_dataQuery as $tome ) {
+             if (is_null($tome->IMG_COUV) | ($tome->IMG_COUV=='')){
+				$url_image = BDO_URL_COUV."default.png";
+				$dimension="";
+				$poids="";
+			}else{
+				$url_image = BDO_URL_COUV.$tome->IMG_COUV;
+				$imageproperties = getimagesize(BDO_DIR_COUV.$tome->IMG_COUV);
+				$imagetype = $imageproperties[2];
+				$imagelargeur = $imageproperties[0];
+				$imagehauteur = $imageproperties[1];
+				$dimension = $imagelargeur."x".$imagehauteur;
+				$poids = round(filesize(BDO_DIR_COUV.$tome->IMG_COUV)/1024,2);
+				$poids .="Ko";
+				$imagename = $tome->IMG_COUV;
+			}
+			// Vérifie l'existence d'une couv chez amazon
+			$url_page_amazon = "http://www.amazon.fr/exec/obidos/ASIN/".$tome->ISBN_EDITION;
+			$url_img_amazon = get_couv_url($url_page_amazon,$tome->ISBN_EDITION);
+			if ($url_img_amazon == "") $url_img_amazon = BDO_URL_COUV."default.png";
+         
+         ?>
           <tr bordercolor="#999999"> 
-            <td width="11%" align="center">Tome</td>
-            <td width="79%">Titre</td>
-            <td width="10%">Traiter</td>
+            <td colspan="3" align="center"><?php echo $tome->NUM_TOME;?> - <?php echo $tome->TITRE_TOME;?></td>
           </tr>
-          <!-- BEGIN AlbumsBlock -->
           <tr bordercolor="#999999"> 
-            <td align="center"><?php echo $view->TOME;?></td>
-            <td><?php echo $view->TITRE;?></td>
-            <td align="center"> 
-              <input type="checkbox" name="alb_id[]" value="<?php echo $view->IDTOME;?>">
-              <input name="num_tome[<?php echo $view->IDTOME;?>]" type="hidden" value="<?php echo $view->TOME;?>"> </td>
+            <td width="43%" align="center"><img src="<?php echo $url_image;?>" width="111"><input type="hidden" name="url_bdo[<?php echo $tome->ID_TOME;?>]" value="<?php echo $imagename;?>"><br>
+              <?php echo $dimension;?><br>
+              <?php echo $poids;?></td>
+            <td width="14%" align="center"><input type="checkbox" name="alb_id[]" value="<?php echo $tome->ID_TOME;?>"> 
+              <input name="num_tome[<?php echo $tome->ID_TOME;?>]" type="hidden" value="<?php echo $tome->NUM_TOME;?>"></td>
+            <td width="43%" align="center"><p><img src="<?php echo $url_img_amazon;?>" width="111" > 
+                <input type="hidden" name="url_amz[<?php echo $tome->ID_TOME;?>]" value="<?php echo $url_img_amazon;?>">
+              </p>
+              <p><a href="<?php echo $url_page_amazon;?>">Voir sur Amazon</a></p></td>
           </tr>
           <!-- END AlbumsBlock -->
+         <?php } ?>
           <tr bordercolor="#FFFFCC"> 
-            <td>&nbsp;</td>
-            <td colspan="2" align="right"><a name="ici" href="#ici" onClick="Chargement();">Tout 
+            <td colspan="3" align="center"><a name="ici" href="#ici" onClick="Chargement();">Tout 
               selectionner</a></td>
           </tr>
         </table>
@@ -86,19 +104,14 @@ function Chargement() {
         </div>
       </form></td>
     <!-- Debut colonne Gauche-->
-    <td width="50%"> <table width="100%" border="1">
-        <tr> 
-          <td bordercolor="#FFFFCC" bgcolor="#FFFFCC"><p><strong>Aide</strong><br>
-              Ce form permet de renommer tous les albums d'une série.<br>
-              L'expression #tome# sera automatiquement remplacée par le numéro 
-              de tome.<br>
-			  Seul les albums selectionnés seront traités.
-            </p>
-            <p><strong>Menu Express</strong><br>
-              <a href="<?php echo $view->URLEDITSERIE;?>">Retour à la fiche série</a><br>
-            </p></td>
-        </tr>
-      </table></td>
-  </tr>
-</table>
-
+   
+      </table>
+      <script>
+    /*
+     * On remplit les champs de saisie par l'autocompletion
+     * 
+     */
+    
+   
+  addAutocomplete("txtSerie","txtSerieId","txtSerieId","<?php echo BDO_URL; ?>getjson?data=Serie");
+</script>

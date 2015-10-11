@@ -1668,7 +1668,7 @@ class Admin extends Bdo_Controller {
                     "URLMASSDETAIL" => BDO_URL . "admin/mu_detail.php?serie=" . $this->Serie->ID_SERIE,
                     "URLMASSUPDATE" => BDO_URL . "admin/mu_serie.php?serie=" . $this->Serie->ID_SERIE,
                     "URLMASSRENAME" => BDO_URL . "admin/murenameserie?serie=" . $this->Serie->ID_SERIE,
-                    "URLMASSCOUV" => BDO_URL . "admin/mu_couv.php?serie=" . $this->Serie->ID_SERIE,
+                    "URLMASSCOUV" => BDO_URL . "admin/mucouvserie?serie=" . $this->Serie->ID_SERIE,
                     "URLAJOUTALB" => BDO_URL . "admin/editalbum?act=newfserie&id_serie=" . $this->Serie->ID_SERIE,
                     "URLACTION" => BDO_URL . "admin/editserie?act=update",
                     "dbs_tome" => $dbs_tome,
@@ -2248,6 +2248,95 @@ class Admin extends Bdo_Controller {
                
         }
     } 
+    
+    public function muCouvSerie() {
+        if (!User::minAccesslevel(1)) {
+             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+             
+         }
+         $this->loadModel("Serie");
+         $this->loadModel("Tome");
+         $this->loadModel("Edition");
+         $act = getVal("act","");
+         $serie = getVal("serie","");
+        // Mettre à jour les informations
+        if ($act=="update"){
+                $nb = 0;
+                $alb_id = postVal("alb_id");
+                $url_amz = postVal("url_amz");
+                foreach ($alb_id as $idtome){
+                    $this->Tome->set_dataPaste(array(
+                        "ID_TOME" => $idtome
+                    ));
+                    $this->Tome->load();
+                    // Selection le numéro de l'edition en cours
+
+
+                    $idedition = $this->Tome->ID_EDITION;
+
+                    // Efface la couverture actuelle
+                    $oldfile = $this->Tome->IMG_COUV;
+                    @unlink (BDO_DIR_COUV.$oldfile);
+
+                    // détermine le nouveau nom
+                    $newfilename = "CV-".sprintf("%06d",$idtome)."-".sprintf("%06d",$idedition);
+
+                    // Copie le fichier dans le répertoire temporaire
+                    $new_filename = get_img_from_url($url_amz[$idtome],BDO_DIR_UPLOAD,$newfilename);
+
+                    // Déplace le fichier dans le répertoire couv
+                    rename (BDO_DIR_UPLOAD.$new_filename, BDO_DIR_COUV.$new_filename);
+
+                    // Met à jour bd_edition
+                    $this->Edition->set_dataPaste(array(
+                        "ID_EDITION" => $idedition,
+                        "IMG_COUV" => $new_filename
+                     ));
+                    $this->Edition->update();
+
+
+                    $nb++;
+                }
+            echo GetMetaTag(2,"$nb albums ont été traités.",(BDO_URL."admin/mucouvserie?serie=".$serie));
+        }
+
+        // AFFICHER UNE FICHE SERIE
+        elseif($act==""){
+           
+            if ($serie != ""){
+		
+		// récupère le infos liées à la série
+		$this->Serie->set_dataPaste(array(
+                    "ID_SERIE" => $serie
+                ));
+                $this->Serie->load();
+		$this->view->set_var (array(
+		"SERIE" => stripslashes($this->Serie->NOM_SERIE),
+		"IDSERIE" => $serie,
+		"NOUVTITRE" => stripslashes($this->Serie->NOM_SERIE).", Tome #tome#"
+		));
+
+		// Affiche les couvertures
+		$dbs_tome = $this->Tome->load('c', " 
+                            WHERE bd_tome.id_serie=
+                            ".$serie." 
+                             ORDER BY bd_tome.id_tome");
+                         // selection des albums
+                $this->view->set_var('dbs_tome', $dbs_tome);
+		
+		
+            }
+            $this->view->set_var (array(
+            "ACTIONNAME" => "Mettre à Jour",
+            "URLACTION" => BDO_URL."admin/mucouvserie?act=update&serie=".$serie,
+            "URLREFRESH" => BDO_URL."admin/mucouvserie",
+            "URLEDITSERIE" => BDO_URL."admin/editserie?serie_id=".$serie
+            ));
+
+            $this->view->layout = "iframe";
+            $this->view->render();
+         }  
+     }
 
 }
 

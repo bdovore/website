@@ -93,13 +93,14 @@ function scan_alb_amazon($URL_page) {
 	return $alb_bdnet;
 }
 function get_couv_url($URL_page, $isbn) {
+        if ($isbn == "") return "";
 	$file_content = @file_get_contents ( $URL_page );
 	if ($file_content == "") {
 		return "";
 		exit ();
 	}
 	
-	if (eregi ( "(http://images-eu.{10,30}/P/" . $isbn . ".{1,20}jpg)", $file_content, $url_list ))
+	if (preg_match ( "/(http:\/\/ecx.images-amazon.com\/images\/.{1,100}jpg)/i", $file_content, $url_list ))
 		return $url_list [1];
 	else
 		return "";
