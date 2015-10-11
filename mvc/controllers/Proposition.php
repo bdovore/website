@@ -28,7 +28,7 @@ class Proposition extends Bdo_Controller {
 
             if ($action == "append") {
                 $er = $this->addProposition();
-                if (count($er) > 1)  {
+                if (issetNotEmpty($er))  {
                     var_dump($er); 
                     die("Erreur lors de l'insertion, contactez l'équipe !");
                 }

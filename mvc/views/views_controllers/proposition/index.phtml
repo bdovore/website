@@ -366,7 +366,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                           <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-13 (EAN)</strong></font></td>
                             <td> <div align="left"> </div></td>
                             <td colspan="3">
-                                <input name="txtEAN" id="txtEAN" value="<?php echo $view->edition->EAN_EDITION; ?>" size="13" class="flat" type="text">
+                                <input name="txtEAN" id="txtEAN" value="<?php echo $view->edition->EAN_EDITION; ?>" size="13" maxlength="13" class="flat" type="text">
                                 <span class="texte">ISBN à 13 chiffres <u>sans</u> trait d'union ni espace (aussi appelé EAN)</span>
                             </td>
                     </tr>         
@@ -374,7 +374,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                         <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-10</strong></font></td>
                         <td> <div align="left"> </div></td>
                         <td colspan="3">
-                            <input name="txtISBN" id="txtISBN" value="<?php echo $view->edition->ISBN_EDITION; ?>" size="10" class="flat" type="text">
+                            <input name="txtISBN" id="txtISBN" value="<?php echo $view->edition->ISBN_EDITION; ?>" size="10" maxlength="10" class="flat" type="text">
                             <span class="texte">ISBN à 10 chiffres <u>sans</u> trait d'union ni espace (obsolète depuis janvier 2007)</span>
                         </td>
                     </tr>
