@@ -5,13 +5,18 @@ class FicheAlbum {
     public function getTitreTome ($o_tome,$url=true) {
         $html = "";
         if ($o_tome->TITRE_TOME) {
-            if ($o_tome->NUM_TOME AND stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
-            //if ($o_tome->NUM_TOME) {
-                $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
-            } else if ($o_tome->FLG_INT_TOME == "O" and stripos(strtolower($o_tome->TITRE_TOME),"intégrale") === false) {
+            if ($o_tome->FLG_INT_TOME == "O" and stripos(strtolower($o_tome->TITRE_TOME),"intégrale") === false) {
                 $html .= '<i>Intégrale - </i> ';
-                
             }
+
+            if ($o_tome->NUM_TOME AND preg_match("/n°".$o_tome->NUM_TOME."\b/",$o_tome->TITRE_TOME) !== 1) {
+                $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
+            }
+
+            //if ($o_tome->NUM_TOME AND stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
+            ////if ($o_tome->NUM_TOME) {
+            //    $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
+            //}
             
             if ($url) {
                 $html .=  "<strong>".$this->urlAlbum($o_tome, 'albTitle')."</strong>" ;
