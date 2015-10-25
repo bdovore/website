@@ -12,45 +12,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             <form id="form1" name="form1" method="get">
                 <div id="select_origine">
                     <label for="o1">BD </label>  <input type="radio" name="origine" id="o1" value="1" <?php if ($view->origine == 1) echo "checked"; ?> onclick="$('#form1').submit();">  <label for="o2">Mangas </label> <input type="radio" name="origine" id="o2" value="2" <?php if ($view->origine == 2) echo "checked"; ?> onclick="$('#form1').submit();">  <label for="o3">Comics</label>  <input type="radio" name="origine" id="o3" value="3" <?php if ($view->origine == 3) echo "checked"; ?> onclick="$('#form1').submit();">
-
-                </div>
-
-
-                <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC" bgcolor="#FFFFFF" frame="box" rules="groups">
-
-                    <tr>
-
-                        <td></td>
-
-                        <td><div id="rb_mode">
-                                <table><tbody><tr><td><b>Actualité BD</b> <br>
-                                                <input id="rb_mode3" name="rb_mode" value="4" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[3]["checked"]; ?> type="radio"><label for="rb_mode3">Dernières parutions</label><br>
-                                                <input id="rb_mode4" name="rb_mode" value="5" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[4]["checked"]; ?> type="radio"><label for="rb_mode4">A paraitre</label><br>
-                                                <input id="rb_mode5" name="rb_mode" value="6" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[5]["checked"]; ?> type="radio"><label for="rb_mode5">Derniers ajouts</label><br>
-                                            </td>
-
-                                            <td><b>Découverte BD</b> <br>
-                                                <input id="rb_mode2" name="rb_mode" value="3" <?php echo $view->a_chGuide[2]["checked"]; ?> onclick="$('#form1').submit();" type="radio"><label for="rb_mode2">Derniers avis de lecture</label><br>
-                                                <input id="rb_mode0" name="rb_mode" value="1" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[0]["checked"]; ?> type="radio"><label for="rb_mode0">Top des votes</label><br>
-                                                <input id="rb_mode1" name="rb_mode" value="2" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[1]["checked"]; ?>  type="radio"><label for="rb_mode1">Les incontournables</label><br>
-                                            </td></tr>
-                                    </tbody></table>
-
-
-
-
-
-
-
-                            </div>
-
-
-
-                        </td>
-
-                        <td>
-
-                            Genre : <select data-placeholder="Choisir un ou plusieurs genres..." name="a_idGenre[]" id="a_idGenre" style="width:350px;" multiple="multiple" size="10">
+                    &nbsp; Genre : <select data-placeholder="Choisir un ou plusieurs genres..." name="a_idGenre[]" id="a_idGenre" style="width:350px;" multiple="multiple" size="10">
 
 <?php
 foreach ($view->dbs_genre->a_dataQuery as $genre) {
@@ -61,28 +23,21 @@ foreach ($view->dbs_genre->a_dataQuery as $genre) {
 }
 ?>
 
-                            </select> 
+                            </select>  <input type="submit" name="submitGuide" value="Ok">
+                </div>
+                <br>
 
-                            <script type="text/javascript">
+                <div  id="rb_mode">
+                                <input id="rb_mode2" name="rb_mode" value="3" <?php echo $view->a_chGuide[2]["checked"]; ?> onclick="$('#form1').submit();" type="radio"><label for="rb_mode2">Avis</label>
+                                <input id="rb_mode3" name="rb_mode" value="4" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[3]["checked"]; ?> type="radio"><label for="rb_mode3">Nouveautés</label>
+                                <input id="rb_mode4" name="rb_mode" value="5" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[4]["checked"]; ?> type="radio"><label for="rb_mode4">A paraitre</label>
 
-                                    $(document).ready(function() {
-
-                                        $("#a_idGenre").chosen({max_selected_options: 10});
-
-                                    });
-
-                            </script>
-
-                            <div id="rb_list">
-
-                                <input id="rb_list1" name="rb_list" type="radio" value="album" <?php echo $view->a_checkboxType['album']; ?>><label for="rb_list1"> Albums</label>
-
-                                <input id="rb_list2" name="rb_list" type="radio" value="serie" <?php echo $view->a_checkboxType['serie']; ?>><label for="rb_list2">Séries</label>
-
+                                <input id="rb_mode5" name="rb_mode" value="6" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[5]["checked"]; ?> type="radio"><label for="rb_mode5">Ajouts</label>
+                                <input id="rb_mode0" name="rb_mode" value="1" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[0]["checked"]; ?> type="radio"><label for="rb_mode0">Top Bdovore</label>
+                                <input id="rb_mode1" name="rb_mode" value="2" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[1]["checked"]; ?>  type="radio"><label for="rb_mode1">Incontournables</label>
                             </div>
 
-                            <input type="submit" name="submitGuide" value="Envoyer"></td>
-
+                           
                     </tr>
 
                 </table>
@@ -92,20 +47,53 @@ foreach ($view->dbs_genre->a_dataQuery as $genre) {
             <br>
 
 <?php
-if (isset($view->dbs_tome)) {
-
+if (isset($view->dbs_tome)) {?>
+    <table class="list_album">
+        
+     <?php 
+     $tr = true;
     foreach ($view->dbs_tome->a_dataQuery as $tome) {
+        if ($tr)
+               echo "<tr>";
 
-        echo $ficheAlbum->big($tome);
+            echo "<td class='mw50'>" . $ficheAlbum->big($tome,$sep=true,$getUrlSerie=true) . "</td>";
+
+        if (!$tr) {
+            echo "</tr>";
+        }
+        $tr = !$tr;
+        
     }
+    if (!$tr)
+                        echo "</tr>";
+    ?>
+    </table>
+ <?php
 }
 
-if (isset($view->dbs_serie)) {
+if (isset($view->dbs_serie)) {?>
+    <table class="list_album">
+        
+     <?php 
+     $tr = true;
 
     foreach ($view->dbs_serie->a_dataQuery as $serie) {
+        if ($tr)
+               echo "<tr>";
 
-        echo $ficheAlbum->serie($serie,"big");
+            echo "<td class='mw50'>" . $ficheAlbum->serie($serie,"big");
+    
+    if (!$tr) {
+            echo "</tr>";
+        }
+        $tr = !$tr;
+        
     }
+    if (!$tr)
+                        echo "</tr>";
+    ?>
+    </table>
+ <?php
 }
 
 if (isset($view->dbs_comment)) {
@@ -167,5 +155,9 @@ if ($view->NUM_PAGE < 20)
 <script>
     $(document).ready(function() {
         $("#select_origine").buttonset();
+         $("#rb_mode").buttonset();
+          $("#a_idGenre").chosen({max_selected_options: 10});
     });
+     
 </script>
+ 

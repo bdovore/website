@@ -146,7 +146,7 @@ class Actus
                 en.dte_parution <= NOW()
 	";
         
-        $order_actu = " ORDER BY score desc, en.dte_parution DESC LIMIT 0,1";
+        $order_actu = " ORDER BY score desc, en.dte_parution DESC LIMIT 0,2";
         
         // requete select de base pour dans l'air
         $select_topair = "
@@ -174,7 +174,7 @@ class Actus
         $order_air = "
 	GROUP BY t.id_tome
 	ORDER BY nb DESC, IFNULL(ua.date_achat,ua.date_ajout) DESC
-	LIMIT 0,1";
+	LIMIT 0,2";
         
         $html = '
 	<div id="actu" class="right fond">
@@ -192,13 +192,19 @@ class Actus
             $resultat = Db_query($requete);
             if ($obj = Db_fetch_object($resultat)) {
                  $html .= urlAlbum ($obj,'couvMedium');
-                 $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";
-                  
+                 $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";                  
+            }
+             if ($obj = Db_fetch_object($resultat)) {
+                 $html .= urlAlbum ($obj,'couvMedium');
+                 $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";                  
             }
             
             // air du temps
             $requete = $select_topair . $filter . $order_air;
             $resultat = Db_query($requete);
+            if ($obj = Db_fetch_object($resultat)) {
+                $html .= '&nbsp;' . urlAlbum ($obj,'couvMedium');
+            }
             if ($obj = Db_fetch_object($resultat)) {
                 $html .= '&nbsp;' . urlAlbum ($obj,'couvMedium');
             }
