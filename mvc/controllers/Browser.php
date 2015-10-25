@@ -228,7 +228,7 @@ class Browser extends Bdo_Controller
                         "NAMELEVEL" => htmlspecialchars($row['name']),
                         "ACTLEVEL" => "",
                         "LEVSIGN" => "1L" . $row['id'],
-                     "URLEDIT" => (User::minAccesslevel(1)) ? "<a href='".$url_edit.$row['id']."'".' class="fancybox fancybox.iframe {width:600,height:300}" ><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>' : ""
+                     "URLEDIT" => (User::minAccesslevel(1)) ? "<a href='".$url_edit.$row['id']."'".' class="fancybox fancybox.iframe {width:700,height:600}" ><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>' : ""
                 );
                 $this->keyword .= htmlspecialchars($row['name']) . ",";
                 // //$t->parse("DBlock", "DataBlock", true);
@@ -245,7 +245,7 @@ class Browser extends Bdo_Controller
                         "NAMELEVEL" => htmlspecialchars(stripslashes($row['name'])),
                         "ACTLEVEL" => "",
                         "LEVSIGN" => "1L" . $row['id'],
-                   "URLEDIT" => (User::minAccesslevel(1)) ? "<a href='".$url_edit.$row['id']."'".' class="fancybox fancybox.iframe {width:600,height:300}" ><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>' : ""
+                   "URLEDIT" => (User::minAccesslevel(1)) ? "<a href='".$url_edit.$row['id']."'".' class="fancybox fancybox.iframe {width:700,height:600}" ><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>' : ""
                 );
                 $this->keyword .= htmlspecialchars($row['name']) . ",";
             }
