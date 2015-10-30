@@ -1412,7 +1412,15 @@ class Admin extends Bdo_Controller {
                 $prenom = postVal('txtPrenomAuteur');
                 $pseudo = (postVal('txtPseudoAuteur') == '' ? postVal('txtNomAuteur') . ", " .
                                 postVal('txtPrenomAuteur')  :  postVal('txtPseudoAuteur') );
-
+                $auteur_id = postVal("txtIdAuteur");
+                var_dump($_FILES['txtFileLoc']);
+                if ($_FILES['txtFileLoc']['size'] > 0) {// un fichier à uploader
+                    $img_aut = imgAutFromForm($auteur_id);
+                } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal('txtFileURL'), $url_ary)) { // un fichier à télécharger
+                    $img_aut = imgAutFromUrl($url_ary, $auteur_id);
+                } else {
+                    $img_aut = '';
+                }
                 $this->Auteur->set_dataPaste(array(
                     "ID_AUTEUR" => postVal("txtIdAuteur"),
                     "PRENOM" => $prenom,
@@ -1424,7 +1432,10 @@ class Admin extends Bdo_Controller {
                     "COMMENT" => postVal('txtCommentaire'),
                     "DTE_NAIS" => postVal('txtDateNaiss'),
                     "DTE_DECES" => postVal('txtDateDeces'),
-                    "NATIONALITE" => postVal('txtNation')
+                    "NATIONALITE" => postVal('txtNation'),
+                    "VALIDATOR" => $_SESSION["userConnect"]->user_id,
+                    "VALID_DTE" => date('d/m/Y H:i:s'),
+                    "IMG_AUT" =>  $img_aut
                 ));
                 $this->Auteur->update();
                 if (issetNotEmpty($this->Auteur->error)) {
@@ -1479,7 +1490,9 @@ class Admin extends Bdo_Controller {
                     "COMMENT" => postVal('txtCommentaire'),
                     "DTE_NAIS" => postVal('txtDateNaiss'),
                     "DTE_DECES" => postVal('txtDateDeces'),
-                    "NATIONALITE" => postVal('txtNation')
+                    "NATIONALITE" => postVal('txtNation'),
+                    "VALIDATOR" => $_SESSION["userConnect"]->user_id,
+                    "VALID_DTE" => date('d/m/Y H:i:s')
                 ));
                 $this->Auteur->update();
                 $lid = $this->Auteur->ID_AUTEUR;
@@ -1511,8 +1524,8 @@ class Admin extends Bdo_Controller {
                     "URLDELETE" => BDO_URL . "admin/editauteur?act=delete&auteur_id=" . $this->Auteur->ID_AUTEUR,
                     "URLFUSION" => BDO_URL . "admin/mergeauteurs?source_id=" . $this->Auteur->ID_AUTEUR,
                     "ACTIONNAME" => "Valider les Modifications",
-                    "URLACTION" => BDO_URL . "admin/editauteur?act=update"));
-
+                    "URLACTION" => BDO_URL . "admin/editauteur?act=update",
+                    "IMG_AUT" => ($this->Auteur->IMG_AUT ? $this->Auteur->IMG_AUT : "default_auteur.png")));
                 $this->view->render();
             }
         } else {

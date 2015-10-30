@@ -755,6 +755,108 @@ function imgCouvFromForm($lid_tome, $lid_edition) {
         unlink($tmp_filename);
         return $newfilename;
     }
+    
+    /* 
+ * Variante de la fonction précédente pour form et URL fiche Auteur
+ */
+
+function imgAutFromForm($lid_auteur) {
+        $imageproperties = getimagesize($_FILES['txtFileLoc']['tmp_name']);
+        $imagetype = $imageproperties[2];
+
+        $newfilename = "AUT-" . sprintf("%06d", $lid_auteur) ;
+        // vérifie le type d'image
+        switch ($imagetype) {
+            case IMAGETYPE_GIF:
+                $newfilename .=".gif";
+                break;
+            case IMAGETYPE_JPEG:
+                $newfilename .=".jpg";
+                break;
+            case IMAGETYPE_PNG:
+                $newfilename .=".png";
+                break;
+            default:
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers PNG, JPEG ou GIF peuvent &ecirc;tre charg&eacute;s. Vous allez &ecirc;tre redirig&eacute;.';
+                exit();
+                break;
+        }
+
+        //move_uploaded_file fait un copy(), mais en plus il vérifie que le fichier est bien un upload
+        //et pas un fichier local (genre constante.php, au hasard)
+        if (!move_uploaded_file($_FILES['txtFileLoc']['tmp_name'], BDO_DIR_IMAGE . "auteur/". $newfilename)) {
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez &ecirc;tre redirig&eacute;.';
+            exit();
+        }
+        return $newfilename;
+    }
+    
+    function imgAutFromUrl($url_ary, $lid_auteur) {
+        /*
+         * Récupère une image de couvertue et la copie dans le répertoire fournit en paramètre
+         * Return : nom du fichier
+         */
+        if (empty($url_ary[4])) {
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incompl&egrave;te. Vous allez &ecirc;tre redirig&eacute;.';
+            exit();
+        }
+        $base_get = '/' . $url_ary[4];
+        $port = (!empty($url_ary[3]) ) ? $url_ary[3] : 80;
+        // Connection au serveur hébergeant l'image
+        if (!($fsock = @fsockopen($url_ary[2], $port, $errno, $errstr))) {
+            $error = true;
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image innacessible. Vous allez &ecirc;tre redirig&eacute;.';
+            exit();
+        }
+
+        // Récupère l'image
+        @fputs($fsock, "GET $base_get HTTP/1.1\r\n");
+        @fputs($fsock, "HOST: " . $url_ary[2] . "\r\n");
+        @fputs($fsock, "Connection: close\r\n\r\n");
+
+        unset($avatar_data);
+        while (!@feof($fsock)) {
+            $avatar_data .= @fread($fsock, 102400);
+        }
+        @fclose($fsock);
+
+        // Check la validité de l'image
+        if (!preg_match('#Content-Length\: ([0-9]+)[^ /][\s]+#i', $avatar_data, $file_data1) || !preg_match('#Content-Type\: image/[x\-]*([a-z]+)[\s]+#i', $avatar_data, $file_data2)) {
+            $error = true;
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du t&eacute;l&eacute;chargement de l\'image. Vous allez &ecirc;tre redirig&eacute;.';
+            exit();
+        }
+        $avatar_filesize = $file_data1[1];
+        $avatar_filetype = $file_data2[1];
+        $avatar_data = substr($avatar_data, strlen($avatar_data) - $avatar_filesize, $avatar_filesize);
+        $tmp_path = BDO_DIR_UPLOAD;
+        $tmp_filename = tempnam($tmp_path, uniqid(rand()) . '-');
+        $fptr = @fopen($tmp_filename, 'wb');
+        $bytes_written = @fwrite($fptr, $avatar_data, $avatar_filesize);
+        @fclose($fptr);
+
+        if ($bytes_written != $avatar_filesize) {
+            @unlink($tmp_filename);
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Could not write avatar file to local storage. Please contact the board administrator with this message. Vous allez &ecirc;tre redirig&eacute;.';
+            exit();
+        }
+
+        // newfilemname
+        if (!($imgtype = check_image_type($avatar_filetype, $error))) {
+            exit;
+        }
+        $newfilename = "AUT-" . sprintf("%06d", $lid_auteur) . $imgtype;
+
+        // si le fichier existe, on l'efface
+        if (file_exists(BDO_DIR_IMAGE . "auteur/$newfilename")) {
+            @unlink(BDO_DIR_IMAGE . "auteur/$newfilename");
+        }
+
+        // copie le fichier temporaire dans le repertoire image
+        @copy($tmp_filename, BDO_DIR_IMAGE . "auteur/$newfilename");
+        unlink($tmp_filename);
+        return $newfilename;
+    }
 
 /**
  * Fonction générant le menu admin

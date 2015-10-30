@@ -41,7 +41,10 @@ class Auteur extends Bdo_Db_Line
             `COMMENT` , 
             `DTE_NAIS` , 
             `DTE_DECES` , 
-            `NATIONALITE`
+            `NATIONALITE`,
+            VALIDATOR,
+            VALID_DTE,
+            IMG_AUT
         FROM `" . $this->table_name . "`";
     }
 

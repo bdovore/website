@@ -23,7 +23,8 @@ function valider(){
 }
 </script>
 
-<form action="<?php echo $view->URLACTION;?>" method="post" name="input_form" onSubmit="return valider()">
+<form action="<?php echo $view->URLACTION;?>" method="post" name="input_form" enctype="multipart/form-data" onSubmit="return valider()">
+    
     <table width="100%" border="1" bgcolor="#FFFFCC">
           <tr bordercolor="#FFFFCC"> 
             <td width="25%" height="27">Pseudo</td>
@@ -36,6 +37,20 @@ function valider(){
               <input name="txtNomAuteur" type="text" id="txtNomAuteur" value="<?php echo $view->NOM;?>" size="20">
               , 
               <input name="txtPrenomAuteur" type="text" id="txtPrenomAuteur" value="<?php echo $view->PRENOM;?>" size="20"></td>
+          </tr>
+          <tr>
+              <td height="28">
+                  Image : 
+              </td>
+              <td colspan="4">
+                  <img src="<?php echo BDO_URL_IMAGE."auteur/". $view->IMG_AUT; ?>" class="couvBig" id="imgAut">
+                <br /> Envoyer depuis un fichier local :
+                <br /><input name="txtFileLoc" type="file" id="txtFileLoc" style="width: 100%;" /> 
+                <br> 
+                 Envoyer depuis une URL :
+            <br /><input name="txtFileURL" type="text" id="txtFileURL" style="width: 100%;" />
+              </td>
+              
           </tr>
           <tr bordercolor="#FFFFCC"> 
             <td height="28">Date Naissance</td>
@@ -90,4 +105,25 @@ function valider(){
 
 
 </form>
-<script>$("#txtCommentaire").jqte(); </script>
+<script>$("#txtCommentaire").jqte();
+
+function readURL(input) {
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#imgAut').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#txtFileLoc").change(function(){
+    readURL(this);
+});
+$("#txtFileUrl").change(function(){
+    $('#imgAut').attr('src',$("#txtFileUrl").val());
+});
+</script>
