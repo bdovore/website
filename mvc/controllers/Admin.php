@@ -1413,7 +1413,7 @@ class Admin extends Bdo_Controller {
                 $pseudo = (postVal('txtPseudoAuteur') == '' ? postVal('txtNomAuteur') . ", " .
                                 postVal('txtPrenomAuteur')  :  postVal('txtPseudoAuteur') );
                 $auteur_id = postVal("txtIdAuteur");
-                var_dump($_FILES['txtFileLoc']);
+                //var_dump($_FILES['txtFileLoc']);
                 if ($_FILES['txtFileLoc']['size'] > 0) {// un fichier à uploader
                     $img_aut = imgAutFromForm($auteur_id);
                 } else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal('txtFileURL'), $url_ary)) { // un fichier à télécharger
