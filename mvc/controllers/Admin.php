@@ -1413,6 +1413,8 @@ class Admin extends Bdo_Controller {
                 $pseudo = (postVal('txtPseudoAuteur') == '' ? postVal('txtNomAuteur') . ", " .
                                 postVal('txtPrenomAuteur')  :  postVal('txtPseudoAuteur') );
                 $auteur_id = postVal("txtIdAuteur");
+                $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $auteur_id));
+                $this->Auteur->load();
                 //var_dump($_FILES['txtFileLoc']);
                 if ($_FILES['txtFileLoc']['size'] > 0) {// un fichier à uploader
                     $img_aut = imgAutFromForm($auteur_id);
@@ -1421,6 +1423,7 @@ class Admin extends Bdo_Controller {
                 } else {
                     $img_aut = '';
                 }
+                if (issetNotEmpty($this->Auteur->IMG_AUT) and $img_aut == "") $img_aut = $this->Auteur->IMG_AUT;
                 $this->Auteur->set_dataPaste(array(
                     "ID_AUTEUR" => postVal("txtIdAuteur"),
                     "PRENOM" => $prenom,
