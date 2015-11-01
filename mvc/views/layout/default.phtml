@@ -164,14 +164,17 @@ $(document).ready(function() {
 		        }
 		        if (ui.item.category=='Albums') {
 		            $.fancybox.open(
-                     {
-                         type: 'iframe',
-                         autoSize : false,
-                         href : "<?php echo BDO_URL;?>Album?id_tome="+ui.item.ID_TOME,                
-                         title : ui.item.label,
-                         width:600,
-                         height:600
-                     });
+                            {
+                                type: 'iframe',
+                                autoSize : false,
+                                href : "<?php echo BDO_URL;?>Album?id_tome="+ui.item.ID_TOME,                
+                                title : ui.item.label,
+                                width:600,
+                                height:600
+                            });
+		        }
+                        if (ui.item.category=='Bdovore') {
+			        window.location.href = "<?php echo BDO_URL;?>guest?user="+encodeURIComponent(ui.item.ID_USER);
 		        }
 	      }
 	    });

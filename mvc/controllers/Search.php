@@ -70,7 +70,16 @@ class Search extends Bdo_Controller
                     'category' => "Auteurs"
             );
         }
-
+        
+        $this->loadModel("User");
+        $this->User->load('c'," WHERE (username LIKE '". $term ."%') AND OPEN_COLLEC = 'Y'  ORDER BY username LIMIT 0,10");
+        foreach ($this->User->dbSelect->a_dataQuery as $obj) {
+            $arr[] = (object) array(
+                    'label' => $obj->username,
+                "ID_USER" => ($this->User->user_id * 1209) + 951,
+                    'category' => "Bdovore"
+            );
+        }
         $this->view->set_var('json', json_encode($arr));
         $this->view->layout = "ajax";
         $this->view->render();
