@@ -55,6 +55,10 @@ class Compte extends Bdo_Controller {
                         "location" => postVal("txtlocation"),
                         "CARRE_TYPE" => postVal("lstCarre")));
                     $this->User->update();
+                    if (issetNotEmpty($this->User->error)) {
+                        var_dump($this->User->error);
+                        exit();
+                    }
                     echo GetMetaTag(2, "Votre profil a &eacute;t&eacute; mis &agrave; jour.", (BDO_URL . "Compte"));
                 }
             }
