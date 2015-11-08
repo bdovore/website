@@ -56,8 +56,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                             $("#date_achat").val(dte);
                 }
 }
-        //-->	
-            getComment(page=1, id_tome=<?php echo $view->tome->ID_TOME;?> );
+        //-->
+                $( document ).ready(function() {
+                  getComment(page=1, id_tome=<?php echo $view->tome->ID_TOME;?> );
+                });	
+            
             
             
             

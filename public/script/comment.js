@@ -69,11 +69,14 @@ function getComment(page,id_tome,user_id) {
         if (data.length == 0) {
             $("#listcomment").append("<i>Aucun commentaire pour cet album actuellement. <a onclick='viewComment();'>Soyez le premier !</a><i>");
         }
+        var idcmt = "";
         $.each(data,function (i, item) {
-            $("#listcomment").append("<div class='listcomment'> <strong>Note : "+ item.NOTE + "</strong> \n\
-             Posté par <a href='./guest?user="+item.user_id + "' target='parent'>"+ item.username + "</a> le "+ item.DTE_POST +"  <p>     \n\
-             " + stripslashes(nl2br(item.COMMENT)) + "</p> </div>")
+            idcmt = item.ID_TOME + "_" + i;
+            $("#listcomment").append("<div class='listcomment'> <span id='noteTome"+idcmt + "'></span>  \n\
+            Posté par <a href='./guest?user="+item.user_id + "' target='parent'>"+ item.username + "</a> le "+ item.DTE_POST +"  <p>     \n\
+             " + stripslashes(nl2br(item.COMMENT)) + "</p> </div>");
             
+            $('#noteTome'+ idcmt ).raty({score: item.NOTE/2.0 , readOnly: true});
             }
            )
         }
