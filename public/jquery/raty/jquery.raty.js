@@ -730,7 +730,7 @@
     click        : undefined,
     half         : false,
     halfShow     : true,
-    hints        : ['Bof', 'Mouais', 'Moyen', 'Bon album', 'Culte !'],
+    hints        : [['Sans intérêt','Très mauvais'], ['Mauvais','Bof'], ['Moyen','Pas mal'], ['Bon','Très bon'], ['Excellent','Culte !']],
     iconRange    : undefined,
     mouseout     : undefined,
     mouseover    : undefined,
