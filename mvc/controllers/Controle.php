@@ -212,19 +212,33 @@ class Controle extends Bdo_Controller
                     "url" => BDO_URL . "admin/editedition?edition_id=",
                     "colUrl" => "ID_EDITION"
             ),
-array(    
-    "title" => "EAN mal formés, selon le calcul de la clé ean",
-    "query" => "SELECT SQL_CALC_FOUND_ROWS
-		`ID_EDITION` , 
-        concat(mid(ean,1,12),RIGHT(10 - MOD((MID(ean,2,1) + MID(ean,4,1)+MID(ean,6,1)+MID(ean,8,1)+MID(ean,10,1)+MID(ean,12,1))*3
-        +MID(ean,1,1)+MID(ean,3,1)+MID(ean,5,1)+MID(ean,7,1)+MID(ean,9,1)+MID(ean,11,1),10),1)) as 'ean calculé', ean, isbn
-        FROM `bd_edition` 
-        WHERE concat(mid(ean,1,12),RIGHT(10 - MOD((MID(ean,2,1) + MID(ean,4,1)+MID(ean,6,1)+MID(ean,8,1)+MID(ean,10,1)+MID(ean,12,1))*3
-            +MID(ean,1,1)+MID(ean,3,1)+MID(ean,5,1)+MID(ean,7,1)+MID(ean,9,1)+MID(ean,11,1),10),1)) <> ean and
-            ean is not null",
-        "url" => BDO_URL."admin/editedition?edition_id=",
-	"colUrl" => "ID_EDITION",
-   ));
+            array(    
+                "title" => "EAN mal formés, selon le calcul de la clé ean",
+                "query" => "SELECT SQL_CALC_FOUND_ROWS
+                            `ID_EDITION` , 
+                    concat(mid(ean,1,12),RIGHT(10 - MOD((MID(ean,2,1) + MID(ean,4,1)+MID(ean,6,1)+MID(ean,8,1)+MID(ean,10,1)+MID(ean,12,1))*3
+                    +MID(ean,1,1)+MID(ean,3,1)+MID(ean,5,1)+MID(ean,7,1)+MID(ean,9,1)+MID(ean,11,1),10),1)) as 'ean calculé', ean, isbn
+                    FROM `bd_edition` 
+                    WHERE concat(mid(ean,1,12),RIGHT(10 - MOD((MID(ean,2,1) + MID(ean,4,1)+MID(ean,6,1)+MID(ean,8,1)+MID(ean,10,1)+MID(ean,12,1))*3
+                        +MID(ean,1,1)+MID(ean,3,1)+MID(ean,5,1)+MID(ean,7,1)+MID(ean,9,1)+MID(ean,11,1),10),1)) <> ean and
+                        ean is not null",
+                    "url" => BDO_URL."admin/editedition?edition_id=",
+                    "colUrl" => "ID_EDITION",
+               ),
+                array(
+                    "title" => "Séries vide (sans album)",
+                    "query" => "
+            SELECT SQL_CALC_FOUND_ROWS 
+                    `ID_SERIE`,
+                    `NOM`
+            FROM 
+                    `bd_serie` left join bd_tome using (id_serie)
+            WHERE 
+                    id_tome is null ",
+                    "url" => BDO_URL . "admin/editserie?serie_id=",
+                    "colUrl" => "ID_SERIE",
+                )
+                );
 
 
           
