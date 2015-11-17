@@ -79,7 +79,7 @@ class Search extends Bdo_Controller
         foreach ($this->User->dbSelect->a_dataQuery as $obj) {
             $arr[] = (object) array(
                     'label' => $obj->username,
-                "ID_USER" => ($this->User->user_id * 1209) + 951,
+                "ID_USER" => ($obj->user_id * 1209) + 951,
                     'category' => "Bdovore"
             );
         }
