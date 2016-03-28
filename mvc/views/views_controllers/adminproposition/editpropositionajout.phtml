@@ -42,6 +42,7 @@ function verifAddExisting(myIdTome,myAction) {
     <table width="100%">
         <tr>
             <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" onsubmit="return verifFieldNull(document.myform.txtSerieId.value);">
+               
                 <!--Debut colonne gauche -->
                 <td width="65%" valign="top">
                     <table class="tableaux_admin">
@@ -475,6 +476,8 @@ function verifAddExisting(myIdTome,myAction) {
     </table>
     <table width="64%">
         <form action="<?php echo $view->URLDELETE;?>" method="post" name="subform2">
+             <input type="hidden" id="type" name="type" value="AJOUT">
+             <input type="hidden" name="ID" id="ID" value="<?php echo $view->PROPID; ?>">
             <tr align="center">
                 <td class="cadre_texte-admin">
                     <span class="texte">En cas de <span class="b">suppression</span>, le contenu (à modifier) du champ suivant sera envoyé par email à l'utilisateur :</span>

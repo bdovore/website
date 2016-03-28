@@ -28,7 +28,8 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 <div align="center" class="cadre1" width="100%">
     <h1>Validation d'une correction</h1>
     <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
-	<table width="100%" border="0">
+        
+        <table width="100%" border="0">
 		<tr>
 			<td>
 				<table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
@@ -442,6 +443,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
     	<td width="435">
    			<form action="<?php echo $view->URLDELETE;?>" method="post">
                             <input type="hidden" name="ID" id="ID" value="<?php echo $view->PROPID; ?>">
+                            <input type="hidden" id="type" name="type" value="CORRECTION">
                             <input type="submit" value="Supprimer">
 			</form>
 		</td>
