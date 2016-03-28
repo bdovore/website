@@ -191,7 +191,7 @@ class Leguide extends Bdo_Controller
                     $dbs_tome = $this->Edition->load('c', "
                         WHERE bd_edition.`DTE_PARUTION`<= NOW() and bd_edition.`DTE_PARUTION` >= DATE_ADD(NOW(), INTERVAL -1 YEAR)
                         ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                                 and g.origine = '".$filter_origine ."'
+                                 and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1  
                     ORDER BY bd_edition.`DTE_PARUTION` DESC ".$limit);
 
                     $this->view->set_var('dbs_tome', $dbs_tome);
@@ -209,7 +209,7 @@ class Leguide extends Bdo_Controller
                     $dbs_tome = $this->Edition->load('c', "
                         WHERE bd_edition.`DTE_PARUTION`>'".date('Y-m-d')."'
                             ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                                 and g.origine = '".$filter_origine ."'
+                                 and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1 
                             ORDER BY bd_edition.`DTE_PARUTION` ASC ".$limit);
 
                     $this->view->set_var('dbs_tome', $dbs_tome);
