@@ -16,6 +16,8 @@ $jquery = $view->getHelper('jquery');
 <meta name="reply-to" content="" />
 <meta name="revisit-after" content="7 days" />
 <meta name="robots" content="all" />
+<!-- Include media queries -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes"/>
 <link rel="shortcut icon" href="<?php echo BDO_URL;?>favicon.ico" />
 
 <!-- Declaration fil rss -->
@@ -68,6 +70,8 @@ $jquery = $view->getHelper('jquery');
 <link href="<?php echo BDO_URL;?>jquery/datatable/css/jquery.dataTables.css" rel="stylesheet"
 	type="text/css" />
 <script src="<?php echo BDO_URL;?>script/comment.js" type="text/javascript"></script>
+<script src="<?php echo BDO_URL;?>jquery/jquery.cookie.js" type="text/javascript"></script>
+<script src="<?php echo BDO_URL;?>script/detectmobilebrowser.js" type="text/javascript"></script>
 <?php 
 if (User::minAccesslevel(2)) {
 ?>
@@ -80,14 +84,15 @@ if (User::minAccesslevel(2)) {
 ?>
 
 <script>
-
-$(document).ready(function() {
-	$(".fancybox")
-    .fancybox({
-        type: 'iframe',
-        autoSize : false
+if (!$.browser.mobile) {
+    $(document).ready(function() {
+            $(".fancybox")
+        .fancybox({
+            type: 'iframe',
+            autoSize : false
+        });
     });
-});
+}
 
 // boutons haut / bas
 $(document).ready(function() {
@@ -182,7 +187,7 @@ $(document).ready(function() {
 
   </script>
     <script>
-    
+ if (!$.browser.mobile) {   
   $(function() {
     $( '*' ).tooltip({
       position: {
@@ -199,6 +204,7 @@ $(document).ready(function() {
       }
     });
   });
+ }
     
   </script>
    

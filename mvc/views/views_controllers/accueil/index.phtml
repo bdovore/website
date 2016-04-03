@@ -1,4 +1,4 @@
-<?php 
+d<?php 
 $ficheAlbum = $view->getHelper('ficheAlbum');
 ?>
 <div class="colleft">
@@ -74,31 +74,31 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     <thead>
         <tr>
         <th><div class="middle_title"><h3 align="center"><a href="./leguide?rb_mode=3&rb_list=album&submitGuide=Envoyer">BD</a></h3></div></th>
-        <th><div class="middle_title"><h3 align="center"><a href="./leguide?rb_mode=3&rb_list=album&origine=2&submitGuide=Envoyer">Mangas</a></h3></div></th>
+        <th class="alb-col2"><div class="middle_title"><h3 align="center"><a href="./leguide?rb_mode=3&rb_list=album&origine=2&submitGuide=Envoyer">Mangas</a></h3></div></th>
         <th class="alb-col3"><div class="middle_title"><h3 align="center"><a href="./leguide?rb_mode=3&rb_list=album&origine=3&submitGuide=Envoyer">Comics</a></h3></div></th>
 </tr>
     </thead>
     <tbody>
      <tr>
          <td><?php echo $ficheAlbum->getFicheWithComment($view->a_lastBD[0]); ?></td>
-         <td><?php echo $ficheAlbum->getFicheWithComment($view->a_lastManga[0]); ?></td>
+         <td class="alb-col2"><?php echo $ficheAlbum->getFicheWithComment($view->a_lastManga[0]); ?></td>
          <td class="alb-col3"><?php echo $ficheAlbum->getFicheWithComment($view->a_lastComics[0]); ?></td>
      </tr>
      <tr>
          <td><?php echo $ficheAlbum->getFicheWithComment($view->a_lastBD[1]); ?></td>
-         <td><?php echo $ficheAlbum->getFicheWithComment($view->a_lastManga[1]); ?></td>
+         <td class="alb-col2"><?php echo $ficheAlbum->getFicheWithComment($view->a_lastManga[1]); ?></td>
          <td class="alb-col3"><?php echo $ficheAlbum->getFicheWithComment($view->a_lastComics[1]); ?></td>
      </tr>
      <tr>
          <td><?php echo $ficheAlbum->getFicheWithComment($view->a_lastBD[2]); ?></td>
-         <td><?php echo $ficheAlbum->getFicheWithComment($view->a_lastManga[2]); ?></td>
+         <td class="alb-col2"><?php echo $ficheAlbum->getFicheWithComment($view->a_lastManga[2]); ?></td>
          <td class="alb-col3"><?php echo $ficheAlbum->getFicheWithComment($view->a_lastComics[2]); ?></td>
      </tr>
     </tbody>
      <tfoot>
          <tr>
              <td><div class="fright"><a href="leguide">Tous les avis BD</div></td>
-             <td><div class="fright"><a href="./leguide?rb_mode=3&rb_list=album&origine=2&submitGuide=Envoyer">Tous les avis Mangas</div> </td>
+             <td class="alb-col2"><div class="fright"><a href="./leguide?rb_mode=3&rb_list=album&origine=2&submitGuide=Envoyer">Tous les avis Mangas</div> </td>
              <td class="alb-col3"><div class="fright"><a href="./leguide?rb_mode=3&rb_list=album&origine=3&submitGuide=Envoyer">Tous les avis Comics</div></td>
          </tr>
      </tfoot>
@@ -187,6 +187,5 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 </div>
 </div>
 <!-- Fin de la partie de droite -->
-<script src="<?php echo BDO_URL;?>jquery/jquery.cookie.js" type="text/javascript"></script>
-<script src="<?php echo BDO_URL;?>script/detectmobilebrowser.js" type="text/javascript"></script>
+
 
