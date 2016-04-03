@@ -660,7 +660,16 @@ class Macollection extends Bdo_Controller {
             if ($act == "suppr") {
                 // annulation de la proposition courante : on passe le statut à 98
                 if ($lstSource == 1) {
-                    
+                    $this->loadModel("Edition");
+                    $this->Edition->set_dataPaste(array("ID_EDITION" => $propid));
+                    $this->Edition->load();
+                     if ($this->Edition->USER_ID == $user_id ) {
+                        $this->Edition->set_dataPaste(array("PROP_STATUS"=>98));
+                        $this->Edition->update();
+                    }
+                    else {
+                        die("Vous ne pouvez pas supprimer une proposition d'un autre utilisateur !");
+                    }
                 }
                 else {
                     $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $propid));
