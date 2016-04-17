@@ -18,6 +18,7 @@ class Album extends Bdo_Controller {
         $ID_TOME = getValInteger('id_tome', 1);
         $id_edition = getValInteger('id_edition', 0);
         $frame = getVal("frame","iframe");
+        $mobile = getVal("mobile",""); // check if mobile device detected
         if ($id_edition > 0) {
             // ajout du filtre edition 
             $this->loadModel('Edition');
@@ -83,7 +84,7 @@ class Album extends Bdo_Controller {
         if ($domaine != $url_host['host']) {
             $frame = "default";
         }
-        if ($frame == "iframe") {
+        if ($frame == "iframe" AND $mobile <> "T") {
             $this->view->layout = "iframe";
         }
         $this->view->render();

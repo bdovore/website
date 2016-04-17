@@ -1158,10 +1158,19 @@ table.list_album tr {
 
 }
 
+.couvleft {
+    float:left;
+    margin-right: 5px;
+}
+
+.textleft {
+    float:left;
+    font-size:0.9em;
+}
 #list-last-critique {
     border-spacing: 5px;
 }
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 1200px) {
     .colleft {
         float: left;
         width: 200%;
@@ -1176,7 +1185,9 @@ table.list_album tr {
         border-radius: 5px;
         margin: 0px 25px 0px 0px !important;
     }
-
+    #logo {
+        display:none;
+    }
     .col2 {
         display:none;
     }
@@ -1207,75 +1218,169 @@ table.list_album tr {
         padding: 5px 5px 0px !important;
         min-width: 0 !important;
     }
-    #content {
-        width: 100% !important;
-        margin: auto !important;
-        min-width: 0 !important;
-    }
-    .alb-col3 {
-        display:none;
-    }
-    .mw30 {
-        max-width: 45% !important;
-    }
-    #logo {
-        display:none;
-    }
-}
-
-@media only screen and (max-width : 400px) {
-/* Styles pour cette Media Queries */
- .colleft {
-        float: left;
-        width: 200%;
-        margin-left: 0px !important;
-        position: relative;
-        right: 100%;
-        min-height: 600px;
-    }
-    .clowrap {
-        width: 50% !important; 
-    }
-    .col1 {
-        overflow: hidden;
-        padding: 1px;
-        border-radius: 1px;
-        margin: 0px !important;
-    }
-
-    .col2 {
-        display:none;
-    }
-    #header {
-        width: 100% !important;
-        margin: auto !important;
-        padding: 0px 0px 0px !important;
-        min-width: 0 !important;
-    }
-    #content {
-        width: 100% !important;
-        margin: auto !important;
-        min-width: 0 !important;
-    }
-    .alb-col3 {
-        display:none;
-    }
-    .alb-col2 {
-        display:none;
-    }
-    .mw30 {
-        max-width: 45% !important;
-    }
-    #logo {
-        display:none;
-    }
-    #footer {
-        width: 90%;
-        max-width:400px;
-        min-width:100px;
-    }
+    
     #search {
-        size: 10;
-        width: 250px;
+        width : 12em !important;
+    }
+    #content {
+        width: 100% !important;
+        margin: auto !important;
+        min-width: 0 !important;
+    }
+    #list-last-critique thead {
+        display:none;
+    }
+    #list-last-critique thead {
+        display:none;
+    }
+    #list-last-critique>tbody>tr>td {
+       
+        display:block;
+    }
+    
+    
+    #list-last-critique>tfoot>tr>td{
+        display:block;
+    }
+    
+    table.list_album>tbody>tr>td {
+        display:block;
+    }
+    
+    table.list_album>tbody>tr{
+        display:block;
+    }
+    table.list_album>tbody {
+        display:block;
+    }
+    td.mw50 {
+        max-width: 100% !important;
+        
+    }
+    .mw30 {
+        max-width: 50% !important;
+    }
+    
+    .couvleft {
+        margin-right : 0px !important;
+    }
+    #logo {
+        display:none;
+    }
+    
+    #footer {
+        min-width: 0px;
+    }
+    
+    .contentalb {
+        width : 100% !important;
+    }
+    
+    .comment {
+        width : 100% !important;
+    }
+    #alb-description {
+        
+    }
+    
+    .synopsis{
+        width : 100% !important;
+    }
+    
+   
+    td[name="col5"] {
+        display: none!important;
+    }
+    td[name="col6"] {
+        display: none!important;
+    }
+    td[name="col7"] {
+        display: none!important;
+    }
+    td[name="col8"] {
+        display: none!important;
+    }
+    td[name="col9"] {
+        display: none!important;
+    }
+    td[name="col10"] {
+        display: none!important;
+    }
+    td[name="col11"] {
+        display: none!important;
+    }
+    td[name="col12"] {
+        display: none!important;
+    }
+    td[name="col13"] {
+        display: none!important;
+    }
+    td[name="col13"] {
+        display: none!important;
+    }
+    td[name="col14"] {
+        display: none!important;
+    }
+    td[name="col15"] {
+        display: none!important;
+    }
+    td[name="col16"] {
+        display: none!important;
+    }
+    td[name="col17"] {
+        display: none;
+    }
+    td[name="col18"] {
+        display: none!important;
+    }
+    
+    
+    
+    th[name="col5"] {
+        display: none!important;
+    }
+    th[name="col6"] {
+        display: none!important;
+    }
+    th[name="col7"] {
+        display: none!important;
+    }
+    th[name="col8"] {
+        display: none!important;
+    }
+    th[name="col9"] {
+        display: none!important;
+    }
+    th[name="col10"] {
+        display: none!important;
+    }
+    th[name="col11"] {
+        display: none!important;
+    }
+    th[name="col12"] {
+        display: none!important;
+    }
+    th[name="col13"] {
+        display: none!important;
+    }
+     th[name="col14"] {
+        display: none!important;
+    }
+     th[name="col15"] {
+        display: none!important;
+    }
+     th[name="col16"] {
+        display: none!important;
+    }
+     th[name="col17"] {
+        display: none!important;
+    }
+     th[name="col18"] {
+        display: none!important;
+    }
+    
+    a[id="inline"] {
+        display:none;
     }
 }
+

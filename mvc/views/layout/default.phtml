@@ -92,7 +92,15 @@ if (!$.browser.mobile) {
             autoSize : false
         });
     });
-}
+} else {
+    $(document).ready(function() {
+            $(".fancybox")
+        .each( function () {
+            this.href = this.href + "&mobile=T";
+        });
+    });
+    }
+ 
 
 // boutons haut / bas
 $(document).ready(function() {
@@ -273,7 +281,8 @@ div.verticaltext {
 		</div>
 		<div id="searchtable" class="rmm">
 			<ul id="menusite1">
-				
+                            <li> <a class="menuGene" href="<?php echo BDO_URL;?>"
+					title="Retour à l'accueil">Accueil</a></li>
 				<li><a class="menuGene" href="<?php echo BDO_URL;?>browser"
 					title="Le BDo'Browser ! Oh Yeah!">Browser</a></li>
 				<li><a class="menuGene" href="<?php echo BDO_URL;?>leguide"
