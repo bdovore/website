@@ -31,10 +31,10 @@ class FicheAlbum {
 
         $html = '
             <div class="cadre1 fiche_small">
-            <div style="float:left;margin-right:5px;" class="mw50">
+            <div  class="mw50 couvleft">
             ' . $this->urlAlbum($o_tome, 'couvSmall') . '
             </div>
-            <div style="float:left;font-size:0.9em;" class="mw50">';
+            <div  class="mw50 textleft">';
         
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
@@ -97,7 +97,7 @@ class FicheAlbum {
             <div style="float:left" class="mw50">
             ' . $this->urlAlbum($o_tome, 'couvBig') . '
             </div>
-            <div style="float:left;margin-left: 5px;" class="mw50">';
+            <div class="mw50 couvleft">';
 
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
