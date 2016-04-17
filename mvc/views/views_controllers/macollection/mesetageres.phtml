@@ -152,6 +152,12 @@ $page = $view->getHelper('pagination');
         <form id="f_collection" method="GET" action="" >
             <div id="filtre">
                 Filtrer :  
+                Type : <select id='sel_type' name='sel_type' onChange='$("#f_collection").submit();'>
+                    <option value="Tous" <?php if ($view->sel_type  =="Tous") echo "selected" ?> >Tous</option>
+                    <option value="BD" <?php if ($view->sel_type  =="BD") echo "selected" ?>>BD</option>
+                    <option value="Mangas" <?php if ($view->sel_type  =="Mangas") echo "selected" ?>>Mangas</option>
+                    <option value = "Comics" <?php if ($view->sel_type  =="Comics") echo "selected" ?> >Comics</option>
+                </select>
                 E.O :<input id="cb_tete" type="checkbox" value="O" name="cb_tete" onChange='$("#f_collection").submit();' <?php if ($view->eo == "O") echo "checked"; ?>/>
                 Dédicace : <input id="cb_dedicace" type="checkbox" value="O" name="cb_dedicace" onChange='$("#f_collection").submit();'  <?php if ($view->dedicace == "O") echo "checked"; ?> />
                 Cadeau :<input id="cb_cadeau" name="cb_cadeau" type="checkbox" value="O" onChange='$("#f_collection").submit();' <?php if ($view->cadeau == "O") echo "checked"; ?>/>

@@ -152,6 +152,7 @@ class Macollection extends Bdo_Controller {
            
             $page = getValInteger("page",1);
             $length = getValInteger("length",0);
+            $sel_type = getVal("sel_type","Tous");
             //TODO mettre une longueur max. pour la recherche ?
             if (!$length) {
                 if ($_COOKIE["l_etageres"] ) {
@@ -217,6 +218,9 @@ class Macollection extends Bdo_Controller {
             if ($dedicace== "O") $where .= " and flg_dedicace = 'O' ";
             if ($non_lu== "O") $where .= " and FLG_LU <> 'O' ";
             
+            if ($sel_type <> "Tous") {
+                $where .= " and g.ORIGINE = '".Db_Escape_String($sel_type) ."'";
+            }
             if($l_search <> "") {
                 $searchvalue = Db_Escape_String($l_search);
                 $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
@@ -239,7 +243,8 @@ class Macollection extends Bdo_Controller {
                 "eo" => $eo,
                 "non_lu" => $non_lu,
                 "dedicace" => $dedicace,
-                "searchvalue" => $l_search
+                "searchvalue" => $l_search,
+                 "sel_type" => $sel_type
                 ));
         }
         else {
