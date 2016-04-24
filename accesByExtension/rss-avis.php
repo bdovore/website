@@ -3,19 +3,19 @@
 
 Header("content-type: application/xml");
 
-echo '<?xml version="1.0" encoding="iso-8859-1"?>';
+echo '<?xml version="1.0" encoding="UTF-8"?>';
 echo '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">';
 
 echo '<channel>';
 echo '<atom:link href="http://www.bdovore.com/rss-avis.php" rel="self" type="application/rss+xml" />';
 echo '<title>Bdovore - Avis albums</title>';
 echo '<link>'.BDO_URL.'</link>';
-echo '<description>Les derniers avis de lecture postés sur les albums</description>';
+echo '<description>Les derniers avis de lecture postÃ©s sur les albums</description>';
 echo '<copyright>Bdovore</copyright>';
 echo '<language>fr</language>';
 
 
-// Requête pour récupérer les 50 derniers avis avec leurs couvertures
+// Requï¿½te pour rï¿½cupï¿½rer les 50 derniers avis avec leurs couvertures
 $select = "
 SELECT 
 	t.titre, 
@@ -74,7 +74,7 @@ while ($DB->next_record()) {
     $titre = str_replace ( chr(0x96), '\'',  $titre );
 	$histoire = str_replace ( chr(0x96), '\'',  $histoire );
     
-    //Conversion de la date de MySQL (yyyy-mm-jj hh:mm:ss) à RFC822 (format rss : wed, 30 apr 2009 hh:mm:ss GMT)
+    //Conversion de la date de MySQL (yyyy-mm-jj hh:mm:ss) ï¿½ RFC822 (format rss : wed, 30 apr 2009 hh:mm:ss GMT)
     $date_array = explode("-",$dte_post);
     $day_array = explode(" ",$date_array[2]);
     $time_array = explode(":",$day_array[1]);
@@ -89,7 +89,7 @@ while ($DB->next_record()) {
 
 	echo '<item>'."\n";
     echo '<title>'.$titre." (".$serie.") - ".$pseudo.'</title>'."\n";
-    echo '<link>'.BDO_URL.'membres/album_rss.php?id_tome='.$DB->f("id_tome").'#'.$var_timestamp.'</link>'."\n";
+    echo '<link>'.BDO_URL.'Album?id_tome='.$DB->f("id_tome").'#'.$var_timestamp.'</link>'."\n";
     echo '<description><![CDATA["'.$histoire.'"]]></description>'."\n";
     echo '<pubDate>'.$date.'</pubDate>'."\n";
     //echo '<bdovore:adsinfos>'."\n";
@@ -102,7 +102,7 @@ while ($DB->next_record()) {
     //echo '</bdovore:adsinfos>'."\n";
 
 
-    echo '<guid isPermaLink="true">'.BDO_URL.'membres/album_rss.php?id_tome='.$DB->f("id_tome").'#'.$var_timestamp.'</guid>';
+    echo '<guid isPermaLink="true">'.BDO_URL.'Album?id_tome='.$DB->f("id_tome").'#'.$var_timestamp.'</guid>';
     if ($DB->f("img_couv")!=NULL) {
 		$taille_couv = filesize(BDO_DIR_COUV.$DB->f("img_couv"));
         echo '<enclosure url="'.BDO_URL_IMAGE.'couv/'.$DB->f("img_couv").'" type="image/jpeg" length="'.$taille_couv.'"/>';
