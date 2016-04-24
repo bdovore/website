@@ -615,6 +615,13 @@ class Admin extends Bdo_Controller {
 
 // INSERE UN NOUVEL ALBUM DANS LA BASE
             elseif ($act == "append") {
+                
+                // on vérifie d'abord la date 
+                $txtDateParution = completeDate(postVal('txtDateParution'));
+                if (!validateDate($txtDateParution)) {
+                     echo "Erreur : la date fournie est invalide et risque de générer un album fantôme :D";
+                     exit();
+                }
                 $this->Serie->set_dataPaste(array("ID_SERIE" => postValInteger("txtSerieId")));
                 $this->Serie->load(); // chargement de la série pour récupérer le genre de l'album
 
@@ -645,8 +652,8 @@ class Admin extends Bdo_Controller {
 
                 // insère un champ dans la table id_edition
                 $this->loadModel("Edition");
-                $txtDateParution = completeDate(postVal('txtDateParution'));
-
+                
+                
                 $this->Edition->set_dataPaste(array(
                     'DTE_PARUTION' => $txtDateParution,
                     'FLAG_DTE_PARUTION' => ((postVal('FLAG_DTE_PARUTION') == "1") ? "1" : ""),

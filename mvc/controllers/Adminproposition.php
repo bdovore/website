@@ -477,6 +477,11 @@ private function getDateBeforeValid() {
             } else { // validation de la proposition
                 // on crée l'album etc...
                 // n'insère dans bd_tome que s'il s'agit d'une nouvelle édition
+                $txtDateParution = completeDate(postVal('txtDateParution'));
+                if (!validateDate($txtDateParution)) {
+                     echo "Erreur : la date fournie est invalide et risque de g&eacute;n&eacute;rer un album fantome :D";
+                     exit();
+                }
                 if (postVal('txtExistingTomeId', '') == '') {
                     // Récupère le genre de la série
                     $this->loadModel("Serie");
@@ -523,7 +528,7 @@ private function getDateBeforeValid() {
                     "ID_TOME" => $lid_tome,
                     "ID_EDITEUR" => postValInteger('txtEditeurId'),
                     "ID_COLLECTION" => postValInteger('txtCollecId'),
-                    "DTE_PARUTION" => postVal('txtDateParution'),
+                    "DTE_PARUTION" => $txtDateParution,
                     "FLG_TT" => ((postVal('chkTT') == "checkbox") ? "O" : "N"),
                     "EAN" => postVal('txtEAN'),
                     "ISBN" => postVal('txtISBN'),

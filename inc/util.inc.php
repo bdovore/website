@@ -832,7 +832,12 @@ function completeDate ($date)
 
     return $date;
 }
-
+// vérification de date valide
+function validateDate($date)
+{
+    $d = DateTime::createFromFormat('Y-m-d', $date);
+    return $d && $d->format('Y-m-d') === $date;
+}
 function detectUTF8 ($str)
 {
     $c = 0;
