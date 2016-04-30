@@ -115,7 +115,7 @@ class Auteur extends Bdo_Db_Line
         
     }
     
-    public function getNbAlbumForAuteur($auteur_id) {
+    public static function getNbAlbumForAuteur($auteur_id) {
         $query = "
 	select 
 		count(*) as nbtome 
@@ -146,5 +146,39 @@ class Auteur extends Bdo_Db_Line
             $a_obj[] = $obj;
         }
         return $a_obj;
+    }
+    
+    public static function replaceAuteur($source_id, $dest_id) {
+        // Remplace l'id d'auteur source par l'id auteur dest dans les différents champs de bd_tome
+        // Met à jour l'information contenue dans la base de données
+        $modif = 0;
+        $dest_id = intval($dest_id);
+        $source_id = intval($source_id);
+        // scenar
+        $query = "UPDATE bd_tome SET id_scenar = " . $dest_id . " where id_scenar = " . $source_id;
+        Db_query($query);
+        $modif += Db_affected_rows();
+        // scenar_alt
+        $query = "UPDATE bd_tome SET id_scenar_alt = " . $dest_id . " where id_scenar_alt = " . $source_id;
+        Db_query($query);
+        $modif += Db_affected_rows();
+        //dessin
+        $query = "UPDATE bd_tome SET id_dessin = " . $dest_id . " where id_dessin = " . $source_id;
+        Db_query($query);
+        $modif += Db_affected_rows();
+        //dessin_alt
+        $query = "UPDATE bd_tome SET id_dessin_alt = " . $dest_id . " where id_dessin_alt = " . $source_id;
+        Db_query($query);
+        $modif += Db_affected_rows();
+        //color
+        $query = "UPDATE bd_tome SET id_color = " . $dest_id . " where id_color = " . $source_id;
+        Db_query($query);
+        $modif += Db_affected_rows();
+        //color_alt
+        $query = "UPDATE bd_tome SET id_color_alt = " . $dest_id . " where id_color_alt = " . $source_id;
+        Db_query($query);
+        $modif += Db_affected_rows() ;
+        
+        return $modif;
     }
 }

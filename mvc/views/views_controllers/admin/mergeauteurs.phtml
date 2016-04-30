@@ -1,3 +1,4 @@
+<script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
 <script type="text/javascript">
 
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
@@ -68,7 +69,7 @@ function valider(){
 
 function urlsource(){
 
-	document.forms['form1'].action = "<?php echo $view->URLREFRESH;?>?source_id="+document.forms['form1'].elements['txtField1Id'].value+"&dest_id=<?php echo $view->DESTID;?>";
+	document.forms['form1'].action = "<?php echo $view->URLREFRESH;?>?source_id="+document.forms['form1'].elements['txtField1Id'].value+"&dest_id=<?php echo $view->AUTEUR2->ID_AUTEUR;?>";
 
     //alert("Saisissez les champs requis");
 
@@ -80,7 +81,7 @@ function urlsource(){
 
 function urldest(){
 
-	document.forms['form2'].action = "<?php echo $view->URLREFRESH;?>?source_id=<?php echo $view->SOURCEID;?>&dest_id="+document.forms['form2'].elements['txtField2Id'].value;
+	document.forms['form2'].action = "<?php echo $view->URLREFRESH;?>?source_id=<?php echo $view->AUTEUR1->ID_AUTEUR;?>&dest_id="+document.forms['form2'].elements['txtField2Id'].value;
 
     //alert("Saisissez les champs requis");
 
@@ -91,7 +92,7 @@ function urldest(){
 
 
 </script>
-
+<div class="cadre1">
 <table width="100%" border="1">
 
   <tr> 
@@ -108,11 +109,11 @@ function urldest(){
 
       <form name="form1" method="post" action="" onSubmit="return urlsource()">
 
-        <input name="txtField1Id" type="text" id="txtField1Id" value="<?php echo $view->AUTEURID1;?>" size="5">
+        <input name="txtField1Id" type="text" id="txtField1Id" value="<?php echo $view->AUTEUR1->ID_AUTEUR;?>" size="5">
 
-		<input name="txtField1" type="text" id="txtField1" value="<?php echo $view->AUTEUR1;?>" size="40">		
+		<input name="txtField1" type="text" id="txtField1" value="<?php echo $view->AUTEUR1->PSEUDO;?>" size="40">		
 
-        <a href="<?php echo $view->URLEDITEDIT1;?>"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a> 
+        <a class="fancybox fancybox.iframe {width:600,height:600}" href="<?php echo $view->URLEDIT1;?>"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a> 
 
         <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.form1.txtField1.value,'form1','txtField1',true)"><br>
 
@@ -124,11 +125,11 @@ function urldest(){
 
       <form name="form2" method="post" action="" onSubmit="return urldest()">
 
-        <input name="txtField2Id" type="text" id="txtField2Id" value="<?php echo $view->AUTEURID2;?>" size="5">
+        <input name="txtField2Id" type="text" id="txtField2Id" value="<?php echo $view->AUTEUR2->ID_AUTEUR;?>" size="5">
 
-        <input name="txtField2" type="text" id="txtField2" value="<?php echo $view->AUTEUR2;?>" size="40">
+        <input name="txtField2" type="text" id="txtField2" value="<?php echo $view->AUTEUR2->PSEUDO;?>" size="40">
 
-        <a href="<?php echo $view->URLEDITEDIT2;?>"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a> 
+        <a class="fancybox fancybox.iframe {width:600,height:600}" href="<?php echo $view->URLEDIT2;?>"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a> 
 
         <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.form2.txtField2.value,'form2','txtField2',true)"><br>
 
@@ -146,7 +147,7 @@ function urldest(){
 
           <td>Prenom</td>
 
-          <td colspan="4"><?php echo $view->PRENOM1;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR1->PRENOM;?></td>
 
         </tr>
 
@@ -154,7 +155,7 @@ function urldest(){
 
           <td>Nom</td>
 
-          <td colspan="4"><?php echo $view->NOM1;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR1->NOM;?></td>
 
         </tr>
 
@@ -162,7 +163,7 @@ function urldest(){
 
           <td>Date Naissance</td>
 
-          <td colspan="4"><?php echo $view->DTENAISS1;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR1->DTE_NAISS;?></td>
 
         </tr>
 
@@ -170,7 +171,7 @@ function urldest(){
 
           <td>Date Dec&egrave;s</td>
 
-          <td colspan="4"><?php echo $view->DTEDECES1;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR1->DTE_DECES;?></td>
 
         </tr>
 
@@ -178,7 +179,7 @@ function urldest(){
 
           <td>Nationalit&eacute;</td>
 
-          <td colspan="4"><?php echo $view->NATION1;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR1->NATIONALITE;?></td>
 
         </tr>
 
@@ -202,19 +203,19 @@ function urldest(){
 
           <td><div align="center"> 
 
-              <input type="checkbox" name="checkbox" value="checkbox" <?php echo $view->ISSCEN1;?> disabled>
+              <input type="checkbox" name="checkbox" value="checkbox" <?php echo ($view->AUTEUR1->FLG_SCENAR == 1 ? "checked" : "");?> disabled>
 
             </div></td>
 
           <td><div align="center"> 
 
-              <input name="checkbox2" type="checkbox" disabled value="checkbox" <?php echo $view->ISDESS1;?>>
+              <input name="checkbox2" type="checkbox" disabled value="checkbox" <?php  echo ($view->AUTEUR1->FLG_DESSIN == 1 ? "checked" : "");?>>
 
             </div></td>
 
           <td><div align="center"> 
 
-              <input type="checkbox" name="checkbox3" value="checkbox" <?php echo $view->ISCOLOR1;?> disabled>
+              <input type="checkbox" name="checkbox3" value="checkbox" <?php  echo ($view->AUTEUR1->FLG_COLOR == 1 ? "checked" : "");?> disabled>
 
             </div></td>
 
@@ -226,7 +227,7 @@ function urldest(){
 
           <td width="22%">Commentaire</td>
 
-          <td width="78%" colspan="4"><?php echo $view->COMMENT1;?></td>
+          <td width="78%" colspan="4"><?php echo $view->AUTEUR1->COMMENT;?></td>
 
         </tr>
 
@@ -234,91 +235,79 @@ function urldest(){
 
     <td><table width="100%" border="1" cellspacing="0">
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
 
           <td>Prenom</td>
 
-          <td colspan="4"><?php echo $view->PRENOM2;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR2->PRENOM;?></td>
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
 
           <td>Nom</td>
 
-          <td colspan="4"><?php echo $view->NOM2;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR2->NOM;?></td>
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
 
           <td>Date Naissance</td>
 
-          <td colspan="4"><?php echo $view->DTENAISS2;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR2->DTE_NAISS;?></td>
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
 
           <td>Date Dec&egrave;s</td>
 
-          <td colspan="4"><?php echo $view->DTEDECES2;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR2->DTE_DECES;?></td>
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
 
           <td>Nationalit&eacute;</td>
 
-          <td colspan="4"><?php echo $view->NATION2;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR2->NATIONALITE;?></td>
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
 
           <td>&nbsp;</td>
 
-          <td> 
+          <td><div align="center">Sc&eacute;nariste</div></td>
 
-            <div align="center">Sc&eacute;nariste</div></td>
+          <td><div align="center">Dessinateur</div></td>
 
-          <td> 
-
-            <div align="center">Dessinateur</div></td>
-
-          <td> 
-
-            <div align="center">Coloriste</div></td>
+          <td><div align="center">Coloriste</div></td>
 
           <td>&nbsp;</td>
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
 
           <td>&nbsp;</td>
 
-          <td> 
+          <td><div align="center"> 
 
-            <div align="center"> 
-
-              <input type="checkbox" name="checkbox" value="checkbox" <?php echo $view->ISSCEN2;?> disabled>
+              <input type="checkbox" name="checkbox" value="checkbox" <?php echo ($view->AUTEUR2->FLG_SCENAR  ? "checked" : "");?> disabled>
 
             </div></td>
 
-          <td> 
+          <td><div align="center"> 
 
-            <div align="center"> 
-
-              <input type="checkbox" name="checkbox2" value="checkbox" <?php echo $view->ISDESS2;?> disabled>
+              <input name="checkbox2" type="checkbox" disabled value="checkbox" <?php  echo ($view->AUTEUR2->FLG_DESSIN ? "checked" : "");?>>
 
             </div></td>
 
-          <td> 
+          <td><div align="center"> 
 
-            <div align="center"> 
-
-              <input type="checkbox" name="checkbox3" value="checkbox" <?php echo $view->ISCOLOR2;?> disabled>
+              <input type="checkbox" name="checkbox3" value="checkbox" <?php  echo ($view->AUTEUR2->FLG_COLOR == "1" ? "checked" : "");?> disabled>
 
             </div></td>
 
@@ -326,11 +315,11 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
 
           <td width="22%">Commentaire</td>
 
-          <td width="78%" colspan="4"><?php echo $view->COMMENT2;?></td>
+          <td width="78%" colspan="4"><?php echo $view->AUTEUR2->COMMENT;?></td>
 
         </tr>
 
@@ -342,11 +331,11 @@ function urldest(){
 
     <td bgcolor="#CCCCCC"> <p><strong>Statistiques</strong></p>
 
-      <p>Cet auteur a travaill&eacute; sur <?php echo $view->NBUSERS1;?> album(s).</p></td>
+      <p>Cet auteur a travaill&eacute; sur <?php echo $view->NBALBUM1;?> album(s).</p></td>
 
     <td bordercolor="#FFFFCC" bgcolor="#FFFFCC"> <p><strong>Statistiques</strong></p>
 
-      <p>Cet auteur a travaill&eacute; sur <?php echo $view->NBUSERS2;?> album(s).</p></td>
+      <p>Cet auteur a travaill&eacute; sur <?php echo $view->NBALBUM2;?> album(s).</p></td>
 
   </tr>
 
@@ -359,4 +348,10 @@ function urldest(){
   </tr>
 
 </table>
+</div>
+<script>
+
+ addAutocomplete("txtField1","txtField1Id","txtField1Id","<?php echo BDO_URL; ?>getjson?data=Auteur");
+  addAutocomplete("txtField2","txtField2Id","txtField2Id","<?php echo BDO_URL; ?>getjson?data=Auteur");
+</script>
 

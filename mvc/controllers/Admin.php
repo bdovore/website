@@ -615,13 +615,13 @@ class Admin extends Bdo_Controller {
 
 // INSERE UN NOUVEL ALBUM DANS LA BASE
             elseif ($act == "append") {
-                
+
                 // on vérifie d'abord la date 
                 $txtDateParution = completeDate(postVal('txtDateParution'));
                 $flgDteParution = postVal('FLAG_DTE_PARUTION');
                 if (!validateDate($txtDateParution) AND $flgDteParution <> "1") {
-                     echo "Erreur : la date fournie est invalide et risque de générer un album fantôme :D";
-                     exit();
+                    echo "Erreur : la date fournie est invalide et risque de générer un album fantôme :D";
+                    exit();
                 }
                 $this->Serie->set_dataPaste(array("ID_SERIE" => postValInteger("txtSerieId")));
                 $this->Serie->load(); // chargement de la série pour récupérer le genre de l'album
@@ -653,8 +653,8 @@ class Admin extends Bdo_Controller {
 
                 // insère un champ dans la table id_edition
                 $this->loadModel("Edition");
-                
-                
+
+
                 $this->Edition->set_dataPaste(array(
                     'DTE_PARUTION' => $txtDateParution,
                     'FLAG_DTE_PARUTION' => ((postVal('FLAG_DTE_PARUTION') == "1") ? "1" : ""),
@@ -1228,14 +1228,14 @@ class Admin extends Bdo_Controller {
         if (!User::minAccesslevel(1)) {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }
-        $this->view->set_var("PAGETITLE","Fusion Edition");
+        $this->view->set_var("PAGETITLE", "Fusion Edition");
         $error_msg[0] = "Edition &agrave; supprimer non d&eacute;finie";
         $error_msg[1] = "Edition &agrave; garder non d&eacute;finie";
         $error_msg[2] = "Edition &agrave; garder et &agrave; supprimer identiques";
-        $act = getVal("act","");
+        $act = getVal("act", "");
         $dest_id = getValInteger("dest_id");
         $source_id = getValInteger("source_id");
-        $conf= getVal("conf");
+        $conf = getVal("conf");
         $this->loadModel("Edition");
 // Fusionne les editions
         if ($act == "merge") {
@@ -1250,24 +1250,24 @@ class Admin extends Bdo_Controller {
                 header("Location:" . BDO_URL . "admin/mergeeditions?source_id=$source_id&dest_id=$dest_id&error=2");
             }
             if ($conf == "ok") {
-                
+
                 // Récupère les données de l'edition à mettre à jour (de destination)
-                $this->Edition->add_dataPaste("ID_EDITION",$source_id);
+                $this->Edition->add_dataPaste("ID_EDITION", $source_id);
                 $this->Edition->load();
-               // Efface les éditions et les couvertures correspondantes
+                // Efface les éditions et les couvertures correspondantes
                 if ($this->Edition->IMG_COUV != '') {
-                        $filename = $this->Edition->IMG_COUV;
-                        if (file_exists(BDO_DIR_COUV . $filename)) {
-                            @unlink(BDO_DIR_COUV . $filename);
-                            echo "Couverture effac&eacute;e pour l'&eacute;dition N" . $this->Edition->ID_EDITION. "<br />";
-                        }
+                    $filename = $this->Edition->IMG_COUV;
+                    if (file_exists(BDO_DIR_COUV . $filename)) {
+                        @unlink(BDO_DIR_COUV . $filename);
+                        echo "Couverture effac&eacute;e pour l'&eacute;dition N" . $this->Edition->ID_EDITION . "<br />";
                     }
-                
+                }
+
                 $this->loadModel("Useralbum");
-                $this->Useralbum->replaceEditionFromEdition($source_id,$dest_id);
+                $this->Useralbum->replaceEditionFromEdition($source_id, $dest_id);
                 echo 'R&eacute;f&eacute;rence(s) &agrave; l\'&eacute;dition modifi&eacute;e(s) dans la table users_album<br />';
 
-                
+
                 // vide la table bd_edition
                 $this->Edition->delete();
                 echo 'R&eacute;f&eacute;rence(s) &agrave; l\'album supprim&eacute;e(s) dans la table bd_edition<br />';
@@ -1285,17 +1285,17 @@ class Admin extends Bdo_Controller {
 // AFFICHER L'INTERFACE DE FUSION DES EDITIONS
         elseif ($act == "") {
 
-           
+
             // REMPLISSAGE PARTIE GAUCHE
             if ((!is_null($source_id)) & ($source_id != '')) {
-                
-                $this->Edition->add_dataPaste("ID_EDITION",$source_id);
+
+                $this->Edition->add_dataPaste("ID_EDITION", $source_id);
                 $this->Edition->load();
                 // r�cup�re le nombre d'utilisateurs
                 $nb_users1 = $this->Edition->NBR_USER_ID;
 
-               // Determine l'URL image
-                if (!  $this->Edition->IMG_COUV) {
+                // Determine l'URL image
+                if (!$this->Edition->IMG_COUV) {
                     $url_image1 = BDO_URL_IMAGE . "couv/default.png";
                 } else {
                     $url_image1 = BDO_URL_IMAGE . "couv/" . $this->Edition->IMG_COUV;
@@ -1303,7 +1303,7 @@ class Admin extends Bdo_Controller {
                 $this->view->set_var(array(
                     "EDITIONID1" => $this->Edition->ID_EDITION,
                     "EAN1" => $this->Edition->EAN_EDITION,
-                    "ISBN1" =>  $this->Edition->ISBN_EDITION,
+                    "ISBN1" => $this->Edition->ISBN_EDITION,
                     "TOMEID1" => $this->Edition->ID_TOME,
                     "TITRE1" => $this->Edition->TITRE_TOME,
                     "IDSERIE1" => $this->Edition->ID_SERIE,
@@ -1341,14 +1341,14 @@ class Admin extends Bdo_Controller {
             //REMPLISSAGE DE LA PARTIE DROITE
             if ((!is_null($dest_id)) & ($dest_id != '')) {
                 // r�cup�re le nombre d'utilisateurs
-               
-                $this->Edition->add_dataPaste("ID_EDITION",$dest_id);
+
+                $this->Edition->add_dataPaste("ID_EDITION", $dest_id);
                 $this->Edition->load();
                 $nb_users2 = $this->Edition->NBR_USER_ID;
 
-                
+
                 // Determine l'URL image
-                if (!  $this->Edition->IMG_COUV) {
+                if (!$this->Edition->IMG_COUV) {
                     $url_image2 = BDO_URL_IMAGE . "couv/default.png";
                 } else {
                     $url_image2 = BDO_URL_IMAGE . "couv/" . $this->Edition->IMG_COUV;
@@ -1356,7 +1356,7 @@ class Admin extends Bdo_Controller {
                 $this->view->set_var(array(
                     "EDITIONID2" => $this->Edition->ID_EDITION,
                     "EAN2" => $this->Edition->EAN_EDITION,
-                    "ISBN2" =>  $this->Edition->ISBN_EDITION,
+                    "ISBN2" => $this->Edition->ISBN_EDITION,
                     "TOMEID2" => $this->Edition->ID_TOME,
                     "TITRE2" => $this->Edition->TITRE_TOME,
                     "IDSERIE2" => $this->Edition->ID_SERIE,
@@ -1403,7 +1403,7 @@ class Admin extends Bdo_Controller {
                 "URLFUSION" => BDO_URL . "admin/mergeeditions?act=merge&source_id=$source_id&dest_id=$dest_id"
             ));
             // assigne la barre de login
-           $this->view->render();
+            $this->view->render();
         }
     }
 
@@ -1419,7 +1419,7 @@ class Admin extends Bdo_Controller {
                 $nom = postVal('txtNomAuteur');
                 $prenom = postVal('txtPrenomAuteur');
                 $pseudo = (postVal('txtPseudoAuteur') == '' ? postVal('txtNomAuteur') . ", " .
-                                postVal('txtPrenomAuteur')  :  postVal('txtPseudoAuteur') );
+                                postVal('txtPrenomAuteur') : postVal('txtPseudoAuteur') );
                 $auteur_id = postVal("txtIdAuteur");
                 $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $auteur_id));
                 $this->Auteur->load();
@@ -1431,7 +1431,8 @@ class Admin extends Bdo_Controller {
                 } else {
                     $img_aut = '';
                 }
-                if (issetNotEmpty($this->Auteur->IMG_AUT) and $img_aut == "") $img_aut = $this->Auteur->IMG_AUT;
+                if (issetNotEmpty($this->Auteur->IMG_AUT) and $img_aut == "")
+                    $img_aut = $this->Auteur->IMG_AUT;
                 $this->Auteur->set_dataPaste(array(
                     "ID_AUTEUR" => postVal("txtIdAuteur"),
                     "PRENOM" => $prenom,
@@ -1446,7 +1447,7 @@ class Admin extends Bdo_Controller {
                     "NATIONALITE" => postVal('txtNation'),
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
                     "VALID_DTE" => date('d/m/Y H:i:s'),
-                    "IMG_AUT" =>  $img_aut
+                    "IMG_AUT" => $img_aut
                 ));
                 $this->Auteur->update();
                 if (issetNotEmpty($this->Auteur->error)) {
@@ -1454,7 +1455,6 @@ class Admin extends Bdo_Controller {
                     exit();
                 }
                 echo GetMetaTag(2, "Mise &agrave; jour effectu&eacute;e", (BDO_URL . "admin/editauteur?auteur_id=" . postVal("txtIdAuteur")));
-               
             }
 
 // effacement d'un auteur
@@ -2026,6 +2026,125 @@ class Admin extends Bdo_Controller {
         }
     }
 
+    public function mergeAuteurs() {
+        $error_msg[0] = "Auteur à supprimer non défini";
+        $error_msg[1] = "Auteur à garder non défini";
+        $error_msg[2] = "Auteur à garder et auteur à fusionner identiques";
+        if (!User::minAccesslevel(1))
+            die("Vous n'avez pas accès à cette page.");
+        
+        $source_id = getValInteger("source_id");
+        $dest_id = getValInteger("dest_id");
+        $act = getVal("act","");
+        $conf = getVal("conf");
+        $this->loadModel("Auteur");
+        
+        if ($act == "merge") {
+            // vérifie que source_id et dest_id ont été defini
+            if ((is_null($dest_id)) | ($dest_id == "")) {
+                header("Location:" . BDO_URL . "admin/mergeauteurs?source_id=$source_id&error=1");
+            }
+            if ((is_null($source_id)) | ($source_id == "")) {
+                header("Location:" . BDO_URL . "admin/mergeauteurs?dest_id=$dest_id&error=0");
+            }
+
+            if ($source_id == $dest_id) {
+                header("Location:" . BDO_URL . "admin/mergeauteurs?source_id=$source_id&dest_id=$dest_id&error=2");
+            }
+
+            if ($conf == "ok") {
+
+                $modif = $this->Auteur->replaceAuteur($source_id, $dest_id);
+
+                echo "Nombre de records modifiées dans la table bd_tome : " . $modif . "<br>";
+
+                // Supprime l'ancien auteur
+                $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $source_id));
+                 $this->Auteur->delete();               
+                
+                echo "Auteur supprim&eacute; <br>";
+
+                $redirection = BDO_URL . "admin";
+                echo '<META http-equiv="refresh" content="4; URL=' . $redirection . '">Les auteurs ont été fusionnés.';
+            } else {
+                // Demande de confirmation
+
+                echo 'Etes-vous s&ucirc;r de vouloir fusionner les auteurs n°' . $source_id . ' et ' . $dest_id . '? <a href="' . BDO_URL . 'admin/mergeauteurs?act=merge&conf=ok&source_id=' . $source_id . '&dest_id=' . $dest_id . '">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
+                exit();
+            }
+        }
+
+        // AFFICHER
+        elseif ($act == "") {          
+
+            // REMPLISSAGE PARTIE GAUCHE
+            if ((!is_null($source_id)) & ($source_id != '')) {
+                // récupère le nombre d'utilisateurs
+                $nb_album = $this->Auteur->getNbAlbumForAuteur($source_id);
+
+                // récupère les données principales
+                $this->Auteur->set_dataPaste(array(
+                    "ID_AUTEUR" => $source_id
+                ));
+                $auteur1 = $this->Auteur->load();
+
+                $this->view->set_var(array
+                    (
+                    "AUTEUR1" => $auteur1->a_dataQuery[0],
+                    "NBALBUM1" => $nb_album,
+                    "URLEDIT1" => BDO_URL."admin/editauteur?auteur_id=".$source_id
+                ));
+            } else {
+                $this->view->set_var(array
+                    ("NBUSERS1" => "0",
+                    "URLEDIT1" => "javascript:alert('Désactivé')"
+                ));
+            }
+
+            //REMPLISSAGE DE LA PARTIE DROITE
+            if ((!is_null($dest_id)) & ($dest_id != '')) {
+                // récupère le nombre d'utilisateurs
+
+                $nb_album2 = $this->Auteur->getNbAlbumForAuteur($dest_id);
+
+                // récupère les données principales
+                // récupère les données principales
+                $this->Auteur->set_dataPaste(array(
+                    "ID_AUTEUR" => $dest_id
+                ));
+                $this->Auteur->load();
+
+                $this->view->set_var(array
+                    (
+                    "AUTEUR2" => $this->Auteur,
+                    "NBALBUM2" => $nb_album2,
+                    "URLEDIT2" => BDO_URL."admin/editauteur?auteur_id=".$dest_id
+                ));
+            } else {
+                $this->view->set_var(array
+                    ("NBALBUM2" => "0",
+                    "URLEDITEDIT2" => "javascript:alert('Désactivé')"
+                ));
+            }
+            // Message d'erreur
+            if (!is_null($error)) {
+                $this->view->set_var("ERRORMESSAGE", $error_msg[$error]);
+            }
+
+
+            // variables misesà jour dans tous les cas
+            $this->view->set_var(array
+                ("URLREFRESH" => BDO_URL . "admin/mergeauteurs",
+                "URLECHANGE" => BDO_URL . "admin/mergeauteurs?source_id=$dest_id&dest_id=$source_id",
+                "URLFUSION" => BDO_URL . "admin/mergeauteurs?act=merge&source_id=$source_id&dest_id=$dest_id"
+            ));
+
+            // assigne la barre de login
+           
+        }
+        $this->view->render();
+    }
+
     public function editCollection() {
         /*
          * Methode d'ajout / suppression / modification d'une collection
@@ -2215,152 +2334,146 @@ class Admin extends Bdo_Controller {
             echo "Image redimensionnée<br />";
         }
     }
-    
+
     public function muRenameSerie() {
-         if (!User::minAccesslevel(1)) {
-             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
-             
-         }
-         $this->loadModel("Serie");
-         $this->loadModel("Tome");
-         $act = getVal("act","");
-          $serie = getVal("serie","");
-        // Mettre à jour les informations
-        if ($act=="update"){
-                $nb = 0;
-                $num_tome  = postVal("num_tome");
-                $alb_id = postVal("alb_id");
-                $newtitre = postVal("txtNouvTitre");
-                foreach ($alb_id as $idtome){
-                        $nouv_titre = ereg_replace("#tome#", $num_tome[$idtome], $newtitre);
-                        $this->Tome->renameAlbum($idtome, $nouv_titre);
-                        $nb++;
-                }
-                echo GetMetaTag(2,"$nb albums ont été traités.",(BDO_URL."admin/murenameserie?serie=".$serie));
-        }
-
-        // AFFICHER UNE FICHE SERIE
-        elseif($act==""){                
-                if ($serie != ""){
-                    $this->Serie->set_dataPaste(array(
-                        "ID_SERIE" => $serie
-                    ));
-                    $this->Serie->load();
-                        
-                        $this->view->set_var (array(
-                        "SERIE" => stripslashes($this->Serie->NOM_SERIE),
-                        "IDSERIE" => $serie,
-                        "NOUVTITRE" => stripslashes($this->Serie->NOM_SERIE).", Tome #tome#"
-                        ));
-
-                        $dbs_tome = $this->Tome->load('c', " 
-                            WHERE bd_tome.id_serie=
-                            ".$serie." 
-                             ORDER BY bd_tome.id_tome");
-                         // selection des albums
-                         $this->view->set_var('dbs_tome', $dbs_tome);
-                }
-
-                $this->view->set_var (array(
-                "ACTIONNAME" => "Mettre à Jour",
-                "URLACTION" => BDO_URL."admin/murenameserie?act=update&serie=".$serie,
-                "URLREFRESH" => BDO_URL."admin/murenameserie",
-                "URLEDITSERIE" => BDO_URL."admin/editserie?serie_id=".$serie
-                ));
-                $this->view->layout = "iframe";
-                $this->view->render();
-               
-        }
-    } 
-    
-    public function muCouvSerie() {
         if (!User::minAccesslevel(1)) {
-             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
-             
-         }
-         $this->loadModel("Serie");
-         $this->loadModel("Tome");
-         $this->loadModel("Edition");
-         $act = getVal("act","");
-         $serie = getVal("serie","");
+            die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+        }
+        $this->loadModel("Serie");
+        $this->loadModel("Tome");
+        $act = getVal("act", "");
+        $serie = getVal("serie", "");
         // Mettre à jour les informations
-        if ($act=="update"){
-                $nb = 0;
-                $alb_id = postVal("alb_id");
-                $url_amz = postVal("url_amz");
-                foreach ($alb_id as $idtome){
-                    $this->Tome->set_dataPaste(array(
-                        "ID_TOME" => $idtome
-                    ));
-                    $this->Tome->load();
-                    // Selection le numéro de l'edition en cours
-
-
-                    $idedition = $this->Tome->ID_EDITION;
-
-                    // Efface la couverture actuelle
-                    $oldfile = $this->Tome->IMG_COUV;
-                    @unlink (BDO_DIR_COUV.$oldfile);
-
-                    // détermine le nouveau nom
-                    $newfilename = "CV-".sprintf("%06d",$idtome)."-".sprintf("%06d",$idedition);
-
-                    // Copie le fichier dans le répertoire temporaire
-                    $new_filename = get_img_from_url($url_amz[$idtome],BDO_DIR_UPLOAD,$newfilename);
-
-                    // Déplace le fichier dans le répertoire couv
-                    rename (BDO_DIR_UPLOAD.$new_filename, BDO_DIR_COUV.$new_filename);
-
-                    // Met à jour bd_edition
-                    $this->Edition->set_dataPaste(array(
-                        "ID_EDITION" => $idedition,
-                        "IMG_COUV" => $new_filename
-                     ));
-                    $this->Edition->update();
-
-
-                    $nb++;
-                }
-            echo GetMetaTag(2,"$nb albums ont été traités.",(BDO_URL."admin/mucouvserie?serie=".$serie));
+        if ($act == "update") {
+            $nb = 0;
+            $num_tome = postVal("num_tome");
+            $alb_id = postVal("alb_id");
+            $newtitre = postVal("txtNouvTitre");
+            foreach ($alb_id as $idtome) {
+                $nouv_titre = ereg_replace("#tome#", $num_tome[$idtome], $newtitre);
+                $this->Tome->renameAlbum($idtome, $nouv_titre);
+                $nb++;
+            }
+            echo GetMetaTag(2, "$nb albums ont été traités.", (BDO_URL . "admin/murenameserie?serie=" . $serie));
         }
 
         // AFFICHER UNE FICHE SERIE
-        elseif($act==""){
-           
-            if ($serie != ""){
-		
-		// récupère le infos liées à la série
-		$this->Serie->set_dataPaste(array(
+        elseif ($act == "") {
+            if ($serie != "") {
+                $this->Serie->set_dataPaste(array(
                     "ID_SERIE" => $serie
                 ));
                 $this->Serie->load();
-		$this->view->set_var (array(
-		"SERIE" => stripslashes($this->Serie->NOM_SERIE),
-		"IDSERIE" => $serie,
-		"NOUVTITRE" => stripslashes($this->Serie->NOM_SERIE).", Tome #tome#"
-		));
 
-		// Affiche les couvertures
-		$dbs_tome = $this->Tome->load('c', " 
+                $this->view->set_var(array(
+                    "SERIE" => stripslashes($this->Serie->NOM_SERIE),
+                    "IDSERIE" => $serie,
+                    "NOUVTITRE" => stripslashes($this->Serie->NOM_SERIE) . ", Tome #tome#"
+                ));
+
+                $dbs_tome = $this->Tome->load('c', " 
                             WHERE bd_tome.id_serie=
-                            ".$serie." 
+                            " . $serie . " 
                              ORDER BY bd_tome.id_tome");
-                         // selection des albums
+                // selection des albums
                 $this->view->set_var('dbs_tome', $dbs_tome);
-		
-		
             }
-            $this->view->set_var (array(
-            "ACTIONNAME" => "Mettre à Jour",
-            "URLACTION" => BDO_URL."admin/mucouvserie?act=update&serie=".$serie,
-            "URLREFRESH" => BDO_URL."admin/mucouvserie",
-            "URLEDITSERIE" => BDO_URL."admin/editserie?serie_id=".$serie
+
+            $this->view->set_var(array(
+                "ACTIONNAME" => "Mettre à Jour",
+                "URLACTION" => BDO_URL . "admin/murenameserie?act=update&serie=" . $serie,
+                "URLREFRESH" => BDO_URL . "admin/murenameserie",
+                "URLEDITSERIE" => BDO_URL . "admin/editserie?serie_id=" . $serie
+            ));
+            $this->view->layout = "iframe";
+            $this->view->render();
+        }
+    }
+
+    public function muCouvSerie() {
+        if (!User::minAccesslevel(1)) {
+            die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+        }
+        $this->loadModel("Serie");
+        $this->loadModel("Tome");
+        $this->loadModel("Edition");
+        $act = getVal("act", "");
+        $serie = getVal("serie", "");
+        // Mettre à jour les informations
+        if ($act == "update") {
+            $nb = 0;
+            $alb_id = postVal("alb_id");
+            $url_amz = postVal("url_amz");
+            foreach ($alb_id as $idtome) {
+                $this->Tome->set_dataPaste(array(
+                    "ID_TOME" => $idtome
+                ));
+                $this->Tome->load();
+                // Selection le numéro de l'edition en cours
+
+
+                $idedition = $this->Tome->ID_EDITION;
+
+                // Efface la couverture actuelle
+                $oldfile = $this->Tome->IMG_COUV;
+                @unlink(BDO_DIR_COUV . $oldfile);
+
+                // détermine le nouveau nom
+                $newfilename = "CV-" . sprintf("%06d", $idtome) . "-" . sprintf("%06d", $idedition);
+
+                // Copie le fichier dans le répertoire temporaire
+                $new_filename = get_img_from_url($url_amz[$idtome], BDO_DIR_UPLOAD, $newfilename);
+
+                // Déplace le fichier dans le répertoire couv
+                rename(BDO_DIR_UPLOAD . $new_filename, BDO_DIR_COUV . $new_filename);
+
+                // Met à jour bd_edition
+                $this->Edition->set_dataPaste(array(
+                    "ID_EDITION" => $idedition,
+                    "IMG_COUV" => $new_filename
+                ));
+                $this->Edition->update();
+
+
+                $nb++;
+            }
+            echo GetMetaTag(2, "$nb albums ont été traités.", (BDO_URL . "admin/mucouvserie?serie=" . $serie));
+        }
+
+        // AFFICHER UNE FICHE SERIE
+        elseif ($act == "") {
+
+            if ($serie != "") {
+
+                // récupère le infos liées à la série
+                $this->Serie->set_dataPaste(array(
+                    "ID_SERIE" => $serie
+                ));
+                $this->Serie->load();
+                $this->view->set_var(array(
+                    "SERIE" => stripslashes($this->Serie->NOM_SERIE),
+                    "IDSERIE" => $serie,
+                    "NOUVTITRE" => stripslashes($this->Serie->NOM_SERIE) . ", Tome #tome#"
+                ));
+
+                // Affiche les couvertures
+                $dbs_tome = $this->Tome->load('c', " 
+                            WHERE bd_tome.id_serie=
+                            " . $serie . " 
+                             ORDER BY bd_tome.id_tome");
+                // selection des albums
+                $this->view->set_var('dbs_tome', $dbs_tome);
+            }
+            $this->view->set_var(array(
+                "ACTIONNAME" => "Mettre à Jour",
+                "URLACTION" => BDO_URL . "admin/mucouvserie?act=update&serie=" . $serie,
+                "URLREFRESH" => BDO_URL . "admin/mucouvserie",
+                "URLEDITSERIE" => BDO_URL . "admin/editserie?serie_id=" . $serie
             ));
 
             $this->view->layout = "iframe";
             $this->view->render();
-         }  
-     }
+        }
+    }
 
 }
-
