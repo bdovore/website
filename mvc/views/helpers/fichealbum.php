@@ -268,7 +268,7 @@ class FicheAlbum {
                 case "couvBig": {
                         $html .= '<img src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
                         $html .= '</a>' . ($o_tome->NOM_EDITEUR ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
-                        if ($sponsor) $html .= "<div align=center>". $this->getSponsor($o_tome,false)."</div>";
+                        if ($sponsor) $html .= "<div align=center>". $this->getSponsor($o_tome,true)."</div>";
                         break;
                 }
 

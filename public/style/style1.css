@@ -1170,6 +1170,11 @@ table.list_album tr {
 #list-last-critique {
     border-spacing: 5px;
 }
+ #carre_magique {
+        width: 300px; 
+        border-width: 0px; 
+    }
+    
 @media screen and (max-width: 1200px) {
     .colleft {
         float: left;
@@ -1194,6 +1199,9 @@ table.list_album tr {
 }
 
 @media screen and (max-width: 920px), screen and (max-device-width: 667px) {
+    body {
+        margin-top:1em !important;
+    }
     .colleft {
         float: left;
         width: 200%;
@@ -1212,15 +1220,18 @@ table.list_album tr {
     .col2 {
         display:none;
     }
+    #message_accueil {
+        display:none;
+    }
     #header {
         width: 100% !important;
         margin: auto !important;
-        padding: 5px 5px 0px !important;
+        padding: 0px !important;
         min-width: 0 !important;
     }
     
     #search {
-        width : 12em !important;
+        width : 80% !important;
     }
     #content {
         width: 100% !important;
@@ -1263,6 +1274,7 @@ table.list_album tr {
     
     .couvleft {
         margin-right : 0px !important;
+        padding-left: 1em;
     }
     #logo {
         display:none;
@@ -1287,6 +1299,9 @@ table.list_album tr {
         width : 100% !important;
     }
     
+    #alb-description{
+        padding-top: 2em;
+    }
    
     td[name="col5"] {
         display: none!important;
@@ -1382,5 +1397,22 @@ table.list_album tr {
     a[id="inline"] {
         display:none;
     }
+    
+    .pagination {
+        margin: 0px !important;
+    }
+    #album_as {
+        display:none;
+    }
+    
+    .scrollauto {
+        overflow:auto;
+    }
+    
+    #carre_magique {
+        width: 100%; 
+        border-width: 0px; 
+    }
+    
 }
 

@@ -165,7 +165,7 @@ class Pagination{
         
         // informations sur la page
         
-        $menu = "\n<div id=\"menu\">\n    <ul id=\"onglets\">\n";
+        $menu = "\n<div id=\"menu\" class=\"rmm\" data-menu-title=\"Ma Collection\">\n    <ul id=\"onglets\">\n";
 
         $a_request_uri = explode('?',$_SERVER['REQUEST_URI']);
         

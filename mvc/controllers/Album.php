@@ -17,16 +17,24 @@ class Album extends Bdo_Controller {
 
         $ID_TOME = getValInteger('id_tome', 1);
         $id_edition = getValInteger('id_edition', 0);
+        $ean = getVal("ean","");
+        $isbn = getVal("isbn","");
         $frame = getVal("frame","iframe");
         $mobile = getVal("mobile",""); // check if mobile device detected
-        if ($id_edition > 0) {
+        if ($id_edition > 0 || $ean || $isbn) {
             // ajout du filtre edition 
             $this->loadModel('Edition');
-            $this->Edition->set_dataPaste(array(
-                "ID_EDITION" => $id_edition
-            ));
+            if ($ean) { // filtre par ean
+                $this->Edition->load("c"," WHERE bd_edition.ean = '".Db_Escape_String($ean)."'");
+            } else if ($isbn) {
+                 $this->Edition->load("c"," WHERE bd_edition.isbn = '".Db_Escape_String($isbn)."'");
+            } else {
+                $this->Edition->set_dataPaste(array(
+                    "ID_EDITION" => $id_edition
+                ));
 
-            $this->Edition->load();
+                $this->Edition->load();
+            }
         } else {
             /*
              * Ouverture d'une fiche sans préciser l'édition

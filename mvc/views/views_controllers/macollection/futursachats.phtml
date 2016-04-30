@@ -101,6 +101,7 @@
                 <input type="hidden" id="sort" name="sort" value="<?php echo $view->sort; ?>" />
                 <input type="hidden" id="order" name="order" value="<?php echo $view->order; ?>" />
         </form>
+        <div class="scrollauto">
         <table id="t_collection" class="display dataTable">
             <thead>
                 <tr>
@@ -147,6 +148,7 @@
             </tbody>
 
         </table>
+        </div>
             <div align="center">
               <?php 
                     $nbpage = ceil($view->nbr / $view->length);
