@@ -827,7 +827,7 @@ class Admin extends Bdo_Controller {
                     "NBUSERS2" => $nb_comments,
                     "URLDELETE" => $url_delete,
                     "URLFUSION" => BDO_URL . "admin/mergealbums?source_id=" . $this->Tome->ID_TOME,
-                    "URLSPLIT" => BDO_URL . "admin/split?alb_id=" . $this->Tome->ID_TOME,
+                    "URLSPLIT" => BDO_URL . "admin/splitedition?alb_id=" . $this->Tome->ID_TOME,
                     "URLFUSIONDELETE" => BDO_URL . "admin/fusiondelete?alb_id=" . $this->Tome->ID_TOME,
                     "URLEDITSERIE" => BDO_URL . "admin/editserie?serie_id=" . $this->Tome->ID_SERIE,
                     "URLEDITGENRE" => BDO_URL . "admin/editgenre?genre_id=" . $this->Tome->ID_GENRE,
@@ -2473,6 +2473,154 @@ class Admin extends Bdo_Controller {
 
             $this->view->layout = "iframe";
             $this->view->render();
+        }
+    }
+    
+    public function splitEdition() {
+        
+        if (!User::minAccesslevel(1)) {
+            die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+        }
+        $act = getVal("act");
+        $alb_id= getValInteger("alb_id");
+        // Split les éditions dans un nouvel album
+        if($act=="update")
+        {
+                // vérifie si une série a été passé
+                $new_serie_id = postValInteger("txtNewSerieId");
+                $old_tome_id = postValInteger("txtTomeId");
+                $chkEdition = postVal("chkEdition");
+                $txtCouv = postVal("txtCouv");
+                // teste si des editions ont été cochée
+                if (count($chkEdition) == 0) {
+                        echo GetMetaTag(2,"Aucune édition à transférer.",(BDO_URL."admin/splitedition?alb_id=".$old_tome_id));
+                        exit();
+                }
+                
+                // Récupère le genre de la nouvelle série
+                $this->loadModel("Serie");
+                $this->Serie->set_dataPaste(array("ID_SERIE" =>$new_serie_id ));
+                $this->Serie->load();
+                
+                $id_genre = $this->Serie->ID_GENRE;
+
+                // création du nouvel album dans la base bd_tome
+                $this->loadModel("Tome");
+                $this->Tome->set_dataPaste(array("ID_TOME" => $old_tome_id));
+                $this->Tome->load();
+                $newTome = new Tome();
+                $newTome->set_dataPaste(array(
+                    "TITRE" => $this->Tome->TITRE_TOME,
+                    "NUM_TOME" => $this->Tome->NUM_TOME,
+                    "ID_GENRE" => $id_genre,
+                    "ID_SERIE" =>  $new_serie_id,
+                    "ID_SCENAR" => $this->Tome->ID_SCENAR, 
+                    "ID_SCENAR_ALT"  => $this->Tome->ID_SCENAR_ALT, 
+                    "ID_DESSIN"  => $this->Tome->ID_DESSIN,     
+                    "ID_DESSIN_ALT"  => $this->Tome->ID_DESSIN_ALT, 
+                    "ID_COLOR"  => $this->Tome->ID_COLOR, 
+                    "ID_COLOR_ALT"=> $this->Tome->ID_COLOR_ALT, 
+                    "FLG_INT" => $this->Tome->FLG_INT_TOME, 
+                    "FLG_TYPE" => $this->Tome->FLG_TYPE_TOME, 
+                    "PRIX_BDNET" => $this->Tome->PRIX_BDNET, 
+                    "HISTOIRE" => $this->Tome->HISTOIRE_TOME
+                ));
+               
+                
+                $newTome->update();
+                
+
+                // récupère la valeur du dernier album inséré
+                $new_tome_id = $newTome->ID_TOME;
+
+                echo "new tome:".$new_tome_id."<br>";
+
+                // transfère les éditions à transférer sur le nouvel album
+                // et prend la première édition comme édition par défaut
+                $flg_edition = "O";
+                $this->loadModel("Edition");
+                foreach ($chkEdition as $idedition) {
+
+                        // si une couverture existe, son nom est modifié
+                        $old_filename = $txtCouv[$idedition];
+                        if ($old_filename == "")
+                        {
+                                $new_filename = "";
+                        }else{
+                                $new_filename = "CV-".sprintf("%06d",$new_tome_id)."-".sprintf("%06d",$idedition).substr($old_filename,-4);
+                                echo "renomme $old_filename en $new_filename<br>";
+                                rename(BDO_DIR_COUV.$old_filename,BDO_DIR_COUV.$new_filename);
+                        }
+
+                        if ($flg_edition == "O") //première édition comme édition par défaut
+                        {
+                                // renseigne cette edition comme defaut pour bd_tome
+                                $newTome->add_dataPaste("ID_EDITION" , $idedition);
+                                $newTome->update();
+                                $flg_edition = "N";
+                                
+                        }
+                        $this->Edition->set_dataPaste(array("ID_EDITION" => $idedition));
+                        $this->Edition->load();
+                        // Transfère les éditions sélectionnées sous le nouvel albums
+                        $this->Edition->set_dataPaste(array(
+                           "ID_TOME" => $new_tome_id,
+                            "IMG_COUV" => $new_filename
+                        ));
+                       
+                        $this->Edition->update();
+                        echo "Nombre de records modifi&eactue;es dans la table bd_edition : ".$this->Edition->affected_rows."<br>";
+                }
+
+                echo GetMetaTag(2,"Split effectu&eacute;.",(BDO_URL."admin/editalbum?alb_id=".$new_tome_id));
+                exit();
+        }
+
+        // AFFICHER UN ALBUM
+        elseif($act=="")
+        {
+                $this->loadModel("Tome");
+                $this->Tome->set_dataPaste(array("ID_TOME" =>$alb_id ));
+                $this->Tome->load();
+
+                $id_edition = $this->Tome->ID_EDITION;
+
+                // Détermine l'affichage des infos
+                $scenaristes1 = ($this->Tome->ID_SCENAR_ALT == 0) ? stripslashes($this->Tome->scpseudoscpseudo) : stripslashes($this->Tome->scpseudo)." / ".stripslashes($this->Tome->scapseudo);
+                $dessinateurs1 = ($this->Tome->ID_DESSIN_ALT  == 0) ? stripslashes($this->Tome->depseudo) : stripslashes($this->Tome->depseudo)." / ".stripslashes($this->Tome->deapseudo);
+                $coloristes1 = ($this->Tome->ID_COLOR_ALT == 0) ? stripslashes($this->Tome->copseudo) : stripslashes($this->Tome->copseudo)." / ".stripslashes($this->Tome->coapseudo);
+                $edcollec1 = ($this->Tome->NOM_COLLECTION == "<N/A>") ? stripslashes($this->Tome->NOM_EDITION) : stripslashes($this->Tome->NOM_EDITION)." / ".stripslashes($this->Tome->NOM_COLLECTION);
+                // Creation d'un nouveau Template
+               
+
+                $this->view->set_var (array
+                ("IDTOME" => $this->Tome->ID_TOME,
+                "TITRE" => stripslashes($this->Tome->TITRE_TOME),
+                "SERIEID" => $this->Tome->ID_SERIE,
+                "SERIE" => stripslashes($this->Tome->NOM_SERIE),
+                "TOME" => $this->Tome->NUM_TOME,
+                "SCENARISTES" => $scenaristes1,
+                "DESSINATEURS" => $dessinateurs1,
+                "COLORISTES" => $coloristes1,
+                "EDCOLLEC" => $edcollec1,
+                ));
+
+                // Affiche les informations relatives aux différentes éditions sauf celle par defaut
+                $this->loadModel('Edition');
+                $dbs_edition = $this->Edition->load(c, "where PROP_STATUS not in ('0','99','98') and bd_tome.id_tome =" . $alb_id);
+
+                
+
+                $this->view->set_var (array
+                ("dbs_edition" => $dbs_edition,
+                 "DEFAULT_EDITION" => $id_edition,                
+                "URLRETOURFICHE" => BDO_URL."admin/editalbum?alb_id=".$alb_id,
+                "ACTIONNAME" => "Effectuer les modifications",
+                "URLACTION" => BDO_URL."admin/splitedition?act=update"
+                ));
+                $this->view->render();
+
+                
         }
     }
 

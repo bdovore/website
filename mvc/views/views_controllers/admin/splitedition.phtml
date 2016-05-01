@@ -18,6 +18,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 	}
 }
 //--></SCRIPT>
+<div class="cadre1">
 <table width="100%" border="1" cellpadding="10" cellspacing="10" bordercolor="#333333">
   <tr> 
     <td width="66%">
@@ -83,7 +84,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
         <table width="100%" border="1" bordercolor="#333333" bgcolor="#FFFFCC">
           <tr> 
             <td bordercolor="#FFFFCC" class="label"> <p>Différentes éditions existant 
-                sur l'album &agrave; supprimer : <?php echo $view->NBEDITIONS;?></p>
+                sur l'album &agrave; supprimer : <?php echo count($view->dbs_edition->a_dataQuery);?></p>
               <p> 
               <table width="100%" border="0">
                 <tr> 
@@ -94,14 +95,24 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
                   <td width="16%" class="entete">Couverture</td>
                 </tr>
                 <!-- BEGIN EditionBlock -->
+                <?php foreach($view->dbs_edition->a_dataQuery as $edition) { 
+                    if (is_null($edition->IMG_COUV) | ($edition->IMG_COUV ==''))
+                    {
+                            $url_image = BDO_URL_COUV."default.png";
+                            $url_couv = "";
+                    }else{
+                            $url_image = BDO_URL_COUV.$edition->IMG_COUV;
+                            $url_couv = $edition->IMG_COUV;
+		}?>
                 <tr> 
-                  <td class="data"><input type="checkbox" name="chkEdition[]" value="<?php echo $view->IDEDITION;?>"></td>
-                  <td class="data"><?php echo $view->EDITEUR;?></td>
-                  <td class="data"><?php echo $view->COLLECTION;?></td>
-                  <td class="data"><?php echo $view->DTPAR;?></td>
-                  <td align="center" class="data"><a href="<?php echo $view->URLIMAGE;?>" target="_blank"><img src="<?php echo $view->URLIMAGE;?>" width="50" height="60" border="0" align="absmiddle"></a> 
-                    <input name="txtCouv[<?php echo $view->IDEDITION;?>]" type="hidden" value="<?php echo $view->URLCOUV;?>"></td>
+                  <td class="data"><input type="checkbox" name="chkEdition[]" value="<?php echo $edition->ID_EDITION;?>" <?php echo $view->DEFAULT_EDITION == $edition->ID_EDITION ? "disabled": ""; ?>></td>
+                  <td class="data"><?php echo $edition->NOM_EDITEUR;?></td>
+                  <td class="data"><?php echo $edition->NOM_COLLECTION;?></td>
+                  <td class="data"><?php echo $edition->DATE_PARUTION_EDITION;?></td>
+                  <td align="center" class="data"><a href="<?php echo $url_image;?>" target="_blank"><img src="<?php echo $url_image;?>" width="50" height="60" border="0" align="absmiddle"></a> 
+                    <input name="txtCouv[<?php echo $edition->ID_EDITION;?>]" type="hidden" value="<?php echo $url_couv;?>"></td>
                 </tr>
+                <?php } ?>
                 <!-- END EditionBlock -->
               </table>
               </p>
@@ -129,3 +140,4 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
       </p></td>
   </tr>
 </table>
+</div>
