@@ -55,3 +55,23 @@ foreach ($view->a_row as $row) {
 ?>
 	<!-- END DataBlock -->
 </table>
+<script>
+     // hack pour mobile 
+    if (!$.browser.mobile) {
+    $(document).ready(function() {
+            $(".fancybox")
+        .fancybox({
+            type: 'iframe',
+            autoSize : false
+        });
+    });
+} else {
+    $(document).ready(function() {
+            $(".fancybox")
+        .each( function () {
+            this.href = this.href + "&mobile=T";
+        });
+    });
+ }
+ 
+ </script>
