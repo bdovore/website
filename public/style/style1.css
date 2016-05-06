@@ -1202,6 +1202,10 @@ table.list_album tr {
     body {
         margin-top:1em !important;
     }
+    
+    #searchtable{
+        padding:0px 4px 0px 0px !important;
+    }
     .colleft {
         float: left;
         width: 200%;
@@ -1285,18 +1289,21 @@ table.list_album tr {
     }
     
     .contentalb {
-        width : 100% !important;
+        width : 95% !important;
+        margin:0 2px;
     }
     
     .comment {
         width : 100% !important;
     }
-    #alb-description {
-        
+   
+    .listcomment {
+        width:95%;
     }
-    
     .synopsis{
         width : 100% !important;
+        padding:20px 0px !important;
+        margin: 0px 2px !important;
     }
     
     #alb-description{

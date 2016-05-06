@@ -17,7 +17,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                     $( "#date_achat" ).datepicker({dateFormat: "dd/mm/yy"});
                 });
 		function changeEdition () {
-			window.location="album?id_tome=<?php echo $view->tome->ID_TOME;?>&id_edition="+ document.getElementById('sel_edition').value;
+			window.location="album?id_tome=<?php echo $view->tome->ID_TOME;?>&id_edition="+ document.getElementById('sel_edition').value+"&frame=<?php echo $view->frame;?>" ;
 		}
 		
 		function liencorrection () {

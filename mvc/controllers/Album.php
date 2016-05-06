@@ -90,11 +90,13 @@ class Album extends Bdo_Controller {
         $domaine = $url_referer['host'];  
         $url_host =  parse_url(BDO_URL);
         if ($domaine != $url_host['host']) {
-            $frame = "default";
+            $frame = "default";            
         }
-        if ($frame == "iframe" AND $mobile <> "T") {
+        if ($mobile == "T") $frame = "default";
+        if ($frame == "iframe") {
             $this->view->layout = "iframe";
-        }
+        } 
+        $this->view->set_var("frame",$frame);
         $this->view->render();
     }
 
