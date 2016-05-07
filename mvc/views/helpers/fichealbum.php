@@ -388,7 +388,7 @@ class FicheAlbum {
         } else if ($o_tome->EAN_EDITION) {
             $html .= "http://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=" . $o_tome->EAN_EDITION . "&mode=books-fr";
         } else {
-            $html .= "http://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=" . htmlspecialchars(stripslashes($o_tome->TITRE_TOME)) . "&mode=books-fr";
+            $html .= "http://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=" . htmlentities ($o_tome->TITRE_TOME,$flag=ENT_QUOTES) . "&mode=books-fr";
         }
         if ($img) {
             $html .= "' target='_blank'><img src='" . BDO_URL_IMAGE . "amazon.gif'></a>";
