@@ -72,7 +72,7 @@ class Export extends Bdo_Controller {
                             10 => 'Date d\'ajout',
                             11 => 'Note',
                             12 => 'Remarque',
-                            13 => 'Prêté',
+                            13 => 'Pret',
                             14 => 'Emprunteur',
                             15 => 'Date d\'achat',
                             16 => 'Prix',
@@ -151,37 +151,9 @@ class Export extends Bdo_Controller {
                         $objPHPExcel->getActiveSheet()->fromArray(array($dataTitle), NULL, 'A1');
 
                         //Ecrit le contenu
-                        $dataArray = array();
-
-                        //TODO n'exporter que ce qui a été demandé
-                        foreach ($dbs_tome->a_dataQuery as $tome ) {
-                            $a_line = array();
-                            $a_line[] = $tome->NOM_SERIE;
-                            $a_line[] = $tome->TITRE_TOME;
-                            $a_line[] = $tome->NUM_TOME;
-                            $a_line[] = $tome->ISBN_EDITION;
-                            $a_line[] = $tome->EAN_EDITION;
-                            $a_line[] = $tome->NOM_GENRE;
-                            $a_line[] = $tome->scpseudo;
-                            $a_line[] = $tome->depseudo;
-                            $a_line[] = $tome->NOM_EDITEUR;
-                            $a_line[] = $tome->NOM_COLLECTION;
-                            $a_line[] = $tome->DTE_PARUTION;
-                            
-                            if ($contenu <> 2) {
-                                $a_line[] = $tome->DATE_AJOUT;
-                                $a_line[] = $tome->USER_NOTE;
-                                $a_line[] = $tome->comment;
-                                $a_line[] = $tome->FLG_PRET;
-                                $a_line[] = $tome->NOM_PRET;
-                                $a_line[] = $tome->DATE_ACHAT;
-                                $a_line[] = $tome->cote;
-                                $a_line[] = $tome->FLG_CADEAU;
-                                $a_line[] = $tome->FLG_TETE;
-                            }
-                            
-                            $dataArray[] = $a_line;
-                        }
+                        $dataArray = $this->getRowsFromData($sel_field, $dbs_tome->a_dataQuery,$contenu);
+                        
+                        
                         $objPHPExcel->getActiveSheet()->fromArray($dataArray, NULL, 'A2');
 
 
@@ -229,36 +201,18 @@ class Export extends Bdo_Controller {
                         echo $txtTitre . "\n";
 
                         // Données de l'export
-                        
-                        foreach ($dbs_tome->a_dataQuery as $tome ) {
+                         //Ecrit le contenu
+                        $dataArray = $this->getRowsFromData($sel_field, $dbs_tome->a_dataQuery, $contenu);
+                        foreach ($dataArray as $a_line) {
+                            $sep_line = "";
                             $txtCol = "";
-                            $txtCol .= '"'.preg_replace('/"/','""',$tome->NOM_SERIE).'"';
-                            $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->TITRE_TOME).'"';
-                            $txtCol .= $sep.'"'.$tome->NUM_TOME.'"';
-                            $txtCol .= $sep.'"'.$tome->ISBN_EDITION.'"';
-                            $txtCol .= $sep.'"'.$tome->EAN_EDITION.'"';
-                            $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->NOM_GENRE).'"';
-                            $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->scpseudo).'"';
-                            $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->depseudo).'"';
-                            $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->NOM_EDITEUR).'"';
-                            $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->NOM_COLLECTION).'"';
-                            $txtCol .= $sep.'"'.$tome->DTE_PARUTION.'"';
-                            
-                            if ($contenu <> 2) {
-                                $txtCol .= $sep.'"'.$tome->DATE_AJOUT.'"';
-                                $txtCol .= $sep.'"'.$tome->USER_NOTE.'"';
-                                //$txtCol .= $sep.preg_replace("/\r|\n/"," ",$tome->comment);
-                                $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->comment).'"';
-                                $txtCol .= $sep.'"'.$tome->FLG_PRET.'"';
-                                $txtCol .= $sep.'"'.preg_replace('/"/','""',$tome->NOM_PRET).'"';
-                                $txtCol .= $sep.'"'.$tome->DATE_ACHAT.'"';
-                                $txtCol .= $sep.'"'.$tome->cote.'"';
-                                $txtCol .= $sep.'"'.$tome->FLG_CADEAU.'"';
-                                $txtCol .= $sep.'"'.$tome->FLG_TETE.'"';
+                            foreach ($a_line as $cell) {
+                                $txtCol .= $sep_line.'"'.preg_replace('/"/','""',$cell).'"';
+                                $sep_line = $sep;
                             }
-                           
                             echo $txtCol . "\n";
                         }
+                       
 
                         die();
 
@@ -570,7 +524,42 @@ class Export extends Bdo_Controller {
             die("Vous devez vous authentifier pour accéder à cette page.");
         }
     }
+    
+    private function getRowsFromData ($sel_field, $a_dataQuery,$contenu) {
+         //Ecrit le contenu
+                        $dataArray = array();
 
+                        //TODO n'exporter que ce qui a été demandé
+                        foreach ($a_dataQuery as $tome ) {
+                            $a_line = array();
+                            if (in_array("0", $sel_field)) $a_line[] = $tome->NOM_SERIE;
+                            if (in_array("1", $sel_field))$a_line[] = $tome->TITRE_TOME;
+                            if (in_array("2", $sel_field)) $a_line[] = $tome->NUM_TOME;
+                            if (in_array("3", $sel_field)) $a_line[] = $tome->ISBN_EDITION;
+                            if (in_array("19", $sel_field)) $a_line[] = $tome->EAN_EDITION;
+                            if (in_array("4", $sel_field)) $a_line[] = $tome->NOM_GENRE;
+                            if (in_array("5", $sel_field)) $a_line[] = $tome->scpseudo;
+                            if (in_array("6", $sel_field)) $a_line[] = $tome->depseudo;
+                            if (in_array("7", $sel_field)) $a_line[] = $tome->NOM_EDITEUR;
+                            if (in_array("8", $sel_field)) $a_line[] = $tome->NOM_COLLECTION;
+                            if (in_array("9", $sel_field)) $a_line[] = $tome->DTE_PARUTION;
+                            
+                            if ($contenu <> 2) {
+                                if (in_array("10", $sel_field)) $a_line[] = $tome->DATE_AJOUT;
+                                if (in_array("11", $sel_field)) $a_line[] = $tome->USER_NOTE;
+                                if (in_array("12", $sel_field))$a_line[] = $tome->comment;
+                                if (in_array("13", $sel_field))$a_line[] = $tome->FLG_PRET;
+                                if (in_array("14", $sel_field))$a_line[] = $tome->NOM_PRET;
+                                if (in_array("15", $sel_field))$a_line[] = $tome->DATE_ACHAT;
+                                if (in_array("16", $sel_field))$a_line[] = $tome->cote;
+                                if (in_array("17", $sel_field))$a_line[] = $tome->FLG_CADEAU;
+                                if (in_array("18", $sel_field))$a_line[] = $tome->FLG_TETE;
+                            }
+                            
+                            $dataArray[] = $a_line;
+                        }
+             return $dataArray;
+    }
     private function AddBandeauSerie(&$PDF, $line, $text) {
         $html = '<div style="background-color:#990000;border:1 px solid #000;font-size: 16;color:#FFCC00;font-family:Helvetica;">' . htmlspecialchars($text) . '</div>';
         $PDF->WriteHTML($html,2,true,true);
