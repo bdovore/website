@@ -76,7 +76,8 @@ class Album extends Bdo_Controller {
             //(pour les cas où on présente album *et* éditions sur une même vue ?
             'dateparution' => notIssetOrEmpty($this->Tome) ? $this->Edition->DATE_PARUTION_EDITION : $this->Tome->DTE_PARUTION,
             'PAGETITLE' => "Album BD : " . ( notIssetOrEmpty($this->Tome) ? $this->Edition->TITRE_TOME : $this->Tome->TITRE_TOME),
-            'connected' => (!empty($_SESSION['userConnect']->user_id))
+            'connected' => (!empty($_SESSION['userConnect']->user_id)),
+            "mobile" => $mobile
         ));
 
 

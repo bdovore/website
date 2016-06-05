@@ -6,7 +6,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 <div class="col1wrap">
 				<div class="col1 fond">
                                    
-                                    <div class="cadre1" width="100%" height="600px">
+                                    <div class="cadre1">
                                         <p>Les Bdovore qui ont <?php echo $ficheAlbum->urlalbum($view->tome,$class='albTitle'); ?> <?php if ($view->tome->NOM_SERIE <> $view->tome->TITRE_TOME) { ?> (série  <?php echo $ficheAlbum->urlserie($view->tome); ?> )<?php } ?> dans leur collection, ont aussi : 
                                             <br></p>
 						<!-- Column 1 start --> 
@@ -14,10 +14,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     <?php 
       $cpt = 1;
      foreach ($view->a_simil as $simil) {
-            ?><div class='cadre1'>
+            ?>
              <?php echo $ficheAlbum->big($simil,$sep=true,$getUrlSerie=true); ?>
-                  <a href="simil?ID_TOME=<?php echo $simil->ID_TOME ;?>">Albums similaires à <?php echo $simil->TITRE_TOME;?>...</a>
-             </div>
+                  
            
             
     <?php  

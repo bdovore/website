@@ -239,8 +239,10 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                         else { ?>
                                        <script> $("#couv").append("<li><img src='<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : 'default.png';?>' width='180' border='1' name='imgEdition' id='imgEdition' alt='couverture'> ");</script>
                                         <?php } ?>
-                                        <br>   <a href="<?php echo BDO_URL;?>simil?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">Vous devriez aimer aussi...</a> 
-                                        
+                                       <br>  
+                                       <div id="simil"> 
+                                           <a href="<?php echo BDO_URL;?>simil?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">Voir des albums similaires</a> 
+                                           <br></div>
                                         <br>
                                         <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
                                             
@@ -444,4 +446,17 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
          $('.numbersOnly').keyup(function () { 
                        this.value = this.value.replace(/[^0-9\.]/g,'');
                    });
+                   
+     /* add simil */
+     $( document ).ready( 
+             function () {
+        var url_simil = "./simil/getTopSimil?ID_TOME=<?php echo $view->tome->ID_TOME; ?>";
+        $.getJSON(url_simil, function (data) {
+            if (data.length > 0) {
+
+                for (var i=0; i<3;i++){                   
+                    $("#simil").append("<a href='./Album?id_tome="+data[i].ID_TOME+  "&mobile=<?php echo $view->mobile; ?>' title='"+ data[i].TITRE_TOME.replace(/'/g, "\\'") +"'><img class= 'couvSmall' src='http://www.bdovore.com/images/couv/"+ data[i].IMG_COUV+"'></a>&nbsp;");
+                }
+            }
+        });});
 </script>
