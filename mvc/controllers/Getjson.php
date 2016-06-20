@@ -59,7 +59,7 @@ class GetJSON extends Bdo_Controller {
         if ($id_auteur <> 0) {
             $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $id_auteur));
             $this->Auteur->load();
-        } else {
+        } else if ($term <> "") {
             $where = " WHERE PSEUDO like '%" . Db_Escape_String($term) . "%'";
             $this->Auteur->load("c", $where);
         }
@@ -186,7 +186,7 @@ class GetJSON extends Bdo_Controller {
         if ($id_editeur <> 0) {
             $this->Editeur->set_dataPaste(array("ID_EDITEUR" => $id_editeur));
             $this->Editeur->load();
-        } else {
+        } else if ($term <> "") {
             $where = " WHERE NOM like '%" . Db_Escape_String($term) . "%'";
 
             $this->Editeur->load("c", $where);
@@ -229,7 +229,7 @@ class GetJSON extends Bdo_Controller {
                 $where .= " AND bd_collection.NOM like '%" . Db_Escape_String($term) . "%'";
 
             $this->Collection->load("c", $where);
-        } else {
+        } else if ($term <> "") {
             $where = " WHERE bd_collection.NOM like '%" . Db_Escape_String($term) . "%'";
             $this->Collection->load("c", $where);
         }
@@ -260,7 +260,7 @@ class GetJSON extends Bdo_Controller {
         if ($id_serie <> 0) {
             $this->Serie->set_dataPaste(array("ID_SERIE" => $id_serie));
             $this->Serie->load();
-        } else {
+        } else if ($term <> "") {
             $this->Serie->load("c", " WHERE bd_serie.nom like '" . Db_Escape_String($term) . "%' group by id_serie");
         }
 
