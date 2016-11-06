@@ -1,0 +1,14 @@
+ <?php if (isset($view->dbs_tome)) { 
+        foreach ($view->dbs_tome->a_dataQuery as $tome) { 
+            
+     ?>
+   
+    
+   
+<url>
+    <loc><?php echo BDO_URL."Album?id_tome=".$tome->ID_TOME; ?> </loc>
+    <lastmod><?php echo date("Y-m-d"); ?></lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+ <?php }} ?>
