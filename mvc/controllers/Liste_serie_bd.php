@@ -20,4 +20,17 @@ class Liste_serie_bd extends Bdo_Controller {
         ));
         $this->view->render();
     }
+    
+    public function SiteMap() {
+        $let = getVal("lettre","A");
+        $this->loadModel("Serie");
+        
+        $dbs_serie = $this->Serie->getListSerie($let);
+        
+        $this->view->set_var(array(
+            "dbs_serie" => $dbs_serie
+        ));
+        $this->view->layout = "sitemap";
+        $this->view->render();
+    }
   }

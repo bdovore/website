@@ -1,0 +1,18 @@
+<?php 
+foreach(range('A','Z') as $i) {
+ 
+    ?>
+
+<sitemap>
+    <loc><?php echo BDO_URL; ?>liste_auteur_bd/sitemap?lettre=<?php echo $i; ?></loc>
+    <lastmod><?php echo date("Y-m-d");?></lastmod>
+</sitemap>
+<sitemap>
+    <loc><?php echo BDO_URL; ?>liste_serie_bd/sitemap?lettre=<?php echo $i; ?></loc>
+    <lastmod><?php echo date("Y-m-d");?></lastmod>
+</sitemap>
+<?php } ?>
+<sitemap>
+    <loc><?php echo BDO_URL; ?>sitemapbase.xml</loc>
+    <lastmod>2016-11-06</lastmod>
+</sitemap>

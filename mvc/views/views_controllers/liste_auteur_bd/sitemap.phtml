@@ -1,0 +1,15 @@
+<?php $fiche = $view->getHelper('ficheAlbum'); ?>
+ <?php if (isset($view->dbs_auteur)) { 
+        foreach ($view->dbs_auteur->a_dataQuery as $auteur) { 
+            
+     ?>
+   
+    
+   
+<url>
+    <loc><?php echo $fiche->getURLAuteur($auteur); ?> </loc>
+    <lastmod><?php echo date("Y-m-d"); ?></lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+ <?php }} ?>
