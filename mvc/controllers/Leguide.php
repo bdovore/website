@@ -76,6 +76,12 @@ class Leguide extends Bdo_Controller
                         "title" => "Derniers ajouts"
 
                 ),
+             array(
+                        'mode' => 7,
+                        "checked" => "",
+                        "title" => "Tendances BD"
+
+                ),
                /* array(
                         'mode' => 6,
                         "checked" => "",
@@ -102,31 +108,18 @@ class Leguide extends Bdo_Controller
                     $title .= "le top des votes";
                     // force le type de liste
                     $_GET['rb_list'] = 'album';
-                    if ($_GET['rb_list'] == 'serie')
-                    {
-                        $this->loadModel('Serie');
+                    
+                    $this->loadModel('Tome');
+                    $dbs_tome = $this->Tome->load('c', " 
 
-                        $dbs_serie = $this->Serie->load('c', "
-                            WHERE note_serie.NB_NOTE_SERIE > 5
-                            ".($_GET['a_idGenre'] ? "AND bd_genre.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                           and bd_genre.ORIGINE = '".$filter_origine ."'
-                           group by ID_SERIE ORDER BY (note_serie.MOYENNE_NOTE_SERIE*log(note_serie.NB_NOTE_SERIE)) DESC ".$limit);
+                        WHERE note_tome.NB_NOTE_TOME> 5
 
-                        $this->view->set_var('dbs_serie', $dbs_serie);
-                    }
-                    else
-                    {
-                        $this->loadModel('Tome');
-                        $dbs_tome = $this->Tome->load('c', " 
+                        ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
+                             and g.ORIGINE = '".$filter_origine ."'
+                        ORDER BY (note_tome.MOYENNE_NOTE_TOME*log(note_tome.NB_NOTE_TOME)) DESC ".$limit);
 
-                            WHERE note_tome.NB_NOTE_TOME> 5
-
-                            ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                                 and g.ORIGINE = '".$filter_origine ."'
-                            ORDER BY (note_tome.MOYENNE_NOTE_TOME*log(note_tome.NB_NOTE_TOME)) DESC ".$limit);
-
-                        $this->view->set_var('dbs_tome', $dbs_tome);
-                    }
+                    $this->view->set_var('dbs_tome', $dbs_tome);
+                    
 
                     break;
                 }
@@ -135,31 +128,18 @@ class Leguide extends Bdo_Controller
                 {
                     $title .= "les plus répandus";
                     $_GET['rb_list'] = 'serie';
-                    if ($_GET['rb_list'] == 'serie')
-                    {
-                        $this->loadModel('Serie');
+                   
+                    $this->loadModel('Serie');
 
-                        $dbs_serie = $this->Serie->load('c', "
+                    $dbs_serie = $this->Serie->load('c', "
 
-                            WHERE `bd_edition_stat`.`NBR_USER_ID_SERIE` > 100 
-                            ".($_GET['a_idGenre'] ? "AND bd_genre.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                            and bd_genre.origine = '".$filter_origine ."'
-                         GROUP BY ID_SERIE   ORDER BY `bd_edition_stat`.`NBR_USER_ID_SERIE` DESC ".$limit);
+                        WHERE `bd_edition_stat`.`NBR_USER_ID_SERIE` > 100 
+                        ".($_GET['a_idGenre'] ? "AND bd_genre.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
+                        and bd_genre.origine = '".$filter_origine ."'
+                     GROUP BY ID_SERIE   ORDER BY `bd_edition_stat`.`NBR_USER_ID_SERIE` DESC ".$limit);
 
-                        $this->view->set_var('dbs_serie', $dbs_serie);
-                    }
-                    else
-                    {
-                        $this->loadModel('Tome');
-
-                        $dbs_tome = $this->Tome->load('c', "
-                            WHERE `bd_edition_stat`.`NBR_USER_ID_TOME` > ".($_GET['a_idGenre'] ? 20 : 200)."
-                            ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                                 and g.origine = '".$filter_origine ."'
-                            ORDER BY `bd_edition_stat`.`NBR_USER_ID_TOME` DESC ".$limit);
-
-                        $this->view->set_var('dbs_tome', $dbs_tome);
-                    }
+                    $this->view->set_var('dbs_serie', $dbs_serie);
+                    
 
                     break;
                 }
@@ -250,6 +230,18 @@ class Leguide extends Bdo_Controller
 
             case 7: // Derniers commentaires
                 {
+                    $title .= "les albums tendances";
+                    $_GET['rb_list'] = 'album';
+
+                    $this->loadModel('Edition');
+
+                    $dbs_tome = $this->Edition->load('c', "
+                        WHERE bd_edition.`DTE_PARUTION`> date_add(now(),INTERVAL -1 YEAR) 
+                            ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
+                                 and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1 
+                            ORDER BY `NBR_USER_ID` DESC ".$limit);
+
+                    $this->view->set_var('dbs_tome', $dbs_tome);
                     break;
                 }
         }
