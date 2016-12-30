@@ -45,15 +45,16 @@ class Export extends Bdo_Controller {
                         $where = " WHERE ua.user_id = ".$_SESSION["userConnect"]->user_id;
                         if ($contenu == 0) {
                             $nomFichier = "Collection au " . strftime("%d-%m-%Y");
-                            $where .= " and flg_achat = 'N' ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME";
+                            $where .= " and flg_achat = 'N' ";
                         } else if ($contenu == 1) {
                             $nomFichier = "Achats futurs au " . strftime("%d-%m-%Y");
-                            $where .= " and flg_achat = 'O' ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME";
+                            $where .= " and flg_achat = 'O' ";
                         } else {
                             $nomFichier = "Collection et Achats futurs au " . strftime("%d-%m-%Y");
-                            $where .= " ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME";
+                           
                         }
-
+                        $order = " ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME,  en.DTE_PARUTION";
+                        $where .= $order;
                         // Construction de la query
                         $this->loadModel("Useralbum");
                         $this->Useralbum->setWithUserComment(true);
@@ -61,8 +62,7 @@ class Export extends Bdo_Controller {
                         $entete = array(0 => 'Serie',
                             1 => 'Titre',
                             2 => 'Tome',
-                            3 => 'ISBN', 
-                            19 => 'EAN',
+                            3 => 'ISBN',                             
                             4 => 'Genre', 
                             5 => 'Scenariste',
                             6 => 'Dessinateur',
@@ -77,7 +77,8 @@ class Export extends Bdo_Controller {
                             15 => 'Date d\'achat',
                             16 => 'Prix',
                             17 => 'Cadeau',
-                            18 => 'Edition originale');
+                            18 => 'Edition originale',
+                            19 => 'EAN',);
                         $largeur = array(15,15,5,10,15,15,15,15,15,15,15,15,5,20,5,10,15,10,5,5);
                         //$entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution', 'Date d\'ajout', 'Note', 'Remarque', 'Pret', 'Emprunteur', 'Date d\'achat', 'Prix', 'Cadeau', 'Edition originale');
                         //$largeur = array(20, 20, 5, 10, 15, 15, 15, 15, 15, 15, 15, 5, 20, 5, 10, 15, 10, 5, 5);
