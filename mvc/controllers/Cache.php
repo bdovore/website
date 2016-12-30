@@ -244,5 +244,15 @@ WHERE bd_edition_stat.ID_EDITION BETWEEN " . $nbruser_ID_EDITION_next . " AND " 
         $this->view->render();
         }
     }
+    public function addEditionStat() {
+        $query = "insert into bd_edition_stat 
+            (id_edition, id_tome, id_serie, id_genre, id_editeur, id_collection)
+            select e.id_edition, e.id_tome, t.id_serie, t.id_genre, e.id_editeur, e.id_collection
+            from bd_edition e inner join bd_tome t on t.id_tome = e.id_tome
+            left join bd_edition_stat s on s.id_edition = e.id_edition
+            WHERE s.id_edition is null";
+         $resultat = Db_query($requete);
+         
+    }
 }
 
