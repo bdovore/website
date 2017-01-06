@@ -9,7 +9,7 @@
 
 set_time_limit(1800); // 30 min
 
-$_SERVER['SERVER_NAME'] = "beta.bdovore.com";
+$_SERVER['SERVER_NAME'] = "www.bdovore.com";
 
 require_once ('..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'constante.php');
 // ----------------------------------------------------

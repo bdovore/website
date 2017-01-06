@@ -1,4 +1,23 @@
-<div class="cadre1">	
+<div class="cadre1">
+    <hr> 
+<h2>Cache - ajout nouvelles éditions</h2>
+<button id="lancernewedition">lancer</button>
+<div id='ddcacheNewedition'>vide</div>
+<script>
+  $(function() {
+	    $( "#lancernewedition" ).button({
+	        icons: {
+	          primary: "ui-icon-play"
+	        }
+	      })
+	      .click(function() {
+                $.get("<?php echo BDO_URL;?>cache/addeditionstat",  function(data) {
+	         		 $("#ddcacheNewedition").html(data);
+	          		//alert("Data Loaded: " + data);
+	         		});
+              })});
+</script>
+<hr>
 <h2>Cache - Tomes similaires</h2>
 <button id="lancerSimil">lancer</button>
 
@@ -41,8 +60,8 @@
 	      })
   });
   </script>
-<hr> 
-			
+
+<hr>
 <h2>Cache - nbr user by tome</h2>
 <button id="lancernbuserbytome">lancer</button>
 <form id="cachenbuserbytome" name="cachenbuserbytome" method="get">

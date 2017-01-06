@@ -251,8 +251,11 @@ WHERE bd_edition_stat.ID_EDITION BETWEEN " . $nbruser_ID_EDITION_next . " AND " 
             from bd_edition e inner join bd_tome t on t.id_tome = e.id_tome
             left join bd_edition_stat s on s.id_edition = e.id_edition
             WHERE s.id_edition is null";
-         $resultat = Db_query($requete);
-         
+         $resultat = Db_query($query);
+          $this->view->set_var(array(
+              "resultat" => $resultat));
+        $this->view->layout = "ajax";
+        $this->view->render();
     }
 }
 
