@@ -12,7 +12,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             <form id="form1" name="form1" method="get">
                 <div id="select_origine">
                     <label for="o1">BD </label>  <input type="radio" name="origine" id="o1" value="1" <?php if ($view->origine == 1) echo "checked"; ?> onclick="$('#form1').submit();">  <label for="o2">Mangas </label> <input type="radio" name="origine" id="o2" value="2" <?php if ($view->origine == 2) echo "checked"; ?> onclick="$('#form1').submit();">  <label for="o3">Comics</label>  <input type="radio" name="origine" id="o3" value="3" <?php if ($view->origine == 3) echo "checked"; ?> onclick="$('#form1').submit();">
-                    &nbsp; Genre : <select data-placeholder="Choisir un ou plusieurs genres..." name="a_idGenre[]" id="a_idGenre" style="width:350px;" multiple="multiple" size="10">
+                    &nbsp; <div id="select_genre">Genre : <select data-placeholder="Choisir un ou plusieurs genres..." name="a_idGenre[]" id="a_idGenre" style="width:350px;" multiple="multiple" size="10">
 
 <?php
 foreach ($view->dbs_genre->a_dataQuery as $genre) {
@@ -23,7 +23,7 @@ foreach ($view->dbs_genre->a_dataQuery as $genre) {
 }
 ?>
 
-                            </select>  <input type="submit" name="submitGuide" value="Ok">
+                        </select>  <input type="submit" name="submitGuide" value="Ok"></div>
                 </div>
                 <br>
 

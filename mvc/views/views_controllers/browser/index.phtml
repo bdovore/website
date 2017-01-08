@@ -45,7 +45,7 @@
         
 	</script>
 	<form id="browser" name="browser" method="get" onsubmit='return false;'>
-		Genre : <select data-placeholder="Choisir un ou plusieurs genres..."
+		<div id="select_genre">Genre : <select data-placeholder="Choisir un ou plusieurs genres..."
 			name="a_idGenre[]" id="a_idGenre" style="width: 350px;"
 			multiple="multiple" size="10">
 								<?php
@@ -56,7 +56,7 @@
         }
         ?>
 </select>
-
+                
 
 		<script type="text/javascript">
 
@@ -66,7 +66,7 @@ $(document).ready(function() {
 
 	});	
 </script>
-		<br /><br />
+		<br /><br /></div>
 		<div id="chbrowses" align=center>
        <?php
     $i = 0;
@@ -75,7 +75,7 @@ $(document).ready(function() {
         echo '<input onClick="this.form.rb_browse.value=this.value;go()" type="radio" id="chbrowse' . $i . '" name="chbrowse" value="' . $type . '" '.$checked.'/><label for="chbrowse' . $i . '">' . $lib . '</label>';
         $i ++;
     }
-    ?>&nbsp;&nbsp;&nbsp;... commençant par : <input type="text" id="searchtext"
+    ?><br>&nbsp;&nbsp;&nbsp;... commençant par : <input type="text" id="searchtext"
 					onKeyUp='chrono=setTimeout("go()", 1000);'
 					onKeyDown="clearTimeout(chrono)" autocomplete="off" name="let"
 					value="<?php echo $view->VALUELET;?>" /><input type=hidden id="rb_browse" name="rb_browse"

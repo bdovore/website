@@ -1203,6 +1203,9 @@ table.list_album tr {
         margin-top:1em !important;
     }
     
+    .cadre1 {
+        padding:0px !important;
+    }
     #searchtable{
         padding:0px 4px 0px 0px !important;
     }
@@ -1421,5 +1424,39 @@ table.list_album tr {
         border-width: 0px; 
     }
     
+}
+@media screen and (max-width: 680px), screen and (max-device-width: 667px) {
+    label[for=rb_mode4] {
+        display:none;
+    }   
+    label[for=rb_mode0] {
+        display:none;
+    }
+    label[for=rb_mode1] {
+        display:none;
+    }
+    label[for=rb_mode5] {
+        display:none;
+    }
+    
+    #select_genre{
+        display:none;
+    }
+    #onglets > li:nth-child(6) {
+         display:none;
+    }
+     #onglets > li:nth-child(7) {
+         display:none;
+    }
+     #onglets > li:nth-child(8) {
+         display:none;
+    }
+     #onglets > li:nth-child(4) {
+         display:none;
+    }
+    
+     td[class="colselect"] {
+        display: none!important;
+    }
 }
 

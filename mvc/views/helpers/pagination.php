@@ -184,7 +184,7 @@ class Pagination{
             $menu .= "><a href=\"" . BDO_URL.$lien . "\">" . $tab_menu_texte[$cle] . "</a></li>\n";
         }
         
-        $menu .= "</ul>\n</div>";
+        $menu .= "</ul>\n</div>    <hr class='expSep'>";
         
         // on renvoie le code xHTML
         return $menu;        

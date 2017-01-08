@@ -37,7 +37,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
            <?php 
            foreach ($view->dbs_tome->a_dataQuery as $tome) {
                echo "<tr>";
-               echo "<td><input type='checkbox' name='sel_tome[]' value='$tome->ID_TOME'></td>";
+               echo "<td class='colselect'><input type='checkbox' name='sel_tome[]' value='$tome->ID_TOME'></td>";
                 echo "<td>".$ficheAlbum->big($tome)."</td>";
 
 
