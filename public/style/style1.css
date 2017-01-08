@@ -1426,6 +1426,11 @@ table.list_album tr {
     
 }
 @media screen and (max-width: 680px), screen and (max-device-width: 667px) {
+    body {
+        overflow:hidden !important;
+        width:100%;
+        font-size:1.1em;
+    }
     label[for=rb_mode4] {
         display:none;
     }   
@@ -1457,6 +1462,24 @@ table.list_album tr {
     
      td[class="colselect"] {
         display: none!important;
+    }
+    
+    ul.ui-autocomplete {
+        width:100%;
+        height: 500px !important;
+        max-height:640px;
+        font-size: 1.2em;
+        
+    }
+    ul.ui-autocomplete-category:focus {
+        border:1px solid #898989;
+	background:#855a28 url(images/ui-bg_highlight-hard_30_855a28_1x100.png) 50% 50% repeat-x;
+	
+	color:#fff
+    }
+    
+    table.browse {
+        font-size: 1.2em;
     }
 }
 
