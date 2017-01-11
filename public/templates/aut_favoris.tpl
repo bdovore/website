@@ -1,21 +1,21 @@
 <SCRIPT LANGUAGE="JavaScript"><!--
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 3)) {
-		alert('Veuillez saisir au moins 3 caractères');
-	}
-	else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}
-			else {
-			mywindow=open("{URLSITE}admin/pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}
-		else {
-			mywindow=open('{URLSITE}admin/pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+    if ((isMandatory == true) && (myText.length < 3)) {
+        alert('Veuillez saisir au moins 3 caractères');
+    }
+    else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }
+            else {
+            mywindow=open("{URLSITE}admin/pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+            }
+        }
+        else {
+            mywindow=open('{URLSITE}admin/pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 //--></SCRIPT>
 {MENUCOLL}

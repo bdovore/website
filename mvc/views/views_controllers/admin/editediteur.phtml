@@ -34,7 +34,7 @@ function valider(){
     <div class="cadre1">
    <p>Nombre de collections
           : <?php echo $view->NBCOLLEC;?><br>
-		<?php if (issetNotEmpty($view->dbs_collection)) {
+        <?php if (issetNotEmpty($view->dbs_collection)) {
                     foreach ($view->dbs_collection->a_dataQuery as $collection ) { ?>
           <a href="<?php echo BDO_URL."admin/editcollection?collec_id=".$collection->ID_COLLECTION; ?>"><?php echo htmlspecialchars($collection->NOM);?></a><br>
 
@@ -44,7 +44,7 @@ function valider(){
     <div class="cadre1">
         <p><strong>Menu Express</strong></p>
         <p><a href="<?php echo $view->URLDELETE;?>">Supprimer cet editeur</a><br>
-		<a href="<?php echo $view->URLFUSION;?>" target="_blank">Fusionner cet editeur</a><br>
+        <a href="<?php echo $view->URLFUSION;?>" target="_blank">Fusionner cet editeur</a><br>
           <a href="<?php echo $view->URLADDCOLLEC;?>">Ajouter une collection &agrave; cet &eacute;diteur</a>
         </p>
 

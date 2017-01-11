@@ -4,7 +4,7 @@ c.f. https://bdovore.com/forum/viewtopic.php?t=2214 (peut-être plus complèteme
 
 1. charger toutes les sources via git dans votre répertoire en local :
 
-	git clone ssh://bdovore@ftp.bdovore.com/~/git/beta nomdedossier
+    git clone ssh://bdovore@ftp.bdovore.com/~/git/beta nomdedossier
 
 (le paramètre "nomdedossier" est facultatif, s'il n'est pas donné, un dossier nommé "beta" sera créé dans le dossier actuel)
 
@@ -12,50 +12,50 @@ c.f. https://bdovore.com/forum/viewtopic.php?t=2214 (peut-être plus complèteme
 
 3. copier et adapter le fichier public/.htaccess.sample dans le fichier public/.htaccess pour gérer l'url rewriting qui va bien.
 
-	exemple chez moi (l'alias Apache s'appelle "beta") :
+    exemple chez moi (l'alias Apache s'appelle "beta") :
 
-	SetEnv PHP_VER 5_3
-	#DocumentRoot beta.bdovore/
-	# On suit les liens symboliques
-	Options +FollowSymlinks
+    SetEnv PHP_VER 5_3
+    #DocumentRoot beta.bdovore/
+    # On suit les liens symboliques
+    Options +FollowSymlinks
 
-	#page erreur personnalisee
-	Options -Indexes
-	ErrorDocument 403 /beta/erreur.php?error=403
-	ErrorDocument 404 /beta/erreur.php?error=404
+    #page erreur personnalisee
+    Options -Indexes
+    ErrorDocument 403 /beta/erreur.php?error=403
+    ErrorDocument 404 /beta/erreur.php?error=404
 
-	# Activation du mod rewrite d'Apache
-	RewriteEngine On
-	RewriteBase /beta/
-	RewriteRule !\.(js|ico|gif|jpg|png|css|html|htm|xml|wsdl) index.php [NC,L]
+    # Activation du mod rewrite d'Apache
+    RewriteEngine On
+    RewriteBase /beta/
+    RewriteRule !\.(js|ico|gif|jpg|png|css|html|htm|xml|wsdl) index.php [NC,L]
 
 3b. Si nécessaire, activer le module "rewrite" de Apache et adapter le fichier de configuration :
 
-	Linux :
-		$ sudo a2enmod rewrite
-		$ sudo vim /etc/apache2/sites-enabled/000-default
-			<Directory /var/www/>
-				Options Indexes FollowSymLinks MultiViews
-				# changed from None to FileInfo or All (FileInfo crashed for me)
-				AllowOverride All
-				Order allow,deny
-				allow from all
-			</Directory>
-		$ sudo service apache2 restart
+    Linux :
+        $ sudo a2enmod rewrite
+        $ sudo vim /etc/apache2/sites-enabled/000-default
+            <Directory /var/www/>
+                Options Indexes FollowSymLinks MultiViews
+                # changed from None to FileInfo or All (FileInfo crashed for me)
+                AllowOverride All
+                Order allow,deny
+                allow from all
+            </Directory>
+        $ sudo service apache2 restart
 
 4. dans le repertoire "config", copier/coller le contenu de constante.php.sample dans constante.php
    et modifier/adapter les variables BDO_URL_RELATIVE et BDO_DB_...
 
-	dé-commenter la ligne définissant BDO_URL_RELATIVE et faire pointer la variable vers l'alias Apache
+    dé-commenter la ligne définissant BDO_URL_RELATIVE et faire pointer la variable vers l'alias Apache
 
-		define('BDO_URL_RELATIVE', '/beta/');
+        define('BDO_URL_RELATIVE', '/beta/');
 
-	dans la section "case 'localhost'" : modifier les paramètres de votre connexion mysql en local :
+    dans la section "case 'localhost'" : modifier les paramètres de votre connexion mysql en local :
 
-		define('BDO_DB_HOST', 'localhost');
-		define('BDO_DB_SID', 'nom_de_la_base');
-		define('BDO_DB_USER', 'nom_utilisateur_MySQL');
-		define('BDO_DB_PWD', 'mot_de_passe');
+        define('BDO_DB_HOST', 'localhost');
+        define('BDO_DB_SID', 'nom_de_la_base');
+        define('BDO_DB_USER', 'nom_utilisateur_MySQL');
+        define('BDO_DB_PWD', 'mot_de_passe');
 
 5. créer les repertoires "cache", "images/couv" et "images/tmp" à la racine avec permission d'écriture pour le serveur Apache
 

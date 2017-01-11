@@ -71,7 +71,7 @@ if (User::minAccesslevel(0)) {
 <script>
 
 $(document).ready(function() {
-	$(".fancybox")
+    $(".fancybox")
     .fancybox({
         type: 'iframe',
         autoSize : false
@@ -81,31 +81,31 @@ $(document).ready(function() {
 // boutons haut / bas
 $(document).ready(function() {
 
-	$(window).scroll(function() {
-		if ($(this).scrollTop() < $(document).height() - 200) {
-			$('.scrolldown').fadeIn();
-		} else {
-			$('.scrolldown').fadeOut();
-		}
-		if ($(this).scrollTop() > 100) {
-			$('.scrollup').fadeIn();
-		} else {
-			$('.scrollup').fadeOut();
-		}
-	});
-	$('.scrollup').click(function() {
-		$("html, body").animate({
-			scrollTop : 0
-		}, 600);
-		return false;
-	});
+    $(window).scroll(function() {
+        if ($(this).scrollTop() < $(document).height() - 200) {
+            $('.scrolldown').fadeIn();
+        } else {
+            $('.scrolldown').fadeOut();
+        }
+        if ($(this).scrollTop() > 100) {
+            $('.scrollup').fadeIn();
+        } else {
+            $('.scrollup').fadeOut();
+        }
+    });
+    $('.scrollup').click(function() {
+        $("html, body").animate({
+            scrollTop : 0
+        }, 600);
+        return false;
+    });
 
-	$('.scrolldown').click(function() {
-		$("html, body").animate({
-			scrollTop : $(document).height()
-		}, 600);
-		return false;
-	});
+    $('.scrolldown').click(function() {
+        $("html, body").animate({
+            scrollTop : $(document).height()
+        }, 600);
+        return false;
+    });
 
 });
 </script>
@@ -114,67 +114,67 @@ $(document).ready(function() {
 </head>
 
 <body onLoad="<?php echo $view->BODYONLOAD;?>">
-	<div id="header" style="position: relative; z-index: 10;">
-		<div class="fondNoir"></div>
-		<div id="logo">
-			<a href="<?php echo BDO_URL;?>"><img
-				src="<?php echo BDO_URL_IMAGE;?>site/logo_bdovore4.gif" border="0"
-				alt="logo BDovore" id="logo" /></a>
-		</div>
-		<div id="searchtable">
-			<ul id="menusite1">
-				<li><a class="menuGene" href="<?php echo BDO_URL;?>presentation"
-					title="C'est quoi ce bidule ?">Présentation</a></li>
-				<li>&nbsp;&nbsp;<a class="menuGene" href="http://forum.bdovore.com/index"
-					title="Le forum">Forum</a></li>
-				<li>&nbsp;&nbsp;&nbsp;&nbsp;<a class="menuGene" href="<?php echo BDO_URL;?>contacts"
-					title="Les coordonnées des tauliers du bidule au cas où...">Contacts</a></li>
-				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="menuGene" href="<?php echo BDO_URL;?>browser"
-					title="Le BDo'Browser ! Oh Yeah!">Browser</a></li>
-				<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="menuGene" href="<?php echo BDO_URL;?>leguide"
-					title="Le top des votes, les albums les plus répandus, les derniers commentaires, les dernières sorties...">Le
-						Guide BD</a></li>
-			</ul>
-			<form action="<?php echo BDO_URL;?>membres/search" method="post"
-				name="search" target="_self">
-				<input name="str_search" type="text" id="str_search"
-					onblur="if (!this.value) this.value='Rechercher...';"
-					onfocus="if (this.value=='Rechercher...') this.value='';" size="20"
-					maxlength="50" value="Rechercher..." /> <input type="submit"
-					name="Submit" value="Ok" />
-			</form>
-		</div>
-		<div id="login">
-			<?php echo $view->LOGINBARRE;?>
-		</div>
-		<hr class="expSep" />
-	</div>
+    <div id="header" style="position: relative; z-index: 10;">
+        <div class="fondNoir"></div>
+        <div id="logo">
+            <a href="<?php echo BDO_URL;?>"><img
+                src="<?php echo BDO_URL_IMAGE;?>site/logo_bdovore4.gif" border="0"
+                alt="logo BDovore" id="logo" /></a>
+        </div>
+        <div id="searchtable">
+            <ul id="menusite1">
+                <li><a class="menuGene" href="<?php echo BDO_URL;?>presentation"
+                    title="C'est quoi ce bidule ?">Présentation</a></li>
+                <li>&nbsp;&nbsp;<a class="menuGene" href="http://forum.bdovore.com/index"
+                    title="Le forum">Forum</a></li>
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;<a class="menuGene" href="<?php echo BDO_URL;?>contacts"
+                    title="Les coordonnées des tauliers du bidule au cas où...">Contacts</a></li>
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="menuGene" href="<?php echo BDO_URL;?>browser"
+                    title="Le BDo'Browser ! Oh Yeah!">Browser</a></li>
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="menuGene" href="<?php echo BDO_URL;?>leguide"
+                    title="Le top des votes, les albums les plus répandus, les derniers commentaires, les dernières sorties...">Le
+                        Guide BD</a></li>
+            </ul>
+            <form action="<?php echo BDO_URL;?>membres/search" method="post"
+                name="search" target="_self">
+                <input name="str_search" type="text" id="str_search"
+                    onblur="if (!this.value) this.value='Rechercher...';"
+                    onfocus="if (this.value=='Rechercher...') this.value='';" size="20"
+                    maxlength="50" value="Rechercher..." /> <input type="submit"
+                    name="Submit" value="Ok" />
+            </form>
+        </div>
+        <div id="login">
+            <?php echo $view->LOGINBARRE;?>
+        </div>
+        <hr class="expSep" />
+    </div>
 
-	<?php if (User::minAccesslevel(0)) include dirname(__FILE__).DS.'..'.DS.'views_controllers'.DS.'menuadmin.phtml';?>
-
-
-	<div id="content" style="position: relative; z-index: 10;">
-		<div class="fond"></div>
-					<?php echo $view->BODY;?>
-	</div>
+    <?php if (User::minAccesslevel(0)) include dirname(__FILE__).DS.'..'.DS.'views_controllers'.DS.'menuadmin.phtml';?>
 
 
-	<div id="footer" style="position: relative; z-index: 10;">
-		<div class="fond"></div>
+    <div id="content" style="position: relative; z-index: 10;">
+        <div class="fond"></div>
+                    <?php echo $view->BODY;?>
+    </div>
 
-		<div id="titre_avertissement">Avertissement</div>
-		<div id="texte_avertissement">Les images présentes sur ce site sont la
-			propriété de leurs auteurs et éditeurs respectifs et sont soumises à
-			copyright. Leur utilisation n'a pour but que d'illustrer
-			l'information contenue dans la base de donnée du site. Cependant, si
-			ces derniers le désirent, ces images seront retirées sur simple
-			demande de leur part.</div>
-		<div id="texte_avertissement">
-			<font color="#990000"> Lien destiné au référencement par les moteurs
-				de recherche : </font> <a href="<?php echo BDO_URL;?>indexation">Liste
-				des séries</a>
-		</div>
-	</div>
+
+    <div id="footer" style="position: relative; z-index: 10;">
+        <div class="fond"></div>
+
+        <div id="titre_avertissement">Avertissement</div>
+        <div id="texte_avertissement">Les images présentes sur ce site sont la
+            propriété de leurs auteurs et éditeurs respectifs et sont soumises à
+            copyright. Leur utilisation n'a pour but que d'illustrer
+            l'information contenue dans la base de donnée du site. Cependant, si
+            ces derniers le désirent, ces images seront retirées sur simple
+            demande de leur part.</div>
+        <div id="texte_avertissement">
+            <font color="#990000"> Lien destiné au référencement par les moteurs
+                de recherche : </font> <a href="<?php echo BDO_URL;?>indexation">Liste
+                des séries</a>
+        </div>
+    </div>
 
 
 </body>

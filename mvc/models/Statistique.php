@@ -111,12 +111,12 @@ class Statistique
     public function tomeComment ()
     {
         $resultat = Db_query("
-        	select
-        		sum(case when note is not null and note > 0 then 1 else 0 end) nbnote,
-        		sum(case when comment is not null and comment <> '' then 1 else 0 end) nbcomment
-        	from
-        		users_comment
-        	");
+            select
+                sum(case when note is not null and note > 0 then 1 else 0 end) nbnote,
+                sum(case when comment is not null and comment <> '' then 1 else 0 end) nbcomment
+            from
+                users_comment
+            ");
         if ($obj = Db_fetch_object($resultat)) {
             $this->nbNoteAlbum = $obj->nbnote;
             $this->nbCommentAlbum = $obj->nbcomment;
@@ -134,11 +134,11 @@ class Statistique
     {
         $resultat = Db_query("
             select
-        		sum(case when note is not null and note > 0 then 1 else 0 end) nbnote,
-        		sum(case when comment is not null and comment <> '' then 1 else 0 end) nbcomment
-        	from
-        		serie_comment
-        		");
+                sum(case when note is not null and note > 0 then 1 else 0 end) nbnote,
+                sum(case when comment is not null and comment <> '' then 1 else 0 end) nbcomment
+            from
+                serie_comment
+                ");
         if ($obj = Db_fetch_object($resultat)) {
             $this->nbNoteSerie = $obj->nbnote;
             $this->nbCommentSerie = $obj->nbcomment;

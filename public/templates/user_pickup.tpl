@@ -7,8 +7,8 @@
 <SCRIPT LANGUAGE="JavaScript"><!--
 function changeSource(myForm, myElement, myTitle, withID) {
     window.opener.document.forms[myForm].elements[myElement].value = myTitle;
-	window.opener.document.forms[myForm].elements[myElement+'Id'].value = withID;
-	window.close(self);
+    window.opener.document.forms[myForm].elements[myElement+'Id'].value = withID;
+    window.close(self);
 }
 
 //--></SCRIPT>

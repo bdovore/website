@@ -13,34 +13,34 @@
               <script type="text/javascript">
                 function go()
                 {
-                 	document.browser.pageNum.value='0';
-                 	go1();
+                    document.browser.pageNum.value='0';
+                    go1();
 
-               		var div=getObj("livesearch2");
-                	if (document.browser.let.value.length > 2)
-                	{
-						go2();
-                	}
-                	else
-                	{
-                		div.style.display = "none";
-                	}
+                    var div=getObj("livesearch2");
+                    if (document.browser.let.value.length > 2)
+                    {
+                        go2();
+                    }
+                    else
+                    {
+                        div.style.display = "none";
+                    }
 
                 }
                 function go1()
                 {
 
-               		SubmitXhr(document.browser,"livesearch1","browser_search.php",false);
+                    SubmitXhr(document.browser,"livesearch1","browser_search.php",false);
                 }
                 function go2()
                 {
-               		var div=getObj("livesearch2");
-					div.style.display = "block";
-               		SubmitXhr(document.browser,"livesearch2","browser_search2.php",false);
+                    var div=getObj("livesearch2");
+                    div.style.display = "block";
+                    SubmitXhr(document.browser,"livesearch2","browser_search2.php",false);
 
                 }
 
-			</script>
+            </script>
                     <form name="browser" method="get" onsubmit='return false;'>
                         <div align="center">
                             ... commence par :

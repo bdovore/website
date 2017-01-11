@@ -3,7 +3,7 @@
     <h2>Mes derniers achats</h2>
       <div align="center">
       <!-- BEGIN AlbBlock -->
-	  <br>
+      <br>
       <table width="650" border="0" bordercolor="#000000" bgcolor="#EEDED6" dwcopytype="CopyTableRow">
         <tr>
           <td width="13%" valign="top" align="center"> <img src="{COUVALBUM}" alt="" width="133" height="173" border="1"></td>
@@ -65,6 +65,6 @@
         </tr>
       </table>
       <!-- END AlbBlock -->
-	  </div>
-	  <br>
+      </div>
+      <br>
     </div>

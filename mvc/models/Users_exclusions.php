@@ -157,13 +157,13 @@ class Users_exclusions extends Bdo_Db_Line
          * Fonction pour ajouter une série à exclure pour un user donné
          */
         // on efface les anciennes références à la série
-	$this->delSerieExclude($user_id,$id_serie);
+    $this->delSerieExclude($user_id,$id_serie);
 
         $query = "
-	INSERT INTO users_exclusions (
-	`user_id` ,`id_tome` ,`id_serie`
-	) VALUES (
-	'".intval($user_id)."', '0', '".intval($id_serie)."');";
+    INSERT INTO users_exclusions (
+    `user_id` ,`id_tome` ,`id_serie`
+    ) VALUES (
+    '".intval($user_id)."', '0', '".intval($id_serie)."');";
 
          Db_query($query);
          return 1;
@@ -187,10 +187,10 @@ class Users_exclusions extends Bdo_Db_Line
          * Fonction pour ajouter une série à exclure pour un user donné
          */
         $query = "
-			INSERT IGNORE INTO users_exclusions (
-			`user_id` ,`id_tome` ,`id_serie`
-			) VALUES (
-			'".intval($user_id)."', '".intval($id_tome)."', '".intval($id_serie)."');";
+            INSERT IGNORE INTO users_exclusions (
+            `user_id` ,`id_tome` ,`id_serie`
+            ) VALUES (
+            '".intval($user_id)."', '".intval($id_tome)."', '".intval($id_serie)."');";
 
         Db_query($query);
 

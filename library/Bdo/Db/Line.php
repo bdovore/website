@@ -508,8 +508,8 @@ class Bdo_Db_Line
 
         if (! is_null($this->entite)) {
             $delete_query = "
-			DELETE FROM `" . $this->schema_name . "`.`" . $this->table_name . "`
-			WHERE " . $this->wherePkQuery . " LIMIT 1";
+            DELETE FROM `" . $this->schema_name . "`.`" . $this->table_name . "`
+            WHERE " . $this->wherePkQuery . " LIMIT 1";
 
             $typeQuery = "DELETE";
             if (Db_query($delete_query)) {
@@ -533,8 +533,8 @@ class Bdo_Db_Line
         if (count($this->a_constraint['PRIMARY']) == count($this->a_conditionPk)) {
             // recherche de la ligne à modifier
             $resultat = Db_query("
-				SELECT * FROM `" . $this->schema_name . "`.`" . $this->table_name . "`
-				WHERE " . $this->wherePkQuery . " LIMIT 1");
+                SELECT * FROM `" . $this->schema_name . "`.`" . $this->table_name . "`
+                WHERE " . $this->wherePkQuery . " LIMIT 1");
 
             if ($obj = Db_fetch_object($resultat)) {
                 $this->entite = $obj;
@@ -572,9 +572,9 @@ class Bdo_Db_Line
                     // pour la uk en dehors de la pk
 
                     if (0 < Db_CountRow("
-				SELECT * FROM `" . $this->schema_name . "`.`" . $this->table_name . "`
-				WHERE " . $whereUkQuery . "
-				AND " . $this->wherePkQueryNot)) {
+                SELECT * FROM `" . $this->schema_name . "`.`" . $this->table_name . "`
+                WHERE " . $whereUkQuery . "
+                AND " . $this->wherePkQueryNot)) {
                         $error_uk = "[";
                         foreach ($a_cons_column as $column_name) {
                             $error_uk .= " " . $this->a_column[$column_name]->TITRE_CHAMP . " ";
@@ -618,9 +618,9 @@ class Bdo_Db_Line
                 }
 
                 $update_query = "
-					UPDATE `" . $this->schema_name . "`.`" . $this->table_name . "`
-					SET " . implode(",\n", $tab) . "
-					WHERE " . $this->wherePkQuery;
+                    UPDATE `" . $this->schema_name . "`.`" . $this->table_name . "`
+                    SET " . implode(",\n", $tab) . "
+                    WHERE " . $this->wherePkQuery;
             }
             // ----------------- cas INSERT ------------------------
             else if (is_null($this->entite)) {
@@ -633,8 +633,8 @@ class Bdo_Db_Line
                 }
 
                 $update_query = "INSERT INTO `" . $this->schema_name . "`.`" . $this->table_name . "` ( " . implode(",\n", $tabKey) . "
-					) VALUES ( " . implode(",\n", $tabVal) . "
-					)";
+                    ) VALUES ( " . implode(",\n", $tabVal) . "
+                    )";
             }
             // var_dump_pre($update_query);
             // Bdo_Cfg::quit();

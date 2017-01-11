@@ -2,7 +2,7 @@
 <head>
 <title>{WNDTITLE}</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link href="{URLSITE}style/style1.css" rel="stylesheet" type="text/css" />
+    <link href="{URLSITE}style/style1.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -23,16 +23,16 @@
               <td><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Collection</strong></font></td>
               <td><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Date de Parution</strong></font></td>
               <td><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Couverture</strong></font></td>
-		</tr>
-		<!-- BEGIN EditionBlock -->
-		<tr>
+        </tr>
+        <!-- BEGIN EditionBlock -->
+        <tr>
               <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif"><div align="center"><input name="btnDefEdit" type="radio" value="{BTNVALUE}" {ISCHECKED}></div></font></td>
               <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">{EDITEUR}</font></td>
               <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">{COLLECTION}</font></td>
               <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">{DTPAR}</font></td>
               <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif"><img src="{URLIMAGE}" width="50" height="60" border="0" align="absmiddle" /></font></td>
-		</tr>
-		<!-- END EditionBlock -->
+        </tr>
+        <!-- END EditionBlock -->
         </table>
             </td>
   </tr>

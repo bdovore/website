@@ -287,7 +287,7 @@ $page = $view->getHelper('pagination');
                         <td  name="col6"><?php echo htmlspecialchars( $album->NOM_COLLECTION); ?></td>
                         <td  name="col7"><?php echo $album->scpseudo; ?></td>
                         <td  name="col8"><?php echo $album->depseudo; ?></td>
-                        <td  name="col9"><input name="date_achat" id="date_achat_<?php echo $album->ID_EDITION; ?>" value="<?php echo date('d/m/Y', strtotime($album->DATE_ACHAT)); ?>" size="10" maxlength="10" type="text" onchange="addChange(<?php echo $album->ID_EDITION; ?>);">	</td>
+                        <td  name="col9"><input name="date_achat" id="date_achat_<?php echo $album->ID_EDITION; ?>" value="<?php echo date('d/m/Y', strtotime($album->DATE_ACHAT)); ?>" size="10" maxlength="10" type="text" onchange="addChange(<?php echo $album->ID_EDITION; ?>);">  </td>
                         <td  name="col10"><input name="prix" class="numbersOnly" id="prix_<?php echo $album->ID_EDITION; ?>" value="<?php echo $album->cote; ?>" size="4" maxlength="8" type="text" onchange="addChange(<?php echo $album->ID_EDITION; ?>);"></td>
                         <td  name="col11"><input name="cb_pret" id="cb_pret_<?php echo $album->ID_EDITION; ?>" value="checkbox" type="checkbox" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" <?php if ($album->FLG_PRET == 'O') echo "checked"; ?>> </td>
                         <td  name="col12"><input name="cb_cadeau" id="cb_cadeau_<?php echo $album->ID_EDITION; ?>" value="checkbox" type="checkbox" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" <?php if ($album->FLG_CADEAU == 'O') echo "checked"; ?>> </td>

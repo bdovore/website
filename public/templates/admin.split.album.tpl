@@ -1,28 +1,28 @@
 <SCRIPT LANGUAGE="JavaScript"><!--
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 3)) {
-		alert('Veuillez saisir au moins 3 caractères');
-	}
-	else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}
-			else {
-			mywindow=open("pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}
-		else {
-			mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+    if ((isMandatory == true) && (myText.length < 3)) {
+        alert('Veuillez saisir au moins 3 caractères');
+    }
+    else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }
+            else {
+            mywindow=open("pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+            }
+        }
+        else {
+            mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 //--></SCRIPT>
 <table width="100%" border="1" cellpadding="10" cellspacing="10" bordercolor="#333333">
   <tr>
     <td width="66%">
 <form action="{URLACTION}" method="post" enctype="multipart/form-data" onsubmit="return confirm('Voulez-vous vraiment continuer ?');" name="myform" target="_self" id="myform">
-		<table width="100%" border="1" cellpadding="2" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
+        <table width="100%" border="1" cellpadding="2" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
         <!--DWLayoutTable-->
         <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC">
           <td colspan="5" class="label"><strong>Série sur laquelle reporter les éditions sélectionnées </strong></td>

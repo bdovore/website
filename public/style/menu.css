@@ -1,27 +1,27 @@
 #menuAdmin {
-	width: 80%;
-	min-width: 800px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 5px;
-	margin-bottom: 37px;
-		z-index:80;
+    width: 80%;
+    min-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    margin-bottom: 37px;
+        z-index:80;
 
 }
 #ariane {
-	width: 80%;
-	min-width: 800px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 5px;
-	margin-bottom: 5px;
+    width: 80%;
+    min-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 /* liencfgs */
 
 .titremenucfg, .lienmenucfg {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
 }     /* couleur du suivi */
 .titremenucfg a{
     background-color: #FFFFFF;
@@ -32,104 +32,104 @@
 
 }
 .titremenucfg a:hover,.titremenucfg a:active,.titremenucfg a:focus{
-	background-color:#FFE381;
+    background-color:#FFE381;
     background-image:url(../../image/bt_bg.jpg);
-	color:#FF8C00;
-	text-decoration:none;
-	}
+    color:#FF8C00;
+    text-decoration:none;
+    }
 .titremenucfg .suivi{
-	color:#000000;
-	background-color:#DDDDDD;
+    color:#000000;
+    background-color:#DDDDDD;
     background-image:url(../../image/bt_bg.jpg);
 
-	}     /* couleur du suivi */
+    }     /* couleur du suivi */
 
  /* avec url */
 .lienmenucfg a{
-	font-weight:normal;
-	background-color:#FFFFFF;
+    font-weight:normal;
+    background-color:#FFFFFF;
     background-image:url(../../image/bt_bg.jpg);
-	color:#333333;
-	border: 1px solid #E5E5E5;
-	margin: 0px 0px 0px 0px;
-	cursor:pointer;
-	cursor:hand/*IE5.0*/
-	}
+    color:#333333;
+    border: 1px solid #E5E5E5;
+    margin: 0px 0px 0px 0px;
+    cursor:pointer;
+    cursor:hand/*IE5.0*/
+    }
 .lienmenucfg a:visited{
-	color:#333333;
-	font-weight:normal;
-	}
+    color:#333333;
+    font-weight:normal;
+    }
 .lienmenucfg a:hover,.lienmenucfg a:active,.lienmenucfg a:focus{
-	background-color:#FFE381;
+    background-color:#FFE381;
     background-image:url(../../image/bt_bg.jpg);
-	color:#FF8C00;
-	text-decoration:none;
-	}
+    color:#FF8C00;
+    text-decoration:none;
+    }
 .lienmenucfg .suivi{
-	color:#000000;
-	background-color:#FFE381;
+    color:#000000;
+    background-color:#FFE381;
     background-image:url(../../image/bt_bg.jpg);
-	}
+    }
 
 #ancre_menu{
 }
 
 /* flêches */
 .fh,.fl{
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
-	font-size:80%;
-	}
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
+    font-size:80%;
+    }
 .fl{
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
-	position:absolute;
-	}
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
+    position:absolute;
+    }
 
 /* 1er niveau : */
 .mh, .vg, .vd{
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
 }
 .mh{
-	height:1.3em
-	}
+    height:1.3em
+    }
 .vd{
-	text-align:right;
-	right:1.3em;
-	}
+    text-align:right;
+    right:1.3em;
+    }
 .mh a,.vg a,.vd a{
-	display:block;
-	padding:6px 5px 6px 5px;
-	text-decoration:none;
-	}
+    display:block;
+    padding:6px 5px 6px 5px;
+    text-decoration:none;
+    }
 /* marge du body de general.css reportée */
 .vg,.vg ul,.mh,.mh ul,.vd,.vd ul{
-	position:absolute;
+    position:absolute;
     margin:0;
-	padding:0;
-	z-index:80;
+    padding:0;
+    z-index:80;
 }
 
 .vg ul,.mh ul,.vd ul{
-	visibility:hidden;
+    visibility:hidden;
 }
 .vg ul,.mh ul ul{
-	margin:-1.5em 0 0 -10px; /* écart entre ss-menu et sous-ss-menu */
-	}
+    margin:-1.5em 0 0 -10px; /* écart entre ss-menu et sous-ss-menu */
+    }
 .vd ul{
-	margin:-1.5em -10px 0 0;
-	}
+    margin:-1.5em -10px 0 0;
+    }
 
 /* 2ème niveau et suivants */
 .mh li,.vd li,.vg li{
-	display:inline; /* bordure menu horizontal */
+    display:inline; /* bordure menu horizontal */
     } /* bug IE */
 
 .mh li{
-	float:left;
-	}
+    float:left;
+    }
 .mh li li{
-	float:none;
-	}
+    float:none;
+    }
 

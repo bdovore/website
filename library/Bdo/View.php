@@ -187,10 +187,10 @@ class Bdo_View
             $this->addHeader('cache-control: no-cache');
             if (! empty($this->onLoad)) {
                 $this->a_htmlEndFile[] = '
-				<script language="javascript">
-				' . $this->onLoad . '
-				</script>
-				';
+                <script language="javascript">
+                ' . $this->onLoad . '
+                </script>
+                ';
             }
         }
 
@@ -209,9 +209,9 @@ class Bdo_View
         }
         if ($this->type != 'xhr') {
             echo "
-		</body>
-		</html>
-		";
+        </body>
+        </html>
+        ";
         }
     }
 

@@ -1,40 +1,40 @@
 <SCRIPT LANGAUGE="JavaScript"><!--
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 3)) {
-		alert('Veuillez saisir au moins 3 caractères');
-	}
-	else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}
-			else {
-			mywindow=open("pickup?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}
-		else {
-			mywindow=open('pickup?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+    if ((isMandatory == true) && (myText.length < 3)) {
+        alert('Veuillez saisir au moins 3 caractères');
+    }
+    else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }
+            else {
+            mywindow=open("pickup?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+            }
+        }
+        else {
+            mywindow=open('pickup?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 
 function refreshpage()
 {
 if (document.forms['formRefresh'].elements['txtNewTitreId'].value == "")
-	{
-	alert ("Saisissez un titre");
-	return false;
-	}else{
-	document.forms['formRefresh'].action = "<?php echo $view->REFRESHPAGE;?>"+"&report_id="+document.forms['formRefresh'].elements['txtNewTitreId'].value;
-	return true;
-	}
+    {
+    alert ("Saisissez un titre");
+    return false;
+    }else{
+    document.forms['formRefresh'].action = "<?php echo $view->REFRESHPAGE;?>"+"&report_id="+document.forms['formRefresh'].elements['txtNewTitreId'].value;
+    return true;
+    }
 }
 //--></SCRIPT>
 <table width="100%" border="1" cellpadding="10" cellspacing="10" bordercolor="#333333">
   <tr>
     <td width="66%">
-	<form action="" method="post" name="formRefresh" onsubmit="return refreshpage();">
-	<table width="100%" border="1" cellpadding="2" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
+    <form action="" method="post" name="formRefresh" onsubmit="return refreshpage();">
+    <table width="100%" border="1" cellpadding="2" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
         <!--DWLayoutTable-->
         <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC">
           <td colspan="5" class="label"><strong>Album sur lequel reporter les
@@ -95,7 +95,7 @@ if (document.forms['formRefresh'].elements['txtNewTitreId'].value == "")
           <td colspan="3"><?php echo $view->EDCOLLEC2;?></td>
         </tr>
       </table>
-	  <br>
+      <br>
 
         <table width="100%" border="1" bordercolor="#666666" bgcolor="#CCCCCC">
           <tr>

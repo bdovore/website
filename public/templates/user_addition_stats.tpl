@@ -32,7 +32,7 @@ de la valorisation</a>
     <input name="annee" type="hidden" value="{ANNEE}">
       <label><input type="radio" name="info" value="0" {TYPE0} onClick="submit();">Coût</label>
       <label><input type="radio" name="info" value="1" {TYPE1} onClick="submit();">Nombre</label>
-	</div>
+    </div>
 <!--        <div class="addFreeBlock"> <img src="{IMGANNEE}" class="addImg"> </div>-->
     <div class="addFreeBlock" style="width:601px;height:281px"> <img src="{IMGANNEE}" class="addImg"> </div>
 </div>

@@ -9,37 +9,37 @@ minAccessLevel(2);
 // vérifie si on a une mise à jour des prix
 if ($action == 'update')
 {
-	foreach ($prix_achat as $key => $value)
-	{
-		$value = str_replace (',','.',$value);
-		$query = "UPDATE users_album SET cote =".sqlise($value,'int_null')." WHERE id_edition = ".$key. " AND user_id = ".$DB->escape($_SESSION["UserId"]);
-		$DB->query ($query);
-	}
+    foreach ($prix_achat as $key => $value)
+    {
+        $value = str_replace (',','.',$value);
+        $query = "UPDATE users_album SET cote =".sqlise($value,'int_null')." WHERE id_edition = ".$key. " AND user_id = ".$DB->escape($_SESSION["UserId"]);
+        $DB->query ($query);
+    }
 }
 
 // Vérifie si mise à jour des valeurs
 if ($action == 'refresh')
 {
-	$defval[0] = $_POST["txtPrixAlbum"];
-	$defval[1] = $_POST["txtPrixIntegrale"];
-	$defval[2] = $_POST["txtPrixCoffret"];
-	$defcoffret = $_POST["lstCoffret"];
-	$query = "UPDATE users SET
-	val_alb = ".sqlise($defval[0],'int_null').",
-	val_int = ".sqlise($defval[1],'int_null').",
-	val_cof =".sqlise($defval[2],'int_null').",
-	val_cof_type = ".sqlise($defcoffret,'text')."
-	WHERE user_id=".$DB->escape($_SESSION["UserId"]);
-	$DB->query ($query);
+    $defval[0] = $_POST["txtPrixAlbum"];
+    $defval[1] = $_POST["txtPrixIntegrale"];
+    $defval[2] = $_POST["txtPrixCoffret"];
+    $defcoffret = $_POST["lstCoffret"];
+    $query = "UPDATE users SET
+    val_alb = ".sqlise($defval[0],'int_null').",
+    val_int = ".sqlise($defval[1],'int_null').",
+    val_cof =".sqlise($defval[2],'int_null').",
+    val_cof_type = ".sqlise($defcoffret,'text')."
+    WHERE user_id=".$DB->escape($_SESSION["UserId"]);
+    $DB->query ($query);
 }
 else{
-	$query = "SELECT val_alb, val_cof, val_int, val_cof_type FROM users WHERE user_id = ".$DB->escape($_SESSION["UserId"]);
-	$DB->query ($query);
-	$DB->next_record();
-	$defval[0] = $DB->f("val_alb");
-	$defval[1] = $DB->f("val_int");
-	$defval[2] = $DB->f("val_cof");
-	$defcoffret = $DB->f("val_cof_type");
+    $query = "SELECT val_alb, val_cof, val_int, val_cof_type FROM users WHERE user_id = ".$DB->escape($_SESSION["UserId"]);
+    $DB->query ($query);
+    $DB->next_record();
+    $defval[0] = $DB->f("val_alb");
+    $defval[1] = $DB->f("val_int");
+    $defval[2] = $DB->f("val_cof");
+    $defcoffret = $DB->f("val_cof_type");
 }
 
 // Variables générales
@@ -64,115 +64,115 @@ $opt_coffret[1][1] = "Valeur du coffret";
 // Récupère la collection
 $query = "
 SELECT
-	IFNULL(ua.date_achat, ua.date_ajout) as alb_date,
-	en.id_edition,
-	en.dte_parution,
-	en.flag_dte_parution,
-	ed.nom enom,
-	t.id_tome,
-	t.titre,
-	t.num_tome,
-	t.flg_type,
-	t.flg_int,
-	t.prix_bdnet,
-	ua.cote,
-	s.id_serie,
-	s.nom
+    IFNULL(ua.date_achat, ua.date_ajout) as alb_date,
+    en.id_edition,
+    en.dte_parution,
+    en.flag_dte_parution,
+    ed.nom enom,
+    t.id_tome,
+    t.titre,
+    t.num_tome,
+    t.flg_type,
+    t.flg_int,
+    t.prix_bdnet,
+    ua.cote,
+    s.id_serie,
+    s.nom
 FROM
-	users_album ua
-	INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
-	INNER JOIN bd_tome t ON en.id_tome=t.id_tome
-	INNER JOIN bd_serie s ON t.id_serie=s.id_serie
-	INNER JOIN bd_collection c ON en.id_collection=c.id_collection
-	INNER JOIN bd_editeur ed ON ed.id_editeur=c.id_editeur
+    users_album ua
+    INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
+    INNER JOIN bd_tome t ON en.id_tome=t.id_tome
+    INNER JOIN bd_serie s ON t.id_serie=s.id_serie
+    INNER JOIN bd_collection c ON en.id_collection=c.id_collection
+    INNER JOIN bd_editeur ed ON ed.id_editeur=c.id_editeur
 WHERE
-	ua.user_id=".$DB->escape($_SESSION["UserId"])."
-	AND ua.flg_achat = 'N'
+    ua.user_id=".$DB->escape($_SESSION["UserId"])."
+    AND ua.flg_achat = 'N'
 ";
 
 $DB->query ($query);
 
 while ($DB->next_record())
 {
-	if ($DB->f("flg_int") == 'O')
-	$type = 1;
-	else
-	$type = 0;
-	if ($DB->f("flg_type") == 1) $type = 2;
+    if ($DB->f("flg_int") == 'O')
+    $type = 1;
+    else
+    $type = 0;
+    if ($DB->f("flg_type") == 1) $type = 2;
 
-	// Vérifie si l'album est coté par l'utilisateur
-	if (($DB->f("cote") != '') & (($DB->f("flg_type") == 0) | ($defcoffret == 1)))
-	{
-		$class = 0;
-		// Stocke les infos liées au prix
-		$matrice_prix[0][$type] += $DB->f("cote");
-		$matrice_count[0][$type]++;
-		$tot_prix[$type] += $DB->f("cote");
-		$tot_count[$type]++;
-		$prix_retenu = $DB->f("cote");
-	}
-	// Verifie si l'album est noté par bdovore
-	elseif (($DB->f("prix_bdnet") != '') & ($DB->f("flg_type") == 0 | ($defcoffret == 1)))
-	{
-		$class = 1;
-		// Stocke les infos liées au prix
-		$matrice_prix[1][$type] += $DB->f("prix_bdnet");
-		$matrice_count[1][$type]++;
-		$tot_prix[$type] += $DB->f("prix_bdnet");
-		$tot_count[$type]++;
-		$prix_retenu = $DB->f("prix_bdnet");
-	}
-	// Non valorisé
-	elseif (($DB->f("flg_type") == 0) | ($defcoffret == 1))
-	{
-		if ($defval[$type] == '')
-		{
-			$class = 2;
-			$matrice_count[2][$type]++;
-			$tot_count[$type]++;
-			$prix_retenu = 0;
-		}else{
-			$class = 3;
-			$matrice_prix[3][$type] += $defval[$type];
-			$matrice_count[3][$type]++;
-			$tot_prix[$type] += $defval[$type];
-			$tot_count[$type]++;
-			$prix_retenu = $defval[$type];
-		}
-	}
-	// Coffret valorisé album par album
-	elseif (($DB->f("flg_type") == 1) & ($defcoffret == 0))
-	{
-		$class = 4;
-		$matrice_prix[4][0] += $defval[2];
-		$matrice_count[4][0]++;
-		$tot_prix[$type] += $defval[2];
-		$tot_count[$type]++;
-		$prix_retenu = $defval[2];
-	}
+    // Vérifie si l'album est coté par l'utilisateur
+    if (($DB->f("cote") != '') & (($DB->f("flg_type") == 0) | ($defcoffret == 1)))
+    {
+        $class = 0;
+        // Stocke les infos liées au prix
+        $matrice_prix[0][$type] += $DB->f("cote");
+        $matrice_count[0][$type]++;
+        $tot_prix[$type] += $DB->f("cote");
+        $tot_count[$type]++;
+        $prix_retenu = $DB->f("cote");
+    }
+    // Verifie si l'album est noté par bdovore
+    elseif (($DB->f("prix_bdnet") != '') & ($DB->f("flg_type") == 0 | ($defcoffret == 1)))
+    {
+        $class = 1;
+        // Stocke les infos liées au prix
+        $matrice_prix[1][$type] += $DB->f("prix_bdnet");
+        $matrice_count[1][$type]++;
+        $tot_prix[$type] += $DB->f("prix_bdnet");
+        $tot_count[$type]++;
+        $prix_retenu = $DB->f("prix_bdnet");
+    }
+    // Non valorisé
+    elseif (($DB->f("flg_type") == 0) | ($defcoffret == 1))
+    {
+        if ($defval[$type] == '')
+        {
+            $class = 2;
+            $matrice_count[2][$type]++;
+            $tot_count[$type]++;
+            $prix_retenu = 0;
+        }else{
+            $class = 3;
+            $matrice_prix[3][$type] += $defval[$type];
+            $matrice_count[3][$type]++;
+            $tot_prix[$type] += $defval[$type];
+            $tot_count[$type]++;
+            $prix_retenu = $defval[$type];
+        }
+    }
+    // Coffret valorisé album par album
+    elseif (($DB->f("flg_type") == 1) & ($defcoffret == 0))
+    {
+        $class = 4;
+        $matrice_prix[4][0] += $defval[2];
+        $matrice_count[4][0]++;
+        $tot_prix[$type] += $defval[2];
+        $tot_count[$type]++;
+        $prix_retenu = $defval[2];
+    }
 
-	// stocke les valeurs de détail
-	$idedition[$class][$count[$class]] = $DB->f("id_edition");
-	$serie[$class][$count[$class]] = stripslashes($DB->f("nom"));
-	$idserie[$class][$count[$class]] = stripslashes($DB->f("id_serie"));
-	$titre[$class][$count[$class]] = stripslashes($DB->f("titre"));
-	$editeur[$class][$count[$class]] = $DB->f("enom") . ' / ' . dateParution($DB->f("dte_parution"),$DB->f("flag_dte_parution"));
-	$tome[$class][$count[$class]] = $DB->f("num_tome");
-	$prixachat[$class][$count[$class]] = $DB->f("cote");
-	$prixbdovore[$class][$count[$class]] = $DB->f("prix_bdnet");
-	$prixutil[$class][$count[$class]] = $prix_retenu;
-	$count[$class]++;
+    // stocke les valeurs de détail
+    $idedition[$class][$count[$class]] = $DB->f("id_edition");
+    $serie[$class][$count[$class]] = stripslashes($DB->f("nom"));
+    $idserie[$class][$count[$class]] = stripslashes($DB->f("id_serie"));
+    $titre[$class][$count[$class]] = stripslashes($DB->f("titre"));
+    $editeur[$class][$count[$class]] = $DB->f("enom") . ' / ' . dateParution($DB->f("dte_parution"),$DB->f("flag_dte_parution"));
+    $tome[$class][$count[$class]] = $DB->f("num_tome");
+    $prixachat[$class][$count[$class]] = $DB->f("cote");
+    $prixbdovore[$class][$count[$class]] = $DB->f("prix_bdnet");
+    $prixutil[$class][$count[$class]] = $prix_retenu;
+    $count[$class]++;
 
-	// stocke les valeurs totales
-	$idedition_all[$count_all] = $DB->f("id_edition");
-	$serie_all[$count_all] = stripslashes($DB->f("nom"));
-	$titre_all[$count_all] = stripslashes($DB->f("titre"));
-	$editeur_all[$count_all] = $DB->f("enom") . ' / ' . dateParution($DB->f("dte_parution"),$DB->f("flag_dte_parution"));
-	$tome_all[$count_all] = $DB->f("num_tome");
-	$prixachat_all[$count_all] = $DB->f("cote");
-	$prixbdovore_all[$count_all] = $DB->f("prix_bdnet");
-	$prixutil_all[$count_all] = $prix_retenu;
-	$count_all++;
+    // stocke les valeurs totales
+    $idedition_all[$count_all] = $DB->f("id_edition");
+    $serie_all[$count_all] = stripslashes($DB->f("nom"));
+    $titre_all[$count_all] = stripslashes($DB->f("titre"));
+    $editeur_all[$count_all] = $DB->f("enom") . ' / ' . dateParution($DB->f("dte_parution"),$DB->f("flag_dte_parution"));
+    $tome_all[$count_all] = $DB->f("num_tome");
+    $prixachat_all[$count_all] = $DB->f("cote");
+    $prixbdovore_all[$count_all] = $DB->f("prix_bdnet");
+    $prixutil_all[$count_all] = $prix_retenu;
+    $count_all++;
 }
 
 // Affichage du tableau de détail
@@ -215,60 +215,60 @@ $t->set_var (array
 
 if (isset($detail))
 {
-	if ($detail == 5)
-	{	// Affiche tous les albums sans distinction
-		$num_alb = $count_all-1;
-		if (($first + $nb) > $num_alb)
-		$max_display = $num_alb;
-		else
-		$max_display = ($first + $nb -1);
+    if ($detail == 5)
+    {   // Affiche tous les albums sans distinction
+        $num_alb = $count_all-1;
+        if (($first + $nb) > $num_alb)
+        $max_display = $num_alb;
+        else
+        $max_display = ($first + $nb -1);
 
-		// on déclare le block à utiliser
-		$t->set_block('tpBody','RowBlock','RBlock');
-		for ($i=$first ; $i <= $max_display; $i++)
-		{
-			$t->set_var (array
-			("IDEDITION" => $idedition_all[$i],
-			"ALBSERIE" => $serie_all[$i],
-			"ALBTOME" => $tome_all[$i],
-			"ALBTITRE" => $titre_all[$i],
-			"ALBEDITEUR" => $editeur_all[$i],
-			"PRIX" => ($prixbdovore_all[$i] != '') ? number_format($prixbdovore_all[$i],2,".",",") : $prixbdovore_all[$i],
-			"PRIXACHAT" => $prixachat_all[$i],
-			"PRIXRETENU" => number_format($prixutil_all[$i],2,".",",")
-			));
-			// Affiche la ligne
-			$t->parse ("RBlock", "RowBlock",true);
-		}
-	}else{
-		// Affiche uniquement la catégorie concernée
-		$num_alb = $count[$detail]-1;
-		if (($first + $nb) > $num_alb)
-		$max_display = $num_alb;
-		else
-		$max_display = ($first + $nb -1);
+        // on déclare le block à utiliser
+        $t->set_block('tpBody','RowBlock','RBlock');
+        for ($i=$first ; $i <= $max_display; $i++)
+        {
+            $t->set_var (array
+            ("IDEDITION" => $idedition_all[$i],
+            "ALBSERIE" => $serie_all[$i],
+            "ALBTOME" => $tome_all[$i],
+            "ALBTITRE" => $titre_all[$i],
+            "ALBEDITEUR" => $editeur_all[$i],
+            "PRIX" => ($prixbdovore_all[$i] != '') ? number_format($prixbdovore_all[$i],2,".",",") : $prixbdovore_all[$i],
+            "PRIXACHAT" => $prixachat_all[$i],
+            "PRIXRETENU" => number_format($prixutil_all[$i],2,".",",")
+            ));
+            // Affiche la ligne
+            $t->parse ("RBlock", "RowBlock",true);
+        }
+    }else{
+        // Affiche uniquement la catégorie concernée
+        $num_alb = $count[$detail]-1;
+        if (($first + $nb) > $num_alb)
+        $max_display = $num_alb;
+        else
+        $max_display = ($first + $nb -1);
 
-		// on déclare le block à utiliser
-		$t->set_block('tpBody','RowBlock','RBlock');
-		for ($i=$first ; $i <= $max_display; $i++)
-		{
-			$t->set_var (array
-			("IDEDITION" => $idedition[$detail][$i],
-			"URLTOME" => BDO_URL."membres/album.php?id_edition=".$idedition[$detail][$i],
-			"ALBSERIE" => $serie[$detail][$i],
-			"URLSERIE" => BDO_URL."membres/userserie.php?id_serie=".$idserie[$detail][$i],
-			"ALBTOME" => $tome[$detail][$i],
-			"ALBTITRE" => $titre[$detail][$i],
-			"ALBEDITEUR" => $editeur[$detail][$i],
-			"PRIX" => ($prixbdovore[$detail][$i] != '') ? number_format($prixbdovore[$detail][$i],2,".",",") : $prixbdovore[$detail][$i],
-			"PRIXACHAT" => $prixachat[$detail][$i],
-			"PRIXRETENU" => number_format($prixutil[$detail][$i],2,".",",")
-			));
+        // on déclare le block à utiliser
+        $t->set_block('tpBody','RowBlock','RBlock');
+        for ($i=$first ; $i <= $max_display; $i++)
+        {
+            $t->set_var (array
+            ("IDEDITION" => $idedition[$detail][$i],
+            "URLTOME" => BDO_URL."membres/album.php?id_edition=".$idedition[$detail][$i],
+            "ALBSERIE" => $serie[$detail][$i],
+            "URLSERIE" => BDO_URL."membres/userserie.php?id_serie=".$idserie[$detail][$i],
+            "ALBTOME" => $tome[$detail][$i],
+            "ALBTITRE" => $titre[$detail][$i],
+            "ALBEDITEUR" => $editeur[$detail][$i],
+            "PRIX" => ($prixbdovore[$detail][$i] != '') ? number_format($prixbdovore[$detail][$i],2,".",",") : $prixbdovore[$detail][$i],
+            "PRIXACHAT" => $prixachat[$detail][$i],
+            "PRIXRETENU" => number_format($prixutil[$detail][$i],2,".",",")
+            ));
 
-			// Affiche la ligne
-			$t->parse ("RBlock", "RowBlock",true);
-		}
-	}
+            // Affiche la ligne
+            $t->parse ("RBlock", "RowBlock",true);
+        }
+    }
 }
 
 // Rempli les paramètres
@@ -291,7 +291,7 @@ $t->set_var (array
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-	"URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
 "PAGETITLE" => "L'addition"));
 
 $t->parse("MENUCOLL","tpMenuColl");

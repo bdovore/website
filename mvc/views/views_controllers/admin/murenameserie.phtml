@@ -1,28 +1,28 @@
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
 <SCRIPT LANGAUGE="JavaScript"><!--
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 3)) {
-		alert('Veuillez saisir au moins 3 caractères');
-	}
-	else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}
-			else {
-			mywindow=open("pickup?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}
-		else {
-			mywindow=open('pickup?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+    if ((isMandatory == true) && (myText.length < 3)) {
+        alert('Veuillez saisir au moins 3 caractères');
+    }
+    else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }
+            else {
+            mywindow=open("pickup?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+            }
+        }
+        else {
+            mywindow=open('pickup?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 
 function urlsource(){
-	document.forms['form1'].action = "<?php echo $view->URLREFRESH;?>?serie="+document.forms['form1'].elements['txtSerieId'].value;
+    document.forms['form1'].action = "<?php echo $view->URLREFRESH;?>?serie="+document.forms['form1'].elements['txtSerieId'].value;
     //alert("Saisissez les champs requis");
-	return true;
+    return true;
 }
 
 function Chargement() {
@@ -37,7 +37,7 @@ function Chargement() {
               Ce form permet de renommer tous les albums d'une série.<br>
               L'expression #tome# sera automatiquement remplacée par le numéro
               de tome.<br>
-			  Seul les albums selectionnés seront traités.
+              Seul les albums selectionnés seront traités.
             </p>
             <p>
               <a href="<?php echo $view->URLEDITSERIE;?>">Retour à la fiche série</a><br>

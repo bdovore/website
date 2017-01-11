@@ -54,7 +54,7 @@ function fr_date($val,$type=false)
             case 19 : // cas avec l'heure
                 $type = 'datetime';
                 break;
-            default	 :
+            default  :
                 {
                     return $val;
                 }
@@ -65,35 +65,35 @@ function fr_date($val,$type=false)
         case '_FR';
         switch($type)
         {
-            case 'date'	 : // cas sans heure
+            case 'date'  : // cas sans heure
                 $val = substr($val,0,10);
                 $tab_j = explode('-', $val);
                 if (3 != count($tab_j)) return $val;
                 $date = $tab_j[2].'/'.$tab_j[1].'/'.$tab_j[0];
                 break;
-            case 'datetime'	 : // cas avec l'heure
-            case 'timestamp'	 : // cas avec l'heure
+            case 'datetime'  : // cas avec l'heure
+            case 'timestamp'     : // cas avec l'heure
                 $tab_j_h = explode(" ", $val);
                 if (2 != count($tab_j_h)) return $val;
                 $tab_j = explode('-', $tab_j_h[0]);
                 if (3 != count($tab_j)) return $val;
                 $date = $tab_j[2].'/'.$tab_j[1].'/'.$tab_j[0].' '.$tab_j_h[1];
                 break;
-            default	 :
+            default  :
                 {
                     $date = $val;
                 }
         }
         break;
-        default	 :
+        default  :
             switch($type)
             {
-                case 'date'	 : // cas sans heure
+                case 'date'  : // cas sans heure
                     $date = substr($val,0,10);
                     break;
-                case 'timestamp'	 : // cas avec l'heure
-                case 'datetime'	 : // cas avec l'heure
-                default	 :
+                case 'timestamp'     : // cas avec l'heure
+                case 'datetime'  : // cas avec l'heure
+                default  :
                     {
                         $date = $val;
                     }
@@ -231,10 +231,10 @@ function TransConstante($txt)
             $val_const = '';
             $curl = new CURL();
             $opts = array(
-                    CURLOPT_TIMEOUT			=>5,
-                    CURLOPT_CONNECTTIMEOUT	=>5,
-                    CURLOPT_RETURNTRANSFER	=> true,
-                    CURLOPT_FOLLOWLOCATION	=> false
+                    CURLOPT_TIMEOUT         =>5,
+                    CURLOPT_CONNECTTIMEOUT  =>5,
+                    CURLOPT_RETURNTRANSFER  => true,
+                    CURLOPT_FOLLOWLOCATION  => false
             );
 
             $curl->addSession( $url, $opts );
@@ -315,9 +315,9 @@ function protectAttack ($GLOBALVAR)
                             mail($toAlert, $subjectAlert, $message, $headersAlert);
                             exit(
                                     'Mot ou caractère interdit rencontré : [' . $mot . '] dans [' . htmlspecialchars($val, ENT_QUOTES) . ']
-						<br />un mail a été envoyé aux administrateurs pour étudier votre requête.<br />
-						Utilisez le forum pour signaler un problème persistant.
-						<br /><br />Utilisez la fonction "Page précédente" de votre navigateur.');
+                        <br />un mail a été envoyé aux administrateurs pour étudier votre requête.<br />
+                        Utilisez le forum pour signaler un problème persistant.
+                        <br /><br />Utilisez la fonction "Page précédente" de votre navigateur.');
                         }
                     }
                 }
@@ -526,7 +526,7 @@ function tableOfFetchObj ($data, $a_onlyCol = array(), $specialChar = true)
     }
 
     echo '<table border=1 cellpadding=2 cellspacing=1 class=scp>
-	<tr>';
+    <tr>';
     foreach ($tab_col as $val) {
         echo "<td valign=top class='entete_admin'>" . $val->name . "</td>";
     }

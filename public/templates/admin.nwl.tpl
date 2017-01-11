@@ -1,28 +1,28 @@
 <script language="JavaScript">
 function saveNews() {
-	if (document.forms["nwl_form"].stat.value == "send") {
-		alert("Vous ne pouvez pas modifier une newsletter déjà envoyée");
+    if (document.forms["nwl_form"].stat.value == "send") {
+        alert("Vous ne pouvez pas modifier une newsletter déjà envoyée");
 
-	}
-	else {
-		document.forms["nwl_form"].action = "admin.nwl.list.php";
-		//alert(document.forms["nwl_form"].action);
-		document.forms["nwl_form"].submit();
-	}
+    }
+    else {
+        document.forms["nwl_form"].action = "admin.nwl.list.php";
+        //alert(document.forms["nwl_form"].action);
+        document.forms["nwl_form"].submit();
+    }
 }
 
 function sendNews() {
-	if (document.forms["nwl_form"].stat.value == "send") {
-		alert("La newsletter a déjà été envoyée !");
+    if (document.forms["nwl_form"].stat.value == "send") {
+        alert("La newsletter a déjà été envoyée !");
 
-	}
-	else {
-		if (confirm("Envoyer la newsletter à tous les abonnés ?")) {
-			document.forms["nwl_form"].action = "nwlsend.php";
-			document.forms["nwl_form"].submit();
+    }
+    else {
+        if (confirm("Envoyer la newsletter à tous les abonnés ?")) {
+            document.forms["nwl_form"].action = "nwlsend.php";
+            document.forms["nwl_form"].submit();
 
-		}
-	}
+        }
+    }
 
 }
 </script>

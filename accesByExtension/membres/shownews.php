@@ -7,12 +7,12 @@
 // check le numéro de page à afficher
 if ($first == "")
 {
-	$first=0;
+    $first=0;
 }
 
 if ($nb == "")
 {
-	$nb=4;
+    $nb=4;
 }
 
 //Détermine le nombre de news à afficher
@@ -37,26 +37,26 @@ $query = "SELECT * FROM news WHERE news_level>=" . $DB->escape($_SESSION["UserLe
 $DB->query ($query);
 if ($DB->nf() != 0)
 {
-	while ($DB->next_record())
-	{
-		$titre = $DB->f ("news_titre");
-		$auteur = $DB->f ("news_posteur");
-		$newsdate = $DB->f ("news_date");
-		$newscontent = $DB->f ("news_text");
+    while ($DB->next_record())
+    {
+        $titre = $DB->f ("news_titre");
+        $auteur = $DB->f ("news_posteur");
+        $newsdate = $DB->f ("news_date");
+        $newscontent = $DB->f ("news_text");
 
-		$t->set_var (array
-		("TITRE" => $titre,
-		"AUTEUR" => $auteur,
-		"DATE" => $newsdate,
-		"NEWSCONTENT"=> regextexte($newscontent),
-		"ACTION"=> ""));
+        $t->set_var (array
+        ("TITRE" => $titre,
+        "AUTEUR" => $auteur,
+        "DATE" => $newsdate,
+        "NEWSCONTENT"=> regextexte($newscontent),
+        "ACTION"=> ""));
 
-		$t->parse ("NBlock", "NewsBlock",true);
-	}
+        $t->parse ("NBlock", "NewsBlock",true);
+    }
 }else
 {
-	$t->set_var (array
-	("NEWSITEMS" => "aucune news à afficher"));
+    $t->set_var (array
+    ("NEWSITEMS" => "aucune news à afficher"));
 }
 
 // assigne la barre le navigation NEWS
@@ -67,7 +67,7 @@ $t->set_var("PAGETITLE","Les news de BDovore ");
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-	"URLSITEIMAGE" => BDO_URL_IMAGE,));
+    "URLSITEIMAGE" => BDO_URL_IMAGE,));
 
 $t->parse("BODY","tpBody");
 $t->parse("MENUBARRE","tpMenu");

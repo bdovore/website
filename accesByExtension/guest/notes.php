@@ -10,22 +10,22 @@ include (BDO_DIR."inc/queryfunction.php");
 
 // Vérifie qu'un parametre a été passé
 if (!isset($user)){
-	if (issetNotEmpty($_SESSION["UserId"])) {
-		$user = encodeUserId($_SESSION["UserId"]);
-	}else {
-		echo GetMetaTag(3,"Erreur lors du chargement de cette page : vous allez être redirigé.",(BDO_URL."index.php"));
-		exit();
-	}
+    if (issetNotEmpty($_SESSION["UserId"])) {
+        $user = encodeUserId($_SESSION["UserId"]);
+    }else {
+        echo GetMetaTag(3,"Erreur lors du chargement de cette page : vous allez être redirigé.",(BDO_URL."index.php"));
+        exit();
+    }
 }
 
 $ori_user = $user;
 $user = decodeUserId($user);
 
 if ($user <> $_SESSION["UserId"] ) {
-	// verifie que l'utilisateur a autorise la mise en ligne de sa collection
-	$username = openCollection($user);
+    // verifie que l'utilisateur a autorise la mise en ligne de sa collection
+    $username = openCollection($user);
 }else {
-	$username = $_SESSION["UserName"];
+    $username = $_SESSION["UserName"];
 }
 
 // prépare le template
@@ -48,7 +48,7 @@ $t->set_var (array(
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-	"URLSITEIMAGE" => BDO_URL_IMAGE,));
+    "URLSITEIMAGE" => BDO_URL_IMAGE,));
 
 $t->parse("BODY","tpBody");
 $t->parse("MENUBARRE","tpMenu");

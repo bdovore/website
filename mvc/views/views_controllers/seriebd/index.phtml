@@ -19,7 +19,7 @@ $pageinate = $view->getHelper('Pagination');
 </SCRIPT>
 <div class="colleft">
 <div class="col1wrap">
-				<div class="col1 fond">
+                <div class="col1 fond">
 
 
 
@@ -132,23 +132,23 @@ if ($view->serie->NB_ALBUM > 20) {
                 <div align="center"> </div>
             </div>
        <!-- Column 1 end -->
-					</div>
+                    </div>
 </div>
-    				<!-- Debut de la partie de droite -->
+                    <!-- Debut de la partie de droite -->
 <div class="col2">
     <div id="actu" class="right fond">
-			<div class="middle_title">
+            <div class="middle_title">
 
-	<h3>Même auteur...</h3>
+    <h3>Même auteur...</h3>
 
-	</div>		<!-- Column 2 start -->
-	            <?php
+    </div>      <!-- Column 2 start -->
+                <?php
                     //echo count($view->SERIESIMI);
                     foreach ($view->SERIESIMI as $o_serie)
                    {
                       echo $ficheAlbum->serie($o_serie);
                     } ?>
     </div>
-				<!-- Column 2 end -->
+                <!-- Column 2 end -->
 </div>
 </div>

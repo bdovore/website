@@ -18,10 +18,10 @@ $a_onlyCol = array();
 $a_liaison2 = array();
 foreach( $a_liaison as $liaison)
 {
-	if (!in_array($liaison['co'], $a_onlyCol)) $a_onlyCol[] = $liaison['co'];
-	if (!in_array($liaison['cd'], $a_onlyCol)) $a_onlyCol[] = $liaison['cd'];
-	$a_column[$liaison['co']] = $liaison['to'];
-	$a_liaison2[$liaison['to']][$liaison['co']][] = array('td'=>$liaison['td'],'cd'=>$liaison['cd']);
+    if (!in_array($liaison['co'], $a_onlyCol)) $a_onlyCol[] = $liaison['co'];
+    if (!in_array($liaison['cd'], $a_onlyCol)) $a_onlyCol[] = $liaison['cd'];
+    $a_column[$liaison['co']] = $liaison['to'];
+    $a_liaison2[$liaison['to']][$liaison['co']][] = array('td'=>$liaison['td'],'cd'=>$liaison['cd']);
 }
 /*
 array('td'=>'users_list_carre','to'=>'bd_tome','cd'=>'id_tome','co'=>'ID_TOME'),
@@ -56,8 +56,8 @@ Référence :
 <select name="column_name">';
 foreach( $a_column as $column_name=>$table_name)
 {
-	$selected = ($column_name == $_POST['column_name']) ? 'SELECTED' : '';
-	echo '<option value="'.$column_name.'" '.$selected.' >'.$table_name.'.'.$column_name.'</option>';
+    $selected = ($column_name == $_POST['column_name']) ? 'SELECTED' : '';
+    echo '<option value="'.$column_name.'" '.$selected.' >'.$table_name.'.'.$column_name.'</option>';
 }
 echo '</select> = \' <input type="text" name="valeur" value="'.$_POST['valeur'].'"> \'
 <br /><label for="viewQuery"><input type="checkbox" id="viewQuery" name="viewQuery" value="checked" '.$_POST['viewQuery'].'> voir les requêtes</label>
@@ -68,53 +68,53 @@ echo '</select> = \' <input type="text" name="valeur" value="'.$_POST['valeur'].
 
 if (isset($_POST['execformvalue']) and isset($_POST['valeur']))
 {
-	$co = $_POST['column_name'];
+    $co = $_POST['column_name'];
 
-	$to = $a_column[$_POST['column_name']];
+    $to = $a_column[$_POST['column_name']];
 
-	$query = "SELECT * FROM `".$to."` WHERE `".$co."`= '".$_POST['valeur']."'";
+    $query = "SELECT * FROM `".$to."` WHERE `".$co."`= '".$_POST['valeur']."'";
 
-	$resultat = mysql_query($query);
-	$a_obj = array();
-	while ($obj = mysql_fetch_object($resultat)) {
-		$a_obj[] = $obj;
-	}
-	$nbr = mysql_num_rows($resultat);
+    $resultat = mysql_query($query);
+    $a_obj = array();
+    while ($obj = mysql_fetch_object($resultat)) {
+        $a_obj[] = $obj;
+    }
+    $nbr = mysql_num_rows($resultat);
 
-	if ($nbr > 0)
-	{
-		echo '<h3>Recherche dans la table <i>'.$to.'</i> colonne <i>'.$co.'</i></h3>';
-		echo $nbr . ' lignes.';
-		tableOfFetchObj($a_obj, $a_onlyCol);
-		if(isset($_POST['viewQuery']) and !empty($_POST['viewQuery']))
-		{
-			echo "<font size=2>" . $query . "</font>";
-		}
-		echo '<hr>';
-	}
-	foreach( $a_liaison2[$to][$co] as $a_d)
-	{
+    if ($nbr > 0)
+    {
+        echo '<h3>Recherche dans la table <i>'.$to.'</i> colonne <i>'.$co.'</i></h3>';
+        echo $nbr . ' lignes.';
+        tableOfFetchObj($a_obj, $a_onlyCol);
+        if(isset($_POST['viewQuery']) and !empty($_POST['viewQuery']))
+        {
+            echo "<font size=2>" . $query . "</font>";
+        }
+        echo '<hr>';
+    }
+    foreach( $a_liaison2[$to][$co] as $a_d)
+    {
 
-		$query = "SELECT * FROM `".$a_d['td']."` WHERE `".$a_d['cd']."`= '".$_POST['valeur']."'";
-		$resultat = mysql_query($query);
-		$a_obj = array();
-		while ($obj = mysql_fetch_object($resultat)) {
-			$a_obj[] = $obj;
-		}
-		$nbr = mysql_num_rows($resultat);
+        $query = "SELECT * FROM `".$a_d['td']."` WHERE `".$a_d['cd']."`= '".$_POST['valeur']."'";
+        $resultat = mysql_query($query);
+        $a_obj = array();
+        while ($obj = mysql_fetch_object($resultat)) {
+            $a_obj[] = $obj;
+        }
+        $nbr = mysql_num_rows($resultat);
 
-		if ($nbr > 0)
-		{
-			echo '<h3>Recherche dans la table <i>'.$a_d['td'].'</i> colonne <i>'.$a_d['cd'].'</i></h3>';
-			echo $nbr . ' lignes.';
-			tableOfFetchObj($a_obj,$a_onlyCol);
-			if(isset($_POST['viewQuery']) and !empty($_POST['viewQuery']))
-			{
-				echo "<font size=2>" . $query . "</font>";
-			}
-			echo '<hr>';
-		}
-	}
+        if ($nbr > 0)
+        {
+            echo '<h3>Recherche dans la table <i>'.$a_d['td'].'</i> colonne <i>'.$a_d['cd'].'</i></h3>';
+            echo $nbr . ' lignes.';
+            tableOfFetchObj($a_obj,$a_onlyCol);
+            if(isset($_POST['viewQuery']) and !empty($_POST['viewQuery']))
+            {
+                echo "<font size=2>" . $query . "</font>";
+            }
+            echo '<hr>';
+        }
+    }
 
 }
 

@@ -17,91 +17,91 @@ if ($cle == "")
 
 $sort = $_GET["sort"];
 if ($sort != "DESC") {
-	$sort = " ASC";
+    $sort = " ASC";
 } else {
-	$sort=" DESC";
+    $sort=" DESC";
 }
 
 $type = $_GET["type"];
 if ($type == "" || ($type != "EDITION" && $type != "CORRECTION") ) {
-	$type = "AJOUT";
+    $type = "AJOUT";
 }
 
 if ($type == "EDITION") {
-	$clerep[1] = "s.id_serie";
-	$clerep[2] = "u.username";
-	$clerep[3] = "en.prop_dte";
-	$waitstatus = "en.prop_status IN (0,2,3,4)";
-	$query = "
-	select
-		count(1) nb
-	from
-		bd_edition en
-		INNER JOIN users u ON en.user_id = u.user_id
-	where
-		en.prop_status IN (0,2,3,4)
-	";
-	$DB->query($query);
-	$DB->next_record();
-	$nb_alb = $DB->f("nb");
+    $clerep[1] = "s.id_serie";
+    $clerep[2] = "u.username";
+    $clerep[3] = "en.prop_dte";
+    $waitstatus = "en.prop_status IN (0,2,3,4)";
+    $query = "
+    select
+        count(1) nb
+    from
+        bd_edition en
+        INNER JOIN users u ON en.user_id = u.user_id
+    where
+        en.prop_status IN (0,2,3,4)
+    ";
+    $DB->query($query);
+    $DB->next_record();
+    $nb_alb = $DB->f("nb");
 
-	$query = "
-	SELECT
-		en.id_edition,
-		t.id_tome,
-		t.num_tome,
-		en.user_id,
-		u.username,
-		en.prop_dte,
-		t.titre,
-		s.nom serie,
-		s.id_serie
-	FROM
-		bd_edition en
-		INNER JOIN users u ON en.user_id = u.user_id
-		INNER JOIN bd_tome t ON en.id_tome = t.id_tome
-		INNER JOIN bd_serie s ON s.id_serie = t.id_serie
-	WHERE
-		en.prop_status IN (0,2,3,4)
-	ORDER BY ".$clerep[$cle]. " ".$DB->escape($sort)."
-	LIMIT ".$DB->escape($first)." , ".$DB->escape($nb);
+    $query = "
+    SELECT
+        en.id_edition,
+        t.id_tome,
+        t.num_tome,
+        en.user_id,
+        u.username,
+        en.prop_dte,
+        t.titre,
+        s.nom serie,
+        s.id_serie
+    FROM
+        bd_edition en
+        INNER JOIN users u ON en.user_id = u.user_id
+        INNER JOIN bd_tome t ON en.id_tome = t.id_tome
+        INNER JOIN bd_serie s ON s.id_serie = t.id_serie
+    WHERE
+        en.prop_status IN (0,2,3,4)
+    ORDER BY ".$clerep[$cle]. " ".$DB->escape($sort)."
+    LIMIT ".$DB->escape($first)." , ".$DB->escape($nb);
 }
 else {
-	$clerep[1] = "uap.serie";
-	$clerep[2] = "u.username";
-	$clerep[3] = "uap.prop_dte";
-	$waitstatus = "(status = 0 OR status = 2 OR status = 3 OR status = 4)";
-	$query = "
-	select
-		count(1) nb
-	from
-		users_alb_prop uap
-		INNER JOIN users u ON uap.user_id = u.user_id
-	where
-		uap.status IN (0,2,3,4)
-		and uap.prop_type = '".$DB->escape($type)."'
-	";
-	$DB->query($query);
-	$DB->next_record();
-	$nb_alb = $DB->f("nb");
+    $clerep[1] = "uap.serie";
+    $clerep[2] = "u.username";
+    $clerep[3] = "uap.prop_dte";
+    $waitstatus = "(status = 0 OR status = 2 OR status = 3 OR status = 4)";
+    $query = "
+    select
+        count(1) nb
+    from
+        users_alb_prop uap
+        INNER JOIN users u ON uap.user_id = u.user_id
+    where
+        uap.status IN (0,2,3,4)
+        and uap.prop_type = '".$DB->escape($type)."'
+    ";
+    $DB->query($query);
+    $DB->next_record();
+    $nb_alb = $DB->f("nb");
 
-	$query = "
-	select
-		uap.serie,
-		uap.id_serie,
-		uap.titre,
-		uap.id_tome,
-		uap.prop_dte,
-		u.username,
-		uap.num_tome
-	from
-		users_alb_prop uap
-		INNER JOIN users u ON uap.user_id = u.user_id
-	where
-		uap.status IN (0,2,3,4)
-		and uap.prop_type = '".$DB->escape($type)."'
-	ORDER BY ".$clerep[$cle]. " ".$DB->escape($sort)."
-	LIMIT ".$DB->escape($first)." , ".$DB->escape($nb);
+    $query = "
+    select
+        uap.serie,
+        uap.id_serie,
+        uap.titre,
+        uap.id_tome,
+        uap.prop_dte,
+        u.username,
+        uap.num_tome
+    from
+        users_alb_prop uap
+        INNER JOIN users u ON uap.user_id = u.user_id
+    where
+        uap.status IN (0,2,3,4)
+        and uap.prop_type = '".$DB->escape($type)."'
+    ORDER BY ".$clerep[$cle]. " ".$DB->escape($sort)."
+    LIMIT ".$DB->escape($first)." , ".$DB->escape($nb);
 }
 
 $DB->query ($query);
@@ -122,27 +122,27 @@ $t->set_block('tpBody','DetailBlock','DBlock');
 while ($DB->next_record())
 {
 
-	if ($DB->f("id_serie") <> "") {
-		$serie = sprintf($link_serie,$DB->f("id_serie")).stripslashes($DB->f("serie"))."</a>";
+    if ($DB->f("id_serie") <> "") {
+        $serie = sprintf($link_serie,$DB->f("id_serie")).stripslashes($DB->f("serie"))."</a>";
 
-	} else {
-		$serie = stripslashes($DB->f("serie"));
-	}
-	if ($DB->f("id_tome") <> "") {
-		$titre = sprintf($link_album,$DB->f("id_tome")).stripslashes($DB->f("titre"))."</a>";
+    } else {
+        $serie = stripslashes($DB->f("serie"));
+    }
+    if ($DB->f("id_tome") <> "") {
+        $titre = sprintf($link_album,$DB->f("id_tome")).stripslashes($DB->f("titre"))."</a>";
 
-	} else {
-		$titre = stripslashes($DB->f("titre"));
-	}
-	$t->set_var (array
-	( "SERIE" => $serie,
-	"TOME" => stripslashes($DB->f ("num_tome")),
-	"TITRE" => $titre,
-	"DTEPAR" => $DB->f ("prop_dte"),
-	"AUTEUR" => $DB->f ("username")
-	));
-	//Affiche le block
-	$t->parse ("DBlock", "DetailBlock",true);
+    } else {
+        $titre = stripslashes($DB->f("titre"));
+    }
+    $t->set_var (array
+    ( "SERIE" => $serie,
+    "TOME" => stripslashes($DB->f ("num_tome")),
+    "TITRE" => $titre,
+    "DTEPAR" => $DB->f ("prop_dte"),
+    "AUTEUR" => $DB->f ("username")
+    ));
+    //Affiche le block
+    $t->parse ("DBlock", "DetailBlock",true);
 }
 
 // block pour les liens vers les autres listes
@@ -162,13 +162,13 @@ $t->set_var(array(
 "TYPE" => $type
 ));
 foreach($typeautre as $value) {
-	if ($value <> $type) {
-		$t->set_var(array(
-		"TYPEAUTRE" => $value,
-		"AJOUTCORRECTION" => $texteautre[$value],
-		));
-		$t->parse ("LBlock", "LinksBlock",true);
-	}
+    if ($value <> $type) {
+        $t->set_var(array(
+        "TYPEAUTRE" => $value,
+        "AJOUTCORRECTION" => $texteautre[$value],
+        ));
+        $t->parse ("LBlock", "LinksBlock",true);
+    }
 }
 
 // Converti les variable generales
@@ -183,7 +183,7 @@ $t->set_var (array
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-	"URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
 "PAGETITLE" => "Proposition en cours..."));
 
 $t->parse("BODY","tpBody");

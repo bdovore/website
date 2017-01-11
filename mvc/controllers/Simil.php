@@ -18,7 +18,7 @@ class Simil extends Bdo_Controller
         $this->Tome->set_dataPaste(array(
                 "ID_TOME" => $ID_TOME
         ));
-		//echo $ID_TOME;
+        //echo $ID_TOME;
         $this->Tome->load();
 
         $this->view->set_var(array(
@@ -58,7 +58,7 @@ class Simil extends Bdo_Controller
         $this->Tome->set_dataPaste(array(
                 "ID_TOME" => $ID_TOME
         ));
-		//echo $ID_TOME;
+        //echo $ID_TOME;
         $this->Tome->load();
         $a_simil = $this->Tome->simil();
         $this->view->set_var('json', json_encode($a_simil));

@@ -23,7 +23,7 @@ while ($obj = mysql_fetch_object($resultat_sch))
 {
     if (!in_array($obj->TABLE_NAME,$a_table))
     {
-    	echo "<hr>".$obj->TABLE_NAME."\n";
+        echo "<hr>".$obj->TABLE_NAME."\n";
         mysql_query("LOCK TABLES `".$obj->TABLE_NAME."` WRITE");
         $a_table[] = $obj->TABLE_NAME;
     }
@@ -34,16 +34,16 @@ while ($obj = mysql_fetch_object($resultat_sch))
 
     if ($nb>0)
     {
-	    echo "`".$obj->TABLE_NAME."` - `".$obj->COLUMN_NAME."` - ".$nb;
+        echo "`".$obj->TABLE_NAME."` - `".$obj->COLUMN_NAME."` - ".$nb;
 
-	    if (isset($_GET['go']))
-	    {
-	        $query = "UPDATE `".$obj->TABLE_NAME."` SET `".$obj->COLUMN_NAME."`=REPLACE(`".$obj->COLUMN_NAME."`,'\\\\','')
-	   		WHERE `".$obj->COLUMN_NAME."` LIKE ('%\\\\\\%')";
-	        mysql_query($query);
-	        echo " - " . mysql_affected_rows();
-	    }
-	    echo "\n";
+        if (isset($_GET['go']))
+        {
+            $query = "UPDATE `".$obj->TABLE_NAME."` SET `".$obj->COLUMN_NAME."`=REPLACE(`".$obj->COLUMN_NAME."`,'\\\\','')
+            WHERE `".$obj->COLUMN_NAME."` LIKE ('%\\\\\\%')";
+            mysql_query($query);
+            echo " - " . mysql_affected_rows();
+        }
+        echo "\n";
     }
 
 

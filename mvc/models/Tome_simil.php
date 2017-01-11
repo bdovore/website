@@ -47,14 +47,14 @@ class Tome_simil
         if ($a_idEdition AND !in_array($tome->ID_GENRE, $a_idGenreExclu)) {
             $requete = "
 SELECT
-	MIN(bd_edition_stat.ID_TOME) as ID_TOME,
-	(count(DISTINCT(users_album.user_id)) / (".$tome->NBR_USER_ID_SERIE." + MAX(bd_edition_stat.NBR_USER_ID_SERIE) - count(DISTINCT(users_album.user_id)))) as score
+    MIN(bd_edition_stat.ID_TOME) as ID_TOME,
+    (count(DISTINCT(users_album.user_id)) / (".$tome->NBR_USER_ID_SERIE." + MAX(bd_edition_stat.NBR_USER_ID_SERIE) - count(DISTINCT(users_album.user_id)))) as score
 FROM
 users_album INNER JOIN (
-	SELECT DISTINCT user_id
-	FROM users_album
-	WHERE id_edition IN (" . implode(',', $a_idEdition) . ")
-	) usersb USING (user_id)
+    SELECT DISTINCT user_id
+    FROM users_album
+    WHERE id_edition IN (" . implode(',', $a_idEdition) . ")
+    ) usersb USING (user_id)
 INNER JOIN bd_edition_stat ON bd_edition_stat.ID_EDITION=users_album.ID_EDITION
 WHERE NOT(bd_edition_stat.ID_SERIE = ".$tome->ID_SERIE.")
 AND NOT(bd_edition_stat.NBR_USER_ID_SERIE = 0)

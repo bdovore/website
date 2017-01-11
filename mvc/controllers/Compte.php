@@ -295,25 +295,25 @@ class Compte extends Bdo_Controller {
         $email = getVal("email");
         $this->view->layout = "iframe";
         if ($email=="ok")
-	{//initialise la procédure de renvoi
-		$user_username = postVal("txtusername");
-		$user_email = postVal("txtemail");
+    {//initialise la procédure de renvoi
+        $user_username = postVal("txtusername");
+        $user_email = postVal("txtemail");
                 $this->loadModel("User");
                 $this->User->load("c", " WHERE username= '".Db_Escape_String($user_username)."' and email = '".Db_Escape_String($user_email)."'");
 
-		//Verifie qu'un nom a été retourné par la query
-		if (notIssetOrEmpty($this->User->user_id))
-		{
-			$this->view->addAlertPage("L'utilisateur n'existe pas ou l'adresse e-mail est erron&eacute;e !");
+        //Verifie qu'un nom a été retourné par la query
+        if (notIssetOrEmpty($this->User->user_id))
+        {
+            $this->view->addAlertPage("L'utilisateur n'existe pas ou l'adresse e-mail est erron&eacute;e !");
                         $this->view->addPhtmlFile('alert', 'BODY');
 
-		}
+        }
                 else {
 
-		//génère un nouveau mot de passe et l'envoie à l'utilisateur
+        //génère un nouveau mot de passe et l'envoie à l'utilisateur
 
 
-		$newpassword = passgen(8);
+        $newpassword = passgen(8);
                 $this->User->set_dataPaste(array("user_id" => $this->User->user_id, "password" =>md5($newpassword) ));
                 $this->User->update();
 
@@ -322,21 +322,21 @@ class Compte extends Bdo_Controller {
                     exit;
                 }
 
-		//Prépare l'email à envoyer
-		$textemail = "Bonjour,\n\n";
-		$textemail .= "Suite à votre demande, votre mot de passe pour accéder à www.bdovore.com a été changé.\n";
-		$textemail .= "Votre nouveau mot de passe est :\n\n";
-		$textemail .= "$newpassword\n\n";
-		$textemail .= "N'oubliez pas de changer votre mot de passe dans votre profil lors de votre prochain login.\n";
-		$textemail .= "Amicalement\n";
+        //Prépare l'email à envoyer
+        $textemail = "Bonjour,\n\n";
+        $textemail .= "Suite à votre demande, votre mot de passe pour accéder à www.bdovore.com a été changé.\n";
+        $textemail .= "Votre nouveau mot de passe est :\n\n";
+        $textemail .= "$newpassword\n\n";
+        $textemail .= "N'oubliez pas de changer votre mot de passe dans votre profil lors de votre prochain login.\n";
+        $textemail .= "Amicalement\n";
 
 
-		mail($user_email,"Votre nouveau mot de passe",$textemail);
+        mail($user_email,"Votre nouveau mot de passe",$textemail);
 
-		echo  "Votre nouveau mot de passe a &eacute;t&eacute; envoy&eacute;. Vous pouvez fermer cette fenêtre.";
-		exit();
+        echo  "Votre nouveau mot de passe a &eacute;t&eacute; envoy&eacute;. Vous pouvez fermer cette fenêtre.";
+        exit();
                 }
-	}
+    }
 
                 $this->view->render();
 

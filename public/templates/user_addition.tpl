@@ -101,7 +101,7 @@ Recherche :
             </form></td>
         </tr>
       </table><br>
-	  <form action="{URLACTION}" method="post" name="formMAJ">
+      <form action="{URLACTION}" method="post" name="formMAJ">
 <table width="100%" border="1">
         <tr>
           <td>D&eacute;tail de la valorisation</td>
@@ -109,7 +109,7 @@ Recherche :
         <tr>
           <td>
 
-		  <table width="100%" height="55" border="1" cellpadding="1" cellspacing="1" class="Tableur">
+          <table width="100%" height="55" border="1" cellpadding="1" cellspacing="1" class="Tableur">
               <tr>
                 <td width="182" height="25" class="EnteteTableur">Serie</td>
                 <td width="36" class="EnteteTableur">Tome</td>
@@ -127,7 +127,7 @@ Recherche :
               </tr>
               <!-- END RowBlock -->
             </table>
-		  </td>
+          </td>
         </tr>
       </table>
 </form>

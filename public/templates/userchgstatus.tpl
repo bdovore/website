@@ -17,11 +17,11 @@
           status :</font></div></td>
       <td><font size="2" face="Arial, Helvetica, sans-serif">
         <select name="cmblevel" size="1" id="cmblevel">
-			{OPTIONS}
+            {OPTIONS}
         </select>
         </font></td>
     </tr>
-	<tr>
+    <tr>
       <td><div align="right"><font size="2" face="Arial, Helvetica, sans-serif">Pr&eacute;venir
           l'utilisateur par e-mail:</font></div></td>
       <td><font size="2" face="Arial, Helvetica, sans-serif">

@@ -139,10 +139,10 @@ FROM " . $this->table_name . "
                 and issetNotEmpty($_COOKIE["pass"])) {
 
             $this->load('c', "
-    			WHERE username ='" . Db_Escape_String($_COOKIE["username"]) . "'
-    			AND password='" . Db_Escape_String($_COOKIE["pass"]) . "'
-    			AND level<98
-    			");
+                WHERE username ='" . Db_Escape_String($_COOKIE["username"]) . "'
+                AND password='" . Db_Escape_String($_COOKIE["pass"]) . "'
+                AND level<98
+                ");
 
             if (1 == $this->dbSelect->nbLineResult) {
                 $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
@@ -202,10 +202,10 @@ FROM " . $this->table_name . "
         else if ((! isset($_SESSION['userConnect']->user_id) or empty($_SESSION['userConnect']->user_id))
                 and isset($_SESSION['userConnect']->username)){
             $this->load('c', "
-    			WHERE username ='" . Db_Escape_String($_SESSION['userConnect']->username) . "'
-    			AND level<98
+                WHERE username ='" . Db_Escape_String($_SESSION['userConnect']->username) . "'
+                AND level<98
                 ORDER BY nb_connect
-    			");
+                ");
 
             if (1 <= $this->dbSelect->nbLineResult) {
                 $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
@@ -220,10 +220,10 @@ FROM " . $this->table_name . "
         else if ((! isset($_SESSION['userConnect']->user_id) or empty($_SESSION['userConnect']->user_id))
                 and isset($_SESSION['userConnect']->email)){
             $this->load('c', "
-    			WHERE email ='" . Db_Escape_String($_SESSION['userConnect']->email) . "'
-    			AND level<98
+                WHERE email ='" . Db_Escape_String($_SESSION['userConnect']->email) . "'
+                AND level<98
                 ORDER BY nb_connect
-    			");
+                ");
 
             if (1 <= $this->dbSelect->nbLineResult) {
                 $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
@@ -362,9 +362,9 @@ FROM " . $this->table_name . "
             $o = Db_fetch_object($result);
             $id = $o->total + 1;
             $query = "INSERT INTO phpbb_users (
-					user_id , username,user_password, user_email, user_regdate ) VALUES (
-					$id, '" . $username . "', '" . md5($password) . "', '" . $email . "'," . time() . "
-					)";
+                    user_id , username,user_password, user_email, user_regdate ) VALUES (
+                    $id, '" . $username . "', '" . md5($password) . "', '" . $email . "'," . time() . "
+                    )";
             $result = Db_query($query,$connexion);
         }
     }
@@ -412,130 +412,130 @@ FROM " . $this->table_name . "
     public function countUserBy($type, $id) {
 
 
-	$query = '';
-	switch ($type) {
-		case "edition" :
-			{
-				$query = "
-			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-			FROM
-				users_album ua
-			WHERE
-				ua.id_edition=" . intval($id) . "
-			";
-				break;
-			}
-		case "tome" :
-			{
-				$query = "
-			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-			FROM
-				users_album ua
-				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-			WHERE
-				en.id_tome=" . intval($id) . "
-			";
-				break;
-			}
-		case "collection" :
-			{
-				$query = "
-			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-			FROM
-				users_album ua
-				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-			WHERE
-				en.id_collection=" . intval($id) . "
-			";
-				break;
-			}
-		case "editeur" :
-			{
-				$query = "
-			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-			FROM
-				users_album ua
-				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-				INNER JOIN bd_collection c ON en.id_collection = c.id_collection
+    $query = '';
+    switch ($type) {
+        case "edition" :
+            {
+                $query = "
+            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+            FROM
+                users_album ua
+            WHERE
+                ua.id_edition=" . intval($id) . "
+            ";
+                break;
+            }
+        case "tome" :
+            {
+                $query = "
+            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+            FROM
+                users_album ua
+                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+            WHERE
+                en.id_tome=" . intval($id) . "
+            ";
+                break;
+            }
+        case "collection" :
+            {
+                $query = "
+            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+            FROM
+                users_album ua
+                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+            WHERE
+                en.id_collection=" . intval($id) . "
+            ";
+                break;
+            }
+        case "editeur" :
+            {
+                $query = "
+            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+            FROM
+                users_album ua
+                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+                INNER JOIN bd_collection c ON en.id_collection = c.id_collection
 
-			WHERE
-				c.id_editeur=" . intval($id) . "
-			";
-				break;
-			}
-		case "serie" :
-			{
-				$query = "
-			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-			FROM
-				users_album ua
-				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-				INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-			WHERE
-				t.id_serie=" . intval($id) . "
-			";
-				break;
-			}
-		case "genre" :
-			{
-				$query = "
-			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-			FROM
-				users_album ua
-				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-				INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-				INNER JOIN bd_serie s ON t.id_serie = s.id_serie
-			WHERE
-				s.id_genre=" . intval($id) . "
-			";
-				break;
-			}
-		case "auteur" :
-			{
-				$query = "
-			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-			FROM
-				users_album ua
-				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-				INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-			WHERE
-				t.id_scenar = " . intval($id) . "
-				or t.id_dessin = " . intval($id) . "
-				or t.id_scenar_alt = " . intval($id) . "
-				or t.id_dessin_alt = " . intval($id) . "
-				or t.id_color = " . intval($id) . "
-				or t.id_color_alt = " . intval($id) . "
-			";
-				break;
-			}
-		case "tomeComment" :
-			{
-				$query = "
-			SELECT COUNT(DISTINCT(uc.user_id)) as nbr
-			FROM
-				users_comment uc
-			WHERE
-				uc.id_tome=" . intval($id) . "
-			";
-				break;
-			}
-		case "serieComment" :
-			{
-				$query = "
-			SELECT COUNT(DISTINCT(sc.user_id)) as nbr
-			FROM
-				serie_comment sc
-			WHERE
-				sc.id_serie=" . intval($id) . "
-			";
-				break;
-			}
-	}
-	if (! empty ( $query )) {
+            WHERE
+                c.id_editeur=" . intval($id) . "
+            ";
+                break;
+            }
+        case "serie" :
+            {
+                $query = "
+            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+            FROM
+                users_album ua
+                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+                INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+            WHERE
+                t.id_serie=" . intval($id) . "
+            ";
+                break;
+            }
+        case "genre" :
+            {
+                $query = "
+            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+            FROM
+                users_album ua
+                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+                INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+                INNER JOIN bd_serie s ON t.id_serie = s.id_serie
+            WHERE
+                s.id_genre=" . intval($id) . "
+            ";
+                break;
+            }
+        case "auteur" :
+            {
+                $query = "
+            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+            FROM
+                users_album ua
+                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+                INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+            WHERE
+                t.id_scenar = " . intval($id) . "
+                or t.id_dessin = " . intval($id) . "
+                or t.id_scenar_alt = " . intval($id) . "
+                or t.id_dessin_alt = " . intval($id) . "
+                or t.id_color = " . intval($id) . "
+                or t.id_color_alt = " . intval($id) . "
+            ";
+                break;
+            }
+        case "tomeComment" :
+            {
+                $query = "
+            SELECT COUNT(DISTINCT(uc.user_id)) as nbr
+            FROM
+                users_comment uc
+            WHERE
+                uc.id_tome=" . intval($id) . "
+            ";
+                break;
+            }
+        case "serieComment" :
+            {
+                $query = "
+            SELECT COUNT(DISTINCT(sc.user_id)) as nbr
+            FROM
+                serie_comment sc
+            WHERE
+                sc.id_serie=" . intval($id) . "
+            ";
+                break;
+            }
+    }
+    if (! empty ( $query )) {
                 $result = Db_query( $query );
-		$o = Db_fetch_object($result);
-		return $o->nbr;
-	}
-	return false;
+        $o = Db_fetch_object($result);
+        return $o->nbr;
+    }
+    return false;
 }
 }

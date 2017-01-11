@@ -117,14 +117,14 @@ class Auteur extends Bdo_Db_Line
 
     public static function getNbAlbumForAuteur($auteur_id) {
         $query = "
-	select
-		count(*) as nbtome
-	from
-		bd_tome
-	where
-		id_scenar = " . intval($auteur_id) . "
-		or id_dessin = " . intval($auteur_id) . "
-		or id_color = " . intval($auteur_id) . "";
+    select
+        count(*) as nbtome
+    from
+        bd_tome
+    where
+        id_scenar = " . intval($auteur_id) . "
+        or id_dessin = " . intval($auteur_id) . "
+        or id_color = " . intval($auteur_id) . "";
          $resultat = Db_query($query);
         $obj = Db_fetch_object($resultat);
 
@@ -136,10 +136,10 @@ class Auteur extends Bdo_Db_Line
          * Fournit la liste des auteurs contributeur sur une série
          */
         $query = "SELECT distinct ID_AUTEUR, PSEUDO
-	FROM
-	bd_auteur, bd_tome
-	WHERE id_serie = " . $serie_id . "
-	and (id_scenar = id_auteur or id_dessin = id_auteur)";
+    FROM
+    bd_auteur, bd_tome
+    WHERE id_serie = " . $serie_id . "
+    and (id_scenar = id_auteur or id_dessin = id_auteur)";
         $resultat = Db_query($query);
         $a_obj = array();
         while ($obj = Db_fetch_object($resultat)) {

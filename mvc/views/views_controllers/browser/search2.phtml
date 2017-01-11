@@ -1,60 +1,60 @@
 <table width="100%" class='browser'>
-	<tr>
-		<td class="entete"><?php echo $view->TITRESEARCH;?></td>
-	</tr>
-	<tr>
-		<td class="milieu" align="center">
+    <tr>
+        <td class="entete"><?php echo $view->TITRESEARCH;?></td>
+    </tr>
+    <tr>
+        <td class="milieu" align="center">
                 <?php echo $view->TOTALROW;?>
             </td>
-	</tr>
-	<tr>
-		<td class="milieu" align="center"><br />
+    </tr>
+    <tr>
+        <td class="milieu" align="center"><br />
                 <?php echo $view->URLPREVPAGE;?> <?php echo $view->URLNEXTPAGE;?>
             </td>
-	</tr>
-	<!-- BEGIN DataBlock -->
-        	<?php
+    </tr>
+    <!-- BEGIN DataBlock -->
+            <?php
         foreach ($view->a_row as $row) {
             ?>
         <tr>
-		<td class="milieu"><img
-			src="<?php echo BDO_URL_IMAGE;?>site/spacer.gif"
-			width=<?php echo $row['WSPACER'];?>
-			height=<?php echo $row['HSPACER'];?> />
-		<div id='onglet_div_plus_<?php echo $row['LEVSIGN'];?>'
-				style='display: block'
-				onMouseOver='this.className="ui-state-hover"'
-				onMouseOut='this.className="off"'
-				onClick='
-				Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
-				Block_None_Div("onglet_div_plus_<?php echo $row['LEVSIGN'];?>");
-				Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>");
+        <td class="milieu"><img
+            src="<?php echo BDO_URL_IMAGE;?>site/spacer.gif"
+            width=<?php echo $row['WSPACER'];?>
+            height=<?php echo $row['HSPACER'];?> />
+        <div id='onglet_div_plus_<?php echo $row['LEVSIGN'];?>'
+                style='display: block'
+                onMouseOver='this.className="ui-state-hover"'
+                onMouseOut='this.className="off"'
+                onClick='
+                Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
+                Block_None_Div("onglet_div_plus_<?php echo $row['LEVSIGN'];?>");
+                Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>");
 $.get("<?php echo $row['URLEVEL'];?># <?php echo $row['LEVSIGN'];?>", function(data) {
  $("#onglet_div_xhr_<?php echo $row['LEVSIGN'];?>").html(data);
 });
 '>
 <span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-arrowthick-2-n-s"></span>
 <?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'];?></div>
-			<div class="ui-state-active" id='onglet_div_moins_<?php echo $row['LEVSIGN'];?>'
-				style='display: none'
-				onMouseOver='this.className="ui-state-hover"'
-					onMouseOut='this.className="ui-state-active"'
-				onClick='Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
-				Block_None_Div("onglet_div_plus_<?php echo $row['LEVSIGN'];?>");
-				Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>")'>
+            <div class="ui-state-active" id='onglet_div_moins_<?php echo $row['LEVSIGN'];?>'
+                style='display: none'
+                onMouseOver='this.className="ui-state-hover"'
+                    onMouseOut='this.className="ui-state-active"'
+                onClick='Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
+                Block_None_Div("onglet_div_plus_<?php echo $row['LEVSIGN'];?>");
+                Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>")'>
 <span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-arrowthickstop-1-n"></span><?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'];?></div>
-			<div id='onglet_div_xhr_<?php echo $row['LEVSIGN'];?>'
-				style='display: none'></div></td>
-	</tr>
-        	<?php
+            <div id='onglet_div_xhr_<?php echo $row['LEVSIGN'];?>'
+                style='display: none'></div></td>
+    </tr>
+            <?php
         }
         ?>
         <!-- END DataBlock -->
         <tr>
-		<td class="milieu" align="center"><br />
+        <td class="milieu" align="center"><br />
                 <?php echo $view->URLPREVPAGE;?> <?php echo $view->URLNEXTPAGE;?>
             </td>
-	</tr>
+    </tr>
 </table>
 <br />
 <div id="livesearch"></div>

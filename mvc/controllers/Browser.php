@@ -102,7 +102,7 @@ class Browser extends Bdo_Controller
         $query_where = "";
         if ($this->rb_browse == 'ser' || ! $this->rb_browse) {
             $query_select = "SELECT SQL_CALC_FOUND_ROWS bd_serie.id_serie id, bd_serie.nom name,
-            bd_serie.FLG_FINI as FLG_FINI_SERIE	FROM bd_serie WHERE 1 ";
+            bd_serie.FLG_FINI as FLG_FINI_SERIE FROM bd_serie WHERE 1 ";
             if ($this->let) {
                 $query_where .= " AND nom like '" . PMA_sqlAddslashes($this->let, true) . "%' ";
             }
@@ -295,7 +295,7 @@ class Browser extends Bdo_Controller
 
         if ($this->rb_browse == 'ser' || ! $this->rb_browse) {
             $query_select = "SELECT SQL_CALC_FOUND_ROWS distinct bd_serie.id_serie id, bd_serie.nom name,
-               bd_serie.FLG_FINI as FLG_FINI_SERIE	FROM bd_serie WHERE 1 ";
+               bd_serie.FLG_FINI as FLG_FINI_SERIE  FROM bd_serie WHERE 1 ";
             if ($this->let) {
                 $query_where .= " AND nom like '%" . PMA_sqlAddslashes($this->let, true) . "%' ";
             }
@@ -483,36 +483,36 @@ class Browser extends Bdo_Controller
         if ($this->rb_browse == 'aut') {
 
             $query_niv2 = "
-        	select SQL_CALC_FOUND_ROWS distinct
-        		bd_serie.id_serie id,
-        		bd_serie.nom name,
+            select SQL_CALC_FOUND_ROWS distinct
+                bd_serie.id_serie id,
+                bd_serie.nom name,
                bd_serie.FLG_FINI as FLG_FINI_SERIE
-        	from
-        		bd_serie
-        		INNER JOIN bd_tome USING(id_serie)
-        	where
-        		(bd_tome.id_dessin = " . $this->lev_id . "
-        		or bd_tome.id_scenar = " . $this->lev_id . "
-        		or bd_tome.id_color = " . $this->lev_id . "
-        		or bd_tome.id_scenar_alt = " . $this->lev_id . "
-        		or bd_tome.id_dessin_alt = " . $this->lev_id . "
-        		or bd_tome.id_color_alt = " . $this->lev_id . ")
-        		".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
-        	order by name ";
+            from
+                bd_serie
+                INNER JOIN bd_tome USING(id_serie)
+            where
+                (bd_tome.id_dessin = " . $this->lev_id . "
+                or bd_tome.id_scenar = " . $this->lev_id . "
+                or bd_tome.id_color = " . $this->lev_id . "
+                or bd_tome.id_scenar_alt = " . $this->lev_id . "
+                or bd_tome.id_dessin_alt = " . $this->lev_id . "
+                or bd_tome.id_color_alt = " . $this->lev_id . ")
+                ".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
+            order by name ";
 
         }
         elseif ($this->rb_browse == 'edit') {
 
             $query_niv2 = "
-        	select SQL_CALC_FOUND_ROWS
-        		id_collection id,
-        		nom name
-        	from
-        		bd_collection
-        	where
-        		id_editeur =" . $this->lev_id . "
-        	order by name
-        	";
+            select SQL_CALC_FOUND_ROWS
+                id_collection id,
+                nom name
+            from
+                bd_collection
+            where
+                id_editeur =" . $this->lev_id . "
+            order by name
+            ";
         }
 
         $recLev2 = Db_query($query_niv2 . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
@@ -633,8 +633,8 @@ class Browser extends Bdo_Controller
             from
             bd_tome
             INNER JOIN bd_serie USING(id_serie)
-        	INNER JOIN bd_edition USING(ID_EDITION)
-        	where
+            INNER JOIN bd_edition USING(ID_EDITION)
+            where
             bd_tome.id_serie = $this->lev_id
             order by num_tome, TITRE
             ";
@@ -651,7 +651,7 @@ class Browser extends Bdo_Controller
 
             $query_album = "
             select SQL_CALC_FOUND_ROWS
-        		bd_tome.id_tome id,
+                bd_tome.id_tome id,
             bd_tome.ID_TOME,
                     (CASE
                 WHEN bd_tome.flg_int = 'O'
@@ -670,24 +670,24 @@ class Browser extends Bdo_Controller
                bd_serie.FLG_FINI as FLG_FINI_SERIE,
                 bd_genre.LIBELLE as NOM_GENRE,
                 bd_edition.IMG_COUV
-        	from
-        		bd_tome
-        		INNER JOIN bd_serie USING(id_serie)
-        		INNER JOIN bd_edition USING(ID_EDITION)
-        	INNER JOIN bd_genre ON bd_genre.ID_GENRE=bd_serie.ID_GENRE
+            from
+                bd_tome
+                INNER JOIN bd_serie USING(id_serie)
+                INNER JOIN bd_edition USING(ID_EDITION)
+            INNER JOIN bd_genre ON bd_genre.ID_GENRE=bd_serie.ID_GENRE
                     where
-        		bd_tome.id_serie =" . intval($this->lev2_id) . "
-                		and	(
-        			bd_tome.id_dessin = " . $this->lev_id . "
-                			or bd_tome.id_scenar = " . $this->lev_id . "
-                			or bd_tome.id_color = " . $this->lev_id . "
-                			or bd_tome.id_scenar_alt = " . $this->lev_id . "
-                			or bd_tome.id_dessin_alt = " . $this->lev_id . "
-                			or bd_tome.id_color_alt = " . $this->lev_id . "
-                			)
+                bd_tome.id_serie =" . intval($this->lev2_id) . "
+                        and (
+                    bd_tome.id_dessin = " . $this->lev_id . "
+                            or bd_tome.id_scenar = " . $this->lev_id . "
+                            or bd_tome.id_color = " . $this->lev_id . "
+                            or bd_tome.id_scenar_alt = " . $this->lev_id . "
+                            or bd_tome.id_dessin_alt = " . $this->lev_id . "
+                            or bd_tome.id_color_alt = " . $this->lev_id . "
+                            )
                 ".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
 
-                			order by num_tome, titre
+                            order by num_tome, titre
             ";
 
             // URL album
@@ -699,23 +699,23 @@ class Browser extends Bdo_Controller
         elseif ($this->rb_browse == 'edit') {
 
             $query_album = "
-        	select SQL_CALC_FOUND_ROWS distinct
-        		bd_serie.id_serie id,
+            select SQL_CALC_FOUND_ROWS distinct
+                bd_serie.id_serie id,
                     bd_serie.ID_SERIE,
-        		bd_serie.nom as titre,
+                bd_serie.nom as titre,
                     bd_serie.NOM as NOM_SERIE,
                bd_serie.FLG_FINI as FLG_FINI_SERIE
-        	from
-        	bd_edition
-        		INNER JOIN bd_tome USING(id_tome)
-        		INNER JOIN bd_serie USING(id_serie)
-        	where
-        		bd_edition.id_editeur=" . $this->lev_id . "
-        		and bd_edition.id_collection=" . intval($this->lev2_id) . "
-        		".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
+            from
+            bd_edition
+                INNER JOIN bd_tome USING(id_tome)
+                INNER JOIN bd_serie USING(id_serie)
+            where
+                bd_edition.id_editeur=" . $this->lev_id . "
+                and bd_edition.id_collection=" . intval($this->lev2_id) . "
+                ".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
 
-        	order by bd_serie.nom
-        	";
+            order by bd_serie.nom
+            ";
 
             // URL affichage
             $url_alb = "serie?id_serie=%d";
@@ -726,20 +726,20 @@ class Browser extends Bdo_Controller
         elseif ($this->rb_browse == 'genr') {
 
             $query_album = "
-        	select SQL_CALC_FOUND_ROWS
-        		distinct
-        		bd_serie.id_serie id,
+            select SQL_CALC_FOUND_ROWS
+                distinct
+                bd_serie.id_serie id,
                     bd_serie.ID_SERIE,
-        		bd_serie.nom as titre,
+                bd_serie.nom as titre,
                     bd_serie.NOM as NOM_SERIE,
                bd_serie.FLG_FINI as FLG_FINI_SERIE
-          	from
+            from
                 bd_serie
             where
                 bd_serie.id_genre=" . $this->lev_id . "
-        		and bd_serie.nom like '" . Db_Escape_String($this->lev2_id) . "%'
+                and bd_serie.nom like '" . Db_Escape_String($this->lev2_id) . "%'
             order by titre
-        	";
+            ";
             $url_alb = "serie?id_serie=%d";
             $act_url = "";
             // URL d'edition

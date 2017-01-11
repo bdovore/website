@@ -2,28 +2,28 @@
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
 <SCRIPT LANGAUGE="JavaScript"><!--
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 3)) {
-		alert('Veuillez saisir au moins 3 caractères');
-	}
-	else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}
-			else {
-			mywindow=open("pickup?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}
-		else {
-			mywindow=open('pickup?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+    if ((isMandatory == true) && (myText.length < 3)) {
+        alert('Veuillez saisir au moins 3 caractères');
+    }
+    else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }
+            else {
+            mywindow=open("pickup?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+            }
+        }
+        else {
+            mywindow=open('pickup?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 
 function urlsource(){
-	document.forms['form1'].action = "<?php echo $view->URLREFRESH;?>?serie="+document.forms['form1'].elements['txtSerieId'].value;
+    document.forms['form1'].action = "<?php echo $view->URLREFRESH;?>?serie="+document.forms['form1'].elements['txtSerieId'].value;
     //alert("Saisissez les champs requis");
-	return true;
+    return true;
 }
 
 function Chargement() {
@@ -55,29 +55,29 @@ function Chargement() {
          <?php
          foreach ($view->dbs_tome->a_dataQuery as $tome ) {
              if (is_null($tome->IMG_COUV) | ($tome->IMG_COUV=='')){
-				$url_image = BDO_URL_COUV."default.png";
-				$dimension="";
-				$poids="";
-			}else{
-				$url_image = BDO_URL_COUV.$tome->IMG_COUV;
-				$imageproperties = getimagesize(BDO_DIR_COUV.$tome->IMG_COUV);
-				$imagetype = $imageproperties[2];
-				$imagelargeur = $imageproperties[0];
-				$imagehauteur = $imageproperties[1];
-				$dimension = $imagelargeur."x".$imagehauteur;
-				$poids = round(filesize(BDO_DIR_COUV.$tome->IMG_COUV)/1024,2);
-				$poids .="Ko";
-				$imagename = $tome->IMG_COUV;
-			}
+                $url_image = BDO_URL_COUV."default.png";
+                $dimension="";
+                $poids="";
+            }else{
+                $url_image = BDO_URL_COUV.$tome->IMG_COUV;
+                $imageproperties = getimagesize(BDO_DIR_COUV.$tome->IMG_COUV);
+                $imagetype = $imageproperties[2];
+                $imagelargeur = $imageproperties[0];
+                $imagehauteur = $imageproperties[1];
+                $dimension = $imagelargeur."x".$imagehauteur;
+                $poids = round(filesize(BDO_DIR_COUV.$tome->IMG_COUV)/1024,2);
+                $poids .="Ko";
+                $imagename = $tome->IMG_COUV;
+            }
                         if ( !issetNotEmpty( $tome->ISBN_EDITION) and issetNotEmpty($tome->EAN_EDITION)) {
                             $isbn = EAN_to_ISBN($tome->EAN_EDITION);
                         } else {
                             $isbn = $tome->ISBN_EDITION;
                         }
-			// Vérifie l'existence d'une couv chez amazon
-			$url_page_amazon = "http://www.amazon.fr/exec/obidos/ASIN/".$isbn;
-			$url_img_amazon = get_couv_url($url_page_amazon,$isbn);
-			if ($url_img_amazon == "") $url_img_amazon = BDO_URL_COUV."default.png";
+            // Vérifie l'existence d'une couv chez amazon
+            $url_page_amazon = "http://www.amazon.fr/exec/obidos/ASIN/".$isbn;
+            $url_img_amazon = get_couv_url($url_page_amazon,$isbn);
+            if ($url_img_amazon == "") $url_img_amazon = BDO_URL_COUV."default.png";
 
          ?>
           <tr bordercolor="#999999">

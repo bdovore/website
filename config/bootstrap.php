@@ -73,26 +73,26 @@ include_once (BDO_DIR . "language".DS.$_SESSION['ID_LANG'].".inc.php");
 /*
 $a_uri = explode('?',$_SERVER['REQUEST_URI']);
 if (CFG_RELATIVE_APPLI and (strpos($a_uri[0],CFG_RELATIVE_APPLI) === 0)) {
-	$a_uri[0] = substr($a_uri[0],strlen(CFG_RELATIVE_APPLI));
+    $a_uri[0] = substr($a_uri[0],strlen(CFG_RELATIVE_APPLI));
 }
 
 $page_include = $a_uri[0];
 
 // a supprimer pour la securite
 if (stristr($page_include,'index.php')) {
-	$page_include = '';
+    $page_include = '';
 }
 
 
 if (issetNotEmpty($a_uri[1]))
-	$baseAriane = $a_uri[0].'?'.$a_uri[1];
+    $baseAriane = $a_uri[0].'?'.$a_uri[1];
 else
-	$baseAriane = $a_uri[0];
+    $baseAriane = $a_uri[0];
 Bdo_Cfg::setVar('baseAriane',$baseAriane);
 
 if (stristr($_SERVER['REQUEST_URI'],'script/fckeditor')) {
-	include_once $a_uri[0];
-	Bdo_Cfg::quit();
+    include_once $a_uri[0];
+    Bdo_Cfg::quit();
 }
 */
 

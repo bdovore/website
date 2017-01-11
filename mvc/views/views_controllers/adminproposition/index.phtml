@@ -57,8 +57,8 @@ function deleteProposition(idpropale,typeprop){
      <div class="cadre1">
 
          <div class="fond_admin">
-	<div class="titre_admin"><?php echo $view->TITRE_ADMIN;?></div>
-	<div class="date_before_valid"><?php echo $view->DATEBEFOREVALID;?></div>
+    <div class="titre_admin"><?php echo $view->TITRE_ADMIN;?></div>
+    <div class="date_before_valid"><?php echo $view->DATEBEFOREVALID;?></div>
     <table class="donnees" align="center" id="propal">
         <thead>
             <td width="70" class="entete_admin">
@@ -88,7 +88,7 @@ function deleteProposition(idpropale,typeprop){
                 $date_parution = new DateTime($prop->DTE_PARUTION);
 
                 if ($date_parution > $date_courante_21){
-			$stylevaliddelay = 'style="background-color: #FFDB70;" title="Parution le '.$prop->DTE_PARUTION.'"';
+            $stylevaliddelay = 'style="background-color: #FFDB70;" title="Parution le '.$prop->DTE_PARUTION.'"';
 
                 }
                 ?>
@@ -107,7 +107,7 @@ function deleteProposition(idpropale,typeprop){
                  $date_parution = new DateTime($prop->DATE_PARUTION_EDITION);
 
                 if ($date_parution > $date_courante_21){
-			$stylevaliddelay = 'style="background-color: #FFDB70;" title="Parution le '.$prop->DTE_PARUTION.'"';
+            $stylevaliddelay = 'style="background-color: #FFDB70;" title="Parution le '.$prop->DTE_PARUTION.'"';
 
                 }?>
             <tr>

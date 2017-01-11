@@ -1,6 +1,6 @@
 <div class="fond_admin">
-	<div class="titre_admin">{TITRE_ADMIN}</div>
-	<div class="date_before_valid">{DATEBEFOREVALID}</div>
+    <div class="titre_admin">{TITRE_ADMIN}</div>
+    <div class="date_before_valid">{DATEBEFOREVALID}</div>
     <table class="donnees" align="center">
         <tr>
             <td width="70" class="entete_admin"><a href="../admin/adminproposals.php?cle=1&sort=asc"><img src="{URLSITEIMAGE}flechehaut.gif" width="12" height="12" hspace="5" border="0" /></a>

@@ -19,7 +19,7 @@
     <td width="120"><div align="center"><font color="#000000"><font color="#000000"><font size="2" face="Arial, Helvetica, sans-serif">{LEVEL}</font></font></font></div></td>
     <td width="225"><div align="center"><font color="#000000"><font color="#000000"><font size="2" face="Arial, Helvetica, sans-serif">{TITRE}</font></font></font></div></td>
     <td width="30"><div align="center"><font color="#000000"><a href="{URLEDIT}"><img src="{URLSITEIMAGE}edit.gif" width="18" height="13" border="0"></a></font></div></td>
-	<td width="30"> <div align="center"><a href="{URLDELETE}"><img src="{URLSITEIMAGE}poubelle.gif" width="20" height="21" border="0"></a></div></td>
+    <td width="30"> <div align="center"><a href="{URLDELETE}"><img src="{URLSITEIMAGE}poubelle.gif" width="20" height="21" border="0"></a></div></td>
   </tr>
 </table>
 <!-- END NewsBlock -->

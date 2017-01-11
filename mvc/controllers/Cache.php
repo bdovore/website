@@ -53,14 +53,14 @@ class Cache extends Bdo_Controller
         $continuer = getVal('continuer', '');
         $query = "
         SELECT
-          	bd_tome.ID_TOME,
-          	bd_tome.ID_SERIE,
-          	bd_serie.ID_GENRE,
+            bd_tome.ID_TOME,
+            bd_tome.ID_SERIE,
+            bd_serie.ID_GENRE,
             bd_tome.NBR_USER_ID,
             bd_tome_simil.TSMP_TOME_SIMIL
         FROM bd_tome
             INNER JOIN bd_serie ON bd_tome.ID_SERIE = bd_serie.ID_SERIE
-       	LEFT JOIN bd_tome_simil ON bd_tome.ID_TOME = bd_tome_simil.ID_TOME
+        LEFT JOIN bd_tome_simil ON bd_tome.ID_TOME = bd_tome_simil.ID_TOME
         WHERE NOT(bd_tome.NBR_USER_ID=0)
                 AND bd_serie.ID_GENRE NOT IN (" . implode(',', $a_idGenreExclu) . ")
                 AND (bd_tome_simil.TSMP_TOME_SIMIL IS NULL

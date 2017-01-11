@@ -40,7 +40,7 @@ function valider(){
         <p><strong>Menu Express</strong></p>
         <p><a href="{URLDELETE}">Supprimer ce genre</a><br>
           <a href="{URLFUSION}">Fusionner ce genre</a></p>
-	</td>
+    </td>
     </tr>
   </table>
 

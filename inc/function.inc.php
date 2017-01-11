@@ -146,11 +146,11 @@ function getFileExtension ($str)
  * Fonction de génération de la barre de navigation
  *
  * @param
- *            type			description
+ *            type          description
  *            $first integer numéro du premier élément à afficher
- *            $nb			integer			nb d'élements par pages
- *            $nbtotal		integer			nb total d'éléments à afficher
- *            $action		string			contient l'URL de retour
+ *            $nb           integer         nb d'élements par pages
+ *            $nbtotal      integer         nb total d'éléments à afficher
+ *            $action       string          contient l'URL de retour
  *
  *
  */
@@ -200,9 +200,9 @@ function GetNavigationBar ($first, $nb, $nbtotal, $action)
  * Fonction de génération d'éléments option value
  *
  * @param
- *            type			description
+ *            type          description
  *            $myarray array contient un tableau avec les choix possibles
- *            $val			string			valeur selectionnée par défaut
+ *            $val          string          valeur selectionnée par défaut
  *
  *
  */
@@ -230,9 +230,9 @@ function GetOption1Value ($myarray, $val)
  * Fonction de génération de la barre de login
  *
  * @param
- *            type			description
+ *            type          description
  *            $authentification Boolean Vérifie si l'user est identifié
- *            $username					string			Nom de l'utilisateur
+ *            $username                 string          Nom de l'utilisateur
  *
  *
  */
@@ -248,30 +248,30 @@ function GetIdentificationBar ()
          */
 
         $loginForm = '
-		<div align="center" style="position: relative; z-index: 10;">
+        <div align="center" style="position: relative; z-index: 10;">
    <div class="fond"></div>
-		<form name="loginForm" method="get" action="' . BDO_URL . '/membres/logout.php">
-		Salut <strong><a href="' . BDO_URL . 'membres/profil.php">' . $_SESSION["UserName"] . '</a></strong> !
-		<input name="LoginDisConnect" type="submit" id="LoginDisConnect" value="Se déconnecter" />
-		</form>
-		<a href="' . BDO_URL . 'membres/profil.php"><font style="font-size:10">Mon compte</font></a>
-		</div>
+        <form name="loginForm" method="get" action="' . BDO_URL . '/membres/logout.php">
+        Salut <strong><a href="' . BDO_URL . 'membres/profil.php">' . $_SESSION["UserName"] . '</a></strong> !
+        <input name="LoginDisConnect" type="submit" id="LoginDisConnect" value="Se déconnecter" />
+        </form>
+        <a href="' . BDO_URL . 'membres/profil.php"><font style="font-size:10">Mon compte</font></a>
+        </div>
 
-	<ul id="menuperso1" class="menu">
-		<li><a href="' . BDO_URL . 'membres/actualites.php" title="Mon actu à moi !">Mon actu</a></li>
-		<li><a href="' . BDO_URL . 'membres/userbrowser.php" title="Ma super collec !">Ma collection</a></li>
-		<li><a href="' . BDO_URL . 'membres/albmanquant.php" title="Y m\'en manque !">Mes albums manquants</a></li>
+    <ul id="menuperso1" class="menu">
+        <li><a href="' . BDO_URL . 'membres/actualites.php" title="Mon actu à moi !">Mon actu</a></li>
+        <li><a href="' . BDO_URL . 'membres/userbrowser.php" title="Ma super collec !">Ma collection</a></li>
+        <li><a href="' . BDO_URL . 'membres/albmanquant.php" title="Y m\'en manque !">Mes albums manquants</a></li>
 </ul>
-	<ul id="menuperso2" class="menu">
+    <ul id="menuperso2" class="menu">
 <li><a href="' . BDO_URL . 'membres/userhome.php" title="Le tableau de commande de votre espace privé">Garde-manger</a></li>
 <li><a href="' . BDO_URL . 'membres/usersearch.php?rb_mode=1"  title="Vos albums">Mes étagères</a></li>
 </ul>
-	<ul id="menuperso2" class="menu">
+    <ul id="menuperso2" class="menu">
 <li><a href="' . BDO_URL . 'membres/userstat.php"  title="Grand sportif devant l\'éternel, le collectionneur mérite bien d\'avoir ses stats !">Mes stats</a></li>
 <li><a href="' . BDO_URL . 'guest.php" title="La présentation publique de votre collec">Ma belle collec</a></li>
 <li><a href="' . BDO_URL . 'membres/addition.php" title="L\'addition SVP ! Gloups...">L\'addition</a></li>
-	</ul>
-	';
+    </ul>
+    ';
 
         return $loginForm;
 
@@ -283,13 +283,13 @@ function GetIdentificationBar ()
     }
     else {
         $loginForm = '
-				<div align="center" style="position: relative; z-index: 10;">
+                <div align="center" style="position: relative; z-index: 10;">
    <div class="fond"></div>
 <form name="loginForm" method="post" action="' . BDO_URL . '/membres/login.php?log=1">
 <table border="0" align="center" cellspacing="0" cellpadding="0">
 <tr><td align="right">Pseudo : </td><td><input name="txtlogin" type="text" id="txtlogin" size=12 /><tr><td>
 <tr><td align="right">Mot de passe : </td><td><input name="txtmot2pass" type="password" id="txtmot2pass" size=12 /><tr><td>
-<tr><td colspan="2"><label for="chkvisit">Se souvenir de moi	<input name="chkvisit" type="checkbox" id="chkvisit" value="1" /></label><tr><td>
+<tr><td colspan="2"><label for="chkvisit">Se souvenir de moi    <input name="chkvisit" type="checkbox" id="chkvisit" value="1" /></label><tr><td>
 <tr><td colspan="2" align="center"><input name="LoginConnecter" type="submit" id="LoginConnecter" value="Se connecter" /><tr><td>
 <tr><td colspan="2" align="center"><a href="' . BDO_URL . 'membres/inscription.php"><font color="#990000" style="font-size:10px">Vous n\'êtes pas inscrit ?</font></a><tr><td>
 </table>
@@ -311,10 +311,10 @@ function GetIdentificationBar ()
  * Fonction de génération d'éléments de type meta
  *
  * @param
- *            type			description
+ *            type          description
  *            $temps Integer Temps en seconde pdt lequel la page s'affiche
- *            $message					string			Message à afficher
- *            $URLCible					string			adresse de la page à ouvrir
+ *            $message                  string          Message à afficher
+ *            $URLCible                 string          adresse de la page à ouvrir
  *
  *
  */
@@ -328,9 +328,9 @@ function GetMetaTag ($temps, $message, $URLCible)
  * Fonction de vérification et d'homogeneisation de type d'image
  *
  * @param
- *            type			description
+ *            type          description
  *            $type string extension d'image
- *            $error					booloean		Retourne true en cas d'erreur
+ *            $error                    booloean        Retourne true en cas d'erreur
  *
  *
  */
@@ -362,9 +362,9 @@ function check_image_type (&$type, &$error)
  * en bd
  *
  * @param
- *            type			description
- *            $text						string chaine à transférer
- *            $type						string type de la variable (text,
+ *            type          description
+ *            $text                     string chaine à transférer
+ *            $type                     string type de la variable (text,
  *
  *
  */
@@ -387,8 +387,8 @@ function sqlise ($text, $type)
  * Fonction de conversion de date
  *
  * @param
- *            type			description
- *            $text						string chaine à convertir
+ *            type          description
+ *            $text                     string chaine à convertir
  *
  *
  */
@@ -427,8 +427,8 @@ function cv_date ($text)
  * Fonction qui retourne les deux éléments les plus significatif dune chaine.
  *
  * @param
- *            type			description
- *            $text						string chaine à traiter
+ *            type          description
+ *            $text                     string chaine à traiter
  *
  *
  */
@@ -456,8 +456,8 @@ function main_words ($text)
  * charactère
  *
  * @param
- *            type			description
- *            $text						string chaine à traiter
+ *            type          description
+ *            $text                     string chaine à traiter
  *
  *
  */
@@ -470,8 +470,8 @@ function is_not_relevant ($text)
  * Fonction qui supprime les articles d'une chaîne de caractère
  *
  * @param
- *            type			description
- *            $text						string chaine à traiter
+ *            type          description
+ *            $text                     string chaine à traiter
  *
  *
  */
@@ -484,8 +484,8 @@ function clean_article ($text)
  * Fonction qui élimine les articles éludés
  *
  * @param
- *            type			description
- *            $text						string chaine à traiter
+ *            type          description
+ *            $text                     string chaine à traiter
  *
  *
  */
@@ -498,8 +498,8 @@ function clean_apostrophes ($text)
  * Fonction de tri pour des tableaux à deux dimension
  *
  * @param
- *            type			description
- *            $text						string chaine à traiter
+ *            type          description
+ *            $text                     string chaine à traiter
  *
  *
  */
@@ -513,7 +513,7 @@ function cmp1 ($a, $b)
  * Fonction retournant le temps écoulé depuis le 1 - 1 1970
  *
  * @param
- *            type			description
+ *            type          description
  *            Aucun
  *
  *
@@ -529,8 +529,8 @@ function temps ()
  * Fonction de conversion mois
  *
  * @param
- *            type			description
- *            $month					integer mois à convertir en text
+ *            type          description
+ *            $month                    integer mois à convertir en text
  *
  *
  */
@@ -557,10 +557,10 @@ function month_to_text ($month)
  * Fonction permettant de génération de requète insert
  *
  * @param
- *            type			description
- *            $table					string table dans laquelle les données doivent être
+ *            type          description
+ *            $table                    string table dans laquelle les données doivent être
  *            insérées
- *            $insert					array array contenant la valeur à insérer ainsi que le
+ *            $insert                   array array contenant la valeur à insérer ainsi que le
  *            champ où l'insérer
  *
  *
@@ -587,8 +587,8 @@ function insert_query ($table, $array)
  * Fonction de récupération d'image sur le net
  *
  * @param
- *            type			description
- *            $month					integer mois à convertir en text
+ *            type          description
+ *            $month                    integer mois à convertir en text
  *
  *
  */
@@ -862,7 +862,7 @@ function imgAutFromForm($lid_auteur) {
  * Fonction générant le menu admin
  *
  * @param
- *            type			description
+ *            type          description
  *
  *
  */
@@ -892,11 +892,11 @@ function admin_menu ()
  * Fonction générant un tag <img>
  *
  * @param
- *            type			description
- *            $url_image				string url de l'image à afficher
- *            $alt_image				string texte à afficher en cas de survol
- *            $dest_image				string lien vers lequel l'image doit pointer
- *            " $dest type				integer			si 0, lien normal, si 1, ouverture dans
+ *            type          description
+ *            $url_image                string url de l'image à afficher
+ *            $alt_image                string texte à afficher en cas de survol
+ *            $dest_image               string lien vers lequel l'image doit pointer
+ *            " $dest type              integer         si 0, lien normal, si 1, ouverture dans
  *            une autre fenetre , si 2 ouverture dans un popup
  *
  *
@@ -1076,38 +1076,38 @@ function urlSerie ($o_serie)
 }
 
 function clean_url($texte) {
-	//Suppression des espaces en début et fin de chaîne
-	$texte = trim($texte);
+    //Suppression des espaces en début et fin de chaîne
+    $texte = trim($texte);
 
-	//Suppression des accents
-	$texte = htmlentities($texte, ENT_NOQUOTES, "UTF-8");
+    //Suppression des accents
+    $texte = htmlentities($texte, ENT_NOQUOTES, "UTF-8");
 
         $texte = preg_replace('#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $texte);
         $texte = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $texte); // pour les ligatures e.g. '&oelig;'
         $texte = preg_replace('#&[^;]+;#', '', $texte); // supprime les autres caractères
-	//mise en minuscule
-	$texte = strtolower($texte);
+    //mise en minuscule
+    $texte = strtolower($texte);
 
-	//Suppression des espaces et caracteres spéciaux
-	$texte = str_replace(" ",'-',$texte);
-	$texte = preg_replace('#([^a-z0-9-])#','-',$texte);
+    //Suppression des espaces et caracteres spéciaux
+    $texte = str_replace(" ",'-',$texte);
+    $texte = preg_replace('#([^a-z0-9-])#','-',$texte);
 
-	//Suppression des tirets multiples
-	$texte = preg_replace('#([-]+)#','-',$texte);
+    //Suppression des tirets multiples
+    $texte = preg_replace('#([-]+)#','-',$texte);
 
-	//Suppression du premier caractère si c'est un tiret
-	if($texte{0} == '-')
-		$texte = substr($texte,1);
+    //Suppression du premier caractère si c'est un tiret
+    if($texte{0} == '-')
+        $texte = substr($texte,1);
 
-	//Suppression du dernier caractère si c'est un tiret
-	if(substr($texte, -1, 1) == '-')
-		$texte = substr($texte, 0, -1);
+    //Suppression du dernier caractère si c'est un tiret
+    if(substr($texte, -1, 1) == '-')
+        $texte = substr($texte, 0, -1);
 
-	return $texte;
+    return $texte;
 }
 function is_dateFr( $value )
 {
-	return preg_match('`^(((0[1-9])|(1\d)|(2\d)|(3[0-1]))\/((0[1-9])|(1[0-2]))\/(\d{4}))$`',$value);
+    return preg_match('`^(((0[1-9])|(1\d)|(2\d)|(3[0-1]))\/((0[1-9])|(1[0-2]))\/(\d{4}))$`',$value);
 }
 function clean_rss ($str) {
     // remplace les caractères " par '

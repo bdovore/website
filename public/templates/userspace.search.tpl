@@ -4,28 +4,28 @@
   <div align="center">
   <form name="filter" method="post" action="usersearch.php">
   <table width="80%" border="0" align="center">
-				<tr>
-				<td width="20%"><div align="left">N'afficher que les albums :</div></td>
-				<td width="20%"> <div align="left">
+                <tr>
+                <td width="20%"><div align="left">N'afficher que les albums :</div></td>
+                <td width="20%"> <div align="left">
                     <input name="cb_pret" type="checkbox" value="1" {PRETCHECK}>
                     prêtés <br>
                     <input name="cb_dedi" type="checkbox" value="1" {DEDICHECK}>
                     dédicacés </div></td>
-				<td width="25%"> <div align="left">
+                <td width="25%"> <div align="left">
                     <input name="cb_note" type="checkbox" value="1" {NOTCHECK}>
                     non notés <br>
                     <input name="cb_comment" type="checkbox" value="1" {CMTCHECK}>
                     non commentés </div></td>
-					<td width="20%">
-					<input name="rb_mode" type="radio" value="1" {MODE1CHECKED}>
+                    <td width="20%">
+                    <input name="rb_mode" type="radio" value="1" {MODE1CHECKED}>
                   Mes BD <br>
                   <input type="radio" name="rb_mode" value="3" {MODE3CHECKED}>
                   Futurs Achats
-					</td>
+                    </td>
                 <td> <input type="submit" name="send_filter" value="Ok"> </td>
-				</tr>
-	</table>
-	Recherche :
+                </tr>
+    </table>
+    Recherche :
           <input name="str_search" type="text" id="str_search" value={DEFSEARCH} size="20" maxlength="50">
             <br>
          dans Albums:
@@ -37,16 +37,16 @@
 
 
 
-                           				 <br />trier par <select name="ch_tri" size="1" id="ch_tri">
-								{OPTIONS}
-        		 				 </select>
+                                         <br />trier par <select name="ch_tri" size="1" id="ch_tri">
+                                {OPTIONS}
+                                 </select>
 
 
 
 
-	<input name="search_mode" type="hidden" value="1">
-	<! input name="cb_serie" type="hidden" value="1">
-	<p align="center">
+    <input name="search_mode" type="hidden" value="1">
+    <! input name="cb_serie" type="hidden" value="1">
+    <p align="center">
   <a href="#" onclick="document.forms.filter.str_search.value='';document.forms.filter.submit();">Tous</a>&nbsp;
   <a href="#" onclick="document.forms.filter.str_search.value='A';document.forms.filter.search_mode.value='2';document.forms.filter.submit();">A</a>&nbsp;
   <a href="#" onclick="document.forms.filter.str_search.value='B';document.forms.filter.search_mode.value='2';document.forms.filter.submit();">B</a>&nbsp;
@@ -75,12 +75,12 @@
   <a href="#" onclick="document.forms.filter.str_search.value='Y';document.forms.filter.search_mode.value='2';document.forms.filter.submit();">Y</a>&nbsp;
   <a href="#" onclick="document.forms.filter.str_search.value='Z';document.forms.filter.search_mode.value='2';document.forms.filter.submit();">Z</a>&nbsp;
   </p>
-	</form>
+    </form>
 </div>
 </div>
   <div class="cadre1" align="center">
     <p>{NBREPONSES}</p>
-	 <table width="90%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolor="#000000" frame="border" rules="all">
+     <table width="90%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolor="#000000" frame="border" rules="all">
   <!-- BEGIN ResultBlock -->
     <tr bgcolor="EED8BF">
       <td width="75%"><a href="{URLSERIE}"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>{SERIE}</strong></font></a><br/>

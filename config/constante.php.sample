@@ -39,18 +39,18 @@ switch ($_SERVER["SERVER_NAME"]) {
             define('BDO_URL_IMAGE', BDO_URL . 'images/');
             define('BDO_URL_COUV', BDO_URL_IMAGE . 'couv/');
 
-			// BDO_DIR_IMAGE: location of all the images of the website
-			// BDO_DIR_COUV: location of all the album covers (usually inside the BDO_DIR_IMAGE folder)
+            // BDO_DIR_IMAGE: location of all the images of the website
+            // BDO_DIR_COUV: location of all the album covers (usually inside the BDO_DIR_IMAGE folder)
             define('BDO_DIR_IMAGE', BDO_DIR . 'images' . DS); // system path, but URL can be used as well
             define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
             define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
 
-			// BDO_DB_HOST: hostname for the DB. For instance 'localhost' for a local install
-			//              or 'mysql5-dev.bdb' if that's what your provider gives you
-			// BDO_DB_SID:  name/identifier of the database
-			// BDO_DB_USER: user's name for DB BDO_DB_SID (often the same as BDO_DB_SID)
-			// BDO_DB_PWD:  password for user BDO_DB_USER of database BDO_DB_SID
-			define('BDO_DB_HOST', 'mydatabase.bdb');
+            // BDO_DB_HOST: hostname for the DB. For instance 'localhost' for a local install
+            //              or 'mysql5-dev.bdb' if that's what your provider gives you
+            // BDO_DB_SID:  name/identifier of the database
+            // BDO_DB_USER: user's name for DB BDO_DB_SID (often the same as BDO_DB_SID)
+            // BDO_DB_PWD:  password for user BDO_DB_USER of database BDO_DB_SID
+            define('BDO_DB_HOST', 'mydatabase.bdb');
             define('BDO_DB_SID', 'bdovore');
             define('BDO_DB_USER', 'bdovore');
             define('BDO_DB_PWD', 'someverygoodpassword');
@@ -76,7 +76,7 @@ switch ($_SERVER["SERVER_NAME"]) {
             define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
             define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
 
-			//currently the same login info as bdovore.com, until we switch to the new DB schema
+            //currently the same login info as bdovore.com, until we switch to the new DB schema
             define('BDO_DB_HOST', '');
             define('BDO_DB_SID', '');
             define('BDO_DB_USER', '');
@@ -103,7 +103,7 @@ switch ($_SERVER["SERVER_NAME"]) {
             define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
             define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
 
-			//same as bdovore bdovore.com
+            //same as bdovore bdovore.com
             define('BDO_DB_HOST', '');
             define('BDO_DB_SID', '');
             define('BDO_DB_USER', '');
@@ -151,12 +151,12 @@ switch ($_SERVER["SERVER_NAME"]) {
         {
             error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 
-			// use BDO_URL_RELATIVE here if available instead of /bdovore/beta/
-			// NB: configure Apache correctly so that it directly redirects to ./public/
-			if (defined('BDO_URL_RELATIVE'))
-				define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . BDO_URL_RELATIVE );
-			else
-	            define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . '/bdovore/beta/');
+            // use BDO_URL_RELATIVE here if available instead of /bdovore/beta/
+            // NB: configure Apache correctly so that it directly redirects to ./public/
+            if (defined('BDO_URL_RELATIVE'))
+                define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . BDO_URL_RELATIVE );
+            else
+                define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . '/bdovore/beta/');
 
             define('BDO_URL_IMAGE', 'http://www.bdovore.com/images/');
             define('BDO_URL_COUV', BDO_URL_IMAGE . 'couv/');

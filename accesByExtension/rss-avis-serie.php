@@ -18,21 +18,21 @@ echo '<language>fr</language>';
 // Requête pour récupérer les 50 derniers avis avec leurs couvertures
 $select = "
 SELECT
-	s.nom serie,
-	s.id_serie,
-	u.username,
-	u.user_id,
-	sc.comment histoire,
-	sc.dte_post,
-	DATE_FORMAT(sc.dte_post,'%d/%m/%Y %H:%i') date_post,
-	sc.note
+    s.nom serie,
+    s.id_serie,
+    u.username,
+    u.user_id,
+    sc.comment histoire,
+    sc.dte_post,
+    DATE_FORMAT(sc.dte_post,'%d/%m/%Y %H:%i') date_post,
+    sc.note
 FROM
-	serie_comment sc
-	INNER JOIN users u ON sc.user_id=u.user_id
-	INNER JOIN bd_serie s ON sc.id_serie=s.id_serie
+    serie_comment sc
+    INNER JOIN users u ON sc.user_id=u.user_id
+    INNER JOIN bd_serie s ON sc.id_serie=s.id_serie
 WHERE
-	sc.comment is not null
-	AND sc.comment <> ''
+    sc.comment is not null
+    AND sc.comment <> ''
 ORDER BY sc.dte_post desc
 LIMIT 0,50
 ";
@@ -40,20 +40,20 @@ LIMIT 0,50
 $DB->query($select);
 while ($DB->next_record())
 {
-	$serie = htmlspecialchars(stripslashes($DB->f("serie")));
-	$histoire = nl2br(htmlspecialchars(stripslashes($DB->f("histoire"))));
+    $serie = htmlspecialchars(stripslashes($DB->f("serie")));
+    $histoire = nl2br(htmlspecialchars(stripslashes($DB->f("histoire"))));
     $pseudo = htmlspecialchars(stripslashes($DB->f("username")));
     $dte_post = $DB->f("dte_post");
     $date_post = $DB->f("date_post");
 
-	$titre = str_replace ( chr(0x92), '\'',  $titre );
-	$histoire = str_replace ( chr(0x92), '\'',  $histoire );
+    $titre = str_replace ( chr(0x92), '\'',  $titre );
+    $histoire = str_replace ( chr(0x92), '\'',  $histoire );
     $titre = str_replace ( chr(0x85), '\'',  $titre );
-	$histoire = str_replace ( chr(0x85), '\'',  $histoire );
+    $histoire = str_replace ( chr(0x85), '\'',  $histoire );
     $titre = str_replace ( chr(0x9c), '\'',  $titre );
-	$histoire = str_replace ( chr(0x9c), '\'',  $histoire );
+    $histoire = str_replace ( chr(0x9c), '\'',  $histoire );
     $titre = str_replace ( chr(0x96), '\'',  $titre );
-	$histoire = str_replace ( chr(0x96), '\'',  $histoire );
+    $histoire = str_replace ( chr(0x96), '\'',  $histoire );
 
     //Conversion de la date de MySQL (yyyy-mm-jj hh:mm:ss) à RFC822 (format rss : wed, 30 apr 2009 hh:mm:ss GMT)
     $date_array = explode("-",$dte_post);
@@ -68,7 +68,7 @@ while ($DB->next_record())
     $var_timestamp = mktime($var_hour,$var_min,$var_sec,$var_month,$var_day,$var_year);
     $date = date("D, d M Y H:i:s O",$var_timestamp);
 
-	echo '<item>'."\n";
+    echo '<item>'."\n";
     echo '<title>'.$serie." - ".$pseudo.'</title>'."\n";
     echo '<link>'.BDO_URL.'serie.php?id_serie='.$DB->f("id_serie").'</link>'."\n";
     echo '<description><![CDATA["'.$histoire.'"]]></description>'."\n";

@@ -1,6 +1,6 @@
 <div class="fond_admin">
-	<div class="titre_admin">Nouvelles éditions en attente</div>
-	<div style="margin: 0 0 7px 14px; font-weight: bold; text-align: center">{DATEBEFOREVALID}</div>
+    <div class="titre_admin">Nouvelles éditions en attente</div>
+    <div style="margin: 0 0 7px 14px; font-weight: bold; text-align: center">{DATEBEFOREVALID}</div>
     <table class="donnees" align="center">
         <tr>
             <td width="70" class="entete_admin"><a href="../admin/adminpropeditions.php?cle=1&sort=asc"><img src="{URLSITEIMAGE}flechehaut.gif" width="12" height="12" hspace="5" border="0" /></a>

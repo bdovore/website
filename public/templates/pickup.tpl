@@ -9,8 +9,8 @@
 <script type="text/javascript"><!--
 function changeSource(myForm, myElement, myTitle, withID) {
     window.opener.document.forms[myForm].elements[myElement].value = myTitle;
-	window.opener.document.forms[myForm].elements[myElement+'Id'].value = withID;
-	window.close(self);
+    window.opener.document.forms[myForm].elements[myElement+'Id'].value = withID;
+    window.close(self);
 }
 //--></script>
 

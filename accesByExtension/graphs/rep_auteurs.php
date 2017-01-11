@@ -6,10 +6,10 @@ include (BDO_DIR."vendors/jpgraph-3.5.0b1/src/jpgraph_bar.php");
 
 // Variable d�finissant l'utilisateur
 if ($user != '') {
-	$user_id = decodeUserId($user);
+    $user_id = decodeUserId($user);
 }
 else{
-	$user_id = $_SESSION["userConnect"]->user_id;
+    $user_id = $_SESSION["userConnect"]->user_id;
 }
 
 if (empty($user_id)) exit();
@@ -45,33 +45,33 @@ $list_aut = array();
 
 while ($DB->next_record())
 {
-	// Stocke l'auteur
-	$list_aut[$DB->f('id_scenar')] = $DB->f('ps_scen');
-	$list_aut[$DB->f('id_dessin')] = $DB->f('ps_dess');
+    // Stocke l'auteur
+    $list_aut[$DB->f('id_scenar')] = $DB->f('ps_scen');
+    $list_aut[$DB->f('id_dessin')] = $DB->f('ps_dess');
 
-	// stocke le scenar
-	$aut_fav[$DB->f('id_scenar')]++;
+    // stocke le scenar
+    $aut_fav[$DB->f('id_scenar')]++;
 
-	//traite le dessinateur
-	if ($DB->f('id_scenar')== $DB->f('id_dessin'))
-	{
-		$aut_fav[$DB->f('id_scenar')] = $aut_fav[$DB->f('id_scenar')]+0.5;
-	}
-	else{
-		$aut_fav[$DB->f('id_dessin')]++;
-	}
+    //traite le dessinateur
+    if ($DB->f('id_scenar')== $DB->f('id_dessin'))
+    {
+        $aut_fav[$DB->f('id_scenar')] = $aut_fav[$DB->f('id_scenar')]+0.5;
+    }
+    else{
+        $aut_fav[$DB->f('id_dessin')]++;
+    }
 }
 
 arsort($aut_fav);
 $compteur = 0;
 while ((list ($cle, $val) = each ($aut_fav)) & $compteur <10)
 {
-	if ($cle >= 4)
-	{
-		$datay[$compteur] = $val;
-		$lbl[$compteur] = $list_aut[$cle];
-		$compteur++;
-	}
+    if ($cle >= 4)
+    {
+        $datay[$compteur] = $val;
+        $lbl[$compteur] = $list_aut[$cle];
+        $compteur++;
+    }
 }
 
 // Size of graph

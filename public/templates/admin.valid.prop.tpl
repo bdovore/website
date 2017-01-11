@@ -1,18 +1,18 @@
 <SCRIPT type="text/javascript"><!--
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 2)) {
-		alert('Veuillez saisir au moins 2 caractères');
-	}else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}else {
+    if ((isMandatory == true) && (myText.length < 2)) {
+        alert('Veuillez saisir au moins 2 caractères');
+    }else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }else {
                 mywindow=open("pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}else {
-			mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+            }
+        }else {
+            mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 function verifFieldNull(myField) {
     if(myField == "0") {
@@ -36,8 +36,8 @@ function verifAddExisting(myIdTome,myAction) {
 //--></SCRIPT>
 
 <div class="fond_admin">
-	<div class="titre_admin">Traitement des albums en attente</div>
-	<div class="date_before_valid">{DATEBEFOREVALID}</div>
+    <div class="titre_admin">Traitement des albums en attente</div>
+    <div class="date_before_valid">{DATEBEFOREVALID}</div>
     <table width="100%">
         <tr>
             <form action="{URLACTION}" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" onsubmit="return verifFieldNull(document.myform.txtSerieId.value)">

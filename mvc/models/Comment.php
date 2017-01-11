@@ -66,7 +66,7 @@ class Comment extends Bdo_Db_Line
                bd_tome.titre as TITRE_TOME,
                bd_edition.IMG_COUV,
                 s.ID_SERIE,
-        	s.nom as NOM_SERIE
+            s.nom as NOM_SERIE
         FROM `users_comment` c INNER JOIN users u using(user_id)
                inner join bd_tome using (id_tome)
                inner join bd_edition using (id_edition)

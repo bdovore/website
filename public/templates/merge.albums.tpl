@@ -1,21 +1,21 @@
 <script type="text/javascript">
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 3)) {
-		alert('Veuillez saisir au moins 3 caractères');
-	}
-	else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}
-			else {
-			mywindow=open("pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}
-		else {
-			mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+    if ((isMandatory == true) && (myText.length < 3)) {
+        alert('Veuillez saisir au moins 3 caractères');
+    }
+    else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }
+            else {
+            mywindow=open("pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+            }
+        }
+        else {
+            mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 
 function valider(){
@@ -33,15 +33,15 @@ function valider(){
 }
 
 function urlsource(){
-	document.forms['form1'].action = "{URLREFRESH}?source_id="+document.forms['form1'].elements['txtTome1Id'].value+"&dest_id={DESTID}";
+    document.forms['form1'].action = "{URLREFRESH}?source_id="+document.forms['form1'].elements['txtTome1Id'].value+"&dest_id={DESTID}";
     //alert("Saisissez les champs requis");
-	return true;
+    return true;
 }
 
 function urldest(){
-	document.forms['form2'].action = "{URLREFRESH}?source_id={SOURCEID}&dest_id="+document.forms['form2'].elements['txtTome2Id'].value;
+    document.forms['form2'].action = "{URLREFRESH}?source_id={SOURCEID}&dest_id="+document.forms['form2'].elements['txtTome2Id'].value;
     //alert("Saisissez les champs requis");
-	return true;
+    return true;
 }
 
 </script>

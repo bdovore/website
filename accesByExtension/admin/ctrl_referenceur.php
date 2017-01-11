@@ -20,7 +20,7 @@ if (!isset($_POST['tableOrigine'])) $_POST['tableOrigine'] = array();
 $a_td = array();
 foreach( $a_liaison as $a_lien)
 {
-	if (!in_array($a_lien['td'],$a_td)) $a_td[] = $a_lien['td'];
+    if (!in_array($a_lien['td'],$a_td)) $a_td[] = $a_lien['td'];
 }
 
 echo '<form name="formrelation" method="post">
@@ -29,8 +29,8 @@ Table référenceur :
 <select name="tableOrigine[]" >';
 foreach( $a_td as $_td)
 {
-	$selected = (in_array($_td,$_POST['tableOrigine'])) ? 'SELECTED' : '';
-	echo '<option value="'.$_td.'" '.$selected.' >'.$_td.'</option>';
+    $selected = (in_array($_td,$_POST['tableOrigine'])) ? 'SELECTED' : '';
+    echo '<option value="'.$_td.'" '.$selected.' >'.$_td.'</option>';
 }
 echo '</select>
 <br /><label for="onlyDiff"><input type="checkbox" id="onlyDiff" name="onlyDiff" value="checked" '.$_POST['onlyDiff'].'> voir seulement les écarts</label>
@@ -43,68 +43,68 @@ echo '</select>
 if (isset($_POST['execformrelation']))
 {
 
-	foreach( $a_liaison as $a_lien)
-	{
-		if (in_array($a_lien['td'],$_POST['tableOrigine']))
-		{
-			$to = $a_lien['to'];
-			$td = $a_lien['td'];
-			$co = $a_lien['co'];
-			$cd = $a_lien['cd'];
+    foreach( $a_liaison as $a_lien)
+    {
+        if (in_array($a_lien['td'],$_POST['tableOrigine']))
+        {
+            $to = $a_lien['to'];
+            $td = $a_lien['td'];
+            $co = $a_lien['co'];
+            $cd = $a_lien['cd'];
 
 
-			$query = "SELECT distinct(`".$cd."`) FROM `".$td."`
-	    	WHERE `".$cd."` NOT IN ( SELECT `".$co."` FROM `".$to."` )
-	    	AND `".$cd."` IS NOT NULL";
-			/*
-	    	AND `".$cd."`!= ''
-	    	AND `".$cd."`!= 0";
+            $query = "SELECT distinct(`".$cd."`) FROM `".$td."`
+            WHERE `".$cd."` NOT IN ( SELECT `".$co."` FROM `".$to."` )
+            AND `".$cd."` IS NOT NULL";
+            /*
+            AND `".$cd."`!= ''
+            AND `".$cd."`!= 0";
 */
-			$result = mysql_query($query);
-			$nbr = mysql_num_rows($result);
+            $result = mysql_query($query);
+            $nbr = mysql_num_rows($result);
 
 
-			if(!isset($_POST['onlyDiff']) or (isset($_POST['onlyDiff']) and (0 < $nbr)))
-			{
+            if(!isset($_POST['onlyDiff']) or (isset($_POST['onlyDiff']) and (0 < $nbr)))
+            {
 
-				if (0 < $nbr)
-				{
-					$a_obj = array();
-					While ($obj = mysql_fetch_object($result))
-					{
-						$a_obj[] = $obj;
-					}
-				}
+                if (0 < $nbr)
+                {
+                    $a_obj = array();
+                    While ($obj = mysql_fetch_object($result))
+                    {
+                        $a_obj[] = $obj;
+                    }
+                }
 
 
-				echo  "<hr>Valeur de la colonne [".$cd."] table [<font color=blue><b>".$td."</b></font>]
+                echo  "<hr>Valeur de la colonne [".$cd."] table [<font color=blue><b>".$td."</b></font>]
             <br />inconnues dans la table de référence [<font color=blue><b>".$to."</b></font>] colonne [".$co."]";
-				if (0 < $nbr)
-				{
-					echo  "<br /><font color=red><b>nbr = " . $nbr ."</b></font><br />";
+                if (0 < $nbr)
+                {
+                    echo  "<br /><font color=red><b>nbr = " . $nbr ."</b></font><br />";
 
-					echo '<table border=1><tr><td colspan=10 class="entete_admin">'.$cd.'</td></tr><tr>';
-					$k = 0;
-					foreach($a_obj as $obj){
-						if (!($k++%10)) echo '</tr><tr>';
-						echo '<td class="data_admin">'.$obj->$cd.'</td>';
-					}
-					echo '</tr></table>';
+                    echo '<table border=1><tr><td colspan=10 class="entete_admin">'.$cd.'</td></tr><tr>';
+                    $k = 0;
+                    foreach($a_obj as $obj){
+                        if (!($k++%10)) echo '</tr><tr>';
+                        echo '<td class="data_admin">'.$obj->$cd.'</td>';
+                    }
+                    echo '</tr></table>';
 
-				}
-				else
-				{
-					echo  "<br /><font color=gray><b>nbr = " . $nbr ."</b></font><br />";
-				}
-				if(isset($_POST['viewQuery']) and !empty($_POST['viewQuery']))
-				{
-					echo "<font size=2>" . $query . "</font>";
-				}
-			}
+                }
+                else
+                {
+                    echo  "<br /><font color=gray><b>nbr = " . $nbr ."</b></font><br />";
+                }
+                if(isset($_POST['viewQuery']) and !empty($_POST['viewQuery']))
+                {
+                    echo "<font size=2>" . $query . "</font>";
+                }
+            }
 
 
-		}
-	}
+        }
+    }
 }
 
 

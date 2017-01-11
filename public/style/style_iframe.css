@@ -3,9 +3,9 @@
 /*Comptabilit? IE-Firefox*/
 /*html,body{
 
-	margin:0;
+    margin:0;
 
-	padding:0
+    padding:0
 
 }
 
@@ -14,9 +14,9 @@
 */
 /*p {
 
-	margin:0 0 1em 0;
+    margin:0 0 1em 0;
 
-	padding:0
+    padding:0
 
 }
 
@@ -25,9 +25,9 @@
 */
 /*h1{
 
-	margin:0 0 .7em 0;
+    margin:0 0 .7em 0;
 
-	padding:0
+    padding:0
 
 }
 
@@ -36,9 +36,9 @@
 */
 /*form {
 
-	margin:0;
+    margin:0;
 
-	padding:0
+    padding:0
 
 }
 
@@ -48,10 +48,10 @@
 * {
 
 
-	margin: 0;
+    margin: 0;
 
 
-	padding: 0;
+    padding: 0;
 
 
 
@@ -67,19 +67,19 @@
 html {
 
 
-	font-size: 0.9em;
+    font-size: 0.9em;
 
 
-	font-family:  Trebuchet MS, Helvetica,Arial, sans-serif;
+    font-family:  Trebuchet MS, Helvetica,Arial, sans-serif;
 
 
-	line-height: 1.5em;
+    line-height: 1.5em;
 
 
     margin: 0;
 
 
-	padding: 0;
+    padding: 0;
 
 
 
@@ -93,31 +93,31 @@ html {
 body {
 
 
-	font-size: 1em;
+    font-size: 1em;
 
 
-	color: #000000;
+    color: #000000;
 
 
-	background-color: #FFF;
+    background-color: #FFF;
 
 
-	/*background-image: url(http://www.bdovore.com/images/site/texturedefond.gif);
+    /*background-image: url(http://www.bdovore.com/images/site/texturedefond.gif);
 
-	*/
-	/*background-image: url("http://www.bdovore.com/images/site/bdo_fond1.jpg");
-
-
-	background-repeat: repeat-x;
+    */
+    /*background-image: url("http://www.bdovore.com/images/site/bdo_fond1.jpg");
 
 
-	background-attachment:fixed;*/
+    background-repeat: repeat-x;
 
 
-	margin: 0;
+    background-attachment:fixed;*/
 
 
-	padding: 0;
+    margin: 0;
+
+
+    padding: 0;
 
 
 
@@ -132,13 +132,13 @@ body {
 ul {
 
 
-	list-style: disc outside;
+    list-style: disc outside;
 
 
-	margin: 0;
+    margin: 0;
 
 
-	padding: 0;
+    padding: 0;
 
 
 
@@ -152,7 +152,7 @@ ul {
 li {
 
 
-	list-style-type: none;
+    list-style-type: none;
 
 
 
@@ -177,10 +177,10 @@ td {
 a {
 
 
-	color: #3D201C;
+    color: #3D201C;
 
-	cursor: pointer;
-	text-decoration: none;
+    cursor: pointer;
+    text-decoration: none;
 
 
 
@@ -194,7 +194,7 @@ a {
 a:link {
 
 
-	text-decoration: none;
+    text-decoration: none;
 
 
 
@@ -208,7 +208,7 @@ a:link {
 a:visited {
 
 
-	text-decoration: none;
+    text-decoration: none;
 
 
 
@@ -222,10 +222,10 @@ a:visited {
 a:hover {
 
 
-	color: #770000;
+    color: #770000;
 
 
-	text-decoration: underline;
+    text-decoration: underline;
 
 
 
@@ -239,7 +239,7 @@ a:hover {
 a:active {
 
 
-	text-decoration: overline;
+    text-decoration: overline;
 
 
 
@@ -253,16 +253,16 @@ a:active {
 h3,h3.a {
 
 
-	color: #990000;
+    color: #990000;
 
 
-	font-size: 1.1em;
+    font-size: 1.1em;
 
 
-	margin: 0;
+    margin: 0;
 
 
-	padding: 0;
+    padding: 0;
 
 
 
@@ -275,16 +275,16 @@ h3,h3.a {
 h2 {
 
 
-	color: #990000;
+    color: #990000;
 
 
-	font-size: 1.2em;
+    font-size: 1.2em;
 
 
-	margin: 0;
+    margin: 0;
 
 
-	padding: 0;
+    padding: 0;
 
 
 
@@ -297,16 +297,16 @@ h2 {
 h1 {
 
 
-	color: #990000;
+    color: #990000;
 
 
-	font-size: 22px;
+    font-size: 22px;
 
 
-	text-align: center;
+    text-align: center;
 
 
-	line-height: 1.4em;
+    line-height: 1.4em;
 
 
 
@@ -320,16 +320,16 @@ h1 {
 input {
 
 
-	font-size: 0.9em;
+    font-size: 0.9em;
 
 
-	font-style: normal;
+    font-style: normal;
 
 
-	height: auto;
+    height: auto;
 
 
-	width: auto;
+    width: auto;
 
 
 
@@ -343,10 +343,10 @@ input {
 textarea {
 
 
-	border: 1px solid;
+    border: 1px solid;
 
 
-	padding: 3px;
+    padding: 3px;
 
 
 
@@ -362,37 +362,37 @@ textarea {
 #header {
 
 
-	width: 90%;
+    width: 90%;
 
 
-	min-width: 920px;
+    min-width: 920px;
 
 
     max-width: 1220px;
 
 
-	margin-left: auto;
+    margin-left: auto;
 
 
-	margin-right: auto;
+    margin-right: auto;
 
 
-	margin-top: 10px;
+    margin-top: 10px;
 
 
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 
 
-	padding-left: 10px;
+    padding-left: 10px;
 
 
-	padding-right: 10px;
+    padding-right: 10px;
 
 
-	padding-top: 10px;
+    padding-top: 10px;
 
 
-	padding-bottom: 0;
+    padding-bottom: 0;
 
 
 
@@ -406,25 +406,25 @@ textarea {
 #content {
 
 
-	width: 90%;
+    width: 90%;
 
 
-	min-width: 920px;
+    min-width: 920px;
 
 
     max-width: 1220px;
 
 
-	margin-left: auto;
+    margin-left: auto;
 
 
-	margin-right: auto;
+    margin-right: auto;
 
 
-	margin-top: 5px;
+    margin-top: 5px;
 
 
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 
 
 
@@ -438,31 +438,31 @@ textarea {
 #footer {
 
 
-	width: 90%;
+    width: 90%;
 
 
-	min-width: 700px;
+    min-width: 700px;
 
 
     max-width: 1220px;
 
 
-	margin-left: auto;
+    margin-left: auto;
 
 
-	margin-right: auto;
+    margin-right: auto;
 
 
-	margin-top: 5px;
+    margin-top: 5px;
 
 
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 
 
-	font-size: 0.7em;
+    font-size: 0.7em;
 
 
-	clear: both;
+    clear: both;
 
 
 
@@ -476,16 +476,16 @@ textarea {
 #searchtable {
 
 
-	margin: 0 0 3px 0;
+    margin: 0 0 3px 0;
 
 
-	padding: 4px;
+    padding: 4px;
 
 
-/*	width: 200px;
+/*  width: 200px;
 
-	*/
-	float: left;
+    */
+    float: left;
 
 
 
@@ -499,7 +499,7 @@ textarea {
 #searchtable ul {
 
 
-	margin-top:-10px;
+    margin-top:-10px;
 
 
 
@@ -513,7 +513,7 @@ textarea {
 #searchtable ul li {
 
 
-	display : inline;
+    display : inline;
 
 
 
@@ -527,25 +527,25 @@ textarea {
 #searchtable a {
 
 
-	color : #999;
+    color : #999;
 
 
-	background-color : #fff ;
+    background-color : #fff ;
 
 
-	margin : 12px;
+    margin : 12px;
 
 
-	padding : 8px;
+    padding : 8px;
 
 
-	-moz-box-shadow: 2px 2px 8px #888;
+    -moz-box-shadow: 2px 2px 8px #888;
 
 
-	-webkit-box-shadow: 2px 2px 8px #888;
+    -webkit-box-shadow: 2px 2px 8px #888;
 
 
-	box-shadow:2px 2px 6px #888;
+    box-shadow:2px 2px 6px #888;
 
 
 
@@ -559,25 +559,25 @@ textarea {
 #searchtable a:hover {
 
 
-	color : #fff;
+    color : #fff;
 
 
-	background-color : #bbb ;
+    background-color : #bbb ;
 
 
-	margin : 8px;
+    margin : 8px;
 
 
-	padding : 12px;
+    padding : 12px;
 
 
-	-moz-box-shadow: 4px 4px 12px #333;
+    -moz-box-shadow: 4px 4px 12px #333;
 
 
-	-webkit-box-shadow: 4px 4px 12px #333;
+    -webkit-box-shadow: 4px 4px 12px #333;
 
 
-	box-shadow:4px 4px 8px #333;
+    box-shadow:4px 4px 8px #333;
 
 
 
@@ -592,18 +592,18 @@ textarea {
 #logo {
 
 
-	float: left;
+    float: left;
 
 
-	margin: 0;
+    margin: 0;
 
 
-	padding: 0;
+    padding: 0;
 
 
-	width: 170px;
+    width: 170px;
 
-	margin-top: -5px;
+    margin-top: -5px;
 
 
 }
@@ -615,7 +615,7 @@ textarea {
 #titre_prop_album {
 
 
-	font-size: 1.3em;
+    font-size: 1.3em;
 
 
 
@@ -630,7 +630,7 @@ textarea {
 #bienvenu {
 
 
-	border-top: 1px solid #B64045;
+    border-top: 1px solid #B64045;
 
 
 
@@ -646,7 +646,7 @@ textarea {
 .arial {
 
 
-	font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 
 
 
@@ -660,7 +660,7 @@ textarea {
 .champ_avis {
 
 
-	font-size: 0.9em;
+    font-size: 0.9em;
 
 
 
@@ -674,7 +674,7 @@ textarea {
 .petite_police {
 
 
-	font-size: 0.7em;
+    font-size: 0.7em;
 
 
 
@@ -688,7 +688,7 @@ textarea {
 .b {
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
 
@@ -702,7 +702,7 @@ textarea {
 .i {
 
 
-	font-style: italic;
+    font-style: italic;
 
 
 
@@ -715,10 +715,10 @@ textarea {
 .fond {
 
 
-	background-color: #eee;
+    background-color: #eee;
 
 
-	opacity: 1;
+    opacity: 1;
 
 
 
@@ -732,37 +732,37 @@ textarea {
 .fondNoir {
 
 
-	background-color: #FFFFFF;
+    background-color: #FFFFFF;
 
 
-	position: absolute;
+    position: absolute;
 
 
-	z-index: -1;
+    z-index: -1;
 
 
-	top: 0;
+    top: 0;
 
 
-	left: 0;
+    left: 0;
 
 
-	right: 0;
+    right: 0;
 
 
-	bottom: 0;
+    bottom: 0;
 
 
-	opacity: 0.9;
+    opacity: 0.9;
 
 
-	-moz-box-shadow: 4px 4px 10px #888;
+    -moz-box-shadow: 4px 4px 10px #888;
 
 
-	-webkit-box-shadow: 4px 4px 8px #888;
+    -webkit-box-shadow: 4px 4px 8px #888;
 
 
-	box-shadow:4px 4px 6px #888;
+    box-shadow:4px 4px 6px #888;
 
 
 
@@ -776,16 +776,16 @@ textarea {
 hr.expSep {
 
 
-	clear: both;
+    clear: both;
 
 
-	visibility: hidden;
+    visibility: hidden;
 
 
-	margin: 0;
+    margin: 0;
 
 
-	padding: 0;
+    padding: 0;
 
 
 
@@ -800,10 +800,10 @@ hr.expSep {
 td.bordure {
 
 
-	background-color: #5D1614;
+    background-color: #5D1614;
 
 
-	height: 11px;
+    height: 11px;
 
 
 
@@ -817,16 +817,16 @@ td.bordure {
 td.bord_gauche {
 
 
-	background-image: url(http://www.bdovore.com/images/site/gauche.gif);
+    background-image: url(http://www.bdovore.com/images/site/gauche.gif);
 
 
-	background-repeat: repeat-y;
+    background-repeat: repeat-y;
 
 
-	height: 13px;
+    height: 13px;
 
 
-	width: 13px;
+    width: 13px;
 
 
 
@@ -840,7 +840,7 @@ td.bord_gauche {
 #avertissement a {
 
 
-	font-size: 1em;
+    font-size: 1em;
 
 
 
@@ -854,7 +854,7 @@ td.bord_gauche {
 #avertissement a:hover {
 
 
-	text-decoration: none;
+    text-decoration: none;
 
 
 
@@ -868,19 +868,19 @@ td.bord_gauche {
 #titre_avertissement {
 
 
-	color: #990000;
+    color: #990000;
 
 
-	font-size: 1.2em;
+    font-size: 1.2em;
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
-	text-align: center;
+    text-align: center;
 
 
-	padding: 5px;
+    padding: 5px;
 
 
 
@@ -894,10 +894,10 @@ td.bord_gauche {
 #texte_avertissement {
 
 
-	text-align: justify;
+    text-align: justify;
 
 
-	padding: 5px;
+    padding: 5px;
 
 
 
@@ -912,19 +912,19 @@ td.bord_gauche {
 table.browser {
 
 
-	border-collapse: collapse;
+    border-collapse: collapse;
 
 
-	padding: 0;
+    padding: 0;
 
 
-	margin: 0;
+    margin: 0;
 
 
-	border: 0;
+    border: 0;
 
 
-	line-height: 13px;
+    line-height: 13px;
 
 
 
@@ -938,19 +938,19 @@ table.browser {
 .browser div {
 
 
-	margin: 0;
+    margin: 0;
 
 
-	padding: 0;
+    padding: 0;
 
 
-	border: 0;
+    border: 0;
 
 
-	overflow: hidden;
+    overflow: hidden;
 
 
-	text-align: left;
+    text-align: left;
 
 
 
@@ -964,16 +964,16 @@ table.browser {
 table.main {
 
 
-	border-collapse: collapse;
+    border-collapse: collapse;
 
 
-	border: 0;
+    border: 0;
 
 
-	padding-top: 5px;
+    padding-top: 5px;
 
 
-	padding-bottom: 10px;
+    padding-bottom: 10px;
 
 
 
@@ -987,13 +987,13 @@ table.main {
 table.rubrique {
 
 
-	border-collapse: collapse;
+    border-collapse: collapse;
 
 
-	border: 0;
+    border: 0;
 
 
-	width: 100%;
+    width: 100%;
 
 
 
@@ -1007,16 +1007,16 @@ table.rubrique {
 td.leftframe {
 
 
-	width: 150px;
+    width: 150px;
 
 
-	padding-right: 10px;
+    padding-right: 10px;
 
 
-	padding-left: 10px;
+    padding-left: 10px;
 
 
-	vertical-align: top;
+    vertical-align: top;
 
 
 
@@ -1031,10 +1031,10 @@ td.leftframe {
 table.donnees {
 
 
-	border-collapse: collapse;
+    border-collapse: collapse;
 
 
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 
 
 
@@ -1048,7 +1048,7 @@ table.donnees {
 td.label {
 
 
-	font-size: 1.1em;
+    font-size: 1.1em;
 
 
 
@@ -1063,13 +1063,13 @@ td.label {
 table.table_form_public {
 
 
-	width: 100%;
+    width: 100%;
 
 
-	border: 1px solid #FFFFCC;
+    border: 1px solid #FFFFCC;
 
 
-	background-color: #DAC1B3;
+    background-color: #DAC1B3;
 
 
 
@@ -1083,7 +1083,7 @@ table.table_form_public {
 .table_form_public td {
 
 
-	padding: 3px;
+    padding: 3px;
 
 
 
@@ -1097,16 +1097,16 @@ table.table_form_public {
 .enonce_tr_form_public {
 
 
-	color: #990000;
+    color: #990000;
 
 
-	font-size: 0.9em;
+    font-size: 0.9em;
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
-	text-align: center;
+    text-align: center;
 
 
 
@@ -1120,13 +1120,13 @@ table.table_form_public {
 span.ftitle {
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
-	color: #990000;
+    color: #990000;
 
 
-	text-align: center;
+    text-align: center;
 
 
 
@@ -1140,19 +1140,19 @@ span.ftitle {
 table.menu {
 
 
-	width: 150px;
+    width: 150px;
 
 
-	border: 0;
+    border: 0;
 
 
-	border-collapse: collapse;
+    border-collapse: collapse;
 
 
-	padding: 0;
+    padding: 0;
 
 
-	border-spacing: 0;
+    border-spacing: 0;
 
 
 
@@ -1169,10 +1169,10 @@ table.menu {
 table.Tableur {
 
 
-	border: Black;
+    border: Black;
 
 
-	border-collapse: collapse;
+    border-collapse: collapse;
 
 
 
@@ -1186,16 +1186,16 @@ table.Tableur {
 td.EnteteTableur {
 
 
-	background-color: #8B0000;
+    background-color: #8B0000;
 
 
-	color: #FFA500;
+    color: #FFA500;
 
 
-	font: Verdana;
+    font: Verdana;
 
 
-	text-align: center;
+    text-align: center;
 
 
 
@@ -1209,16 +1209,16 @@ td.EnteteTableur {
 td.DataTableur {
 
 
-	background-color: #E5D7D1;
+    background-color: #E5D7D1;
 
 
-	color: #000000;
+    color: #000000;
 
 
-	font: Verdana;
+    font: Verdana;
 
 
-	text-align: center;
+    text-align: center;
 
 
 
@@ -1233,10 +1233,10 @@ td.DataTableur {
 a.menu {
 
 
-	font-size: 14px;
+    font-size: 14px;
 
 
-	color: #FFFFFF;
+    color: #FFFFFF;
 
 
 
@@ -1250,13 +1250,13 @@ a.menu {
 a.menuGene:link {
 
 
-	color: #880000;
+    color: #880000;
 
 
-	text-decoration: none;
+    text-decoration: none;
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
 
@@ -1270,13 +1270,13 @@ a.menuGene:link {
 a.menuGene:visited {
 
 
-	color: #880000;
+    color: #880000;
 
 
-	text-decoration: none;
+    text-decoration: none;
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
 
@@ -1290,13 +1290,13 @@ a.menuGene:visited {
 a.menuGene:hover {
 
 
-	color: #000;
+    color: #000;
 
 
-	text-decoration: none;
+    text-decoration: none;
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
 
@@ -1310,10 +1310,10 @@ a.menuGene:hover {
 a.menuGene:active {
 
 
-	text-decoration: none;
+    text-decoration: none;
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
 
@@ -1327,16 +1327,16 @@ a.menuGene:active {
 div.edito {
 
 
-	font-size: 0.8em;
+    font-size: 0.8em;
 
 
-	/* letter-spacing: 1px;
+    /* letter-spacing: 1px;
 
 
-	line-height: 15px;
+    line-height: 15px;
 
-	 */
-	background: #ECE1CD;
+     */
+    background: #ECE1CD;
 
 
 
@@ -1354,7 +1354,7 @@ div.edito {
 input.textfield {
 
 
-	border: 1px solid;
+    border: 1px solid;
 
 
 
@@ -1368,7 +1368,7 @@ input.textfield {
 input.noborder {
 
 
-	border: 0px solid;
+    border: 0px solid;
 
 
 
@@ -1382,16 +1382,16 @@ input.noborder {
 .rub_title {
 
 
-	position: relative;
+    position: relative;
 
 
-	top: -0.5em;
+    top: -0.5em;
 
 
-	left: 53%;
+    left: 53%;
 
 
-	margin: 0;
+    margin: 0;
 
 
 
@@ -1405,16 +1405,16 @@ input.noborder {
 .rub_title2 {
 
 
-	position: relative;
+    position: relative;
 
 
-	top: 0em;
+    top: 0em;
 
 
-	left: 30%;
+    left: 30%;
 
 
-	margin: 0;
+    margin: 0;
 
 
 
@@ -1428,13 +1428,13 @@ input.noborder {
 .rub_title3 {
 
 
-	position: relative;
+    position: relative;
 
 
-	top: 12px;
+    top: 12px;
 
 
-	left: 73%;
+    left: 73%;
 
 
 
@@ -1461,16 +1461,16 @@ input.noborder {
 .GuestName {
 
 
-	background-color: #C8857C;
+    background-color: #C8857C;
 
 
-	font: normal small-caps bold large Verdana;
+    font: normal small-caps bold large Verdana;
 
 
-	color: #990000;
+    color: #990000;
 
 
-	padding-left: 5px;
+    padding-left: 5px;
 
 
 
@@ -1484,19 +1484,19 @@ input.noborder {
 .AnnonceBD {
 
 
-	background-color: #C8857C;
+    background-color: #C8857C;
 
 
-	font: normal bold Verdana;
+    font: normal bold Verdana;
 
 
-	color: #000000;
+    color: #000000;
 
 
-	float: right;
+    float: right;
 
 
-	width: 250px;
+    width: 250px;
 
 
 
@@ -1510,10 +1510,10 @@ input.noborder {
 .CarreMagique {
 
 
-	border: 1px solid #fff;
+    border: 1px solid #fff;
 
 
-	background-color: #fff;
+    background-color: #fff;
 
 
 text-align:center;
@@ -1530,16 +1530,16 @@ text-align:center;
 .MenuGuest {
 
 
-	background-color: #DAC1B3;
+    background-color: #DAC1B3;
 
 
-	padding: 5px 5px 5px 5px;
+    padding: 5px 5px 5px 5px;
 
 
-	color: Black;
+    color: Black;
 
 
-	border: solid #B64045;
+    border: solid #B64045;
 
 
 
@@ -1556,22 +1556,22 @@ text-align:center;
 td.entete {
 
 
-	font-size: small;
+    font-size: small;
 
 
-	height: 25px;
+    height: 25px;
 
 
-	border: 1px solid Silver;
+    border: 1px solid Silver;
 
 
-	border-collapse: collapse;
+    border-collapse: collapse;
 
 
-	background-color: #C8857C;
+    background-color: #C8857C;
 
 
-	padding-left: 5px;
+    padding-left: 5px;
 
 
 
@@ -1585,22 +1585,22 @@ td.entete {
 td.data {
 
 
-	font-size: small;
+    font-size: small;
 
 
-	height: 25px;
+    height: 25px;
 
 
-	border: 1px solid Silver;
+    border: 1px solid Silver;
 
 
-	border-collapse: collapse;
+    border-collapse: collapse;
 
 
-	padding-left: 5px;
+    padding-left: 5px;
 
 
-	background-color: #E7CCBD;
+    background-color: #E7CCBD;
 
 
 
@@ -1614,16 +1614,16 @@ td.data {
 .cadre_fiche {
 
 
-	width: 100%;
+    width: 100%;
 
 
-	border: 2px solid #FFFFCC;
+    border: 2px solid #FFFFCC;
 
 
-	margin: 0;
+    margin: 0;
 
 
-	background-color: #DAC1B3;
+    background-color: #DAC1B3;
 
 
 
@@ -1637,16 +1637,16 @@ td.data {
 .case_entete_fonce {
 
 
-	background-color: #C8857C;
+    background-color: #C8857C;
 
 
-	color: #990000;
+    color: #990000;
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
-	font-size: 0.8em;
+    font-size: 0.8em;
 
 
 
@@ -1660,10 +1660,10 @@ td.data {
 .case_fond_clair {
 
 
-	background-color: #DAC1B3;
+    background-color: #DAC1B3;
 
 
-	font-size: 0.8em;
+    font-size: 0.8em;
 
 
 
@@ -1677,16 +1677,16 @@ td.data {
 .champ_commentaire {
 
 
-	font-size: 90%;
+    font-size: 90%;
 
 
-	width: 100%;
+    width: 100%;
 
 
-	height: 10em;
+    height: 10em;
 
 
-	border: 1px solid #888888;
+    border: 1px solid #888888;
 
 
 
@@ -1705,19 +1705,19 @@ td.data {
 #cadre_menu_admin {
 
 
-	width: 100%;
+    width: 100%;
 
 
-	padding: 5px;
+    padding: 5px;
 
 
-	background-color: #A34848;
+    background-color: #A34848;
 
 
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 
 
-	text-align: left;
+    text-align: left;
 
 
 
@@ -1731,10 +1731,10 @@ td.data {
 #cadre_menu_admin a {
 
 
-	color: #DAC1B3 !important;
+    color: #DAC1B3 !important;
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
 
@@ -1748,10 +1748,10 @@ td.data {
 .hr_menu_admin {
 
 
-	width: 80%;
+    width: 80%;
 
 
-	color: #DAC1B3;
+    color: #DAC1B3;
 
 
 
@@ -1765,19 +1765,19 @@ td.data {
 .fond_admin {
 
 
-	width: 100%;
+    width: 100%;
 
 
-	border: 2px solid #D35E5E;
+    border: 2px solid #D35E5E;
 
 
-	margin-top: 18px;
+    margin-top: 18px;
 
 
-	padding: 0 0 0 5px;
+    padding: 0 0 0 5px;
 
 
-	background-color: #A34848;
+    background-color: #A34848;
 
 
 
@@ -1791,16 +1791,16 @@ td.data {
 .titre_admin {
 
 
-	margin: 6px 0 5px 11px;
+    margin: 6px 0 5px 11px;
 
 
-	font-size: 1.3em;
+    font-size: 1.3em;
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
-	color: #FFFFFF;
+    color: #FFFFFF;
 
 
 
@@ -1814,13 +1814,13 @@ td.data {
 .date_before_valid {
 
 
-	margin: 0 0 7px 14px;
+    margin: 0 0 7px 14px;
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
-	text-align: center;
+    text-align: center;
 
 
 
@@ -1834,7 +1834,7 @@ td.data {
 .cadre_texte-admin {
 
 
-	width: 100%;
+    width: 100%;
 
 
 
@@ -1848,10 +1848,10 @@ td.data {
 .cadre_texte-admin td,td.cadre_texte-admin {
 
 
-	background-color: #D35E5E;
+    background-color: #D35E5E;
 
 
-	padding: 10px 5px 5px 10px;
+    padding: 10px 5px 5px 10px;
 
 
 
@@ -1863,10 +1863,10 @@ td.data {
 
 
 .cadre_texte-admin td a,td.cadre_texte-admin a,.cadre_texte-admin td a:hover,td.cadre_texte-admin a:hover
-	{
+    {
 
 
-	color: #F7E4D9 !important;
+    color: #F7E4D9 !important;
 
 
 
@@ -1881,13 +1881,13 @@ td.data {
 .tableaux_admin {
 
 
-	background-color: #F7D1BA;
+    background-color: #F7D1BA;
 
 
-	margin: 7px 0 7px 0;
+    margin: 7px 0 7px 0;
 
 
-	width: 99%;
+    width: 99%;
 
 
 
@@ -1901,10 +1901,10 @@ td.data {
 .tableaux_admin td {
 
 
-	border: 1px inset #DDDDDD;
+    border: 1px inset #DDDDDD;
 
 
-	padding: 2px;
+    padding: 2px;
 
 
 
@@ -1918,7 +1918,7 @@ td.data {
 .tableaux_admin_sans-bord {
 
 
-	width: 100%;
+    width: 100%;
 
 
 
@@ -1932,10 +1932,10 @@ td.data {
 .tableaux_admin_sans-bord td {
 
 
-	border: 0px;
+    border: 0px;
 
 
-	padding: 2px;
+    padding: 2px;
 
 
 
@@ -1949,16 +1949,16 @@ td.data {
 .textarea_description_edition {
 
 
-	font-size: 90%;
+    font-size: 90%;
 
 
-	width: 100%;
+    width: 100%;
 
 
-	height: 7em;
+    height: 7em;
 
 
-	border: 1px solid #888888;
+    border: 1px solid #888888;
 
 
 
@@ -1973,10 +1973,10 @@ td.data {
 .champ_form_desactive,.champ_form_desactive_newfserie {
 
 
-	background-color: #F7D1BA;
+    background-color: #F7D1BA;
 
 
-	border: 0;
+    border: 0;
 
 
 
@@ -1990,19 +1990,19 @@ td.data {
 .champ_form_desactivechamp_commentaire {
 
 
-	font-size: 90%;
+    font-size: 90%;
 
 
-	width: 100%;
+    width: 100%;
 
 
-	height: 10em;
+    height: 10em;
 
 
-	background-color: #F7D1BA;
+    background-color: #F7D1BA;
 
 
-	border: 0;
+    border: 0;
 
 
 
@@ -2016,25 +2016,25 @@ td.data {
 td.entete_admin {
 
 
-	height: 25px;
+    height: 25px;
 
 
-	border: 1px solid Silver;
+    border: 1px solid Silver;
 
 
-	border-collapse: collapse;
+    border-collapse: collapse;
 
 
-	background-color: #C8857C;
+    background-color: #C8857C;
 
 
-	text-align: center;
+    text-align: center;
 
 
-	font-weight: bold;
+    font-weight: bold;
 
 
-	font-size: 0.9em;
+    font-size: 0.9em;
 
 
 
@@ -2048,22 +2048,22 @@ td.entete_admin {
 td.data_admin {
 
 
-	height: 25px;
+    height: 25px;
 
 
-	border: 1px solid Silver;
+    border: 1px solid Silver;
 
 
-	border-collapse: collapse;
+    border-collapse: collapse;
 
 
-	background-color: #E7CCBD;
+    background-color: #E7CCBD;
 
 
-	text-align: center;
+    text-align: center;
 
 
-	font-size: 0.9em;
+    font-size: 0.9em;
 
 
 
@@ -2077,22 +2077,22 @@ td.data_admin {
 td.data_admin_petit {
 
 
-	height: 25px;
+    height: 25px;
 
 
-	border: 1px solid Silver;
+    border: 1px solid Silver;
 
 
-	border-collapse: collapse;
+    border-collapse: collapse;
 
 
-	background-color: #E7CCBD;
+    background-color: #E7CCBD;
 
 
-	text-align: center;
+    text-align: center;
 
 
-	font-size: 0.8em;
+    font-size: 0.8em;
 
 
 
@@ -2106,16 +2106,16 @@ td.data_admin_petit {
 td.original {
 
 
-	background-color: #CCCCCC;
+    background-color: #CCCCCC;
 
 
-	font: 80%;
+    font: 80%;
 
 
-	border: 1px inset #DDDDDD;
+    border: 1px inset #DDDDDD;
 
 
-	padding: 2px;
+    padding: 2px;
 
 
 
@@ -2141,13 +2141,13 @@ input.flat {
 input.to_be_corrected,.to_be_corrected {
 
 
-	background-color: #FF7B7B;
+    background-color: #FF7B7B;
 
 
-	border: 1px inset #DDDDDD;
+    border: 1px inset #DDDDDD;
 
 
-	padding: 2px;
+    padding: 2px;
 
 
 
@@ -2161,13 +2161,13 @@ input.to_be_corrected,.to_be_corrected {
 input.has_changed,.has_changed {
 
 
-	background-color: #FFE759;
+    background-color: #FFE759;
 
 
-	border: 1px inset #DDDDDD;
+    border: 1px inset #DDDDDD;
 
 
-	padding: 2px;
+    padding: 2px;
 
 
 
@@ -2181,10 +2181,10 @@ input.has_changed,.has_changed {
 .submit {
 
 
-	margin: 10px;
+    margin: 10px;
 
 
-	text-align: center;
+    text-align: center;
 
 
 
@@ -2198,16 +2198,16 @@ input.has_changed,.has_changed {
 div.contenu {
 
 
-	border: 0;
+    border: 0;
 
 
-	padding-left: 5px;
+    padding-left: 5px;
 
 
-	border-color: #B64045;
+    border-color: #B64045;
 
 
-	line-height: 25px;
+    line-height: 25px;
 
 
 
@@ -2221,21 +2221,21 @@ div.contenu {
 div.cadre1 {
 
 
-	background-color: #ffffff;
+    background-color: #ffffff;
 
 
-	margin: 0 0 3px 0;
+    margin: 0 0 3px 0;
 
 
-	padding: 5px;
+    padding: 5px;
 
 
-	border: 1px solid #bbbbbb;
+    border: 1px solid #bbbbbb;
 
 
-	text-align : left;
+    text-align : left;
 
-	height:95%;
+    height:95%;
 
 
 }
@@ -2247,10 +2247,10 @@ div.cadre1 {
 span.flabel {
 
 
-	color: #990000;
+    color: #990000;
 
 
-	font-size: 10px;
+    font-size: 10px;
 
 
 
@@ -2264,15 +2264,15 @@ span.flabel {
 div.contenu>.clear {
 
 
-	clear: both;
+    clear: both;
 
 
-	height: 0;
+    height: 0;
 
 
-	overflow: hidden;
+    overflow: hidden;
 
-	 /* Pr?caution pour IE 7 */
+     /* Pr?caution pour IE 7 */
 
 
 }
@@ -2285,19 +2285,19 @@ div.contenu>.clear {
 div.conteneuralb {
 
 
-	width: 100%;
+    width: 100%;
 
 
-	padding-top: 15px;
+    padding-top: 15px;
 
 
-	margin: auto;
+    margin: auto;
 
 
-	position: relative;
+    position: relative;
 
 
-	float: left;
+    float: left;
 
         background-color: white;
 
@@ -2312,13 +2312,13 @@ div.conteneuralb {
 div.alb-fiche {
 
 
-	float: left;
+    float: left;
 
 
-	width: 190px;
+    width: 190px;
 
 
-	padding-left: 10px;
+    padding-left: 10px;
 
 
 
@@ -2332,13 +2332,13 @@ div.alb-fiche {
 div.alb-img {
 
 
-	float: left;
+    float: left;
 
 
-	width: 190px;
+    width: 190px;
 
 
-	padding-left: 10px;
+    padding-left: 10px;
 
 
 
@@ -2352,10 +2352,10 @@ div.alb-img {
 div.contentalb {
 
 
-	float: left;
+    float: left;
 
 
-	width: 340px;
+    width: 340px;
 
 
 
@@ -2369,19 +2369,19 @@ div.contentalb {
 div.synopsis {
 
 
-	margin-top: 20px;
+    margin-top: 20px;
 
 
-	padding-left: 5px;
+    padding-left: 5px;
 
 
-	padding-right: 5px;
+    padding-right: 5px;
 
 
-	float: left;
+    float: left;
 
 
-	width: 530px;
+    width: 530px;
 
 
 
@@ -2395,19 +2395,19 @@ div.synopsis {
 div.comment {
 
 
-	margin-top: 20px;
+    margin-top: 20px;
 
 
-	float: left;
+    float: left;
 
 
-	width: 530px;
+    width: 530px;
 
 
-	padding-left: 5px;
+    padding-left: 5px;
 
 
-	padding-right: 5px;
+    padding-right: 5px;
 
 
 
@@ -2421,7 +2421,7 @@ div.comment {
 div.action {
 
 
-	float: left;
+    float: left;
 
 
 
@@ -2435,19 +2435,19 @@ div.action {
 div.middle {
 
 
-	float: left;
+    float: left;
 
 
-	width: 30%;
+    width: 30%;
 
 
-	text-align: center;
+    text-align: center;
 
 
-	padding-top: 5px;
+    padding-top: 5px;
 
 
-	margin-left: 5px;
+    margin-left: 5px;
 
 
 
@@ -2461,19 +2461,19 @@ div.middle {
 div.middle-align-left {
 
 
-	float: left;
+    float: left;
 
 
-	width: 30%;
+    width: 30%;
 
 
-	text-align: left;
+    text-align: left;
 
 
-	padding-top: 5px;
+    padding-top: 5px;
 
 
-	margin-left: 5px;
+    margin-left: 5px;
 
 
 
@@ -2487,16 +2487,16 @@ div.middle-align-left {
 div.right {
 
 
-	float: left;
+    float: left;
 
 
-	text-align: center;
+    text-align: center;
 
 
-	padding-top: 5px;
+    padding-top: 5px;
 
 
-	width: 100%;
+    width: 100%;
 
 
 
@@ -2510,13 +2510,13 @@ div.right {
 div.copyright {
 
 
-	text-align: center;
+    text-align: center;
 
 
-	font-size: 0.7em;
+    font-size: 0.7em;
 
 
-	padding: 2px;
+    padding: 2px;
 
 
 
@@ -2530,19 +2530,19 @@ div.copyright {
 div.middle_content {
 
 
-	padding-top: 1px;
+    padding-top: 1px;
 
 
-	padding-bottom: 4px;
+    padding-bottom: 4px;
 
 
 float: left;
 
 
-	width: 100%;
+    width: 100%;
 
 
-	margin: 0;
+    margin: 0;
 
 
 
@@ -2556,10 +2556,10 @@ float: left;
 img.couvBig {
 
 
-	border: 1px solid #000;
+    border: 1px solid #000;
 
 
-	max-height: 160px;
+    max-height: 160px;
 
 
         width: 120px;
@@ -2575,12 +2575,12 @@ img.couvBig {
 img.couvMedium {
 
 
-	border: 1px solid #000;
+    border: 1px solid #000;
 
 
-	height: 140px;
+    height: 140px;
 
-	width: 97px;
+    width: 97px;
 
 
 }
@@ -2591,10 +2591,10 @@ img.couvMedium {
 img.couvSmall {
 
 
-	border: 1px solid #000;
+    border: 1px solid #000;
 
 
-	max-width:70px;
+    max-width:70px;
 
 
 
@@ -2608,19 +2608,19 @@ img.couvSmall {
 div.top_content {
 
 
-	padding-top: 5px;
+    padding-top: 5px;
 
 
-	padding-right: 10px;
+    padding-right: 10px;
 
 
-	float: left;
+    float: left;
 
 
-	width: 200px;
+    width: 200px;
 
 
-	margin: auto;
+    margin: auto;
 
 
 
@@ -2634,15 +2634,15 @@ div.top_content {
 div.middle_title {
 
 
-	width: 100%;
+    width: 100%;
 
 
-	background-color: #000000;
+    background-color: #000000;
 
 
-	min-width: 150px;
+    min-width: 150px;
 
-	color: #FFFFFF;
+    color: #FFFFFF;
 
         padding-left: 5px;
 
@@ -2655,7 +2655,7 @@ div.middle_title {
 .middle_title a {
 
 
-	color: #FFFFFF;
+    color: #FFFFFF;
 
 
 
@@ -2664,7 +2664,7 @@ div.middle_title {
 .middle_title h3 {
 
 
-	color: #FFFFFF;
+    color: #FFFFFF;
 
 
 
@@ -2677,10 +2677,10 @@ div.middle_title {
 #bienvenu {
 
 
-	width: 81%;
+    width: 81%;
 
 
-	float: left;
+    float: left;
 
 
 
@@ -2694,22 +2694,22 @@ div.middle_title {
 #actu2 {
 
 
-	width: 150px;
+    width: 150px;
 
 
-	min-width: 150px;
+    min-width: 150px;
 
 
-	/*margin-top:10px;
+    /*margin-top:10px;
 
-	*/
-	float: right;
+    */
+    float: right;
 
 
-	/*padding-right:10px;
+    /*padding-right:10px;
 
-	*/
-	padding: 0;
+    */
+    padding: 0;
 
 
 
@@ -2723,19 +2723,19 @@ div.middle_title {
 #news {
 
 
-	width: 100%;
+    width: 100%;
 
 
-	margin-top: 15px;
+    margin-top: 15px;
 
 
-	border-top: 1px solid #B64045;
+    border-top: 1px solid #B64045;
 
 
-	padding-right: 0;
+    padding-right: 0;
 
 
-	padding-left: 0;
+    padding-left: 0;
 
 
 
@@ -2749,7 +2749,7 @@ div.middle_title {
 #top {
 
 
-	margin: auto;
+    margin: auto;
 
 
 
@@ -2763,16 +2763,16 @@ div.middle_title {
 #actu {
 
 
-	clear: left;
+    clear: left;
 
 
-	width: 100%;
+    width: 100%;
 
 
-	margin-top: 0;
+    margin-top: 0;
 
 
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 
 
 
@@ -2786,16 +2786,16 @@ div.middle_title {
 #last {
 
 
-	clear: left;
+    clear: left;
 
 
-	width: 100%;
+    width: 100%;
 
 
-	margin-top: 0;
+    margin-top: 0;
 
 
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 
 
 
@@ -2809,10 +2809,10 @@ div.middle_title {
 div.idea {
 
 
-	font-size : 0.9em;
+    font-size : 0.9em;
 
 
-	color : #555;
+    color : #555;
 
 
 
@@ -2826,13 +2826,13 @@ div.idea {
 div.middle_list {
 
 
-	float: left;
+    float: left;
 
 
-	width: 100%;
+    width: 100%;
 
 
-	padding: 5px;
+    padding: 5px;
 
 
 
@@ -2846,16 +2846,16 @@ div.middle_list {
 #imgsearch {
 
 
-	margin-bottom: -3px;
+    margin-bottom: -3px;
 
 
-	padding: 3px;
+    padding: 3px;
 
 
-	height: 16px;
+    height: 16px;
 
 
-	width: 100%;
+    width: 100%;
 
 
 
@@ -2870,28 +2870,28 @@ div.middle_list {
 div.genTitle {
 
 
-	text-align: center;
+    text-align: center;
 
 
-	background-color: #C8857C;
+    background-color: #C8857C;
 
 
-	font: normal small-caps bold 10pt Verdana;
+    font: normal small-caps bold 10pt Verdana;
 
 
-	color: #990000;
+    color: #990000;
 
 
-	padding-left: 5px;
+    padding-left: 5px;
 
 
-	/*clear: both;
+    /*clear: both;
 
-	*/
-	margin-top: 15px;
+    */
+    margin-top: 15px;
 
 
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 
 
 
@@ -2904,31 +2904,31 @@ div.genTitle {
 
 .genBlock {
 
-	 /*float: left;
+     /*float: left;
 
-	*/
-	text-align: left;
-
-
-	border: thin solid #C8857C;
+    */
+    text-align: left;
 
 
-	font: 8pt Verdana;
+    border: thin solid #C8857C;
 
 
-	padding: 2px 2px 2px 2px;
+    font: 8pt Verdana;
 
 
-	margin: 3px 3px 3px 3px;
+    padding: 2px 2px 2px 2px;
 
 
-	background-color: #FAF0F0;
+    margin: 3px 3px 3px 3px;
 
 
-	padding-left: 10px;
+    background-color: #FAF0F0;
 
 
-	padding-right: 10px;
+    padding-left: 10px;
+
+
+    padding-right: 10px;
 
 
 
@@ -2942,7 +2942,7 @@ div.genTitle {
 table.genTable {
 
 
-	font: Verdana;
+    font: Verdana;
 
 
 
@@ -2956,19 +2956,19 @@ table.genTable {
 td.genTitle {
 
 
-	padding: 2px 5px 2px 5px;
+    padding: 2px 5px 2px 5px;
 
 
-	background-color: #C8857C;
+    background-color: #C8857C;
 
 
-	width: auto;
+    width: auto;
 
 
-	color: #990000;
+    color: #990000;
 
 
-	text-align: center;
+    text-align: center;
 
 
 
@@ -2982,10 +2982,10 @@ td.genTitle {
 td.genData {
 
 
-	text-align: center;
+    text-align: center;
 
 
-	padding: 2px 5px 2px 5px;
+    padding: 2px 5px 2px 5px;
 
 
 
@@ -2999,10 +2999,10 @@ td.genData {
 ul.menu {
 
 
-	text-align: center;
+    text-align: center;
 
 
-	margin: 5px 0 0 0;
+    margin: 5px 0 0 0;
 
 
 
@@ -3016,7 +3016,7 @@ ul.menu {
 ul.menu li {
 
 
-	display: inline;
+    display: inline;
 
 
 
@@ -3030,22 +3030,22 @@ ul.menu li {
 ul.menu li a {
 
 
-	border: 1px solid #fff;
+    border: 1px solid #fff;
 
 
-	margin: 0px -5px 0px 0px;
+    margin: 0px -5px 0px 0px;
 
 
-	padding: 2px 7px 2px 7px;
+    padding: 2px 7px 2px 7px;
 
 
-	background-color: #CD6767;
+    background-color: #CD6767;
 
 
 text-decoration: none;
 
 
-	color: #fff;
+    color: #fff;
 
 
 
@@ -3059,7 +3059,7 @@ text-decoration: none;
 ul.menu li a:hover {
 
 
-	background-color: #000000;
+    background-color: #000000;
 
 
 
@@ -3075,7 +3075,7 @@ ul.menu li a:hover {
 font.pucenum {
 
 
-	color: #999;
+    color: #999;
 
 
 
@@ -3091,22 +3091,22 @@ font.pucenum {
 .colmask {
 
 
-	position: relative;
+    position: relative;
 
 
-	/* This fixes the IE7 overflow hidden bug and stops the layout jumping out of place */
-	clear: both;
+    /* This fixes the IE7 overflow hidden bug and stops the layout jumping out of place */
+    clear: both;
 
 
-	float: left;
+    float: left;
 
 
-	width: 100%;
+    width: 100%;
 
-	 /* width of whole page */
-	overflow: hidden;
+     /* width of whole page */
+    overflow: hidden;
 
-	 /* This chops off any overhanging divs */
+     /* This chops off any overhanging divs */
 
 
 }
@@ -3117,9 +3117,9 @@ font.pucenum {
 /* 2 column right menu settings */
 .rightmenu {
 
-	 /*background:#ff9;
+     /*background:#ff9;
 
-	*/
+    */
 
 
 
@@ -3132,27 +3132,27 @@ font.pucenum {
 .rightmenu .colleft {
 
 
-	float: left;
+    float: left;
 
 
-	width: 200%;
+    width: 200%;
 
 
-	margin-left: -200px;
+    margin-left: -200px;
 
 
-	position: relative;
+    position: relative;
 
 
-	right: 100%;
+    right: 100%;
 
 
         min-height: 600px;
 
 
-	/*background:#fff;
+    /*background:#fff;
 
-	*/
+    */
 
 
 }
@@ -3164,19 +3164,19 @@ font.pucenum {
 .rightmenu .col1wrap {
 
 
-	float: left;
+    float: left;
 
 
-	width: 50%;
+    width: 50%;
 
 
-	position: relative;
+    position: relative;
 
 
-	left: 50%;
+    left: 50%;
 
 
-	padding-bottom: 1em;
+    padding-bottom: 1em;
 
 
 
@@ -3190,13 +3190,13 @@ font.pucenum {
 .rightmenu .col1 {
 
 
-	margin: 0 25px 0 200px;
+    margin: 0 25px 0 200px;
 
 
-	overflow: hidden;
+    overflow: hidden;
 
 
-	padding: 5px;
+    padding: 5px;
 
 
 
@@ -3210,19 +3210,19 @@ font.pucenum {
 .rightmenu .col2 {
 
 
-	float: right;
+    float: right;
 
 
-	width: 220px;
+    width: 220px;
 
 
-	position: relative;
+    position: relative;
 
 
-	left: 210px;
+    left: 210px;
 
 
-	padding-right: 10px;
+    padding-right: 10px;
 
 
 
@@ -3236,13 +3236,13 @@ font.pucenum {
 td.fiche_h1l {
 
 
-	text-align : left;
+    text-align : left;
 
 
-	vertical-align : top;
+    vertical-align : top;
 
 
-	font-size: 1em;
+    font-size: 1em;
 
         max-width:150px;
 
@@ -3258,13 +3258,13 @@ td.fiche_h1l {
 td.fiche_h1r {
 
 
-	text-align : right;
+    text-align : right;
 
 
-	vertical-align : top;
+    vertical-align : top;
 
 
-	font-size: 1em;
+    font-size: 1em;
 
 
 
@@ -3278,13 +3278,13 @@ td.fiche_h1r {
 td.fiche_h2l {
 
 
-	text-align : left;
+    text-align : left;
 
 
-	vertical-align : top;
+    vertical-align : top;
 
 
-	font-size: 0.9em;
+    font-size: 0.9em;
 
 
 
@@ -3298,13 +3298,13 @@ td.fiche_h2l {
 td.fiche_h2r {
 
 
-	text-align : right;
+    text-align : right;
 
 
-	vertical-align : top;
+    vertical-align : top;
 
 
-	font-size: 0.9em;
+    font-size: 0.9em;
 
 
 
@@ -3319,13 +3319,13 @@ td.fiche_h2r {
 td.fiche_h3l {
 
 
-	text-align : left;
+    text-align : left;
 
 
-	vertical-align : top;
+    vertical-align : top;
 
 
-	font-size: 0.8em;
+    font-size: 0.8em;
 
 
 
@@ -3339,13 +3339,13 @@ td.fiche_h3l {
 td.fiche_h3r {
 
 
-	text-align : right;
+    text-align : right;
 
 
-	vertical-align : top;
+    vertical-align : top;
 
 
-	font-size: 0.8em;
+    font-size: 0.8em;
 
 
 
@@ -3360,15 +3360,15 @@ td.fiche_h3r {
 #openidProvider {
 
 
-/*	margin: 0 0 3px 0;
+/*  margin: 0 0 3px 0;
 
 
-	padding: 4px;
+    padding: 4px;
 
 
-	width: 200px;
+    width: 200px;
 
-	*/
+    */
 padding : auto;
 
 

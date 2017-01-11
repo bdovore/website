@@ -1,556 +1,556 @@
 a.lien {
-	color: #000000;
-	text-decoration: none;
+    color: #000000;
+    text-decoration: none;
 }
 
 a:hover.lien {
-	color: #FF8C00;
-	text-decoration: underline;
+    color: #FF8C00;
+    text-decoration: underline;
 }
 
 .navigation {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
-	font-style: normal;
-	color: #888888;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    color: #888888;
 }
 
 a.navigation {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
-	font-style: normal;
-	color: #888888;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    color: #888888;
 }
 
 table.navigation {
-	background-color: #E5E5E5;
-	border-color: #FF8C00;
-	border-style: solid;
-	border-width: 0px;
+    background-color: #E5E5E5;
+    border-color: #FF8C00;
+    border-style: solid;
+    border-width: 0px;
 }
 
 table.information {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
-	font-style: normal;
-	font-weight: bold;
-	color: #888888;
-	background-color: #FFFFFF;
-	border-color: #FF8C00;
-	border-style: solid;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 1px;
-	border-left-width: 1px;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: bold;
+    color: #888888;
+    background-color: #FFFFFF;
+    border-color: #FF8C00;
+    border-style: solid;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
 }
 
 .action_workflow_on,.action_workflow_off,.action_navigation_on,.action_navigation_off,.action_modification_on,.action_modification_off
-	{
-	font-size: 10px;
-	font-style: normal;
-	font-weight: bold;
-	cursor: hand;
+    {
+    font-size: 10px;
+    font-style: normal;
+    font-weight: bold;
+    cursor: hand;
 }
 
 td.action_workflow_on,td.action_workflow_off,td.action_navigation_on,td.action_navigation_off,td.action_modification_on,td.action_modification_off
-	{
-	border-style: solid;
-	border-width: 1px;
-	padding: 2px 5px 2px 5px;
+    {
+    border-style: solid;
+    border-width: 1px;
+    padding: 2px 5px 2px 5px;
 }
 
 input.action_workflow_on,input.action_workflow_off,input.action_navigation_on,input.action_navigation_off,input.action_modification_on,input.action_modification_off
-	{
-	border-style: solid;
-	border-width: 1px;
-	padding: 0px 5px 0px 5px;
+    {
+    border-style: solid;
+    border-width: 1px;
+    padding: 0px 5px 0px 5px;
 }
 
 /* IE */
 * html input.action_workflow_on {
-	width: 1%;
-	overflow: visible;
+    width: 1%;
+    overflow: visible;
 }
 
 * html input.action_workflow_off {
-	width: 1%;
-	overflow: visible;
+    width: 1%;
+    overflow: visible;
 }
 
 * html input.action_navigation_on {
-	width: 1%;
-	overflow: visible;
+    width: 1%;
+    overflow: visible;
 }
 
 * html input.action_navigation_off {
-	width: 1%;
-	overflow: visible;
+    width: 1%;
+    overflow: visible;
 }
 
 * html input.action_modification_on {
-	width: 1%;
-	overflow: visible;
+    width: 1%;
+    overflow: visible;
 }
 
 * html input.action_modification_off {
-	width: 1%;
-	overflow: visible;
+    width: 1%;
+    overflow: visible;
 }
 
 .action_workflow_on {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	color: #FFFFFF;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    color: #FFFFFF;
 }
 
 td.action_workflow_on,input.action_workflow_on {
-	color: #FFFFFF;
-	background-color: #FF8C00;
-	border-color: #000000;
+    color: #FFFFFF;
+    background-color: #FF8C00;
+    border-color: #000000;
 }
 
 .action_navigation_on {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	color: #FFFFFF;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    color: #FFFFFF;
 }
 
 td.action_navigation_on,input.action_navigation_on {
-	color: #FFFFFF;
-	background-color: #A0A0A0;
-	border-color: #000000;
+    color: #FFFFFF;
+    background-color: #A0A0A0;
+    border-color: #000000;
 }
 
 .action_modification_on {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	color: #FFFFFF;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    color: #FFFFFF;
 }
 
 td.action_modification_on,input.action_modification_on {
-	color: #FFFFFF;
-	background-color: #FF8C00;
-	border-color: #000000;
+    color: #FFFFFF;
+    background-color: #FF8C00;
+    border-color: #000000;
 }
 
 .action_workflow_off {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	color: #000000;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    color: #000000;
 }
 
 input.action_workflow_off,td.action_workflow_off {
-	color: #FFFFFF;
-	background-color: #A0A0A0;
-	border-color: #000000;
+    color: #FFFFFF;
+    background-color: #A0A0A0;
+    border-color: #000000;
 }
 
 .action_navigation_off {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	color: #FFFFFF;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    color: #FFFFFF;
 }
 
 td.action_navigation_off,input.action_navigation_off {
-	color: #000000;
-	background-color: #E5E5E5;
-	border-color: #BBBBBB;
+    color: #000000;
+    background-color: #E5E5E5;
+    border-color: #BBBBBB;
 }
 
 .action_modification_off {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	color: #000000;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    color: #000000;
 }
 
 td.action_modification_off,input.action_modification_off {
-	color: #000000;
-	background-color: #FFE381;
-	border-color: #FF8C00;
+    color: #000000;
+    background-color: #FFE381;
+    border-color: #FF8C00;
 }
 
 .gris {
-	color: #888888;
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 9px;
+    color: #888888;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 9px;
 }
 
 .gris_t {
-	color: #FFFFFF;
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	background-color: #DBDBDB;
-	font-size: 10px;
-	font-weight: bold;
-	cursor: hand;
+    color: #FFFFFF;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    background-color: #DBDBDB;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: hand;
 }
 
 .titrebandeau {
-	color: #000;
-	text-align: center;
-	font-size: 20;
-	font-weight: lighter;
+    color: #000;
+    text-align: center;
+    font-size: 20;
+    font-weight: lighter;
 }
 
 .ContextMenu {
-	color: #000000;
-	cursor: default;
-	font: menutext;
-	position: absolute;
-	text-align: left;
-	font-size: 11;
-	background-color: #FFFFFF;
-	border: 1 solid buttonface;
-	visibility: hidden;
-	border: 2 outset buttonhighlight;
+    color: #000000;
+    cursor: default;
+    font: menutext;
+    position: absolute;
+    text-align: left;
+    font-size: 11;
+    background-color: #FFFFFF;
+    border: 1 solid buttonface;
+    visibility: hidden;
+    border: 2 outset buttonhighlight;
 }
 
 .ContextMenuOver {
-	color: #FFFFFF;
-	font-size: 11;
-	background: #888888;
+    color: #FFFFFF;
+    font-size: 11;
+    background: #888888;
 }
 
 .ContextMenuOut {
-	color: #000000;
-	font-size: 11;
-	background: #FFFFFF;
+    color: #000000;
+    font-size: 11;
+    background: #FFFFFF;
 }
 
 .cfg_big {
-	font-size: 13px;
-	color: #FF9900;
-	font-family: Arial, Verdana, Helvetica, sans-serif
+    font-size: 13px;
+    color: #FF9900;
+    font-family: Arial, Verdana, Helvetica, sans-serif
 }
 
 .cfg {
-	font-size: 11px;
-	font-family: Arial, Verdana, Helvetica, sans-serif
+    font-size: 11px;
+    font-family: Arial, Verdana, Helvetica, sans-serif
 }
 
 .cfg_small {
-	font-size: 9px;
-	color: #FF9900;
-	font-family: Arial, Verdana, Helvetica, sans-serif
+    font-size: 9px;
+    color: #FF9900;
+    font-family: Arial, Verdana, Helvetica, sans-serif
 }
 
 .cfg_bandeau {
-	background-color: #FFEEAA;
-	font-size: 11px;
-	color: #888888;
-	font-family: Arial, Verdana, Helvetica, sans-serif
+    background-color: #FFEEAA;
+    font-size: 11px;
+    color: #888888;
+    font-family: Arial, Verdana, Helvetica, sans-serif
 }
 
 .cfg_texte {
-	font-size: 11px;
-	color: #888888;
-	font-family: Arial, Verdana, Helvetica, sans-serif
+    font-size: 11px;
+    color: #888888;
+    font-family: Arial, Verdana, Helvetica, sans-serif
 }
 
 a.cfg {
-	color: #FF9900;
+    color: #FF9900;
 }
 
 select.cfg {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
-	font-style: normal;
-	line-height: normal;
-	font-weight: bold;
-	color: #000000;
-	background-color: #FFEEAA;
-	height: auto;
-	width: auto;
-	border-color: #FF7F01;
-	border-style: solid;
-	border-top-width: 0px;
-	border-right-width: 0px;
-	border-bottom-width: 0px;
-	border-left-width: 0px;
-	SCROLLBAR-FACE-COLOR: #888888;
-	SCROLLBAR-HIGHLIGHT-COLOR: #FFEEAA;
-	SCROLLBAR-SHADOW-COLOR: #FF7F01;
-	SCROLLBAR-3DLIGHT-COLOR: #FF7F01;
-	SCROLLBAR-ARROW-COLOR: #FFEEAA;
-	SCROLLBAR-TRACK-COLOR: #FFEEAA;
-	SCROLLBAR-DARKSHADOW-COLOR: #888888;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    line-height: normal;
+    font-weight: bold;
+    color: #000000;
+    background-color: #FFEEAA;
+    height: auto;
+    width: auto;
+    border-color: #FF7F01;
+    border-style: solid;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 0px;
+    border-left-width: 0px;
+    SCROLLBAR-FACE-COLOR: #888888;
+    SCROLLBAR-HIGHLIGHT-COLOR: #FFEEAA;
+    SCROLLBAR-SHADOW-COLOR: #FF7F01;
+    SCROLLBAR-3DLIGHT-COLOR: #FF7F01;
+    SCROLLBAR-ARROW-COLOR: #FFEEAA;
+    SCROLLBAR-TRACK-COLOR: #FFEEAA;
+    SCROLLBAR-DARKSHADOW-COLOR: #888888;
 }
 
 input.cfg,input.cfg_on {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
-	font-style: normal;
-	line-height: normal;
-	font-weight: bold;
-	color: #000000;
-	height: auto;
-	width: auto;
-	border-color: #FF7F01;
-	border-style: solid;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 1px;
-	border-left-width: 1px;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    line-height: normal;
+    font-weight: bold;
+    color: #000000;
+    height: auto;
+    width: auto;
+    border-color: #FF7F01;
+    border-style: solid;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
 }
 
 input.cfg {
-	background-color: #FFEEAA;
+    background-color: #FFEEAA;
 }
 
 input.cfg_on {
-	background-color: #FFFFFF;
+    background-color: #FFFFFF;
 }
 
 textarea.cfg,textarea.cfg_on {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
-	font-style: normal;
-	line-height: normal;
-	font-weight: bold;
-	color: #000000;
-	height: auto;
-	width: auto;
-	border-color: #FF7F01;
-	border-style: solid;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 1px;
-	border-left-width: 1px;
-	SCROLLBAR-FACE-COLOR: #FF9900;
-	SCROLLBAR-HIGHLIGHT-COLOR: #FFEEAA;
-	SCROLLBAR-SHADOW-COLOR: #FF7F01;
-	SCROLLBAR-3DLIGHT-COLOR: #FF7F01;
-	SCROLLBAR-ARROW-COLOR: #FFEEAA;
-	SCROLLBAR-TRACK-COLOR: #FFEEAA;
-	SCROLLBAR-DARKSHADOW-COLOR: #FF9900;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    line-height: normal;
+    font-weight: bold;
+    color: #000000;
+    height: auto;
+    width: auto;
+    border-color: #FF7F01;
+    border-style: solid;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    SCROLLBAR-FACE-COLOR: #FF9900;
+    SCROLLBAR-HIGHLIGHT-COLOR: #FFEEAA;
+    SCROLLBAR-SHADOW-COLOR: #FF7F01;
+    SCROLLBAR-3DLIGHT-COLOR: #FF7F01;
+    SCROLLBAR-ARROW-COLOR: #FFEEAA;
+    SCROLLBAR-TRACK-COLOR: #FFEEAA;
+    SCROLLBAR-DARKSHADOW-COLOR: #FF9900;
 }
 
 textarea.cfg {
-	background-color: #FFEEAA;
+    background-color: #FFEEAA;
 }
 
 textarea.cfg_on {
-	background-color: #FFFFFF;
+    background-color: #FFFFFF;
 }
 
 .cfgch {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 11px;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 11px;
 }
 
 .cfg0,.cfgonglet0 {
-	background-color: #EEEEEE;
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
+    background-color: #EEEEEE;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
 }
 
 .cfg1,.cfgonglet1 {
-	background-color: #DDDDDD;
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
+    background-color: #DDDDDD;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
 }
 
 .cfg2,.cfgonglet2 {
-	background-color: #BBBBBB;
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
+    background-color: #BBBBBB;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
 }
 
 .cfgL {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 10px;
-	color: #FF9900;
-	cursor: hand;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #FF9900;
+    cursor: hand;
 }
 
 .cfg_titre {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	background-color: #FFFFFF;
-	font-style: normal;
-	font-size: 13px;
-	font-variant: normal;
-	text-transform: none;
-	text-decoration: none;
-	color: #000000;
-	font-weight: bold;
-	line-height: 15px;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    background-color: #FFFFFF;
+    font-style: normal;
+    font-size: 13px;
+    font-variant: normal;
+    text-transform: none;
+    text-decoration: none;
+    color: #000000;
+    font-weight: bold;
+    line-height: 15px;
 }
 
 .cfg_titre_small {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	background-color: #FF9900;
-	font-style: normal;
-	font-size: 10px;
-	font-variant: normal;
-	text-transform: none;
-	text-decoration: none;
-	color: #DDDDDD;
-	line-height: 13px;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    background-color: #FF9900;
+    font-style: normal;
+    font-size: 10px;
+    font-variant: normal;
+    text-transform: none;
+    text-decoration: none;
+    color: #DDDDDD;
+    line-height: 13px;
 }
 
 a.cfg_titre {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	background-color: #FF9900;
-	font-style: normal;
-	font-size: 13px;
-	font-weight: bold;
-	color: #DDDDDD;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    background-color: #FF9900;
+    font-style: normal;
+    font-size: 13px;
+    font-weight: bold;
+    color: #DDDDDD;
 }
 
 table.cfg_titre,table.cfg_titre_small {
-	background-color: #DDDDDD;
-	background-image: url(../../image/bt_bg.jpg);
-	height: 20px;
+    background-color: #DDDDDD;
+    background-image: url(../../image/bt_bg.jpg);
+    height: 20px;
 }
 
 .cfgt {
-	border-color: #333333;
-	border-style: solid;
-	border-width: 0px;
-	background-color: #888888;
-	font-size: 10px;
-	font-weight: bold;
-	color: #FFFFFF;
+    border-color: #333333;
+    border-style: solid;
+    border-width: 0px;
+    background-color: #888888;
+    font-size: 10px;
+    font-weight: bold;
+    color: #FFFFFF;
 }
 
 .cfgt_v {
-	border: 1px solid #333333;
-	layout-flow: vertical-ideographic;
-	background-color: #FF9900;
-	font-size: 10px;
-	font-weight: bold;
-	color: #FFFFFF;
+    border: 1px solid #333333;
+    layout-flow: vertical-ideographic;
+    background-color: #FF9900;
+    font-size: 10px;
+    font-weight: bold;
+    color: #FFFFFF;
 }
 
 table.cfg {
-	border-color: #888888;
-	border-style: solid;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 1px;
-	border-left-width: 1px;
+    border-color: #888888;
+    border-style: solid;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
 }
 
 div.cfgonglet {
-	border-color: #888888;
-	border-style: solid;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 1px;
-	border-left-width: 1px;
-	padding: 1px 1px 1px 1px;
+    border-color: #888888;
+    border-style: solid;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    padding: 1px 1px 1px 1px;
 }
 
 .cfgonglet_line_trl_out,.cfgonglet_line_trl_on,.cfgonglet_line_trbl_out,.cfgonglet_line_trbl_on,.cfgonglet_line_trl,.cfgonglet_line_rbl,.cfgonglet_line_b
-	{
-	background-color: #FFFFFF;
-	border-color: #888888;
-	border-style: solid;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 1px;
-	border-left-width: 1px;
+    {
+    background-color: #FFFFFF;
+    border-color: #888888;
+    border-style: solid;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
 }
 
 td.cfgonglet_line_trbl_out {
-	background-color: #FFEEAA;
+    background-color: #FFEEAA;
 }
 
 td.cfgonglet_line_trbl_on {
-	background-color: #BBBBBB;
-	cursor: hand;
+    background-color: #BBBBBB;
+    cursor: hand;
 }
 
 td.cfgonglet_line_trl_out {
-	border-bottom-width: 0px;
-	background-color: #FFFFFF;
-	font-weight: bold;
+    border-bottom-width: 0px;
+    background-color: #FFFFFF;
+    font-weight: bold;
 }
 
 td.cfgonglet_line_trl_on {
-	border-bottom-width: 0px;
-	background-color: #FFFFFF;
-	cursor: default;
-	font-weight: bold;
+    border-bottom-width: 0px;
+    background-color: #FFFFFF;
+    cursor: default;
+    font-weight: bold;
 }
 
 td.cfgonglet_line_trl {
-	border-bottom-width: 0px;
+    border-bottom-width: 0px;
 }
 
 td.cfgonglet_line_rbl {
-	border-top-width: 0px;
+    border-top-width: 0px;
 }
 
 td.cfgonglet_line_b {
-	border-top-width: 0px;
-	border-right-width: 0px;
-	border-left-width: 0px;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-left-width: 0px;
 }
 
 iframe.tom {
-	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 250;
-	z-index: -1; /*Placer l'iframe en arrière-plan du div*/
-	filter: mask(); /*Cacher l'iframe dans IE6*/
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 250;
+    z-index: -1; /*Placer l'iframe en arrière-plan du div*/
+    filter: mask(); /*Cacher l'iframe dans IE6*/
 }
 
 #lightbox {
-	overflow: auto;
-	background-color: #eee;
-	margin: 5px;
-	padding: 5px;
-	border-bottom: 2px solid #666;
-	border-right: 2px solid #666; /**/
+    overflow: auto;
+    background-color: #eee;
+    margin: 5px;
+    padding: 5px;
+    border-bottom: 2px solid #666;
+    border-right: 2px solid #666; /**/
 }
 
 #lightboxDetails {
-	background-color: #fff;
-	font-size: 0.8em;
-	/*	border: 1px solid #000;*/
+    background-color: #fff;
+    font-size: 0.8em;
+    /*  border: 1px solid #000;*/
 }
 
 #closeButton {
-	top: 0px;
-	right: 0px;
+    top: 0px;
+    right: 0px;
 }
 
 #lightbox img {
-	border: none;
-	clear: both;
+    border: none;
+    clear: both;
 }
 
 #overlay img {
-	border: none;
+    border: none;
 }
 
 #overlayIframe img {
-	border: none;
+    border: none;
 }
 
 #overlay {
-	background-color: #333;
-	-moz-opacity: 0.7;
-	opacity: 0.7;
-	filter: alpha(opacity = 70);
+    background-color: #333;
+    -moz-opacity: 0.7;
+    opacity: 0.7;
+    filter: alpha(opacity = 70);
 }
 
 #overlayIframe {
-	background-color: #333;
-	-moz-opacity: 0.7;
-	opacity: 0.7;
-	filter: alpha(opacity = 70);
+    background-color: #333;
+    -moz-opacity: 0.7;
+    opacity: 0.7;
+    filter: alpha(opacity = 70);
 }
 
 * html #overlay {
-	background-color: #333;
-	/*	back\ground-color: transparent;*/
-	/*	background-image: url(image/blank.gif);*/
-	/*	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="image/overlay.png", sizingMethod="scale");*/
+    background-color: #333;
+    /*  back\ground-color: transparent;*/
+    /*  background-image: url(image/blank.gif);*/
+    /*  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="image/overlay.png", sizingMethod="scale");*/
 }
 
 * html #overlayIframe {
-	background-color: #333;
-	/*	back\ground-color: transparent;*/
-	/*	background-image: url(image/blank.gif);*/
-	/*	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="image/overlay.png", sizingMethod="scale");*/
+    background-color: #333;
+    /*  back\ground-color: transparent;*/
+    /*  background-image: url(image/blank.gif);*/
+    /*  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="image/overlay.png", sizingMethod="scale");*/
 }
 
 .iframeAlbum {
@@ -558,12 +558,12 @@ iframe.tom {
 }
 
 .slideBdo {
-	width: 100%;
-	height: 245px;
-	margin-top: 3px;
-	margin-bottom: 3px;
-	margin-left: 5px;
-	margin-right: 5px;
+    width: 100%;
+    height: 245px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .listcomment{

@@ -22,19 +22,19 @@ $select = 'select *'
 
 $DB->query($select);
 while ($DB->next_record()) {
-	$titre = htmlspecialchars(stripslashes($DB->f("news_titre")));
-	$posteur = htmlspecialchars(stripslashes($DB->f("news_posteur")));
-	$histoire = htmlspecialchars(stripslashes($DB->f("news_text")));
+    $titre = htmlspecialchars(stripslashes($DB->f("news_titre")));
+    $posteur = htmlspecialchars(stripslashes($DB->f("news_posteur")));
+    $histoire = htmlspecialchars(stripslashes($DB->f("news_text")));
     $dte_post = $DB->f("news_date");
 
-	$titre = str_replace ( chr(0x92), '\'',  $titre );
-	$histoire = str_replace ( chr(0x92), '\'',  $histoire );
+    $titre = str_replace ( chr(0x92), '\'',  $titre );
+    $histoire = str_replace ( chr(0x92), '\'',  $histoire );
     $titre = str_replace ( chr(0x85), '\'',  $titre );
-	$histoire = str_replace ( chr(0x85), '\'',  $histoire );
+    $histoire = str_replace ( chr(0x85), '\'',  $histoire );
     $titre = str_replace ( chr(0x9c), '\'',  $titre );
-	$histoire = str_replace ( chr(0x9c), '\'',  $histoire );
+    $histoire = str_replace ( chr(0x9c), '\'',  $histoire );
     $titre = str_replace ( chr(0x96), '\'',  $titre );
-	$histoire = str_replace ( chr(0x96), '\'',  $histoire );
+    $histoire = str_replace ( chr(0x96), '\'',  $histoire );
 
     //Conversion de la date de MySQL (yyyy-mm-jj hh:mm:ss) à RFC822 (format rss : wed, 30 apr 2009 hh:mm:ss GMT)
     $date_array = explode("-",$dte_post);
@@ -49,10 +49,10 @@ while ($DB->next_record()) {
     $var_timestamp = mktime($var_hour,$var_min,$var_sec,$var_month,$var_day,$var_year);
     $date = date("D, d M Y H:i:s O",$var_timestamp);
 
-	echo '<item>'."\n";
-	echo '<title>'.$titre." (".$posteur.")".'</title>'."\n";
-	echo '<link>'.BDO_URL.'</link>'."\n";
-	echo '<description><![CDATA["'.$histoire.'"]]></description>'."\n";
+    echo '<item>'."\n";
+    echo '<title>'.$titre." (".$posteur.")".'</title>'."\n";
+    echo '<link>'.BDO_URL.'</link>'."\n";
+    echo '<description><![CDATA["'.$histoire.'"]]></description>'."\n";
     echo '<pubDate>'.$date.'</pubDate>'."\n";
     //echo '<bdovore:adsinfos>'."\n";
     //echo '       <bdovore:prix>11500</bdovore:prix>'."\n";
@@ -64,7 +64,7 @@ while ($DB->next_record()) {
     //echo '</bdovore:adsinfos>'."\n";
 
 
-	echo '<guid isPermaLink="true">'.BDO_URL.'#'.$DB->f("news_id").'</guid>';
+    echo '<guid isPermaLink="true">'.BDO_URL.'#'.$DB->f("news_id").'</guid>';
     echo '</item>';
 }//fin du while*/
 

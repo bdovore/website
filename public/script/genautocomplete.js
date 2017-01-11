@@ -1,7 +1,7 @@
 function addAutocomplete (idInput, idSpan, idHiddenField, url, min){
 /*
 * Crée un champs de saisie autocompletion sur l'input d'id "idinput" et
-*	affiche le code dans le span idspan
+*   affiche le code dans le span idspan
 *   remplit le champ hidden avec l'id dans idhidden
 */
 

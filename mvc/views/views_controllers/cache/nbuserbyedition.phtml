@@ -8,9 +8,9 @@ if ($view->continuer == "oui") {
 <script>
 document.cachenbuserbyedition.nbruser_ID_EDITION.value = "<?php echo $view->nbruser_ID_EDITION;?>";
     $.get("<?php echo BDO_URL;?>cache/nbuserbyedition", $("#cachenbuserbyedition").serialize(), function(data) {
-	 $("#ddcachenbuserbyedition").html(data);
-	//alert("Data Loaded: " + data);
-	});
+     $("#ddcachenbuserbyedition").html(data);
+    //alert("Data Loaded: " + data);
+    });
   </script>
 <?php
 }
@@ -23,8 +23,8 @@ var options;
 options =
 { label: "lancer",
 icons: {
-	primary: "ui-icon-play"
-		}
+    primary: "ui-icon-play"
+        }
 };
 $("#lancernbuserbyedition").button( "option", options );
 </script>

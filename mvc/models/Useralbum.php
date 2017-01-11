@@ -68,40 +68,40 @@ class Useralbum extends Bdo_Db_Line
                 ua.FLG_LU as FLG_LU,
 
 
-        	bd_tome.PRIX_BDNET,
-        	bd_tome.FLG_INT as FLG_INT_TOME,
-        	bd_tome.FLG_TYPE as FLG_TYPE_TOME,
-        	bd_tome.HISTOIRE as HISTOIRE_TOME,
+            bd_tome.PRIX_BDNET,
+            bd_tome.FLG_INT as FLG_INT_TOME,
+            bd_tome.FLG_TYPE as FLG_TYPE_TOME,
+            bd_tome.HISTOIRE as HISTOIRE_TOME,
 
                 s.ID_SERIE,
 
                 s.FLG_FINI,
-        	g.ID_GENRE,
-        	g.libelle as NOM_GENRE,
+            g.ID_GENRE,
+            g.libelle as NOM_GENRE,
 
-        	en.ID_EDITION,
-        	en.DTE_PARUTION,
-        	en.ean as EAN_EDITION,
-        	en.isbn as ISBN_EDITION,
+            en.ID_EDITION,
+            en.DTE_PARUTION,
+            en.ean as EAN_EDITION,
+            en.isbn as ISBN_EDITION,
 
                 c.ID_COLLECTION,
 
 
-        	er.ID_EDITEUR,
+            er.ID_EDITEUR,
 
 
-        	bd_tome.ID_SCENAR,
+            bd_tome.ID_SCENAR,
 
-        	bd_tome.ID_DESSIN,
+            bd_tome.ID_DESSIN,
 
-        	bd_tome.ID_COLOR,
-        	co.pseudo as copseudo,
-        	bd_tome.ID_SCENAR_ALT,
-        	sca.pseudo as scapseudo,
-        	bd_tome.ID_DESSIN_ALT,
-        	dea.pseudo as deapseudo,
-        	bd_tome.ID_COLOR_ALT,
-        	coa.pseudo as coapseudo,
+            bd_tome.ID_COLOR,
+            co.pseudo as copseudo,
+            bd_tome.ID_SCENAR_ALT,
+            sca.pseudo as scapseudo,
+            bd_tome.ID_DESSIN_ALT,
+            dea.pseudo as deapseudo,
+            bd_tome.ID_COLOR_ALT,
+            coa.pseudo as coapseudo,
                 DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%Y') as annee_achat,
 
                 DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%m') as mois_achat";
@@ -249,9 +249,9 @@ class Useralbum extends Bdo_Db_Line
     {
          $where = " where
 
-        	ua.user_id=" . $user_id . "
+            ua.user_id=" . $user_id . "
 
-        	and ua.flg_achat='N'
+            and ua.flg_achat='N'
                  order by IFNULL(ua.date_achat,ua.date_ajout) desc
 
             limit 0,".$limit;
@@ -266,9 +266,9 @@ class Useralbum extends Bdo_Db_Line
     {
          $where = " where
 
-        	ua.user_id=" . $user_id . "
+            ua.user_id=" . $user_id . "
 
-        	and ua.flg_achat='O'
+            and ua.flg_achat='O'
                  order by ua.date_ajout desc
 
             limit 0,".$limit;
@@ -289,7 +289,7 @@ class Useralbum extends Bdo_Db_Line
         $query = "select round(sum((case when ua.cote > 0 then ua.cote
                                     when bd_tome.prix_bdnet > 0 then prix_bdnet
                                     when bd_tome.flg_int = 'O' then val_int else
-			val_alb end) + IF (bd_tome.flg_type = 1 AND u.val_cof_type = 0 , val_cof, 0)),2)  as valorisation,
+            val_alb end) + IF (bd_tome.flg_type = 1 AND u.val_cof_type = 0 , val_cof, 0)),2)  as valorisation,
                 count(*) nb_album,
                         count(IF((ua.cote > 0),1,null)) nb_val_user,
                         count(IF((ua.cote = 0 or ua.cote is null) and bd_tome.prix_bdnet > 0,1,null)) as nb_val_bdovore,
@@ -323,33 +323,33 @@ class Useralbum extends Bdo_Db_Line
 
             $query = "
 
-	SELECT
+    SELECT
 
-		t.ID_TOME,
+        t.ID_TOME,
 
-		t.TITRE as TITRE_TOME,
+        t.TITRE as TITRE_TOME,
 
-		en.IMG_COUV
+        en.IMG_COUV
 
-	FROM
+    FROM
 
-		users_album ua
+        users_album ua
 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
+        INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
 
-		INNER JOIN users_comment uc ON  uc.id_tome = en.id_tome AND uc.user_id = ua.user_id
+        INNER JOIN users_comment uc ON  uc.id_tome = en.id_tome AND uc.user_id = ua.user_id
 
-		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+        INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 
-	WHERE
+    WHERE
 
-		ua.user_id=" . $user->user_id . "
+        ua.user_id=" . $user->user_id . "
 
-		and ua.flg_achat='N'
+        and ua.flg_achat='N'
 
-	ORDER BY uc.note desc
+    ORDER BY uc.note desc
 
-	LIMIT 0,9";
+    LIMIT 0,9";
 
         }
 
@@ -359,31 +359,31 @@ class Useralbum extends Bdo_Db_Line
 
             $query = "
 
-	select
+    select
 
-		t.ID_TOME,
+        t.ID_TOME,
 
-		t.TITRE as TITRE_TOME,
+        t.TITRE as TITRE_TOME,
 
-		en.IMG_COUV
+        en.IMG_COUV
 
-   	from
+    from
 
-		users_list_carre ulc
+        users_list_carre ulc
 
-		INNER JOIN bd_tome t ON t.id_tome = ulc.id_tome
+        INNER JOIN bd_tome t ON t.id_tome = ulc.id_tome
 
-		INNER JOIN bd_edition en ON en.id_edition = t.id_edition
+        INNER JOIN bd_edition en ON en.id_edition = t.id_edition
 
-	where
+    where
 
-		ulc.user_id=" . $user->user_id . "
+        ulc.user_id=" . $user->user_id . "
 
-	ORDER BY ulc.rang
+    ORDER BY ulc.rang
 
-	limit 0,9
+    limit 0,9
 
-	";
+    ";
 
         }
         $resultat = Db_query($query);
@@ -396,7 +396,7 @@ class Useralbum extends Bdo_Db_Line
          * Suppresio d'id tome dans users_album
          */
         Db_query("DELETE users_album.* FROM users_album INNER JOIN bd_edition USING(id_edition)
-	WHERE bd_edition.`id_tome`=" . intval($id_tome));
+    WHERE bd_edition.`id_tome`=" . intval($id_tome));
 
         return Db_affected_rows();
 
@@ -407,7 +407,7 @@ class Useralbum extends Bdo_Db_Line
          * Suppresion d'id tome : on transfert les édition existantes d'un album vers une éditoin par défaut, si l'album n'est pas déjà référencé
          */
         Db_query("UPDATE IGNORE users_album INNER JOIN bd_edition using(id_edition)
-	SET id_edition = ". intval($id_edition)." WHERE  bd_edition.id_tome = ". intval($id_tome));
+    SET id_edition = ". intval($id_edition)." WHERE  bd_edition.id_tome = ". intval($id_tome));
 
         return Db_affected_rows();
 
@@ -418,7 +418,7 @@ class Useralbum extends Bdo_Db_Line
          * Suppresion d'id tome : on transfert les édition existantes d'un album vers une éditoin par défaut, si l'album n'est pas déjà référencé
          */
         Db_query("UPDATE IGNORE users_album
-	SET id_edition = ". intval($dest_id)." WHERE  id_edition = ". intval($source_id));
+    SET id_edition = ". intval($dest_id)." WHERE  id_edition = ". intval($source_id));
 
         return Db_affected_rows();
 

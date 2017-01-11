@@ -1,28 +1,28 @@
 <SCRIPT LANGAUGE="JavaScript"><!--
 
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 3)) {
-		alert('Veuillez saisir au moins 3 caractères');
-	}
-	else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}
-			else {
-			mywindow=open("pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}
-		else {
-			mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+    if ((isMandatory == true) && (myText.length < 3)) {
+        alert('Veuillez saisir au moins 3 caractères');
+    }
+    else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }
+            else {
+            mywindow=open("pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+            }
+        }
+        else {
+            mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 
 function urlsource(){
-	document.forms['form1'].action = "{URLREFRESH}?serie="+document.forms['form1'].elements['txtSerieId'].value;
+    document.forms['form1'].action = "{URLREFRESH}?serie="+document.forms['form1'].elements['txtSerieId'].value;
     //alert("Saisissez les champs requis");
-	return true;
+    return true;
 }
 
 function CheckDate(d) {
@@ -36,7 +36,7 @@ function CheckDate(d) {
       var a=(d.substring(6));
       var ok=1;
       if (d == '' ) {
-	return ok;
+    return ok;
       }
       if ( ((isNaN(j))||(j<0)||(j>31)) && (ok==1) ) {
          alert("Le jour d'une date n'est pas correct."); ok=0;
@@ -66,14 +66,14 @@ function CheckDate(d) {
 
 function valid_form() {
  for (i = 0; i < document.myform.elements.length; i++) {
- 	//alert(String(document.myform.elements[i].name).substring(0,7));
-	 if(String(document.myform.elements[i].name).substring(0,7) == "txtDate")
-   	{
-		if (CheckDate(document.myform.elements[i].value) != 1)
-		{
-			return false;
-		}
-  	}
+    //alert(String(document.myform.elements[i].name).substring(0,7));
+     if(String(document.myform.elements[i].name).substring(0,7) == "txtDate")
+    {
+        if (CheckDate(document.myform.elements[i].value) != 1)
+        {
+            return false;
+        }
+    }
  }
 }
 

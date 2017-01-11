@@ -11,12 +11,12 @@
 <script type="text/javascript" src="http://beta.bdovore.com/js/jquery-ui-1.10.1.custom.min.js"></script>
 <script language="JavaScript" type="text/javascript">
 $(document).ready(function() {
-	$('#serie').autocomplete({
+    $('#serie').autocomplete({
     source : 'serie_p.php',
-	minLength : 3,
-	select : function(event, ui){
-		$('#serie_id').val(ui.item.id); // met à jour le champ caché du formulaire avec la valeur
-		}
+    minLength : 3,
+    select : function(event, ui){
+        $('#serie_id').val(ui.item.id); // met à jour le champ caché du formulaire avec la valeur
+        }
     });
 });
 

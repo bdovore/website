@@ -1473,9 +1473,9 @@ table.list_album tr {
     }
     ul.ui-autocomplete-category:focus {
         border:1px solid #898989;
-	background:#855a28 url(images/ui-bg_highlight-hard_30_855a28_1x100.png) 50% 50% repeat-x;
+    background:#855a28 url(images/ui-bg_highlight-hard_30_855a28_1x100.png) 50% 50% repeat-x;
 
-	color:#fff
+    color:#fff
     }
 
     table.browse {

@@ -157,10 +157,10 @@ function Chargement() {
                           <td height="30" bgcolor="#C8857C"><strong><font color="#900000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">Identifiant
                             :</font></strong></td>
                           <td bgcolor="#DAC1B3">
-							ISBN-13 (EAN) : {EAN}
-							<br/ >
-							ISBN-10 : {ISBN}
-							<br />
+                            ISBN-13 (EAN) : {EAN}
+                            <br/ >
+                            ISBN-10 : {ISBN}
+                            <br />
                             ID-BDovore : {TOMEID}</td>
                         </tr>
                     </tbody>

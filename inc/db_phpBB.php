@@ -8,13 +8,13 @@
 include_once ("db_mysql.php");
 class DB_phpBB extends DB_Sql {
 
-	/* public: constructor */
-	function DB_phpBB($query = "") {
-		$this->Host = FORUM_DB_HOST;
-		$this->Database = FORUM_DB_SID;
-		$this->User = FORUM_DB_USER;
-		$this->Password = FORUM_DB_PWD;
+    /* public: constructor */
+    function DB_phpBB($query = "") {
+        $this->Host = FORUM_DB_HOST;
+        $this->Database = FORUM_DB_SID;
+        $this->User = FORUM_DB_USER;
+        $this->Password = FORUM_DB_PWD;
 
-		$this->query ( $query );
-	}
+        $this->query ( $query );
+    }
 }

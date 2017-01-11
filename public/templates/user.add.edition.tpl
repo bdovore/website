@@ -3,11 +3,11 @@
 <html>
 
 <head>
-	<title>{DOCTITRE}</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link href="{URLSITE}style/style1.css" rel="stylesheet" type="text/css" />
+    <title>{DOCTITRE}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="{URLSITE}style/style1.css" rel="stylesheet" type="text/css" />
     <script src="{URLSITE}script/script.js" type="text/javascript"></script>
-	<SCRIPT type="text/javascript"><!--
+    <SCRIPT type="text/javascript"><!--
         function valid(){
             if ((document.myform.txtEditeurId.value == '') | (document.myform.txtCollecId.value == '')){
                 alert ("Validez l'éditeur et la collection à l'aide des loupes");
@@ -21,13 +21,13 @@
                 return true;
             }
         }
-	//--></SCRIPT>
+    //--></SCRIPT>
 </head>
 
 <body>
 
 <form action="{URLACTION}" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" OnSubmit="return valid()">
-	<table border="0">
+    <table border="0">
         <tr>
             <td width="610" valign="top">
                 {ERRORMESSAGE}
@@ -181,7 +181,7 @@
                 </div>
             </td>
         </tr>
-	</table>
+    </table>
 </form>
 
 </body>

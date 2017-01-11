@@ -1,22 +1,22 @@
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
 <script type="text/javascript">
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 3)) {
-		alert('Veuillez saisir au moins 3 caractères');
-	}
-	else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}
-			else {
-			mywindow=open("pickup?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}
-		else {
-			mywindow=open('pickup?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+    if ((isMandatory == true) && (myText.length < 3)) {
+        alert('Veuillez saisir au moins 3 caractères');
+    }
+    else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }
+            else {
+            mywindow=open("pickup?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+            }
+        }
+        else {
+            mywindow=open('pickup?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 
 function valider(){
@@ -34,15 +34,15 @@ function valider(){
 }
 
 function urlsource(){
-	document.forms['form1'].action = "<?php echo $view->URLREFRESH;?>?source_id="+document.forms['form1'].elements['txtField1Id'].value+"&dest_id=<?php echo $view->DESTID;?>";
+    document.forms['form1'].action = "<?php echo $view->URLREFRESH;?>?source_id="+document.forms['form1'].elements['txtField1Id'].value+"&dest_id=<?php echo $view->DESTID;?>";
     //alert("Saisissez les champs requis");
-	return true;
+    return true;
 }
 
 function urldest(){
-	document.forms['form2'].action = "<?php echo $view->URLREFRESH;?>?source_id=<?php echo $view->SOURCEID;?>&dest_id="+document.forms['form2'].elements['txtField2Id'].value;
+    document.forms['form2'].action = "<?php echo $view->URLREFRESH;?>?source_id=<?php echo $view->SOURCEID;?>&dest_id="+document.forms['form2'].elements['txtField2Id'].value;
     //alert("Saisissez les champs requis");
-	return true;
+    return true;
 }
 
 </script>

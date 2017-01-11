@@ -55,7 +55,7 @@ Edition originale<input type="checkbox" name="sel_field[]" value="18" {SELFIELD1
 <div class="expRadioBlock">
 
       <div align="center">
-        	<div class="expTitle2">Information à exporter</div>
+            <div class="expTitle2">Information à exporter</div>
       </div>
 
         <p>

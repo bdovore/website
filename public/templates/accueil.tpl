@@ -15,47 +15,47 @@ et puis des <a href="{URLSITE}/browser.php?lev_id=12&totalRows_RecAuteur=2&let=c
 </div>
 
 <div class="middle">
-	<div class="middle_title">
-		<h3><a href="{URLSITE}listlast.php?rb_mode=last_par">Dernières sorties</a></h3>
-	</div>
-	<div class="top_content">
-		<a href={URLALLAST1} title="{TITLAST1}">
-							<img src={IMGLAST1} alt="Couverture 1" class="imgtop" />
-						</a>
-		 <!-- BEGIN LastSortieBlock -->
-		<br><font class="pucenum">{NUMERO} - </font><a href={URLLASTITEM} title="{TITLASTITEM}">{TITLASTITEM}</a>
-		<!-- END LastSortieBlock -->
-	</div>
+    <div class="middle_title">
+        <h3><a href="{URLSITE}listlast.php?rb_mode=last_par">Dernières sorties</a></h3>
+    </div>
+    <div class="top_content">
+        <a href={URLALLAST1} title="{TITLAST1}">
+                            <img src={IMGLAST1} alt="Couverture 1" class="imgtop" />
+                        </a>
+         <!-- BEGIN LastSortieBlock -->
+        <br><font class="pucenum">{NUMERO} - </font><a href={URLLASTITEM} title="{TITLASTITEM}">{TITLASTITEM}</a>
+        <!-- END LastSortieBlock -->
+    </div>
 </div>
 <div class="middle">
-	<div class="middle_title">
-		<h3><a href="{URLSITE}listlast.php?rb_mode=futur">Sorties à venir</a></h3>
-	</div>
-	<div class="top_content">
-		<a href={URLALFS1} title="{TITFS1}">
-							<img src='{IMGFS1}' alt="Couverture 1" class="imgtop" />
-						</a>
-		 <!-- BEGIN FuturSortieBlock -->
-		<br> <font class="pucenum">{NUMERO}- </font><a href={URLFSITEM} title="{TITFSITEM}">{TITFSITEM}</a>
-		<!-- END FuturSortieBlock -->
-	</div>
+    <div class="middle_title">
+        <h3><a href="{URLSITE}listlast.php?rb_mode=futur">Sorties à venir</a></h3>
+    </div>
+    <div class="top_content">
+        <a href={URLALFS1} title="{TITFS1}">
+                            <img src='{IMGFS1}' alt="Couverture 1" class="imgtop" />
+                        </a>
+         <!-- BEGIN FuturSortieBlock -->
+        <br> <font class="pucenum">{NUMERO}- </font><a href={URLFSITEM} title="{TITFSITEM}">{TITFSITEM}</a>
+        <!-- END FuturSortieBlock -->
+    </div>
 </div>
 
 <div class="middle">
-	<div class="middle_title">
-		<h3><a href="listlast.php?rb_mode=last_cmt">Derniers avis</a></h3>
-	</div>
-	<div class="top_content">
-		<a href={URLALLASTCMT1}	 title="{TITLASTCMT1}"><img src='{IMGLASTCMT1}' alt="Couverture 1" class="imgtop" /></a>
-		 <!-- BEGIN ComBlock -->
-		<br><font class="pucenum">{NUMERO} - </font><a href={URLLASTCMT} title="{CMTLAST}">{CMTLAST}</a>
-		<!-- END ComBlock -->
-	</div>
+    <div class="middle_title">
+        <h3><a href="listlast.php?rb_mode=last_cmt">Derniers avis</a></h3>
+    </div>
+    <div class="top_content">
+        <a href={URLALLASTCMT1}  title="{TITLASTCMT1}"><img src='{IMGLASTCMT1}' alt="Couverture 1" class="imgtop" /></a>
+         <!-- BEGIN ComBlock -->
+        <br><font class="pucenum">{NUMERO} - </font><a href={URLLASTCMT} title="{CMTLAST}">{CMTLAST}</a>
+        <!-- END ComBlock -->
+    </div>
 </div>
 <div class="clear"></div>
 
 <div class="contenu" id="news">
-	<img src="{URLSITEIMAGE}site/rub_news.gif" alt="Rubrique des news" class="rub_title" /><a href="./rss-news.php"><img src="{URLSITEIMAGE}site/feed.png" class="rub_title" style="border: 0; margin: 0 0 13px -7px;" alt="logo fil rss" title="Suivez les news du site grace à ce fil rss" />
+    <img src="{URLSITEIMAGE}site/rub_news.gif" alt="Rubrique des news" class="rub_title" /><a href="./rss-news.php"><img src="{URLSITEIMAGE}site/feed.png" class="rub_title" style="border: 0; margin: 0 0 13px -7px;" alt="logo fil rss" title="Suivez les news du site grace à ce fil rss" />
     </a>
-	<p>{LASTNEWS}</p>
+    <p>{LASTNEWS}</p>
 </div>

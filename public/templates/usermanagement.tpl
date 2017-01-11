@@ -30,7 +30,7 @@
     <td width="107"><div align="center"><font color="#000000"><font size="2" face="Arial, Helvetica, sans-serif">{STATUS}</font></font></div></td>
     <td width="126"><div align="center"><font color="#000000"><font size="2" face="Arial, Helvetica, sans-serif">{NBVISITES}</font></font></div></td>
     <td width="168"><div align="center"><font color="#000000"><font size="2" face="Arial, Helvetica, sans-serif">{LASTVISIT}</font></font></div></td>
-	<td width="30"> <div align="center"><a href="{URLDELETE}"><img src="{URLSITEIMAGE}poubelle.gif" width="20" height="21" border="0"></a></div></td>
+    <td width="30"> <div align="center"><a href="{URLDELETE}"><img src="{URLSITEIMAGE}poubelle.gif" width="20" height="21" border="0"></a></div></td>
   </tr>
 </table>
 <!-- END UsersBlock -->

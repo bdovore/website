@@ -13,19 +13,19 @@ $t->set_block('tpBody','ResultBlock','RBlock');
 
 //détermine la query à utiliser
 switch ($cat){
-    case "serie":	$query = "select id_serie as myID, nom as myName from bd_serie where nom like '%".$DB->escape($text)."%' or nom like '".$DB->escape($text)."' order by nom";
+    case "serie":   $query = "select id_serie as myID, nom as myName from bd_serie where nom like '%".$DB->escape($text)."%' or nom like '".$DB->escape($text)."' order by nom";
         break;
-    case "genre":	$query = "select id_genre as myID, libelle as myName from bd_genre where libelle like '%".$DB->escape($text)."%' order by libelle";
+    case "genre":   $query = "select id_genre as myID, libelle as myName from bd_genre where libelle like '%".$DB->escape($text)."%' order by libelle";
         break;
-    case "auteur":	$query = "select id_auteur as myID, pseudo as myName from bd_auteur where pseudo like '%".$DB->escape($text)."%' order by pseudo";
+    case "auteur":  $query = "select id_auteur as myID, pseudo as myName from bd_auteur where pseudo like '%".$DB->escape($text)."%' order by pseudo";
         break;
-    case "editeur":	$query = "select id_editeur as myID, nom as myName from bd_editeur where nom like '%".$DB->escape($text)."%' order by nom";
+    case "editeur": $query = "select id_editeur as myID, nom as myName from bd_editeur where nom like '%".$DB->escape($text)."%' order by nom";
         break;
-    case "collection":	$query = "select id_collection as myID, nom as myName from bd_collection where nom like '%".$DB->escape($text)."%' and id_editeur =".$DB->escape($IdEditeur)." order by nom";
+    case "collection":  $query = "select id_collection as myID, nom as myName from bd_collection where nom like '%".$DB->escape($text)."%' and id_editeur =".$DB->escape($IdEditeur)." order by nom";
         break;
-    case "album":	$query = "select id_tome as myID, titre as myName from bd_tome where titre like '%".$DB->escape($text)."%' or titre like '".$DB->escape($text)."' order by titre";
+    case "album":   $query = "select id_tome as myID, titre as myName from bd_tome where titre like '%".$DB->escape($text)."%' or titre like '".$DB->escape($text)."' order by titre";
         break;
-    case "allcollec":	$query = "select id_collection as myID, nom as myName from bd_collection where nom like '%".$DB->escape($text)."%' order by nom";
+    case "allcollec":   $query = "select id_collection as myID, nom as myName from bd_collection where nom like '%".$DB->escape($text)."%' order by nom";
         break;
 }
 // lance la query

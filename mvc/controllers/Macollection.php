@@ -590,7 +590,7 @@ class Macollection extends Bdo_Controller {
                 ));
 
                 $user->update();
-			}
+            }
 
             $txtPrixAlbum = $user->VAL_ALB;
             $txtPrixIntegrale = $user->VAL_INT;
@@ -744,7 +744,7 @@ class Macollection extends Bdo_Controller {
         else {
             $this->view->addAlertPage("Vous devez vous authentifier pour accéder à cette page !");
             $this->view->addPhtmlFile('alert', 'BODY');
-		}
+        }
 
         $this->view->set_var("PAGETITLE","Suivi des mes propositions");
         $this->view->render();

@@ -1,35 +1,35 @@
 <SCRIPT LANGAUGE="JavaScript"><!--
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 3)) {
-		alert('Veuillez saisir au moins 3 caractères');
-	}
-	else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}
-			else {
-			mywindow=open("pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}
-		else {
-			mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+    if ((isMandatory == true) && (myText.length < 3)) {
+        alert('Veuillez saisir au moins 3 caractères');
+    }
+    else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }
+            else {
+            mywindow=open("pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+            }
+        }
+        else {
+            mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 
 function urlsource(){
-	document.forms['form1'].action = "{URLREFRESH}?serie="+document.forms['form1'].elements['txtSerieId'].value;
+    document.forms['form1'].action = "{URLREFRESH}?serie="+document.forms['form1'].elements['txtSerieId'].value;
     //alert("Saisissez les champs requis");
-	return true;
+    return true;
 }
 //--></SCRIPT>
 <table width="100%" border="1">
   <tr>
-  	<!-- Debut colonne Gauche-->
+    <!-- Debut colonne Gauche-->
     <td width="50%" valign="top">
-	<form name="form1" method="post" action="" onSubmit="return urlsource()">
-	    <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
+    <form name="form1" method="post" action="" onSubmit="return urlsource()">
+        <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
           <tr bordercolor="#FFFFCC">
             <td width="10%" class="label"> <div align="center">Serie</div></td>
             <td width="10%"> <div align="left">
@@ -44,7 +44,7 @@ function urlsource(){
 </form>
 <br>
 <form action="{URLACTION}" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
-	<table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
+    <table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
           <tr bordercolor="#FFFFCC">
             <td width="88" class="label">Scenariste</td>
             <td width="37"> <input name="txtScenarId" type="text" size="5"></td>
@@ -82,8 +82,8 @@ function urlsource(){
             <td> <img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColorAlt.value,'myform','txtColorAlt',true)"></td>
           </tr>
         </table>
-		<br>
-	<table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
+        <br>
+    <table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
           <tr bordercolor="#FFFFCC">
             <td width="16%" class="label"> <div align="center">Editeur</div></td>
             <td width="12%"> <input name="txtEditeurId" type="text" size="7"></td>
@@ -102,9 +102,9 @@ function urlsource(){
           <input type="submit" name="Submit" value="{ACTIONNAME}">
           <br>
         </div>
-		</form>
-	</td>
-	<!-- Debut colonne Gauche-->
+        </form>
+    </td>
+    <!-- Debut colonne Gauche-->
     <td width="50%">
 <table width="100%" border="1">
   <tr>
@@ -156,7 +156,7 @@ function urlsource(){
 </table>
 
 
-	</td>
+    </td>
   </tr>
 </table>
 

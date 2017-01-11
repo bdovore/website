@@ -6,7 +6,7 @@ $pageinate = $view->getHelper('Pagination');
 
 <div class="colleft">
 <div class="col1wrap">
-				<div class="col1 fond">
+                <div class="col1 fond">
 
 
 
@@ -120,24 +120,24 @@ if ($view->nb_album > 20) {
 ?> </div>
             </div>
        <!-- Column 1 end -->
-					</div>
+                    </div>
 </div>
-    				<!-- Debut de la partie de droite -->
+                    <!-- Debut de la partie de droite -->
 <div class="col2">
     <div id="actu" class="right fond">
-			<div class="middle_title">
+            <div class="middle_title">
 
-	<h3>Derniers ajouts...</h3>
+    <h3>Derniers ajouts...</h3>
 
-	</div>		<!-- Column 2 start -->
-	            <?php
+    </div>      <!-- Column 2 start -->
+                <?php
                     //echo count($view->SERIESIMI);
                     foreach ($view->lastAlbum->a_dataQuery as $o_tome)
                    {
                       echo $ficheAlbum->small($o_tome);
                     } ?>
     </div>
-				<!-- Column 2 end -->
+                <!-- Column 2 end -->
 </div>
 </div>
 <script>

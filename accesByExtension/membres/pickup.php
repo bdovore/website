@@ -26,13 +26,13 @@ $t->set_block('tpBody','ResultBlock','RBlock');
 
 //liste les users
 while ($DB->next_record()){
-	$t->set_var (array(
-	"ID" => $DB->f("id_tome"),
-	"SERIE" => htmlentities($DB->f("nom")),
-	"NUMTOME" => htmlentities($DB->f("num_tome")),
-	"TITRE" => htmlentities($DB->f("titre")),
-	"RETURNURL" => htmlentities("javascript:changeSource('$ReturnDoc','$ReturnElement','".addslashes($DB->f("titre"))."','".$DB->f("id_tome")."')")));
-	$t->parse ("RBlock", "ResultBlock",true);
+    $t->set_var (array(
+    "ID" => $DB->f("id_tome"),
+    "SERIE" => htmlentities($DB->f("nom")),
+    "NUMTOME" => htmlentities($DB->f("num_tome")),
+    "TITRE" => htmlentities($DB->f("titre")),
+    "RETURNURL" => htmlentities("javascript:changeSource('$ReturnDoc','$ReturnElement','".addslashes($DB->f("titre"))."','".$DB->f("id_tome")."')")));
+    $t->parse ("RBlock", "ResultBlock",true);
 }
 
 $t->set_var ("DOCTITRE","Sélection");
@@ -41,6 +41,6 @@ $t->set_var ("DOCTITRE","Sélection");
 $t->set_var (array(
 "LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-	"URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
 ));
 $t->pparse("BODY","tpBody");

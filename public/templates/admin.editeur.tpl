@@ -41,9 +41,9 @@ function valider(){
         </table></td>
       <td width="35%" valign="top" bgcolor="#FFFFCC"> <p>Nombre de collections
           : {NBCOLLEC}<br>
-		  <!-- BEGIN ColBlock -->
-		<a href="{COL_LIEN}">{COL_TITRE}</a><br>
-			<!-- END ColBlock -->
+          <!-- BEGIN ColBlock -->
+        <a href="{COL_LIEN}">{COL_TITRE}</a><br>
+            <!-- END ColBlock -->
         </p>
         </td>
   </tr>
@@ -53,7 +53,7 @@ function valider(){
       <td>
         <p><strong>Menu Express</strong></p>
         <p><a href="{URLDELETE}">Supprimer cet editeur</a><br>
-		<a href="{URLFUSION}">Fusionner cet editeur</a><br>
+        <a href="{URLFUSION}">Fusionner cet editeur</a><br>
           <a href="{URLADDCOLLEC}">Ajouter une collection &agrave; cet &eacute;diteur</a>
         </p>
         </td>

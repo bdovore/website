@@ -12,17 +12,17 @@ function valider(){
     return true;
   }
   else {
-  	// renseigner alors nom et prenom
-	if (document.forms['input_form'].elements['txtNomAuteur'].value != "" &&
-			document.forms['input_form'].elements['txtPrenomAuteur'].value != "" ) {
-    		// sinon on affiche un message
-			return true;
-	}
-	else {
-    	alert("Si l'auteur signe sous un pseudonyme, vous devez le saisir, dans le cas contraire saisissez nom et prénom !");
-    	// et on indique de ne pas envoyer le formulaire
-   		 return false;
-	}
+    // renseigner alors nom et prenom
+    if (document.forms['input_form'].elements['txtNomAuteur'].value != "" &&
+            document.forms['input_form'].elements['txtPrenomAuteur'].value != "" ) {
+            // sinon on affiche un message
+            return true;
+    }
+    else {
+        alert("Si l'auteur signe sous un pseudonyme, vous devez le saisir, dans le cas contraire saisissez nom et prénom !");
+        // et on indique de ne pas envoyer le formulaire
+         return false;
+    }
   }
 }
 </script>

@@ -8,8 +8,8 @@ if ($view->continuer == "oui") {
 
 <script>
 $.get("<?php echo BDO_URL;?>cache/simil", $("#cacheSimil").serialize(), function(data) {
-	 $("#ddcacheSimil").html(data);
-	//alert("Data Loaded: " + data);
-	});
+     $("#ddcacheSimil").html(data);
+    //alert("Data Loaded: " + data);
+    });
   </script>
 <?php }?>
