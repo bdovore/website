@@ -40,14 +40,14 @@ $(document).ready(function() {
         type: 'iframe',
         autoSize : false
     });
-});</script>	
-	
+});</script>
+
 		<div class="fond"></div>
-                <?php 
+                <?php
 					if (Bdo_Error::notEmpty()) echo $jquery->alert(Bdo_Error::flush());
 					if ($view->a_alertPage) echo $jquery->alert($view->a_alertPage);
                                         if ($view->a_infoPage) echo $jquery->info($view->a_infoPage);
-						
+
 					?>
 					<?php echo $view->BODY;?>
 

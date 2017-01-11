@@ -52,7 +52,7 @@ echo '<h2>Recherche id de référence</h2>';
 
 echo '<form name="formvalue" method="post">
 <div>
-Référence : 
+Référence :
 <select name="column_name">';
 foreach( $a_column as $column_name=>$table_name)
 {

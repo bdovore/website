@@ -8,10 +8,10 @@ set_time_limit(600);
 
 mysql_connect(BDO_DB_HOST, BDO_DB_USER, BDO_DB_PWD);
 mysql_select_db(BDO_DB_SID);
-	
+
 echo '<pre>';
 
-$query ="SELECT `TABLE_NAME`,`COLUMN_NAME`  FROM `db_column` 
+$query ="SELECT `TABLE_NAME`,`COLUMN_NAME`  FROM `db_column`
 WHERE `DATA_TYPE` IN ('varchar','text')
 AND `TABLE_NAME` NOT IN ('users_album')
 ORDER BY `TABLE_NAME`,`COLUMN_NAME`";
@@ -31,11 +31,11 @@ while ($obj = mysql_fetch_object($resultat_sch))
     $resultat_cpt = mysql_query($query);
     $count = mysql_fetch_object($resultat_cpt);
     $nb = $count->nbr;
-    
+
     if ($nb>0)
     {
 	    echo "`".$obj->TABLE_NAME."` - `".$obj->COLUMN_NAME."` - ".$nb;
-	    
+
 	    if (isset($_GET['go']))
 	    {
 	        $query = "UPDATE `".$obj->TABLE_NAME."` SET `".$obj->COLUMN_NAME."`=REPLACE(`".$obj->COLUMN_NAME."`,'\\\\','')
@@ -46,7 +46,7 @@ while ($obj = mysql_fetch_object($resultat_sch))
 	    echo "\n";
     }
 
-    
+
 }
 mysql_query("UNLOCK TABLES");
 mysql_free_result($resultat_sch);

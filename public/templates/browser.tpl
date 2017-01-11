@@ -9,11 +9,11 @@
 	</div>
 	<table width="100%" border="0">
 	    <tr>
-	        <td> 
+	        <td>
 	            <div align="center">
 	                <!-- BEGIN NavBlock -->
 	                <a href="{URLLETTER}">{LETTER}&nbsp;</a>
-	                <!-- END NavBlock -->         
+	                <!-- END NavBlock -->
 	            </div>
 	        </td>
 	    </tr>
@@ -21,9 +21,9 @@
 	        <td>
 	            <form name="form1" method="get" action="">
 	                <div align="center">
-	                    Ou commence par : 
+	                    Ou commence par :
 	                    <input name="let" type="text" id="let" />
-	                    <input type=hidden name="rb_browse" value="{TYPBROWSE}" /> 
+	                    <input type=hidden name="rb_browse" value="{TYPBROWSE}" />
 	                    <input type=hidden name="user" value="{USERID}" />
 	                </div>
 	            </form>
@@ -31,7 +31,7 @@
 	    </tr>
 	</table>
 	</div>
-	
+
 	<div class="cadre1">
 	<!-- BEGIN DataBlock -->
 	<div class="cadre1">
@@ -45,7 +45,7 @@
 	<div class="cadre1">
 	        <p align="center">
 	            <a href="{URLPREVPAGE}">Pr&eacute;c&eacute;dent</a> -
-	             <a href="{URLNEXTPAGE}">Suivant</a> 
+	             <a href="{URLNEXTPAGE}">Suivant</a>
 	        </p>
 	</div>
 </div>

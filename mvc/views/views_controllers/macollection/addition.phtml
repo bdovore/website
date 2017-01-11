@@ -11,7 +11,7 @@ $(document).ready(function() {
     });
 });
 </script>
-<?php 
+<?php
 
 $ficheAlbum = $view->getHelper('ficheAlbum');
  $page = $view->getHelper('pagination');
@@ -28,7 +28,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     </div>
 
      <div class="cadre1">
-    <a href="<?php echo BDO_URL;?>Macollection/detailvalorisation" class="fancybox2 fancybox.iframe {width:415,height:500}">Detail 
+    <a href="<?php echo BDO_URL;?>Macollection/detailvalorisation" class="fancybox2 fancybox.iframe {width:415,height:500}">Detail
     de la valorisation</a>
     </div>
 
@@ -38,16 +38,16 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
      <h3>Achats depuis le début de votre collection</h3>
         </div>
       <hr class="addSep">
-      <div class="addFreeBlock"> 
+      <div class="addFreeBlock">
         <table class="addTable">
-          <tr> 
+          <tr>
             <td class="addTitle">Annee</td>
             <td class="addTitleMiddle">Qté</td>
             <td class="addTitle">Coût</td>
           </tr>
-         <?php if (issetNotEmpty($view->a_depense)) { 
+         <?php if (issetNotEmpty($view->a_depense)) {
              foreach($view->a_depense as $key => $value) { ?>
-          <tr> 
+          <tr>
             <td class="addData"><a href="?<?php echo "annee=".$key."&info=".$view->info."&mois=1";?>"><?php echo ($key == $view->annee) ? "<b>$key</b>" : $key;?></a></td>
             <td class="addData"><?php echo $view->a_nbalbum[$key];?></td>
             <td class="addDataRight"><?php echo number_format($value,2,".",",");?></td>
@@ -59,9 +59,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 
     <!--        <div class="addFreeBlock"> <img src="<?php echo BDO_URL."graphs/rep_cout_annee.php?info=$view->info";?>" class="addImg"> </div>-->
-        <div class="addFreeBlock" style="width:602px;height:300px"> <img src="<?php echo BDO_URL."graphs/rep_cout_annee.php?info=$view->info";?>" class="addImg"> 
+        <div class="addFreeBlock" style="width:602px;height:300px"> <img src="<?php echo BDO_URL."graphs/rep_cout_annee.php?info=$view->info";?>" class="addImg">
         <div align="center">
-        Sélectionner l'information à afficher 
+        Sélectionner l'information à afficher
         <input name="annee" type="hidden" value="<?php echo $view->annee;?>">
           <label><input type="radio" name="info" value="0" <?php echo ($view->info==0) ? 'checked' : '';?> onClick="submit();">Coût</label>
           <label><input type="radio" name="info" value="1" <?php echo ($view->info==1) ? 'checked' : '';?> onClick="submit();">Nombre</label>
@@ -72,7 +72,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
      <h3>Achats pour l'année <?php echo $view->annee;?></h3>
         </div>
 
-        <div class="addFreeBlock"> 
+        <div class="addFreeBlock">
 
           <select name="mois" size="12" onchange="submit();" class="addSelect">
               <option value="1" <?php echo $view->mois == 1 ? "selected=''" : "" ?>>Janvier</option>
@@ -89,10 +89,10 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
               <option value="12" <?php echo $view->mois == 12 ? "selected=''" : "" ?>>Décembre</option>
 
               </select>
-          
+
         </div>
             <table class="addTable">
-              <tr> 
+              <tr>
                 <td class="addTitle">Serie</td>
                 <td class="addTitleMiddle">Titre</td>
                 <td class="addTitle">Date</td>
@@ -102,7 +102,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             <?php
             $i = 0;
             foreach($view->a_album as $album) { ?>
-              <tr> 
+              <tr>
                 <td class="addDataSmall"><a href="<?php echo BDO_URL."Seriebd?id_serie=".$album->ID_SERIE;?>" class="addLiens"><?php echo $album->NOM_SERIE;?></a></td>
 
                 <td class="addDataSmall"><?php echo $ficheAlbum->urlalbum($album,$class="albTitle") ; ?></td>
@@ -110,7 +110,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 <td class="addDataSmall"><?php echo number_format($view->prixretenu[$i],2,".",",");?></td>
                 <td width="10">&nbsp;</td>
               </tr>
-            <?php 
+            <?php
             $i++;
             } ?>
               <!-- END MonthBlock -->
@@ -120,8 +120,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     <hr class="addSep">
     </div>
 
-</form>	
-	
+</form>
 
 
-	
+
+

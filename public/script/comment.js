@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -75,30 +75,30 @@ function getComment(page,id_tome,user_id) {
             $("#listcomment").append("<div class='listcomment'> <span id='noteTome"+idcmt + "'></span>  \n\
             Posté par <a href='./guest?user="+item.user_id + "' target='parent'>"+ item.username + "</a> le "+ item.DTE_POST +"  <p>     \n\
              " + stripslashes(nl2br(item.COMMENT)) + "</p> </div>");
-            
+
             $('#noteTome'+ idcmt ).raty({score: item.NOTE/2.0 , readOnly: true});
             }
            )
         }
     )
-  return 0;  
+  return 0;
 }
 
 function writeComment(id_tome,note,comment) {
-    //$("#writecomment").html("<img src='./script/ajax-loader.gif'>"); 
+    //$("#writecomment").html("<img src='./script/ajax-loader.gif'>");
     var url = "./AlbumComment/writeComment?";
     url += "id_tome="+id_tome;
     url += "&note="+note;
     url += "&comment="+encodeURIComponent(comment);
     $.getJSON(url, function(data){
-       
+
         if (data.length == 0) {
             alert("Commentaire / note enregistré !");
         }
     });
-    
-    
-    
+
+
+
 }
 
 function isValidEmailAddress(emailAddress) {

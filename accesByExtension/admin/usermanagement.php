@@ -156,7 +156,7 @@ elseif ($act=="")
 
 		$nbconnect = $DB->f ("nb_connect");
 		$lastconnect = $DB->f ("last_connect");
-		
+
 		if ($_SESSION["UserLevel"] < $userlevel)
 		{
 			$username = '<a href="'.BDO_URL.'membres/profil.php?user_id='.$user_id.'">'.$DB->f ("username").'</a>';

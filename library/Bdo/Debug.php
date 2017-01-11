@@ -3,49 +3,49 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 
 class Bdo_Debug {
 		public $a_exec_time = array();
-	
+
 		public $CEcountQuery = 0;
 		public $CEtabQuery = array();
 		public $CEtabQueryOcc = array();
-	
+
 		public $CEinfoVar = array();
-	
-	
+
+
 		private static $instance;
-	
-	
+
+
 		public function __construct() {
 		}
-	
+
 		public static function getInstance() {
 			if(!isset(self::$instance)) {
 				self::$instance = new Bdo_Debug();
 			}
 			return self::$instance;
 		}
-	
-	
+
+
 		public static function saveInfoVar($var,$nom_var,$lib='')
 		{
 			Bdo_Debug::getInstance();
 			self::$instance->infoVar[$nom_var][] = (object) array('var'=>$var,"lib"=>$lib);
 		}
-	
+
 		public static function viewInfoVar()
 		{
 			Bdo_Debug::getInstance();
-	
+
 			$debugInfoVar_div = new Bdo_Onglet('debugInfoVar',"Variables",'cfgonglet');
 			$debugInfoVar_div->setWidth('100%');
-	
+
 			$html = "
 				<div class='cadre1'>;
-			        
+
 		<table border=1 cellpadding=3 cellspacing=0 >
 		<tr>
 		<td >
@@ -58,7 +58,7 @@ class Bdo_Debug {
 					$html .= self::AfficheTableauVars($o_var->var,$nom_var,$o_var->lib);
 				}
 			}
-	
+
 			$html .= "
 		</font>
 		</td>
@@ -66,12 +66,12 @@ class Bdo_Debug {
 		</table>
 			        </div>
 		";
-	
-	
+
+
 			$debugInfoVar_div->addElement($html);
 			return $debugInfoVar_div->vueOnglet();
 		}
-	
+
 		public static function AfficheTableauVars($var,$nom_var,$lib)
 		{
 			$html = "<HR width=100><b>".($lib ? $lib : $nom_var)." :</b>";
@@ -81,7 +81,7 @@ class Bdo_Debug {
 			}
 			return $html;
 		}
-	
+
 		public static function AfficheVal($val,$txt_tab)
 		{
 			$html = '';
@@ -109,30 +109,30 @@ class Bdo_Debug {
 			}
 			return $html;
 		}
-	
+
 		public static function execTime($msg=false)
 		{
 			Bdo_Debug::getInstance();
-	
+
 			$count_exec_time = count(self::$instance->a_exec_time);
-	
+
 			if(!$msg) $msg = "Flag Temp n°".$count_exec_time;
-	
+
 			self::$instance->a_exec_time[$count_exec_time]['time'] = microtime(true);
 			self::$instance->a_exec_time[$count_exec_time]['msg'] = $msg;
 		}
-	
+
 		public static function affExecTime()
 		{
 			Bdo_Debug::getInstance();
-	
+
 			self::execTime("Visualisation des temps");
-	
+
 			$count_exec_time = count(self::$instance->a_exec_time);
-	
+
 			$debugExecTime_div = new Bdo_Onglet('debugExecTime',"Temp total d'éxecution = ".round((self::$instance->a_exec_time[($count_exec_time-1)]['time'] - self::$instance->a_exec_time[0]['time']),5),'cfgonglet');
 			$debugExecTime_div->setWidth('100%');
-	
+
 			$txt = "<div class='cadre1'><U>Calcul des intervales de temps d'éxecution</U>";
 			for ($i=1;$i<$count_exec_time;$i++)
 			{
@@ -143,8 +143,8 @@ class Bdo_Debug {
 			$debugExecTime_div->addElement($txt);
 			return $debugExecTime_div->vueOnglet();
 		}
-	
-	
+
+
 		public static function bilanQuery()
 		{
 			$debugBilanQuery_div = new Bdo_Onglet('debugBilanQuery',self::$instance->countQuery.' requetes executees / '.count(self::$instance->a_query).' requetes uniques','cfgonglet');
@@ -157,7 +157,7 @@ class Bdo_Debug {
 			pre.cephenix {color:#000000 ; font-family:Verdana ; font-size:10px ; text-align:left}
 			</style>
             ';
-	
+
 			foreach (self::$instance->a_query as $idQ=>$a_query)
 			{
 				$txt .= '<div class=cephenix2><pre class=cephenix>'.$a_query['query'].'</pre>
@@ -172,34 +172,34 @@ class Bdo_Debug {
 			$debugBilanQuery_div->addElement($txt);
 			return $debugBilanQuery_div->vueOnglet();
 		}
-	
-	
+
+
 		public static function increCountQuery()
 		{
 			Bdo_Debug::getInstance();
 			$this->CEcountQuery++;
 		}
-	
-	
+
+
 		public static function addQuery($a_requete)
 		{
 			Bdo_Debug::getInstance();
-	
+
 			$idQ = md5($a_requete['query']);
-	
+
 			self::$instance->countQuery++;
 			if (!isset(self::$instance->countQueryOcc[$idQ])) self::$instance->countQueryOcc[$idQ]=0;
 			self::$instance->countQueryOcc[$idQ]++;
 			self::$instance->a_query[$idQ] = $a_requete;
 		}
-	
+
 		public static function viewInclude()
 		{
 			Bdo_Debug::getInstance();
 			$included_files = get_included_files();
-	
+
 			$mem = memory_get_usage();
-	
+
 			$debugIncludeFile_div = new Bdo_Onglet('debugIncludeFile',count($included_files)." fichiers inclus / ".affFormatByteDown($mem,3,2)." de mémoire utilisée",'cfgonglet');
 			$debugIncludeFile_div->setWidth('100%');
 			$txt .= "<div class='cadre1'>";
@@ -207,17 +207,17 @@ class Bdo_Debug {
 			{
 				$filename = str_replace ('\\','/',$filename);
 				$filename = str_replace (CFG_DIR_ROOT,'',$filename);
-	
+
 				$txt .= '<br />'. $filename;
 			}
 			$txt .= "</div>";
-				
+
 			$debugIncludeFile_div->addElement($txt);
 			return $debugIncludeFile_div->vueOnglet();
-	
+
 		}
-	
-	
+
+
 	}
 
 ?>

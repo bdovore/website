@@ -43,43 +43,43 @@ if ($num_fa == 0) $message_err = "Pas d'achats prévus";
 
 // Récupère les 20 derniers achats
 $query = "
-SELECT 
-	t.id_tome, 
+SELECT
+	t.id_tome,
 	t.titre,
-	CASE flg_int 
-	when 'O' 
-	then 'Intégrale' 
+	CASE flg_int
+	when 'O'
+	then 'Intégrale'
 	else (
-		CASE t.flg_type 
-		when 1 
-		then 'Coffret' 
-		else t.num_tome 
+		CASE t.flg_type
+		when 1
+		then 'Coffret'
+		else t.num_tome
 		end
-	) end num_tome, 
-	s.id_serie, 
-	s.nom nom_serie, 
+	) end num_tome,
+	s.id_serie,
+	s.nom nom_serie,
 	u.comment,
-	scen.pseudo pseudo_scen, 
-	dess.pseudo pseudo_dess, 
-	e.nom nom_editeur, 
-	col.nom nom_collec, 
-	g.libelle genre, 
-	ed.img_couv, 
+	scen.pseudo pseudo_scen,
+	dess.pseudo pseudo_dess,
+	e.nom nom_editeur,
+	col.nom nom_collec,
+	g.libelle genre,
+	ed.img_couv,
 	ed.isbn
-FROM 
-	users_album u 
-	LEFT JOIN bd_edition ed ON u.id_edition = ed.ID_EDITION 
-	LEFT JOIN bd_tome t ON ed.id_tome = t.ID_TOME 
-	LEFT JOIN bd_auteur scen ON t.ID_SCENAR = scen.ID_AUTEUR 
-	LEFT JOIN bd_auteur dess ON t.ID_DESSIN = dess.ID_AUTEUR 
-	LEFT JOIN bd_editeur e ON ed.id_editeur = e.ID_EDITEUR 
-	LEFT JOIN bd_collection col ON ed.id_collection = col.ID_COLLECTION 
-	LEFT JOIN bd_serie s ON t.id_serie = s.ID_SERIE 
-	LEFT JOIN bd_genre g ON s.id_genre = g.ID_GENRE 
-WHERE 
-	u.user_id=" . $DB->escape($user_id) . " 
+FROM
+	users_album u
+	LEFT JOIN bd_edition ed ON u.id_edition = ed.ID_EDITION
+	LEFT JOIN bd_tome t ON ed.id_tome = t.ID_TOME
+	LEFT JOIN bd_auteur scen ON t.ID_SCENAR = scen.ID_AUTEUR
+	LEFT JOIN bd_auteur dess ON t.ID_DESSIN = dess.ID_AUTEUR
+	LEFT JOIN bd_editeur e ON ed.id_editeur = e.ID_EDITEUR
+	LEFT JOIN bd_collection col ON ed.id_collection = col.ID_COLLECTION
+	LEFT JOIN bd_serie s ON t.id_serie = s.ID_SERIE
+	LEFT JOIN bd_genre g ON s.id_genre = g.ID_GENRE
+WHERE
+	u.user_id=" . $DB->escape($user_id) . "
 	AND u.flg_achat='O'
-ORDER BY s.nom, t.num_tome, t.flg_type 
+ORDER BY s.nom, t.num_tome, t.flg_type
 LIMIT ".$DB->escape($first).", ".$DB->escape($nb);
 
 $DB->query ($query);

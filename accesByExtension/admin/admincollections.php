@@ -100,7 +100,7 @@ elseif($act==""){
 	// on compte le nombre d'albums dans la collection
 	$query = "SELECT count(distinct(bd_tome.ID_TOME)) as numofalb
 	FROM bd_tome
-	INNER JOIN bd_edition ON bd_tome.ID_EDITION=bd_edition.ID_EDITION 
+	INNER JOIN bd_edition ON bd_tome.ID_EDITION=bd_edition.ID_EDITION
 	WHERE bd_edition.id_collection=".$DB->escape($collec_id);
 	$DB->query ($query);
 	$DB->next_record();
@@ -108,15 +108,15 @@ elseif($act==""){
 
 	//récupère les données
 	$query = "
-	SELECT 
-		c.id_collection, 
-		c.nom, 
-		c.id_editeur, 
-		e.nom as editeurname 
-	FROM 
-		bd_collection c 
+	SELECT
+		c.id_collection,
+		c.nom,
+		c.id_editeur,
+		e.nom as editeurname
+	FROM
+		bd_collection c
 		INNER JOIN bd_editeur e ON c.id_editeur = e.id_editeur
-	WHERE 
+	WHERE
 		c.id_collection=".$DB->escape($collec_id);
 
 	$DB->query ($query);

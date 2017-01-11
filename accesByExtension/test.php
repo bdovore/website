@@ -18,7 +18,7 @@ function completeDate ($date)
 	{
 		$date = date("Y-m-d",TimestampDate($date));
 	}
-	
+
 	return $date;
 }
 

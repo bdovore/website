@@ -11,14 +11,14 @@
 <div class="cadre1">
 			<!-- BEGIN AddBlock -->
 			<table width="100%" border="0" align="center">
-				<tr> 
+				<tr>
 					<td>
 						<p><strong>Noter et commenter <font color="#990000">{SERTITLE}</font></strong></p>
 					</td>
 				</tr>
 			  	<form name="form1" method="post" action="commentserie.php">
-				    <tr> 
-					    <td> Note: 
+				    <tr>
+					    <td> Note:
 							<select name="note" id="note">
 							<option value="1">1</option>
 							    <option value="2">2</option>
@@ -38,16 +38,16 @@
 				    <tr>
 					      <td>Commentaire : </td>
 				    </tr>
-				    <tr> 
+				    <tr>
 					    <td>
 							<p align="left">
 					        	<textarea name="comment" class="champ_commentaire"></textarea>
 					        </p>
 						</td>
 				    </tr>
-				    <tr> 
-				    	<td> 
-							<p align="center"> 
+				    <tr>
+				    	<td>
+							<p align="center">
 				          		<input name="id_serie" type="hidden" id="id_serie" value="{SERID}" />
 								<input name="lib_tome" type="hidden" id="lib_tome" value="{SERTITLE}" />
 				          		<input type="submit" name="Submit" value="Valider" />

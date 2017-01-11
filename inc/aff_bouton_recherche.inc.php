@@ -3,9 +3,9 @@
 function aff_bouton_recherche ()
 {
     if (isset($_POST['baff']) and ! isset($baff)) $baff = intval($_POST['baff']);
-    
+
     if (($baff < BDO_NBLINEBYPAGE_MIN) or ($baff > BDO_NBLINEBYPAGE_MAX)) $baff = BDO_NBLINEBYPAGE_DEFAULT;
-    
+
     /*
     $html = "
     <table border=0 cellspacing=1 cellpadding=2 class=information>
@@ -20,7 +20,7 @@ function aff_bouton_recherche ()
     	<td align=center width=100%>" . CadreVide("navigation", "100%", 2) . "</td>
     	" . EspaceTD() . "
     	<td align=center>" . Bouton("submit", "validSubmitSearch", LANG_RECHERCHER, "", "action_modification") . "</td>
-    
+
     </tr>
     </table>
     <table align=center border=0 cellpadding=0 cellspacing=0 width=100%>

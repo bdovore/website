@@ -1,4 +1,4 @@
-<?php  
+<?php
 
 
 //if (0 < count($acl->getAllIdRoleByCreationOrder()))
@@ -121,7 +121,7 @@ if (0 < count($acl->getAllAclRole()))
 							or $acl->isLegacyPrivilege($idrole, 'all', $idpriv)
 							or $acl->isLegacyPrivilege($idrole, $idres, 'all')
 							or $acl->isLegacyPrivilege($idrole, 'all', 'all')
-							
+
 							or ($acl->isDefinedPrivilege($idrole, 'all', $idpriv))
 							or ($acl->isDefinedPrivilege('all', 'all', $idpriv))
 							or ($acl->isDefinedPrivilege($idrole, $idres, 'all'))
@@ -138,8 +138,8 @@ if (0 < count($acl->getAllAclRole()))
 								$classOut = 'oftAclAccessAllow';							}
 						}
 					}
-					echo '<td class="'.$class.'" onClick="'.$onClick.'" title="'.$title.'"  
-						onmouseover="this.className=\''.$classOut.'\'" 
+					echo '<td class="'.$class.'" onClick="'.$onClick.'" title="'.$title.'"
+						onmouseover="this.className=\''.$classOut.'\'"
 	  		onmouseout="this.className=\''.$class.'\'">'.$val;
 					echo '
 				<form name="'.$formName.'" method="POST" action="">
@@ -184,6 +184,6 @@ if (0 < count($acl->getAllAclRole()))
 </div>
 </td></tr>
 </table>
-<?php	
+<?php
 }
 

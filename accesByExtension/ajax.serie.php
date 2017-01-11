@@ -17,11 +17,11 @@
 							});
 		// Champs Série
 		$("#serie").button();
-							
+
 		$('#serie').focus(function() {
 			$(this).val('');
-			});	
-		
+			});
+
 		$('#serie').autocomplete({
 					source : 'serie_p.php',
 					minLength : 3,
@@ -29,7 +29,7 @@
 						$('#serie_id').val(ui.item.id);
 						$("#albums").hide('blind');
 						$("#albums").load('ajax.serie.alb.php?id_serie='+ui.item.id, function() {
-							
+
 							// Prise en charge des appels serveur
 							$(".clickable").click(function(event) {
 
@@ -53,8 +53,8 @@
 										// Une erreur s'est produite lors de la requete
 									}
 								});
-							});							
-							
+							});
+
 							// prise en charge des éléments à afficher
 							if ($("#togglehide").is(':checked'))
 								{
@@ -67,20 +67,20 @@
 							else
 								{
 								$(".additional").hide();
-								}			
+								}
 						}); // Affichage de la page
 						$("#albums").show('blind',{},500);// Cache les éléments masqués
 						}
 					});
-		
+
 		// ON cache par défaut les détails sur les albums
 		$(".additional").hide();
 		$("#expandable").button()
 							.click(function( event ) {
 							$(".additional").toggle('drop',{},500);
-							});	
+							});
 	});
-	
+
 	// Fonction pour mettre à jour le champs série
 	function ac_return(field, item){
         // on met en place l'expression régulière
@@ -94,17 +94,17 @@
         $(field.name+'_id').value = id;
 		//alert((field.name+'_id'));
 		//alert($("serie_id").value);
-	}	
-	
+	}
+
 	// gestion de l'affichage
 	function refresh_alb(resp) {
 		$("#"+resp[0]["idtome"]).removeClass();
 		$("#"+resp[0]["idtome"]).addClass('album');
-		$('[id^=af-'+resp[0]["idtome"]+'-]').attr("id",'af-'+resp[0]["idtome"]+'-'+resp[0]["idedition"]); 
+		$('[id^=af-'+resp[0]["idtome"]+'-]').attr("id",'af-'+resp[0]["idtome"]+'-'+resp[0]["idedition"]);
 		$('[id^=addrem-'+resp[0]["idtome"]+'-]').attr("id",'addrem-'+resp[0]["idtome"]+'-'+resp[0]["idedition"]);
 		$('[id^=exclude-'+resp[0]["idtome"]+'-]').attr("id",'exclude-'+resp[0]["idtome"]+'-'+resp[0]["idedition"]);
-		
-		
+
+
 		if (resp[0]["incollec"]=='N')
 			{
 			$("#addrem-"+resp[0]["idtome"]+'-'+resp[0]["idedition"]).text('Add');
@@ -136,13 +136,13 @@
 				$("#"+resp[0]["idtome"]).addClass('incollec');
 				}
 			}
-			
+
 		// inclure ici une partie bloquant les boutons
 		//alert ('La rep:'+resp[0]["statut"]+resp[0]["incollec"]);
 		//alert ('rafraichissement'+id);
 	};
-	
-	
+
+
 </script>
 </head>
 <body>

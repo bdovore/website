@@ -1,18 +1,18 @@
-<SCRIPT language="Javascript"> 
-<!-- 
-  
-function Chargement(){ 
+<SCRIPT language="Javascript">
+<!--
+
+function Chargement(){
 	d = document.add_collect;
 	for (i = 0; i < d.elements.length; i++){
 		if (d.elements[i].name == "sel_alb[]"){
 			d.elements[i].checked = true;
 		}
 	}
-} 
+}
 
 function test_value(){
 	if (document.form1.lstEdition.value == '0'){
-		mywindow=open("addedition.php?id_tome={TOMEID}",'myEdition','scrollbars=no,resizable=yes,width=530,height=380');	
+		mywindow=open("addedition.php?id_tome={TOMEID}",'myEdition','scrollbars=no,resizable=yes,width=530,height=380');
 	}
 }
 
@@ -23,7 +23,7 @@ function add_element(elName, elValue){
 	mywindow.close();
 }
 
-//--> 
+//-->
 </SCRIPT>
 
 {MENUCOLL}
@@ -35,22 +35,22 @@ function add_element(elName, elValue){
 					</font>
 					{SERTITLE}
 					<br />
-					<font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+					<font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
 						<strong>Genre : </strong>
 					</font>
 					{SERGENRE}
 					<br />
-					<font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+					<font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
 						<strong>Albums dans la collection : </strong>
 					</font>
 					{NBALB}
 					<br />
-					<font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+					<font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
 						<strong>Avancement : </strong>
 					</font>
 					{SERFIN}
 					<br />
-					<font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+					<font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
 						<strong>Album(s) manquant(s) : </strong>
 					</font>
 					{SERCOMPLETE}
@@ -71,12 +71,12 @@ function add_element(elName, elValue){
 			</div>
 
 	<div class="cadre1">
-				<input type="hidden" name="id_serie" value="{SERID}" /> 
+				<input type="hidden" name="id_serie" value="{SERID}" />
 				<input type="hidden" name="page" value="{NUMPAGE}" />
 				<input type="hidden" name="src" value="serie" />
 				<!-- BEGIN AlbBlock -->
 				<table class="fond_fiche_album">
-					<tr> 
+					<tr>
 						<td width="185px" valign="top">
 							<img src="{URLSITEIMAGE}couv/{COUVALBUM}" width="180" />
 							<a href="{URLAMAZON}" target="_blank" title="Commander cet album sur Amazon">
@@ -86,55 +86,55 @@ function add_element(elName, elValue){
 						<td align="left" valign="top">
 							<table width="100%" height="75%" border="1" cellpadding="3" cellspacing="0" bordercolor="#000000" frame="border" rules="all">
 								<tbody>
-									<tr> 
+									<tr>
 										<td width="126" class="case_entete_fonce">
 											Titre :
 										</td>
 										<td width="709" class="case_fond_clair">{ALBTITLE}</td>
 									</tr>
-									<tr> 
+									<tr>
 										<td class="case_entete_fonce">
 											Série :
 										</td>
 										<td class="case_fond_clair">{SERTITLE}</td>
 									</tr>
-									<tr> 
+									<tr>
 										<td class="case_entete_fonce">
 											Tome :
 										</td>
 										<td class="case_fond_clair">{NUMTOME}</td>
 									</tr>
-									<tr> 
+									<tr>
 										<td class="case_entete_fonce">
 											Genre :
 										</td>
 										<td class="case_fond_clair">{ALBGENRE}</td>
 									</tr>
-									<tr> 
+									<tr>
 										<td class="case_entete_fonce">
 											Scénario :
 										</td>
 										<td class="case_fond_clair">{ALBSCENAR}</td>
 									</tr>
-									<tr> 
+									<tr>
 										<td class="case_entete_fonce">
 											Dessin :
 										</td>
 										<td class="case_fond_clair">{ALBDESSIN}</td>
 									</tr>
-									<tr> 
+									<tr>
 										<td class="case_entete_fonce">
 											Couleur :
 										</td>
 										<td class="case_fond_clair">{ALBCOLOR}</td>
 									</tr>
-									<tr> 
+									<tr>
 										<td height="30" class="case_entete_fonce">
 											Mon édition :</strong></font>
 										</td>
 										<td class="case_fond_clair">{ALBEDITION}</td>
 									</tr>
-									<tr> 
+									<tr>
 										<td class="case_entete_fonce">
 											Identifiant :</font></strong>
 										</td>
@@ -147,7 +147,7 @@ function add_element(elName, elValue){
 										</td>
 									</tr>
 									{COMMENT_EDITION}
-									<tr> 
+									<tr>
 										<td height="30" align=center valign=top class="case_entete_fonce">
 											Note sur 10<br /><!-- A garder sur la meme ligne ou une ligne supplémentaire s'affiche après 10 sous IE -->
 											&amp;
@@ -169,7 +169,7 @@ function add_element(elName, elValue){
 								</tbody>
 							</table>
 							<p>
-								<strong><font color="#990000" size="-1">Synopsis :</font></strong> 
+								<strong><font color="#990000" size="-1">Synopsis :</font></strong>
 								{ALBSTORY}
 							</p>
 							<p>
@@ -181,53 +181,53 @@ function add_element(elName, elValue){
 					</tr>
 				</table>
 				<table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC" bgcolor="#DAC1B3"   frame="box" rules="groups">
-					<tr> 
+					<tr>
 						<td height="18">
 							<font color="#990000" size="-1"><strong>Edition originale :</strong></font>
-							<input name="cb_tete[]" type="checkbox" id="cb_tete[]" value="{EDITIONID}" {TETECHECKED} /> 
-							<strong><font color="#990000" size="-1">D&eacute;dicace :</font></strong> 
+							<input name="cb_tete[]" type="checkbox" id="cb_tete[]" value="{EDITIONID}" {TETECHECKED} />
+							<strong><font color="#990000" size="-1">D&eacute;dicace :</font></strong>
 							<input name="cb_dedicace[]" type="checkbox" id="cb_dedicace[]" value="{EDITIONID}" {DEDICHECKED} />
 						</td>
 					</tr>
-					<tr> 
+					<tr>
 						<td height="18">
 							<font color="#990000" size="-1"><strong>
 								A acheter prochainement :
 							</strong></font>
-							<input name="cb_achat[]" type="checkbox" id="cb_achat[]" value="{EDITIONID}" {ACHATCHECKED} /> 
+							<input name="cb_achat[]" type="checkbox" id="cb_achat[]" value="{EDITIONID}" {ACHATCHECKED} />
 							<font color="#990000" size="-1"><strong>Date d'achat :  </strong></font>
 							<input name="dte_achat[]" type="text" id="dte_achat[]" value="{DTEACHAT}" size="10" maxlength="10" />
 							<font color="#990000" size="-1"><strong>Prix/cote : </strong></font>
 							<input name="prix[]" type="text" id="prix[]" value="{PRIX}" size="4" maxlength="8" />
 						</td>
 					</tr>
-					<tr> 
+					<tr>
 						<td>
-							<font color="#990000" size="-1"><strong>Pr&ecirc;t :</strong></font> 
-							<input name="cb_pret[]" type="checkbox" id="cb_pret[]" value="{EDITIONID}" {PRETCHECKED} /> 
-							<font color="#990000" size="-1"><strong>Dernier emprunteur :</strong></font> 
-							<input name="name_pret[]" type="text" id="name_pret[]" value="{NOMPRET}" size="15" maxlength="100" /> 
-							<strong><font color="#990000" size="-1">Email :</font></strong> 
+							<font color="#990000" size="-1"><strong>Pr&ecirc;t :</strong></font>
+							<input name="cb_pret[]" type="checkbox" id="cb_pret[]" value="{EDITIONID}" {PRETCHECKED} />
+							<font color="#990000" size="-1"><strong>Dernier emprunteur :</strong></font>
+							<input name="name_pret[]" type="text" id="name_pret[]" value="{NOMPRET}" size="15" maxlength="100" />
+							<strong><font color="#990000" size="-1">Email :</font></strong>
 							<input name="email_pret[]" type="text" id="email_pret[]" value="{EMAILPRET}" size="20" maxlength="100" />
 						</td>
 					</tr>
-					<tr> 
+					<tr>
 						<td>
-							<font color="#990000" size="-1"><strong>Remarque personnelle (consultable par vous uniquement) :</strong></font> 
+							<font color="#990000" size="-1"><strong>Remarque personnelle (consultable par vous uniquement) :</strong></font>
 							<textarea name="remarque[]" class="champ_commentaire">{USERRQUE}</textarea>
 						</td>
 					</tr>
 				</table>
-				<p align="center"> 
+				<p align="center">
 					<input name="id_edition[]" type="hidden" id="id_edition[]" value="{EDITIONID}" />
-				</p> 
+				</p>
 				<!-- END AlbBlock -->
 				<div align="right"></div>
 				<div align="center">{NAVPAGE} </div>
 				<div align="center"></div>
 				<div align="center">
 					<table width="20%" border="0">
-						<tr> 
+						<tr>
 							<td>
 								<div align="center">
 									<input name="B_Add" type="submit" id="B_Add" value="Envoyer" />

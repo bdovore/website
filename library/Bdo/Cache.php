@@ -3,14 +3,14 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Bdo_Cache {
-	
+
 	public $filename = null;
 	public $fileCache = null;
 	public $dateCreaCache=false;
-	
+
 	public $data = null;
 	public $dataCache = null;
 
@@ -98,7 +98,7 @@ class Bdo_Cache {
 
 		return false;
 	}
-	
+
 }
 
 ?>

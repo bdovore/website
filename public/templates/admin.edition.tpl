@@ -2,18 +2,18 @@
 	<input name="txtFlgDef" type="hidden" value="{FLGDEF}" />
 	<input name="txtEditionId" type="hidden" value="{IDEDITION}" />
 	<table class="fond_admin">
-	    <tr> 
+	    <tr>
 			<td valign="top" width="60%">
 				<table class="tableaux_admin">
 					<!--DWLayoutTable-->
-          			<tr bordercolor="#FFFFCC"> 
+          			<tr bordercolor="#FFFFCC">
 			            <td width="10%" class="label">
 							<div align="center">
 								Album
 							</div>
 						</td>
 			            <td width="10%">
-							<div align="left"> 
+							<div align="left">
 			                	<input name="txtTomeId" type="text" id="txtTomeId" value="{IDTOME}" size="5" class="champ_form_desactive" />
 			            	</div>
 						</td>
@@ -23,16 +23,16 @@
 			        </tr>
 			    </table>
         		{ADMINEDITIONDETAIL}
-                <div class="submit"> 
+                <div class="submit">
                     <input type="submit" name="Submit" value="{ACTIONNAME}" />
                 </div>
 			</td>
-            
+
             <!-- colonne de droite -->
 			<td valign="top" width="40%">
 				{ADMINEDITIONCOUV}
 				<table class="cadre_texte-admin">
-	          		<tr> 
+	          		<tr>
 	            		<td>
 							<p class="b">Statistiques</p>
 				            <p>{NBUSERS} utilisateur(s) ont cette edition dans leur collection {VIEWUSEREDITION}</p>

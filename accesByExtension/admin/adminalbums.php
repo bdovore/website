@@ -59,7 +59,7 @@ if ($act=="update"){
 	$query = "
 	UPDATE bd_tome SET
 		id_edition = " . $DB->escape($_POST['btnDefEdit']) . "
-	WHERE 
+	WHERE
 		`id_tome`=".$_POST["txtTomeId"];
 	$DB->query($query);
 
@@ -95,7 +95,7 @@ elseif($act=="delete")
 
 			$query = "DELETE FROM bd_tome WHERE id_tome=" . $DB->escape($idtome);
 			$DB->query ($query);
-			
+
 			$redirection = BDO_URL."index.php";
 			echo '<META http-equiv="refresh" content="1; URL='.$redirection.'">L\'album a été effacé de la table bd_tome.';
 			exit();
@@ -184,8 +184,8 @@ elseif($act=="newfserie"){
 
 	$query = q_tome("t.id_serie='".$DB->escape($id_serie)."'"
 	,"ORDER BY t.num_tome DESC LIMIT 1");
-	
-	
+
+
 	$DB->query($query);
 	$DB->next_record();
 
@@ -252,30 +252,30 @@ elseif($act=="newfserie"){
 elseif($act=="append"){
 
 	$query = "
-	INSERT INTO `bd_tome` 
-	(`TITRE`, `NUM_TOME`, `PRIX_BDNET`, `ID_SERIE`,  
-	`ID_GENRE`, `ID_SCENAR`, `ID_SCENAR_ALT`, `ID_DESSIN`, 
-	`ID_DESSIN_ALT`, `ID_COLOR`, `ID_COLOR_ALT`, 
+	INSERT INTO `bd_tome`
+	(`TITRE`, `NUM_TOME`, `PRIX_BDNET`, `ID_SERIE`,
+	`ID_GENRE`, `ID_SCENAR`, `ID_SCENAR_ALT`, `ID_DESSIN`,
+	`ID_DESSIN_ALT`, `ID_COLOR`, `ID_COLOR_ALT`,
 	`HISTOIRE`, `FLG_INT`, `FLG_TYPE`
 	) VALUES (
-	'".$DB->escape($_POST['txtTitre'])."', 
-	".($_POST['txtNumTome']=='' ? "NULL" :  "'".$DB->escape($_POST['txtNumTome']). "'").", 
-	".($_POST['txtPrixVente']=='' ? "NULL" :  "'".$DB->escape($_POST['txtPrixVente']). "'").", 
-	'".$_POST['txtSerieId']."', 
-	'".$DB->escape($_POST['txtGenreId'])."', 
-	
-	'".sqlise($_POST['txtScenarId'],'int')."', 
-	'".sqlise($_POST['txtScenarAltId'],'int')."', 
-	'".sqlise($_POST['txtDessiId'],'int')."', 
-	'".sqlise($_POST['txtDessiAltId'],'int')."', 
-	'".sqlise($_POST['txtColorId'],'int')."', 
-	'".sqlise($_POST['txtColorAltId'],'int')."', 
-	
+	'".$DB->escape($_POST['txtTitre'])."',
+	".($_POST['txtNumTome']=='' ? "NULL" :  "'".$DB->escape($_POST['txtNumTome']). "'").",
+	".($_POST['txtPrixVente']=='' ? "NULL" :  "'".$DB->escape($_POST['txtPrixVente']). "'").",
+	'".$_POST['txtSerieId']."',
+	'".$DB->escape($_POST['txtGenreId'])."',
+
+	'".sqlise($_POST['txtScenarId'],'int')."',
+	'".sqlise($_POST['txtScenarAltId'],'int')."',
+	'".sqlise($_POST['txtDessiId'],'int')."',
+	'".sqlise($_POST['txtDessiAltId'],'int')."',
+	'".sqlise($_POST['txtColorId'],'int')."',
+	'".sqlise($_POST['txtColorAltId'],'int')."',
+
 	".($_POST['txtHistoire']=='' ? "NULL" : "'".$DB->escape($_POST['txtHistoire'])."'").",
-	".(($_POST['chkIntegrale'] == "checkbox") ? "'O'" : "'N'").", 
+	".(($_POST['chkIntegrale'] == "checkbox") ? "'O'" : "'N'").",
 	".$DB->escape($_POST['lstType'])."
 	)";
-	
+
 	$DB->query ($query);
 	// récupère la valeur de la dernière insertion
 	$lid_tome = mysql_insert_id();
@@ -289,7 +289,7 @@ elseif($act=="append"){
 
 	$query = "
 	UPDATE bd_tome SET
-	id_genre = ".$DB->escape($id_genre)." 
+	id_genre = ".$DB->escape($id_genre)."
 	WHERE `id_tome`=".$DB->escape($lid_tome);
 	$DB->query($query);
 
@@ -483,14 +483,14 @@ elseif($act==""){
 
 	// récupère le nombre d'utilisateurs
 	$query = "
-	SELECT COUNT(DISTINCT(users_album.user_id)) AS countusers 
+	SELECT COUNT(DISTINCT(users_album.user_id)) AS countusers
 	FROM users_album
 	INNER JOIN bd_edition USING(ID_EDITION)
 	WHERE bd_edition.ID_TOME=" . $DB->escape($alb_id);
 	$DB->query ($query);
 	$DB->next_record();
 	$nb_users = $DB->f("countusers");
-	
+
 	// récupère le nombre de commentaires
 	$query = "select count(user_id) as countcomments from users_comment where id_tome=" . $DB->escape($alb_id);
 	$DB->query ($query);

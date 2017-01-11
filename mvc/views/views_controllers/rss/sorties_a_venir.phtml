@@ -10,7 +10,7 @@
     <link><?php echo BDO_URL;?>Album?id_tome=<?php echo $tome->ID_TOME; ?> </link>
     <description><![CDATA["<?php echo $tome->HISTOIRE_TOME; ?>"]]></description>
     <guid isPermaLink="true"><?php echo BDO_URL;?>Album?id_tome=<?php echo $tome->ID_TOME; ?></guid>
-    <?php if ($tome->IMG_COUV !=NULL) { 
+    <?php if ($tome->IMG_COUV !=NULL) {
         $taille_couv = filesize(BDO_DIR_COUV.$tome->IMG_COUV);
         ?>
         <enclosure url="<?php echo BDO_URL_COUV.$tome->IMG_COUV; ?>" type="image/jpeg" length="<?php echo $taille_couv; ?>"/>

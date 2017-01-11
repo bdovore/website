@@ -52,7 +52,7 @@ if ($act=="update"){
 	}else{
 		$img_couv='';
 	}
-	
+
 	if($_POST['FLAG_DTE_PARUTION'] != "1") $_POST['txtDateParution'] = completeDate($_POST['txtDateParution']);
 	else $_POST['txtDateParution'] = '';
 
@@ -124,10 +124,10 @@ if ($act=="update"){
 
 	// Commence par activer l'�dition dans la base
 	$query = "
-		UPDATE bd_edition SET 
-		`prop_status` = '1', 
-		`validator` =" . $DB->escape($_SESSION["UserId"]) . ", 
-		`valid_dte` = NOW() 
+		UPDATE bd_edition SET
+		`prop_status` = '1',
+		`validator` =" . $DB->escape($_SESSION["UserId"]) . ",
+		`valid_dte` = NOW()
 		WHERE id_edition = '".$DB->escape($edition_id)."';";
 	$DB->query($query);
 	$DB->next_record();
@@ -135,11 +135,11 @@ if ($act=="update"){
 
 	// redirection vers album
 	$query = "
-		SELECT 
+		SELECT
 			id_tome
-		FROM 
-			bd_edition 
-		WHERE 
+		FROM
+			bd_edition
+		WHERE
 			id_edition=".$DB->escape($edition_id);
 
 	$DB->query($query);
@@ -303,25 +303,25 @@ elseif($act==""){
 
 	// R�cup�re l'adresse mail de l'utilisateur
 	$query = "
-	SELECT 
-		e.id_edition, 
-		t.id_tome, 
-		e.user_id, 
-		u.username, 
-		u.email, 
-		e.prop_dte, 
-		t.titre, 
+	SELECT
+		e.id_edition,
+		t.id_tome,
+		e.user_id,
+		u.username,
+		u.email,
+		e.prop_dte,
+		t.titre,
 		s.nom serie
-	FROM 
-		bd_edition e, 
-		bd_tome t, 
-		bd_serie s, 
+	FROM
+		bd_edition e,
+		bd_tome t,
+		bd_serie s,
 		users u
-	WHERE 
-		e.user_id = u.user_id 
-		AND e.prop_status = 0 
-		AND e.id_tome = t.id_tome 
-		and t.id_serie = s.id_serie 
+	WHERE
+		e.user_id = u.user_id
+		AND e.prop_status = 0
+		AND e.id_tome = t.id_tome
+		and t.id_serie = s.id_serie
 		AND e.id_edition = ".$DB->escape($edition_id);
 
 	$DB->query ($query);

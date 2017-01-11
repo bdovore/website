@@ -26,10 +26,10 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 		<tr>
 			<td>
 				<table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-			    	<tr bordercolor="#FFFFCC"> 
+			    	<tr bordercolor="#FFFFCC">
 			        	<td width="38" class="label">Titre</td>
 			            <td width="34">
-							<div align="left"> 
+							<div align="left">
 								<input name="txtPropId" type="hidden" id="txtPropId" value="{PROPID}" />
 							</div>
 						</td>
@@ -38,38 +38,38 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 						</td>
 			            <td width="70"><!--DWLayoutEmptyCell-->&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td><!--DWLayoutEmptyCell-->&nbsp;</td>
 			            <td><!--DWLayoutEmptyCell-->&nbsp;</td>
 			            <td class="original">{ORITITRE}</td>
 			            <td><!--DWLayoutEmptyCell-->&nbsp;</td>
 			        </tr>
-					<tr bordercolor="#FFFFCC"> 
+					<tr bordercolor="#FFFFCC">
 			            <td class="label">Tome</td>
 			            <td> </td>
 			            <td>
-							<div align="left"> 
+							<div align="left">
 								<input name="txtNumTome" type="text" id="txtNumTome2" value="{TOME}" size="2" class="{CLTOME}" />
 				            </div>
 						</td>
 			            <td></td>
 					</tr>
-					<tr bordercolor="#FFFFCC"> 
+					<tr bordercolor="#FFFFCC">
 						<td class="label">&nbsp;</td>
 						<td></td>
 						<td class="original">{ORITOME}</td>
 						<td>&nbsp;</td>
 					</tr>
-					<tr bordercolor="#FFFFCC"> 
+					<tr bordercolor="#FFFFCC">
 						<td colspan="4" class="label">
 							<table width="100%" border="0">
-				                <tr> 
+				                <tr>
 					                <td width="25%">&nbsp;</td>
 					                <td width="25%" align="center" class="entete">Int&eacute;grale{NEW_FLG_INT}</td>
 					                <td width="25%" align="center" class="entete">Type{NEW_FLG_TYPE}</td>
 					                <td width="25%">&nbsp;</td>
 				                </tr>
-				                <tr> 
+				                <tr>
 					                <td>&nbsp;</td>
 						            <td class="data" align="center">
 										<input type="checkbox" name="chkIntegrale" value="checkbox" {ISINT} />
@@ -84,12 +84,12 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							</table>
 						</td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td colspan="4" class="label">
 							Histoire
 							<br />
 							<br />
-							<textarea name="txtHistoire" cols="50" rows="8" id="textarea" class="{CLHISTOIRE}">{HISTOIRE}</textarea> 
+							<textarea name="txtHistoire" cols="50" rows="8" id="textarea" class="{CLHISTOIRE}">{HISTOIRE}</textarea>
 				            <br />
 						</td>
 					</tr>
@@ -97,30 +97,30 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			            <td colspan="4" class="original">{ORIHISTOIRE}</td>
 			        </tr>
 				</table>
-				<br /> 
+				<br />
 		        <table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Serie</td>
 			            <td>
-							<div align="left"> 
+							<div align="left">
 				                <input name="txtSerieId" type="text" id="txtSerieId2" value="{IDSERIE}" size="5" class="{CLIDSERIE}" />
 				            </div>
 						</td>
 			            <td><input name="txtSerie" type="text" id="txtSerie3" value="{SERIE}" size="37" class="{CLSERIE}" /> {LIENEDITNEWSERIE}</td>
-			            <td> 
+			            <td>
 							<img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('serie',document.myform.txtSerie.value,'myform','txtSerie',true)" alt="Loupe" />
 						</td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td><!--DWLayoutEmptyCell-->&nbsp;</td>
 			            <td><!--DWLayoutEmptyCell-->&nbsp;</td>
 			            <td class="original">{ORISERIE}</td>
 			            <td><!--DWLayoutEmptyCell-->&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td width="10%" class="label">Genre</td>
 			            <td width="8%">
-							<div align="center"> 
+							<div align="center">
 				                <input name="txtGenreId" type="text" value="{IDGENRE}" size="3" class="{CLIDGENRE}" />
 				            </div>
 						</td>
@@ -131,13 +131,13 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('genre',document.myform.txtGenre.value,'myform','txtGenre',false)" alt="Loupe" />
 						</td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original">{ORIGENRE}</td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Status</td>
 			            <td>
 							<div align="center"> </div>
@@ -150,16 +150,16 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 						</td>
 			            <td>&nbsp; </td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original">{ORISERIEFINI}</td>
 			            <td>&nbsp;</td>
 			        </tr>
 		        </table>
-		        <br /> 
+		        <br />
 		        <table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td width="18%" class="label">Scenariste</td>
 			            <td width="10%">
 							<input name="txtScenarId" type="text" value="{IDSCEN}" size="4" class="{CLIDSCEN}" />
@@ -171,13 +171,13 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenar.value,'myform','txtScenar',true)" alt="Loupe" />
 						</td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original">{ORISCENARISTE}</td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Scenariste #2</td>
 			            <td>
 							<input name="txtScenarAltId" type="text" value="{IDSCENALT}" size="4" class="{CLIDSCENALT}" />
@@ -189,13 +189,13 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenarAlt.value,'myform','txtScenarAlt',true)" alt="Loupe" />
 						</td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original">{ORISCENARISTEALT}</td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Dessinateur</td>
 			            <td>
 							<input name="txtDessiId" type="text" value="{IDDESS}" size="4" class="{CLIDDESS}" />
@@ -207,13 +207,13 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessi.value,'myform','txtDessi',true)" alt="Loupe" />
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original">{ORIDESSINATEUR}</td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Dessinateur #2</td>
 			            <td>
 							<input name="txtDessiAltId" type="text" value="{IDDESSALT}" size="4" class="{CLIDDESSALT}" />
@@ -225,13 +225,13 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessiAlt.value,'myform','txtDessiAlt',true)" alt="Loupe" />
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original">{ORIDESSINATEURALT}</td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Coloriste</td>
 			            <td>
 							<input name="txtColorId" type="text" value="{IDCOLOR}" size="4" class="{CLIDCOLOR}" />
@@ -243,15 +243,15 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColor.value,'myform','txtColor',true)" alt="Loupe" />
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original">{ORICOLORISTE}</td>
 			            <td>&nbsp;</td>
 			        </tr>
 				</table>
-		        <p> 
-			        <div align="center"> 
+		        <p>
+			        <div align="center">
 				        <p></p>
 				        <input type="submit" name="Submit" value="{ACTIONNAME}" />
 				        <br />
@@ -259,7 +259,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			</td>
 		    <td valign="top">
 				<table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-					<tr bordercolor="#FFFFCC"> 
+					<tr bordercolor="#FFFFCC">
 						<td class="label">
 							{USEROWN}
 							<br />
@@ -272,7 +272,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 				</table>
 				<br />
 		        <table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td width="21%" class="label">Editeur</td>
 			            <td width="9%">
 							<input name="txtEditeurId" type="text" value="{IDEDIT}" size="3" class="{CLIDEDIT}" />
@@ -284,15 +284,15 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('editeur',document.myform.txtEditeur.value,'myform','txtEditeur',true)" alt="Loupe" />
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original">{ORIEDITEUR}</td>
 			            <td>&nbsp;</td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Collection</td>
-			            <td> 
+			            <td>
 							<input name="txtCollecId" type="text" value="{IDCOLLEC}" size="3" class="{CLIDCOLLEC}" />
 						</td>
 			            <td>
@@ -302,19 +302,19 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('collection',document.myform.txtCollec.value,'myform','txtCollec',false,document.myform.txtEditeurId.value)" alt="Loupe" />
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original">{ORICOLLECTION}</td>
 			            <td>&nbsp;</td>
-			        </tr>	
-					<tr bordercolor="#FFFFCC"> 
+			        </tr>
+					<tr bordercolor="#FFFFCC">
 			            <td colspan="4" class="label">
 							<table width="100%" border="0">
-				                <tr> 
-				                	<td align="center"><a href="{URLEAN}" title="Teste le code EAN sur BDNet" target="_blank">EAN</a> : 
+				                <tr>
+				                	<td align="center"><a href="{URLEAN}" title="Teste le code EAN sur BDNet" target="_blank">EAN</a> :
 				                	<input name="txtEAN" type="text" value="{EAN}" size="14" class="{CLEAN}" />{ISEAN}</td>
-				                	<td align="center"><a href="{URLISBN}" title="Teste le code ISBN sur Amazon" target="_blank">ISBN</a> : 
+				                	<td align="center"><a href="{URLISBN}" title="Teste le code ISBN sur Amazon" target="_blank">ISBN</a> :
 				                    <input name="txtISBN" type="text" value="{ISBN}" size="10" class="{CLISBN}" />{ISISBN}</td>
 				                </tr>
 						<tr>
@@ -324,7 +324,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			            	</table>
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Date de parution</td>
 			            <td>&nbsp; </td>
 			            <td>
@@ -332,22 +332,22 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 						</td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original">{ORIDTPAR}</td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td colspan="4" class="label">
-							Ignorer les modifications relatives &agrave; l'&eacute;dition 
+							Ignorer les modifications relatives &agrave; l'&eacute;dition
 				            <input type="checkbox" name="chkModifEdition" value="checked" />
 						</td>
 			        </tr>
 				</table>
 				<br />
 				<table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
-			        <tr> 
+			        <tr>
 			            <td width="50%" align="center" bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 							<img src="{URLIMAGE}" width="180" border="0" align="absmiddle" alt="Couverture" />
 							<br />
@@ -359,23 +359,23 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							{ORIDIMIMAGE}
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 			            <td colspan="2" class="label">
 							Ignorer le changement de couverture (les dimensions de l'image de gauche n'apparaissent pas si l'utilisateur ne propose pas de nouvelle couverture)
 							<input type="checkbox" name="chkDelete" value="checked" />
 				        </td>
 	        		</tr>
-	        		<tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+	        		<tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 			            <td class="label">Redimensionner la couverture</td>
 			            <td><input type="checkbox" name="chkResize" value="checked"></td>
 		            </tr>
 				</table>
 				<br />
 				<table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-					<tr bordercolor="#FFFFCC"> 
+					<tr bordercolor="#FFFFCC">
 						<td class="label">Commentaire de l'utilisateur :</td>
 					</tr>
-					<tr bordercolor="#FFFFCC"> 
+					<tr bordercolor="#FFFFCC">
 						<td class="label">{USERCOMMENT}</td>
 					</tr>
 				</table>
@@ -394,9 +394,9 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 						</td>
 					</tr>
 				</table>
-				<br /> 
+				<br />
 		        <table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td width="18%" class="label">
 							En rouge <div align="center"> </div>
 						</td>
@@ -404,7 +404,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							Incoh&eacute;rence entre l'ID et la valeur saisie
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">En orange</td>
 			            <td class="texte">Champ modifi&eacute; par l'utilisateur</td>
 			        </tr>
@@ -442,4 +442,4 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
     		&nbsp;
     	</td>
 	</tr>
-</table>	
+</table>

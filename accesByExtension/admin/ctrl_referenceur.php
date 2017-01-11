@@ -25,7 +25,7 @@ foreach( $a_liaison as $a_lien)
 
 echo '<form name="formrelation" method="post">
 <div>
-Table référenceur : 
+Table référenceur :
 <select name="tableOrigine[]" >';
 foreach( $a_td as $_td)
 {
@@ -54,9 +54,9 @@ if (isset($_POST['execformrelation']))
 
 
 			$query = "SELECT distinct(`".$cd."`) FROM `".$td."`
-	    	WHERE `".$cd."` NOT IN ( SELECT `".$co."` FROM `".$to."` ) 
+	    	WHERE `".$cd."` NOT IN ( SELECT `".$co."` FROM `".$to."` )
 	    	AND `".$cd."` IS NOT NULL";
-			/* 
+			/*
 	    	AND `".$cd."`!= ''
 	    	AND `".$cd."`!= 0";
 */

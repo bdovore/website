@@ -44,40 +44,40 @@ if ($act=="export") {
 
 			// Construction de la query
 			$query = "
-	SELECT 
-		bd_serie.nom serie, 
-		bd_tome.titre,  
-		bd_tome.num_tome, 
-		bd_edition.isbn, 
-		bd_genre.libelle, 
-		bd_auteur.PSEUDO p_scenar, 
-		bd_auteur_1.PSEUDO p_dessin, 
-		bd_editeur.NOM editeur, 
-		bd_collection.nom, 
-		bd_edition.dte_parution, 
-		users_album.date_ajout, 
-		users_comment.note, 
-		users_album.comment, 
-		users_album.flg_pret, 
-		users_album.nom_pret, 
+	SELECT
+		bd_serie.nom serie,
+		bd_tome.titre,
+		bd_tome.num_tome,
+		bd_edition.isbn,
+		bd_genre.libelle,
+		bd_auteur.PSEUDO p_scenar,
+		bd_auteur_1.PSEUDO p_dessin,
+		bd_editeur.NOM editeur,
+		bd_collection.nom,
+		bd_edition.dte_parution,
+		users_album.date_ajout,
+		users_comment.note,
+		users_album.comment,
+		users_album.flg_pret,
+		users_album.nom_pret,
 		users_album.date_achat,
-		users_album.cote, 
-		users_album.flg_cadeau, 
+		users_album.cote,
+		users_album.flg_cadeau,
 		users_album.flg_tete
-	FROM 
-		users_album 
+	FROM
+		users_album
 		INNER JOIN bd_edition ON bd_edition.id_edition = users_album.id_edition
-		INNER JOIN bd_tome ON bd_tome.id_tome = bd_edition.ID_TOME 
-		INNER JOIN bd_auteur ON bd_tome.id_scenar = bd_auteur.ID_AUTEUR 
-		INNER JOIN bd_auteur AS bd_auteur_1 ON bd_tome.id_dessin = bd_auteur_1.ID_AUTEUR 
-		INNER JOIN bd_serie ON bd_tome.id_serie = bd_serie.ID_SERIE 
+		INNER JOIN bd_tome ON bd_tome.id_tome = bd_edition.ID_TOME
+		INNER JOIN bd_auteur ON bd_tome.id_scenar = bd_auteur.ID_AUTEUR
+		INNER JOIN bd_auteur AS bd_auteur_1 ON bd_tome.id_dessin = bd_auteur_1.ID_AUTEUR
+		INNER JOIN bd_serie ON bd_tome.id_serie = bd_serie.ID_SERIE
 		INNER JOIN bd_genre ON bd_serie.id_genre = bd_genre.ID_GENRE
 		INNER JOIN bd_collection ON bd_edition.id_collection = bd_collection.ID_COLLECTION
 		INNER JOIN bd_editeur ON bd_collection.id_editeur = bd_editeur.id_editeur
-		LEFT JOIN users_comment ON bd_tome.id_tome = users_comment.ID_TOME AND users_album.user_id = users_comment.USER_ID 
-	WHERE 
-		users_album.user_id= ".$DB->escape($_SESSION["UserId"])." 
-		AND users_album.flg_achat='".$DB->escape($flg_achat)."' 
+		LEFT JOIN users_comment ON bd_tome.id_tome = users_comment.ID_TOME AND users_album.user_id = users_comment.USER_ID
+	WHERE
+		users_album.user_id= ".$DB->escape($_SESSION["UserId"])."
+		AND users_album.flg_achat='".$DB->escape($flg_achat)."'
 	ORDER BY bd_serie.tri, bd_serie.NOM, bd_tome.NUM_TOME
 	";
 			$entete = array('Serie', 'Titre','Tome','ISBN', 'Genre','Scénariste','Dessinateur','Editeur','Collection','Date parution','Date d\'ajout','Note','Remarque','Prêté','Emprunteur','Date d\'achat', 'Prix','Cadeau','Edition originale');
@@ -88,7 +88,7 @@ if ($act=="export") {
 		case 2:
 
 			$query ="
-SELECT  
+SELECT
 	s.nom,
 	t.titre,
 	t.num_tome,
@@ -99,21 +99,21 @@ SELECT
 	er.nom editeur,
 	c.nom,
 	en.dte_parution
-FROM 
+FROM
 	(
 		SELECT DISTINCT
 			s.*
-		FROM 
-			users_album ua 
+		FROM
+			users_album ua
 			INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
 			INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-			INNER JOIN bd_serie s ON t.ID_SERIE=s.ID_SERIE 
-		WHERE 
+			INNER JOIN bd_serie s ON t.ID_SERIE=s.ID_SERIE
+		WHERE
 			ua.user_id = ".$DB->escape($_SESSION["UserId"])."
 			AND NOT EXISTS (
 						SELECT NULL FROM users_exclusions ues
-						WHERE s.id_serie=ues.id_serie 
-						AND ues.id_tome = 0 
+						WHERE s.id_serie=ues.id_serie
+						AND ues.id_tome = 0
 						AND ues.user_id = ".$DB->escape($_SESSION["UserId"])."
 					)
 		) s
@@ -124,17 +124,17 @@ FROM
 	INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
 	INNER JOIN bd_auteur se ON t.id_scenar = se.id_auteur
 	INNER JOIN bd_auteur de ON t.id_dessin = de.id_auteur
-WHERE 
+WHERE
 		NOT EXISTS (
-			SELECT NULL 
+			SELECT NULL
 			FROM users_album ua
 			INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
-			WHERE 
+			WHERE
 			ua.user_id = ".$DB->escape($_SESSION["UserId"])."
-			AND t.id_tome=en.id_tome 
+			AND t.id_tome=en.id_tome
 		)
 		AND NOT EXISTS (
-			SELECT NULL 
+			SELECT NULL
 			FROM users_exclusions uet
 			WHERE uet.user_id = ".$DB->escape($_SESSION["UserId"])."
 			AND t.id_tome=uet.id_tome
@@ -276,10 +276,10 @@ ORDER BY s.tri, s.NOM, t.NUM_TOME
 			require_once (BDO_DIR."vendors/html2pdf_v4.03/html2pdf.class.php");
 			ob_start();
 
-			
+
 			include "pdf_html2.php";
-			
-			
+
+
 			$content = ob_get_clean();
 			echo $content;exit();
 			$html2pdf = new HTML2PDF('P', 'A4', 'fr', false, 'ISO-8859-15');

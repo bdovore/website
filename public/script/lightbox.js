@@ -170,17 +170,17 @@ function showLightbox(boxType,url,widthDiv,heightDiv)
 	objLightbox.style.width = widthDiv + "px";
 	objLightbox.style.height = heightDiv + "px";
 
-		
+
 	if (boxType == 'div')
 	{
 		var objLightboxDetails = document.getElementById('lightboxDetails');
 	}
 	else
-	{	
+	{
 		var objLightboxDetails = document.getElementById('lightboxDetailsIframe');
 		objLightboxDetails.setAttribute('src',url);
 	}
-		
+
 	objLightboxDetails.style.width = widthDiv + "px";
 	objLightboxDetails.style.height = heightDiv + "px";
 
@@ -223,12 +223,12 @@ function hideLightbox(stmt)
 	// hide lightbox and overlay
 	objOverlay.style.display = 'none';
 	objLightbox.style.display = 'none';
-	
+
 	//----------------------iframe
 	// get objects
 	objOverlayIframe = document.getElementById('overlayIframe');
 	objLightboxIframe = document.getElementById('lightboxIframe');
-	
+
 	if (stmt != 'self')
 	{
 		var objLightboxDetails = document.getElementById('lightboxDetailsIframe');
@@ -310,8 +310,8 @@ function initLightbox()
 	var objLightboxDetails = document.createElement("div");
 	objLightboxDetails.setAttribute('id','lightboxDetails');
 	objLightbox.appendChild(objLightboxDetails);
-	
-	
+
+
 	// create overlayIframe div and hardcode some functional styles (aesthetic styles are in CSS file)
 	var objOverlayIframe = document.createElement("div");
 	objOverlayIframe.setAttribute('id','overlayIframe');
@@ -331,7 +331,7 @@ function initLightbox()
 	objLightboxIframe.style.position = 'absolute';
 	objLightboxIframe.style.zIndex = '100';
 	objBody.insertBefore(objLightboxIframe, objOverlayIframe.nextSibling);
-	
+
 
 	//	iframe id="frmMain" src="javascript:void(0)" name="frmMain" frameborder="0" height="100%" width="100%" scrolling="auto"
 

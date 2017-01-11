@@ -39,10 +39,10 @@ if (isset($_POST["B_Add"]))
 			//mise à jour du commentaire
 			$update = "
 			update serie_comment
-                set note = ".$DB->escape($sernote).", 
+                set note = ".$DB->escape($sernote).",
                 comment = '".$DB->escape($sercomment)."',
                 dte_post = CURRENT_TIMESTAMP()
-                where user_id = "; 
+                where user_id = ";
 			$update .= sprintf("%d and id_serie =%d",$DB->escape($_SESSION["UserId"]), $DB->escape($id_serie));
 			$DB->next_record();
 			$old_note = $DB->f("note");
@@ -111,18 +111,18 @@ if (isset($_POST["B_Add"]))
 
 		$update = "
 		update users_album
-		set 
-			comment = '".$DB->escape($remarque[$i])."', 
+		set
+			comment = '".$DB->escape($remarque[$i])."',
 			flg_tete='".$DB->escape($tete)."',
-			flg_pret = '".$DB->escape($pret)."', 
+			flg_pret = '".$DB->escape($pret)."',
 			flg_achat = '".$DB->escape($achat)."',
 			flg_dedicace = '".$DB->escape($dedi)."',
-			nom_pret = '".$DB->escape($name_pret[$i])."', 
-			email_pret = '".$DB->escape($email_pret[$i])."', 
-			date_achat = ".$i_achat.", 
+			nom_pret = '".$DB->escape($name_pret[$i])."',
+			email_pret = '".$DB->escape($email_pret[$i])."',
+			date_achat = ".$i_achat.",
 			cote = ".$DB->escape($i_prix)."
-		where 
-			id_edition = ".$DB->escape($id_edition[$i])." 
+		where
+			id_edition = ".$DB->escape($id_edition[$i])."
 			and user_id =".$DB->escape($_SESSION["UserId"]);
 
 		$DB->query($update);
@@ -154,9 +154,9 @@ if (isset($_POST["B_Add"]))
 				insert into users_comment (
 					user_id, id_tome,note, comment, dte_post
 				) values (
-					".$DB->escape($_SESSION["UserId"]).", 
+					".$DB->escape($_SESSION["UserId"]).",
 					".$DB->escape($id_tome[$i]).",
-					".$DB->escape($note[$i]).", 
+					".$DB->escape($note[$i]).",
 					'".$DB->escape($comment[$i])."',
 					CURRENT_TIMESTAMP()
 				)";
@@ -194,19 +194,19 @@ if (isset($_POST["B_Add"]))
 if ($id_serie) {
 	// information général sur la série
 	$query_serie = "
-	select 
-	s.nom, 
+	select
+	s.nom,
 	g.libelle,
-    CASE s.flg_fini WHEN 0 then 'Fini' when 1 then 'En cours' when 2 then 'One Shot' ELSE '?' end ser_fini, 
+    CASE s.flg_fini WHEN 0 then 'Fini' when 1 then 'En cours' when 2 then 'One Shot' ELSE '?' end ser_fini,
     count(distinct(t.id_tome)) nbalb
-    from 
-	    users_album ua 
+    from
+	    users_album ua
 	    INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
 	    INNER JOIN bd_tome t ON en.id_tome=t.id_tome
 	    INNER JOIN bd_serie s ON t.id_serie=s.id_serie
 	    INNER JOIN bd_genre g ON s.id_genre=g.id_genre
-    where 
-	    s.id_serie = ".$DB->escape($id_serie)." 
+    where
+	    s.id_serie = ".$DB->escape($id_serie)."
 	    and ua.user_id =".$DB->escape($_SESSION["UserId"])."
     group by s.id_serie
     ";
@@ -253,17 +253,17 @@ if ($id_serie) {
 		// La série est elle complète ?
 		// -----------------------------------------------------
 		$select = "
-		SELECT 
+		SELECT
 			count(distinct(t.id_tome))  nb
-		FROM 
-			bd_tome t 
+		FROM
+			bd_tome t
 			INNER JOIN bd_edition en ON t.id_tome=en.id_tome
 			LEFT JOIN users_album ua ON en.id_edition = ua.id_edition and ua.user_id =".$DB->escape($_SESSION["UserId"])."
-		where  
-			t.id_serie = ".$DB->escape($id_serie)." 
-			and ua.id_edition is null 
-			and t.num_tome > 0 
-			and t.flg_int = 'N' 
+		where
+			t.id_serie = ".$DB->escape($id_serie)."
+			and ua.id_edition is null
+			and t.num_tome > 0
+			and t.flg_int = 'N'
 			and t.flg_type = 0
 		";
 
@@ -280,60 +280,60 @@ if ($id_serie) {
 		// Liste des albums...
 		// ----------------------------------------------------
 		$query_album = "
-		SELECT 
-			en.id_edition, 
-			t.id_tome, 
-			t.titre, 
-			t.histoire, 
-			sc.pseudo p_scenar, 
+		SELECT
+			en.id_edition,
+			t.id_tome,
+			t.titre,
+			t.histoire,
+			sc.pseudo p_scenar,
 			t.id_scenar,
-			de.pseudo p_dessin, 
+			de.pseudo p_dessin,
 			t.id_dessin,
-			er.nom editeur, 
-			s.nom serie, 
-			s.id_serie, 
+			er.nom editeur,
+			s.nom serie,
+			s.id_serie,
 			uc.note,
-			uc.comment, 
-			en.img_couv, 
-			g.libelle, 
+			uc.comment,
+			en.img_couv,
+			g.libelle,
 			ua.cote,
 			CASE t.flg_int when 'O' then 'Intégrale' else t.num_tome end ntome,
-			ua.flg_dedicace, 
-			ua.flg_achat, 
-			ua.flg_tete, 
-			ua.flg_pret, 
-			ua.nom_pret, 
-			ua.email_pret, 
+			ua.flg_dedicace,
+			ua.flg_achat,
+			ua.flg_tete,
+			ua.flg_pret,
+			ua.nom_pret,
+			ua.email_pret,
 			ua.comment rque,
-			date_format(ua.date_achat,'%d/%m/%Y') dte_achat, 
-			date_format(ua.date_ajout,'%d/%m/%Y') dte_ajout, 
-			ua.cote, 
-			en.isbn, 
-			en.ean, 
-			en.comment comment_ed, 
-			c.nom collection, 
-			co.pseudo p_color, 
+			date_format(ua.date_achat,'%d/%m/%Y') dte_achat,
+			date_format(ua.date_ajout,'%d/%m/%Y') dte_ajout,
+			ua.cote,
+			en.isbn,
+			en.ean,
+			en.comment comment_ed,
+			c.nom collection,
+			co.pseudo p_color,
 			en.dte_parution,
 			en.flag_dte_parution
-		FROM 
-			users_album ua 
+		FROM
+			users_album ua
 			INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
 			INNER JOIN bd_tome t ON en.id_tome=t.id_tome
 			left outer join users_comment uc on uc.user_id = ua.user_id and uc.id_tome = t.id_tome
 
 			INNER JOIN bd_serie s ON t.id_serie = s.id_serie
 			INNER JOIN bd_genre g ON s.id_genre = g.id_genre
-			
+
 			INNER JOIN bd_collection c ON en.id_collection = c.id_collection
-			INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur 
-			
+			INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
+
 			LEFT JOIN bd_auteur sc ON t.id_scenar = sc.id_auteur
-			LEFT JOIN bd_auteur de ON t.id_dessin = de.id_auteur 
+			LEFT JOIN bd_auteur de ON t.id_dessin = de.id_auteur
 			LEFT JOIN bd_auteur co ON t.id_color = co.id_auteur
-		WHERE 
+		WHERE
 			t.id_serie= ".$DB->escape($id_serie)."
 			and ua.user_id =".$DB->escape($_SESSION["UserId"])."
-		ORDER BY t.flg_int DESC, t.flg_type, num_tome, t.titre 
+		ORDER BY t.flg_int DESC, t.flg_type, num_tome, t.titre
 		LIMIT ".$DB->escape($debut).", ".$DB->escape($limPage)."
             ";
 

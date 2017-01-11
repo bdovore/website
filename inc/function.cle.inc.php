@@ -6,7 +6,7 @@
 * $EAN        string(12)
 */
 function cle_EAN($EAN) {
-	
+
 	// parse le code EAN
 	for($i = 1; $i <= 12; $i ++) {
 		$letter [$i] = substr ( $EAN, $i - 1, 1 );
@@ -28,10 +28,10 @@ function cle_EAN($EAN) {
  *
  * @param type $ISBN
  *        	string(9)
- *        	
+ *
  */
 function cle_ISBN($ISBN) {
-	
+
 	// parse le code ISBN
 	for($i = 1; $i <= 9; $i ++) {
 		$letter [$i] = substr ( $ISBN, $i - 1, 1 );
@@ -57,7 +57,7 @@ function cle_ISBN($ISBN) {
  *
  * @param type $ISBN
  *        	string(10)
- *        	
+ *
  */
 function ISBN_to_EAN($ISBN) {
 	$ISBN = substr ( $ISBN, 0, 9 );
@@ -69,7 +69,7 @@ function ISBN_to_EAN($ISBN) {
  *
  * @param type $EAN
  *        	string(13)
- *        	
+ *
  */
 function EAN_to_ISBN($EAN) {
 	$EAN = substr ( $EAN, 3, 9 );
@@ -81,7 +81,7 @@ function EAN_to_ISBN($EAN) {
  *
  * @param type $EAN
  *        	string(13)
- *        	
+ *
  */
 function check_EAN($EAN) {
 	// parse le code EAN
@@ -103,7 +103,7 @@ function check_EAN($EAN) {
  *
  * @param type $ISBN
  *        	string(10)
- *        	
+ *
  */
 function check_ISBN($ISBN) {
 	// parse le code ISBN

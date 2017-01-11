@@ -34,7 +34,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 
 <div class="cadre1">
 <h2>Proposition de correction</h2>
-    
+
 <form action="{URLACTION}" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
 <input name="txtTomeId" type="hidden" id="txtTomeId" value="{IDTOME}"><input name="txtEditionId" type="hidden" id="txtEditionId" value="{IDEDITION}">
 <table width="100%" border="0">
@@ -283,7 +283,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
                       <td bordercolor="#DAC1B3"> <img src="{URLSITEIMAGE}site/loupe.gif" onclick="newWindow('collection',document.myform.txtCollec.value,'myform','txtCollec',false,document.myform.txtEditeurId.value)" height="14" width="24"></td>
 
                     </tr>
-					
+
 					 <tr bordercolor="#DAC1B3">
 
 	                      <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-13</strong></font></td>
@@ -292,7 +292,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 								<input name="txtEAN" id="txtEAN" value="{EAN}" size="13" class="flat" type="text" />
 								<span class="texte">ISBN à 13 chiffres <u>sans</u> trait d'union ni espace (aussi appelé EAN)</span>
 							</td>
-                    </tr>		 
+                    </tr>
 					<tr bordercolor="#DAC1B3">
 						<td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-10</strong></font></td>
 	                    <td> <div align="left"> </div></td>

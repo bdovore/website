@@ -29,7 +29,7 @@ if ($act=="merge")
 
 	if ($conf=="ok")
 	{
-		
+
 		// Met à jour l'information contenue dans la base de données
 		$query = "UPDATE bd_tome SET id_genre = ".$DB->escape($dest_id)." where id_genre = ".$DB->escape($source_id);
 		$DB->query($query);
@@ -57,7 +57,7 @@ if ($act=="merge")
 // AFFICHER
 elseif($act=="")
 {
-	
+
 	// Creation d'un nouveau Template
 	$t = new Template(BDO_DIR."public/templates");
 	// fichier à utiliser
@@ -70,7 +70,7 @@ elseif($act=="")
 	{
 		// récupère le nombre d'utilisateurs
 		$nb_users1 = countUserBy("genre",$source_id);
-		
+
 		// récupère les données principales
 		$query= "select id_genre, libelle from bd_genre where id_genre = ".$DB->escape($source_id);
 		$DB->query ($query);
@@ -94,7 +94,7 @@ elseif($act=="")
 	{
 		// récupère le nombre d'utilisateurs
 		$nb_users2 = countUserBy("genre",$dest_id);
-		
+
 		// récupère les données principales
 		$query= "select id_genre, libelle from bd_genre where id_genre = ".$DB->escape($dest_id);
 		$DB->query ($query);

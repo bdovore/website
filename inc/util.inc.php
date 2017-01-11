@@ -11,7 +11,7 @@ function __autoload_classes ($class_name)
     // "__Bdo_Name_" --> "Bdo/Name"
     $classFile = str_replace( '_', DS, trim($class_name, '_') );
     $file = BDO_DIR . 'library' . DS . $classFile . '.php';
-    
+
     if (is_file($file)) {
         require_once $file;
     } else {
@@ -284,21 +284,21 @@ function protectAttack ($GLOBALVAR)
             '<Quadrichromie>',
             '<Aucun>'
     );
-    
+
     // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
     $toAlert = "laurent.mignot@gmail.com";
     $subjectAlert = "BDovore Alerte";
-    
+
     $headersAlert = 'MIME-Version: 1.0' . "\r\n";
     $headersAlert .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-    
+
     if (! isset($_SESSION["UserLevel"]) or ($_SESSION["UserLevel"] > 1)) {
         if (issetNotEmpty(${$GLOBALVAR})) {
             foreach (${$GLOBALVAR} as $key => $val) {
                 if (strlen($val) > 15) {
                     foreach ($a_motInterdit as $mot) {
                         if ((stristr($val, $mot)) and ! in_array($val, $a_motExcept)) {
-                            
+
                             ob_start();
                             echo "\n------" . $GLOBALVAR . "------\n\n";
                             var_dump(${$GLOBALVAR});
@@ -306,12 +306,12 @@ function protectAttack ($GLOBALVAR)
                             var_dump($_SERVER);
                             $dump = ob_get_clean();
                             echo "";
-                            
+
                             $message = nl2br(
                                     '<pre>Mot ou caractère interdit rencontré : [' . $mot . '] dans [' .
                                              htmlspecialchars($val, ENT_QUOTES) . ']' . "\n" . date('d/m/Y H:i:s') . "\n" .
                                              htmlspecialchars($dump, ENT_QUOTES) . "</pre>");
-                            
+
                             mail($toAlert, $subjectAlert, $message, $headersAlert);
                             exit(
                                     'Mot ou caractère interdit rencontré : [' . $mot . '] dans [' . htmlspecialchars($val, ENT_QUOTES) . ']
@@ -339,7 +339,7 @@ function stripSlUtf8 ($data)
             if (is_utf8($data)) $data = utf8_decode($data);
         }
     }
-    
+
     return $data;
 }
 
@@ -356,13 +356,13 @@ function stripSlUtf8 ($data)
  * @param
  *            boolean whether to treat cr/lfs as escape-worthy entities
  *            (converts \n to \\n, \r to \\r)
- *            
+ *
  * @param
  *            boolean whether this function is used as part of the
  *            "Create PHP code" dialog
- *            
+ *
  * @return string the slashed string
- *        
+ *
  * @access public
  */
 function PMA_sqlAddslashes ($a_string = '', $is_like = false, $crlf = false, $php_code = false)
@@ -373,20 +373,20 @@ function PMA_sqlAddslashes ($a_string = '', $is_like = false, $crlf = false, $ph
     else {
         $a_string = str_replace('\\', '\\\\', $a_string);
     }
-    
+
     if ($crlf) {
         $a_string = str_replace("\n", '\n', $a_string);
         $a_string = str_replace("\r", '\r', $a_string);
         $a_string = str_replace("\t", '\t', $a_string);
     }
-    
+
     if ($php_code) {
         $a_string = str_replace('\'', '\\\'', $a_string);
     }
     else {
         $a_string = str_replace('\'', '\'\'', $a_string);
     }
-    
+
     return $a_string;
 } // end of the 'PMA_sqlAddslashes()' function
 function issetNotEmpty (&$var)
@@ -413,7 +413,7 @@ function getVal ($nomvar, $default = '')
     // NB: les Magic Quotes n'existent plus pour PHP >= 5.4.0
     if (get_magic_quotes_gpc() ) {
         if (is_array($val))
-            return array_map('stripslashes',$val);//NB: non-recursif --> suppose que $_GET['nom'] est un array simple 
+            return array_map('stripslashes',$val);//NB: non-recursif --> suppose que $_GET['nom'] est un array simple
         else
             return stripslashes($val);
     } else {
@@ -426,7 +426,7 @@ function getValInteger ($nomvar, $default = 0)
     $val = isset($_GET[$nomvar]) ? $_GET[$nomvar] : $default;
 
     if (is_array($val))
-        return array_map('intval',$val); //NB: non recursif --> suppose que $_GET['nom'] est un array simple 
+        return array_map('intval',$val); //NB: non recursif --> suppose que $_GET['nom'] est un array simple
     else
         return intval($val);
 }
@@ -439,7 +439,7 @@ function postVal ($nomvar, $default = '')
     // NB: les Magic Quotes n'existent plus pour PHP >= 5.4.0
     if (get_magic_quotes_gpc()) {
         if (is_array($val))
-            return array_map('stripslashes',$val);//NB: non-recursif --> suppose que $_POST['nom'] est un array simple 
+            return array_map('stripslashes',$val);//NB: non-recursif --> suppose que $_POST['nom'] est un array simple
         else
             return stripslashes($val);
     } else {
@@ -452,7 +452,7 @@ function postValInteger ($nomvar, $default = 0)
     $val = isset($_POST[$nomvar]) ? $_POST[$nomvar] : $default;
 
     if (is_array($val))
-        return array_map('intval',$val); //NB: non recursif --> suppose que $_POST['nom'] est un array simple 
+        return array_map('intval',$val); //NB: non recursif --> suppose que $_POST['nom'] est un array simple
     else
         return intval($val);
 }
@@ -524,7 +524,7 @@ function tableOfFetchObj ($data, $a_onlyCol = array(), $specialChar = true)
             }
         }
     }
-    
+
     echo '<table border=1 cellpadding=2 cellspacing=1 class=scp>
 	<tr>';
     foreach ($tab_col as $val) {
@@ -541,7 +541,7 @@ function tableOfFetchObj ($data, $a_onlyCol = array(), $specialChar = true)
         }
         else {
             echo '<tr>';
-            
+
             foreach ($tab_col as $key => $val) {
                 echo "<td  class='data_admin' valign=top>";
                 if (isset($obj->{$val->name})) {
@@ -557,7 +557,7 @@ function tableOfFetchObj ($data, $a_onlyCol = array(), $specialChar = true)
         }
         echo "</tr>";
     }
-    
+
     echo '</table>';
     return $tab_obj;
 }
@@ -571,7 +571,7 @@ function Verif_Time ($Time)
 {
     $Tableau = array();
     $timeOk = '';
-    
+
     $Tableau = explode(':', $Time);
     if (1 > count($Tableau)) {
         $Tableau = explode('-', $Date);
@@ -579,21 +579,21 @@ function Verif_Time ($Time)
             return false;
         }
     }
-    
+
     if (is_numeric($Tableau[0]) and ($Tableau[0] < 24)) {
         $Heure = zeroFill($Tableau[0]);
     }
     else {
         return false;
     }
-    
+
     if (is_numeric($Tableau[1]) and ($Tableau[1] < 60)) {
         $Minute = zeroFill($Tableau[1]);
     }
     else {
         return false;
     }
-    
+
     if (3 == count($Tableau)) {
         if (is_numeric($Tableau[2]) and ($Tableau[2] < 60)) {
             $Seconde = zeroFill($Tableau[2]);
@@ -602,11 +602,11 @@ function Verif_Time ($Time)
             $Seconde = '00';
         }
     }
-    
+
     $timeOk = $Heure . ':' . $Minute;
-    
+
     if (isset($Seconde)) $timeOk .= ':' . $Seconde;
-    
+
     return $timeOk;
 }
 
@@ -616,13 +616,13 @@ function Verif_Time ($Time)
  * explose une date en fonction du separateur et retourne un tableau avec les
  * elements de date dans l'ordre array(aaaa,mm,dd)
  *
- * @param string $date            
+ * @param string $date
  * @return array
  */
 function explodeDate ($s_date)
 {
     $a_date = explode('-', $s_date);
-    
+
     if (2 > count($a_date)) {
         $a_date = explode('/', $s_date);
         if (2 > count($a_date)) {
@@ -633,39 +633,39 @@ function explodeDate ($s_date)
         $a_temp[0] = $a_date[2];
         $a_date = $a_temp;
     }
-    
+
     return $a_date;
 }
 
 function Verif_Date ($Date)
 {
     $Tableau = explodeDate($Date);
-   
+
     if (is_numeric($Tableau[2]) ) {
         $Jour = zeroFill($Tableau[2]);
-       
+
     }
     else {
         return false;
     }
-    
+
     if (is_numeric($Tableau[1]) ) {
         $Mois = zeroFill($Tableau[1]);
     }
     else {
         return false;
     }
-    
+
     if (2 == count($Tableau)) {
         if (($Mois + 0) <= date('n')) $Tableau[0] = date('Y') + 1;
         else
             $Tableau[0] = date('Y');
     }
-    
+
     if (is_numeric($Tableau[0])) {
         if (strlen($Tableau[0]) <= 2) {
             $Tableau[0] = zeroFill($Tableau[0]);
-            
+
             if (49 > $Tableau[0]) $Annee = '20' . $Tableau[0];
             else
                 $Annee = '19' . $Tableau[0];
@@ -680,9 +680,9 @@ function Verif_Date ($Date)
     else {
         return false;
     }
-    
+
     $Date_SQL = $Jour . '/' . $Mois . '/' . $Annee;
-    
+
     if (checkdate($Mois, $Jour, $Annee) || ($Mois==0 and $Jour==0)) {
         return $Date_SQL;
     }
@@ -706,7 +706,7 @@ function Verif_DateHeure ($val)
         $tab = explode(' ', $val);
         $dateVal = Verif_Date($tab[0]);
         $timeVal = Verif_Time($tab[1]);
-        
+
         if ($dateVal and $timeVal) {
             return $dateVal . ' ' . $timeVal;
         }
@@ -719,7 +719,7 @@ function Verif_DateHeure ($val)
     {
         return Verif_Date($val);
     }
-    
+
     return false;
 }
 
@@ -769,8 +769,8 @@ function TimestampDate ($date)
     else {
         return false;
     }
-    
-    return mktime((isset($a_date[3]) ? $a_date[3] : 0), (isset($a_date[4]) ? $a_date[4] : 0), (isset($a_date[5]) ? $a_date[5] : 0), 
+
+    return mktime((isset($a_date[3]) ? $a_date[3] : 0), (isset($a_date[4]) ? $a_date[4] : 0), (isset($a_date[5]) ? $a_date[5] : 0),
             (isset($a_date[1]) ? $a_date[1] : 0), (isset($a_date[2]) ? $a_date[2] : 0), (isset($a_date[0]) ? $a_date[0] : 0));
 }
 
@@ -790,7 +790,7 @@ function translate_date ($val, $type = false)
                              (isset($a_date[5]) ? $a_date[5] : '');
                     break;
                 }
-            
+
             default:
                 {
                     $s_date = (isset($a_date[0]) ? $a_date[0] : '') . ((isset($a_date[1]) and isset($a_date[0])) ? '-' : '') .

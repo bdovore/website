@@ -146,16 +146,16 @@ elseif($act=="supprim")
 	// Vérifie l'existence d'une couverture
 
 	$query = "
-	SELECT 
-		user_id, 
-		img_couv, 
-		action, 
-		notif_mail, 
-		titre 
-	FROM 
-		users_alb_prop 
+	SELECT
+		user_id,
+		img_couv,
+		action,
+		notif_mail,
+		titre
+	FROM
+		users_alb_prop
 	WHERE id_proposal = ".$DB->escape($propid);
-	
+
 	$DB->query ($query);
 	$DB->next_record();
 	$prop_user = $DB->f("user_id");
@@ -172,13 +172,13 @@ elseif($act=="supprim")
 	}
 	//Effacement virtuel de l'album
 	$query = "
-	UPDATE users_alb_prop SET 
-		`STATUS` = 99, 
-		`VALIDATOR` = " . $DB->escape($_SESSION["UserId"]) . " , 
-		`VALID_DTE` = NOW() 
+	UPDATE users_alb_prop SET
+		`STATUS` = 99,
+		`VALIDATOR` = " . $DB->escape($_SESSION["UserId"]) . " ,
+		`VALID_DTE` = NOW()
 	WHERE
 		id_proposal=".$DB->escape($propid);
-	
+
 	$DB->query ($query);
 
 	//Envoi d'un email
@@ -192,16 +192,16 @@ elseif($act=="supprim")
 	mail($mail_adress,$mail_sujet,$mail_text,$mail_entete);
 
 	$query = "
-	SELECT 
-		id_proposal 
-		FROM 
-		users_alb_prop 
-	WHERE 
-		id_proposal > ".$DB->escape($propid)." 
-		AND status = 0 
-		AND prop_type = 'AJOUT' 
+	SELECT
+		id_proposal
+		FROM
+		users_alb_prop
+	WHERE
+		id_proposal > ".$DB->escape($propid)."
+		AND status = 0
+		AND prop_type = 'AJOUT'
 	ORDER BY id_proposal";
-	
+
 	$DB->query ($query);
 
 	if ($DB->num_rows() > 0){
@@ -221,17 +221,17 @@ elseif($act=="supprim_list")
 	// Vérifie l'existence d'une couverture
 
 	$query = "
-	SELECT 
-		user_id, 
-		img_couv, 
-		action, 
-		notif_mail, 
-		titre 
-	FROM 
-		users_alb_prop 
-	WHERE 
+	SELECT
+		user_id,
+		img_couv,
+		action,
+		notif_mail,
+		titre
+	FROM
+		users_alb_prop
+	WHERE
 		id_proposal = ".$DB->escape($propid);
-	
+
 	$DB->query ($query);
 	$DB->next_record();
 	$prop_user = $DB->f("user_id");
@@ -247,23 +247,23 @@ elseif($act=="supprim_list")
 	}
 	//Effacement virtuel de l'album
 	$query = "
-	UPDATE users_alb_prop SET 
-		`STATUS` = 99, 
-		`VALIDATOR` = " . $DB->escape($_SESSION["UserId"]) . " , 
-		`VALID_DTE` = NOW() 
+	UPDATE users_alb_prop SET
+		`STATUS` = 99,
+		`VALIDATOR` = " . $DB->escape($_SESSION["UserId"]) . " ,
+		`VALID_DTE` = NOW()
 	WHERE
 		id_proposal=".$DB->escape($propid);
 	$DB->query ($query);
 
 	$query = "
-	SELECT 
-		id_proposal 
-	FROM 
-		users_alb_prop 
+	SELECT
+		id_proposal
+	FROM
+		users_alb_prop
 	WHERE
-		id_proposal > ".$DB->escape($propid)." 
-		AND status = 0 
-		AND prop_type = 'AJOUT' 
+		id_proposal > ".$DB->escape($propid)."
+		AND status = 0
+		AND prop_type = 'AJOUT'
 		ORDER BY id_proposal";
 	$DB->query ($query);
 
@@ -284,69 +284,69 @@ elseif($act=="valid")
 
 
 	$query = "
-	SELECT 
-		users_alb_prop.USER_ID, 
-		users_alb_prop.ID_PROPOSAL, 
-		users_alb_prop.ACTION, 
-		users_alb_prop.TITRE, 
-		users_alb_prop.NUM_TOME, 
-		users_alb_prop.PRIX, 
-		users_alb_prop.ID_SERIE, 
-		users_alb_prop.SERIE AS ORISERIE, 
-		bd_serie.NOM AS SERIE, 
-		users_alb_prop.DTE_PARUTION, 
-		users_alb_prop.ID_GENRE, 
+	SELECT
+		users_alb_prop.USER_ID,
+		users_alb_prop.ID_PROPOSAL,
+		users_alb_prop.ACTION,
+		users_alb_prop.TITRE,
+		users_alb_prop.NUM_TOME,
+		users_alb_prop.PRIX,
+		users_alb_prop.ID_SERIE,
+		users_alb_prop.SERIE AS ORISERIE,
+		bd_serie.NOM AS SERIE,
+		users_alb_prop.DTE_PARUTION,
+		users_alb_prop.ID_GENRE,
 		users_alb_prop.GENRE AS ORIGENRE,
-		bd_genre.LIBELLE AS GENRE, 
-		users_alb_prop.ID_EDITEUR, 
-		users_alb_prop.EDITEUR AS ORIEDITEUR, 
-		bd_editeur.NOM AS EDITEUR_NOM, 
-		users_alb_prop.ID_SCENAR, 
-		users_alb_prop.SCENAR AS ORISCENAR, 
-		bd_auteur.PSEUDO AS PSEUDO_SCENAR, 
-		users_alb_prop.ID_SCENAR_ALT, 
-		users_alb_prop.SCENAR_ALT AS ORISCENARALT, 
-		bd_auteur_3.PSEUDO AS PSEUDO_SCENAR_ALT, 
-		users_alb_prop.ID_DESSIN, 
+		bd_genre.LIBELLE AS GENRE,
+		users_alb_prop.ID_EDITEUR,
+		users_alb_prop.EDITEUR AS ORIEDITEUR,
+		bd_editeur.NOM AS EDITEUR_NOM,
+		users_alb_prop.ID_SCENAR,
+		users_alb_prop.SCENAR AS ORISCENAR,
+		bd_auteur.PSEUDO AS PSEUDO_SCENAR,
+		users_alb_prop.ID_SCENAR_ALT,
+		users_alb_prop.SCENAR_ALT AS ORISCENARALT,
+		bd_auteur_3.PSEUDO AS PSEUDO_SCENAR_ALT,
+		users_alb_prop.ID_DESSIN,
 		users_alb_prop.DESSIN AS ORIDESSIN,
-		bd_auteur_1.PSEUDO AS PSEUDO_DESSIN, 
-		users_alb_prop.ID_DESSIN_ALT, 
-		users_alb_prop.DESSIN_ALT AS ORIDESSINALT, 
-		bd_auteur_4.PSEUDO AS PSEUDO_DESSIN_ALT, 
-		users_alb_prop.ID_COLOR, 
-		users_alb_prop.COLOR AS ORICOLOR, 
-		bd_auteur_2.PSEUDO AS PSEUDO_COLOR, 
-		users_alb_prop.ID_COLOR_ALT, 
-		users_alb_prop.COLOR_ALT AS ORICOLORALT, 
-		bd_auteur_5.PSEUDO AS PSEUDO_COLOR_ALT, 
-		users_alb_prop.DESCRIB_EDITION, 
-		users_alb_prop.ID_COLLECTION, 
-		users_alb_prop.COLLECTION AS ORICOLLECTION, 
-		bd_collection.NOM AS COLLECTION, 
-		users_alb_prop.HISTOIRE, 
+		bd_auteur_1.PSEUDO AS PSEUDO_DESSIN,
+		users_alb_prop.ID_DESSIN_ALT,
+		users_alb_prop.DESSIN_ALT AS ORIDESSINALT,
+		bd_auteur_4.PSEUDO AS PSEUDO_DESSIN_ALT,
+		users_alb_prop.ID_COLOR,
+		users_alb_prop.COLOR AS ORICOLOR,
+		bd_auteur_2.PSEUDO AS PSEUDO_COLOR,
+		users_alb_prop.ID_COLOR_ALT,
+		users_alb_prop.COLOR_ALT AS ORICOLORALT,
+		bd_auteur_5.PSEUDO AS PSEUDO_COLOR_ALT,
+		users_alb_prop.DESCRIB_EDITION,
+		users_alb_prop.ID_COLLECTION,
+		users_alb_prop.COLLECTION AS ORICOLLECTION,
+		bd_collection.NOM AS COLLECTION,
+		users_alb_prop.HISTOIRE,
 		users_alb_prop.IMG_COUV,
-		users_alb_prop.FLG_INT, 
-		users_alb_prop.FLG_TYPE, 
-		users_alb_prop.FLG_TT, 
-		users_alb_prop.EAN, 
-		users_alb_prop.ISBN, 
-		users_alb_prop.PRIX, 
-		users_alb_prop.DESCRIB_EDITION, 
-		users_alb_prop.CORR_COMMENT, 
+		users_alb_prop.FLG_INT,
+		users_alb_prop.FLG_TYPE,
+		users_alb_prop.FLG_TT,
+		users_alb_prop.EAN,
+		users_alb_prop.ISBN,
+		users_alb_prop.PRIX,
+		users_alb_prop.DESCRIB_EDITION,
+		users_alb_prop.CORR_COMMENT,
 		users_alb_prop.STATUS
 	FROM (((((((((
-		users_alb_prop 
-		LEFT JOIN bd_serie ON users_alb_prop.ID_SERIE = bd_serie.ID_SERIE) 
-		LEFT JOIN bd_genre ON users_alb_prop.ID_GENRE = bd_genre.ID_GENRE) 
-		LEFT JOIN bd_editeur ON users_alb_prop.ID_EDITEUR = bd_editeur.ID_EDITEUR) 
-		LEFT JOIN bd_auteur ON users_alb_prop.ID_SCENAR = bd_auteur.ID_AUTEUR) 
-		LEFT JOIN bd_auteur AS bd_auteur_1 ON users_alb_prop.ID_DESSIN = bd_auteur_1.ID_AUTEUR) 
-		LEFT JOIN bd_auteur AS bd_auteur_2 ON users_alb_prop.ID_COLOR = bd_auteur_2.ID_AUTEUR) 
-		LEFT JOIN bd_collection ON users_alb_prop.ID_COLLECTION = bd_collection.ID_COLLECTION) 
-		LEFT JOIN bd_auteur as bd_auteur_3 ON users_alb_prop.ID_SCENAR_ALT = bd_auteur_3.ID_AUTEUR) 
-		LEFT JOIN bd_auteur as bd_auteur_4 ON users_alb_prop.ID_DESSIN_ALT = bd_auteur_4.ID_AUTEUR) 
+		users_alb_prop
+		LEFT JOIN bd_serie ON users_alb_prop.ID_SERIE = bd_serie.ID_SERIE)
+		LEFT JOIN bd_genre ON users_alb_prop.ID_GENRE = bd_genre.ID_GENRE)
+		LEFT JOIN bd_editeur ON users_alb_prop.ID_EDITEUR = bd_editeur.ID_EDITEUR)
+		LEFT JOIN bd_auteur ON users_alb_prop.ID_SCENAR = bd_auteur.ID_AUTEUR)
+		LEFT JOIN bd_auteur AS bd_auteur_1 ON users_alb_prop.ID_DESSIN = bd_auteur_1.ID_AUTEUR)
+		LEFT JOIN bd_auteur AS bd_auteur_2 ON users_alb_prop.ID_COLOR = bd_auteur_2.ID_AUTEUR)
+		LEFT JOIN bd_collection ON users_alb_prop.ID_COLLECTION = bd_collection.ID_COLLECTION)
+		LEFT JOIN bd_auteur as bd_auteur_3 ON users_alb_prop.ID_SCENAR_ALT = bd_auteur_3.ID_AUTEUR)
+		LEFT JOIN bd_auteur as bd_auteur_4 ON users_alb_prop.ID_DESSIN_ALT = bd_auteur_4.ID_AUTEUR)
 		LEFT JOIN bd_auteur as bd_auteur_5 ON users_alb_prop.ID_COLOR_ALT = bd_auteur_5.ID_AUTEUR
-	WHERE 
+	WHERE
 		users_alb_prop.ID_PROPOSAL =".$DB->escape($propid) ;
 	$DB->query ($query);
 	$DB->next_record();
@@ -498,24 +498,24 @@ elseif($act=="valid")
 	$main_words = main_words(stripslashes($DB->f("TITRE")));
 	if ($main_words[1][0] != ''){
 		$query = "
-		select 
-			id_tome, 
-			titre 
-		from 
-			bd_tome 
-		where 
+		select
+			id_tome,
+			titre
+		from
+			bd_tome
+		where
 			titre like '%".$DB->escape($main_words[0][0])."%".$DB->escape($main_words[1][0])."%'
-			or titre like '%".$DB->escape($main_words[1][0])."%".$DB->escape($main_words[0][0])."%' 
+			or titre like '%".$DB->escape($main_words[1][0])."%".$DB->escape($main_words[0][0])."%'
 			LIMIT 0,30;";
 	}else{
 		$query = "
-		select 
-			id_tome, 
-			titre 
-		from 
-			bd_tome 
-		where 
-			titre like '%".$DB->escape($main_words[0][0])."%' 
+		select
+			id_tome,
+			titre
+		from
+			bd_tome
+		where
+			titre like '%".$DB->escape($main_words[0][0])."%'
 		LIMIT 0,30;";
 	}
 	$DB->query ($query);
@@ -546,14 +546,14 @@ elseif($act=="valid")
 
 	// url suivant et précédent
 	$query = "
-	SELECT 
-		id_proposal 
-	FROM 
-		users_alb_prop 
-	WHERE 
-		id_proposal <".$DB->escape($propid)." 
-		AND status = 0 
-		AND prop_type = 'AJOUT' 
+	SELECT
+		id_proposal
+	FROM
+		users_alb_prop
+	WHERE
+		id_proposal <".$DB->escape($propid)."
+		AND status = 0
+		AND prop_type = 'AJOUT'
 	ORDER BY id_proposal desc
 	";
 	$DB->query ($query);
@@ -567,14 +567,14 @@ elseif($act=="valid")
 	}
 
 	$query = "
-	SELECT 
-		id_proposal 
-	FROM 
-		users_alb_prop 
+	SELECT
+		id_proposal
+	FROM
+		users_alb_prop
 	WHERE
-		id_proposal >".$DB->escape($propid)." 
-		AND status = 0 
-		AND prop_type = 'AJOUT' 
+		id_proposal >".$DB->escape($propid)."
+		AND status = 0
+		AND prop_type = 'AJOUT'
 	ORDER BY id_proposal
 	";
 	$DB->query ($query);
@@ -605,15 +605,15 @@ elseif($act=="append")
 	// Récupère l'utilisateur et l'image de couv
 
 	$query = "
-	SELECT 
-		user_id, 
-		img_couv, 
-		action, 
-		notif_mail, 
-		url_bdnet 
-	FROM 
-		users_alb_prop 
-	WHERE 
+	SELECT
+		user_id,
+		img_couv,
+		action,
+		notif_mail,
+		url_bdnet
+	FROM
+		users_alb_prop
+	WHERE
 		id_proposal = ".$DB->escape($propid);
 	$DB->query ($query);
 	$DB->next_record();
@@ -637,14 +637,14 @@ elseif($act=="append")
 		"ID_SERIE" => $DB->escape($_POST['txtSerieId']),
 		"PRIX_BDNET" => sqlise($_POST['txtPrixVente'],'int_null'),
 		"ID_GENRE" => $DB->escape($DB->f("id_genre")),
-		
+
 		"ID_SCENAR" => sqlise($_POST['txtScenarId'],'int'),
 		"ID_SCENAR_ALT" => sqlise($_POST['txtScenarAltId'],'int'),
 		"ID_DESSIN" => sqlise($_POST['txtDessiId'],'int'),
 		"ID_DESSIN_ALT"=> sqlise($_POST['txtDessiAltId'],'int'),
 		"ID_COLOR" => sqlise($_POST['txtColorId'],'int'),
 		"ID_COLOR_ALT" => sqlise($_POST['txtColorAltId'],'int'),
-		
+
 		"HISTOIRE" => sqlise($_POST['txtHistoire'],'text'),
 		"FLG_INT" => (($_POST['chkIntegrale'] == "checkbox") ? "'O'" : "'N'"),
 		"FLG_TYPE" => $DB->escape($_POST['lstType'])
@@ -962,11 +962,11 @@ elseif($act=="merge")
 	// Ajoute l'album existant à la collection ou aux futurs achats de l'utilisateur
 
 	// Vérifie la présence de l'album existant dans la collection de l'utilisateur
-	$query = "SELECT 
-	bd_edition.id_tome 
-	FROM users_album 
+	$query = "SELECT
+	bd_edition.id_tome
+	FROM users_album
 	INNER JOIN bd_edition ON bd_edition.ID_EDITION=users_album.ID_EDITION
-	WHERE bd_edition.id_tome =".$DB->escape($idtome)." 
+	WHERE bd_edition.id_tome =".$DB->escape($idtome)."
 	AND users_album.user_id = ".$DB->escape($prop_user);
 	$DB->query ($query);
 	if ($DB->num_rows() > 0)
@@ -977,13 +977,13 @@ elseif($act=="merge")
 	else
 	{ // Ajoute l'album
 		$query = "
-		SELECT 
-			t.TITRE, 
+		SELECT
+			t.TITRE,
 			en.ID_EDITION
-		FROM 
-			bd_tome t 
+		FROM
+			bd_tome t
 			INNER JOIN bd_edition en ON t.ID_EDITION=en.ID_EDITION
-		WHERE 
+		WHERE
 			t.ID_TOME=".$DB->escape($idtome);
 
 		$DB->query($query);
@@ -1004,10 +1004,10 @@ elseif($act=="merge")
 
 		// Archive la proposition
 		$query = "
-		UPDATE users_alb_prop SET 
-		`STATUS` = 99, 
-		`VALIDATOR` = " . $DB->escape($_SESSION["UserId"]) . " , 
-		`VALID_DTE` = NOW() 
+		UPDATE users_alb_prop SET
+		`STATUS` = 99,
+		`VALIDATOR` = " . $DB->escape($_SESSION["UserId"]) . " ,
+		`VALID_DTE` = NOW()
 		WHERE id_proposal=".$DB->escape($propid);
 		$DB->query ($query);
 
@@ -1115,10 +1115,10 @@ elseif ($act=="comment")
 
 	// Met à jours le status
 	if (($status != 1) && ($status != 99)) {
-		$query = "UPDATE users_alb_prop SET 
-		status = '".$DB->escape($status)."', 
-		`VALIDATOR` = " . $DB->escape($_SESSION["UserId"]) . " , 
-		`VALID_DTE` = NOW() 
+		$query = "UPDATE users_alb_prop SET
+		status = '".$DB->escape($status)."',
+		`VALIDATOR` = " . $DB->escape($_SESSION["UserId"]) . " ,
+		`VALID_DTE` = NOW()
 		WHERE id_proposal = '".$DB->escape($propid)."'";
 		$DB->query ($query);
 	}else{

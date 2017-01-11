@@ -51,7 +51,7 @@ class Export extends Bdo_Controller {
                             $where .= " and flg_achat = 'O' ";
                         } else {
                             $nomFichier = "Collection et Achats futurs au " . strftime("%d-%m-%Y");
-                           
+
                         }
                         $order = " ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME,  en.DTE_PARUTION";
                         $where .= $order;
@@ -62,8 +62,8 @@ class Export extends Bdo_Controller {
                         $entete = array(0 => 'Serie',
                             1 => 'Titre',
                             2 => 'Tome',
-                            3 => 'ISBN',                             
-                            4 => 'Genre', 
+                            3 => 'ISBN',
+                            4 => 'Genre',
                             5 => 'Scenariste',
                             6 => 'Dessinateur',
                             7 => 'Editeur',
@@ -87,18 +87,18 @@ class Export extends Bdo_Controller {
 
                     case 2:
                         $this->loadModel("Tome");
-                        
-                        $dbs_tome = $this->Tome->getListAlbumToComplete($_SESSION["userConnect"]->user_id); 
+
+                        $dbs_tome = $this->Tome->getListAlbumToComplete($_SESSION["userConnect"]->user_id);
                         $entete = array(0 => 'Serie',
-                            1 => 'Titre', 
-                            2 => 'Tome', 
-                            3 => 'ISBN', 
-                            19 => 'EAN', 
-                            4 => 'Genre', 
-                            5 => 'Scenariste', 
-                            6 => 'Dessinateur', 
-                            7 => 'Editeur', 
-                            8 => 'Collection', 
+                            1 => 'Titre',
+                            2 => 'Tome',
+                            3 => 'ISBN',
+                            19 => 'EAN',
+                            4 => 'Genre',
+                            5 => 'Scenariste',
+                            6 => 'Dessinateur',
+                            7 => 'Editeur',
+                            8 => 'Collection',
                             9 => 'Date parution');
                         $largeur = array(15,15,5,10,15,15,15,15,15,15,15);
                         //$entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution');
@@ -153,8 +153,8 @@ class Export extends Bdo_Controller {
 
                         //Ecrit le contenu
                         $dataArray = $this->getRowsFromData($sel_field, $dbs_tome->a_dataQuery,$contenu);
-                        
-                        
+
+
                         $objPHPExcel->getActiveSheet()->fromArray($dataArray, NULL, 'A2');
 
 
@@ -171,10 +171,10 @@ class Export extends Bdo_Controller {
                         header('Content-Type: application/vnd.ms-excel');
                         header('Content-Disposition: attachment;filename="' . $nomFichier . '.xls"');
                         header('Cache-Control: max-age=0');
-                       
+
                         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
                         $objWriter->save('php://output');
-                        
+
                         exit;
 
                         break;
@@ -213,7 +213,7 @@ class Export extends Bdo_Controller {
                             }
                             echo $txtCol . "\n";
                         }
-                       
+
 
                         die();
 
@@ -243,7 +243,7 @@ class Export extends Bdo_Controller {
                                 $current_id_serie = $tome->ID_SERIE;
                                 $nom_serie = htmlspecialchars($tome->NOM_SERIE,ENT_QUOTES,"UTF-8");
                                 echo "</serie>\n<serie><nom>" . $nom_serie . "</nom>\n";
-                                $infoserie = true; 
+                                $infoserie = true;
                             }
 
                             if ($infoserie) {
@@ -288,7 +288,7 @@ class Export extends Bdo_Controller {
                                 $xml .= "<int/>";
                             else if ($coffret)
                                 $xml .= "<cof/>";
-                            
+
                             if ($contenu <> 2) {
                                 $ajout = $tome->DATE_AJOUT;
                                 $comment = htmlspecialchars($tome->comment,ENT_QUOTES,"UTF-8");
@@ -300,10 +300,10 @@ class Export extends Bdo_Controller {
                                 $cadeau = $tome->FLG_CADEAU;
                                 $eo = $tome->FLG_TETE;
                                 $flg_achat = ($tome->FLG_ACHAT === "O") ? true : false;
-                                
+
                                 $xml_private = "<private>";
                                 $xml_private .= "<ajout>". $ajout . "</ajout>";
-                                
+
                                 if ($flg_achat)
                                     $xml_private .= "<flg_achat/>";
                                 else
@@ -334,7 +334,7 @@ class Export extends Bdo_Controller {
                         break;
                     case 3:
                         // Export en PDF
-                        
+
                         require_once(BDO_DIR . "vendors/mpdf60/mpdf.php");
                         ob_implicit_flush(true);
                         $opt_status[0][0] = 0;
@@ -369,10 +369,10 @@ class Export extends Bdo_Controller {
                         $current_id_serie = 0;
                         $balise_open = false; // pour tracer que l'on a ouvert une balise "table" pour les colonnes
                         $tr_open = false;
-                       
+
                         foreach ($dbs_tome->a_dataQuery as $tome) {
                             if ($tome->ID_SERIE != $current_id_serie) {
-                                
+
                                 if ($tr_open) { // on ferme la table à deux colonnes
                                     $p->WriteHTML("</tr>", 2, false, false);
                                     $tr_open = false;
@@ -385,8 +385,8 @@ class Export extends Bdo_Controller {
                                    $p->AddPage(); /* start a new page */
                                    $line = $max_num_lines;
                                 }
-                                //Affiche un nouveau bandeau série                      
-                                
+                                //Affiche un nouveau bandeau série
+
                                 $nom_serie = stripslashes($tome->NOM_SERIE);
                                 $this->AddBandeauSerie($p, $line, $nom_serie);
                                 // Affiche le détail des infos séries
@@ -397,7 +397,7 @@ class Export extends Bdo_Controller {
                                 $this->AddInfoSerie($p, $line, $info);
                                 // Reinitialise les variables
                                 $current_id_serie = $tome->ID_SERIE;
-                                
+
                                 $colonne_num = 0;
                                 $new_line = false;
                             } else if ($new_line == true) { // nouvelle ligne d'album pour la série
@@ -519,13 +519,13 @@ class Export extends Bdo_Controller {
                 $this->view->layout = "iframe";
 
                 $this->view->render();
-                
+
             }
         } else {
             die("Vous devez vous authentifier pour accéder à cette page.");
         }
     }
-    
+
     private function getRowsFromData ($sel_field, $a_dataQuery,$contenu) {
          //Ecrit le contenu
                         $dataArray = array();
@@ -544,7 +544,7 @@ class Export extends Bdo_Controller {
                             if (in_array("7", $sel_field)) $a_line[] = $tome->NOM_EDITEUR;
                             if (in_array("8", $sel_field)) $a_line[] = $tome->NOM_COLLECTION;
                             if (in_array("9", $sel_field)) $a_line[] = $tome->DTE_PARUTION;
-                            
+
                             if ($contenu <> 2) {
                                 if (in_array("10", $sel_field)) $a_line[] = $tome->DATE_AJOUT;
                                 if (in_array("11", $sel_field)) $a_line[] = $tome->USER_NOTE;
@@ -556,7 +556,7 @@ class Export extends Bdo_Controller {
                                 if (in_array("17", $sel_field))$a_line[] = $tome->FLG_CADEAU;
                                 if (in_array("18", $sel_field))$a_line[] = $tome->FLG_TETE;
                             }
-                            
+
                             $dataArray[] = $a_line;
                         }
              return $dataArray;
@@ -591,13 +591,13 @@ class Export extends Bdo_Controller {
         $imagefile = BDO_DIR_COUV . $infos["IMG_COUV"];
         if ((file_exists($imagefile))) {
             $im = file_get_contents($imagefile);
-            $imdata = base64_encode($im); 
+            $imdata = base64_encode($im);
         } else {
-            
+
             $im  = file_get_contents(BDO_DIR_COUV . "default.png");
              $imdata = base64_encode($im);
         }
-                    switch (substr($infos["IMG_COUV"],-3)) { 
+                    switch (substr($infos["IMG_COUV"],-3)) {
                         case "jpg" :
                         case "jpeg" :
                             $extension = "jpg";
@@ -608,11 +608,11 @@ class Export extends Bdo_Controller {
                         case "png" :
                             $extension = "png";
                             break;
-                        
-                            
+
+
                     };
             ;
-       
+
         $html = ' <table border="0" cellpadding="0" cellspacing="0">
                     <tr>
                             <td align="center"><div style="background-color:#FFCC00; width: 40px; font-size:14px;font-weight: bold;">' . ($infos["NUM_TOME"] ?  $infos["NUM_TOME"]: "HS") . '</div></td>
@@ -636,7 +636,7 @@ class Export extends Bdo_Controller {
                                      <tr>
                                                     <td>Collection </td><td> '. htmlspecialchars($infos["COLLECTION"]) .'</td>
                                             </tr>
-                                    
+
                                     <tr>
                                                     <td>Dépôt Légal  </td><td> '. htmlspecialchars($infos["DATE_PARUTION"]) .' </td>
                                     </tr>
@@ -644,11 +644,11 @@ class Export extends Bdo_Controller {
                                                     <td>ISBN  </td><td> '. htmlspecialchars($infos["ISBN"]) .'  </td>
                                     </tr>
                                     </table>
-                            </td>	
-                    </tr>	
+                            </td>
+                    </tr>
             </table>';
         $PDF->WriteHTML($html, 0, false, false);
-        
+
     }
 
     private function removeOldFiles($dir, $user_id, $timelimit) {

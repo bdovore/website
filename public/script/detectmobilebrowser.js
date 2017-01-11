@@ -16,9 +16,9 @@ if ($.browser.mobile) {
 		} else {
 			$.cookie('prefmobile', 'site', { expires: 7 });
 		}
-		
+
 	}
-	
+
 	if ($.cookie('prefmobile') == "mob") {
 		window.location = "http://phone.bdovore.com";
 	}

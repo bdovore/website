@@ -1,16 +1,16 @@
-<SCRIPT language="Javascript"> 
-<!-- 
-  
-function Chargement() { 
+<SCRIPT language="Javascript">
+<!--
+
+function Chargement() {
  d = document.add_collect;
  for (i = 0; i < d.elements.length; i++) {
    if (d.elements[i].name == "sel_alb[]") {
      d.elements[i].checked = true;
    }
  }
-} 
-  
-//--> 
+}
+
+//-->
 </SCRIPT>
 
 <div class="cadre1">
@@ -28,22 +28,22 @@ function Chargement() {
     </font>
     {SERTITLE} {EDITSERIE}
     <br />
-    <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+    <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
         <strong>Genre : </strong>
     </font>
     {SERGENRE}
     <br />
-    <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+    <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
         <strong>Nombre de tome: </strong>
     </font>
     {NBTOME}
     <br />
-    <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+    <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
         <strong>Albums dans la base: </strong>
     </font>
     {NBALB}
     <br />
-    <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+    <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
         <strong>Avancement : </strong>
     </font>
     {SERFIN}
@@ -60,9 +60,9 @@ function Chargement() {
     <!-- BEGIN CommentBlock -->
     <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#B64444">
         <tbody>
-            <tr bordercolor="#FFFFFF"> 
+            <tr bordercolor="#FFFFFF">
                 <td height="25" bordercolor="#B64444" bgcolor="#C8857C">
-                    <b><font color="#990000" face="Arial, Helvetica, sans-serif" size="2"> 
+                    <b><font color="#990000" face="Arial, Helvetica, sans-serif" size="2">
                         Note : {NOTE}
                     </font></b>
                 </td>
@@ -76,13 +76,13 @@ function Chargement() {
                     </font></div>
                 </td>
             </tr>
-            <tr bordercolor="#B64444"> 
+            <tr bordercolor="#B64444">
                 <td colspan="2"><font size="2" face="Arial, Helvetica, sans-serif">{CMTTEXTE}</font></td>
             </tr>
         </tbody>
     </table>
     <!-- END CommentBlock -->
-    
+
     <a href="#" onClick='open("./membres/commentserie.php?id_serie={SERID}&lib_tome={SERTITLE}","Comment","width=500,height=400,scrollbars=1")'>
         Ajouter/Voir tous les commentaires sur la série
     </a>
@@ -98,63 +98,63 @@ function Chargement() {
     </div>
         <!-- BEGIN AlbBlock -->
     <table width="100%" border="0" bordercolor="#000000" bgcolor="#EED8BF" dwcopytype="CopyTableRow">
-        <tr> 
+        <tr>
             <td width="25%" valign="top">
                 <img src="{URLSITEIMAGE}/couv/{COUVALBUM}" width="180" border="1" />
                 <div class="petite_police">{COPYRIGHT}</div>
-                <a href="{URLAMAZON}" target="_blank">Commander sur Amazon !</a> 
+                <a href="{URLAMAZON}" target="_blank">Commander sur Amazon !</a>
             </td>
             <td width="75%" align="left" valign="top">
                 <table width="100%" height="75%" border="1" cellpadding="3" cellspacing="0" bordercolor="#000000" frame="border" rules="all">
                     <tbody>
-                        <tr> 
+                        <tr>
                             <td width="25%" bgcolor="#C8857C"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
                                 <strong>Titre :</strong>
                             </font></td>
-                            <td width="75%" bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+                            <td width="75%" bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
                                 <a href={ALBURL}>
                                     {ALBTITLE}
                                 </a>
                             </font>{EDITALB}</td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td bgcolor="#C8857C"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
                                 <strong>Tome :</strong>
                             </font></td>
-                            <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+                            <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
                                 {NUMTOME}
                             </font></td>
                         </tr>
-                        <tr> 
-                          <td bgcolor="#C8857C"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Genre 
+                        <tr>
+                          <td bgcolor="#C8857C"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Genre
                             :</strong></font></td>
-                          <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+                          <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
                             {ALBGENRE}</font></td>
                         </tr>
-                        <tr> 
-                          <td bgcolor="#C8857C"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Scénario 
+                        <tr>
+                          <td bgcolor="#C8857C"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Scénario
                             :</strong></font></td>
-                          <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+                          <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
                             {ALBSCENAR}</font></td>
                         </tr>
-                        <tr> 
-                          <td bgcolor="#C8857C"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Dessin 
+                        <tr>
+                          <td bgcolor="#C8857C"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Dessin
                             :</strong></font></td>
-                          <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+                          <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
                             {ALBDESSIN}</font></td>
                         </tr>
-                        <tr> 
-                          <td height="30" bgcolor="#C8857C"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Editeur 
+                        <tr>
+                          <td height="30" bgcolor="#C8857C"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Editeur
                             : </strong></font></td>
                           <td bgcolor="#DAC1B3"><font size="-1">{ALBEDITEUR}</font> - Edition : {DTEPARUTION}</td>
                         </tr>
-                        <tr> 
-                          <td height="30" bgcolor="#C8857C"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Synopsis 
+                        <tr>
+                          <td height="30" bgcolor="#C8857C"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Synopsis
                             : </strong></font></td>
                           <td bgcolor="#DAC1B3">{ALBSTORY}</td>
                         </tr>
-                        <tr> 
-                          <td height="30" bgcolor="#C8857C"><strong><font color="#900000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">Identifiant 
+                        <tr>
+                          <td height="30" bgcolor="#C8857C"><strong><font color="#900000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">Identifiant
                             :</font></strong></td>
                           <td bgcolor="#DAC1B3">
 							ISBN-13 (EAN) : {EAN}
@@ -164,10 +164,10 @@ function Chargement() {
                             ID-BDovore : {TOMEID}</td>
                         </tr>
                     </tbody>
-                </table> 
+                </table>
                 <br />
                 <table width="80%" border="1" align="center" cellpadding="0" cellspacing="3" bordercolor="#000000" frame="border" rules="all">
-                    <tr> 
+                    <tr>
                         <td width="50%"><div align="center">
                             <a href="#" onClick="window.open('{URLSITE}membres/add_fiche_album.php?act=add&id_tome={TOMEID}&id_edition={EDITIONID}&flg_achat=N','Album','width=200,height=80,scrollbars=1');return false">
                                 <font color="#900000" size="-1">
@@ -195,7 +195,7 @@ function Chargement() {
                         Ajouter/Voir les commentaires
                     </a>
                     <br />
-                    <a href="{URLEDIT}" target="_blank">Proposer une correction</a> 
+                    <a href="{URLEDIT}" target="_blank">Proposer une correction</a>
                 </p>
             </td>
         </tr>
@@ -204,15 +204,15 @@ function Chargement() {
 
     <div align="center">
         <table width="20%" border="0">
-            <tr> 
+            <tr>
                 <td>
                     <div align="center">
-                        Achat futur : 
+                        Achat futur :
                         <input name="cb_achat" type="checkbox" id="cb_achat2" value="checkbox" />
                     </div>
                 </td>
             </tr>
-            <tr> 
+            <tr>
                 <td>
                     <input name="B_Add" type="submit" id="B_Add2" value="Ajouter &agrave; ma collection" />
                 </td>

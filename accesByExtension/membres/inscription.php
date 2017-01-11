@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 
 include (BDO_DIR."inc/db_phpBB.php");

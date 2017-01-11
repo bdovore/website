@@ -1,18 +1,18 @@
 <form action="{URLACTION}" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
     <table class="fond_admin">
         <!--DWLayoutTable-->
-        <tr> 
+        <tr>
             <td width="75%" rowspan="4" valign="top">
                 {ADMINSERIEDETAIL}
 
                 {ADMINALBUMDETAIL}
 
                 <table class="tableaux_admin" width="100%">
-                    <tr> 
+                    <tr>
                         <td class="label">
                             <p>Différentes éditions : {NBEDITIONS}</p>
                             <table>
-                                <tr> 
+                                <tr>
                                     <td width="8%" class="entete">Defaut</td>
                                     <td width="23%" class="entete">Editeur</td>
                                     <td width="23%" class="entete">Collection</td>
@@ -22,9 +22,9 @@
                                     <td width="7%" class="entete">Editer</td>
                                 </tr>
                               <!-- BEGIN EditionBlock -->
-                                <tr> 
-                                    <td align="center" class="data"{BGCOLOR}><p> 
-                                        <label> 
+                                <tr>
+                                    <td align="center" class="data"{BGCOLOR}><p>
+                                        <label>
                                         <input name="btnDefEdit" type="radio" value="{BTNVALUE}" {ISCHECKED} />
                                         </label>
                                         <br />
@@ -42,15 +42,15 @@
                         </td>
                     </tr>
                 </table>
-                <div class="submit"> 
+                <div class="submit">
                     <input type="submit" name="Submit" value="{ACTIONNAME}" />
                 </div>
             </td>
             <td width="287" height="47" bordercolor="#FFFFFF"></td>
         </tr>
-        
+
         <!-- colonne de droite -->
-        <tr width="100%"> 
+        <tr width="100%">
             <td class="cadre_texte-admin">
                 <p><strong>Statistiques</strong></p>
                 <p>

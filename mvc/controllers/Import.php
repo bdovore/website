@@ -9,7 +9,7 @@
 class Import extends Bdo_Controller {
 
     public function Index() {
-       
+
         if (User::minAccesslevel(2)) {
             $act = postVal("act", "");
             $this->loadModel("Edition");
@@ -176,15 +176,15 @@ class Import extends Bdo_Controller {
                             $a_eanIsbn[] = Db_Escape_String($eanIsbn);
                             $a_editionByEanIsbn[$eanIsbn] = $editionAjout;
                         }
-                        
-                        
+
+
                         // controle d'existence ean ou isbn
                         $where = "
 			WHERE bd_edition." . Db_Escape_String($a_col[0]) . " IN ('" . implode("','", $a_eanIsbn) . "')
 			GROUP BY bd_edition." . Db_Escape_String($a_col[0]);
-                        
+
                         $dbs_edition = $this->Edition->load("c", $where);
-                        
+
                         if ($dbs_edition->nbLineResult != 0) {
 
                             $a_insert = array();
@@ -212,7 +212,7 @@ class Import extends Bdo_Controller {
 						'" . (issetNotEmpty($field['flg_dedicace']) ? Db_Escape_String($a_editionByEanIsbn[$val]['flg_dedicace']) : 'N') . "',
 						'" . (issetNotEmpty($field['flg_cadeau']) ? Db_Escape_String($a_editionByEanIsbn[$val]['flg_cadeau']) : 'N') . "'
 						)";
-                                
+
                             }
 
                             foreach ($a_editionByEanIsbn as $eanIsbn => $editionAjout) {
@@ -224,7 +224,7 @@ class Import extends Bdo_Controller {
                             if (!empty($a_insert)) {
                                 $query_insert = "
 					INSERT IGNORE INTO users_album (
-						user_id, 
+						user_id,
 						id_edition,
 						date_ajout,
 						date_achat,

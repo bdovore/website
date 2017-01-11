@@ -21,30 +21,30 @@ if ($act=="merge"){
 		header("Location:".BDO_URL."admin/mergeeditions.php?source_id=$source_id&dest_id=$dest_id&error=2");
 	}
 	if ($conf=="ok"){
-		
+
 		// Récupère les données de l'edition à mettre à jour (de destination)
 		$query = "
-		SELECT 
+		SELECT
 			t.id_tome,
-			s.id_serie, 
-			s.id_genre, 
+			s.id_serie,
+			s.id_genre,
 			en.id_edition,
 			c.id_collection,
 			c.id_editeur,
-			t.id_scenar, 
-			t.id_dessin 
-		from 
+			t.id_scenar,
+			t.id_dessin
+		from
 			bd_edition en
 			INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 			INNER JOIN bd_serie s ON t.id_serie = s.id_serie
 			INNER JOIN bd_collection c ON en.id_collection = c.id_collection
-		WHERE 
-			en.id_edition = ".$DB->escape($dest_id)." 
+		WHERE
+			en.id_edition = ".$DB->escape($dest_id)."
 		";
-		
+
 		$DB->query($query);
 		$DB->next_record();
-		
+
 		$id_serie = $DB->f("id_serie");
 		$id_editeur = $DB->f("id_editeur");
 		$id_collection = $DB->f("id_collection");
@@ -52,7 +52,7 @@ if ($act=="merge"){
 		$id_dessin = $DB->f("id_dessin");
 		$id_genre = $DB->f("id_genre");
 		$id_tome = $DB->f("id_tome");
-		
+
 		// Efface les éditions et les couvertures correspondantes
 
 		$query = "SELECT id_edition, img_couv FROM bd_edition WHERE id_edition = ".$DB->escape($source_id);
@@ -70,17 +70,17 @@ if ($act=="merge"){
 		$query = "UPDATE IGNORE users_album SET id_edition=".$DB->escape($dest_id)." WHERE id_edition = ".$DB->escape($source_id);
 		$DB->query ($query);
 		echo 'Référence(s) à l\'édition modifiée(s) dans la table users_album<br />';
-		
+
 		$query = "delete from users_album where id_edition = ".$DB->escape($source_id);
 		$DB->query ($query);
 		echo 'Référence(s) à l\'édition supprimée(s) dans la table users_album (sécurité au cas ou un utilisateur possède les deux éditions fusionnées)<br />';
-		
+
 		// vide la table bd_edition
 		$query = "DELETE FROM bd_edition WHERE id_edition = ".$DB->escape($source_id)." LIMIT 1";
 		$DB->query ($query);
 		echo 'Référence(s) à l\'album supprimée(s) dans la table bd_edition<br />';
 
-		
+
 		$redirection = BDO_URL."admin/admineditions.php?edition_id=".$dest_id;
 		echo '<META http-equiv="refresh" content="4; URL='.$redirection.'">Les éditions ont été fusionnées.';
 	}else{
@@ -92,7 +92,7 @@ if ($act=="merge"){
 
 // AFFICHER L'INTERFACE DE FUSION DES EDITIONS
 elseif($act==""){
-	
+
 	// Creation d'un nouveau Template
 	$t = new Template(BDO_DIR."public/templates");
 	// fichier à utiliser
@@ -105,10 +105,10 @@ elseif($act==""){
 	if ((!is_null($source_id)) & ($source_id!='')){
 		// récupère le nombre d'utilisateurs
 		$nb_users1 = countUserBy("edition", $source_id);
-		
+
 		// récupère les données principales
 		$query = q_edition("en.id_edition=".$DB->escape($source_id));
-		
+
 		$DB->query ($query);
 		$DB->next_record();
 		// Determine l'URL image
@@ -159,10 +159,10 @@ elseif($act==""){
 	if ((!is_null($dest_id)) & ($dest_id!='')){
 		// récupère le nombre d'utilisateurs
 		$nb_users2 = countUserBy("edition", $dest_id);
-		
+
 		// récupère les données principales
 		$query = q_edition("en.id_edition=".$DB->escape($dest_id));
-		
+
 		$DB->query($query);
 		$DB->next_record();
 		// Determine l'URL image

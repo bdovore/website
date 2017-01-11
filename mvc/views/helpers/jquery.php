@@ -10,7 +10,7 @@ class Jquery
                     $a_var
             );
         }
-        
+
         $xhtml = '
 <div class="ui-widget">
 	<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">

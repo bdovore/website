@@ -22,8 +22,8 @@
 	</p>
 	<ul>
         <li>
-			Une <b>base de donnée</b> de {NBALB} volumes, tenue à jour 
-  			en permanence, notée et commentée par les membres  
+			Une <b>base de donnée</b> de {NBALB} volumes, tenue à jour
+  			en permanence, notée et commentée par les membres
 			(<a href="{URLSITE}bdovore-tuto.php?page=1">plus d'info sur la base de données</a>).
 			<br />
 	        <br />
@@ -36,7 +36,7 @@
 			<br />
 		</li>
 		<li>
-			Le suivi de ses <b>prêts</b>, de ses <b>futurs achats</b> 
+			Le suivi de ses <b>prêts</b>, de ses <b>futurs achats</b>
 			(<a href="{URLSITE}bdovore-tuto.php?page=2">plus d'info</a>).
 			<br />
 			<br />
@@ -49,14 +49,14 @@
 		</li>
 		<li>
 			La possibilité de <b>mettre en ligne sa collection</b> de bandes
-			dessinées, à la manière d'un "BDprofiler" 
+			dessinées, à la manière d'un "BDprofiler"
 			(<a href="{URLSITE}bdovore-tuto.php?page=4">plus d'info sur la mise en ligne</a>).
 			<br />
 			<br />
 		</li>
 		<li>
 			La possibilité de suivre au plus près <b>les sorties et
-			l'actualité du monde de la bande dessinée</b> 
+			l'actualité du monde de la bande dessinée</b>
 			(<a href="{URLSITE}bdovore-tuto.php?page=3">plus d'info sur l'actualité</a>).
 			<br />
 			<br />
@@ -67,7 +67,7 @@
 		</li>
 	</ul>
 	<p>
-		Et le tout <font color="#990000" size="-1"><strong>GRATUITEMENT</strong> et <strong>SANS PUBLICITÉ !</strong></font> 
+		Et le tout <font color="#990000" size="-1"><strong>GRATUITEMENT</strong> et <strong>SANS PUBLICITÉ !</strong></font>
 	</p>
 	<p>
 		Vous voulez utiliser le site, participer au projet et vous joindre à la
@@ -80,7 +80,7 @@
 		<a href="{URLSITE}bdovore-tuto.php?page=1">Pour le début de la visite guidée</a>
 	</p>
     <p>
-		<span class="texte"> 
+		<span class="texte">
 			<br />
         </span>
 		<font color="#990000" size="+1">
@@ -126,11 +126,11 @@
 	    <p>
 			Nombre de notes d'albums : <a href="listop.php?rb_mode=top_vote">{NBNOTEALBUM}</a>
 			<br />
-		    Nombre de commentaires d'albums : <a href="listlast.php?rb_mode=last_cmt">{NBCOMMENTALBUM}</a> 
+		    Nombre de commentaires d'albums : <a href="listlast.php?rb_mode=last_cmt">{NBCOMMENTALBUM}</a>
 	        <br />
-	        Nombre de notes de séries : <a href="listop.php?rb_mode=top_vote">{NBNOTESERIE}</a> 
+	        Nombre de notes de séries : <a href="listop.php?rb_mode=top_vote">{NBNOTESERIE}</a>
 	        <br />
-	        Nombre de commentaires de séries : {NBCOMMENTSERIE} 
+	        Nombre de commentaires de séries : {NBCOMMENTSERIE}
 	    </p>
 	</p>
 

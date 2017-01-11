@@ -23,9 +23,9 @@ class Bdo_Menu_Lien {
 			$this->extractPrivilege();
 		}
 		else {
-			$this->privilege = $privilege;			
+			$this->privilege = $privilege;
 		}
-		
+
 
 		if ($this->privilege) $this->a_privilege[] = $this->privilege;
 		$this->target = $target;
@@ -62,7 +62,7 @@ class Bdo_Menu_Lien {
 
 
 	public function extractPrivilege() {
-		
+
 		$a_uri = explode('?',$this->link);
 		if (strpos($a_uri[0],CFG_RELATIVE_APPLI) === 0) {
 			$a_uri[0] = str_ireplace(CFG_RELATIVE_APPLI, '',$a_uri[0]);

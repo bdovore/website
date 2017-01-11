@@ -4,11 +4,11 @@
  * Controller pour l'ajout et la gestion des propositions
  * reprie en partie du code Latruffe originale + usage du model
  * @author : Tom
- *  
+ *
  */
 
 class Proposition extends Bdo_Controller {
-    
+
     public function Index () {
         /*
          * Affichage du modele de saisie d'une proposition
@@ -23,13 +23,13 @@ class Proposition extends Bdo_Controller {
         $type = getVal("type","ALBUM");
         if (User::minAccesslevel(2)) {
             $id_edition = getValInteger("id_edition",0);
-            
+
             $action = postVal("action","");
 
             if ($action == "append") {
                 $er = $this->addProposition();
                 if (issetNotEmpty($er))  {
-                    var_dump($er); 
+                    var_dump($er);
                     die("Erreur lors de l'insertion, contactez l'équipe !");
                 }
                 else {
@@ -52,7 +52,7 @@ class Proposition extends Bdo_Controller {
                     $this->view->set_var("edition",$this->Edition);
                     $this->view->set_var('PAGETITLE',"Proposer une correction pour ".$this->Edition->TITRE_TOME);
                     $this->view->set_var("TYPE","CORRECTION");
-                } 
+                }
                 else {
                     $this->view->set_var('PAGETITLE',"Proposer l'ajout d'un album");
                     $this->view->set_var("OPTIONS",GetOptionValue($action_user,0));
@@ -60,7 +60,7 @@ class Proposition extends Bdo_Controller {
                 }
             }
         }
-            
+
         else {
             $this->view->addAlertPage("Vous devez vous authentifier pour accéder à cette page !");
             $this->view->addPhtmlFile('alert', 'BODY');
@@ -69,9 +69,9 @@ class Proposition extends Bdo_Controller {
         $this->view->layout = "iframe";
         $this->view->render();
     }
- 
+
     private function addProposition() {
-        
+
         $type = postVal("type","ALBUM");
         if ($type == "EDITION") {
             $this->loadModel("Edition");
@@ -94,7 +94,7 @@ class Proposition extends Bdo_Controller {
         else {
             $this->loadModel("User_album_prop");
             $id_edition = getValInteger("id_edition",0);
-            // on enregistre la proposition 
+            // on enregistre la proposition
             // TODO vérifier pourquoi il n'y a de Db_Escape_String que sur certain string ...
             $this->User_album_prop->set_dataPaste(array(
                 "USER_ID" => $_SESSION['userConnect']->user_id,
@@ -254,9 +254,9 @@ class Proposition extends Bdo_Controller {
 
             $imageproperties = getimagesize($tmp_filename);
             $imagetype = $imageproperties[2];
-            
+
             $new_filename = sprintf("tmpCV-%06d-01",$lid);
-            
+
             // vérifie le type d'image
             switch ($imagetype)
             {
@@ -299,7 +299,7 @@ class Proposition extends Bdo_Controller {
         }
 
         $id_edition = postValInteger("txtEditionId",0);
-        
+
         if ($type=="EDITION") {
             $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
             $this->Edition->update();
@@ -308,19 +308,19 @@ class Proposition extends Bdo_Controller {
         else {
             $this->User_album_prop->set_dataPaste(array("IMG_COUV" => $img_couv));
             $this->User_album_prop->update();
-           
+
             return $this->User_album_prop->error;
         }
     }
     public function Listpropal(){
         /* fonction pour lister les propositons en cours et informer les utilisateurs
-         * 
+         *
          */
         $type = getVal("type","AJOUT");
         if ($type == "EDITION") {
             $this->loadModel("Edition");
             $dbs_edition = $this->Edition->load("c"," WHERE PROP_STATUS in (0,2,3,4)");
-            
+
             $this->view->set_var("dbs_edition",$dbs_edition);
         }
         else {
@@ -341,13 +341,13 @@ class Proposition extends Bdo_Controller {
                 "NBCORRECTION" => $this->Statistique->nbcorrect,
             )
         );
-        
+
         //$this->view->set_var($this->User_album_prop->getAllStat());
         $this->view->set_var("type",$type);
         $this->view->set_var("PAGETITLE","Liste des proposition : ".Db_Escape_String($type));
         $this->view->render();
-        
+
     }
 }
-    
+
 ?>

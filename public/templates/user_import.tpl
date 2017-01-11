@@ -37,7 +37,7 @@ Elles sont utilisées dans l'ordre d'affichage de la liste.<br />
 <br />
 Ce programme ne gère pas les incohérences. Si vous indiquez "Futur Achat" et une "date d'achat", ça ne lui posera aucun cas de conscience.<br />
 Toute ligne incorrecte par rapport aux indications données sera rejetée.<br />
-Toute ligne supérieure à 50 caractères sera rejetée.<br /> 
+Toute ligne supérieure à 50 caractères sera rejetée.<br />
 Seules 500 lignes seront traitées au maximum.<br />
 Si vous essayez d'inserer une édition déjà présente dans votre collection aucune indication précise ne vous sera faite.<br />
 <br />
@@ -55,7 +55,7 @@ Fichier à importer <input name="importFile" size="25" class="flat" type="file">
 <tr>
 
 <td width="50%" valign="top">
-Voici une liste de 10 EAN. 9782205066753, 9782800150260, 9782800148809, 9782800149745, 9782800150901, 9782800151212, 
+Voici une liste de 10 EAN. 9782205066753, 9782800150260, 9782800148809, 9782800149745, 9782800150901, 9782800151212,
 9782754800808, 9782754803564, 9782754806084 et 9782355922992.<br />
 Pour l'importer, en faire un simple fichier texte en séparant chaque valeur par un retour à la ligne comme suit :
 <pre>

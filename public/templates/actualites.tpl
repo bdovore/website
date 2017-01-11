@@ -3,7 +3,7 @@
 			<h3>Mon actualit&eacute;</h3>
 			<form action="{ACTION}" method="post">
 				<table border="0">
-				    <tr> 
+				    <tr>
 						<td>
 							<span class="texte">
 								Voir les nouveautés concernant :
@@ -19,14 +19,14 @@
 					    <td>&nbsp;</td>
 					    <td>&nbsp;</td>
 				    </tr>
-				    <tr> 
-					    <td> 
+				    <tr>
+					    <td>
 					        <select name="lstSource" size="1">
 						        {OPTSOURCE}
 					        </select>
 						</td>
 						<td>&nbsp;</td>
-					    <td> 
+					    <td>
 					        <select name="lstDuree">
 						        {OPTDUREE}
 					        </select>
@@ -45,7 +45,7 @@
 				</table>
 			</form>
 			<table width="100%" height="29" class="donnees">
-				<tr> 
+				<tr>
 				    <td width="15%" class="entete"><div align="center"><font color="#0000FF"><strong><a href="{URLSITE}membres/actualites.php?cle=1&sort=asc&duree={DUREE}&lstSource={SRC}"><img src="{URLSITEIMAGE}flechehaut.gif" width="12" height="12" hspace="5" border="0"></a>Genre<a href="{URLSITE}membres/actualites.php?cle=1&sort=DESC&duree={DUREE}&lstSource={SRC}"><img src="{URLSITEIMAGE}flechebas.gif" width="12" height="12" hspace="5" border="0"></a></strong></font></div></td>
 					<td width="20%" class="entete"><div align="center"><font color="#0000FF"><strong><a href="{URLSITE}membres/actualites.php?cle=4&sort=asc&duree={DUREE}&lstSource={SRC}"><img src="{URLSITEIMAGE}flechehaut.gif" width="12" height="12" hspace="5" border="0"></a>Auteur<a href="{URLSITE}membres/actualites.php?cle=4&sort=DESC&duree={DUREE}&lstSource={SRC}"><img src="{URLSITEIMAGE}flechebas.gif" width="12" height="12" hspace="5" border="0"></a></strong></font></div></td>
 				    <td width="20%" class="entete"><div align="center"><font color="#0000FF"><strong><a href="{URLSITE}membres/actualites.php?cle=2&sort=asc&duree={DUREE}&lstSource={SRC}"><img src="{URLSITEIMAGE}flechehaut.gif" width="12" height="12" hspace="5" border="0"></a>S&eacute;rie<a href="{URLSITE}membres/actualites.php?cle=2&sort=DESC&duree={DUREE}&lstSource={SRC}"><img src="{URLSITEIMAGE}flechebas.gif" width="12" height="12" hspace="5" border="0"></a></strong></font></div></td>
@@ -54,7 +54,7 @@
 				    <td width="15%" class="entete"><div align="center"><font color="#0000FF"><strong><a href="{URLSITE}membres/actualites.php?cle=3&sort=asc&duree={DUREE}&lstSource={SRC}"><img src="{URLSITEIMAGE}flechehaut.gif" width="12" height="12" hspace="5" border="0"></a>Date de Parution <a href="{URLSITE}membres/actualites.php?cle=3&sort=DESC&duree={DUREE}&lstSource={SRC}"><img src="{URLSITEIMAGE}flechebas.gif" width="12" height="12" hspace="5" border="0"></a></strong></font></div></td>
 				</tr>
 				<!-- BEGIN DetailBlock -->
-				<tr> 
+				<tr>
 				    <td width="15%" class="data"><div align="center">{GENRE}</div></td>
 					<td width="20%" class="data"><div align="center">{AUTEUR}</div></td>
 				    <td width="20%" class="data"><div align="center"><a href="{URLSITE}serie.php?id_serie={SERID}">{SERIE}</a></div></td>

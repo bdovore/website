@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 
 
@@ -83,7 +83,7 @@ elseif ($act=="")
 			header("Location:".BDO_URL."membres/login.php?errornum=1");
 			exit ();
 		}
-		
+
 		// Verification que le login existe
 		$query = "SELECT user_id FROM users WHERE username ='".$DB->escape($user_login)."' AND level <98;";
 		$DB->query($query);

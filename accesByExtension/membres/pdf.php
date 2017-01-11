@@ -6,7 +6,7 @@
 include (BDO_DIR."inc/queryfunction.php");
 
 minAccessLevel(2);
-		
+
 function AddBandeauSerie(&$PDF, $line, $text)
 {
 	PDF_set_font($PDF, "Helvetica", 12, "winansi");
@@ -173,41 +173,41 @@ if ($flg_achat == '') {
 
 
 $query = "
-SELECT 
-	t.id_tome, 
-	t.titre, 
-	t.num_tome, 
-	s.id_serie, 
+SELECT
+	t.id_tome,
+	t.titre,
+	t.num_tome,
+	s.id_serie,
 	s.nom s_nom,
-	s.flg_fini s_fini, 
-	uc.note, 
-	uc.comment, 
-	scen.pseudo sc_pseudo, 
-	dess.pseudo de_pseudo, 
-	color.pseudo co_pseudo, 
-	er.nom ed_nom, 
-	c.nom col_nom, 
-	g.libelle s_genre, 
-	en.dte_parution dte_par, 
-	en.isbn, 
+	s.flg_fini s_fini,
+	uc.note,
+	uc.comment,
+	scen.pseudo sc_pseudo,
+	dess.pseudo de_pseudo,
+	color.pseudo co_pseudo,
+	er.nom ed_nom,
+	c.nom col_nom,
+	g.libelle s_genre,
+	en.dte_parution dte_par,
+	en.isbn,
 	en.img_couv
-FROM 
+FROM
 	users_album ua
 	LEFT JOIN bd_edition en ON ua.id_edition = en.ID_EDITION
 	LEFT JOIN bd_tome t ON en.id_tome = t.ID_TOME
 	LEFT JOIN users_comment uc ON (t.id_tome = uc.ID_TOME AND ua.user_id = uc.USER_ID)
-	
+
 	LEFT JOIN bd_auteur scen ON t.ID_SCENAR = scen.ID_AUTEUR
 	LEFT JOIN bd_auteur dess ON t.ID_DESSIN = dess.ID_AUTEUR
 	LEFT JOIN bd_auteur color ON t.ID_COLOR = color.ID_AUTEUR
 
 	LEFT JOIN bd_collection c ON en.id_collection = c.ID_COLLECTION
 	LEFT JOIN bd_editeur er ON c.id_editeur = er.ID_EDITEUR
-	
+
 	LEFT JOIN bd_serie s ON t.id_serie = s.ID_SERIE
 	LEFT JOIN bd_genre g ON s.id_genre = g.ID_GENRE
-WHERE 
-ua.user_id = ".$DB->escape($_SESSION["UserId"])." 
+WHERE
+ua.user_id = ".$DB->escape($_SESSION["UserId"])."
 AND ua.flg_achat='".$DB->escape($flg_achat)."'
 ORDER BY s.nom, t.num_tome, t.flg_type
 ";

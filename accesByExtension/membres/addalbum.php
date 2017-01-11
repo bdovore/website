@@ -25,62 +25,62 @@ else {
 }
 if ($sel_alb) {
 	$select_verif = "
-	select 
-		ua.flg_achat t 
-	from 
+	select
+		ua.flg_achat t
+	from
 		users_album ua
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
-	where 
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
+	where
 		ua.user_id=".$DB->escape($_SESSION["UserId"])." and en.id_tome = %d";
-/* modif	
+/* modif
 	$insert_new = "
 	insert into users_album (user_id, id_tome,id_scenar, id_dessin,id_genre,
-     id_editeur, id_collection,id_serie, date_ajout,flg_achat, id_edition ) 
-     select 
+     id_editeur, id_collection,id_serie, date_ajout,flg_achat, id_edition )
+     select
 	     ".$DB->escape($_SESSION["UserId"]).",
 	     t.id_tome,
-	     t.id_scenar, 
+	     t.id_scenar,
 	     t.id_dessin,
 	     s.id_genre,
-	     c.id_editeur, 
+	     c.id_editeur,
 	     c.id_collection,
 	     s.id_serie,
 	     CURRENT_TIMESTAMP(),
-	     '".$DB->escape($achat)."', 
-	     en.id_edition 
-     from 
+	     '".$DB->escape($achat)."',
+	     en.id_edition
+     from
 		bd_tome t
 		INNER JOIN bd_edition en ON t.id_edition = en.id_edition
 		INNER JOIN bd_serie s ON t.id_serie = s.id_serie
 		INNER JOIN bd_collection c ON en.id_collection = c.id_collection
-     where 
-	     t.id_tome =%d 
-	"; 
+     where
+	     t.id_tome =%d
+	";
 */
 	$insert_new = "
-	insert into users_album (user_id, date_ajout, flg_achat, id_edition ) 
-     select 
+	insert into users_album (user_id, date_ajout, flg_achat, id_edition )
+     select
 	     ".$DB->escape($_SESSION["UserId"]).",
 	     CURRENT_TIMESTAMP(),
-	     '".$DB->escape($achat)."', 
-	     en.id_edition 
-     from 
+	     '".$DB->escape($achat)."',
+	     en.id_edition
+     from
 		bd_tome t
 		INNER JOIN bd_edition en ON t.id_edition = en.id_edition
-     where 
-	     t.id_tome =%d 
-	"; 
-	
+     where
+	     t.id_tome =%d
+	";
+
 	$update_new = "
-	update 
+	update
 		users_album ua
 		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
-	set 
-		ua.flg_achat = 'N', 
+	set
+		ua.flg_achat = 'N',
 		ua.date_achat = CURRENT_TIMESTAMP()
-	where 
-		en.id_tome=%d 
-		and ua.user_id=".$DB->escape($_SESSION["UserId"]); 
+	where
+		en.id_tome=%d
+		and ua.user_id=".$DB->escape($_SESSION["UserId"]);
 
 	foreach ($sel_alb as $id_tome)
 	{

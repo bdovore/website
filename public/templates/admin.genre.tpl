@@ -8,7 +8,7 @@
 function valider(){
   // si la valeur du champ prenom est non vide
   if(document.forms['input_form'].elements['txtGenre'].value != "") {
-    // les données sont ok, on peut envoyer le formulaire    
+    // les données sont ok, on peut envoyer le formulaire
     return true;
   }
   else {
@@ -24,14 +24,14 @@ function valider(){
 <body bgcolor="#FFFFCC" onLoad="{BODYONLOAD}">
 <form action="{URLACTION}" method="post" name="input_form" onSubmit="return valider()">
   <table width="100%" border="1">
-    <tr> 
+    <tr>
       <td width="65%"><table width="100%" border="1" bgcolor="#FFFFCC">
-          <tr bordercolor="#FFFFCC"> 
+          <tr bordercolor="#FFFFCC">
             <td width="25%" height="27">Genre</td>
-            <td width="75%"><input name="txtIdGenre" type="hidden" id="txtIdGenre" value="{IDGENRE}"> 
+            <td width="75%"><input name="txtIdGenre" type="hidden" id="txtIdGenre" value="{IDGENRE}">
               <input name="txtGenre" type="text" id="txtGenre" value="{GENRE}" size="38"></td>
           </tr>
-          <tr bordercolor="#FFFFCC"> 
+          <tr bordercolor="#FFFFCC">
             <td colspan="2"> <input type="submit" name="Submit" value="{ACTIONNAME}"></td>
           </tr>
         </table></td>

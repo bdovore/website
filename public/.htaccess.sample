@@ -12,5 +12,5 @@ ErrorDocument 404 /erreur.php?error=404
 # Activation du mod rewrite d'Apache
 RewriteEngine On
 # ne pas oublier pour pointer vers la base url en local, par exemple pour http://localhost/beta:
-# RewriteBase /beta/ 
+# RewriteBase /beta/
 RewriteRule !\.(js|ico|gif|jpg|png|css|html|htm|xml|wsdl) index.php [NC,L]

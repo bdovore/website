@@ -51,7 +51,7 @@ if ($act=="import") {
 		'a_lineErrorRef' => 'Erreurs dans la base de références BDoVore',
 		'a_lineErrorInconnue' => 'Erreurs éditions inconnues',
 		);
-		
+
 		$a_lineErrorNbrCarac = array(); // erreur nombre de caracteres dans la ligne
 		$a_lineErrorNbrField = array(); // erreur nombre de champ sur une ligne
 		$a_lineErrorTypeVal = array(); // erreur de type de donnee envoye
@@ -97,7 +97,7 @@ if ($act=="import") {
 
 			if (!$errorLine)
 			{
-				if (!isset($a_edition[$a_line[0]])) 
+				if (!isset($a_edition[$a_line[0]]))
 				{
 					$field = array();
 
@@ -204,7 +204,7 @@ if ($act=="import") {
 			}
 		}
 		fclose ($fp);
-		
+
 
 		if (!empty($a_editionAjout))
 		{
@@ -220,7 +220,7 @@ if ($act=="import") {
 
 			// controle d'existence ean ou isbn
 			$query_select = "
-			SELECT 
+			SELECT
 				count(1) as nbval,
 				bd_edition.".$a_col[0].",
 				bd_edition.ID_EDITION,
@@ -229,8 +229,8 @@ if ($act=="import") {
 				bd_collection.NOM COLLECTION,
 				bd_editeur.NOM EDITEUR,
 				DATE_FORMAT(bd_edition.DTE_PARUTION,'%d/%m/%Y') DTE_PARUTION
-			FROM 
-				bd_edition 
+			FROM
+				bd_edition
 				INNER JOIN bd_tome USING(ID_TOME)
 				INNER JOIN bd_serie USING(ID_SERIE)
 				INNER JOIN bd_collection USING(ID_COLLECTION)
@@ -288,7 +288,7 @@ if ($act=="import") {
 				{
 					$query_insert = "
 					INSERT IGNORE INTO users_album (
-						user_id, 
+						user_id,
 						id_edition,
 						date_ajout,
 						date_achat,

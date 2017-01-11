@@ -34,11 +34,11 @@ if ($type == "EDITION") {
 	$waitstatus = "en.prop_status IN (0,2,3,4)";
 	$query = "
 	select
-		count(1) nb 
-	from 
-		bd_edition en 
-		INNER JOIN users u ON en.user_id = u.user_id 
-	where 
+		count(1) nb
+	from
+		bd_edition en
+		INNER JOIN users u ON en.user_id = u.user_id
+	where
 		en.prop_status IN (0,2,3,4)
 	";
 	$DB->query($query);
@@ -46,24 +46,24 @@ if ($type == "EDITION") {
 	$nb_alb = $DB->f("nb");
 
 	$query = "
-	SELECT 
-		en.id_edition, 
-		t.id_tome, 
-		t.num_tome, 
-		en.user_id, 
-		u.username, 
-		en.prop_dte, 
-		t.titre, 
-		s.nom serie, 
+	SELECT
+		en.id_edition,
+		t.id_tome,
+		t.num_tome,
+		en.user_id,
+		u.username,
+		en.prop_dte,
+		t.titre,
+		s.nom serie,
 		s.id_serie
-	FROM 
+	FROM
 		bd_edition en
-		INNER JOIN users u ON en.user_id = u.user_id 
-		INNER JOIN bd_tome t ON en.id_tome = t.id_tome 
-		INNER JOIN bd_serie s ON s.id_serie = t.id_serie 
-	WHERE 
+		INNER JOIN users u ON en.user_id = u.user_id
+		INNER JOIN bd_tome t ON en.id_tome = t.id_tome
+		INNER JOIN bd_serie s ON s.id_serie = t.id_serie
+	WHERE
 		en.prop_status IN (0,2,3,4)
-	ORDER BY ".$clerep[$cle]. " ".$DB->escape($sort)." 
+	ORDER BY ".$clerep[$cle]. " ".$DB->escape($sort)."
 	LIMIT ".$DB->escape($first)." , ".$DB->escape($nb);
 }
 else {
@@ -72,13 +72,13 @@ else {
 	$clerep[3] = "uap.prop_dte";
 	$waitstatus = "(status = 0 OR status = 2 OR status = 3 OR status = 4)";
 	$query = "
-	select 
+	select
 		count(1) nb
-	from 
+	from
 		users_alb_prop uap
 		INNER JOIN users u ON uap.user_id = u.user_id
-	where 
-		uap.status IN (0,2,3,4) 
+	where
+		uap.status IN (0,2,3,4)
 		and uap.prop_type = '".$DB->escape($type)."'
 	";
 	$DB->query($query);
@@ -86,21 +86,21 @@ else {
 	$nb_alb = $DB->f("nb");
 
 	$query = "
-	select 
-		uap.serie, 
-		uap.id_serie, 
-		uap.titre, 
-		uap.id_tome, 
-		uap.prop_dte, 
-		u.username, 
+	select
+		uap.serie,
+		uap.id_serie,
+		uap.titre,
+		uap.id_tome,
+		uap.prop_dte,
+		u.username,
 		uap.num_tome
-	from 
+	from
 		users_alb_prop uap
 		INNER JOIN users u ON uap.user_id = u.user_id
-	where 
-		uap.status IN (0,2,3,4) 
+	where
+		uap.status IN (0,2,3,4)
 		and uap.prop_type = '".$DB->escape($type)."'
-	ORDER BY ".$clerep[$cle]. " ".$DB->escape($sort)." 
+	ORDER BY ".$clerep[$cle]. " ".$DB->escape($sort)."
 	LIMIT ".$DB->escape($first)." , ".$DB->escape($nb);
 }
 

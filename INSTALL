@@ -47,7 +47,7 @@ c.f. https://bdovore.com/forum/viewtopic.php?t=2214 (peut-être plus complèteme
    et modifier/adapter les variables BDO_URL_RELATIVE et BDO_DB_...
 
 	dé-commenter la ligne définissant BDO_URL_RELATIVE et faire pointer la variable vers l'alias Apache
- 
+
 		define('BDO_URL_RELATIVE', '/beta/');
 
 	dans la section "case 'localhost'" : modifier les paramètres de votre connexion mysql en local :

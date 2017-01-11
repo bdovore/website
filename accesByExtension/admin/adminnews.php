@@ -90,7 +90,7 @@ elseif($act=="ajout"){
 	if($status=="ok"){//ajoute physiquement la news dans la base
 
 		$query = "INSERT INTO `news` (`news_level`, `news_posteur`, `news_date`, `news_titre`, `news_text`)";
-		$query .= " VALUES ('".$DB->escape($_POST["cmblevel"])."', '".$_SESSION["UserName"]."', NOW(), '".$DB->escape($_POST["txttitre"])."', 
+		$query .= " VALUES ('".$DB->escape($_POST["cmblevel"])."', '".$_SESSION["UserName"]."', NOW(), '".$DB->escape($_POST["txttitre"])."',
 		'".$DB->escape($_POST["txtcontent"])."');";
 		$DB->query($query);
 		//rouvre la page
@@ -149,10 +149,10 @@ elseif($act=="modif"){
 	if($status=="ok"){
 		//modifie physiquement la news dans la base
 
-		$query = "UPDATE news SET 
-		`news_level`='".$DB->escape($_POST["cmblevel"])."', 
-		`news_titre`='".$DB->escape($_POST["txttitre"])."', 
-		`news_text`='".$DB->escape($_POST["txtcontent"])."' 
+		$query = "UPDATE news SET
+		`news_level`='".$DB->escape($_POST["cmblevel"])."',
+		`news_titre`='".$DB->escape($_POST["txttitre"])."',
+		`news_text`='".$DB->escape($_POST["txtcontent"])."'
 		WHERE `news_id`=".$DB->escape($newsid).";";
 		$DB->query($query);
 		//rouvre la page

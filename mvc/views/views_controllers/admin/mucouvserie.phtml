@@ -26,7 +26,7 @@ function urlsource(){
 	return true;
 }
 
-function Chargement() { 
+function Chargement() {
  for (i = 0; i < document.myform.elements.length; i++) {
    if (document.myform.elements[i].name == "alb_id[]") {
      document.myform.elements[i].checked = true;
@@ -39,9 +39,9 @@ function Chargement() {
             </p>
          <form name="form1" method="post" action="" onSubmit="return urlsource()">
         <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
-          <tr bordercolor="#FFFFCC"> 
+          <tr bordercolor="#FFFFCC">
             <td width="10%" class="label"> <div align="center">Serie</div></td>
-            <td width="10%"> <div align="left"> 
+            <td width="10%"> <div align="left">
                 <input name="txtSerieId" type="text" id="txtSerieId" value="<?php echo $view->IDSERIE;?>" size="5">
               </div></td>
             <td width="27%"> <input name="txtSerie" type="text" id="txtSerie" value="<?php echo $view->SERIE;?>" size="40"></td>
@@ -52,7 +52,7 @@ function Chargement() {
       </form>
       <br> <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
         <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
-         <?php  
+         <?php
          foreach ($view->dbs_tome->a_dataQuery as $tome ) {
              if (is_null($tome->IMG_COUV) | ($tome->IMG_COUV=='')){
 				$url_image = BDO_URL_COUV."default.png";
@@ -78,45 +78,45 @@ function Chargement() {
 			$url_page_amazon = "http://www.amazon.fr/exec/obidos/ASIN/".$isbn;
 			$url_img_amazon = get_couv_url($url_page_amazon,$isbn);
 			if ($url_img_amazon == "") $url_img_amazon = BDO_URL_COUV."default.png";
-         
+
          ?>
-          <tr bordercolor="#999999"> 
+          <tr bordercolor="#999999">
             <td colspan="3" align="center"><?php echo $tome->NUM_TOME;?> - <?php echo $tome->TITRE_TOME;?></td>
           </tr>
-          <tr bordercolor="#999999"> 
+          <tr bordercolor="#999999">
             <td width="43%" align="center"><img src="<?php echo $url_image;?>" width="111"><input type="hidden" name="url_bdo[<?php echo $tome->ID_TOME;?>]" value="<?php echo $imagename;?>"><br>
               <?php echo $dimension;?><br>
               <?php echo $poids;?></td>
-            <td width="14%" align="center"><input type="checkbox" name="alb_id[]" value="<?php echo $tome->ID_TOME;?>"> 
+            <td width="14%" align="center"><input type="checkbox" name="alb_id[]" value="<?php echo $tome->ID_TOME;?>">
               <input name="num_tome[<?php echo $tome->ID_TOME;?>]" type="hidden" value="<?php echo $tome->NUM_TOME;?>"></td>
-            <td width="43%" align="center"><p><img src="<?php echo $url_img_amazon;?>" width="111" > 
+            <td width="43%" align="center"><p><img src="<?php echo $url_img_amazon;?>" width="111" >
                 <input type="hidden" name="url_amz[<?php echo $tome->ID_TOME;?>]" value="<?php echo $url_img_amazon;?>">
               </p>
               <p><a href="<?php echo $url_page_amazon;?>">Voir sur Amazon</a></p></td>
           </tr>
           <!-- END AlbumsBlock -->
          <?php } ?>
-          <tr bordercolor="#FFFFCC"> 
-            <td colspan="3" align="center"><a name="ici" href="#ici" onClick="Chargement();">Tout 
+          <tr bordercolor="#FFFFCC">
+            <td colspan="3" align="center"><a name="ici" href="#ici" onClick="Chargement();">Tout
               selectionner</a></td>
           </tr>
         </table>
         <br>
-        <p> 
-        <div align="center"></p> 
+        <p>
+        <div align="center"></p>
           <input type="submit" name="Submit" value="<?php echo $view->ACTIONNAME;?>">
           <br>
         </div>
       </form></td>
     <!-- Debut colonne Gauche-->
-   
+
       </table>
       <script>
     /*
      * On remplit les champs de saisie par l'autocompletion
-     * 
+     *
      */
-    
-   
+
+
   addAutocomplete("txtSerie","txtSerieId","txtSerieId","<?php echo BDO_URL; ?>getjson?data=Serie");
 </script>

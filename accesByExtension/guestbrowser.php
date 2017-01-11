@@ -56,19 +56,19 @@ $startRow_RecAuteur = $pageNum_RecAuteur * $maxRows_RecAuteur;
 
 if ($rb_browse == 'ser' || !$rb_browse) {
 	$query_RecAuteur = "
-	SELECT 
-	distinct s.id_serie id, 
+	SELECT
+	distinct s.id_serie id,
 	s.nom name
-	FROM 
-		users_album ua 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
+	FROM
+		users_album ua
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
 		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 		INNER JOIN bd_serie s ON t.id_serie = s.id_serie
-	WHERE 
-	ua.user_id =" . mysql_real_escape_string($profile_user_id)." 
+	WHERE
+	ua.user_id =" . mysql_real_escape_string($profile_user_id)."
 	and flg_achat= 'N'
 	";
-	
+
 	$pagetitle.= "série ";
 	if ($let) {
 		if (strlen($let) < 4) {
@@ -81,23 +81,23 @@ if ($rb_browse == 'ser' || !$rb_browse) {
 	$query_RecAuteur.=" ORDER BY s.tri, s.nom ASC ";
 
 	$query_album = "
-	select 
-		t.id_tome, 
-		CONCAT(CASE 
-		when t.flg_int = 'O' 
-		then 'Intégrale ' 
-		when t.flg_type = 1 
-		then 'Coffret ' 
-		else IFNULL(concat('Tome ',t.num_tome),'HS') 
-		end,': ', t.titre) as titre 
-	from 
-		users_album ua 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
+	select
+		t.id_tome,
+		CONCAT(CASE
+		when t.flg_int = 'O'
+		then 'Intégrale '
+		when t.flg_type = 1
+		then 'Coffret '
+		else IFNULL(concat('Tome ',t.num_tome),'HS')
+		end,': ', t.titre) as titre
+	from
+		users_album ua
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
 		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-	where 
-	t.id_serie=".mysql_real_escape_string($lev_id)." 
-	and ua.user_id = ".mysql_real_escape_string($profile_user_id)." 
-	and ua.flg_achat='N' 
+	where
+	t.id_serie=".mysql_real_escape_string($lev_id)."
+	and ua.user_id = ".mysql_real_escape_string($profile_user_id)."
+	and ua.flg_achat='N'
 	order by t.num_tome, t.titre
 	";
 
@@ -118,186 +118,186 @@ elseif ($rb_browse == 'aut' ) {
 		$filtre_aut = "";
 	}
 	$query_RecAuteur = "
-	SELECT 
-		distinct a.ID_AUTEUR id, 
-		a.PSEUDO name 
+	SELECT
+		distinct a.ID_AUTEUR id,
+		a.PSEUDO name
 	FROM
-		users_album ua 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
+		users_album ua
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
 		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 		INNER JOIN bd_auteur a ON a.id_auteur = t.id_scenar
-	where 
-		ua.user_id = ".mysql_real_escape_string($profile_user_id)." 
-		and ua.flg_achat='N' 
+	where
+		ua.user_id = ".mysql_real_escape_string($profile_user_id)."
+		and ua.flg_achat='N'
 		$filtre_aut
 	UNION
-	SELECT 
-		distinct a.ID_AUTEUR id, 
-		a.PSEUDO name 
+	SELECT
+		distinct a.ID_AUTEUR id,
+		a.PSEUDO name
 	FROM
-		users_album ua 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
+		users_album ua
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
 		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 		INNER JOIN bd_auteur a ON a.id_auteur = t.id_dessin
 	where
-		ua.user_id = ".mysql_real_escape_string($profile_user_id)." 
-		and ua.flg_achat='N' 
-		$filtre_aut 
+		ua.user_id = ".mysql_real_escape_string($profile_user_id)."
+		and ua.flg_achat='N'
+		$filtre_aut
 	group by id, name
 	ORDER BY name ASC ";
-	
+
 	$query_niv2 = "
-	SELECT distinct 
-		s.id_serie id, 
+	SELECT distinct
+		s.id_serie id,
 		s.nom name
-	FROM 
-		users_album ua 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
+	FROM
+		users_album ua
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
 		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 		INNER JOIN bd_serie s ON t.id_serie = s.id_serie
 	WHERE
-	ua.user_id = ".mysql_real_escape_string($profile_user_id)." 
+	ua.user_id = ".mysql_real_escape_string($profile_user_id)."
 	and ua.flg_achat='N'
 	and (
-		(t.id_dessin = ".mysql_real_escape_string($lev_id).") 
+		(t.id_dessin = ".mysql_real_escape_string($lev_id).")
 		or (t.id_scenar = ".mysql_real_escape_string($lev_id).")
 	)
-	order by name 
+	order by name
 	";
-	
+
 	$query_album = "
-	select 
-	t.id_tome, 
+	select
+	t.id_tome,
 	CONCAT(
-	CASE 
-		when t.flg_int = 'O' 
-		then 'Intégrale ' 
-		when t.flg_type = 1 
-		then 'Coffret ' 
+	CASE
+		when t.flg_int = 'O'
+		then 'Intégrale '
+		when t.flg_type = 1
+		then 'Coffret '
 		else IFNULL(concat('Tome ',t.num_tome),'HS') end,': '
-	, t.titre) 
-	as titre 
-	FROM 
-		users_album ua 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
+	, t.titre)
+	as titre
+	FROM
+		users_album ua
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
 		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-	where 
-		ua.user_id = ".mysql_real_escape_string($profile_user_id)." 
-		and ua.flg_achat='N' 
-		and t.id_serie =".mysql_real_escape_string($lev2_id)." 
+	where
+		ua.user_id = ".mysql_real_escape_string($profile_user_id)."
+		and ua.flg_achat='N'
+		and t.id_serie =".mysql_real_escape_string($lev2_id)."
 	order by t.num_tome, t.titre
 	";
 
 }
 elseif ($rb_browse == 'edit'){
 	$query_RecAuteur = "
-	SELECT distinct 
-		er.ID_EDITEUR id, 
+	SELECT distinct
+		er.ID_EDITEUR id,
 		er.NOM name
-	FROM 
-		users_album ua 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
-		INNER JOIN bd_collection c ON c.id_collection = en.id_collection 
+	FROM
+		users_album ua
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
+		INNER JOIN bd_collection c ON c.id_collection = en.id_collection
 		INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
-	where 
-		ua.user_id = ".mysql_real_escape_string($profile_user_id)." 
+	where
+		ua.user_id = ".mysql_real_escape_string($profile_user_id)."
 		and ua.flg_achat='N'
 	";
 	if ($let) {
 		$query_RecAuteur .= "and LCASE(er.NOM) like LCASE('".mysql_real_escape_string($let)."%') ";
 	}
 	$query_RecAuteur.=" ORDER BY er.NOM ASC ";
-	
+
 	$query_niv2 = "
-	select distinct 
-	c.id_collection id, 
+	select distinct
+	c.id_collection id,
 	c.nom name
-	from 
-		users_album ua 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
-		INNER JOIN bd_collection c ON c.id_collection = en.id_collection 
-		INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur 
-	where 
-	er.id_editeur =".mysql_real_escape_string($lev_id)." 
-	and ua.user_id = ".mysql_real_escape_string($profile_user_id)." 
-	and ua.flg_achat='N' 
+	from
+		users_album ua
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
+		INNER JOIN bd_collection c ON c.id_collection = en.id_collection
+		INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
+	where
+	er.id_editeur =".mysql_real_escape_string($lev_id)."
+	and ua.user_id = ".mysql_real_escape_string($profile_user_id)."
+	and ua.flg_achat='N'
 	order by name";
-	 
+
 	$query_album = "
-	select 
-		t.id_tome, 
+	select
+		t.id_tome,
 		CONCAT(s.NOM, ' ' ,
-		CASE 
-		when t.flg_int = 'O' 
-		then 'Intégrale ' 
-		when t.flg_type = 1 
-		then 'Coffret ' 
-		else IFNULL(concat('Tome ',t.num_tome),'HS') 
-		end,': ', t.titre) as titre 
-	from 
-		users_album ua 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
+		CASE
+		when t.flg_int = 'O'
+		then 'Intégrale '
+		when t.flg_type = 1
+		then 'Coffret '
+		else IFNULL(concat('Tome ',t.num_tome),'HS')
+		end,': ', t.titre) as titre
+	from
+		users_album ua
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
 		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 		INNER JOIN bd_serie s ON t.id_serie = s.id_serie
-		INNER JOIN bd_collection c ON c.id_collection = en.id_collection 
-		INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur 
+		INNER JOIN bd_collection c ON c.id_collection = en.id_collection
+		INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
 	where
-		c.id_editeur = ".mysql_real_escape_string($lev_id)." 
+		c.id_editeur = ".mysql_real_escape_string($lev_id)."
 		and c.id_collection = ".mysql_real_escape_string($lev2_id)."
-		and ua.user_id = ".mysql_real_escape_string($profile_user_id)." 
+		and ua.user_id = ".mysql_real_escape_string($profile_user_id)."
 		and ua.flg_achat='N'
 	order by s.nom, t.num_tome, titre
 	";
 }
 elseif ($rb_browse == 'genr') {
 	$query_RecAuteur = "
-	SELECT distinct 
-		g.ID_GENRE id, 
-		g.LIBELLE name 
+	SELECT distinct
+		g.ID_GENRE id,
+		g.LIBELLE name
 	FROM
-		users_album ua 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
+		users_album ua
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
 		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 		INNER JOIN bd_serie s ON t.id_serie = s.id_serie
-		INNER JOIN bd_genre g ON g.id_genre = s.id_genre 
-	where 
-		ua.user_id = ".mysql_real_escape_string($profile_user_id)." 
+		INNER JOIN bd_genre g ON g.id_genre = s.id_genre
+	where
+		ua.user_id = ".mysql_real_escape_string($profile_user_id)."
 		and ua.flg_achat='N'
 	";
 	if ($let) {
 		$query_RecAuteur .= "and LCASE(g.LIBELLE) like LCASE('".mysql_real_escape_string($let)."%') ";
 	}
 	$query_RecAuteur.=" ORDER BY g.LIBELLE ASC ";
-	
-	$query_niv2 = "
-	select distinct 
-		s.id_serie id, 
-		s.nom name 
-	from 
-		users_album ua 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
-		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-		INNER JOIN bd_serie s ON t.id_serie = s.id_serie
-	where 
-	ua.user_id = ".mysql_real_escape_string($profile_user_id)."
-	and ua.flg_achat='N'
-	and s.id_genre =".mysql_real_escape_string($lev_id)." 
-	order by name
-	"; 
 
-	$query_album = "
-	select distinct 
-	t.id_tome,
-	CONCAT(CASE when t.flg_int = 'O' then 'Intégrale ' when t.flg_type = 1 then 'Coffret ' else IFNULL(concat('Tome ',t.num_tome),'HS') end,': ', t.titre) as titre 
-	FROM
-		users_album ua 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
+	$query_niv2 = "
+	select distinct
+		s.id_serie id,
+		s.nom name
+	from
+		users_album ua
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
 		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 		INNER JOIN bd_serie s ON t.id_serie = s.id_serie
 	where
-		s.id_genre = ".mysql_real_escape_string($lev_id)." 
-		and t.id_serie = ".mysql_real_escape_string($lev2_id)." 
-		and ua.user_id = ".mysql_real_escape_string($profile_user_id)." 
+	ua.user_id = ".mysql_real_escape_string($profile_user_id)."
+	and ua.flg_achat='N'
+	and s.id_genre =".mysql_real_escape_string($lev_id)."
+	order by name
+	";
+
+	$query_album = "
+	select distinct
+	t.id_tome,
+	CONCAT(CASE when t.flg_int = 'O' then 'Intégrale ' when t.flg_type = 1 then 'Coffret ' else IFNULL(concat('Tome ',t.num_tome),'HS') end,': ', t.titre) as titre
+	FROM
+		users_album ua
+		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
+		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+		INNER JOIN bd_serie s ON t.id_serie = s.id_serie
+	where
+		s.id_genre = ".mysql_real_escape_string($lev_id)."
+		and t.id_serie = ".mysql_real_escape_string($lev2_id)."
+		and ua.user_id = ".mysql_real_escape_string($profile_user_id)."
 		and flg_achat='N'
 	order by t.num_tome, t.titre
 	";
@@ -488,7 +488,7 @@ $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
 	"URLSITEIMAGE" => BDO_URL_IMAGE));
-	
+
 	// envoie les variables de la page
 $t->set_var (array(
 "PAGETITLE" => "Bdovore.com : visitez la collection de $username",

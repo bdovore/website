@@ -44,7 +44,7 @@ function valider(){
 
   if((document.forms['form1'].elements['txtTome1Id'].value != "") && (document.forms['form2'].elements['txtTome2Id'].value != "")) {
 
-    // les données sont ok, on peut envoyer le formulaire    
+    // les données sont ok, on peut envoyer le formulaire
 
     return true;
 
@@ -76,7 +76,7 @@ function urlsource(){
 
 }
 
- 
+
 
 function urldest(){
 
@@ -94,15 +94,15 @@ function urldest(){
 
 <table width="100%" border="1">
 
-  <tr> 
+  <tr>
 
     <td colspan="2" align="center"><font color="#FF0000" face="Arial, Helvetica, sans-serif"><strong>{ERRORMESSAGE}</strong></font></td>
 
   </tr>
 
-  <tr bgcolor="#FFFFCC"> 
+  <tr bgcolor="#FFFFCC">
 
-    <td width="50%" bordercolor="#CCCCCC" bgcolor="#CCCCCC"> <p><strong>AUTEUR 
+    <td width="50%" bordercolor="#CCCCCC" bgcolor="#CCCCCC"> <p><strong>AUTEUR
 
         A SUPPRIMER</strong></p>
 
@@ -110,9 +110,9 @@ function urldest(){
 
         <input name="txtField1Id" type="text" id="txtField1Id" value="{AUTEURID1}" size="5">
 
-		<input name="txtField1" type="text" id="txtField1" value="{AUTEUR1}" size="40">		
+		<input name="txtField1" type="text" id="txtField1" value="{AUTEUR1}" size="40">
 
-        <a href="{URLEDITEDIT1}"><img src="{URLSITEIMAGE}edit.gif" width="18" height="13" border="0"></a> 
+        <a href="{URLEDITEDIT1}"><img src="{URLSITEIMAGE}edit.gif" width="18" height="13" border="0"></a>
 
         <img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.form1.txtField1.value,'form1','txtField1',true)"><br>
 
@@ -128,7 +128,7 @@ function urldest(){
 
         <input name="txtField2" type="text" id="txtField2" value="{AUTEUR2}" size="40">
 
-        <a href="{URLEDITEDIT2}"><img src="{URLSITEIMAGE}edit.gif" width="18" height="13" border="0"></a> 
+        <a href="{URLEDITEDIT2}"><img src="{URLSITEIMAGE}edit.gif" width="18" height="13" border="0"></a>
 
         <img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.form2.txtField2.value,'form2','txtField2',true)"><br>
 
@@ -138,11 +138,11 @@ function urldest(){
 
   </tr>
 
-  <tr> 
+  <tr>
 
     <td><table width="100%" border="1" cellspacing="0">
 
-        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC">
 
           <td>Prenom</td>
 
@@ -150,7 +150,7 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC">
 
           <td>Nom</td>
 
@@ -158,7 +158,7 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC">
 
           <td>Date Naissance</td>
 
@@ -166,7 +166,7 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC">
 
           <td>Date Dec&egrave;s</td>
 
@@ -174,7 +174,7 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC">
 
           <td>Nationalit&eacute;</td>
 
@@ -182,7 +182,7 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC">
 
           <td>&nbsp;</td>
 
@@ -196,23 +196,23 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC">
 
           <td>&nbsp;</td>
 
-          <td><div align="center"> 
+          <td><div align="center">
 
               <input type="checkbox" name="checkbox" value="checkbox" {ISSCEN1} disabled>
 
             </div></td>
 
-          <td><div align="center"> 
+          <td><div align="center">
 
               <input name="checkbox2" type="checkbox" disabled value="checkbox" {ISDESS1}>
 
             </div></td>
 
-          <td><div align="center"> 
+          <td><div align="center">
 
               <input type="checkbox" name="checkbox3" value="checkbox" {ISCOLOR1} disabled>
 
@@ -222,7 +222,7 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC"> 
+        <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC">
 
           <td width="22%">Commentaire</td>
 
@@ -234,7 +234,7 @@ function urldest(){
 
     <td><table width="100%" border="1" cellspacing="0">
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 
           <td>Prenom</td>
 
@@ -242,7 +242,7 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 
           <td>Nom</td>
 
@@ -250,7 +250,7 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 
           <td>Date Naissance</td>
 
@@ -258,7 +258,7 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 
           <td>Date Dec&egrave;s</td>
 
@@ -266,7 +266,7 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 
           <td>Nationalit&eacute;</td>
 
@@ -274,19 +274,19 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 
           <td>&nbsp;</td>
 
-          <td> 
+          <td>
 
             <div align="center">Sc&eacute;nariste</div></td>
 
-          <td> 
+          <td>
 
             <div align="center">Dessinateur</div></td>
 
-          <td> 
+          <td>
 
             <div align="center">Coloriste</div></td>
 
@@ -294,29 +294,29 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 
           <td>&nbsp;</td>
 
-          <td> 
+          <td>
 
-            <div align="center"> 
+            <div align="center">
 
               <input type="checkbox" name="checkbox" value="checkbox" {ISSCEN2} disabled>
 
             </div></td>
 
-          <td> 
+          <td>
 
-            <div align="center"> 
+            <div align="center">
 
               <input type="checkbox" name="checkbox2" value="checkbox" {ISDESS2} disabled>
 
             </div></td>
 
-          <td> 
+          <td>
 
-            <div align="center"> 
+            <div align="center">
 
               <input type="checkbox" name="checkbox3" value="checkbox" {ISCOLOR2} disabled>
 
@@ -326,7 +326,7 @@ function urldest(){
 
         </tr>
 
-        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 
           <td width="22%">Commentaire</td>
 
@@ -338,7 +338,7 @@ function urldest(){
 
   </tr>
 
-  <tr> 
+  <tr>
 
     <td bgcolor="#CCCCCC"> <p><strong>Statistiques</strong></p>
 
@@ -350,7 +350,7 @@ function urldest(){
 
   </tr>
 
-  <tr> 
+  <tr>
 
     <td colspan="2" align="center"><p><a href="{URLECHANGE}">Inverser la séléction</a><br>
 

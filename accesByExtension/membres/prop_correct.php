@@ -297,7 +297,7 @@ elseif($act=="")
 	// fichier à utiliser
 //	$t->set_file(array(
 //	"tpBody" => "user.correct.tpl"));
-	
+
 // fichier à utiliser
 $t->set_file(array(
 "tpForm_Recherche" => "form_recherche.tpl",
@@ -367,7 +367,7 @@ $t->set_var (array(
 "DESCRIPTION" => htmlspecialchars($copyright." - ".$description1),
 "PAGEKEYWORD" => $keyword
 ));
-	
+
 $t->parse("BODY","tpBody");
 $t->parse("MENUBARRE","tpMenu");
 $t->parse("FORM_RECHERCHE","tpForm_Recherche");

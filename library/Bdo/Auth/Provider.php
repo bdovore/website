@@ -21,7 +21,7 @@ class Bdo_Auth_Provider
 
     public function connect ()
     {
-         
+
         // Identifiant du service vers lequel établir la connexion, ici
         // on se connecte à Google.
         $this->openid->identity = $this->openid_identifier;

@@ -35,7 +35,7 @@ while ($DB->next_record()) {
 	$histoire = str_replace ( chr(0x9c), '\'',  $histoire );
     $titre = str_replace ( chr(0x96), '\'',  $titre );
 	$histoire = str_replace ( chr(0x96), '\'',  $histoire );
-    
+
     //Conversion de la date de MySQL (yyyy-mm-jj hh:mm:ss) à RFC822 (format rss : wed, 30 apr 2009 hh:mm:ss GMT)
     $date_array = explode("-",$dte_post);
     $day_array = explode(" ",$date_array[2]);

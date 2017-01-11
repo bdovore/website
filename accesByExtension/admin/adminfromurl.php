@@ -1,4 +1,4 @@
-<?php 	
+<?php
 
 
 
@@ -89,8 +89,8 @@ elseif($act=="generate")
 	}
 
 
-	$query = "INSERT INTO `users_alb_prop` (`USER_ID`,`PROP_DTE`, `PROP_TYPE`, `ACTION`, `NOTIF_MAIL`, `TITRE`, 
-	`NUM_TOME`, `ID_SERIE`, `SERIE`, `DTE_PARUTION`, `ID_GENRE`, `GENRE`, `ID_EDITEUR`, `EDITEUR`, `ID_SCENAR`, 
+	$query = "INSERT INTO `users_alb_prop` (`USER_ID`,`PROP_DTE`, `PROP_TYPE`, `ACTION`, `NOTIF_MAIL`, `TITRE`,
+	`NUM_TOME`, `ID_SERIE`, `SERIE`, `DTE_PARUTION`, `ID_GENRE`, `GENRE`, `ID_EDITEUR`, `EDITEUR`, `ID_SCENAR`,
 	`SCENAR`, `ID_DESSIN`, `DESSIN`, `ID_COLOR`, `COLOR`, `ID_COLLECTION`, `COLLECTION`, `HISTOIRE`,`URL_BDNET`
 	) VALUES (" . $DB->escape($_SESSION["UserId"]) . ", NOW(), 'AJOUT', 2, 0, ";
 	$query .= sqlise($titre,'text').", ".sqlise($tome,'text').", NULL, ".sqlise($serie,'text').", ".sqlise($dte_parution,'text'). ", ";

@@ -3,22 +3,22 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Bdo_Security {
 	private static $instance;
-	
-	
+
+
 	public function __construct() {
 	}
-	
+
 	public static function _getInstance() {
 		if(!isset(self::$instance)) {
 			self::$instance = new security();
 		}
 		return self::$instance;
 	}
-	
+
 	public function is_mail($mail)
 	{
 		$Syntaxe='#^[\w.\+-]+@[\w.-]+\.[a-zA-Z]{2,5}$#';
@@ -27,7 +27,7 @@ class Bdo_Security {
 		else
 			return false;
 	}
-	
+
 	public function stripSlUtf8($data)
 	{
 		if (get_magic_quotes_gpc())     {
@@ -41,32 +41,32 @@ class Bdo_Security {
 				//if (is_utf8($data)) $data = utf8_decode($data);
 			}
 		}
-	
+
 		return $data;
 	}
-	
+
 	public function page() {
 	    $acl = Bdo_Cfg::getVar('acl');
 	    $respriv = Bdo_Cfg::getVar('controller').".".Bdo_Cfg::getVar('action');
-	    
+
 	    if (!$acl->isResourcePrivilege(Bdo_Cfg::getVar('controller'),Bdo_Cfg::getVar('action'))) {
 	    	Bdo_Error::add("Le privil&egrave;ge [".$respriv."] n'existe pas.");
 	    }
-	    
+
 	    if (!Bdo_Cfg::user()->isAllowed($respriv)) {
 	        exit('acc&egrave;s interdit !!');
 	    }
 	}
-	
+
 	public function protectAttack($var_name, $var_data)
 	{
 		$error = '';
 		$a_whiteList = Bdo_Cfg::getVar("a_whiteList");
-	
+
 		if (empty($var_data)) {
 			return $var_data;
 		}
-	
+
 		if (is_array($var_data)) {
 			$corr_var_data = array();
 			foreach($var_data as $key=>$val) {
@@ -80,7 +80,7 @@ class Bdo_Security {
 			}
 			return $corr_var_data;
 		}
-	
+
 		/**
 		 * si la valeur est de type numeric
 		 * pas de risque d'attaque
@@ -106,7 +106,7 @@ class Bdo_Security {
 		 */
 		if ($column = Bdo_Cfg::getVar('schema')->getColumn($var_name))
 		{
-	
+
 			if ('ID_' == substr($column->COLUMN_NAME,0,3)) {
 				if (!($error = self::verifData($column,$var_data))) {
 					return $var_data;
@@ -145,20 +145,20 @@ class Bdo_Security {
 		else {
 			$error = '<div style="background-color: #FFFFFF;"><font color=red>['.$var_name.'] : valeur passée non-autorisée ! ['.htmlPrepaTexte($var_data).']</font></div>';
 		}
-	
+
 		if (!$error) {
 			$error = '<div style="background-color: #FFFFFF;"><font color=red>['.$var_name.'] : contôles insuffisants Security Class.</font></div>';
 		}
 		cfg::quit($error);
-	
+
 		return false;
 	}
-	
-	
+
+
 	public function verifData ($column,$data)
 	{
 		$error = "";
-	
+
 		//le type doit correspondre avec la valeur
 		// vérification par type
 		switch ($column->DATA_TYPE)
@@ -197,7 +197,7 @@ class Bdo_Security {
 					else {
 						$error = '[ '.$column->COLUMN_NAME.' ] : '.LANG_INSERTERROR6;
 					}
-	
+
 					break;
 				}
 			case 'float' :
@@ -221,7 +221,7 @@ class Bdo_Security {
 					else {
 						$error = '[ '.$column->COLUMN_NAME.' ] : '.LANG_INSERTERROR6;
 					}
-	
+
 					break;
 				}
 			case 'time' :
@@ -235,7 +235,7 @@ class Bdo_Security {
 			case 'text' :
 			case 'mediumtext' :
 			case 'longtext' :
-	
+
 				{
 					if (stristr($column->COLUMN_NAME,'EMAIL')) {
 						if (!self::is_mail($data)) {
@@ -248,20 +248,20 @@ class Bdo_Security {
 					else {
 						$error = '[ '.$column->COLUMN_NAME.' ] : '.LANG_INSERTERROR11;
 					}
-	
+
 					break;
 				}
 		}
 		return $error;
 	}
-	
-	
+
+
 	public static function verifDecimal($column,$data)
 	{
 		$dataeurs = preg_replace("#decimal|\(|\)| unsigned#i", "$1", $column->COLUMN_TYPE);
 		list($tot,$dec)= explode(",", $dataeurs);
 		$unit = $tot - $dec;
-	
+
 		$max = str_pad('',$unit,'9').'.'.str_pad('',$dec,'9');
 		if (stripos($column->COLUMN_TYPE,'unsigned'))
 		{
@@ -273,22 +273,22 @@ class Bdo_Security {
 			$sign = '[\-+]?';
 			$min='-'.$max;
 		}
-	
+
 		if (preg_match( '/^'.$sign.'[0-9]{0,'.$unit.'}(\.[0-9]{1,'.$dec.'})?$/', $data))
 		{
 			return true;
-	
+
 		}
 		else
 		{
 			return $min.' <= n <= '.$max;
 		}
 	}
-	
+
 	public static function verifInteger($column,$data)
 	{
 		$base = 256;
-	
+
 		switch(strtolower($column->DATA_TYPE))
 		{
 			case 'tinyint' : $expo = 1; break;
@@ -297,7 +297,7 @@ class Bdo_Security {
 			case 'int' : $expo = 4; break;
 			case 'bigint' : $expo = 8; break;
 		}
-	
+
 		if (stripos($column->COLUMN_TYPE,'unsigned'))
 		{
 			$min = 0;
@@ -308,10 +308,10 @@ class Bdo_Security {
 			$min = -(pow($base,$expo)/2);
 			$max = (pow($base,$expo)/2)-1;
 		}
-	
+
 		if (($min <= $data) and ($max >=$data)) {
 			return true;
-	
+
 		}
 		else {
 			return $min.' <= n <= '.$max;

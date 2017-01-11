@@ -29,30 +29,30 @@ if($act=="update")
 
 	$query = "
 	INSERT INTO `bd_tome` (
-	`TITRE`, `NUM_TOME`, `ID_SERIE`, `ID_GENRE`, `ID_SCENAR`, `ID_SCENAR_ALT`, 
-	`ID_DESSIN`, `ID_DESSIN_ALT`, `ID_COLOR`, `ID_COLOR_ALT`, `FLG_INT`, 
+	`TITRE`, `NUM_TOME`, `ID_SERIE`, `ID_GENRE`, `ID_SCENAR`, `ID_SCENAR_ALT`,
+	`ID_DESSIN`, `ID_DESSIN_ALT`, `ID_COLOR`, `ID_COLOR_ALT`, `FLG_INT`,
 	`FLG_TYPE`, `PRIX_BDNET`, `HISTOIRE`
-	) 
-	SELECT 
-		`TITRE`, 
-		`NUM_TOME`, 
-		".$DB->escape($new_serie_id).", 
-		".$DB->escape($id_genre).", 
-		`ID_SCENAR`, 
-		`ID_SCENAR_ALT`, 
-		`ID_DESSIN`, 
-		`ID_DESSIN_ALT`, 
-		`ID_COLOR`, 
-		`ID_COLOR_ALT`, 
-		`FLG_INT`, 
-		`FLG_TYPE`, 
-		`PRIX_BDNET`, 
-		`HISTOIRE` 
+	)
+	SELECT
+		`TITRE`,
+		`NUM_TOME`,
+		".$DB->escape($new_serie_id).",
+		".$DB->escape($id_genre).",
+		`ID_SCENAR`,
+		`ID_SCENAR_ALT`,
+		`ID_DESSIN`,
+		`ID_DESSIN_ALT`,
+		`ID_COLOR`,
+		`ID_COLOR_ALT`,
+		`FLG_INT`,
+		`FLG_TYPE`,
+		`PRIX_BDNET`,
+		`HISTOIRE`
 	FROM
-		bd_tome 
+		bd_tome
 	WHERE
 		id_tome=".$DB->escape($old_tome_id);
-	
+
 	$DB->query($query);
 
 	// récupère la valeur du dernier album inséré
@@ -85,8 +85,8 @@ if($act=="update")
 
 		// Transfère les éditions sélectionnées sous le nouvel albums
 		$query = "UPDATE bd_edition SET
-		id_tome = ".$DB->escape($new_tome_id).", 
-		img_couv = ".sqlise($new_filename,'text_simple')." 
+		id_tome = ".$DB->escape($new_tome_id).",
+		img_couv = ".sqlise($new_filename,'text_simple')."
 		WHERE id_edition = ".$DB->escape($idedition);
 
 		$DB->query($query);
@@ -104,7 +104,7 @@ elseif($act=="")
 	$query = q_tome("t.id_tome = ".$DB->escape($alb_id));
 	$DB->query($query);
 	$DB->next_record();
-	
+
 	$id_edition = $DB->f("id_edition");
 
 	// Détermine l'affichage des infos

@@ -7,7 +7,7 @@ Bdo_Cfg::setVar('debug',DEBUG);
 
 if (Bdo_Cfg::debug()) {
      Bdo_Debug::execTime("Entree dans le bootstrap");
-     
+
      Bdo_Debug::saveInfoVar($_SESSION,'_SESSION','_SESSION en entrée');
      Bdo_Debug::saveInfoVar($_POST,'_POST');
      Bdo_Debug::saveInfoVar($_GET,'_GET');
@@ -63,7 +63,7 @@ else if (! isset($_SESSION['ID_LANG']) or empty($_SESSION['ID_LANG'])) {
 }
 if (!in_array($_SESSION['ID_LANG'], array('_FR','_EN'))) {
     $_SESSION['ID_LANG'] = '_FR';
-    
+
 }
 
 include_once (BDO_DIR . "language".DS.$_SESSION['ID_LANG'].".inc.php");
@@ -95,7 +95,7 @@ if (stristr($_SERVER['REQUEST_URI'],'script/fckeditor')) {
 	Bdo_Cfg::quit();
 }
 */
- 
+
 if (Bdo_Cfg::debug()) Bdo_Debug::execTime("chargement page");
 
 $fileController = BDO_DIR . 'mvc' . DS . 'controllers' . DS . $controller . '.php';

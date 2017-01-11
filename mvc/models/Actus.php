@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Actus
 {
@@ -12,7 +12,7 @@ class Actus
     {
         $requete = "SELECT * FROM news WHERE news_level>=5  ORDER BY News_id DESC LIMIT 0, " . intval($limit);
         $resultat = Db_query($requete);
-        
+
         $a_obj = array();
         while ($obj = Db_fetch_object($resultat)) {
             $a_obj[] = $obj;
@@ -37,7 +37,7 @@ class Actus
 	    group by titre, t.id_tome
 	    order by dte desc limit 0," . intval($limit);
         $resultat = Db_query($requete);
-        
+
         $a_obj = array();
         while ($obj = Db_fetch_object($resultat)) {
             $a_obj[] = $obj;
@@ -61,7 +61,7 @@ class Actus
 	    order by en.dte_parution desc
 	    limit 0," . intval($limit);
         $resultat = Db_query($requete);
-        
+
         $a_obj = array();
         while ($obj = Db_fetch_object($resultat)) {
             $a_obj[] = $obj;
@@ -85,7 +85,7 @@ class Actus
 	    order by en.dte_parution
 	    limit 0," . intval($limit);
         $resultat = Db_query($requete);
-        
+
         $a_obj = array();
         while ($obj = Db_fetch_object($resultat)) {
             $a_obj[] = $obj;
@@ -123,7 +123,7 @@ class Actus
                 'Comics'
         );
         // requete select de base pour les top 1 et 2
-        
+
         $select_topactu = "
 	SELECT
 		t.TITRE as TITRE_TOME,
@@ -142,12 +142,12 @@ class Actus
 		INNER JOIN bd_genre g ON s.id_genre = g.id_genre
                 INNER JOIN note_tome on note_tome.ID_TOME= t.id_tome
 	WHERE
-		en.dte_parution >= DATE_SUB(NOW(),INTERVAL 2 MONTH) AND 
+		en.dte_parution >= DATE_SUB(NOW(),INTERVAL 2 MONTH) AND
                 en.dte_parution <= NOW()
 	";
-        
+
         $order_actu = " ORDER BY score desc, en.dte_parution DESC LIMIT 0,2";
-        
+
         // requete select de base pour dans l'air
         $select_topair = "
 	SELECT
@@ -170,35 +170,35 @@ class Actus
 		and en.dte_parution >= DATE_SUB(NOW(),INTERVAL 3 MONTH) AND
                 en.dte_parution <= NOW()
 		";
-        
+
         $order_air = "
 	GROUP BY t.id_tome
 	ORDER BY nb DESC, IFNULL(ua.date_achat,ua.date_ajout) DESC
 	LIMIT 0,2";
-        
+
         $html = '
 	<div id="actu" class="right fond">
 	<div class="middle_title">
 	<h3>Actualité</h3>
 	</div>
 	';
-        
+
         foreach ($a_genre as $genre) {
             $html .= '<div class="right"><div class="middle_content">' . $genre . '</div><br />';
             $filter = " and g.origine = '" . $genre . "' ";
-            
+
             // actu
             $requete = $select_topactu . $filter . " " . $order_actu;
             $resultat = Db_query($requete);
             if ($obj = Db_fetch_object($resultat)) {
                  $html .= urlAlbum ($obj,'couvMedium');
-                 $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";                  
+                 $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";
             }
              if ($obj = Db_fetch_object($resultat)) {
                  $html .= '&nbsp;' . urlAlbum ($obj,'couvMedium');
-                 $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";                  
+                 $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";
             }
-            
+
             // air du temps
             $requete = $select_topair . $filter . $order_air;
             $resultat = Db_query($requete);
@@ -212,14 +212,14 @@ class Actus
 		</div>
 		';
         }
-        
+
         $html .= '</div>';
 
         //le cache généré pour le moment contient l'URL complète avec http(s)://
         //ça cause des problèmes pour les utilisateurs (~ 99%) qui sont en HTTP
         //et qui n'ont pas accepté le certificat de OVH pour bdovore (pas d'image).
-        //Pour résoudre ça, il suffit de toujours avoir le cache en HTTP. 
-        //Au pire, ceux qui utilisent HTTPS auront un simple avertissement du genre 
+        //Pour résoudre ça, il suffit de toujours avoir le cache en HTTP.
+        //Au pire, ceux qui utilisent HTTPS auront un simple avertissement du genre
         //"attention il y a du contenu non-sécurisé sur cette page".
         $html = preg_replace("/https:/i", "http:", $html);
 
@@ -228,7 +228,7 @@ class Actus
 
     function setLastAjout ($file)
     {
-        
+
         // insertion des 10 derniers albums ajoutés
         $html = '
 	<div id="last" class="right fond">
@@ -241,11 +241,11 @@ class Actus
 		<div class="cadre1" style="margin:3px 3px 3px 3px ;">
 ';
         $requete = "SELECT
-                bd_tome.TITRE as TITRE_TOME, 
-                bd_tome.ID_TOME, 
-                bd_tome.MOYENNE 
-                from bd_tome 
-                INNER JOIN (SELECT 
+                bd_tome.TITRE as TITRE_TOME,
+                bd_tome.ID_TOME,
+                bd_tome.MOYENNE
+                from bd_tome
+                INNER JOIN (SELECT
                 MAX(bd_tome.ID_TOME) ID_TOME
                 from bd_tome inner join bd_edition using (id_edition)
                 WHERE PROP_STATUS = 1

@@ -112,13 +112,13 @@ elseif($act=="")
 	"tpBase" => "body.tpl"));
 	// Compte les albums pour lesquels les auteurs ont travaillé
 	$query = "
-	select 
-		count(*) as nbtome 
-	from 
-		bd_tome 
-	where 
-		id_scenar = ".$DB->escape($auteur_id)." 
-		or id_dessin = ".$DB->escape($auteur_id)." 
+	select
+		count(*) as nbtome
+	from
+		bd_tome
+	where
+		id_scenar = ".$DB->escape($auteur_id)."
+		or id_dessin = ".$DB->escape($auteur_id)."
 		or id_color = ".$DB->escape($auteur_id)."";
 	$DB->query ($query);
 	$DB->next_record();
@@ -126,23 +126,23 @@ elseif($act=="")
 
 	//récupère les données utilisateur dans la base de donnée
 	$query = "
-	SELECT 
-		id_auteur, 
-		pseudo, 
-		prenom, 
-		nom, 
-		flg_scenar, 
-		flg_dessin, 
-		flg_color, 
-		comment, 
-		dte_nais, 
-		dte_deces, 
-		nationalite 
-	FROM 
-		bd_auteur 
-	WHERE 
+	SELECT
+		id_auteur,
+		pseudo,
+		prenom,
+		nom,
+		flg_scenar,
+		flg_dessin,
+		flg_color,
+		comment,
+		dte_nais,
+		dte_deces,
+		nationalite
+	FROM
+		bd_auteur
+	WHERE
 		id_auteur=".$DB->escape($auteur_id);
-	
+
 	$DB->query ($query);
 	$DB->next_record();
 	$t->set_var (array

@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Statistique
 {
@@ -95,7 +95,7 @@ class Statistique
     {
         // visites globales
         $resultat = Db_query("select sum(nb_connect) visite from users");
-        
+
         if ($obj = Db_fetch_object($resultat)) {
             $this->nbVisite = $obj->visite;
         }

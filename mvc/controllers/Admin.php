@@ -2,7 +2,7 @@
 
 /**
  * @author Tom
- * 
+ *
  */
 class Admin extends Bdo_Controller {
 
@@ -243,7 +243,7 @@ class Admin extends Bdo_Controller {
                     "VALID_DTE" => date('d/m/Y H:i:s')
                 ));
                 $this->Edition->update();
-                // vérifit l'image 
+                // vérifit l'image
                 if (substr($prop_img, 0, 3) == "tmp") {
                     $newfilename = "CV-" . sprintf("%06d", $this->Edition->ID_TOME) . "-" . sprintf("%06d", $this->Edition->ID_EDITION);
                     $strLen = strlen($prop_img);
@@ -428,7 +428,7 @@ class Admin extends Bdo_Controller {
     public function editAlbum() {
         /*
          * Methode d'édition / modification / suppression d'un album
-         * 
+         *
          */
         $this->view->set_var(array("PAGETITLE" => "Admin : Album"));
         if (User::minAccesslevel(1)) {
@@ -616,7 +616,7 @@ class Admin extends Bdo_Controller {
 // INSERE UN NOUVEL ALBUM DANS LA BASE
             elseif ($act == "append") {
 
-                // on vérifie d'abord la date 
+                // on vérifie d'abord la date
                 $txtDateParution = completeDate(postVal('txtDateParution'));
                 $flgDteParution = postVal('FLAG_DTE_PARUTION');
                 if (!validateDate($txtDateParution) AND $flgDteParution <> "1") {
@@ -905,7 +905,7 @@ class Admin extends Bdo_Controller {
                     }
                 }
                 // on met à jour l'édition
-                //$nb =  $this->Edition->updateTome($idedition,$new_idtome,$new_filename);  
+                //$nb =  $this->Edition->updateTome($idedition,$new_idtome,$new_filename);
                 $this->Edition->set_dataPaste(array(
                     "ID_EDITION" => $idedition,
                     "ID_TOME" => $new_idtome,
@@ -1991,7 +1991,7 @@ class Admin extends Bdo_Controller {
                 // r�cup�re le nombre d'utilisateurs
                 $nb_users2 = $this->User->countUserBy("editeur", $dest_id);
 
-                // r�cup�re les donn�es principales                
+                // r�cup�re les donn�es principales
                 $this->Editeur->add_dataPaste("ID_EDITEUR", intval($dest_id));
                 $this->Editeur->load();
 
@@ -2032,13 +2032,13 @@ class Admin extends Bdo_Controller {
         $error_msg[2] = "Auteur à garder et auteur à fusionner identiques";
         if (!User::minAccesslevel(1))
             die("Vous n'avez pas accès à cette page.");
-        
+
         $source_id = getValInteger("source_id");
         $dest_id = getValInteger("dest_id");
         $act = getVal("act","");
         $conf = getVal("conf");
         $this->loadModel("Auteur");
-        
+
         if ($act == "merge") {
             // vérifie que source_id et dest_id ont été defini
             if ((is_null($dest_id)) | ($dest_id == "")) {
@@ -2060,8 +2060,8 @@ class Admin extends Bdo_Controller {
 
                 // Supprime l'ancien auteur
                 $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $source_id));
-                 $this->Auteur->delete();               
-                
+                 $this->Auteur->delete();
+
                 echo "Auteur supprim&eacute; <br>";
 
                 $redirection = BDO_URL . "admin";
@@ -2075,7 +2075,7 @@ class Admin extends Bdo_Controller {
         }
 
         // AFFICHER
-        elseif ($act == "") {          
+        elseif ($act == "") {
 
             // REMPLISSAGE PARTIE GAUCHE
             if ((!is_null($source_id)) & ($source_id != '')) {
@@ -2140,7 +2140,7 @@ class Admin extends Bdo_Controller {
             ));
 
             // assigne la barre de login
-           
+
         }
         $this->view->render();
     }
@@ -2371,9 +2371,9 @@ class Admin extends Bdo_Controller {
                     "NOUVTITRE" => stripslashes($this->Serie->NOM_SERIE) . ", Tome #tome#"
                 ));
 
-                $dbs_tome = $this->Tome->load('c', " 
+                $dbs_tome = $this->Tome->load('c', "
                             WHERE bd_tome.id_serie=
-                            " . $serie . " 
+                            " . $serie . "
                              ORDER BY bd_tome.id_tome");
                 // selection des albums
                 $this->view->set_var('dbs_tome', $dbs_tome);
@@ -2457,9 +2457,9 @@ class Admin extends Bdo_Controller {
                 ));
 
                 // Affiche les couvertures
-                $dbs_tome = $this->Tome->load('c', " 
+                $dbs_tome = $this->Tome->load('c', "
                             WHERE bd_tome.id_serie=
-                            " . $serie . " 
+                            " . $serie . "
                              ORDER BY bd_tome.id_tome");
                 // selection des albums
                 $this->view->set_var('dbs_tome', $dbs_tome);
@@ -2475,9 +2475,9 @@ class Admin extends Bdo_Controller {
             $this->view->render();
         }
     }
-    
+
     public function splitEdition() {
-        
+
         if (!User::minAccesslevel(1)) {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }
@@ -2496,12 +2496,12 @@ class Admin extends Bdo_Controller {
                         echo GetMetaTag(2,"Aucune édition à transférer.",(BDO_URL."admin/splitedition?alb_id=".$old_tome_id));
                         exit();
                 }
-                
+
                 // Récupère le genre de la nouvelle série
                 $this->loadModel("Serie");
                 $this->Serie->set_dataPaste(array("ID_SERIE" =>$new_serie_id ));
                 $this->Serie->load();
-                
+
                 $id_genre = $this->Serie->ID_GENRE;
 
                 // création du nouvel album dans la base bd_tome
@@ -2514,21 +2514,21 @@ class Admin extends Bdo_Controller {
                     "NUM_TOME" => $this->Tome->NUM_TOME,
                     "ID_GENRE" => $id_genre,
                     "ID_SERIE" =>  $new_serie_id,
-                    "ID_SCENAR" => $this->Tome->ID_SCENAR, 
-                    "ID_SCENAR_ALT"  => $this->Tome->ID_SCENAR_ALT, 
-                    "ID_DESSIN"  => $this->Tome->ID_DESSIN,     
-                    "ID_DESSIN_ALT"  => $this->Tome->ID_DESSIN_ALT, 
-                    "ID_COLOR"  => $this->Tome->ID_COLOR, 
-                    "ID_COLOR_ALT"=> $this->Tome->ID_COLOR_ALT, 
-                    "FLG_INT" => $this->Tome->FLG_INT_TOME, 
-                    "FLG_TYPE" => $this->Tome->FLG_TYPE_TOME, 
-                    "PRIX_BDNET" => $this->Tome->PRIX_BDNET, 
+                    "ID_SCENAR" => $this->Tome->ID_SCENAR,
+                    "ID_SCENAR_ALT"  => $this->Tome->ID_SCENAR_ALT,
+                    "ID_DESSIN"  => $this->Tome->ID_DESSIN,
+                    "ID_DESSIN_ALT"  => $this->Tome->ID_DESSIN_ALT,
+                    "ID_COLOR"  => $this->Tome->ID_COLOR,
+                    "ID_COLOR_ALT"=> $this->Tome->ID_COLOR_ALT,
+                    "FLG_INT" => $this->Tome->FLG_INT_TOME,
+                    "FLG_TYPE" => $this->Tome->FLG_TYPE_TOME,
+                    "PRIX_BDNET" => $this->Tome->PRIX_BDNET,
                     "HISTOIRE" => $this->Tome->HISTOIRE_TOME
                 ));
-               
-                
+
+
                 $newTome->update();
-                
+
 
                 // récupère la valeur du dernier album inséré
                 $new_tome_id = $newTome->ID_TOME;
@@ -2558,7 +2558,7 @@ class Admin extends Bdo_Controller {
                                 $newTome->add_dataPaste("ID_EDITION" , $idedition);
                                 $newTome->update();
                                 $flg_edition = "N";
-                                
+
                         }
                         $this->Edition->set_dataPaste(array("ID_EDITION" => $idedition));
                         $this->Edition->load();
@@ -2567,7 +2567,7 @@ class Admin extends Bdo_Controller {
                            "ID_TOME" => $new_tome_id,
                             "IMG_COUV" => $new_filename
                         ));
-                       
+
                         $this->Edition->update();
                         echo "Nombre de records modifi&eactue;es dans la table bd_edition : ".$this->Edition->affected_rows."<br>";
                 }
@@ -2591,7 +2591,7 @@ class Admin extends Bdo_Controller {
                 $coloristes1 = ($this->Tome->ID_COLOR_ALT == 0) ? stripslashes($this->Tome->copseudo) : stripslashes($this->Tome->copseudo)." / ".stripslashes($this->Tome->coapseudo);
                 $edcollec1 = ($this->Tome->NOM_COLLECTION == "<N/A>") ? stripslashes($this->Tome->NOM_EDITION) : stripslashes($this->Tome->NOM_EDITION)." / ".stripslashes($this->Tome->NOM_COLLECTION);
                 // Creation d'un nouveau Template
-               
+
 
                 $this->view->set_var (array
                 ("IDTOME" => $this->Tome->ID_TOME,
@@ -2609,18 +2609,18 @@ class Admin extends Bdo_Controller {
                 $this->loadModel('Edition');
                 $dbs_edition = $this->Edition->load(c, "where PROP_STATUS not in ('0','99','98') and bd_tome.id_tome =" . $alb_id);
 
-                
+
 
                 $this->view->set_var (array
                 ("dbs_edition" => $dbs_edition,
-                 "DEFAULT_EDITION" => $id_edition,                
+                 "DEFAULT_EDITION" => $id_edition,
                 "URLRETOURFICHE" => BDO_URL."admin/editalbum?alb_id=".$alb_id,
                 "ACTIONNAME" => "Effectuer les modifications",
                 "URLACTION" => BDO_URL."admin/splitedition?act=update"
                 ));
                 $this->view->render();
 
-                
+
         }
     }
 

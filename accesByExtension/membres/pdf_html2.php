@@ -102,9 +102,9 @@ switch ($contenu) {
 
 		// Affichage des achats futurs
 		$query = "SELECT t.id_tome, t.titre, t.num_tome, s.id_serie,
-		s.nom s_nom,s.flg_fini s_fini, c.note, c.comment, scen.pseudo sc_pseudo, 
-		dess.pseudo de_pseudo, color.pseudo co_pseudo, e.nom ed_nom, 
-		col.nom col_nom, g.libelle s_genre, ed.dte_parution dte_par, 
+		s.nom s_nom,s.flg_fini s_fini, c.note, c.comment, scen.pseudo sc_pseudo,
+		dess.pseudo de_pseudo, color.pseudo co_pseudo, e.nom ed_nom,
+		col.nom col_nom, g.libelle s_genre, ed.dte_parution dte_par,
 		ed.ean, ed.img_couv, '0' cat
 	FROM users_album u
 	LEFT JOIN bd_edition ed ON u.id_edition = ed.ID_EDITION
@@ -117,7 +117,7 @@ switch ($contenu) {
 	LEFT JOIN bd_editeur e ON col.id_editeur = e.ID_EDITEUR
 	LEFT JOIN bd_serie s ON t.id_serie = s.ID_SERIE
 	LEFT JOIN bd_genre g ON s.id_genre = g.ID_GENRE
-	WHERE u.user_id = ".$DB->escape($_SESSION["UserId"])." 
+	WHERE u.user_id = ".$DB->escape($_SESSION["UserId"])."
 	AND u.flg_achat='".$DB->escape($flg_achat)."'
 	ORDER BY s.nom, t.num_tome, t.flg_type";
 		break;
@@ -125,7 +125,7 @@ switch ($contenu) {
 	case '2':
 		$nomFichier = "Albums manquants au ".strftime("%d-%m-%Y");
 		$query = "
-SELECT 
+SELECT
 	t.id_tome,
 	t.titre,
 	t.num_tome,
@@ -142,21 +142,21 @@ SELECT
 	en.ean,
 	en.img_couv,
 	'0' cat
-FROM 
+FROM
 	(
 		SELECT DISTINCT
 			s.*
-		FROM 
-			users_album ua 
+		FROM
+			users_album ua
 			INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
 			INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-			INNER JOIN bd_serie s ON t.ID_SERIE=s.ID_SERIE 
-		WHERE 
+			INNER JOIN bd_serie s ON t.ID_SERIE=s.ID_SERIE
+		WHERE
 			ua.user_id = ".$DB->escape($_SESSION["UserId"])."
 			AND NOT EXISTS (
 						SELECT NULL FROM users_exclusions ues
-						WHERE s.id_serie=ues.id_serie 
-						AND ues.id_tome = 0 
+						WHERE s.id_serie=ues.id_serie
+						AND ues.id_tome = 0
 						AND ues.user_id = ".$DB->escape($_SESSION["UserId"])."
 					)
 		) s
@@ -168,17 +168,17 @@ FROM
 	INNER JOIN bd_auteur se ON t.id_scenar = se.id_auteur
 	INNER JOIN bd_auteur de ON t.id_dessin = de.id_auteur
 	INNER JOIN bd_auteur co ON t.id_color = co.id_auteur
-WHERE 
+WHERE
 		NOT EXISTS (
-			SELECT NULL 
+			SELECT NULL
 			FROM users_album ua
 			INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
-			WHERE 
+			WHERE
 			ua.user_id = ".$DB->escape($_SESSION["UserId"])."
-			AND t.id_tome=en.id_tome 
+			AND t.id_tome=en.id_tome
 		)
 		AND NOT EXISTS (
-			SELECT NULL 
+			SELECT NULL
 			FROM users_exclusions uet
 			WHERE uet.user_id = ".$DB->escape($_SESSION["UserId"])."
 			AND t.id_tome=uet.id_tome
@@ -218,7 +218,7 @@ hr.expSep{
      clear: both;
      visibility: hidden;
      margin:0;
-} 
+}
 
 .expFieldBlock{
 	float: left;
@@ -242,7 +242,7 @@ div.expTitle {
                     <?php echo $nomFichier;?>
                 </td>
                 <td style="width: 50%; text-align: right; color:#880000; font-weight:bold;font-size: 18pt">
-                    BDo'vore 
+                    BDo'vore
                 </td>
             </tr>
         </table>

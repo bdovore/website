@@ -24,14 +24,14 @@ if (($act == 'del') and (($_SESSION["UserId"] == $user_id) or (minAccessLevel(2,
 {
 	// si une seule edition sans commentaire
 	$query = "
-	SELECT 
-		bd_edition.ID_EDITION, 
+	SELECT
+		bd_edition.ID_EDITION,
 		users_album.comment
-	FROM 
-		users_album 
+	FROM
+		users_album
 		INNER JOIN bd_edition ON users_album.ID_EDITION=bd_edition.ID_EDITION
-	WHERE 
-		bd_edition.ID_TOME='".$DB->escape($id_tome)."' 
+	WHERE
+		bd_edition.ID_TOME='".$DB->escape($id_tome)."'
 		and users_album.user_id='".$DB->escape($user_id)."'";
 
 	$DB->query($query);
@@ -44,17 +44,17 @@ if (($act == 'del') and (($_SESSION["UserId"] == $user_id) or (minAccessLevel(2,
 	{
 		// on reporte
 		$query = "
-		UPDATE users_album 
+		UPDATE users_album
 		SET COMMENT=(
 			SELECT
-				comment 
+				comment
 			FROM
-				users_comment 
-			where 
-				ID_TOME='".$DB->escape($id_tome)."' 
+				users_comment
+			where
+				ID_TOME='".$DB->escape($id_tome)."'
 				and USER_ID='".$DB->escape($user_id)."')
-		WHERE 
-		ID_EDITION='".$DB->f("ID_EDITION")."' 
+		WHERE
+		ID_EDITION='".$DB->f("ID_EDITION")."'
 		and USER_ID='".$DB->escape($user_id)."'";
 		$DB->query($query);
 	}

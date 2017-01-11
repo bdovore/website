@@ -5,7 +5,7 @@
 *
 * @param					type			description
 * $URL_page					string	 		URL de la page HTML contenant l'info
-* 
+*
 * Info retournée dans le tableau $alb_bdnet
 * 1 : titre
 * 2 : série
@@ -19,7 +19,7 @@
 */
 function scan_alb_amazon($URL_page) {
 	$file_content = file_get_contents ( $URL_page );
-	
+
 	// balise meta
 	$pointeur_b = strpos ( $file_content, '<META name="keywords" content="' ) + 31;
 	$pointeur_e = strpos ( $file_content, '>"', $pointeur_b );
@@ -66,7 +66,7 @@ function scan_alb_amazon($URL_page) {
 	$pointeur_b = strpos ( $file_content, "tome " ) + 5;
 	$pointeur_e = strpos ( $file_content, "<", $pointeur_b );
 	$alb_bdnet [9] = substr ( $file_content, $pointeur_b, $pointeur_e - $pointeur_b );
-	
+
 	// Identifie la présence d'un double scénariste ou non
 	if (ereg ( "(.*),(.*)", $alb_bdnet [4], $des_list )) {
 		$alb_bdnet [4] = $des_list [1];
@@ -74,7 +74,7 @@ function scan_alb_amazon($URL_page) {
 	} else {
 		$alb_bdnet [10] = '';
 	}
-	
+
 	// Identifie la présence d'un double dessinateur ou non
 	if (ereg ( "(.*),(.*)", $alb_bdnet [3], $des_list )) {
 		$alb_bdnet [3] = $des_list [1];
@@ -82,14 +82,14 @@ function scan_alb_amazon($URL_page) {
 	} else {
 		$alb_bdnet [11] = '';
 	}
-	
+
 	// Inclue le prix de l'album
 	$pointeur_b = strpos ( $file_content, "Prix " ) + 14;
 	$pointeur_e = strpos ( $file_content, " &euro;", $pointeur_b );
 	$alb_bdnet [12] = substr ( $file_content, $pointeur_b, $pointeur_e - $pointeur_b );
 	// elimine la virgule
 	$alb_bdnet [12] = str_replace ( ",", ".", $alb_bdnet [12] );
-	
+
 	return $alb_bdnet;
 }
 function get_couv_url($URL_page, $isbn) {
@@ -99,7 +99,7 @@ function get_couv_url($URL_page, $isbn) {
 		return "";
 		exit ();
 	}
-	
+
 	if (preg_match ( "/(http:\/\/ecx.images-amazon.com\/images\/.{1,100}jpg)/i", $file_content, $url_list ))
 		return $url_list [1];
 	else

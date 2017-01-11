@@ -334,7 +334,7 @@ step           :    1                // show all years in drop-down boxes (inste
 			case 'ID_WORKFLOW' :
 				{
 					$query = "
-					SELECT 
+					SELECT
 					wf_workflow.ID_WORKFLOW,
 					wf_workflow.NOM_WORKFLOW".$_SESSION['ID_LANG']." as NOM_WORKFLOW,
 					acl_resource.ID_ACL_RESOURCE,
@@ -384,7 +384,7 @@ step           :    1                // show all years in drop-down boxes (inste
 			case 'ID_ACL_RESOURCE_ETAT' :
 				{
 					$query = "
-					SELECT 
+					SELECT
 					acl_resource_etat.ID_ACL_RESOURCE_ETAT,
 					acl_resource_etat.NOM_ACL_RESOURCE_ETAT".$_SESSION['ID_LANG']."
 					FROM
@@ -476,7 +476,7 @@ step           :    1                // show all years in drop-down boxes (inste
 
 				$query = "SELECT
 				$column->ORG_COLUMN_NAME,
-				$nom_aff_champ 
+				$nom_aff_champ
 				FROM ".$aff_column->ORG_TABLE_NAME." WHERE 1 ".$order_by;
 
 				$resultat = Db_query($query);
@@ -593,7 +593,7 @@ step           :    1                // show all years in drop-down boxes (inste
 		foreach($this->a_filtreSearch as $column_name=>$o_column)
 		{
 			$selectInput = false;
-			
+
 			$column = $this->a_langField_default[$column_name];
 			$col_option_query = "option_query_".$column_name;
 
@@ -637,7 +637,7 @@ step           :    1                // show all years in drop-down boxes (inste
 					}
 				}
 
-				
+
 				$resultat = Db_query($query);
 
 				while ($obj = Db_fetch_object($resultat))
@@ -675,10 +675,10 @@ step           :    1                // show all years in drop-down boxes (inste
 			{
 				$onClick .= "document.".$this->formName.".".$column_name.".value='';";
 			}
-			
+
 			$onClick .= $modeSubmit."\" title='".LANG_RETIRER."'";
 
-			$html_filtreSearch .= "<li  onmouseover='this.className=\"cfg1\"' onmouseout='this.className=\"cfg0\"' ".$onClick." class='cfg0' style='display:inline;padding:3px;margin:0 5 0 0;cursor:pointer'>" . $aff_column->LIB_CHAMP . " 
+			$html_filtreSearch .= "<li  onmouseover='this.className=\"cfg1\"' onmouseout='this.className=\"cfg0\"' ".$onClick." class='cfg0' style='display:inline;padding:3px;margin:0 5 0 0;cursor:pointer'>" . $aff_column->LIB_CHAMP . "
 			<i>".$lib_option_query."</i> [&nbsp;" . htmlPrepaTexte(TransConstante(implode(',',$a_val))).'&nbsp;]'
 			.$add_lib.'</li>';
 		}

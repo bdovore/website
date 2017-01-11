@@ -68,7 +68,7 @@ elseif($act=="append")
 
 	$query = "
 	INSERT INTO `bd_editeur` (
-		`NOM`, 
+		`NOM`,
 		`URL_SITE`
 	)	VALUES (
 		'".$DB->escape($_POST['txtNomEditeur'])."',
@@ -98,7 +98,7 @@ elseif($act=="")
 	"tpBody" => "admin.editeur.tpl",
 	"tpMenu" => "menuadmin.tpl",
 	"tpBase" => "body.tpl"));
-	
+
 	// Selectionne les collections liées à lediteur
 	$query = "SELECT id_collection, nom FROM bd_collection WHERE id_editeur=".$DB->escape($editeur_id);
 	$DB->query ($query);

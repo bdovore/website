@@ -75,21 +75,21 @@ if (isset($_POST["lstEdition"]))
 	}
 
 	$update = "
-	update users_album set 
+	update users_album set
 		id_edition = ".$DB->escape($id_edition).",
-		comment = '".$DB->escape($remarque)."', 
+		comment = '".$DB->escape($remarque)."',
 		flg_tete='".$DB->escape($tete)."',
-		flg_pret = '".$DB->escape($pret)."', 
+		flg_pret = '".$DB->escape($pret)."',
 		flg_achat = '".$DB->escape($achat)."',
 		flg_dedicace = '".$DB->escape($dedi)."',
 		flg_cadeau = '".$DB->escape($cadeau)."',
-		nom_pret = '".$DB->escape($name_pret)."', 
-		email_pret = '".$DB->escape($email_pret)."', 
-		date_achat = ".$dte_achat.", 
+		nom_pret = '".$DB->escape($name_pret)."',
+		email_pret = '".$DB->escape($email_pret)."',
+		date_achat = ".$dte_achat.",
 		cote = ".$DB->escape($prix)."
-	where 
-		id_edition = ".$DB->escape($ori_id_edition)." 
-		and user_id =".$DB->escape($_SESSION["UserId"])." 
+	where
+		id_edition = ".$DB->escape($ori_id_edition)."
+		and user_id =".$DB->escape($_SESSION["UserId"])."
 		";
 	$DB->query($update);
 
@@ -98,21 +98,21 @@ if (isset($_POST["lstEdition"]))
 	if ($note != 'NULL' || $comment) {
 		$update = "
 			INSERT INTO users_comment (
-				user_id, 
-				id_tome, 
-				note, 
-				comment, 
+				user_id,
+				id_tome,
+				note,
+				comment,
 				dte_post
 			) VALUES (
-				".$DB->escape($_SESSION["UserId"]).", 
+				".$DB->escape($_SESSION["UserId"]).",
 				".$DB->escape($id_tome).",
-				".$DB->escape($note).", 
-				'".$DB->escape($comment)."', 
+				".$DB->escape($note).",
+				'".$DB->escape($comment)."',
 				CURRENT_TIMESTAMP()
 			)
-			ON DUPLICATE KEY UPDATE 
-				note=".$DB->escape($note).", 
-				comment='".$DB->escape($comment)."', 
+			ON DUPLICATE KEY UPDATE
+				note=".$DB->escape($note).",
+				comment='".$DB->escape($comment)."',
 				dte_post=CURRENT_TIMESTAMP()
 			";
 		$DB->query($update);
@@ -173,84 +173,84 @@ if ($id_tome or $id_edition)
 	}
 
 	$query = "
-	SELECT 
+	SELECT
 		ua.comment,
-		ua.flg_dedicace, 
+		ua.flg_dedicace,
 		ua.flg_achat,
-		ua.flg_pret, 
-		ua.flg_cadeau, 
+		ua.flg_pret,
+		ua.flg_cadeau,
 		ua.nom_pret,
 		ua.email_pret,
-		ua.flg_tete, 
-		date_format(ua.date_achat,'%d/%m/%Y') dte_achat, 
-		date_format(ua.date_ajout,'%d/%m/%Y') dte_ajout, 
+		ua.flg_tete,
+		date_format(ua.date_achat,'%d/%m/%Y') dte_achat,
+		date_format(ua.date_ajout,'%d/%m/%Y') dte_ajout,
 		ua.cote,
-		
+
 		t.id_tome,
-		t.id_edition as id_edition_default, 
-		t.titre, 
-		t.num_tome, 
-		t.prix_bdnet, 
-		t.flg_int, 
+		t.id_edition as id_edition_default,
+		t.titre,
+		t.num_tome,
+		t.prix_bdnet,
+		t.flg_int,
 		t.flg_type,
-		t.histoire, 
-		
-		s.id_serie, 
-		s.nom s_nom, 
-		s.tri, 
-		s.flg_fini, 
+		t.histoire,
+
+		s.id_serie,
+		s.nom s_nom,
+		s.tri,
+		s.flg_fini,
 		s.nb_tome,
-		s.histoire histoire_serie, 
-		
-		g.id_genre, 
-		g.libelle, 
-	
+		s.histoire histoire_serie,
+
+		g.id_genre,
+		g.libelle,
+
 		en.id_edition,
 		en.img_couv,
-		en.ean, 
-		en.isbn, 
+		en.ean,
+		en.isbn,
 		en.dte_parution,
 		en.flag_dte_parution,
-		en.comment comment_ed, 
-		
+		en.comment comment_ed,
+
 		c.id_collection,
 		c.nom cnom,
-		
+
 		er.id_editeur,
-		er.nom enom, 
-	
-		t.id_scenar, 
-		sc.pseudo as scpseudo, 
-		t.id_dessin, 
-		de.pseudo as depseudo, 
-		t.id_color, 
+		er.nom enom,
+
+		t.id_scenar,
+		sc.pseudo as scpseudo,
+		t.id_dessin,
+		de.pseudo as depseudo,
+		t.id_color,
 		co.pseudo as copseudo,
-		t.id_scenar_alt, 
-		sca.pseudo as scapseudo, 
-		t.id_dessin_alt, 
-		dea.pseudo as deapseudo, 
-		t.id_color_alt, 
+		t.id_scenar_alt,
+		sca.pseudo as scapseudo,
+		t.id_dessin_alt,
+		dea.pseudo as deapseudo,
+		t.id_color_alt,
 		coa.pseudo as coapseudo
-	FROM 
+	FROM
 		users_album ua
-	
+
 		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
-		
+
 		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 		INNER JOIN bd_serie s ON t.id_serie = s.id_serie
 		INNER JOIN bd_genre g ON s.id_genre = g.id_genre
-		
+
 		INNER JOIN bd_collection c ON en.id_collection = c.id_collection
-		INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur 
-		
+		INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
+
 		LEFT JOIN bd_auteur sc ON t.id_scenar = sc.id_auteur
-		LEFT JOIN bd_auteur de ON t.id_dessin = de.id_auteur 
+		LEFT JOIN bd_auteur de ON t.id_dessin = de.id_auteur
 		LEFT JOIN bd_auteur co ON t.id_color = co.id_auteur
 		LEFT JOIN bd_auteur sca ON t.id_scenar_alt = sca.id_auteur
 		LEFT JOIN bd_auteur dea ON t.id_dessin_alt = dea.id_auteur
 		LEFT JOIN bd_auteur coa ON t.id_color_alt = coa.id_auteur
-	WHERE 
-		ua.id_edition =".$DB->escape($id_edition)." 
+	WHERE
+		ua.id_edition =".$DB->escape($id_edition)."
 		AND ua.user_id =".$DB->escape($_SESSION["UserId"]);
 
 	$DB->query($query);
@@ -352,7 +352,7 @@ if ($id_tome or $id_edition)
 			<select id="lstEdition" name="lstEdition" size="1" onChange="test_value()">
 			'.GetOptionValue($opt_edition,$DB->f("id_edition")).'
 			</select>
-			';		
+			';
 			$otheredit = "<input name=\"Submit\" id=\"otheredit\" type='button' value=\"J'ai plusieurs éditions\"  onClick=\"window.open('userdupalb.php?id_tome=".$id_tome."','myEdition','scrollbars=yes,resizable=yes,width=630,height=380')\"/>";
 		}
 		else {

@@ -1,4 +1,4 @@
- 
+
 <table width="100%" class='browser'>
 <tr>
     <td class="entete">{TITRESEARCH}</td>
@@ -23,6 +23,6 @@
         </tr>
         <!-- END DataBlock -->
     </table>
-       
+
   <br />
   <div id="livesearch"></div>

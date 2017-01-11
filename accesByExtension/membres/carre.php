@@ -29,7 +29,7 @@ if ($act=='submit')
 			$query = "INSERT IGNORE INTO `users_list_carre` (
 			`user_id`, `id_tome`, `rang`
 			) VALUES (
-			".$DB->escape($_SESSION["UserId"]).", ".$DB->escape($_POST[$champs]).", ".$DB->escape($i)." 
+			".$DB->escape($_SESSION["UserId"]).", ".$DB->escape($_POST[$champs]).", ".$DB->escape($i)."
 			)";
 			$DB->query ($query);
 		}
@@ -41,18 +41,18 @@ if ($act=='submit')
 else if ($act=='')
 {
 	$query = "
-	SELECT 
-		u.rang, 
-		u.id_tome, 
-		t.titre 
-	FROM 
-		users_list_carre u, 
-		bd_tome t 
-	WHERE 
-		u.id_tome = t.id_tome 
-		AND u.user_id = ".$DB->escape($_SESSION["UserId"])." 
+	SELECT
+		u.rang,
+		u.id_tome,
+		t.titre
+	FROM
+		users_list_carre u,
+		bd_tome t
+	WHERE
+		u.id_tome = t.id_tome
+		AND u.user_id = ".$DB->escape($_SESSION["UserId"])."
 	ORDER BY rang";
-	
+
 	$DB->query ($query);
 
 	// Creation d'une nouvelle instance Fast Template

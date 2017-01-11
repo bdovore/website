@@ -1,4 +1,4 @@
-<?php 	
+<?php
 
 
 
@@ -42,18 +42,18 @@ if ($act==""){
 	$clerep[5] = "serie";
 
 	$query = "
-	SELECT 
-		p.id_proposal, 
-		p.user_id, 
-		u.username, 
-		p.prop_dte, 
-		p.titre, 
-		p.serie 
+	SELECT
+		p.id_proposal,
+		p.user_id,
+		u.username,
+		p.prop_dte,
+		p.titre,
+		p.serie
 	FROM
-		users_alb_prop p 
+		users_alb_prop p
 		INNER JOIN users u ON p.user_id = u.user_id
 	WHERE
-		p.status = 0 
+		p.status = 0
 		AND p.PROP_TYPE='CORRECTION'
 	ORDER BY ".$clerep[$cle].$sort ;
 
@@ -138,64 +138,64 @@ elseif($act=="supprim")
 elseif($act=="valid"){
 
 	$query = "
-	SELECT 
-		users_alb_prop.ID_PROPOSAL, 
-		users_alb_prop.USER_ID, 
-		users_alb_prop.ID_TOME, 
-		users_alb_prop.ID_EDITION, 
-		users_alb_prop.COMMENTAIRE, 
-		users_alb_prop.TITRE, 
-		users_alb_prop.NUM_TOME, 
-		users_alb_prop.ID_SERIE, 
-		users_alb_prop.SERIE AS ORISERIE, 
-		users_alb_prop.FLG_FINI AS FLG_FINI, 
-		users_alb_prop.FLG_INT AS FLG_INT, 
-		users_alb_prop.FLG_TYPE AS FLG_TYPE, 
-		bd_serie.NOM AS SERIE, 
-		users_alb_prop.DTE_PARUTION, 
-		users_alb_prop.ID_GENRE, 
+	SELECT
+		users_alb_prop.ID_PROPOSAL,
+		users_alb_prop.USER_ID,
+		users_alb_prop.ID_TOME,
+		users_alb_prop.ID_EDITION,
+		users_alb_prop.COMMENTAIRE,
+		users_alb_prop.TITRE,
+		users_alb_prop.NUM_TOME,
+		users_alb_prop.ID_SERIE,
+		users_alb_prop.SERIE AS ORISERIE,
+		users_alb_prop.FLG_FINI AS FLG_FINI,
+		users_alb_prop.FLG_INT AS FLG_INT,
+		users_alb_prop.FLG_TYPE AS FLG_TYPE,
+		bd_serie.NOM AS SERIE,
+		users_alb_prop.DTE_PARUTION,
+		users_alb_prop.ID_GENRE,
 		users_alb_prop.GENRE AS ORIGENRE,
-		bd_genre.LIBELLE AS GENRE, 
-		users_alb_prop.ID_EDITEUR, 
-		users_alb_prop.EDITEUR AS ORIEDITEUR, 
-		bd_editeur.NOM AS EDITEUR_NOM, 
-		users_alb_prop.ID_SCENAR, 
-		users_alb_prop.SCENAR AS ORISCENAR, 
-		bd_auteur.PSEUDO AS PSEUDO_SCENAR, 
-		users_alb_prop.ID_SCENAR_ALT, 
-		users_alb_prop.SCENAR_ALT AS ORISCENARALT, 
-		bd_auteur_3.PSEUDO AS PSEUDO_SCENAR_ALT, 
-		users_alb_prop.ID_DESSIN, 
-		users_alb_prop.DESSIN AS ORIDESSIN, 
-		users_alb_prop.EAN, 
+		bd_genre.LIBELLE AS GENRE,
+		users_alb_prop.ID_EDITEUR,
+		users_alb_prop.EDITEUR AS ORIEDITEUR,
+		bd_editeur.NOM AS EDITEUR_NOM,
+		users_alb_prop.ID_SCENAR,
+		users_alb_prop.SCENAR AS ORISCENAR,
+		bd_auteur.PSEUDO AS PSEUDO_SCENAR,
+		users_alb_prop.ID_SCENAR_ALT,
+		users_alb_prop.SCENAR_ALT AS ORISCENARALT,
+		bd_auteur_3.PSEUDO AS PSEUDO_SCENAR_ALT,
+		users_alb_prop.ID_DESSIN,
+		users_alb_prop.DESSIN AS ORIDESSIN,
+		users_alb_prop.EAN,
 		users_alb_prop.ISBN,
-		bd_auteur_1.PSEUDO AS PSEUDO_DESSIN, 
-		users_alb_prop.ID_DESSIN_ALT, 
-		users_alb_prop.DESSIN_ALT AS ORIDESSINALT, 
-		bd_auteur_4.PSEUDO AS PSEUDO_DESSIN_ALT, 
-		users_alb_prop.ID_COLOR, 
-		users_alb_prop.COLOR AS ORICOLOR, 
-		bd_auteur_2.PSEUDO AS PSEUDO_COLOR, 
-		users_alb_prop.DESCRIB_EDITION, 
-		users_alb_prop.ID_COLLECTION, 
-		users_alb_prop.COLLECTION AS ORICOLLECTION, 
-		bd_collection.NOM AS COLLECTION, 
-		users_alb_prop.HISTOIRE, 
+		bd_auteur_1.PSEUDO AS PSEUDO_DESSIN,
+		users_alb_prop.ID_DESSIN_ALT,
+		users_alb_prop.DESSIN_ALT AS ORIDESSINALT,
+		bd_auteur_4.PSEUDO AS PSEUDO_DESSIN_ALT,
+		users_alb_prop.ID_COLOR,
+		users_alb_prop.COLOR AS ORICOLOR,
+		bd_auteur_2.PSEUDO AS PSEUDO_COLOR,
+		users_alb_prop.DESCRIB_EDITION,
+		users_alb_prop.ID_COLLECTION,
+		users_alb_prop.COLLECTION AS ORICOLLECTION,
+		bd_collection.NOM AS COLLECTION,
+		users_alb_prop.HISTOIRE,
 		users_alb_prop.IMG_COUV
-	FROM 
-		users_alb_prop 
-		LEFT JOIN bd_serie ON users_alb_prop.ID_SERIE = bd_serie.ID_SERIE 
-		LEFT JOIN bd_genre ON users_alb_prop.ID_GENRE = bd_genre.ID_GENRE 
-		LEFT JOIN bd_editeur ON users_alb_prop.ID_EDITEUR = bd_editeur.ID_EDITEUR 
-		LEFT JOIN bd_auteur ON users_alb_prop.ID_SCENAR = bd_auteur.ID_AUTEUR 
-		LEFT JOIN bd_auteur AS bd_auteur_1 ON users_alb_prop.ID_DESSIN = bd_auteur_1.ID_AUTEUR 
-		LEFT JOIN bd_auteur AS bd_auteur_2 ON users_alb_prop.ID_COLOR = bd_auteur_2.ID_AUTEUR 
-		LEFT JOIN bd_collection ON users_alb_prop.ID_COLLECTION = bd_collection.ID_COLLECTION 
-		LEFT JOIN bd_auteur as bd_auteur_3 ON users_alb_prop.ID_SCENAR_ALT = bd_auteur_3.ID_AUTEUR 
+	FROM
+		users_alb_prop
+		LEFT JOIN bd_serie ON users_alb_prop.ID_SERIE = bd_serie.ID_SERIE
+		LEFT JOIN bd_genre ON users_alb_prop.ID_GENRE = bd_genre.ID_GENRE
+		LEFT JOIN bd_editeur ON users_alb_prop.ID_EDITEUR = bd_editeur.ID_EDITEUR
+		LEFT JOIN bd_auteur ON users_alb_prop.ID_SCENAR = bd_auteur.ID_AUTEUR
+		LEFT JOIN bd_auteur AS bd_auteur_1 ON users_alb_prop.ID_DESSIN = bd_auteur_1.ID_AUTEUR
+		LEFT JOIN bd_auteur AS bd_auteur_2 ON users_alb_prop.ID_COLOR = bd_auteur_2.ID_AUTEUR
+		LEFT JOIN bd_collection ON users_alb_prop.ID_COLLECTION = bd_collection.ID_COLLECTION
+		LEFT JOIN bd_auteur as bd_auteur_3 ON users_alb_prop.ID_SCENAR_ALT = bd_auteur_3.ID_AUTEUR
 		LEFT JOIN bd_auteur as bd_auteur_4 ON users_alb_prop.ID_DESSIN_ALT = bd_auteur_4.ID_AUTEUR
-	WHERE 
+	WHERE
 		users_alb_prop.ID_PROPOSAL = ".$DB->escape($propid);
-	
+
 	$DB->query ($query);
 	$DB->next_record();
 
@@ -289,7 +289,7 @@ elseif($act=="valid"){
 	if ($edition_id == 0){
 		// édition par défaut
 		$query = q_tome("t.id_tome = ".$DB->escape($alb_id));
-		
+
 	}else{
 		// force l'édition
 		$query = q_edition("en.id_edition = ".$DB->escape($edition_id));
@@ -454,14 +454,14 @@ elseif($act=="update"){
 	$query .= "`flg_type` = ".$DB->escape($_POST['lstType']).", ";
 	$query .= "`id_serie` = ".$DB->escape($_POST['txtSerieId']).", ";
 	$query .= "`id_genre` = ".$DB->escape($_POST['txtGenreId']).", ";
-	
+
 	$query .= "`id_scenar` = ".sqlise($_POST['txtScenarId'],'int').", ";
 	$query .= "`id_scenar_alt` = ".sqlise($_POST['txtScenarAltId'],'int').", ";
 	$query .= "`id_dessin` = ".sqlise($_POST['txtDessiId'],'int').", ";
 	$query .= "`id_dessin_alt` = ".sqlise($_POST['txtDessiAltId'],'int').", ";
 	$query .= "`id_color` = ".sqlise($_POST['txtColorId'],'int').", ";
 	$query .= "`id_color_alt` = ".sqlise($_POST['txtColorAltId'],'int').", ";
-	
+
 	$query .= "`histoire` = '".$DB->escape($_POST['txtHistoire'])."'";
 	$query .=" WHERE (`id_tome`=".$lid.");";
 

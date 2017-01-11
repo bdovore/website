@@ -17,42 +17,42 @@ echo '<language>fr</language>';
 
 // Requ�te pour r�cup�rer les 50 derniers avis avec leurs couvertures
 $select = "
-SELECT 
-	t.titre, 
-	t.id_tome, 
-	sc.pseudo p_scenar, 
-	t.id_scenar, 
-	de.pseudo p_dessin, 
-	t.id_dessin, 
-	er.nom editeur, 
-	s.nom serie, 
-	s.id_serie,  
-	t.num_tome , 
-	t.flg_int, 
-	s.flg_fini, 
-	t.flg_type, 
-	en.img_couv, 
-	u.username, 
-	u.user_id, 
-	uc.comment histoire, 
-	uc.dte_post, 
-	DATE_FORMAT(uc.dte_post,'%d/%m/%Y %H:%i') date_post, 
-	uc.note, 
+SELECT
+	t.titre,
+	t.id_tome,
+	sc.pseudo p_scenar,
+	t.id_scenar,
+	de.pseudo p_dessin,
+	t.id_dessin,
+	er.nom editeur,
+	s.nom serie,
+	s.id_serie,
+	t.num_tome ,
+	t.flg_int,
+	s.flg_fini,
+	t.flg_type,
+	en.img_couv,
+	u.username,
+	u.user_id,
+	uc.comment histoire,
+	uc.dte_post,
+	DATE_FORMAT(uc.dte_post,'%d/%m/%Y %H:%i') date_post,
+	uc.note,
 	en.dte_parution
-FROM 
-	users_comment uc 
-	INNER JOIN bd_tome t ON uc.id_tome=t.id_tome 
-	INNER JOIN bd_edition en ON t.id_edition=en.id_edition 
-	INNER JOIN bd_auteur sc ON sc.id_auteur=t.id_scenar 
-	INNER JOIN bd_auteur de ON de.id_auteur=t.id_dessin 
-	INNER JOIN users u ON uc.user_id=u.user_id 
-	INNER JOIN bd_collection c ON c.id_collection=en.id_collection 
-	INNER JOIN bd_editeur er ON er.id_editeur=c.id_editeur 
-	INNER JOIN bd_serie s ON t.id_serie=s.id_serie 
-WHERE 
-	uc.comment is not null 
+FROM
+	users_comment uc
+	INNER JOIN bd_tome t ON uc.id_tome=t.id_tome
+	INNER JOIN bd_edition en ON t.id_edition=en.id_edition
+	INNER JOIN bd_auteur sc ON sc.id_auteur=t.id_scenar
+	INNER JOIN bd_auteur de ON de.id_auteur=t.id_dessin
+	INNER JOIN users u ON uc.user_id=u.user_id
+	INNER JOIN bd_collection c ON c.id_collection=en.id_collection
+	INNER JOIN bd_editeur er ON er.id_editeur=c.id_editeur
+	INNER JOIN bd_serie s ON t.id_serie=s.id_serie
+WHERE
+	uc.comment is not null
 	AND uc.comment <> ''
-ORDER BY uc.dte_post desc 
+ORDER BY uc.dte_post desc
 LIMIT 0,50
 ";
 
@@ -73,7 +73,7 @@ while ($DB->next_record()) {
 	$histoire = str_replace ( chr(0x9c), '\'',  $histoire );
     $titre = str_replace ( chr(0x96), '\'',  $titre );
 	$histoire = str_replace ( chr(0x96), '\'',  $histoire );
-    
+
     //Conversion de la date de MySQL (yyyy-mm-jj hh:mm:ss) � RFC822 (format rss : wed, 30 apr 2009 hh:mm:ss GMT)
     $date_array = explode("-",$dte_post);
     $day_array = explode(" ",$date_array[2]);

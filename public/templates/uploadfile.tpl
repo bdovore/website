@@ -1,5 +1,5 @@
 {MENUCOLL}
-<div class="cadre1">	
+<div class="cadre1">
 <h2>Chargement d'une image pour le compte <font color="#0000FF">{USERNAME}</font></h2>
 
     <form action="../membres/profil.php?act=image&status=ok&user_id={USERID}" method="POST" enctype="multipart/form-data">

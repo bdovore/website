@@ -1,4 +1,4 @@
-<?php  
+<?php
 
 
 if (0 < count($acl->getAllEtatForResource($ID_ACL_RESOURCE)))
@@ -9,7 +9,7 @@ if (0 < count($acl->getAllEtatForResource($ID_ACL_RESOURCE)))
 	<tr>
 	<td colspan=2>&nbsp;</td>
 	<td colspan='.count($acl->getAllEtatForResource($ID_ACL_RESOURCE)).' class="oftAclRoleTitle">'.LANG_ACL_RESOURCE_ETAT.'</td>
-	
+
 	</tr>
 	<tr>
 	<td class="oftAclResourceTitle">'.LANG_ACL_RESOURCE_PRIVILEGE.'</td>
@@ -155,8 +155,8 @@ if (0 < count($acl->getAllEtatForResource($ID_ACL_RESOURCE)))
 							}
 						}
 
-						$txtHtml .= '<td class="'.$class.'" onClick="'.$onClick.'" title="'.$title.'" 
-						onmouseover="this.className=\'oftAclAccessON\'" 
+						$txtHtml .= '<td class="'.$class.'" onClick="'.$onClick.'" title="'.$title.'"
+						onmouseover="this.className=\'oftAclAccessON\'"
 	  		onmouseout="this.className=\''.$class.'\'">'.$val;
 						$txtHtml .= '
 				<form name="'.$formName.'" method="POST" action="">
@@ -195,6 +195,6 @@ if (0 < count($acl->getAllEtatForResource($ID_ACL_RESOURCE)))
 	</table>
 </td></tr>
 </table>
-<?php	
+<?php
 }
 

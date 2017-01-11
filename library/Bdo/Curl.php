@@ -9,10 +9,10 @@
 */
 class Bdo_Curl
 {
-	
+
 	public $sessions 				=	array();
 	public $retry					=	0;
-	
+
 	/**
 	* Adds a cURL session to stack
 	* @param $url string, session's URL
@@ -27,7 +27,7 @@ class Bdo_Curl
 			$this->setOpts( $opts, $key );
 		}
 	}
-	
+
 	/**
 	* Sets an option to a cURL session
 	* @param $option constant, cURL option
@@ -38,7 +38,7 @@ class Bdo_Curl
 	{
 		curl_setopt( $this->sessions[$key], $option, $value );
 	}
-	
+
 	/**
 	* Sets an array of options to a cURL session
 	* @param $options array, array of cURL options and values
@@ -48,7 +48,7 @@ class Bdo_Curl
 	{
 		curl_setopt_array( $this->sessions[$key], $options );
 	}
-	
+
 	/**
 	* Executes as cURL session
 	* @param $key int, optional argument if you only want to execute one session
@@ -56,20 +56,20 @@ class Bdo_Curl
 	public function exec( $key = false )
 	{
 		$no = count( $this->sessions );
-		
+
 		if( $no == 1 )
 			$res = $this->execSingle();
 		elseif( $no > 1 ) {
 			if( $key === false )
-				$res = $this->execMulti();	
+				$res = $this->execMulti();
 			else
 				$res = $this->execSingle( $key );
 		}
-		
+
 		if( $res )
 			return $res;
 	}
-	
+
 	/**
 	* Executes a single cURL session
 	* @param $key int, id of session to execute
@@ -85,16 +85,16 @@ class Bdo_Curl
 			{
 				$res = curl_exec( $this->sessions[$key] );
 				$code = $this->info( $key, CURLINFO_HTTP_CODE );
-				
+
 				$retry--;
 			}
 		}
 		else
 			$res = curl_exec( $this->sessions[$key] );
-		
+
 		return $res;
 	}
-	
+
 	/**
 	* Executes a stack of sessions
 	* @return array of content if CURLOPT_RETURNTRANSFER is set
@@ -102,15 +102,15 @@ class Bdo_Curl
 	public function execMulti()
 	{
 		$mh = curl_multi_init();
-		
+
 		#Add all sessions to multi handle
 		foreach ( $this->sessions as $i => $url )
 			curl_multi_add_handle( $mh, $this->sessions[$i] );
-		
+
 		do
 			$mrc = curl_multi_exec( $mh, $active );
 		while ( $mrc == CURLM_CALL_MULTI_PERFORM );
-		
+
 		while ( $active && $mrc == CURLM_OK )
 		{
 			if ( curl_multi_select( $mh ) != -1 )
@@ -123,7 +123,7 @@ class Bdo_Curl
 
 		if ( $mrc != CURLM_OK )
 			cfg::log("Curl multi read error \n".$mrc);
-		
+
 		#Get content foreach session, retry if applied
 		foreach ( $this->sessions as $i => $url )
 		{
@@ -137,12 +137,12 @@ class Bdo_Curl
 					$retry = $this->retry;
 					$this->retry -= 1;
 					$eRes = $this->execSingle( $i );
-					
+
 					if( $eRes )
 						$res[] = $eRes;
 					else
 						$res[] = false;
-						
+
 					$this->retry = $retry;
 					echo '1';
 				}
@@ -154,10 +154,10 @@ class Bdo_Curl
 		}
 
 		curl_multi_close( $mh );
-		
+
 		return $res;
 	}
-	
+
 	/**
 	* Closes cURL sessions
 	* @param $key int, optional session to close
@@ -172,7 +172,7 @@ class Bdo_Curl
 		else
 			curl_close( $this->sessions[$key] );
 	}
-	
+
 	/**
 	* Remove all cURL sessions
 	*/
@@ -182,7 +182,7 @@ class Bdo_Curl
 			curl_close( $session );
 		unset( $this->sessions );
 	}
-	
+
 	/**
 	* Returns an array of session information
 	* @param $key int, optional session key to return info on
@@ -207,10 +207,10 @@ class Bdo_Curl
 			else
 				$info[] = curl_getinfo( $this->sessions[$key] );
 		}
-		
+
 		return $info;
 	}
-	
+
 	/**
 	* Returns an array of errors
 	* @param $key int, optional session key to retun error on
@@ -225,10 +225,10 @@ class Bdo_Curl
 		}
 		else
 			$errors[] = curl_error( $this->sessions[$key] );
-			
+
 		return $errors;
 	}
-	
+
 	/**
 	* Returns an array of session error numbers
 	* @param $key int, optional session key to retun error on
@@ -243,8 +243,8 @@ class Bdo_Curl
 		}
 		else
 			$errors[] = curl_errno( $this->sessions[$key] );
-			
+
 		return $errors;
 	}
-	
+
 }

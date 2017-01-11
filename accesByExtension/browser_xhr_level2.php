@@ -46,19 +46,19 @@ $url_edit = array(
 if ($rb_browse == 'ser') {
 
 	$query_album = "
-	select SQL_CALC_FOUND_ROWS 
+	select SQL_CALC_FOUND_ROWS
 	id_tome id,
 	CONCAT(
-	CASE 
-		when bd_tome.flg_int = 'O' 	then 'Intégrale ' 
-		when bd_tome.flg_type = 1 then 'Coffret ' 
-		when bd_serie.flg_fini = 2 then 'One shot' 
-		else IFNULL(concat('Tome ',bd_tome.num_tome),'HS') 
+	CASE
+		when bd_tome.flg_int = 'O' 	then 'Intégrale '
+		when bd_tome.flg_type = 1 then 'Coffret '
+		when bd_serie.flg_fini = 2 then 'One shot'
+		else IFNULL(concat('Tome ',bd_tome.num_tome),'HS')
 	end, ': ', bd_tome.titre) as titre
-	from 
+	from
 		bd_tome INNER JOIN bd_serie USING(id_serie)
-	where 
-	bd_tome.id_serie = $lev_id 
+	where
+	bd_tome.id_serie = $lev_id
 	order by num_tome, titre
 	";
 
@@ -71,25 +71,25 @@ if ($rb_browse == 'ser') {
 elseif ($rb_browse == 'aut') {
 
 	$query_album = "
-	select SQL_CALC_FOUND_ROWS 
-		id_tome id, 
+	select SQL_CALC_FOUND_ROWS
+		id_tome id,
 		CONCAT(
-		CASE 
+		CASE
 		when bd_tome.flg_int = 'O' then 'Intégrale '
-		when bd_tome.flg_type = 1 then 'Coffret ' 
-		when bd_serie.flg_fini = 2 then 'One shot' 
-		else IFNULL(concat('Tome ',bd_tome.num_tome),'HS') 
+		when bd_tome.flg_type = 1 then 'Coffret '
+		when bd_serie.flg_fini = 2 then 'One shot'
+		else IFNULL(concat('Tome ',bd_tome.num_tome),'HS')
 		end,': ', bd_tome.titre) as titre
-	from 
+	from
 		bd_tome
 		INNER JOIN bd_serie USING(id_serie)
 	where
-		bd_tome.id_serie =".$lev2_id." 
+		bd_tome.id_serie =".$lev2_id."
 		and	(
-			bd_tome.id_dessin = ".mysql_real_escape_string($lev_id)." 
+			bd_tome.id_dessin = ".mysql_real_escape_string($lev_id)."
 			or bd_tome.id_scenar = ".mysql_real_escape_string($lev_id)."
 			or bd_tome.id_color = ".mysql_real_escape_string($lev_id)."
-			or bd_tome.id_scenar_alt = ".mysql_real_escape_string($lev_id)." 
+			or bd_tome.id_scenar_alt = ".mysql_real_escape_string($lev_id)."
 			or bd_tome.id_dessin_alt = ".mysql_real_escape_string($lev_id)."
 			or bd_tome.id_color_alt = ".mysql_real_escape_string($lev_id)."
 			)
@@ -105,15 +105,15 @@ elseif ($rb_browse == 'aut') {
 elseif ($rb_browse == 'edit'){
 
 	$query_album = "
-	select SQL_CALC_FOUND_ROWS distinct 
-		bd_serie.id_serie id, 
-		bd_serie.nom as titre 
-	from 
+	select SQL_CALC_FOUND_ROWS distinct
+		bd_serie.id_serie id,
+		bd_serie.nom as titre
+	from
 	bd_edition
 		INNER JOIN bd_tome USING(id_tome)
 		INNER JOIN bd_serie USING(id_serie)
 	where
-		bd_edition.id_editeur=" . mysql_real_escape_string($lev_id) . " 
+		bd_edition.id_editeur=" . mysql_real_escape_string($lev_id) . "
 		and bd_edition.id_collection=" . mysql_real_escape_string($lev2_id) . "
 	order by bd_serie.nom
 	";
@@ -127,17 +127,17 @@ elseif ($rb_browse == 'edit'){
 elseif ($rb_browse == 'genr') {
 
 	$query_album = "
-	select SQL_CALC_FOUND_ROWS 
+	select SQL_CALC_FOUND_ROWS
 		distinct
-		bd_serie.id_serie id, 
-		bd_serie.nom as titre 
+		bd_serie.id_serie id,
+		bd_serie.nom as titre
 	from
-		bd_serie 
+		bd_serie
 	where
 		bd_serie.id_genre=" . mysql_real_escape_string($lev_id) . "
-		and bd_serie.nom like '" . $lev2_id . "%' 
+		and bd_serie.nom like '" . $lev2_id . "%'
 	order by titre
-	";	
+	";
 	$url_alb = "serie.php?id_serie=%d";
 	$act_url = "";
 	// URL d'edition

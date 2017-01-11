@@ -2,7 +2,7 @@
 
 /**
  * @author Tom
- * 
+ *
  */
 class Adminproposition extends Bdo_Controller {
 
@@ -87,13 +87,13 @@ private function getDateBeforeValid() {
 
         return $datebeforevalid;
     }
-    
+
     public function deleteProposition() {
         /*
          * Fonction de suppression d'une proposition dont l'id est passé en paramètre
          * ainsi que le type : type = AJOUT, CORRECTION ou EDITION
          * La suppression fait simplement changer le statut, et envoie éventuellement un mail à l'utilisateur
-         * 
+         *
          */
         if (User::minAccesslevel(1)) {
             $src = getVal("src", "");
@@ -106,7 +106,7 @@ private function getDateBeforeValid() {
                 $mail = "";
             } else {
                 /*
-                 * Depuis la fiche d'édition : accès via POST, on récupère un email 
+                 * Depuis la fiche d'édition : accès via POST, on récupère un email
                  */
                 $id = postValInteger("ID", 0);
 
@@ -177,9 +177,9 @@ private function getDateBeforeValid() {
     public function editPropositionAjout() {
         $this->view->set_var(array("PAGETITLE" => "Proposition : Ajout"));
         /*
-         * Affichage d'une proposition d'ajout 
-         * Gère aussi les actions : 
-         * - append : ajoute un album 
+         * Affichage d'une proposition d'ajout
+         * Gère aussi les actions :
+         * - append : ajoute un album
          * - merge : fusionne des infos avec un album
          * - comment : enregistre un commentaire sur la proposition
          */
@@ -348,14 +348,14 @@ private function getDateBeforeValid() {
             $main_words = main_words(stripslashes($this->User_album_prop->TITRE));
             if ($main_words[1][0] != '') {
                 $query = "
-                        where 
+                        where
                                 bd_tome.titre like '%" . Db_Escape_String($main_words[0][0]) . "%" . DB_Escape_String($main_words[1][0]) . "%'
-                                or bd_tome.titre like '%" . DB_Escape_String($main_words[1][0]) . "%" . DB_Escape_String($main_words[0][0]) . "%' 
+                                or bd_tome.titre like '%" . DB_Escape_String($main_words[1][0]) . "%" . DB_Escape_String($main_words[0][0]) . "%'
                                 LIMIT 0,30;";
             } else {
                 $query = "
-                       where 
-                                bd_tome.titre like '%" . DB_Escape_String($main_words[0][0]) . "%' 
+                       where
+                                bd_tome.titre like '%" . DB_Escape_String($main_words[0][0]) . "%'
                         LIMIT 0,30;";
             }
             $this->loadModel("Tome");
@@ -379,10 +379,10 @@ private function getDateBeforeValid() {
             ));
 
             // url suivant et précédent
-            $this->User_album_prop->load("c", " WHERE 
-                    id_proposal <" . $id . " 
+            $this->User_album_prop->load("c", " WHERE
+                    id_proposal <" . $id . "
                     AND status not in (98,99,1)
-                    AND prop_type = 'AJOUT' 
+                    AND prop_type = 'AJOUT'
             ORDER BY id_proposal desc limit 0,1");
 
             // URL précédent : proposition avec ID inférieur
@@ -392,10 +392,10 @@ private function getDateBeforeValid() {
             } else {
                 $this->view->set_var("BOUTONPRECEDENT", "<del>Précédent</del>");
             }
-            $this->User_album_prop->load("c", " WHERE 
-                    id_proposal > " . $id . " 
-                    AND status not in (98,99,1) 
-                    AND prop_type = 'AJOUT' 
+            $this->User_album_prop->load("c", " WHERE
+                    id_proposal > " . $id . "
+                    AND status not in (98,99,1)
+                    AND prop_type = 'AJOUT'
             ORDER BY id_proposal asc limit 0,1
             ");
             // URL précédent : proposition avec ID supérieur
@@ -709,10 +709,10 @@ private function getDateBeforeValid() {
                     echo "Email de confirmation envoy&eacute;<br />";
                 }
 
-                $this->User_album_prop->load("c", " WHERE 
-                    id_proposal > " . $id . " 
-                    AND status not in (98,99,1) 
-                    AND prop_type = 'AJOUT' 
+                $this->User_album_prop->load("c", " WHERE
+                    id_proposal > " . $id . "
+                    AND status not in (98,99,1)
+                    AND prop_type = 'AJOUT'
                     ORDER BY id_proposal ASC LIMIT 0,1
                     ");
 
@@ -807,10 +807,10 @@ private function getDateBeforeValid() {
             }
 
             // Prépare la redirection vers la proposition suivante
-            $this->User_album_prop->load("c", " WHERE 
-                    id_proposal > " . $id . " 
-                    AND status not in (98,99,1) 
-                    AND prop_type = 'AJOUT' 
+            $this->User_album_prop->load("c", " WHERE
+                    id_proposal > " . $id . "
+                    AND status not in (98,99,1)
+                    AND prop_type = 'AJOUT'
                     ORDER BY id_proposal asc limit 0,1
                     ");
 
@@ -1065,10 +1065,10 @@ private function getDateBeforeValid() {
             ));
 
             // url suivant et précédent
-            $this->User_album_prop->load("c", " WHERE 
-                    id_proposal <" . $id . " 
+            $this->User_album_prop->load("c", " WHERE
+                    id_proposal <" . $id . "
                     AND status not in (98,99,1)
-                    AND prop_type = 'CORRECTION' 
+                    AND prop_type = 'CORRECTION'
             ORDER BY id_proposal desc limit 0,1");
 
             // URL précédent : proposition avec ID inférieur
@@ -1078,10 +1078,10 @@ private function getDateBeforeValid() {
             } else {
                 $this->view->set_var("BOUTONPRECEDENT", "<del>Précédent</del>");
             }
-            $this->User_album_prop->load("c", " WHERE 
-                    id_proposal > " . $id . " 
-                    AND status not in (98,99,1) 
-                    AND prop_type = 'CORRECTION' 
+            $this->User_album_prop->load("c", " WHERE
+                    id_proposal > " . $id . "
+                    AND status not in (98,99,1)
+                    AND prop_type = 'CORRECTION'
             ORDER BY id_proposal asc limit 0,1
             ");
             // URL précédent : proposition avec ID supérieur
@@ -1193,7 +1193,7 @@ private function getDateBeforeValid() {
                       $query .=" WHERE (`id_tome`=".$lid.");";
                       $DB->query($query);
                       echo 'Info édition : base bd_edition mise à jour.<br />';
-                     * 
+                     *
                      */
                 } else {
                     // Mise à jour de la table bd_edition
@@ -1307,10 +1307,10 @@ private function getDateBeforeValid() {
             $this->User_album_prop->set_dataPaste(array("STATUS" => 1, "VALIDATOR" => $_SESSION["userConnect"]->user_id));
             $this->User_album_prop->update();
 
-            $this->User_album_prop->load("c", " WHERE 
-                    id_proposal > " . $id . " 
-                    AND status not in (98,99,1) 
-                    AND prop_type = 'CORRECTION' 
+            $this->User_album_prop->load("c", " WHERE
+                    id_proposal > " . $id . "
+                    AND status not in (98,99,1)
+                    AND prop_type = 'CORRECTION'
             ORDER BY id_proposal asc limit 0,1
             ");
 
@@ -1324,5 +1324,5 @@ private function getDateBeforeValid() {
             echo GetMetaTag(2, "L'album a &eacute;t&eacute; mis a jour", $next_url);
         }
     }
-    
+
 }

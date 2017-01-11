@@ -4,7 +4,7 @@
 // Début du code
 include_once (BDO_DIR."inc/bdovore.php");
 
-		
+
 // récupère la variable de passage
 $initiale = $_GET["init"];
 
@@ -16,7 +16,7 @@ if ($initiale == "0") {
 	$query = "SELECT id_serie, nom FROM bd_serie WHERE LOWER(LEFT(tri,1)) = '" . $DB->escape($initiale) . "' ORDER BY tri;";
 	$doctitre = "Séries BD commençant par un ".$initiale." sur BDovore";
 }
- 
+
 // exécution de la query
 $DB->query ($query);
 
@@ -36,7 +36,7 @@ while ($DB->next_record()) {
 	$t->parse ("SBlock", "SeriesBlock",true);
 }
 $t->set_var (array(
-	"INITIALE" => $initiale 
+	"INITIALE" => $initiale
 	));
 
 // Envoie les info générales et publie la page

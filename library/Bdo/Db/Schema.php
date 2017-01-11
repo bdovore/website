@@ -3,10 +3,10 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Bdo_Db_Schema {
-	
+
 	/**
 	 */
 	private $forceCache=true;
@@ -68,7 +68,7 @@ class Bdo_Db_Schema {
 		AND `TABLE_NAME` NOT LIKE('faq_%')";
 		*/
 		$query  = "
-		SELECT 
+		SELECT
 		`TABLE_NAME`,
 		  `COLUMN_NAME`,
 		  `ORDINAL_POSITION`,
@@ -79,7 +79,7 @@ class Bdo_Db_Schema {
 		  `COLUMN_TYPE`,
 		  `COLUMN_KEY`,
 		  `EXTRA`
-		FROM `information_schema`.`COLUMNS` 
+		FROM `information_schema`.`COLUMNS`
 		WHERE `TABLE_SCHEMA` IN ('".$this->schema."')
 		AND `TABLE_NAME` NOT LIKE('faq_%')";
 
@@ -100,22 +100,22 @@ class Bdo_Db_Schema {
 		Db_free_result($resultat);
 
 		$query  = "
-		SELECT 
-			`KEY_COLUMN_USAGE`.`TABLE_NAME` , 
-			`KEY_COLUMN_USAGE`.`COLUMN_NAME` , 
+		SELECT
+			`KEY_COLUMN_USAGE`.`TABLE_NAME` ,
+			`KEY_COLUMN_USAGE`.`COLUMN_NAME` ,
 			`KEY_COLUMN_USAGE`.`CONSTRAINT_NAME` ,
-			`TABLE_CONSTRAINTS`.`CONSTRAINT_TYPE`, 
+			`TABLE_CONSTRAINTS`.`CONSTRAINT_TYPE`,
 			`COLUMNS`.`IS_NULLABLE`,
-			`KEY_COLUMN_USAGE`.`REFERENCED_TABLE_NAME` , 
-			`KEY_COLUMN_USAGE`.`REFERENCED_COLUMN_NAME` 
-		FROM 
-			`information_schema`.`TABLE_CONSTRAINTS` 
-			INNER JOIN `information_schema`.`KEY_COLUMN_USAGE` USING ( `TABLE_NAME` , `CONSTRAINT_NAME` , `CONSTRAINT_SCHEMA` ) 
-			LEFT JOIN `information_schema`.`COLUMNS` ON  
+			`KEY_COLUMN_USAGE`.`REFERENCED_TABLE_NAME` ,
+			`KEY_COLUMN_USAGE`.`REFERENCED_COLUMN_NAME`
+		FROM
+			`information_schema`.`TABLE_CONSTRAINTS`
+			INNER JOIN `information_schema`.`KEY_COLUMN_USAGE` USING ( `TABLE_NAME` , `CONSTRAINT_NAME` , `CONSTRAINT_SCHEMA` )
+			LEFT JOIN `information_schema`.`COLUMNS` ON
 				`KEY_COLUMN_USAGE`.`TABLE_NAME`=`COLUMNS`.`TABLE_NAME`
 				AND `KEY_COLUMN_USAGE`.`COLUMN_NAME`=`COLUMNS`.`COLUMN_NAME`
 				AND `KEY_COLUMN_USAGE`.`TABLE_SCHEMA`=`COLUMNS`.`TABLE_SCHEMA`
-		WHERE 
+		WHERE
 			`TABLE_CONSTRAINTS`.`CONSTRAINT_SCHEMA` IN ('".$this->schema."')
 			AND `KEY_COLUMN_USAGE`.`TABLE_NAME` NOT LIKE('faq_%')";
 		$resultat = Db_query($query);
@@ -286,13 +286,13 @@ class Bdo_Db_Schema {
 		}
 		return $column;
 	}
-	
+
 	public function searchForeignKey() {
-		
+
 	}
-	
+
 	public function searchRefDepend() {
-		
+
 	}
 }
 

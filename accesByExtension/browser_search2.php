@@ -240,14 +240,14 @@ else if (!empty($totalRows))
 	$t->set_var("URLPREVPAGE",'<a href="javascript:document.browser.pageNum.value=\''.max(0, $pageNum - 1).'\';go2()">Pr&eacute;c&eacute;dent</a>');
 	else
 	$t->set_var("URLPREVPAGE",'');
-	
+
 	if ($pageNum < $totalPages)
 	$t->set_var("URLNEXTPAGE",'<a href="javascript:document.browser.pageNum.value=\''.min($totalPages, $pageNum + 1).'\';go2()">Suivant</a>');
 	else
 	$t->set_var("URLNEXTPAGE",'');
 	$t->set_var("TOTALROW",(empty($totalRows) ? 'Aucune ligne de résultat !' : $totalrow));
 }
-else 
+else
 {
 	$t->set_var("URLPREVPAGE",'');
 	$t->set_var("URLNEXTPAGE",'');

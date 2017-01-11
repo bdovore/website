@@ -15,30 +15,30 @@
  * via setMode
  */
 class QueryAlbum {
-	
+
 	// variable qui va contenir le filtre de la clause where
 	var $filter = "";
-	
+
 	// variable qui donne le nombre de filtre
 	var $nb_filter = 0;
-	
+
 	// variable qui va contenir la clause FROM
 	var $from = "
-	FROM 
+	FROM
 	bd_tome t
-	INNER JOIN bd_edition e ON t.id_edition=e.id_edition 
-	INNER JOIN bd_collection col ON e.id_collection=col.id_collection 
-	INNER JOIN bd_editeur ed ON col.id_editeur=ed.id_editeur 
-	INNER JOIN bd_serie ser ON t.id_serie=ser.id_serie 
-	INNER JOIN bd_auteur s ON t.id_scenar=s.id_auteur 
-	INNER JOIN bd_auteur d ON t.id_dessin=d.id_auteur 
+	INNER JOIN bd_edition e ON t.id_edition=e.id_edition
+	INNER JOIN bd_collection col ON e.id_collection=col.id_collection
+	INNER JOIN bd_editeur ed ON col.id_editeur=ed.id_editeur
+	INNER JOIN bd_serie ser ON t.id_serie=ser.id_serie
+	INNER JOIN bd_auteur s ON t.id_scenar=s.id_auteur
+	INNER JOIN bd_auteur d ON t.id_dessin=d.id_auteur
 	";
-	
+
 	// variable qui va contenir la clause WHERE
 	var $where = "
 	WHERE 1
 	";
-	
+
 	// variable qui va contenir la clause ORDER BY
 	var $order = "
 	ORDER BY ser.nom, t.num_tome, t.titre
@@ -46,7 +46,7 @@ class QueryAlbum {
 	var $user_mode = false;
 	var $and_or = "or";
 	var $prim_filter = "";
-	
+
 	// $search_mode : définit le mode pour les filtres :
 	// 1 (par défaut ) "contient" : les filtres fonctionnent sur le mode like
 	// '%filtre%'
@@ -82,7 +82,7 @@ class QueryAlbum {
 		}
 		$this->nb_filter ++;
 	}
-	
+
 	// filtre sur les auteurs (scenario ou dessin)
 	function filterAuteur($auteur) {
 		if ($this->nb_filter > 0) {
@@ -106,15 +106,15 @@ class QueryAlbum {
 		}
 		$this->nb_filter ++;
 	}
-	
+
 	// filtre sur l'ISBN
 	function filterISBN($isbn) {
 		$this->where = "
-		WHERE 
+		WHERE
 		e.ISBN = '" . $isbn . "'
 		";
 	}
-	
+
 	// Filtre sur le titre de la série
 	function filterSerie($serie) {
 		if ($this->nb_filter > 0) {
@@ -140,16 +140,16 @@ class QueryAlbum {
 	}
 	function setUserMode($user_id) {
 		$this->user_mode = true;
-		$this->from = " 
-		FROM 
+		$this->from = "
+		FROM
 			users_album u
-			INNER JOIN bd_edition e ON u.id_edition=e.id_edition 
+			INNER JOIN bd_edition e ON u.id_edition=e.id_edition
 			INNER JOIN bd_tome t ON e.id_tome=t.id_tome
-			INNER JOIN bd_collection col ON e.id_collection=col.id_collection 
-			INNER JOIN bd_editeur ed ON col.id_editeur=ed.id_editeur 
-			INNER JOIN bd_serie ser ON t.id_serie=ser.id_serie 
-			INNER JOIN bd_auteur s ON t.id_scenar=s.id_auteur 
-			INNER JOIN bd_auteur d ON t.id_dessin=d.id_auteur  
+			INNER JOIN bd_collection col ON e.id_collection=col.id_collection
+			INNER JOIN bd_editeur ed ON col.id_editeur=ed.id_editeur
+			INNER JOIN bd_serie ser ON t.id_serie=ser.id_serie
+			INNER JOIN bd_auteur s ON t.id_scenar=s.id_auteur
+			INNER JOIN bd_auteur d ON t.id_dessin=d.id_auteur
 			LEFT OUTER JOIN users_comment c ON u.user_id=c.user_id AND t.id_tome=c.id_tome
 		";
 		$this->where .= "
@@ -190,19 +190,19 @@ class QueryAlbum {
 		} else {
 			$select .= "
 			t.id_tome,
-			e.dte_parution, 
-			t.titre, 
-			s.pseudo p_scenar, 
-			t.id_scenar, 
-			d.pseudo p_dessin, 
+			e.dte_parution,
+			t.titre,
+			s.pseudo p_scenar,
+			t.id_scenar,
+			d.pseudo p_dessin,
 			t.id_dessin,
-			ed.nom editeur, 
-			ser.nom serie, 
-			ser.id_serie, 
-			t.moyenne, 
+			ed.nom editeur,
+			ser.nom serie,
+			ser.id_serie,
+			t.moyenne,
 			t.num_tome,
-			ser.flg_fini, 
-			t.flg_int, 
+			ser.flg_fini,
+			t.flg_int,
 			t.flg_type
 			";
 			// mode utilisateur : on ajoute le id_edition

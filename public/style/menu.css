@@ -6,7 +6,7 @@
 	margin-top: 5px;
 	margin-bottom: 37px;
 		z-index:80;
-	
+
 }
 #ariane {
 	width: 80%;
@@ -25,7 +25,7 @@
 }     /* couleur du suivi */
 .titremenucfg a{
     background-color: #FFFFFF;
-    background-image:url(../../image/bt_bg.jpg); 
+    background-image:url(../../image/bt_bg.jpg);
     color:#333333;
     border: 1px solid #E5E5E5;
     margin: 0px 0px 0px 0px;
@@ -33,22 +33,22 @@
 }
 .titremenucfg a:hover,.titremenucfg a:active,.titremenucfg a:focus{
 	background-color:#FFE381;
-    background-image:url(../../image/bt_bg.jpg); 
+    background-image:url(../../image/bt_bg.jpg);
 	color:#FF8C00;
 	text-decoration:none;
 	}
 .titremenucfg .suivi{
 	color:#000000;
 	background-color:#DDDDDD;
-    background-image:url(../../image/bt_bg.jpg); 
-	
+    background-image:url(../../image/bt_bg.jpg);
+
 	}     /* couleur du suivi */
-	
+
  /* avec url */
 .lienmenucfg a{
 	font-weight:normal;
 	background-color:#FFFFFF;
-    background-image:url(../../image/bt_bg.jpg); 
+    background-image:url(../../image/bt_bg.jpg);
 	color:#333333;
 	border: 1px solid #E5E5E5;
 	margin: 0px 0px 0px 0px;
@@ -61,15 +61,15 @@
 	}
 .lienmenucfg a:hover,.lienmenucfg a:active,.lienmenucfg a:focus{
 	background-color:#FFE381;
-    background-image:url(../../image/bt_bg.jpg); 
+    background-image:url(../../image/bt_bg.jpg);
 	color:#FF8C00;
 	text-decoration:none;
 	}
 .lienmenucfg .suivi{
 	color:#000000;
 	background-color:#FFE381;
-    background-image:url(../../image/bt_bg.jpg); 
-	}	
+    background-image:url(../../image/bt_bg.jpg);
+	}
 
 #ancre_menu{
 }

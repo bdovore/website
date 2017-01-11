@@ -21,8 +21,8 @@ $jquery = $view->getHelper('jquery');
 
 <script src="<?php echo BDO_URL;?>jquery/jquery-1.10.2.min.js" type="text/javascript"></script>
 <script src="<?php echo BDO_URL;?>jquery/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
-    
-<script type="text/javascript"> 
+
+<script type="text/javascript">
     $.bdovore= {} // namespace
     $.bdovore.URL = '<?php echo BDO_URL; ?>';
 </script>
@@ -36,8 +36,8 @@ $jquery = $view->getHelper('jquery');
 	type="text/javascript"></script>
 <script src="<?php echo BDO_URL;?>script/navigation_onglet.js"
 	type="text/javascript"></script>
-	
-	
+
+
 <link href="<?php echo BDO_URL;?>style/style_iframe.css" rel="stylesheet"
 	type="text/css" />
 <script src="<?php echo BDO_URL;?>script/script.js"
@@ -60,14 +60,14 @@ $jquery = $view->getHelper('jquery');
 
 <body onLoad="<?php echo $view->BODYONLOAD;?>">
 
-		
-	
+
+
 		<div class="fond"></div>
-                <?php 
+                <?php
 					if (Bdo_Error::notEmpty()) echo $jquery->alert(Bdo_Error::flush());
 					if ($view->a_alertPage) echo $jquery->alert($view->a_alertPage);
                                         if ($view->a_infoPage) echo $jquery->info($view->a_infoPage);
-						
+
 					?>
 					<?php echo $view->BODY;?>
 

@@ -8,8 +8,8 @@
 <body >
 
 <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC" bgcolor="#DAC1B3" frame="box" rules="groups">
-  <tr> 
-            <td width="70%" align="left" valign="top"> 
+  <tr>
+            <td width="70%" align="left" valign="top">
 <p>L'édition a été ajoutée à votre collection.</p>
 </td>
   </tr>

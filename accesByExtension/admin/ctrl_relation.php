@@ -24,7 +24,7 @@ foreach( $a_liaison as $a_lien)
 
 echo '<form name="formrelation" method="post">
 <div>
-Table d\'origine : 
+Table d\'origine :
 <select name="tableOrigine[]" >';
 foreach( $a_to as $_to)
 {
@@ -53,17 +53,17 @@ if (isset($_POST['execformrelation']))
 
 /*
 			$query = "SELECT distinct(`".$cd."`) FROM `".$td."`
-	    	WHERE `".$cd."` NOT IN ( SELECT `".$co."` FROM `".$to."` ) 
+	    	WHERE `".$cd."` NOT IN ( SELECT `".$co."` FROM `".$to."` )
 	    	AND `".$cd."` IS NOT NULL";
-	*/		/* 
+	*/		/*
 	    	AND `".$cd."`!= ''
 	    	AND `".$cd."`!= 0";
 			*/
-			
-			$query = "SELECT distinct(`".$td."`.`".$cd."`) FROM `".$td."` 
-			WHERE `".$td."`.`".$cd."` IS NOT NULL 
+
+			$query = "SELECT distinct(`".$td."`.`".$cd."`) FROM `".$td."`
+			WHERE `".$td."`.`".$cd."` IS NOT NULL
 			AND NOT EXISTS (SELECT NULL FROM `".$to."` WHERE `".$td."`.`".$cd."` =`".$to."`.`".$co."`)";
-			
+
 			$result = mysql_query($query);
 			$nbr = mysql_num_rows($result);
 

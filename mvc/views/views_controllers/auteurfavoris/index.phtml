@@ -1,7 +1,7 @@
 <div class="cadre1">
     <h3>Mes auteurs préférés</h3>
-      Choisissez dans la liste cidessous jusqu'à 20 auteurs pour lesquels 
-      vous souhaitez être informés de leurs nouvelles productions 
+      Choisissez dans la liste cidessous jusqu'à 20 auteurs pour lesquels
+      vous souhaitez être informés de leurs nouvelles productions
       via le panneau mon actualité.
       <br> <form action="" method="get" name="myform" target="_self" id="myform">
         <table border="0" id="listauteur">
@@ -11,16 +11,16 @@
          foreach ($view->a_listauteur as $auteur ) {
              $i++;
              ?>
-          <tr> 
+          <tr>
             <td width="20px;"><input name="txtAuteurId[]" type ="hidden" value="<?php echo $auteur->ID_AUTEUR;?>" size="5" class="flat" type="text"><span id="spAuteurId<?php echo $i;?>"><?php echo $auteur->ID_AUTEUR; ?></span></td>
             <td><input name="txtAuteur[]" id="txtAuteur<?php echo $i;?>" value="<?php echo $auteur->PSEUDO; ?>" size="40" class="flat" type="text"></td>
             <td><a onclick="suppAuteur(this);">Supprimer</a> </td>
           </tr>
-         <?php } ?> 
+         <?php } ?>
         </tbody></table>
         <input type="submit" value="Ok"></input>   <a onclick ="addAuteur();" id="addAuteur">Ajouter un auteur</a>
       </form>
-     
+
 </div>
 <script language="javascript">
     function addAutocomplete (id){
@@ -46,28 +46,28 @@
     }
     var maxid = $("#listauteur tr").size();
     var nb = maxid;
-    
-    
+
+
      for (i=1;i<= maxid;i++){
         addAutocomplete(i);
      }
-    
+
     function showHideButton () {
         if (nb < 20) {
             $("#addAuteur").show();
-        } 
+        }
         else {
             $("#addAuteur").hide();
         }
     }
 
     function addAuteur(){
-        
+
         maxid++;
         nb++;
         $("#listauteur > tbody:last").append('<tr><td width="20px"><input name="txtAuteurId[]" type ="hidden" value="" class="flat" type="text" id="txtAuteurId'+ maxid +'"><span id="spAuteurId'+ maxid +'"></td>' +
             '<td><input name="txtAuteur[]" id="txtAuteur'+ maxid +'" value="" size="40" class="flat" type="text"></td>' +
-             '<td><a onclick="suppAuteur(this);">Supprimer</a> </td><tr>'   
+             '<td><a onclick="suppAuteur(this);">Supprimer</a> </td><tr>'
             );
         addAutocomplete (maxid);
        showHideButton ();
@@ -77,10 +77,9 @@
         nb --;
         showHideButton ();
     }
-    
+
    showHideButton ();
-    
-    
+
+
 </script>
-    
-    
+

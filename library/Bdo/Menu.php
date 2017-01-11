@@ -18,12 +18,12 @@ class Bdo_Menu {
 		$this->user = Bdo_Cfg::user();
 	}
 
-		
+
 	public function __toString()
 	{
 		return $this->html;
 	}
-	
+
 	public function addItem(Bdo_Menu_Lien $lien) {
 		$this->a_item[] = $lien;
 		return $lien;
@@ -117,22 +117,22 @@ class Bdo_Menu {
 
 		return false;
 	}
-	
-	public function generateAriane() 
+
+	public function generateAriane()
 	{
-		
+
 		$a_fil = array_reverse($this->a_ariane);
-		
+
 		if($this->addAriane) {
 			$a_fil[] = (object) array('link'=>null, 'title'=>$this->addAriane);
 		}
-		
+
 		$a_link = array();
 		$i = 0;
 		$a_link[] = ' > <a href="'.BDO_URL.'">'.LANG_ACCUEIL.'</a>';
 		foreach ($a_fil as $lien) {
 			$i++;
-		
+
 			if (($i != count($a_fil) and $lien->link)) {
 				$a_link[] = '<a href="'.$lien->link.'">'.$lien->title.'</a>';
 			}
@@ -140,7 +140,7 @@ class Bdo_Menu {
 				$a_link[] = $lien->title;
 			}
 		}
-		
+
 		return implode(' > ' ,$a_link);
 	}
 

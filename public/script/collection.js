@@ -1,11 +1,11 @@
-/* 
+/*
  * @author  Tom
  * Fonctions pour ajout, suppression, modifications des albums dans la collection
  * Principe : appel par ajax pour toutes les infos persos
  * Retours : code erreur si pb, vide sinon
- * 
- * Seul le user connecté peut modifier les infos dans la collection 
- * 
+ *
+ * Seul le user connecté peut modifier les infos dans la collection
+ *
  * Avis aux hackers en herbe ou chevronnés : suis preneur d'un coup de main pour la partie sécurité, j'y connais rien...
  */
 
@@ -56,7 +56,7 @@ function getInfoCollectionFromTome(id_tome, id_edition) {
             } else {
                 $("#infoCollection" + id_tome).html('<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">ajouté à votre collection le ' + dte + ' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(' + id_edition + ')">Supprimer</a></div>');
             }
-            
+
         }
 
     }
@@ -113,10 +113,10 @@ function deleteEdition(id_edition) {
         });
     }
 }
-/* TODO :  
- * - fonction getInfoCollection pour générer le formulaire de saisie ; 
+/* TODO :
+ * - fonction getInfoCollection pour générer le formulaire de saisie ;
  * - fonction setInfoCollection pour envoyer mise à jour des infos d'un album de la collection
- * 
+ *
  */
 
 

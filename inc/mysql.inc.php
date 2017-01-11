@@ -7,7 +7,7 @@ function Db_connect ($tab_connect_var)
 
 	// Vérification de la connexion
 	if (mysqli_connect_errno()) {
-		
+
 		printf("Échec de la connexion : %s\n", mysqli_connect_error());
 		return false;
 		//exit();
@@ -176,14 +176,14 @@ function Db_CountRow ($resul_or_query=false,$connexion=false)
 {
 
 	$nbr=0;
-	
+
 //	if (!is_a($resul_or_query,'mysqli_result',false) php 5.3.9
 	if (!($resul_or_query instanceof mysqli_result)
 	and stristr($resul_or_query,"select"))
 	{
 		if ($connexion === false)
 		$connexion = Bdo_Cfg::getVar('connexion');
-		
+
 		$debut_query=trim(substr(strtoupper($resul_or_query),0,strpos(strtoupper($resul_or_query),"FROM")));
 		if (
 		($debut_query=="SELECT COUNT(*)") or

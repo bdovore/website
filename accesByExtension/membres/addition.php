@@ -36,28 +36,28 @@ $defcoffret = $DB->f("val_cof_type");
 
 // Récupère la collection
 $query = "
-SELECT 
-	DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%d/%m/%y') as date_achat, 
-	DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%Y') as annee_achat, 
-	DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%m') as mois_achat, 
-	t.id_tome, 
-	t.titre, 
-	t.num_tome, 
-	t.flg_type, 
+SELECT
+	DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%d/%m/%y') as date_achat,
+	DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%Y') as annee_achat,
+	DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%m') as mois_achat,
+	t.id_tome,
+	t.titre,
+	t.num_tome,
+	t.flg_type,
 	t.flg_int,
-	t.prix_bdnet, 
-	ua.cote, 
-	s.id_serie, 
-	s.nom, 
-	ua.id_edition 
-FROM 
-	users_album ua 
-	INNER JOIN bd_edition en ON ua.id_edition=en.id_edition 
+	t.prix_bdnet,
+	ua.cote,
+	s.id_serie,
+	s.nom,
+	ua.id_edition
+FROM
+	users_album ua
+	INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
 	INNER JOIN bd_tome t ON en.id_tome=t.id_tome
 	INNER JOIN bd_serie s ON t.id_serie=s.id_serie
-WHERE 
-	ua.flg_achat = 'N' 
-	AND ua.user_id = ".$DB->escape($_SESSION["UserId"])." 
+WHERE
+	ua.flg_achat = 'N'
+	AND ua.user_id = ".$DB->escape($_SESSION["UserId"])."
 ORDER BY IFNULL(ua.date_achat, ua.date_ajout)";
 
 $DB->query ($query);

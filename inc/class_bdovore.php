@@ -6,16 +6,16 @@ class Element {
 	var $primary_keys; // Variable type table contenant les clés primaires, ie_
 	                   // les champs utilisés
 	var $debug; // Variable de débug permettant d'afficher les conditions
-	            
+
 	// ------------- ci dessous, variables normalement privées ou réservées aux
 	            // power users
 	var $table; // Variable contenant la table de travail
 	var $has_fetch = false; // Indique si une édition a été fetché
 	var $primary_keys_value; // Contient la valeur des différentes clés
-	                         
+
 	// Et ci-dessous les variables à ne pas toucher du tout !
 	var $field_ori; // Valeurs originales de fetch
-	                
+
 	// Instancie la classe en fonction de la table
 	function Element($whichtable) {
 		// Initialise la classe
@@ -30,26 +30,26 @@ class Element {
 		}
 		$this->primary_keys [0] = $mytable [0] ["name"];
 	}
-	
+
 	// fetch récupère une édition déjà existante
 	function fetch($primkeys) {
 		$this->primary_keys_value = $primkeys;
 		$condition = $this->build_prim_keys ( $primkeys );
-		
+
 		$DB = new DB_sql ();
 		$query = "SELECT * FROM $this->table WHERE $condition;";
 		if ($this->debug == "Oui")
 			echo $query;
 		$DB->query ( $query );
 		$DB->next_record ();
-		
+
 		foreach ( $this->field as $key => $value ) {
 			$this->field [$key] = $DB->f ( $key );
 			$this->field_ori [$key] = $DB->f ( $key );
 		}
 		$this->has_fetch = true;
 	}
-	
+
 	// Fonction construisant la condition sur la ou les clés primaires
 	function build_prim_keys($primkeys) {
 		// Si la valeur passée n'est pas un tableau, on le transforme en tableau
@@ -58,22 +58,22 @@ class Element {
 			unset ( $primkeys );
 			$primkeys [0] = $temp;
 		}
-		
+
 		// Verifie si on a passé une valeur pour chaque clé primaire
 		if (count ( $this->primary_keys ) != count ( $primkeys ))
 			$this->halt ( "1" );
-			
+
 			// Construit la condition
 		$i = 0;
 		do {
 			$condition .= $this->primary_keys [$i] . " = " . "'" . $primkeys [$i] . "' AND ";
 			$i ++;
 		} while ( $i < count ( $this->primary_keys ) );
-		
+
 		// on ote les 5 derniers caractères
 		return substr ( $condition, 0, strlen ( $condition ) - 5 );
 	}
-	
+
 	// Ajoute un champ
 	function insert() {
 		$champ_modif = 0;
@@ -87,14 +87,14 @@ class Element {
 				$valeurs .= "'$value', ";
 			}
 		}
-		
+
 		// Construction de la query;
 		if ($champ_modif == 0)
 			$this->halt ( "4" );
 		$champs = substr ( $champs, 0, strlen ( $champs ) - 2 ) . ") ";
 		$valeurs = substr ( $valeurs, 0, strlen ( $valeurs ) - 2 ) . ")";
 		$query = "INSERT INTO $this->table $champs VALUES $valeurs;";
-		
+
 		if ($this->debug == "Oui") {
 			echo $query;
 		} else {
@@ -103,7 +103,7 @@ class Element {
 			return mysql_insert_id ();
 		}
 	}
-	
+
 	// Update l'édition fetchée ou autre si forçage
 	function update() {
 		if (! $this->has_fetch)
@@ -111,9 +111,9 @@ class Element {
 		$condition = $this->build_prim_keys ( $this->primary_keys_value );
 		$champ_modif = 0;
 		$query_mid = "SET ";
-		
+
 		$DB = new DB_sql ();
-		
+
 		// compte le nombre de champs modifiés
 		foreach ( $this->field as $key => $value ) {
 			// Vérifie si il y a eu un changement sur les champs
@@ -122,9 +122,9 @@ class Element {
 				$query_mid .= "`" . $key . "` = '" . $DB->escape ( $value ) . "', ";
 			}
 		}
-		
+
 		$query_mid = substr ( $query_mid, 0, strlen ( $query_mid ) - 2 ) . " ";
-		
+
 		// construction et execution de la query
 		if ($champ_modif == 0)
 			$this->halt ( "3" );
@@ -134,7 +134,7 @@ class Element {
 		else
 			$DB->query ( $query );
 	}
-	
+
 	// Efface l'edition fetchée ou autre si forçage
 	function delete() {
 		if (! $this->has_fetch)
@@ -147,7 +147,7 @@ class Element {
 			$DB = new DB_sql ();
 		$DB->query ( $query );
 	}
-	
+
 	// Fonction de type débug affichant les principales variables de classe
 	function display() {
 		echo "<-- Variables de classe --><br>";

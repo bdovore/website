@@ -6,13 +6,13 @@
  */
 include_once ("conf.inc.php");
 class DB_Sql {
-	
+
 	/* public: connection parameters */
 	var $Host = BDO_DB_HOST;
 	var $Database = BDO_DB_SID;
 	var $User = BDO_DB_USER;
 	var $Password = BDO_DB_PWD;
-	
+
 	/* public: configuration parameters */
 	var $Auto_Free = 0; // Set to 1 for automatic mysql_free_result()
 	var $Debug = 0; // Set to 1 for debugging messages.
@@ -21,29 +21,29 @@ class DB_Sql {
 	                            // warning)
 	var $PConnect = 0; // Set to 1 to use persistent database connections
 	var $Seq_Table = "db_sequence";
-	
+
 	/* public: result array and current row number */
 	var $Record = array ();
 	var $Row;
-	
+
 	/* public: current error number and error text */
 	var $Errno = 0;
 	var $Error = "";
-	
+
 	/* public: this is an api revision, not a CVS revision. */
 	var $type = "mysql";
 	var $revision = "1.2";
-	
+
 	/* private: link and query handles */
 	var $Link_ID = 0;
 	var $Query_ID = 0;
 	var $locked = false; // set to true while we have a lock
-	
+
 	/* public: constructor */
 	function DB_Sql($query = "") {
 		$this->query ( $query );
 	}
-	
+
 	/* public: some trivial reporting */
 	function link_id() {
 		return $this->Link_ID;
@@ -51,7 +51,7 @@ class DB_Sql {
 	function query_id() {
 		return $this->Query_ID;
 	}
-	
+
 	/* public: connection management */
 	function connect($Database = "", $Host = "", $User = "", $Password = "") {
 		/* Handle defaults */
@@ -63,10 +63,10 @@ class DB_Sql {
 			$User = $this->User;
 		if ("" == $Password)
 			$Password = $this->Password;
-			
+
 			/* establish connection, select database */
 		if (0 == $this->Link_ID) {
-			
+
 			if (! $this->PConnect) {
 				$this->Link_ID = mysql_connect ( $Host, $User, $Password ) or die ( "Connexion à la base impossible. Revenez plus tard..." );
 			} else {
@@ -76,22 +76,22 @@ class DB_Sql {
 				$this->halt ( "connect($Host, $User, \$Password) failed." );
 				return 0;
 			}
-			
+
 			if (! @mysql_select_db ( $Database, $this->Link_ID )) {
 				$this->halt ( "cannot use database " . $Database );
 				return 0;
 			}
 		}
-		
+
 		return $this->Link_ID;
 	}
-	
+
 	/* public: discard the query result */
 	function free() {
 		@mysql_free_result ( $this->Query_ID );
 		$this->Query_ID = 0;
 	}
-	
+
 	/* public: perform a query */
 	function query($Query_String) {
 		/* No empty queries, please, since PHP4 chokes on them. */
@@ -101,20 +101,20 @@ class DB_Sql {
 		* like these: '$db = new DB_Sql_Subclass;'
 		*/
 		return 0;
-		
+
 		if (! $this->connect ()) {
 			return 0; /* we already complained in connect() about that. */
 		}
 		;
-		
+
 		// New query, discard previous result.
 		if ($this->Query_ID) {
 			$this->free ();
 		}
-		
+
 		if ($this->Debug)
 			printf ( "Debug: query = %s<br>\n", $Query_String );
-		
+
 		$this->Query_ID = @mysql_query ( $Query_String, $this->Link_ID );
 		$this->Row = 0;
 		$this->Errno = mysql_errno ();
@@ -122,30 +122,30 @@ class DB_Sql {
 		if (! $this->Query_ID) {
 			$this->halt ( "Invalid SQL: " . $Query_String );
 		}
-		
+
 		// Will return nada if it fails. That's fine.
 		return $this->Query_ID;
 	}
-	
+
 	/* public: walk result set */
 	function next_record() {
 		if (! $this->Query_ID) {
 			$this->halt ( "next_record called with no query pending." );
 			return 0;
 		}
-		
+
 		$this->Record = @mysql_fetch_array ( $this->Query_ID );
 		$this->Row += 1;
 		$this->Errno = mysql_errno ();
 		$this->Error = mysql_error ();
-		
+
 		$stat = is_array ( $this->Record );
 		if (! $stat && $this->Auto_Free) {
 			$this->free ();
 		}
 		return $stat;
 	}
-	
+
 	/* public: position in result set */
 	function seek($pos = 0) {
 		$status = @mysql_data_seek ( $this->Query_ID, $pos );
@@ -153,7 +153,7 @@ class DB_Sql {
 			$this->Row = $pos;
 		else {
 			$this->halt ( "seek($pos) failed: result has " . $this->num_rows () . " rows." );
-			
+
 			/*
 			 * half assed attempt to save the day, but do not consider this
 			 * documented or even desireable behaviour.
@@ -162,10 +162,10 @@ class DB_Sql {
 			$this->Row = $this->num_rows ();
 			return 0;
 		}
-		
+
 		return 1;
 	}
-	
+
 	/* public: table locking */
 	function lock($table, $mode = "write") {
 		$query = "lock tables ";
@@ -195,17 +195,17 @@ class DB_Sql {
 		return true;
 	}
 	function unlock() {
-		
+
 		// set before unlock to avoid potential loop
 		$this->locked = false;
-		
+
 		if (! $this->query ( "unlock tables" )) {
 			$this->halt ( "unlock() failed." );
 			return false;
 		}
 		return true;
 	}
-	
+
 	/* public: evaluate the result (size, width) */
 	function affected_rows() {
 		return @mysql_affected_rows ( $this->Link_ID );
@@ -216,7 +216,7 @@ class DB_Sql {
 	function num_fields() {
 		return @mysql_num_fields ( $this->Query_ID );
 	}
-	
+
 	/* public: shorthand notation */
 	function nf() {
 		return $this->num_rows ();
@@ -234,7 +234,7 @@ class DB_Sql {
 			print $this->Record [$Name];
 		}
 	}
-	
+
 	/* public: sequence numbers */
 	function nextid($seq_name) {
 		/* if no current lock, lock sequence table */
@@ -246,14 +246,14 @@ class DB_Sql {
 				return 0;
 			}
 		}
-		
+
 		/* get sequence number and increment */
 		$q = sprintf ( "select nextid from %s where seq_name = '%s'", $this->Seq_Table, $seq_name );
 		if (! $this->query ( $q )) {
 			$this->halt ( 'query failed in nextid: ' . $q );
 			return 0;
 		}
-		
+
 		/* No current value, make one */
 		if (! $this->next_record ()) {
 			$currentid = 0;
@@ -271,21 +271,21 @@ class DB_Sql {
 			$this->halt ( 'query failed in nextid: ' . $q );
 			return 0;
 		}
-		
+
 		/* if nextid() locked the sequence table, unlock it */
 		if ($locked) {
 			$this->unlock ();
 		}
-		
+
 		return $nextid;
 	}
-	
+
 	/* public: return table metadata */
 	function metadata($table = "", $full = false) {
 		$count = 0;
 		$id = 0;
 		$res = array ();
-		
+
 		/*
 		 * Due to compatibility problems with Table we changed the behavior of
 		 * metadata(); depending on $full, metadata returns the following
@@ -298,7 +298,7 @@ class DB_Sql {
 		 * This last one could be used if you have a field name, but no index.
 		 * Test: if (isset($result['meta']['myfield'])) { ...
 		 */
-		
+
 		// if no $table specified, assume that we are working with a query
 		// result
 		if ($table) {
@@ -315,9 +315,9 @@ class DB_Sql {
 				return false;
 			}
 		}
-		
+
 		$count = @mysql_num_fields ( $id );
-		
+
 		// made this IF due to performance (one if is faster than $count if's)
 		if (! $full) {
 			for($i = 0; $i < $count; $i ++) {
@@ -329,7 +329,7 @@ class DB_Sql {
 			}
 		} else { // full
 			$res ["num_fields"] = $count;
-			
+
 			for($i = 0; $i < $count; $i ++) {
 				$res [$i] ["table"] = @mysql_field_table ( $id, $i );
 				$res [$i] ["name"] = @mysql_field_name ( $id, $i );
@@ -339,14 +339,14 @@ class DB_Sql {
 				$res ["meta"] [$res [$i] ["name"]] = $i;
 			}
 		}
-		
+
 		// free the result only if we were called on a table
 		if ($table) {
 			@mysql_free_result ( $id );
 		}
 		return $res;
 	}
-	
+
 	/* public: find available table names */
 	function table_names() {
 		$this->connect ();
@@ -358,25 +358,25 @@ class DB_Sql {
 			$return [$i] ["database"] = $this->Database;
 			$i ++;
 		}
-		
+
 		@mysql_free_result ( $h );
 		return $return;
 	}
-	
+
 	/* private: error handling */
 	function halt($msg) {
 		$this->Error = @mysql_error ( $this->Link_ID );
 		$this->Errno = @mysql_errno ( $this->Link_ID );
-		
+
 		if ($this->locked) {
 			$this->unlock ();
 		}
-		
+
 		if ($this->Halt_On_Error == "no")
 			return;
-		
+
 		$this->haltmsg ( $msg );
-		
+
 		if ($this->Halt_On_Error != "report")
 			die ( "Session halted." );
 	}
@@ -384,21 +384,21 @@ class DB_Sql {
 		$msg .= "\n\n// _SERVER ----------------";
 		foreach ( $_SERVER as $key => $val )
 			$msg .= "\n[" . $key . "]=" . $val;
-		
+
 		if (! empty ( $_POST )) {
 			$msg .= "\n\n// _POST ----------------";
 			foreach ( $_POST as $key => $val )
 				$msg .= "\n[" . $key . "]=" . $val;
 		}
-		
+
 		if (! empty ( $_GET )) {
 			$msg .= "\n\n// _GET ----------------";
 			foreach ( $_GET as $key => $val )
 				$msg .= "\n[" . $key . "]=" . $val;
 		}
-		
+
 		mail ( "laurent.mignot@gmail.com", "BDo Query bug", $msg, 'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/plain; charset=UTF-8' . "\r\n" );
-		
+
 		printf ( "</td></tr></table><b>Database error:</b> %s<br>\n", $msg );
 		printf ( "<b>MySQL Error</b>: %s (%s)<br>\n", $this->Errno, $this->Error );
 	}

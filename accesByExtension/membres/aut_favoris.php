@@ -31,7 +31,7 @@ if ($act=='submit')
 			INSERT IGNORE INTO `users_list_aut` (
 			`user_id`, `id_auteur`
 			) VALUES (
-			".$DB->escape($_SESSION["UserId"]).", ".$DB->escape($_POST[$champs])." 
+			".$DB->escape($_SESSION["UserId"]).", ".$DB->escape($_POST[$champs])."
 			)";
 			$DB->query ($query);
 		}
@@ -44,14 +44,14 @@ else if ($act=='')
 {
 
 	$query = "
-	SELECT 
-		u.id_auteur, 
-		a.pseudo 
-	FROM 
-		users_list_aut u, 
-		bd_auteur a 
-	WHERE 
-		u.id_auteur = a.id_auteur 
+	SELECT
+		u.id_auteur,
+		a.pseudo
+	FROM
+		users_list_aut u,
+		bd_auteur a
+	WHERE
+		u.id_auteur = a.id_auteur
 		AND u.user_id = ".$DB->escape($_SESSION["UserId"]);
 	$DB->query ($query);
 

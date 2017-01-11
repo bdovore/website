@@ -42,16 +42,16 @@ class Users_list_carre extends Bdo_Db_Line
 
     }
 
-       
+
 
        public function majListCarre($user_id, $listalbum) {
-           /* 
+           /*
             * fonction pour mettre à jour la liste des auteurs favoris d'un user
             * En entrée :
             *  @user_id : identifiant du user
             *  @listauteur : tableau listant les identifiant d'auteur favoris pour ce user
             */
-           
+
            $query = "delete from ".$this->table_name ." where user_id = " . $user_id;
            Db_query($query);
            $values = " ";
@@ -70,7 +70,7 @@ class Users_list_carre extends Bdo_Db_Line
 
        public function replaceIdTome($old_idtome, $new_idtome) {
            Db_query("UPDATE IGNORE users_list_carre SET `id_tome` = " . intval($new_idtome) . " WHERE `id_tome`=" . intval($old_idtome));
-        
+
         return Db_affected_rows();
        }
 

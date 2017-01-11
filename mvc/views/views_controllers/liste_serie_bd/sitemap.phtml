@@ -1,11 +1,11 @@
 <?php $fiche = $view->getHelper('ficheAlbum'); ?>
- <?php if (isset($view->dbs_serie)) { 
-        foreach ($view->dbs_serie as $serie) { 
-            
+ <?php if (isset($view->dbs_serie)) {
+        foreach ($view->dbs_serie as $serie) {
+
      ?>
-   
-    
-   
+
+
+
 <url>
     <loc><?php echo $fiche->getURLSerie($serie); ?> </loc>
     <lastmod><?php echo date("Y-m-d"); ?></lastmod>

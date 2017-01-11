@@ -1,4 +1,4 @@
-<?php 	
+<?php
 
 
 
@@ -86,25 +86,25 @@ if ($act==""){
 	// Requete sur les données à afficher
 	if ($_POST['lstSource']==1){
 		$query = "SELECT e.id_edition, e.prop_dte, e.user_id, e.prop_status, t.id_tome, t.titre
-			FROM bd_edition e, bd_tome t 
+			FROM bd_edition e, bd_tome t
 			WHERE e.user_id=".$DB->escape($_SESSION["UserId"])." AND t.id_tome=e.id_tome $filtre
 			ORDER BY ".$orderby.$sort;
-		
+
 		$DB->query ($query);
 	}else{
 		$query = "
-		SELECT id_proposal, 
-			prop_dte, 
-			titre, 
+		SELECT id_proposal,
+			prop_dte,
+			titre,
 			status
 		FROM
-			users_alb_prop 
-		WHERE 
-			user_id=".$DB->escape($_SESSION["UserId"])." 
-			AND prop_type = '".$DB->escape($criteria)."' 
-			$filtre 
+			users_alb_prop
+		WHERE
+			user_id=".$DB->escape($_SESSION["UserId"])."
+			AND prop_type = '".$DB->escape($criteria)."'
+			$filtre
 		ORDER BY ".$orderby.$sort;
-		
+
 		$DB->query ($query);
 	}
 
@@ -200,10 +200,10 @@ elseif($act=="supprim")
 	$type = $_GET["type"];
 
 	if($status=="ok"){// Supression Confirmée
-		
+
 		if ($type == 'EDITION'){// Définie les valeurs dans le cas d'une édition
-			
-			$query = "SELECT e.user_id, e.img_couv, e.id_tome, t.titre FROM bd_edition e, bd_tome t 
+
+			$query = "SELECT e.user_id, e.img_couv, e.id_tome, t.titre FROM bd_edition e, bd_tome t
 			WHERE e.id_edition = ".$DB->escape($propid)." AND t.id_tome = e.id_tome;";
 			$DB->query ($query);
 			$DB->next_record();
@@ -212,7 +212,7 @@ elseif($act=="supprim")
 			$prop_action = $DB->f("action");
 			$prop_titre = $DB->f("titre");
 		}else {// Définie les valeurs dans le cas d'un ajout d'album ou d'une correction
-			
+
 			$query = "SELECT user_id, img_couv, titre FROM users_alb_prop WHERE id_proposal = ".$DB->escape($propid);
 			$DB->query ($query);
 			$DB->next_record();
@@ -251,7 +251,7 @@ elseif($act=="supprim")
 	{
 		// affiche la confirmation de la demande d'effacement
 		echo 'Etes-vous s&ucirc;r de vouloir effacer la proposition ?   <a href="'.BDO_URL.'membres/suiviproposals.php?act=supprim&type='.$type.'&propid='.$propid.'&status=ok">oui</a>
-	  	- <a href="javascript:history.go(-1)">non</a>';	 
+	  	- <a href="javascript:history.go(-1)">non</a>';
 		exit();
 	}
 }

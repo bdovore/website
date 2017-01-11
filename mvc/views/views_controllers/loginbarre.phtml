@@ -4,7 +4,7 @@ if (Bdo_Cfg::user()->minAccesslevel(2)) {
 		    <div id="loginContainer" class="shadow">
                <a href="#" id="loginButton"><span><?php echo $_SESSION['userConnect']->username;?></span><em></em></a>
                 <div style="clear:both"></div>
-                <div id="loginBox" class="shadow">                
+                <div id="loginBox" class="shadow">
                     <form id="loginForm" method="post" action="<?php echo BDO_URL;?>">
                         <fieldset id="loginBody">
                             <input type="submit" id="submitLoginDisconnect" name="submitLoginDisconnect" value="Se déconnecter" />
@@ -21,7 +21,7 @@ else {
 		    <div id="loginContainer" class="shadow">
                <a href="#" id="loginButton"><span>Connexion</span><em></em></a>
                 <div style="clear:both"></div>
-                <div id="loginBox" class="shadow">                
+                <div id="loginBox" class="shadow">
                     <form id="loginForm" method="post" action="<?php echo BDO_URL;?>">
                         <fieldset id="loginBody">
                             <fieldset>
@@ -58,7 +58,7 @@ else {
 	</form>
 	<!-- /Simple OpenID Selector -->
                         </div>
-                   
+
                 </div>
             </div>
 <?php

@@ -23,16 +23,16 @@ $t->set_block('tpBody','LastBlock','LBlock');
 
 // affichage du nombre de bd
 $select = "
-select 
-	count(ua.id_edition) nb, 
-	count(distinct t.id_tome) nb_tome, 
-	count(distinct t.id_serie) nbserie 
-from 
+select
+	count(ua.id_edition) nb,
+	count(distinct t.id_tome) nb_tome,
+	count(distinct t.id_serie) nbserie
+from
 	users_album ua
 	INNER JOIN bd_edition en ON ua.id_edition = en.id_edition
 	INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 where
-	ua.user_id=".$DB->escape($_SESSION["UserId"])." 
+	ua.user_id=".$DB->escape($_SESSION["UserId"])."
 	and ua.flg_achat = 'N'
 ";
 $DB->query($select);
@@ -58,20 +58,20 @@ $t->set_var("NBCOMMENTS",$DB->f("nbcomment"));
 // Selections des 5 albums les mieux notés
 $query = "
 select
-	uc.note, 
-	uc.id_tome, 
-	t.titre, 
-	ua.id_edition 
-from 
+	uc.note,
+	uc.id_tome,
+	t.titre,
+	ua.id_edition
+from
 	users_album ua
 	INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
 	INNER JOIN bd_tome t ON en.id_tome=t.id_tome
 	INNER JOIN bd_serie s ON t.id_serie=s.id_serie
 	left outer join users_comment uc on uc.user_id = ua.user_id and	uc.id_tome = en.id_tome
-where 
-	ua.user_id =".$DB->escape($_SESSION["UserId"])." 
-	and ua.flg_achat = 'N' 
-order by uc.note desc 
+where
+	ua.user_id =".$DB->escape($_SESSION["UserId"])."
+	and ua.flg_achat = 'N'
+order by uc.note desc
 limit 0,5";
 $DB->query ($query);
 
@@ -89,21 +89,21 @@ while ($DB->next_record()){
 
 // Selections des 5 Genres les plus représentés
 $query = "
-SELECT 
-	count(distinct(t.id_tome)) as nbtome, 
-	g.id_genre, 
-	g.libelle 
-from 
+SELECT
+	count(distinct(t.id_tome)) as nbtome,
+	g.id_genre,
+	g.libelle
+from
 	users_album ua
 	INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
 	INNER JOIN bd_tome t ON en.id_tome=t.id_tome
 	INNER JOIN bd_serie s ON t.id_serie=s.id_serie
 	INNER JOIN bd_genre g ON g.id_genre=s.id_genre
-where 
+where
 	ua.user_id =".$DB->escape($_SESSION["UserId"])."
-	and ua.flg_achat = 'N' 
-group by g.id_genre 
-order by nbtome 
+	and ua.flg_achat = 'N'
+group by g.id_genre
+order by nbtome
 desc limit 0,5";
 $DB->query ($query);
 
@@ -120,18 +120,18 @@ while ($DB->next_record()){
 
 // Selections des 5 dessinateurs les plus représentés
 $query = "
-SELECT 
-	count(t.id_tome) as nbtome, 
-	a.pseudo libelle 
-from 
+SELECT
+	count(t.id_tome) as nbtome,
+	a.pseudo libelle
+from
 	users_album ua
 	INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
 	INNER JOIN bd_tome t ON en.id_tome=t.id_tome
-	INNER JOIN bd_auteur a ON a.id_auteur=t.id_dessin 
-where 
-	ua.user_id =".$DB->escape($_SESSION["UserId"])." 
-	and ua.flg_achat = 'N' 
-group by a.id_auteur 
+	INNER JOIN bd_auteur a ON a.id_auteur=t.id_dessin
+where
+	ua.user_id =".$DB->escape($_SESSION["UserId"])."
+	and ua.flg_achat = 'N'
+group by a.id_auteur
 order by nbtome desc limit 0,5
 ";
 $DB->query ($query);

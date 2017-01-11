@@ -59,7 +59,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 	                    <td> <div align="left"> </div></td>
 	                    <td colspan="3"><input name="txtNumTome" id="txtNumTome" value="{TOME}" size="2" class="flat" type="text" /></td>
                     </tr>
-                    
+
                     <tr bordercolor="#DAC1B3">
 						<td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-13</strong></font></td>
 	                    <td> <div align="left"> </div></td>
@@ -163,7 +163,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 	                    <td bordercolor="#DAC1B3"><input name="txtColoAlt" value="{DESSINATEURALT}" size="40" class="flat" type="text" /></td>
 	                    <td bordercolor="#DAC1B3"><img src="{URLSITEIMAGE}site/loupe.gif" onclick="newWindow('auteur',document.myform.txtColoAlt.value,'myform','txtColoAlt',true)" height="14" width="24"></td>
     				</tr>
-    				
+
 					<tr bordercolor="#DAC1B3">
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>

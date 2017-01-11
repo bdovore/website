@@ -19,7 +19,7 @@ $act = $_GET["act"];
 
 // Mettre à jour les informations
 if ($act=="update"){
-	
+
 	$query = "
 	UPDATE bd_serie SET
 		`nom` = '".$DB->escape($_POST['txtSerie'])."',
@@ -118,18 +118,18 @@ elseif($act=="append"){
 	}else{
 		$tri = $_POST['txtTri'];
 	}
-	
+
 	$query = "
 	INSERT INTO `bd_serie` (
 	`NOM`, `ID_GENRE`, `FLG_FINI`, `NB_TOME`, `TRI`, `HISTOIRE`
 	) VALUES (
-	'".$DB->escape($_POST['txtSerie'])."', 
-	".$DB->escape($_POST['txtGenreId']).", 
-	'".$DB->escape($_POST['chkFini'])."', 
-	".sqlise($_POST['txtNbTome'],'int').", 
-	".sqlise($tri,'text_simple').", 
+	'".$DB->escape($_POST['txtSerie'])."',
+	".$DB->escape($_POST['txtGenreId']).",
+	'".$DB->escape($_POST['chkFini'])."',
+	".sqlise($_POST['txtNbTome'],'int').",
+	".sqlise($tri,'text_simple').",
 	".sqlise($_POST['txtSerieHist'],'text_simple')."
-	) 
+	)
 	";
 	$DB->query ($query);
 	$lid= mysql_insert_id();
@@ -139,7 +139,7 @@ elseif($act=="append"){
 // AFFICHER UNE SERIE
 elseif($act==""){
 	$champ_form_style = 'champ_form_desactive';
-	
+
 	// Creation d'un nouveau Template
 	$t = new Template(BDO_DIR."public/templates");
 	// fichier à utiliser
@@ -165,10 +165,10 @@ elseif($act==""){
 	}
 
 	// Selectionne les auteurs ayant travaillé pour la série
-	$query = "SELECT distinct id_auteur, pseudo 
-	FROM 
-	bd_auteur, bd_tome 
-	WHERE id_serie = ".$DB->escape($serie_id)." 
+	$query = "SELECT distinct id_auteur, pseudo
+	FROM
+	bd_auteur, bd_tome
+	WHERE id_serie = ".$DB->escape($serie_id)."
 	and (id_scenar = id_auteur or id_dessin = id_auteur);";
 	$DB->query ($query);
 	$nb_auteur = $DB->num_rows();
@@ -184,20 +184,20 @@ elseif($act==""){
 
 	//récupère les données dans la base
 	$query = "
-	SELECT 
-		s.ID_SERIE, 
-		s.NOM, 
-		s.ID_GENRE, 
-		g.LIBELLE, 
-		s.NOTE, 
-		s.FLG_FINI, 
-		s.NB_TOME, 
-		s.TRI, 
+	SELECT
+		s.ID_SERIE,
+		s.NOM,
+		s.ID_GENRE,
+		g.LIBELLE,
+		s.NOTE,
+		s.FLG_FINI,
+		s.NB_TOME,
+		s.TRI,
 		s.HISTOIRE
-    FROM 
-    	bd_serie s 
+    FROM
+    	bd_serie s
     	INNER JOIN bd_genre g ON s.ID_GENRE = g.ID_GENRE
-    WHERE 
+    WHERE
     	s.id_serie=".$DB->escape($serie_id);
 	$DB->query ($query);
 	$DB->next_record();

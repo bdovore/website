@@ -1,4 +1,4 @@
-<?php 	
+<?php
 
 
 
@@ -42,24 +42,24 @@ if ($act==""){
 	$orderby = $clerep[$cle];
 
 	$query = "
-	SELECT 
-		e.id_edition, 
-		t.id_tome id_proposal, 
-		e.user_id, 
-		u.username, 
-		e.prop_dte, 
-		t.titre, 
+	SELECT
+		e.id_edition,
+		t.id_tome id_proposal,
+		e.user_id,
+		u.username,
+		e.prop_dte,
+		t.titre,
 		s.nom serie
-	FROM 
-		bd_edition e, 
-		bd_tome t, 
-		bd_serie s , 
+	FROM
+		bd_edition e,
+		bd_tome t,
+		bd_serie s ,
 		users u
-	WHERE 
-		e.user_id = u.user_id 
-		AND e.prop_status = 0 
-		AND e.id_tome = t.id_tome 
-		and t.id_serie = s.id_serie 
+	WHERE
+		e.user_id = u.user_id
+		AND e.prop_status = 0
+		AND e.id_tome = t.id_tome
+		and t.id_serie = s.id_serie
 	ORDER BY ".$orderby.$sort;
 
 	$DB->query ($query);

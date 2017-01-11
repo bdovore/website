@@ -12,14 +12,14 @@ class Bdo_Onglet_Pack
 		if (!isset($_SESSION['id_pack_onglet'])) $_SESSION['id_pack_onglet'] = 0;
 		$this->id_pack = $_SESSION['id_pack_onglet'];
 		$_SESSION['id_pack_onglet']++;
-		
+
 		$this->addJavascript('tab_assoc_div['.$this->id_pack.']= new Array;');
 	}
 
 	function addOnglet($onglet)
 	{
 		$this->tab_onglet[$onglet->nom] = $onglet;
-		
+
 		if (0 == $this->nb_onglet)
 		{
 			$onglet->setAbscisse($this->abscisseDefaultOnglet);
@@ -34,7 +34,7 @@ class Bdo_Onglet_Pack
 		tab_div['.$onglet->id.']["id_pack"]='.$this->id_pack.';
 		tab_assoc_div['.$this->id_pack.']['.$this->nb_onglet.'] = '.$onglet->id.';
 		');
-		
+
 		$this->nb_onglet++;
 		return $onglet;
 	}
@@ -43,7 +43,7 @@ class Bdo_Onglet_Pack
 	{
 		return $this->addOnglet(new Bdo_Onglet($nom,$text,$fstyle));
 	}
-		
+
 	function addJavascript($jvs)
 	{
 		$this->javaScript .= "\n".$jvs;
@@ -52,7 +52,7 @@ class Bdo_Onglet_Pack
 	function affPack()
 	{
 	    $html = '';
-	     
+
 		$flagDisplay= false;
 		foreach ($this->tab_onglet as $onglet)
 		{
@@ -128,7 +128,7 @@ class Bdo_Onglet_Pack
 		{
 			if ($onglet->nom == $nameOnglet)
 				$onglet->changeDisplay('block');
-			else 
+			else
 				$onglet->changeDisplay('none');
 		}
 	}

@@ -63,16 +63,16 @@ else {
 // on déclare le block à utiliser
 $t->set_block('tpAccueil','ComBlock','CMBlock');
 $select = "
-select 
-	t.titre, 
-	t.id_tome id,  
-	max(c.dte_post) dte, 
+select
+	t.titre,
+	t.id_tome id,
+	max(c.dte_post) dte,
 	en.img_couv
-from 
-	bd_tome t INNER JOIN bd_edition en ON en.id_edition = t.id_edition, 
+from
+	bd_tome t INNER JOIN bd_edition en ON en.id_edition = t.id_edition,
 	users_comment c
-where 
-	t.id_tome = c.id_tome 
+where
+	t.id_tome = c.id_tome
 	and c.comment <> ''
 group by titre, t.id_tome
 order by dte desc limit 0,5
@@ -103,14 +103,14 @@ while ($DB->next_record()) {
 // on déclare le block à utiliser
 $t->set_block('tpAccueil','LastSortieBlock','LSBlock');
 $select ="select
-			t.titre, 
+			t.titre,
 			t.id_tome,
-			en.img_couv , 
+			en.img_couv ,
 			en.dte_parution
-		from 
+		from
 			bd_tome t
-			INNER JOIN bd_edition en ON en.id_edition = t.id_edition 
-		where 
+			INNER JOIN bd_edition en ON en.id_edition = t.id_edition
+		where
 			en.dte_parution <= CURDATE()
 		order by en.dte_parution desc
 		limit 0,5";
@@ -140,16 +140,16 @@ while ($DB->next_record()) {
 // on déclare le block à utiliser
 $t->set_block('tpAccueil','FuturSortieBlock','FSBlock');
 $select ="select
-			t.titre, 
+			t.titre,
 			t.id_tome,
-			en.img_couv , 
+			en.img_couv ,
 			en.dte_parution
-		from 
+		from
 			bd_tome t
-			INNER JOIN bd_edition en ON en.id_edition = t.id_edition 
-		where 
+			INNER JOIN bd_edition en ON en.id_edition = t.id_edition
+		where
 			en.dte_parution > CURDATE()
-		order by en.dte_parution 
+		order by en.dte_parution
 		limit 0,5";
 $DB->query($select);
 $nb = 1;

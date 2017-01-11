@@ -43,17 +43,17 @@ $url_edit = array(
 if ($rb_browse == 'aut') {
 
 	$query_niv2 = "
-	select SQL_CALC_FOUND_ROWS distinct 
+	select SQL_CALC_FOUND_ROWS distinct
 		bd_serie.id_serie id,
 		bd_serie.nom name
 	from
 		bd_serie
 		INNER JOIN bd_tome USING(id_serie)
-	where 
-		bd_tome.id_dessin = ".mysql_real_escape_string($lev_id)." 
+	where
+		bd_tome.id_dessin = ".mysql_real_escape_string($lev_id)."
 		or bd_tome.id_scenar = ".mysql_real_escape_string($lev_id)."
 		or bd_tome.id_color = ".mysql_real_escape_string($lev_id)."
-		or bd_tome.id_scenar_alt = ".mysql_real_escape_string($lev_id)." 
+		or bd_tome.id_scenar_alt = ".mysql_real_escape_string($lev_id)."
 		or bd_tome.id_dessin_alt = ".mysql_real_escape_string($lev_id)."
 		or bd_tome.id_color_alt = ".mysql_real_escape_string($lev_id)."
 	order by name ";
@@ -67,13 +67,13 @@ if ($rb_browse == 'aut') {
 elseif ($rb_browse == 'edit'){
 
 	$query_niv2 = "
-	select SQL_CALC_FOUND_ROWS 
+	select SQL_CALC_FOUND_ROWS
 		id_collection id,
-		nom name 
+		nom name
 	from
-		bd_collection 
+		bd_collection
 	where
-		id_editeur =" . mysql_real_escape_string($lev_id) . " 
+		id_editeur =" . mysql_real_escape_string($lev_id) . "
 	order by name
 	";
 
@@ -86,15 +86,15 @@ elseif ($rb_browse == 'edit'){
 elseif ($rb_browse == 'genr') {
 
 	$query_niv2 = "
-	select SQL_CALC_FOUND_ROWS distinct 
-		Upper(left(nom,1)) id, 
-		Upper(left(nom,1)) name 
+	select SQL_CALC_FOUND_ROWS distinct
+		Upper(left(nom,1)) id,
+		Upper(left(nom,1)) name
 	from
 		bd_serie
 	where
 		id_genre =" . mysql_real_escape_string($lev_id) . "
 	order by name
-	"; 
+	";
 
 	$url_alb = "serie.php?id_serie=%d";
 	$act_url = "";

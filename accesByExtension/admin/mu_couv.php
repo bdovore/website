@@ -10,18 +10,18 @@ minAccessLevel(1);
 // Mettre à jour les informations
 if ($act=="update"){
 	$nb = 0;
-	
+
 	foreach ($alb_id as $idtome){
 		// Selection le numéro de l'edition en cours
 		$query = "
-		SELECT 
-			en.id_edition, 
-			en.img_couv 
-		FROM 
-			bd_tome t 
+		SELECT
+			en.id_edition,
+			en.img_couv
+		FROM
+			bd_tome t
 			INNER JOIN bd_edition en ON t.ID_EDITION=en.ID_EDITION
-		WHERE 
-			t.id_tome = ".$DB->escape($idtome)." 
+		WHERE
+			t.id_tome = ".$DB->escape($idtome)."
 		";
 		$DB->query ($query);
 		$DB->next_record();
@@ -67,7 +67,7 @@ elseif($act==""){
 	));
 
 	if ($serie != ""){
-		
+
 		// récupère le infos liées à la série
 		$query = "SELECT nom FROM bd_serie WHERE id_serie = ".$DB->escape($serie);
 		$DB->query ($query);
@@ -80,17 +80,17 @@ elseif($act==""){
 
 		// Affiche les couvertures
 		$query = "
-		SELECT 
-			t.id_tome, 
-			t.num_tome, 
-			t.titre, 
-			en.img_couv, 
-			en.isbn 
-		FROM 
-			bd_tome t 
+		SELECT
+			t.id_tome,
+			t.num_tome,
+			t.titre,
+			en.img_couv,
+			en.isbn
+		FROM
+			bd_tome t
 			INNER JOIN bd_edition en ON t.id_edition=en.id_edition
-		WHERE 
-		t.id_serie = ".$DB->escape($serie)." 
+		WHERE
+		t.id_serie = ".$DB->escape($serie)."
 		ORDER BY t.num_tome";
 		$DB->query ($query);
 		// on déclare le block à utiliser

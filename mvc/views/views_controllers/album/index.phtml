@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $ficheAlbum = $view->getHelper('ficheAlbum');
 
@@ -10,21 +10,21 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 -->
 	<script language="JavaScript">
-		
+
                 $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
-                
+
 		$(function() {
                     $( "#date_achat" ).datepicker({dateFormat: "dd/mm/yy"});
                 });
 		function changeEdition () {
 			window.location="album?id_tome=<?php echo $view->tome->ID_TOME;?>&id_edition="+ document.getElementById('sel_edition').value+"&frame=<?php echo $view->frame;?>" ;
 		}
-		
+
 		function liencorrection () {
 			parent.location.href="prop_correct?alb_id=<?php echo $view->tome->ID_TOME;?>&id_edition="+ document.getElementById('sel_edition').value;
 			window.close();
 		}
-		
+
 		function openSerie(){
 			if (window.name == "Album") {
 				window.opener.location="<?php echo BDO_URL;?>SerieBD?id_serie=<?php echo $view->tome->ID_SERIE;?>";}
@@ -32,7 +32,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 			parent.location="<?php echo BDO_URL;?>SerieBD?id_serie=<?php echo $view->tome->ID_SERIE;?>";
 			}
 		}
-		
+
 		function setDteAchat(){
                     if (!$("cb_achat").is(':checked')) {
                             d = new Date();
@@ -59,39 +59,39 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         //-->
                 $( document ).ready(function() {
                   getComment(page=1, id_tome=<?php echo $view->tome->ID_TOME;?> );
-                });	
-            
-            
-            
-            
+                });
+
+
+
+
             function viewComment() {
-                
+
                 <?php  if ($view->connected) { ?>
-                                       
+
                 $("#writecomment").show(100);
                 offset = $("#writecomment").offset().top;
                 $('html, body').animate({scrollTop: offset}, 'slow');
                 <?php }
-                 else { 
+                 else {
                                             echo "alert('Vous devez vous authentifier pour écrire un avis de lecture !');";
                                         }
                                         ?>
             }
-            
+
             function myComment(){
                 writeComment($("#id_tome").val(),$("input[name='note']").val()*2, $("#t_comment").val() );
-                $("#listcomment").empty();             
-                
-                
+                $("#listcomment").empty();
+
+
                 getComment(page=1, id_tome=<?php echo $view->tome->ID_TOME;?>);
             }
-           
+
            function saveCollection() {
                if (!isValidEmailAddress($("#email_pret").val()) && $("#email_pret").val() != "") {
                  alert("L'adresse email de l'emprunteur est erroné !");
-             } 
+             }
              else {
-                $("#save_collection").html("<img src='./script/ajax-loader.gif'>"); 
+                $("#save_collection").html("<img src='./script/ajax-loader.gif'>");
 
                 var url = "./Macollection/majcollection?id_edition="+$("#user_edition").val();
                 url += "&id_tome="+<?php echo $view->tome->ID_TOME; ?>;
@@ -111,7 +111,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                 $.getJSON(url, function (data) {
 
-                           if (data.length == 0) {$("#save_collection").html('<input type="button" value="Enregistrer les modifications" onclick="saveCollection();"/> <br>Données mises à jour !')};   
+                           if (data.length == 0) {$("#save_collection").html('<input type="button" value="Enregistrer les modifications" onclick="saveCollection();"/> <br>Données mises à jour !')};
 
                         }
 
@@ -122,29 +122,29 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 
 <div class="conteneuralb">
-      
+
 			<div class="alb-img">
                             <div id="couv"></div>
-                            
+
                                 <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
                                 <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION;?></div>
                                 <div id="sponsor" align="center"><?php echo $ficheAlbum->getSponsor($view->tome); ?></div>
-                 
-               
-             
+
+
+
 			</div>
-		
+
 	    <div class="contentalb" id="alb-description">
-			
-			<h3 align="center"><?php echo $ficheAlbum->getTitreTome($view->tome,$url=false);?>  <br>  
+
+			<h3 align="center"><?php echo $ficheAlbum->getTitreTome($view->tome,$url=false);?>  <br>
                             <?php echo $ficheAlbum->urlSerie($view->tome,"_parent");?>
-                           
+
                         </h3>
                 <p align="center">
                                 <font size="-1"><?php if ($view->tome->NB_NOTE_TOME > 0) { ?> <span id="noteTome<?php echo $view->tome->ID_TOME; ?>" style="vertical-align: -3px;"> </span> <script>$('#noteTome<?php echo $view->tome->ID_TOME; ?>').raty({score: <?php echo $view->tome->MOYENNE_NOTE_TOME/2.0; ?>, readOnly: true});</script> pour <?php echo $view->tome->NB_NOTE_TOME ?> notes. <?php ;} ?></font>
-                </p> 
-			<?php echo $view->tome->NOM_GENRE;?>  -   <?php echo $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR, "PSEUDO" => $view->tome->scpseudo),$target="_parent"). ($view->tome->scapseudo == "Aucun" ? "" : " - ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR_ALT,"PSEUDO" => $view->tome->scapseudo),$target="_parent")); 
-                        if ($view->tome->scpseudo <> $view->tome->depseudo || $view->tome->deapseudo <> "Aucun" ) echo "/".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN, "PSEUDO" => $view->tome->depseudo),$target="_parent").($view->tome->deapseudo == "Aucun" ? "" : " - ". $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN_ALT, "PSEUDO" => $view->tome->deapseudo),$target="_parent")); ?>  
+                </p>
+			<?php echo $view->tome->NOM_GENRE;?>  -   <?php echo $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR, "PSEUDO" => $view->tome->scpseudo),$target="_parent"). ($view->tome->scapseudo == "Aucun" ? "" : " - ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR_ALT,"PSEUDO" => $view->tome->scapseudo),$target="_parent"));
+                        if ($view->tome->scpseudo <> $view->tome->depseudo || $view->tome->deapseudo <> "Aucun" ) echo "/".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN, "PSEUDO" => $view->tome->depseudo),$target="_parent").($view->tome->deapseudo == "Aucun" ? "" : " - ". $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN_ALT, "PSEUDO" => $view->tome->deapseudo),$target="_parent")); ?>
                         <?php if ($view->tome->copseudo <> $view->tome->depseudo and $view->tome->copseudo <> "Aucun" and $view->tome->copseudo <> "<indéterminé>") echo "<br>Couleur : ".htmlspecialchars ($view->tome->copseudo); ?>
 					<br> <b>Edition </b> <font size="-1">
 			                <?php if (count($view->dbs_edition->a_dataQuery) == 1) {
@@ -168,25 +168,25 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                             echo "</select>";
                                         }
                                         ?>
-                            <?php 
+                            <?php
                             if (isset($view->tome->NOM_COLLECTION)) {
                                 echo $view->tome->NOM_COLLECTION == "<N/A>" ? "" : "<br> Collection ".$view->tome->NOM_COLLECTION;
                             } ?>
-					<br> 
+					<br>
 						<span class="petite_police">
 					ISBN-13 (EAN) : <?php echo $view->tome->EAN_EDITION;?> || ISBN-10 : <?php echo $view->tome->ISBN_EDITION;?> || ID-BDovore : <?php echo $view->tome->ID_TOME;?> </span>
-					
+
 			<div class="action" id="action-menu">
 				<div align="center">
 					<div id="actionCollection"></div>
-                                   
+
 				</div>
-                          
+
                         </div>
-		
-	</div>		
-                    
-    
+
+	</div>
+
+
         <div class="synopsis">
             <?php if ($view->tome->HISTOIRE_TOME <> "") { ?>
                 <strong>Synopsis :</strong>
@@ -195,14 +195,14 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                         <?php echo nl2br($view->tome->HISTOIRE_TOME);?>
                                         </font>
             <?php } ?>
-                                        <?php // test existence d'image Izneo 
-                                        
+                                        <?php // test existence d'image Izneo
+
                                         $file_headers = @get_headers("http://images.izneo.com/page/".$view->tome->EAN_EDITION."/300/1.jpg");
-                                        
-                                        if($file_headers[0] != 'HTTP/1.0 404 Not Found' and $file_headers[0] != 'HTTP/1.1 404 Not Found') { 
+
+                                        if($file_headers[0] != 'HTTP/1.0 404 Not Found' and $file_headers[0] != 'HTTP/1.1 404 Not Found') {
                                         ?>
                                          <script type="text/javascript">
-                                              
+
                                         $(window).load(function(){
                                                             $("head").append($("<link/>").attr("rel", "stylesheet").attr("href", "./style/anythingslider.css"));
                                                             var container = $("#couv");
@@ -223,7 +223,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                                                 playRtl      : false,
                                                                 toggleArrows        : true,
                                                                 width        : 200,
-                                                                buildStartStop      : false, 
+                                                                buildStartStop      : false,
                                                             });
                                                                     };var i=0; list.find("img").load(function(){
                                             i++;
@@ -232,23 +232,23 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                                 launchSlider();
                                             }
                                         })});
-                                   
+
                                         $("#sponsor").append($("<a/>").attr("href", "http://player.izneo.com/read/<?php echo $view->tome->EAN_EDITION;?>-<?php echo IZNEO_ID; ?>.html").attr("target","_blank").append("<img src='http://www.izneo.com/images/desktop/logo-izneo.png' width='80' >"));
                                         </script>
-                                        <?php } 
+                                        <?php }
                                         else { ?>
                                        <script> $("#couv").append("<li><img src='<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : 'default.png';?>' width='180' border='1' name='imgEdition' id='imgEdition' alt='couverture'> ");</script>
                                         <?php } ?>
-                                       <br>  
-                                       <div id="simil"> 
-                                           <a href="<?php echo BDO_URL;?>simil?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">Voir des albums similaires</a> 
+                                       <br>
+                                       <div id="simil">
+                                           <a href="<?php echo BDO_URL;?>simil?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">Voir des albums similaires</a>
                                            <br></div>
                                         <br>
                                         <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
-                                            
-                                            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><i>Une erreur sur cette fiche ou votre édition est différente ? Vous pouvez 
+
+                                            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><i>Une erreur sur cette fiche ou votre édition est différente ? Vous pouvez
                                                     <a href="<?php echo BDO_URL; ?>Proposition?id_edition=<?php echo $edition_selected; ?>" >
-								<b>proposer une correction</b>  
+								<b>proposer une correction</b>
 										</a></i> ou  <i>
                                                     <a href="<?php echo BDO_URL; ?>Proposition?type=EDITION&id_tome=<?php echo $view->tome->ID_TOME; ?>">
 								<b>proposer l'ajout d'une autre édition</b>
@@ -257,119 +257,119 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 
         </div>
-    
+
 	  <div id="info_collection">
               <center><strong>Données privées</strong><br><span class="petite_police">(pour votre utilisation personnelle)</span></center>
 				<hr style="align: center; width: 50%;">
                                 <input type="hidden" id="user_edition" value="<?php echo $view->tome->ID_EDITION; ?>" />
-				<table> 
+				<table>
                                      <tr>
                                         <td>
                                          Futur achat : <input name="cb_achat" id="cb_achat" value="O" type="checkbox" onclick="setDteAchat();">
-					Date d'achat : <span class="petite_police">(dd/mm/aaaa)</span>	<input name="date_achat" id="date_achat" value="" size="10" maxlength="10" type="text">	
-	
-										
+					Date d'achat : <span class="petite_police">(dd/mm/aaaa)</span>	<input name="date_achat" id="date_achat" value="" size="10" maxlength="10" type="text">
+
+
 					Prix/cote :<input class="numbersOnly" name="prix" id="prix" value="" size="4" maxlength="8" type="text">
                                     </td>
-                                </tr>	
+                                </tr>
                                     <tr>
                                         <td>
-				
+
 					E.O :	<input name="cb_tete" id="cb_tete" value="O" type="checkbox" >
                                         Dédicace : <input name="cb_dedicace" id="cb_dedicace" value="O" type="checkbox" >
                                          Cadeau :<input name="cb_cadeau" id="cb_cadeau" value="checkbox" type="checkbox" >
                                          Lu :<input name="cb_lu" id="cb_lu" value="checkbox" type="checkbox" >
 					</td>
                                     </tr>
-                                   	    
+
                                 <tr>
                                     <td>
-                                       
-                                                Prêt :				
-                                       
-                                        <input name="cb_pret" id="cb_pret" value="checkbox" type="checkbox">		            
-                                       						
+
+                                                Prêt :
+
+                                        <input name="cb_pret" id="cb_pret" value="checkbox" type="checkbox">
+
                                                 Dernier emprunteur :
-                                       			        
-                                        <input name="nom_pret" id="nom_pret" value="" size="15" maxlength="100" type="text" >			            
-                                        
-                                               								
+
+                                        <input name="nom_pret" id="nom_pret" value="" size="15" maxlength="100" type="text" >
+
+
                                                         Email :
-                                               
-                                         		           
+
+
                                         <input name="email_pret" id="email_pret" value="" size="15" maxlength="100" type="text">
                                     </td>
-                                </tr>		    
+                                </tr>
                                     <tr>
                                     <td>
-										
+
 					Remarque personnelle (état, mémo, ...) :
                                         <textarea name="remarque" id="remarque" class="champ_commentaire"></textarea>
                                     </td>
-                                    </tr>		
+                                    </tr>
                                 </table>
                                 <div id="save_collection"><input type="button" value="Enregistrer les modifications" onclick="saveCollection();"/></div>
-                                
+
                             </div>
-    
-      
+
+
         <div class="comment" id="comment">
                 <font color="#990000" face="Arial, Helvetica, sans-serif" size="-1">
                         <strong>Commentaires des membres :</strong> <a onclick="viewComment();">
-						
+
 							(vous pouvez également donner un avis de lecture)
-						
+
 					</a>
                 </font>
                  <div id="writecomment">
-                 
-                    <table width="100%" border="0" align="center">			
-				<tr> 						    
-					<td width="70%">					
-													
-							<strong>Notez et donnez votre avis de lecture pour <font color="#990000"><?php echo $view->tome->TITRE_TOME;?> </font></strong>						
-										
-					</td>				    		
-				</tr>				
-								
-				    <tr> 									    
-						<td>						
-							Note: 
+
+                    <table width="100%" border="0" align="center">
+				<tr>
+					<td width="70%">
+
+							<strong>Notez et donnez votre avis de lecture pour <font color="#990000"><?php echo $view->tome->TITRE_TOME;?> </font></strong>
+
+					</td>
+				</tr>
+
+				    <tr>
+						<td>
+							Note:
                                                         <div id="commentRaty"></div>
-                                                        <script>$("#commentRaty").raty({ scoreName: 'note', half : true})</script>							
-												
-						</td>					    		   
-					</tr>				    
-					<tr>					  			    
-						<td>Avis de lecture * : 
-                                                 <textarea id="t_comment" class="champ_commentaire"></textarea></td>					    		    
-					</tr>				    
-							    
-							    
-					<tr>			    
-						<td>						
-							 			
-								<input name="id_tome" type="hidden" id="id_tome" value="<?php echo $view->tome->ID_TOME ?>" />						        
-								<input type="submit" name="Submit" value="Enregistrer note/avis" onclick="myComment();"/>					        
-							<em>								
-                                                            <br><font size="-1">									
+                                                        <script>$("#commentRaty").raty({ scoreName: 'note', half : true})</script>
+
+						</td>
+					</tr>
+					<tr>
+						<td>Avis de lecture * :
+                                                 <textarea id="t_comment" class="champ_commentaire"></textarea></td>
+					</tr>
+
+
+					<tr>
+						<td>
+
+								<input name="id_tome" type="hidden" id="id_tome" value="<?php echo $view->tome->ID_TOME ?>" />
+								<input type="submit" name="Submit" value="Enregistrer note/avis" onclick="myComment();"/>
+							<em>
+                                                            <br><font size="-1">
 										* : Avis de lecture qui apparaîtra pour tous les visiteurs sur le site
-										<br />									
-									</font>								
-								</em>				
-						</td>					    			   
-					</tr>				
-			</table>	
-                   		
+										<br />
+									</font>
+								</em>
+						</td>
+					</tr>
+			</table>
+
 
                 </div>
                 <br>
-                
+
                 <div id="listcomment">
-                                
+
                 </div>
-               
-               
+
+
         </div>
 </div>
 <script language="javascript">
@@ -385,18 +385,18 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             $("#writecomment").show();
         }
         });
-        
+
      function getInfoCollection () {
           $("#actionCollection").html("<img src='"+$.bdovore.URL+ "script/ajax-loader.gif'>");
      var url = $.bdovore.URL+"getjson?data=Useralbum&id_edition=<?php echo $view->tome->ID_EDITION?>";
       $.getJSON(url, function (data) {
-          if (data.length == 0) {               
+          if (data.length == 0) {
                // l'album n'est pas dans la collection : on ajoute les boutons
                 $("#info_collection").hide();
                 // Affichage des boutons
                  var madiv = '<div id="addAlbum<?php echo $view->tome->ID_EDITION; ?>" style="font-size:0.9em;"><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(<?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>,\'N\')" title="Ajouter cet album dans votre collection">Dans ma collection</a> - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(<?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>,\'O\')" title="A acheter prochainement">Futur Achat</a></div>';
                $("#actionCollection").html(madiv);
-               
+
            }
            else {
                $("#info_collection").show();
@@ -407,7 +407,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                     $("#actionCollection").html('<div id="addAlbum' + <?php echo $view->tome->ID_EDITION; ?> + '" style="font-size:0.9em;">ajouté à votre collection le ' + dte + ' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(' + <?php echo $view->tome->ID_EDITION; ?> + ')">Supprimer</a></div>');
                 }
               // $("#actionCollection").html('<div id="addAlbum<?php echo $view->tome->ID_EDITION; ?>" style="font-size:0.9em;">ajouté à votre collection le '+data[0].DATE_ACHAT.substring(0,10) +' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(<?php echo $view->tome->ID_EDITION; ?>)">Supprimer</a></div>');
-          
+
                // on renseigne chaque champs du formulaire
                if (data[0].FLG_ACHAT == 'O') {
                    $('#cb_achat').attr('checked', true);
@@ -421,40 +421,40 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                    $('#cb_lu').attr('checked', true);
                }
                $("#prix").val(data[0].cote);
-               
+
                 if (data[0].FLG_TETE == 'O') {
                    $('#cb_tete').attr('checked', true);
-               } 
+               }
                if (data[0].FLG_DEDICACE == 'O') {
                    $('#cb_dedicace').attr('checked', true);
-               } 
+               }
                if (data[0].FLG_CADEAU == 'O') {
                    $('#cb_cadeau').attr('checked', true);
-               } 
+               }
                $("#nom_pret").val(data[0].NOM_PRET);
                $("#email_pret").val(data[0].EMAIL_PRET);
                $("#remarque").val(data[0].comment);
                 $("#user_edition").val(data[0].ID_EDITION);
            }
-        
+
         }
 
     );
     }
     getInfoCollection ();
    <?php } ?>
-         $('.numbersOnly').keyup(function () { 
+         $('.numbersOnly').keyup(function () {
                        this.value = this.value.replace(/[^0-9\.]/g,'');
                    });
-                   
+
      /* add simil */
-     $( document ).ready( 
+     $( document ).ready(
              function () {
         var url_simil = "./simil/getTopSimil?ID_TOME=<?php echo $view->tome->ID_TOME; ?>";
         $.getJSON(url_simil, function (data) {
             if (data.length > 0) {
 
-                for (var i=0; i<3;i++){                   
+                for (var i=0; i<3;i++){
                     $("#simil").append("<a href='./Album?id_tome="+data[i].ID_TOME+  "&mobile=<?php echo $view->mobile; ?>&frame=<?php echo $view->frame; ?>' title='"+ data[i].TITRE_TOME.replace(/'/g, " ") +"'><img class= 'couvSmall' src='http://www.bdovore.com/images/couv/"+ data[i].IMG_COUV+"'></a>&nbsp;");
                 }
             }

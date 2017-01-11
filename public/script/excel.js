@@ -9,7 +9,7 @@ function Creation_Excel(formulaire,type)
 	else {
 			formulaire.action = action_aff + '?export='+type ;
 	}
-	formulaire.submit();	
+	formulaire.submit();
 	formulaire.action = action_aff ;
-	
+
 }

@@ -11,20 +11,20 @@ if ($act=="insert")
 	$long_name = $_POST['txtNom'].", ".$_POST['txtPrenom'];
 	else
 	$long_name = $_POST['txtNom'];
-	
+
 	$pseudo = notIssetOrEmpty($_POST['txtPseudo']) ?  $long_name : $_POST['txtPseudo'];
 
 	$query = "
 	INSERT INTO `bd_auteur` (
-		`PSEUDO`, 
-		`NOM`, 
+		`PSEUDO`,
+		`NOM`,
 		`PRENOM`
 	) VALUES (
-		".sqlise($pseudo,'text').", 
-		".sqlise($_POST['txtNom'],'text').", 
+		".sqlise($pseudo,'text').",
+		".sqlise($_POST['txtNom'],'text').",
 		".sqlise($_POST['txtPrenom'],'text')."
 	)";
-	
+
 	$DB->query ($query);
 	// Creation d'un nouveau Template
 	$t = new Template(BDO_DIR."public/templates");

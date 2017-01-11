@@ -1,14 +1,14 @@
 <div class="cadre1">
 <h2>Le Guide BD</h2>
-		<a href="listlast.php?rb_mode=futur">A paraitre</a> 
+		<a href="listlast.php?rb_mode=futur">A paraitre</a>
 		- <a href="listlast.php?rb_mode=last_par">Derni&egrave;res parutions</a>
-		- <a href="listop.php?rb_mode=top_vote">Top des notes</a> 
+		- <a href="listop.php?rb_mode=top_vote">Top des notes</a>
 		- <a href="listop.php?rb_mode=top_rep">Albums les plus répandus</a>
-		- <a href="listlast.php?rb_mode=last_cmt">Derniers commentaires</a> 
+		- <a href="listlast.php?rb_mode=last_cmt">Derniers commentaires</a>
 
-		<table width="100%" align="center" cellpadding="10" cellspacing="10">	  
+		<table width="100%" align="center" cellpadding="10" cellspacing="10">
 			<tr bordercolor="#FFFFFF">
-		  		<td valign="top" bordercolor="#FFFFFF"> 
+		  		<td valign="top" bordercolor="#FFFFFF">
             		<form name="form1" method="post" action="listlast.php">
               			<table border="1" width="100%" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC" bgcolor="#DAC1B3" frame="box" rules="groups">
               				<tr>
@@ -26,7 +26,7 @@
               				</tr>
               				<tr>
 							<td align="center">
-									Genre : 
+									Genre :
 	                  				<select name="sel_genre" size="1" id="sel_genre">
 										{OPTIONS}
 									</select>
@@ -43,25 +43,25 @@
 		<table width="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolor="#000000" frame="hsides" rules="rows">
 
 	        <!-- BEGIN AlbBlock -->
-	        <tr float="left" id="{ANCRE}" name="{ANCRE}"> 
-		        <td width="100" valign="top" align="center"> 
+	        <tr float="left" id="{ANCRE}" name="{ANCRE}">
+		        <td width="100" valign="top" align="center">
 					<a href={URLALBUM} title="{TITRE}">
 						<img src='{URLSITEIMAGE}couv/{IMGCOUV}' border="none" width="100" heigh="140" alt="couverture" />
-					</a> 
+					</a>
 	            	<br />
 			        <font size="-2">
 						&copy; {EDITEUR}
 					</font>
 				</td>
-		        <td valign="top"> 
+		        <td valign="top">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-			            <tr valign="top"> 
+			            <tr valign="top">
 			                <td style="min-width:200px">
 								<a href={URLALBUM}>
 									<font size="-1" face="Verdana, Arial, Helvetica, sans-serif" color="#990000">
 										<strong>{TITRE}</strong>
 									</font>
-								</a> 
+								</a>
 				                {EDITALBUM}<br />
 				                Série : <a href="{URLSERIE}">{SERIE}</a> {EDITSERIE}<br />
 				                Editeur : {EDITEUR} <br />
@@ -69,16 +69,16 @@
 				                Dessin : <a href="{URLDESS}">{DESS}</a><br />
 				                Parution : {DTEPARU}
 							</td>
-			
+
 							<!-- BEGIN CmtBlock -->
-							<td valign="top"> 
+							<td valign="top">
 				                <div id="cache" style="display:{DISPLAY}">
 									<table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#B64444">
 					                    <tbody>
-						                    <tr bordercolor="#FFFFFF"> 
+						                    <tr bordercolor="#FFFFFF">
 						                        <td height="25" bordercolor="#B64444" bgcolor="#C8857C">
 													<strong>
-														<font color="#990000" face="Arial, Helvetica, sans-serif" size="2"> 
+														<font color="#990000" face="Arial, Helvetica, sans-serif" size="2">
 									                        Note : {NOTE}
 														</font>
 													</strong>
@@ -96,7 +96,7 @@
 													</div>
 												</td>
 											</tr>
-											<tr bordercolor="#B64444"> 
+											<tr bordercolor="#B64444">
 						                        <td colspan="2">
 													<font size="2" face="Arial, Helvetica, sans-serif">
 														{CMTTEXTE}
@@ -119,7 +119,7 @@
 		<div align="center">
 			<a href="listlast.php?{PREC}">
 				Pr&eacute;c&eacute;dent
-			</a> 
+			</a>
 			<a href="listlast.php?{SUIV}">
 				Suivant
 			</a>

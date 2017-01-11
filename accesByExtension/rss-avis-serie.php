@@ -17,23 +17,23 @@ echo '<language>fr</language>';
 
 // Requête pour récupérer les 50 derniers avis avec leurs couvertures
 $select = "
-SELECT 
-	s.nom serie, 
-	s.id_serie,  
-	u.username, 
-	u.user_id, 
-	sc.comment histoire, 
-	sc.dte_post, 
-	DATE_FORMAT(sc.dte_post,'%d/%m/%Y %H:%i') date_post, 
+SELECT
+	s.nom serie,
+	s.id_serie,
+	u.username,
+	u.user_id,
+	sc.comment histoire,
+	sc.dte_post,
+	DATE_FORMAT(sc.dte_post,'%d/%m/%Y %H:%i') date_post,
 	sc.note
-FROM 
-	serie_comment sc 
+FROM
+	serie_comment sc
 	INNER JOIN users u ON sc.user_id=u.user_id
 	INNER JOIN bd_serie s ON sc.id_serie=s.id_serie
-WHERE 
-	sc.comment is not null 
+WHERE
+	sc.comment is not null
 	AND sc.comment <> ''
-ORDER BY sc.dte_post desc 
+ORDER BY sc.dte_post desc
 LIMIT 0,50
 ";
 
@@ -54,7 +54,7 @@ while ($DB->next_record())
 	$histoire = str_replace ( chr(0x9c), '\'',  $histoire );
     $titre = str_replace ( chr(0x96), '\'',  $titre );
 	$histoire = str_replace ( chr(0x96), '\'',  $histoire );
-    
+
     //Conversion de la date de MySQL (yyyy-mm-jj hh:mm:ss) à RFC822 (format rss : wed, 30 apr 2009 hh:mm:ss GMT)
     $date_array = explode("-",$dte_post);
     $day_array = explode(" ",$date_array[2]);

@@ -2,7 +2,7 @@
 
 {MENUCOLL}
 <div class="cadre1">
-<a href="{URLSITE}membres/detailAddition.php"><! a href="javascript:alert('Fermer pour travaux !')">Detail 
+<a href="{URLSITE}membres/detailAddition.php"><! a href="javascript:alert('Fermer pour travaux !')">Detail
 de la valorisation</a>
 </div>
 
@@ -10,15 +10,15 @@ de la valorisation</a>
 <div class="cadre1">
 
   <div class="addTitle">Achats depuis le début de votre collection</div>
-  <div class="addFreeBlock"> 
+  <div class="addFreeBlock">
     <table class="addTable">
-      <tr> 
+      <tr>
         <td class="addTitle">Annee</td>
         <td class="addTitleMiddle">Qté</td>
         <td class="addTitle">Coût</td>
       </tr>
       <!-- BEGIN YearBlock -->
-      <tr> 
+      <tr>
         <td class="addData"><a href="{URLANNEE}">{ANNEE}</a></td>
         <td class="addData">{QUANTITE}</td>
         <td class="addDataRight">{COUT}</td>
@@ -28,7 +28,7 @@ de la valorisation</a>
   </div>
 
   <div align="center">
-    Sélectionner l'information à afficher 
+    Sélectionner l'information à afficher
     <input name="annee" type="hidden" value="{ANNEE}">
       <label><input type="radio" name="info" value="0" {TYPE0} onClick="submit();">Coût</label>
       <label><input type="radio" name="info" value="1" {TYPE1} onClick="submit();">Nombre</label>
@@ -37,14 +37,14 @@ de la valorisation</a>
     <div class="addFreeBlock" style="width:601px;height:281px"> <img src="{IMGANNEE}" class="addImg"> </div>
 </div>
 
-<div class="cadre1"> 
+<div class="cadre1">
     <div class="addTitle">Achats pour l'année {ANNEE}</div>
-    <div class="addFreeBlock"> 
+    <div class="addFreeBlock">
       <select name="mois" size="12" onChange="submit();" class="addSelect">{OPTMOIS}
       </select>
     </div>
         <table class="addTable">
-          <tr> 
+          <tr>
             <td class="addTitle">Serie</td>
             <td colspan="2" class="addTitleMiddle">Titre</td>
             <td class="addTitle">Date</td>
@@ -52,7 +52,7 @@ de la valorisation</a>
             <td width="10">&nbsp;</td>
           </tr>
           <!-- BEGIN MonthBlock -->
-          <tr> 
+          <tr>
             <td class="addDataSmall"><a href="{URLALBSERIE}" class="addLiens">{ALBSERIE}</a></td>
             <td class="addDataSmall">{ALBTOME}</td>
             <td class="addDataSmall"><a href="#" onclick="window.open('{URLSITE}membres/useralbum.php?id_tome={IDTOME}&id_edition={IDEDITION}','Album','width=580,height=530,scrollbars=1')"  class="addLiens">{ALBTITRE}</a></td>

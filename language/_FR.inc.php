@@ -1,4 +1,4 @@
-<?php 
+<?php
 // fichier de langue - Français -
 define('LANG_ACCES',"Accès");
 define('LANG_ACCUEIL',"Accueil");
@@ -299,6 +299,6 @@ define('LANG_YES',"Oui");
 define('LANG_AIDESEARCH2',"Le choix [".LANG_INDIFFERENT."] est la valeur par défaut des listes de sélection. Il exclut le champ de la recherche mais pas du résultat.");
 define('LANG_CONFIRMMDP',"confirmez votre inscription à l'aide de votre mot de passe.<br />
 	Si des erreurs sont présentes dans vos nom, prénom ou numéro de téléphone vous pourrez les modifier après validation.<br />
-	Si votre code identifiant est erroné, merci de contacter, après confirmation, le soutien 
+	Si votre code identifiant est erroné, merci de contacter, après confirmation, le soutien
 	<A class=scp HREF='mailto:".CFG_CONTACT."' onMouseOver=\"self.status='".LANG_CONTACTSOUTIEN."'; return true\">
 	<b>".CFG_NAME."</b></A> pour effectuer la correction.");

@@ -6,7 +6,7 @@ include (BDO_DIR."inc/queryfunction.php");
 
 if ($act == 'add') {
 	minAccessLevel(2);
-	
+
 	if (notIssetOrEmpty($id_edition) and issetNotEmpty($id_tome))
 	{
 		$id_edition = idEditionByIdTome($id_tome);
@@ -15,31 +15,31 @@ if ($act == 'add') {
 	{
 		$id_tome = idTomeByIdEdition($id_edition);
 	}
-	
+
 	$flg_achat = $_GET["flg_achat"]; // Déclaration de la variable et récupération dans l'url
 	$verif = "
-	select 
-		flg_achat 
+	select
+		flg_achat
 	from
-		users_album			  
-	where 
-		id_edition=".$DB->escape($id_edition)." 
+		users_album
+	where
+		id_edition=".$DB->escape($id_edition)."
 		and user_id=".$DB->escape($_SESSION["UserId"]);
-	
+
 	$DB->query($verif);
-	if ($DB->num_rows() > 0) 
+	if ($DB->num_rows() > 0)
 	{ // Album déjà présent dans la collection
 		$DB->next_record();
-		if ($DB->f("flg_achat") == "O" and $flg_achat == "N") // "O" : Achat futur ; "N" : Achat; 
+		if ($DB->f("flg_achat") == "O" and $flg_achat == "N") // "O" : Achat futur ; "N" : Achat;
 		{
 			$DB->query("
-			update users_album set 
-				flg_achat = 'N', 
+			update users_album set
+				flg_achat = 'N',
 				date_achat = CURRENT_TIMESTAMP()
-			where 
-				id_edition=".$DB->escape($id_edition)."  
+			where
+				id_edition=".$DB->escape($id_edition)."
 				and	user_id=".$DB->escape($_SESSION["UserId"]));
-			
+
 			echo GetMetaTag(4,"L'édition était présente dans vos achats futurs et a été placé dans votre collection. Vous allez être redirigé vers votre fiche côté Collection",(BDO_URL."/membres/useralbum.php?id_tome=$id_tome&id_edition=$id_edition"));
 			exit();
 		}else {
@@ -54,40 +54,40 @@ if ($act == 'add') {
 /* modif id_scenar
 		$insert_new = "
 		INSERT INTO users_album (user_id, id_tome,id_scenar, id_dessin,id_genre,
-				 id_editeur, id_collection,id_serie, date_ajout,flg_achat, id_edition ) 
-		select 
+				 id_editeur, id_collection,id_serie, date_ajout,flg_achat, id_edition )
+		select
 			".$DB->escape($_SESSION["UserId"]).",
 			t.id_tome,
-			t.id_scenar, 
+			t.id_scenar,
 			t.id_dessin,
 			s.id_genre,
-			c.id_editeur, 
+			c.id_editeur,
 			c.id_collection,
 			t.id_serie,
 			CURRENT_TIMESTAMP(),
-			'".$DB->escape($flg_achat)."', 
-			en.id_edition 
-		FROM 
+			'".$DB->escape($flg_achat)."',
+			en.id_edition
+		FROM
 			bd_edition en
 			INNER JOIN bd_tome t ON en.id_tome=t.id_tome
 			INNER JOIN bd_serie s ON t.id_serie=s.id_serie
 			INNER JOIN bd_collection c ON en.id_collection=c.id_collection
-		WHERE 
+		WHERE
 			en.id_edition =".$DB->escape($id_edition)."
-		"; 
+		";
 */
 		$insert_new = "
 		INSERT INTO users_album (
-			user_id, 
+			user_id,
 			date_ajout,
-			flg_achat, 
+			flg_achat,
 			id_edition
 		) VALUES (
 			".$DB->escape($_SESSION["UserId"]).",
 			CURRENT_TIMESTAMP(),
-			'".$DB->escape($flg_achat)."', 
+			'".$DB->escape($flg_achat)."',
 			".$DB->escape($id_edition)."
-		)"; 
+		)";
 
 				$DB->query($insert_new);
 		echo GetMetaTag(3,"L'album a été ajouté dans votre collection, vous allez être redirigé vers sa fiche côté Collection",(BDO_URL."/membres/useralbum.php?id_tome=$id_tome&id_edition=$id_edition"));
@@ -158,10 +158,10 @@ if ($id_tome or $id_edition)
 
 	$DB->query($request);
 
-	if ($DB->nf() != 0) 
+	if ($DB->nf() != 0)
 	{
 		$DB->next_record();
-		
+
 		if (notIssetOrEmpty($id_edition))
 		{
 			$id_edition = $DB->f("id_edition");
@@ -171,7 +171,7 @@ if ($id_tome or $id_edition)
 			$id_tome = $DB->f("id_tome");
 		}
 		$titre = $DB->f("titre");
-		
+
 		if ($DB->f("nb_vote") > 0) {
 			//$note = $DB->f("moyenne")." (".$DB->f("nb_vote")." notes)";
 			$note = "<img src='".BDO_URL."images/imgnote.php?note=".$DB->f("moyenne")."' title='".$DB->f("moyenne")."'>"."<br> (".$DB->f("nb_vote")." note". (($DB->f("nb_vote") > 1) ? "s" : "") .")";
@@ -180,7 +180,7 @@ if ($id_tome or $id_edition)
 			$scenar = '<a href="#" onclick="window.opener.location='.
 			"'../browser.php?rb_browse=aut&lev_id=".$DB->f("id_scenar")."&let=".
 			htmlspecialchars($DB->f("scpseudo"))."'".'"'.">".$DB->f("scpseudo")."</a>
-						 &nbsp;-&nbsp; ".'<a href="#" onclick="window.opener.location='.		 
+						 &nbsp;-&nbsp; ".'<a href="#" onclick="window.opener.location='.
 						 "'../browser.php?rb_browse=aut&lev_id=".$DB->f("id_scenar_alt")."&let=".
 						 htmlspecialchars($DB->f("scapseudo"))."'".'"'.">".$DB->f("scapseudo")."</a>";
 		}else {
@@ -192,7 +192,7 @@ if ($id_tome or $id_edition)
 			$dessin = '<a href="#" onclick="window.opener.location='.
 			"'../browser.php?rb_browse=aut&lev_id=".$DB->f("id_dessin")."&let=".
 			htmlspecialchars($DB->f("depseudo"))."'".'"'.">".$DB->f("depseudo")."</a>
-						 &nbsp;-&nbsp; ".'<a href="#" onclick="window.opener.location='.			   
+						 &nbsp;-&nbsp; ".'<a href="#" onclick="window.opener.location='.
 						 "'../browser.php?rb_browse=aut&lev_id=".$DB->f("id_dessin_alt")."&let=".
 						 htmlspecialchars($DB->f("deapseudo"))."'".'"'.">".$DB->f("deapseudo")."</a>";
 		}else {
@@ -272,7 +272,7 @@ if ($id_tome or $id_edition)
 		$t->set_var("COLLECTION",$collection);
 		$t->set_var("COMMENT_EDITION",$comment_edition);
 
-		
+
 		// recherche de toutes les editions
 		$query = q_AllEditionByIdTome($DB->escape($id_tome),"ORDER BY en.dte_parution");
 		$DB->query($query);
@@ -286,20 +286,20 @@ if ($id_tome or $id_edition)
 
 	// affichage des commentaires
 	$select = "
-	select 
-		u.user_id, 
-		u.username, 
-		u.open_collec, 
-		uc.comment, 
-		DATE_FORMAT(uc.dte_post,'%d/%m/%Y %H:%i') date_post,	
+	select
+		u.user_id,
+		u.username,
+		u.open_collec,
+		uc.comment,
+		DATE_FORMAT(uc.dte_post,'%d/%m/%Y %H:%i') date_post,
 		uc.note
-	FROM 
-		users_comment uc  
-		INNER JOIN users u ON u.user_id=uc.user_id																							
-	WHERE 
-		uc.comment is not null 
-		AND uc.comment <> '' 
-		AND uc.id_tome=".$DB->escape($id_tome);																									
+	FROM
+		users_comment uc
+		INNER JOIN users u ON u.user_id=uc.user_id
+	WHERE
+		uc.comment is not null
+		AND uc.comment <> ''
+		AND uc.id_tome=".$DB->escape($id_tome);
 
 	//$select = sprintf($select."%d",$id_tome);
 	$select .= " order by uc.dte_post DESC";

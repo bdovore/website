@@ -15,19 +15,19 @@ else{
 if (empty($user_id)) exit();
 
 $query = "
-SELECT 
-	er.nom, 
-	count(en.id_edition) as nbtome 
-FROM 
-	users_album u 
-	INNER JOIN bd_edition en ON en.id_edition = u.id_edition 
-	INNER JOIN bd_editeur er ON er.id_editeur = en.id_editeur 
-	INNER JOIN bd_tome t ON t.id_tome = en.id_tome 
-WHERE 
-	t.flg_type = 0 
-	AND u.flg_achat = 'N' 
+SELECT
+	er.nom,
+	count(en.id_edition) as nbtome
+FROM
+	users_album u
+	INNER JOIN bd_edition en ON en.id_edition = u.id_edition
+	INNER JOIN bd_editeur er ON er.id_editeur = en.id_editeur
+	INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+WHERE
+	t.flg_type = 0
+	AND u.flg_achat = 'N'
 	AND u.user_id =" . $user_id . "
-GROUP BY er.nom 
+GROUP BY er.nom
 ORDER BY nbtome DESC
 ";
 $DB->query ($query);

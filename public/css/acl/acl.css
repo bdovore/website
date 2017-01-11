@@ -1,9 +1,9 @@
-.oftAclRole, .oftAclRoleTitle, .oftAclResource, .oftAclResourceTitle, .oftAclPrivilege, .oftAclResourcePrivilege, 
-.oftAclLegacyDirect, .oftAclLegacyPossible, .oftAclLegacyIndirect, 
+.oftAclRole, .oftAclRoleTitle, .oftAclResource, .oftAclResourceTitle, .oftAclPrivilege, .oftAclResourcePrivilege,
+.oftAclLegacyDirect, .oftAclLegacyPossible, .oftAclLegacyIndirect,
 .oftAclAccess, .oftAclAccessAllow, .oftAclAccessAllowLegacy, .oftAclAccessDeny, .oftAclAccessDenyLegacy, .oftAclAccessON {
 	text-align : center;
 }
-.oftAclRole, .oftAclResource, .oftAclPrivilege, .oftAclLegacyDirect, .oftAclLegacyPossible, .oftAclLegacyIndirect, 
+.oftAclRole, .oftAclResource, .oftAclPrivilege, .oftAclLegacyDirect, .oftAclLegacyPossible, .oftAclLegacyIndirect,
 .oftAclAccess, .oftAclAccessAllow, .oftAclAccessAllowLegacy, .oftAclAccessDeny, .oftAclAccessDenyLegacy, .oftAclAccessON,
 .oftAclLegacyDirectON {
 	cursor : pointer;

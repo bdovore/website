@@ -15,20 +15,20 @@ else{
 if (empty($user_id)) exit();
 
 $query = "
-SELECT 
-t.id_tome, 
-t.id_dessin, 
-t.id_scenar, 
-s.pseudo as ps_scen, 
-d.pseudo as ps_dess 
+SELECT
+t.id_tome,
+t.id_dessin,
+t.id_scenar,
+s.pseudo as ps_scen,
+d.pseudo as ps_dess
 FROM
-users_album u 
-INNER JOIN bd_edition en ON en.id_edition = u.id_edition 
-INNER JOIN bd_tome t ON t.id_tome = en.id_tome 
-INNER JOIN bd_auteur d ON t.id_dessin = d.id_auteur 
+users_album u
+INNER JOIN bd_edition en ON en.id_edition = u.id_edition
+INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+INNER JOIN bd_auteur d ON t.id_dessin = d.id_auteur
 INNER JOIN bd_auteur s ON t.id_scenar = s.id_auteur
-WHERE 
-flg_achat = 'N' AND 
+WHERE
+flg_achat = 'N' AND
 u.user_id =".$DB->escape($user_id);
 $DB->query ($query);
 

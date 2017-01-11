@@ -192,25 +192,25 @@ else {
 // Constitue la base d'albums à mettre à jours
 $query = "
 SELECT SQL_CALC_FOUND_ROWS
-	bd_tome.id_tome, 
-	bd_edition.id_edition, 
-	bd_serie.id_serie, 
-	bd_tome.titre, 
-	bd_tome.num_tome, 
+	bd_tome.id_tome,
+	bd_edition.id_edition,
+	bd_serie.id_serie,
+	bd_tome.titre,
+	bd_tome.num_tome,
 	bd_serie.nom
 	".$query_fields."
-FROM 
-	users_album 
+FROM
+	users_album
 	INNER JOIN bd_edition ON users_album.id_edition=bd_edition.id_edition
 	INNER JOIN bd_tome ON bd_edition.id_tome=bd_tome.id_tome
 	INNER JOIN bd_serie ON bd_tome.id_serie=bd_serie.id_serie
 	INNER JOIN bd_auteur scenar ON bd_tome.id_scenar=scenar.id_auteur
 	INNER JOIN bd_auteur dessinateur ON bd_tome.id_dessin=dessinateur.id_auteur
 	LEFT JOIN users_comment ON ((bd_tome.id_tome = users_comment.id_tome) AND (users_album.user_id = users_comment.user_id))
-WHERE 
-	users_album.user_id = ".$DB->escape($_SESSION["UserId"])." 
-	".$query_filtre." 
-ORDER BY nom, num_tome, titre 
+WHERE
+	users_album.user_id = ".$DB->escape($_SESSION["UserId"])."
+	".$query_filtre."
+ORDER BY nom, num_tome, titre
 LIMIT ".($first).", ".$nb."
 ";
 $DB->query ($query);

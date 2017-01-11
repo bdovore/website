@@ -21,13 +21,13 @@
 							$('#serie_id').val(ui.item.id); // met à jour le champ caché du formulaire avec la valeur
 							}
 						});
-		
+
 		// ON cache par défaut les détails sur les albums
 		$(".additional").hide();
 		$("#expandable").button()
 							.click(function( event ) {
 							$(".additional").toggle('drop',{},500);
-							});		
+							});
 		// Bouton pour les appels serveurs
 		$(".clickable").click(function(event) {
 			// On découpe la réponse
@@ -52,7 +52,7 @@
 			});
 		});
 	});
-	
+
 	// Fonction pour mettre à jour le champs série
 	function ac_return(field, item){
         // on met en place l'expression régulière
@@ -67,16 +67,16 @@
 		//alert((field.name+'_id'));
 		//alert($("serie_id").value);
 }
-	
+
 	// gestion de l'affichage
 	function refresh_alb(resp) {
 		$("#"+resp[0]["idtome"]).removeClass();
 		$("#"+resp[0]["idtome"]).addClass('album');
-		$('[id^=af-'+resp[0]["idtome"]+'-]').attr("id",'af-'+resp[0]["idtome"]+'-'+resp[0]["idedition"]); 
+		$('[id^=af-'+resp[0]["idtome"]+'-]').attr("id",'af-'+resp[0]["idtome"]+'-'+resp[0]["idedition"]);
 		$('[id^=addrem-'+resp[0]["idtome"]+'-]').attr("id",'addrem-'+resp[0]["idtome"]+'-'+resp[0]["idedition"]);
 		$('[id^=exclude-'+resp[0]["idtome"]+'-]').attr("id",'exclude-'+resp[0]["idtome"]+'-'+resp[0]["idedition"]);
-		
-		
+
+
 		if (resp[0]["incollec"]=='N')
 			{
 			$("#addrem-"+resp[0]["idtome"]+'-'+resp[0]["idedition"]).text('Add');
@@ -108,13 +108,13 @@
 				$("#"+resp[0]["idtome"]).addClass('incollec');
 				}
 			}
-			
+
 		// inclure ici une partie bloquant les boutons
 		//alert ('La rep:'+resp[0]["statut"]+resp[0]["incollec"]);
 		//alert ('rafraichissement'+id);
 	};
-	
-	
+
+
 </script>
 </head>
 <body>

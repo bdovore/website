@@ -1,7 +1,7 @@
 <?php
 function openCollection($user_id) {
 	global $DB;
-	
+
 	$query = "select username,open_collec from users where user_id=" . $DB->escape ( $user_id );
 	$DB->query ( $query );
 	$DB->next_record ();

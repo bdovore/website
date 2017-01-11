@@ -1,27 +1,27 @@
 {MENUGUEST}
 <div class="cadre1">
     <table width="100%" border="0">
-        <tr> 
+        <tr>
             <td width="340">
                 <table width="300" border="0">
-                    <tr> 
+                    <tr>
                         <td colspan=3 class="CarreMagique" align="center">
                             <font color="#990000">
                                 <strong>Mon Carr&eacute; Magique</strong>
                             </font>
                         </td>
                     </tr>
-                    <tr> 
+                    <tr>
                         <td width="100" class="CarreMagique">{ALB1}</td>
                         <td width="100" class="CarreMagique">{ALB2}</td>
                         <td width="100" class="CarreMagique">{ALB3}</td>
                     </tr>
-                    <tr> 
+                    <tr>
                         <td class="CarreMagique">{ALB4}</td>
                         <td class="CarreMagique">{ALB5}</td>
                         <td class="CarreMagique">{ALB6}</td>
                     </tr>
-                    <tr> 
+                    <tr>
                         <td class="CarreMagique">{ALB7}</td>
                         <td class="CarreMagique">{ALB8}</td>
                         <td class="CarreMagique">{ALB9}</td>
@@ -57,21 +57,21 @@
             </td>
             <td width="100">
                 <table width="100%" border="0">
-                    <tr> 
+                    <tr>
                         <td align="center">
                             <font color="#990000"><b>Derniers achats</b></font>
                         </td>
                     </tr>
-                    <tr> 
+                    <tr>
                         <td class="CarreMagique">{LASTPURCH1}</td>
                     </tr>
-                    <tr> 
+                    <tr>
                         <td class="CarreMagique">{LASTPURCH2}</td>
                     </tr>
-                    <tr> 
+                    <tr>
                         <td class="CarreMagique">{LASTPURCH3}</td>
                     </tr>
-                    <tr> 
+                    <tr>
                         <td class="CarreMagique">{LASTPURCH4}</td>
                     </tr>
                 </table>

@@ -8,7 +8,7 @@ minAccessLevel(1);
 // Mettre à jour les informations
 if ($act=="update"){
 	$nb = 0;
-	
+
 	foreach ($alb_id as $idtome){
 		$nouv_titre = ereg_replace("#tome#", $num_tome[$idtome], $_POST["txtNouvTitre"]);
 		$query = "UPDATE bd_tome SET titre = '".$DB->escape($nouv_titre)."' WHERE id_tome = ".$DB->escape($idtome);
@@ -29,7 +29,7 @@ elseif($act==""){
 	));
 
 	if ($serie != ""){
-		
+
 
 		// récupère le infos liées à la série
 		$query = "SELECT nom FROM bd_serie WHERE id_serie = ".$DB->escape($serie);

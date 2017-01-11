@@ -46,7 +46,7 @@ if ($str_search)
 	$nb = 0;
 	$Album = new QueryAlbum;
 	$strq= "";
-	
+
 	// analyse de la chaine :
 	// - test 1 : verification sur expression exact
 	if (substr($str_search,0,1) == '"' && substr($str_search,-1,1) == '"')
@@ -58,7 +58,7 @@ if ($str_search)
 		$Album->setSearchMode(1);
 		$s_filter = $DB->escape($str_search);
 	}
-	
+
 	if (strtoupper(substr($str_search,0,5)) == "ISBN:") {
 		$Album->filterISBN($DB->escape(substr($str_search,5,10)));
 	}else

@@ -13,12 +13,12 @@ $user = $_SESSION["userConnect"]->user_id; //  --->>> marche pas ... Thanaos
 	// fichier à utiliser
 	$t->set_file(array("tpBase" => "ajax.serie.album.tpl"
 	));
-	
+
 		// Bloc albums
 		$t->set_block('tpBase','AlbBlock','ABlock');
 		// Parcours les albums de la série
 		$query_album = "
-		SELECT 
+		SELECT
 			base.id_tome  b_tome
 			, user.id_tome u_tome
 			, exclu.id_tome e_tome
@@ -28,57 +28,57 @@ $user = $_SESSION["userConnect"]->user_id; //  --->>> marche pas ... Thanaos
 			, user.nedit u_nedit
 			, user.achat u_flgachat
 			, user.edition u_edition
-		FROM 
-			(SELECT 
+		FROM
+			(SELECT
 				t.id_tome
 				,t.num_tome
 				,t.titre
 				,e.img_couv
-			FROM 
+			FROM
 				bd_tome t
 				,bd_edition e
-			WHERE 
+			WHERE
 				id_serie = $id_serie
 			AND t.id_edition = e.id_edition
-			) base 
-		LEFT JOIN 
-			(SELECT 
+			) base
+		LEFT JOIN
+			(SELECT
 				t.id_tome
 				,count(u.id_edition) nedit
 				,IF(count(u.id_edition)>1, 'M', flg_achat) achat
 				,IF(count(u.id_edition)>1, 'M', u.id_edition) edition
-			FROM 
+			FROM
 				users_album u
 				, bd_edition e
 				, bd_tome t
-			WHERE 
-				u.id_edition = e.id_edition 
+			WHERE
+				u.id_edition = e.id_edition
 			AND e.id_tome = t.id_tome
 			AND u.user_id = $user
 			AND t.id_serie = $id_serie
 			GROUP BY t.id_tome
 			) user ON base.id_tome=user.id_tome
-		LEFT JOIN 
-			(SELECT 
-				id_tome 
-			FROM 
+		LEFT JOIN
+			(SELECT
+				id_tome
+			FROM
 				users_exclusions
-			WHERE 
-				user_id = $user 
+			WHERE
+				user_id = $user
 			AND id_serie = $id_serie
 			) exclu ON base.id_tome=exclu.id_tome
 		ORDER BY base.num_tome, base.titre";
-		
+
 		//echo $query_album;
-		
+
 		$DB->query($query_album);
-		
+
 		// Pour chaque album
 		while ($DB->next_record()){
-		
+
 			$id_tome = $DB->f("b_tome");
-			
-			
+
+
 			// Check si l'album est dans la collection
 			switch ($DB->f("u_nedit")) {
 				case 0 : // l'album n'est pas dans la collection de l'utilisateur
@@ -109,7 +109,7 @@ $user = $_SESSION["userConnect"]->user_id; //  --->>> marche pas ... Thanaos
 					$button_status_rem = "disabled";
 					break;
 			}
-			
+
 			// Couverture
 			if (is_null($DB->f("b_imgcouv")) | ($DB->f("b_imgcouv")=='')) {
 				$couv = BDO_URL_COUV."default.png";

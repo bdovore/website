@@ -39,7 +39,7 @@ INSERT INTO `users_alb_prop` (
 	".($_POST['txtNumTome']=='' ? "NULL" :  "'".$DB->escape($_POST['txtNumTome']). "'").",
 	".sqlise($_POST['txtSerieId'],'text').",
 	".sqlise($_POST['txtSerie'],'text').",
-	'".$DB->escape($_POST['txtDateParution']). "', 
+	'".$DB->escape($_POST['txtDateParution']). "',
 	".sqlise($_POST['txtGenreId'],'text').",
 	".sqlise($_POST['txtGenre'],'text').",
 	".sqlise($_POST['txtEditeurId'],'text').",

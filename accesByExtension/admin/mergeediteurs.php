@@ -29,7 +29,7 @@ if ($act=="merge")
 
 	if ($conf=="ok")
 	{
-		
+
 		// Met à jour l'information contenue dans la base de données
 		$query = "UPDATE bd_edition SET id_editeur = ".$DB->escape($dest_id)." where id_editeur = ".$DB->escape($source_id);
 		$DB->query($query);
@@ -61,7 +61,7 @@ if ($act=="merge")
 // AFFICHER
 elseif($act=="")
 {
-	
+
 	// Creation d'un nouveau Template
 	$t = new Template(BDO_DIR."public/templates");
 	// fichier à utiliser
@@ -73,8 +73,8 @@ elseif($act=="")
 	if ((!is_null($source_id)) & ($source_id!=''))
 	{
 		// récupère le nombre d'utilisateurs
-		$nb_users1 = countUserBy("editeur",$source_id);		
-		
+		$nb_users1 = countUserBy("editeur",$source_id);
+
 		// récupère les données principales
 		$query= "select id_editeur, nom, url_site from bd_editeur where id_editeur = ".$DB->escape($source_id);
 		$DB->query ($query);
@@ -99,7 +99,7 @@ elseif($act=="")
 	{
 		// récupère le nombre d'utilisateurs
 		$nb_users2 = countUserBy("editeur",$dest_id);
-		
+
 		// récupère les données principales
 		$query= "select id_editeur, nom, url_site from bd_editeur where id_editeur =".$DB->escape($dest_id);
 		$DB->query ($query);

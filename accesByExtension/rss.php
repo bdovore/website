@@ -17,23 +17,23 @@ echo '<language>fr</language>';
 
 // Requête pour récupérer les 50 derniers albums avec leurs couvertures
 $select = "
-SELECT 
-	t.titre, 
-	t.id_tome, 
-	t.id_serie, 
-	t.histoire, 
-	s.nom serie, 
-	en.img_couv, 
-	en.id_edition, 
-	er.nom, 
+SELECT
+	t.titre,
+	t.id_tome,
+	t.id_serie,
+	t.histoire,
+	s.nom serie,
+	en.img_couv,
+	en.id_edition,
+	er.nom,
 	er.id_editeur
-FROM 
+FROM
 	bd_tome t
-	INNER JOIN bd_edition en ON t.id_edition=en.id_edition 
-	INNER JOIN bd_collection c ON c.id_collection=en.id_collection 
-	INNER JOIN bd_editeur er ON er.id_editeur=c.id_editeur 
-	INNER JOIN bd_serie s ON t.id_serie=s.id_serie 
-ORDER BY t.id_tome desc 
+	INNER JOIN bd_edition en ON t.id_edition=en.id_edition
+	INNER JOIN bd_collection c ON c.id_collection=en.id_collection
+	INNER JOIN bd_editeur er ON er.id_editeur=c.id_editeur
+	INNER JOIN bd_serie s ON t.id_serie=s.id_serie
+ORDER BY t.id_tome desc
 LIMIT 0,50
 ";
 

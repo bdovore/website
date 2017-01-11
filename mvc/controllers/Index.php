@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Index extends Bdo_Controller
 {
@@ -27,7 +27,7 @@ class Index extends Bdo_Controller
                         'a_lastCommentaires' => $this->Actus->lastCommentaires(),
                         'a_futurSorties' => $this->Actus->futurSorties()
                 ));
-        
+
         $this->view->addPhtmlFile('news', 'LASTNEWS', true);
 
         $this->view->render();

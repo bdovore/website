@@ -8,7 +8,7 @@ define('BDO_DB_HOST','localhost');
 define('BDO_DB_SID','bdovore_db5');
 define('BDO_DB_USER','root');
 define('BDO_DB_PWD','');
-				
+
 
 mysql_connect(BDO_DB_HOST, BDO_DB_USER, BDO_DB_PWD);
 mysql_select_db(BDO_DB_USER);

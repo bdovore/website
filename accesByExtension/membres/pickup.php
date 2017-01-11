@@ -6,10 +6,10 @@
 minAccessLevel(2);
 
 //détermine la query à utiliser
-$query = "SELECT s.nom, t.num_tome, t.titre, t.id_tome 
-FROM bd_tome t, bd_serie s 
-WHERE t.id_serie = s.id_serie 
-AND (s.nom LIKE '%".$DB->escape($text)."%' OR t.titre LIKE '%".$DB->escape($text)."%') 
+$query = "SELECT s.nom, t.num_tome, t.titre, t.id_tome
+FROM bd_tome t, bd_serie s
+WHERE t.id_serie = s.id_serie
+AND (s.nom LIKE '%".$DB->escape($text)."%' OR t.titre LIKE '%".$DB->escape($text)."%')
 ORDER BY nom, num_tome, titre
 ";
 

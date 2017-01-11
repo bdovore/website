@@ -25,25 +25,25 @@
                 <td> <input type="submit" name="send_filter" value="Ok"> </td>
 				</tr>
 	</table>
-	Recherche : 
+	Recherche :
           <input name="str_search" type="text" id="str_search" value={DEFSEARCH} size="20" maxlength="50">
             <br>
-         dans Albums: 
+         dans Albums:
           <input name="cb_album" type="checkbox" id="cb_album" value="cb_album" {ALBCHECK}>
-          S&eacute;ries: 
+          S&eacute;ries:
           <input name="cb_serie" type="checkbox" id="cb_serie" value="cb_serie" {SERCHECK}>
-          Auteurs: 
+          Auteurs:
           <input name="cb_aut" type="checkbox" id="cb_aut" value="cb_aut" {AUTCHECK}>
-         
-         
-         
+
+
+
                            				 <br />trier par <select name="ch_tri" size="1" id="ch_tri">
 								{OPTIONS}
         		 				 </select>
-         
-         
-         
-         
+
+
+
+
 	<input name="search_mode" type="hidden" value="1">
 	<! input name="cb_serie" type="hidden" value="1">
 	<p align="center">
@@ -82,7 +82,7 @@
     <p>{NBREPONSES}</p>
 	 <table width="90%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolor="#000000" frame="border" rules="all">
   <!-- BEGIN ResultBlock -->
-    <tr bgcolor="EED8BF"> 
+    <tr bgcolor="EED8BF">
       <td width="75%"><a href="{URLSERIE}"><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>{SERIE}</strong></font></a><br/>
         Titre : <a href={URLALBUM}><font size="-1" face="Verdana, Arial, Helvetica, sans-serif" color="#990000">{TITRE}</font></a><br/>
         Editeur : {EDITEUR} - Edition : {DTEPARUTION} </td>
@@ -90,12 +90,12 @@
       <td width="5%"><a href={URLALBUM}><img src="{URLSITEIMAGE}edit.gif" width="18" height="13" border="0"></a></td>
       <td width="5%"><a href="{URLDELETE}"><img src="{URLSITEIMAGE}poubelle.gif" width="25" height="24" border="0"></a></td>
     </tr>
- 
+
   <!-- END ResultBlock -->
    </table>
   <!-- BEGIN ButtonBlock -->
   <p>{NAVPAGE}&nbsp; </p>
-			
+
     <p>&nbsp; </p>
 <!-- END ButtonBlock -->
    <p align="center">Exporter la liste compl&egrave;te : <a href="{URLSITE}membres/export.php"><img src="{URLSITEIMAGE}site/excel.jpg" width="25" height="25" border="0" alt="Excel"></a>

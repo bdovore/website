@@ -22,7 +22,7 @@ if ($act == "insert")
 	WHERE t.id_serie = s.id_serie AND e.id_edition = ".$DB->escape($btnDefEdit)." AND e.id_tome = t.id_tome;";
 	*/
 	$request = "INSERT INTO users_album (user_id, date_ajout, flg_achat, id_edition )
-		VALUES ( ".$DB->escape($_SESSION["UserId"]).",CURRENT_TIMESTAMP(),'N',".$DB->escape($btnDefEdit).")"; 
+		VALUES ( ".$DB->escape($_SESSION["UserId"]).",CURRENT_TIMESTAMP(),'N',".$DB->escape($btnDefEdit).")";
 
 	$DB->query($request);
 	// Selectionne le template de non ajout
@@ -42,28 +42,28 @@ $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
 }
 
 $request = "
-SELECT DISTINCT 
-	e.id_edition, 
-	ed.nom enom, 
-	c.nom cnom, 
+SELECT DISTINCT
+	e.id_edition,
+	ed.nom enom,
+	c.nom cnom,
 	e.dte_parution,
-	e.flag_dte_parution, 
+	e.flag_dte_parution,
 	e.img_couv
-FROM 
-	bd_edition e, 
-	bd_editeur ed, 
+FROM
+	bd_edition e,
+	bd_editeur ed,
 	bd_collection c
-WHERE 
-	e.id_tome = ".$DB->escape($id_tome)." 
+WHERE
+	e.id_tome = ".$DB->escape($id_tome)."
 	AND e.id_edition NOT IN (
-		SELECT u.id_edition 
+		SELECT u.id_edition
 		FROM users_album u
 		INNER JOIN bd_edition en ON u.id_edition=en.id_edition
-		WHERE u.user_id=".$DB->escape($_SESSION["UserId"])." 
+		WHERE u.user_id=".$DB->escape($_SESSION["UserId"])."
 		AND en.id_tome =".$DB->escape($id_tome)."
 	)
-	AND c.id_collection = e.id_collection 
-	AND c.id_editeur = ed.id_editeur 
+	AND c.id_collection = e.id_collection
+	AND c.id_editeur = ed.id_editeur
 	AND e.prop_status = 1
 ";
 $DB->query($request);

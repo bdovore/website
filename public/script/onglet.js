@@ -43,9 +43,9 @@ function showPref(id_div)
 	for (i=0;i<long_tab_div;i++)
 	{
 		var id_div_ch = tab_assoc_div[id_pack_div][i];
-		
+
 		var nom_td="scp_td_"+id_div_ch.toString();
-		
+
 		var nomclass = getObj(tab_div[id_div_ch]["scp_td_id"]).className;
 		var dimnomclass=nomclass.substring(0,nomclass.lastIndexOf("onglet"));
 		if (id_div_ch==id_div)

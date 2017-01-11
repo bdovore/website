@@ -15,13 +15,13 @@ $a_queryRegle = array(
 array (
 	"title" => "Nom de série ne contenant pas la valeur de la colonne TRI",
 	"query" => "
-	SELECT SQL_CALC_FOUND_ROWS 
+	SELECT SQL_CALC_FOUND_ROWS
 		`ID_SERIE`,
 		`NOM`,
-		`TRI` 
-	FROM 
-		`bd_serie` 
-	WHERE 
+		`TRI`
+	FROM
+		`bd_serie`
+	WHERE
 		`NOM` NOT LIKE concat( '%', `TRI`, '%' )",
 	"url" => BDO_URL."admin/adminseries.php?serie_id=",
 	"colUrl" => "ID_SERIE",
@@ -29,40 +29,40 @@ array (
 array (
 	"title" => "EAN référencés plusieurs fois dans la table des éditions pour des albums différents (parution >31/12/2006 ou non-renseignée)",
 	"query" => "
-	SELECT SQL_CALC_FOUND_ROWS 
+	SELECT SQL_CALC_FOUND_ROWS
 		COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums différents',
 		`EAN` ,
 		GROUP_CONCAT(distinct(`ID_EDITION`) SEPARATOR ';') as 'Liens vers les éditions (séparateur ;)'
-	FROM 
-		`bd_edition` 
-	WHERE 
-		`EAN` IS NOT NULL 
+	FROM
+		`bd_edition`
+	WHERE
+		`EAN` IS NOT NULL
 				AND TRIM(`EAN`)<>''
 	AND (`DTE_PARUTION` > '2006-12-31' OR `DTE_PARUTION` IS NULL )
-	GROUP BY `EAN` 
-	HAVING COUNT(DISTINCT(`ID_TOME`))>1  
+	GROUP BY `EAN`
+	HAVING COUNT(DISTINCT(`ID_TOME`))>1
 	ORDER BY 1 DESC",
-	
+
 	"colExplode" => 'Liens vers les éditions (séparateur ;)',
 	"urlExplode" => "<a href='".BDO_URL."admin/admineditions.php?edition_id={col}' target='_blank'>{col}</a>",
-	
+
 ),
 array (
 	"title" => "ISBN référencés plusieurs fois dans la table des éditions pour des albums différents (parution >31/12/1973 ou non-renseignée)",
 	"query" => "
-	SELECT SQL_CALC_FOUND_ROWS 
-		COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums différents', 
+	SELECT SQL_CALC_FOUND_ROWS
+		COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums différents',
 		`ISBN` ,
 		GROUP_CONCAT(distinct(`ID_EDITION`) SEPARATOR ';') as 'Liens vers les éditions (séparateur ;)'
-	FROM 
-		`bd_edition` 
-	WHERE 
-		`ISBN` IS NOT NULL 
+	FROM
+		`bd_edition`
+	WHERE
+		`ISBN` IS NOT NULL
 		AND TRIM(`ISBN`)<>''
-	AND (`DTE_PARUTION` > '1973-12-31' OR `DTE_PARUTION` IS NULL) 
-	
-	GROUP BY `ISBN`  
-	HAVING COUNT(DISTINCT(`ID_TOME`))>1  
+	AND (`DTE_PARUTION` > '1973-12-31' OR `DTE_PARUTION` IS NULL)
+
+	GROUP BY `ISBN`
+	HAVING COUNT(DISTINCT(`ID_TOME`))>1
 	ORDER BY 1 DESC",
 	"colExplode" => 'Liens vers les éditions (séparateur ;)',
 	"urlExplode" => "<a href='".BDO_URL."admin/admineditions.php?edition_id={col}' target='_blank'>{col}</a>",
@@ -70,22 +70,22 @@ array (
 array (
 	"title" => "Triplet PSEUDO, NOM, PRENOM référencés plusieurs fois dans la table des auteurs",
 	"query" => "
-	SELECT 
+	SELECT
 		bd_auteur.ID_AUTEUR,
 		bd_auteur.`PSEUDO`,
 		bd_auteur.`PRENOM`,
-		bd_auteur.`NOM`  
-	FROM `bd_auteur`, 
+		bd_auteur.`NOM`
+	FROM `bd_auteur`,
 	(
-		SELECT 
+		SELECT
 		`PSEUDO`,
 		`PRENOM`,
-		`NOM` 
-		FROM `bd_auteur` 
-		GROUP BY `PSEUDO`,`PRENOM`,`NOM` 
+		`NOM`
+		FROM `bd_auteur`
+		GROUP BY `PSEUDO`,`PRENOM`,`NOM`
 		HAVING count(*)>1
 	) withDoublon
-	WHERE 
+	WHERE
 		bd_auteur.`PSEUDO`=withDoublon.`PSEUDO`
 		AND bd_auteur.`PRENOM`=withDoublon.`PRENOM`
 		AND bd_auteur.`NOM`=withDoublon.`NOM`",
@@ -95,30 +95,30 @@ array (
 array (
 	"title" => "PSEUDO référencés plusieurs fois dans la table des auteurs",
 	"query" => "
-	SELECT SQL_CALC_FOUND_ROWS 
-		COUNT(*) AS `Enregistrements`, 
-		`PSEUDO` 
-	FROM 
-		`bd_auteur` 
-	GROUP BY `PSEUDO` 
-	HAVING count(*)>1  
+	SELECT SQL_CALC_FOUND_ROWS
+		COUNT(*) AS `Enregistrements`,
+		`PSEUDO`
+	FROM
+		`bd_auteur`
+	GROUP BY `PSEUDO`
+	HAVING count(*)>1
 	ORDER BY `Enregistrements` DESC",
 ),
 array (
 	"title" => "Couple NOM, PRENOM référencés plusieurs fois dans la table des auteurs",
 	"query" => "
-	SELECT SQL_CALC_FOUND_ROWS 
-		COUNT(*) AS `Enregistrements`, 
+	SELECT SQL_CALC_FOUND_ROWS
+		COUNT(*) AS `Enregistrements`,
 		`NOM`,
 		`PRENOM`,
-		GROUP_CONCAT(`PSEUDO` SEPARATOR ' ; ') as 'Liste des pseudos (séparateur ;)' 
-	FROM 
+		GROUP_CONCAT(`PSEUDO` SEPARATOR ' ; ') as 'Liste des pseudos (séparateur ;)'
+	FROM
 		`bd_auteur`
-	WHERE 
+	WHERE
 		`NOM` IS NOT NULL
 		AND `PRENOM` IS NOT NULL
-	GROUP BY `NOM`,`PRENOM` 
-	HAVING count(*)>1 
+	GROUP BY `NOM`,`PRENOM`
+	HAVING count(*)>1
 	ORDER BY `Enregistrements` DESC",
 ),
 array (
@@ -127,18 +127,18 @@ array (
 	SELECT SQL_CALC_FOUND_ROWS
 		`bd_collection`.`ID_COLLECTION`,
 		`bd_collection`.`NOM`,
-		`bd_collection`.`ID_EDITEUR`  
-	FROM `bd_collection`, 
+		`bd_collection`.`ID_EDITEUR`
+	FROM `bd_collection`,
 	(
-		SELECT 
+		SELECT
 			`NOM`,
-			`ID_EDITEUR` 
-		FROM 
-			`bd_collection` 
-		GROUP BY `NOM`,`ID_EDITEUR` 
+			`ID_EDITEUR`
+		FROM
+			`bd_collection`
+		GROUP BY `NOM`,`ID_EDITEUR`
 		HAVING count(*)>1
 	) withDoublon
-	WHERE 
+	WHERE
 		`bd_collection`.`NOM`=withDoublon.`NOM`
 		AND `bd_collection`.`ID_EDITEUR`=withDoublon.`ID_EDITEUR`",
 	"url" => BDO_URL."admin/admincollections.php?collec_id=",
@@ -147,13 +147,13 @@ array (
 array (
 	"title" => "triplet date / collection / Tome présent dans la table des éditions",
 	"query" => "
-	SELECT SQL_CALC_FOUND_ROWS 
-		COUNT(*) AS `Enregistrements`, 
-		`ID_TOME` 
-	FROM 
-		`bd_edition` 
-	GROUP BY `ID_TOME`,`ID_COLLECTION`,`DTE_PARUTION` 
-	HAVING COUNT(*)>1  
+	SELECT SQL_CALC_FOUND_ROWS
+		COUNT(*) AS `Enregistrements`,
+		`ID_TOME`
+	FROM
+		`bd_edition`
+	GROUP BY `ID_TOME`,`ID_COLLECTION`,`DTE_PARUTION`
+	HAVING COUNT(*)>1
 	ORDER BY `Enregistrements` DESC",
 	"url" => BDO_URL."admin/adminalbums.php?alb_id=",
 	"colUrl" => "ID_TOME",
@@ -162,15 +162,15 @@ array (
 	"title" => "Séries déclarées one-shot (FLG_FINI=2) avec plus de 1 tome",
 	"query" => "
 	SELECT SQL_CALC_FOUND_ROWS
-		`bd_serie`.`ID_SERIE` , 
+		`bd_serie`.`ID_SERIE` ,
 		count( bd_tome.ID_TOME ) as 'nbr de tomes'
-	FROM 
+	FROM
 		`bd_serie`
 		INNER JOIN `bd_tome` ON `bd_tome`.`ID_SERIE` = `bd_serie`.`ID_SERIE`
-	WHERE 
+	WHERE
 		`bd_serie`.`FLG_FINI` =2
 	GROUP BY `bd_serie`.`ID_SERIE`
-	HAVING count( `bd_tome`.`ID_TOME` ) >1  
+	HAVING count( `bd_tome`.`ID_TOME` ) >1
 	ORDER BY 2 DESC",
 	"url" => BDO_URL."admin/adminseries.php?serie_id=",
 	"colUrl" => "ID_SERIE",
@@ -178,15 +178,15 @@ array (
 array (
 	"title" => "Albums de série one-shot (1 seul album) titre différent de celui de la série",
 	"query" => "
-	SELECT SQL_CALC_FOUND_ROWS 
-		`bd_serie`.`ID_SERIE` , 
-		`bd_serie`.`NOM` AS 'Titre de la série', 
-		`bd_tome`.`ID_TOME` , 
+	SELECT SQL_CALC_FOUND_ROWS
+		`bd_serie`.`ID_SERIE` ,
+		`bd_serie`.`NOM` AS 'Titre de la série',
+		`bd_tome`.`ID_TOME` ,
 		`bd_tome`.`TITRE` AS 'Titre de l''album'
-	FROM 
+	FROM
 		`bd_serie`
 		INNER JOIN `bd_tome` ON `bd_tome`.`ID_SERIE` = `bd_serie`.`ID_SERIE`
-	WHERE 
+	WHERE
 		`bd_serie`.`FLG_FINI` =2
 		AND `bd_serie`.`NOM` <> `bd_tome`.`TITRE`
 	GROUP BY `bd_serie`.`ID_SERIE`
@@ -199,10 +199,10 @@ array (
 	"title" => "Éditions dont la date de parution n'est pas renseignée (ou < 1800-01-01) (non marquées 'Introuvable')",
 	"query" => "
 	SELECT SQL_CALC_FOUND_ROWS
-		`ID_EDITION` , 
+		`ID_EDITION` ,
 		`DTE_PARUTION`
 	FROM `bd_edition`
-	WHERE 
+	WHERE
 		(`DTE_PARUTION` IS NULL
 		OR `DTE_PARUTION` < '1800-01-01')
 		AND `FLAG_DTE_PARUTION` IS NULL
@@ -214,7 +214,7 @@ array (
 array (
 	"title" => "Couvertures dans le répertoire images/couv absentes des éditions",
 	"query" => "
-	SELECT SQL_CALC_FOUND_ROWS couv.IMG_COUV FROM couv 
+	SELECT SQL_CALC_FOUND_ROWS couv.IMG_COUV FROM couv
 	WHERE NOT EXISTS (SELECT NULL FROM bd_edition WHERE couv.IMG_COUV = bd_edition.IMG_COUV)
 	",
 	"url" => BDO_URL_IMAGE."couv/",
@@ -224,7 +224,7 @@ array (
 array (
 	"title" => "Couvertures dans les éditions absentes du répertoire images/couv",
 	"query" => "
-	SELECT SQL_CALC_FOUND_ROWS bd_edition.IMG_COUV,bd_edition.ID_TOME FROM bd_edition 
+	SELECT SQL_CALC_FOUND_ROWS bd_edition.IMG_COUV,bd_edition.ID_TOME FROM bd_edition
 	WHERE NOT EXISTS (SELECT NULL FROM couv WHERE couv.IMG_COUV = bd_edition.IMG_COUV)
 	AND bd_edition.IMG_COUV IS NOT NULL
 	",
@@ -264,7 +264,7 @@ SELECT 'users_alb_prop' as 'table', COUNT(1) as nbr
 FROM `users_alb_prop` LEFT JOIN `bd_collection` USING (`ID_COLLECTION`,`ID_EDITEUR`)
 WHERE `users_alb_prop`.`ID_COLLECTION` IS NOT NULL
 AND `users_alb_prop`.`ID_EDITEUR` IS NOT NULL
-AND `bd_collection`.`NOM` IS NULL 
+AND `bd_collection`.`NOM` IS NULL
 */
 
 echo '<h2>Contrôle des règles de cohérence des données</h2>';
@@ -272,7 +272,7 @@ echo '(Le résultat est limité à 200 lignes)';
 
 echo '<form name="formregle" method="post">
 <div>
-Contrôle : 
+Contrôle :
 <select name="id_queryRegle">';
 foreach( $a_queryRegle as $id_queryRegle=>$queryRegle)
 {
@@ -302,14 +302,14 @@ if (isset($_POST['execformvalue']) and isset($_POST['id_queryRegle']))
 			{
 				echo_pre($query);
 			}
-			
+
 		$resultat = mysql_query($query);
-	
-	
+
+
 		$resCount = mysql_query('SELECT FOUND_ROWS() as nb');
 		$rowCount = mysql_fetch_assoc($resCount);
 		$nbr = $rowCount['nb'];
-		
+
 		$a_obj = array();
 		$cmpt = 0;
 		while ($obj = mysql_fetch_object($resultat)) {

@@ -1,5 +1,5 @@
 <?php
-    
+
     $page = $view->getHelper('pagination');
     ?>
 <script src="<?php echo BDO_URL;?>jquery/jquery.mask.min" type="text/javascript"></script>
@@ -28,15 +28,15 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 <div align="center" class="cadre1" width="100%">
     <h1>Validation d'une correction</h1>
     <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
-        
+
         <table width="100%" border="0">
 		<tr>
 			<td>
 				<table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-			    	<tr bordercolor="#FFFFCC"> 
+			    	<tr bordercolor="#FFFFCC">
 			        	<td width="38" class="label">Titre</td>
 			            <td width="34">
-							<div align="left"> 
+							<div align="left">
 								<input name="txtPropId" type="hidden" id="txtPropId" value="<?php echo $view->PROPID;?>" />
 							</div>
 						</td>
@@ -45,38 +45,38 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 						</td>
 			            <td width="70"><!--DWLayoutEmptyCell-->&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td><!--DWLayoutEmptyCell-->&nbsp;</td>
 			            <td><!--DWLayoutEmptyCell-->&nbsp;</td>
 			            <td class="original"><?php echo $view->ORITITRE;?></td>
 			            <td><!--DWLayoutEmptyCell-->&nbsp;</td>
 			        </tr>
-					<tr bordercolor="#FFFFCC"> 
+					<tr bordercolor="#FFFFCC">
 			            <td class="label">Tome</td>
 			            <td> </td>
 			            <td>
-							<div align="left"> 
+							<div align="left">
 								<input name="txtNumTome" type="text" id="txtNumTome2" value="<?php echo $view->TOME;?>" size="2" class="<?php echo $view->CLTOME;?>" />
 				            </div>
 						</td>
 			            <td></td>
 					</tr>
-					<tr bordercolor="#FFFFCC"> 
+					<tr bordercolor="#FFFFCC">
 						<td class="label">&nbsp;</td>
 						<td></td>
 						<td class="original"><?php echo $view->ORITOME;?></td>
 						<td>&nbsp;</td>
 					</tr>
-					<tr bordercolor="#FFFFCC"> 
+					<tr bordercolor="#FFFFCC">
 						<td colspan="4" class="label">
 							<table width="100%" border="0">
-				                <tr> 
+				                <tr>
 					                <td width="25%">&nbsp;</td>
 					                <td width="25%" align="center" class="entete">Int&eacute;grale<?php echo $view->NEW_FLG_INT;?></td>
 					                <td width="25%" align="center" class="entete">Type<?php echo $view->NEW_FLG_TYPE;?></td>
 					                <td width="25%">&nbsp;</td>
 				                </tr>
-				                <tr> 
+				                <tr>
 					                <td>&nbsp;</td>
 						            <td class="data" align="center">
 										<input type="checkbox" name="chkIntegrale" value="checkbox" <?php echo $view->ISINT;?> />
@@ -91,12 +91,12 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							</table>
 						</td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td colspan="4" class="label">
 							Histoire
 							<br />
 							<br />
-							<textarea name="txtHistoire" cols="50" rows="8" id="textarea" class="<?php echo $view->CLHISTOIRE;?>"><?php echo $view->HISTOIRE;?></textarea> 
+							<textarea name="txtHistoire" cols="50" rows="8" id="textarea" class="<?php echo $view->CLHISTOIRE;?>"><?php echo $view->HISTOIRE;?></textarea>
 				            <br />
 						</td>
 					</tr>
@@ -104,30 +104,30 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			            <td colspan="4" class="original"><?php echo $view->ORIHISTOIRE;?></td>
 			        </tr>
 				</table>
-				<br /> 
+				<br />
 		        <table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Serie</td>
 			            <td>
-							<div align="left"> 
+							<div align="left">
 				                <input name="txtSerieId" type="text" id="txtSerieId2" value="<?php echo $view->IDSERIE;?>" size="5" class="<?php echo $view->CLIDSERIE;?>" />
 				            </div>
 						</td>
 			            <td><input name="txtSerie" type="text" id="txtSerie3" value="<?php echo $view->SERIE;?>" size="37" class="<?php echo $view->CLSERIE;?>" /> <?php echo $view->LIENEDITNEWSERIE;?></td>
-			            <td> 
+			            <td>
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('serie',document.myform.txtSerie.value,'myform','txtSerie',true)" alt="Loupe" />
 						</td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td><!--DWLayoutEmptyCell-->&nbsp;</td>
 			            <td><!--DWLayoutEmptyCell-->&nbsp;</td>
 			            <td class="original"><?php echo $view->ORISERIE;?></td>
 			            <td><!--DWLayoutEmptyCell-->&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td width="10%" class="label">Genre</td>
 			            <td width="8%">
-							<div align="center"> 
+							<div align="center">
 				                <input name="txtGenreId" id="txtGenreId" type="text" value="<?php echo $view->IDGENRE;?>" size="3" class="<?php echo $view->CLIDGENRE;?>" />
 				            </div>
 						</td>
@@ -138,13 +138,13 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('genre',document.myform.txtGenre.value,'myform','txtGenre',false)" alt="Loupe" />
 						</td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original"><?php echo $view->ORIGENRE;?></td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Statut</td>
 			            <td>
 							<div align="center"> </div>
@@ -157,16 +157,16 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 						</td>
 			            <td>&nbsp; </td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original"><?php echo $view->ORISERIEFINI;?></td>
 			            <td>&nbsp;</td>
 			        </tr>
 		        </table>
-		        <br /> 
+		        <br />
 		        <table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td width="18%" class="label">Scenariste</td>
 			            <td width="10%">
 							<input name="txtScenarId" id="txtScenarId" type="text" value="<?php echo $view->IDSCEN;?>" size="4" class="<?php echo $view->CLIDSCEN;?>" />
@@ -178,13 +178,13 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenar.value,'myform','txtScenar',true)" alt="Loupe" />
 						</td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original"><?php echo $view->ORISCENARISTE;?></td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Scenariste #2</td>
 			            <td>
 							<input name="txtScenarAltId" id="txtScenarAltId" type="text" value="<?php echo $view->IDSCENALT;?>" size="4" class="<?php echo $view->CLIDSCENALT;?>" />
@@ -196,13 +196,13 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenarAlt.value,'myform','txtScenarAlt',true)" alt="Loupe" />
 						</td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original"><?php echo $view->ORISCENARISTEALT;?></td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Dessinateur</td>
 			            <td>
 							<input name="txtDessiId" id="txtDessiId" type="text" value="<?php echo $view->IDDESS;?>" size="4" class="<?php echo $view->CLIDDESS;?>" />
@@ -214,13 +214,13 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessi.value,'myform','txtDessi',true)" alt="Loupe" />
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original"><?php echo $view->ORIDESSINATEUR;?></td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Dessinateur #2</td>
 			            <td>
 							<input name="txtDessiAltId" id="txtDessiAltId"  type="text" value="<?php echo $view->IDDESSALT;?>" size="4" class="<?php echo $view->CLIDDESSALT;?>" />
@@ -232,13 +232,13 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessiAlt.value,'myform','txtDessiAlt',true)" alt="Loupe" />
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original"><?php echo $view->ORIDESSINATEURALT;?></td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Coloriste</td>
 			            <td>
 							<input name="txtColorId" id="txtColorId" type="text" value="<?php echo $view->IDCOLOR;?>" size="4" class="<?php echo $view->CLIDCOLOR;?>" />
@@ -250,15 +250,15 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColor.value,'myform','txtColor',true)" alt="Loupe" />
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original"><?php echo $view->ORICOLORISTE;?></td>
 			            <td>&nbsp;</td>
 			        </tr>
 				</table>
-		        <p> 
-			        <div align="center"> 
+		        <p>
+			        <div align="center">
 				        <p></p>
 				        <input type="submit" name="Submit" value="<?php echo $view->ACTIONNAME;?>" />
 				        <br />
@@ -266,7 +266,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			</td>
 		    <td valign="top">
 				<table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-					<tr bordercolor="#FFFFCC"> 
+					<tr bordercolor="#FFFFCC">
 						<td class="label">
 							<?php echo $view->USEROWN;?>
 							<br />
@@ -279,7 +279,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 				</table>
 				<br />
 		        <table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td width="21%" class="label">Editeur</td>
 			            <td width="9%">
 							<input name="txtEditeurId"  id="txtEditeurId" type="text" value="<?php echo $view->IDEDIT;?>" size="3" class="<?php echo $view->CLIDEDIT;?>" />
@@ -291,15 +291,15 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('editeur',document.myform.txtEditeur.value,'myform','txtEditeur',true)" alt="Loupe" />
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original"><?php echo $view->ORIEDITEUR;?></td>
 			            <td>&nbsp;</td>
 					</tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Collection</td>
-			            <td> 
+			            <td>
 							<input name="txtCollecId" id="txtCollecId" type="text" value="<?php echo $view->IDCOLLEC;?>" size="3" class="<?php echo $view->CLIDCOLLEC;?>" />
 						</td>
 			            <td>
@@ -309,19 +309,19 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('collection',document.myform.txtCollec.value,'myform','txtCollec',false,document.myform.txtEditeurId.value)" alt="Loupe" />
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td>&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original"><?php echo $view->ORICOLLECTION;?></td>
 			            <td>&nbsp;</td>
-			        </tr>	
-					<tr bordercolor="#FFFFCC"> 
+			        </tr>
+					<tr bordercolor="#FFFFCC">
 			            <td colspan="4" class="label">
 							<table width="100%" border="0">
-				                <tr> 
-				                	<td align="center"><a href="<?php echo $view->URLEAN;?>" title="Teste le code EAN sur BDNet" target="_blank">EAN</a> : 
+				                <tr>
+				                	<td align="center"><a href="<?php echo $view->URLEAN;?>" title="Teste le code EAN sur BDNet" target="_blank">EAN</a> :
 				                	<input name="txtEAN" type="text" value="<?php echo $view->EAN;?>" size="14" class="<?php echo $view->CLEAN;?>" /><?php echo $view->ISEAN;?></td>
-				                	<td align="center"><a href="<?php echo $view->URLISBN;?>" title="Teste le code ISBN sur Amazon" target="_blank">ISBN</a> : 
+				                	<td align="center"><a href="<?php echo $view->URLISBN;?>" title="Teste le code ISBN sur Amazon" target="_blank">ISBN</a> :
 				                    <input name="txtISBN" type="text" value="<?php echo $view->ISBN;?>" size="10" class="<?php echo $view->CLISBN;?>" /><?php echo $view->ISISBN;?></td>
 				                </tr>
 						<tr>
@@ -331,7 +331,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 			            	</table>
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">Date de parution</td>
 			            <td>&nbsp; </td>
 			            <td>
@@ -339,22 +339,22 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 						</td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">&nbsp;</td>
 			            <td>&nbsp;</td>
 			            <td class="original"><?php echo $view->ORIDTPAR;?></td>
 			            <td>&nbsp;</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td colspan="4" class="label">
-							Ignorer les modifications relatives &agrave; l'&eacute;dition 
+							Ignorer les modifications relatives &agrave; l'&eacute;dition
 				            <input type="checkbox" name="chkModifEdition" checked="checked" />
 						</td>
 			        </tr>
 				</table>
 				<br />
 				<table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
-			        <tr> 
+			        <tr>
 			            <td width="50%" align="center" bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 							<img src="<?php echo $view->URLIMAGE;?>" width="180" border="0" align="absmiddle" alt="Couverture" />
 							<br />
@@ -366,23 +366,23 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							<?php echo $view->ORIDIMIMAGE;?>
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 			            <td colspan="2" class="label">
 							Ignorer le changement de couverture (les dimensions de l'image de gauche n'apparaissent pas si l'utilisateur ne propose pas de nouvelle couverture)
 							<input type="checkbox" name="chkDelete" value="checked" />
 				        </td>
 	        		</tr>
-	        		<tr bordercolor="#FFFFCC" bgcolor="#FFFFCC"> 
+	        		<tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
 			            <td class="label">Redimensionner la couverture</td>
 			            <td><input type="checkbox" name="chkResize" value="checked"></td>
 		            </tr>
 				</table>
 				<br />
 				<table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-					<tr bordercolor="#FFFFCC"> 
+					<tr bordercolor="#FFFFCC">
 						<td class="label">Commentaire de l'utilisateur :</td>
 					</tr>
-					<tr bordercolor="#FFFFCC"> 
+					<tr bordercolor="#FFFFCC">
 						<td class="label"><?php echo $view->USERCOMMENT;?></td>
 					</tr>
 				</table>
@@ -401,9 +401,9 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 						</td>
 					</tr>
 				</table>
-				<br /> 
+				<br />
 		        <table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td width="18%" class="label">
 							En rouge <div align="center"> </div>
 						</td>
@@ -411,7 +411,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 							Incoh&eacute;rence entre l'ID et la valeur saisie
 						</td>
 			        </tr>
-			        <tr bordercolor="#FFFFCC"> 
+			        <tr bordercolor="#FFFFCC">
 			            <td class="label">En orange</td>
 			            <td class="texte">Champ modifi&eacute; par l'utilisateur</td>
 			        </tr>
@@ -457,29 +457,29 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 <script>
     /*
      * On remplit les champs de saisie par l'autocompletion
-     * 
+     *
      */
-    
+
     addAutocomplete("txtSerie3","txtSerieId2","txtSerieId2","<?php echo BDO_URL; ?>getjson?data=Serie");
     addAutocomplete("txtGenre","txtGenreId","txtGenreId","<?php echo BDO_URL; ?>getjson?data=Genre");
     addAutocomplete("txtScenar","txtScenarId","txtScenarId","<?php echo BDO_URL; ?>getjson?data=Auteur");
     addAutocomplete("txtScenarAlt","txtScenarAltId","txtScenarAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
     addAutocomplete("txtDessiAlt","txtDessiAltId","txtDessiAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
     addAutocomplete("txtDessi","txtDessiId","txtDessiId","<?php echo BDO_URL; ?>getjson?data=Auteur");
-    
+
      addAutocomplete("txtColor","txtColorId","txtColorId","<?php echo BDO_URL; ?>getjson?data=Auteur");
      addAutocomplete("txtColorAlt","txtColorAltId","txtColorAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
      addAutocomplete("txtEditeur","txtEditeurId","txtEditeurId","<?php echo BDO_URL; ?>getjson?data=Editeur");
-     
+
      addAutocomplete("txtExistingTome","txtExistingTomeId","txtExistingTomeId","<?php echo BDO_URL; ?>getjson?data=Album");
-     
+
      addAutocomplete("txtFutAlb","txtFutAlbId","txtFutAlbId","<?php echo BDO_URL; ?>getjson?data=Album");
      changeEditeur();
     function changeEditeur() {
         addAutocomplete("txtCollec","spCollec","txtCollecId","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val());
-    
+
         //addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo $view->IDCOLLEC;?>);
-    
+
     }
      $(document).ready(function(){
   $('#txtDateParution').mask('0000-00-00', {placeholder: "0000-00-00"});

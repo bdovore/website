@@ -26,22 +26,22 @@ $max_date = 0;
 
 // R�cup�re la collection
 $query = "
-SELECT 
-	DATE_FORMAT(IFNULL(u.date_achat, u.date_ajout),'%Y') as date_annee, 
-	t.id_tome, 
-	t.titre, 
-	t.num_tome, 
-	t.flg_type, 
-	t.flg_int, 
-	t.prix_bdnet, 
-	u.cote, 
-	u.flg_cadeau 
-FROM 
-	users_album u 
-	INNER JOIN bd_edition en ON en.id_edition = u.id_edition 
-	INNER JOIN bd_tome t ON t.id_tome = en.id_tome 
-WHERE 
-	u.flg_achat = 'N' 
+SELECT
+	DATE_FORMAT(IFNULL(u.date_achat, u.date_ajout),'%Y') as date_annee,
+	t.id_tome,
+	t.titre,
+	t.num_tome,
+	t.flg_type,
+	t.flg_int,
+	t.prix_bdnet,
+	u.cote,
+	u.flg_cadeau
+FROM
+	users_album u
+	INNER JOIN bd_edition en ON en.id_edition = u.id_edition
+	INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+WHERE
+	u.flg_achat = 'N'
 	AND u.user_id = " . $DB->escape($_SESSION["userConnect"]->user_id);
 
 $DB->query ($query);

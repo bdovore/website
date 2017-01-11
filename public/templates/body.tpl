@@ -12,20 +12,20 @@
 	<meta name="reply-to" content="" />
 	<meta name="revisit-after" content="7 days" />
 	<meta name="robots" content="all" />
-	  
+
 	<link href="{URLSITE}style/style1.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="{URLSITE}script/shadowbox-3.0.3/shadowbox.css">
 	<script src="{URLSITE}script/script.js" type="text/javascript"></script>
 	<script src="{URLSITE}script/library.js" type="text/javascript"></script>
 	<script src="{URLSITE}script/xhr.js" type="text/javascript"></script>
 	<script type="text/javascript" src="{URLSITE}jquery-1.8.2.min.js"></script>
-	<script type="text/javascript" src="{URLSITE}jquery.autocomplete.js"></script> 
+	<script type="text/javascript" src="{URLSITE}jquery.autocomplete.js"></script>
 	<script type="text/javascript" src="{URLSITE}script/shadowbox-3.0.3/shadowbox.js"></script>
 	<script type="text/javascript">
 	Shadowbox.init({
 		language: "fr",
 		players: ["iframe"],
-		}); 
+		});
 	</script>
 	<link rel="shortcut icon" href="favicon.ico" />
 	<!-- Declaration fil rss -->
@@ -39,10 +39,10 @@
 <body onLoad="{BODYONLOAD}">
 
 
-	
-	
 
-		
+
+
+
 	<div id="content">
 		<div class="colmask rightmenu">
 	    <div class="colleft">
@@ -54,28 +54,28 @@
 					<!-- Column 1 end -->
 	            </div>
 	        </div>
-	        
+
 	    </div>
-	</div>	
-	</div>	
-		
-	
+	</div>
+	</div>
+
+
 	<div id="footer" style="position: relative; z-index: 10;">
    <div class="fond"></div>
 
-		<div id="titre_avertissement"> 
+		<div id="titre_avertissement">
 			Avertissement
 		</div>
 		<div id="texte_avertissement">
-			Les images présentes sur ce site sont la propriété 
-			de leurs auteurs et éditeurs respectifs et sont soumises à copyright. 
-			Leur utilisation n'a pour but que d'illustrer l'information contenue 
-			dans la base de donnée du site. Cependant, si ces derniers le désirent, 
+			Les images présentes sur ce site sont la propriété
+			de leurs auteurs et éditeurs respectifs et sont soumises à copyright.
+			Leur utilisation n'a pour but que d'illustrer l'information contenue
+			dans la base de donnée du site. Cependant, si ces derniers le désirent,
 			ces images seront retirées sur simple demande de leur part.
 		</div>
 		<div id="texte_avertissement">
 			<font color="#990000">
-			Lien destiné au référencement par les moteurs de recherche : 
+			Lien destiné au référencement par les moteurs de recherche :
 			</font>
 			<a href="{URLSITE}indexation.php">Liste des séries</a>
 		</div>

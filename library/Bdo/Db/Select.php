@@ -140,8 +140,8 @@ class Bdo_Db_Select
 		if (!is_array($finfo)) $finfo = array();
 
 		$tab_liste_champ = array();
-                
-               
+
+
 		foreach ($finfo as $col)
 		{
                         $champ = new stdClass;
@@ -961,7 +961,7 @@ class Bdo_Db_Select
 			case 'ID_WORKFLOW' :
 				{
 					$query = "
-					SELECT 
+					SELECT
 					wf_workflow.ID_WORKFLOW,
 					wf_workflow.NOM_WORKFLOW".$_SESSION['ID_LANG']." as NOM_WORKFLOW,
 					acl_resource.ID_ACL_RESOURCE,
@@ -1124,7 +1124,7 @@ class Bdo_Db_Select
 					$query = "
 					SELECT $column->ORG_COLUMN_NAME,
 					$aff_column->ORG_COLUMN_NAME
-					FROM $aff_column->ORG_TABLE_NAME 
+					FROM $aff_column->ORG_TABLE_NAME
 					WHERE 1 ".$order_by
 					;
 
@@ -1190,7 +1190,7 @@ class Bdo_Db_Select
 			";
 			$html .= $this->html_Field_Edit("FREE_".$column_name,1,false);
 			$html .= "</table></div>
-			</td></tr>";	
+			</td></tr>";
 
 		}
 		return $html;

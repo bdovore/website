@@ -22,18 +22,18 @@ else{
 if (empty($user_id)) exit();
 
 $query = "
-SELECT 
-	DATE_FORMAT(IFNULL(u.date_achat,u.date_ajout), '%Y%m') as my_date, 
-	count(en.id_edition) as nbtome 
-FROM 
-	users_album u 
+SELECT
+	DATE_FORMAT(IFNULL(u.date_achat,u.date_ajout), '%Y%m') as my_date,
+	count(en.id_edition) as nbtome
+FROM
+	users_album u
 	INNER JOIN bd_edition en ON en.id_edition = u.id_edition
 	INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-WHERE  
-	t.flg_type = 0 
-	AND u.flg_achat = 'N' 
-	AND u.user_id = ".$DB->escape($user_id)." 
-GROUP BY DATE_FORMAT(IFNULL(date_achat,date_ajout), '%Y%m') 
+WHERE
+	t.flg_type = 0
+	AND u.flg_achat = 'N'
+	AND u.user_id = ".$DB->escape($user_id)."
+GROUP BY DATE_FORMAT(IFNULL(date_achat,date_ajout), '%Y%m')
 ORDER BY DATE_FORMAT(IFNULL(date_achat,date_ajout), '%Y%m') DESC limit 0,12;";
 $DB->query ($query);
 

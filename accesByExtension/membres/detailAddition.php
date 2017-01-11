@@ -24,11 +24,11 @@ if ($action == 'refresh')
 	$defval[1] = $_POST["txtPrixIntegrale"];
 	$defval[2] = $_POST["txtPrixCoffret"];
 	$defcoffret = $_POST["lstCoffret"];
-	$query = "UPDATE users SET 
+	$query = "UPDATE users SET
 	val_alb = ".sqlise($defval[0],'int_null').",
-	val_int = ".sqlise($defval[1],'int_null').", 
-	val_cof =".sqlise($defval[2],'int_null').", 
-	val_cof_type = ".sqlise($defcoffret,'text')." 
+	val_int = ".sqlise($defval[1],'int_null').",
+	val_cof =".sqlise($defval[2],'int_null').",
+	val_cof_type = ".sqlise($defcoffret,'text')."
 	WHERE user_id=".$DB->escape($_SESSION["UserId"]);
 	$DB->query ($query);
 }
@@ -63,29 +63,29 @@ $opt_coffret[1][1] = "Valeur du coffret";
 
 // Récupère la collection
 $query = "
-SELECT 
-	IFNULL(ua.date_achat, ua.date_ajout) as alb_date, 
+SELECT
+	IFNULL(ua.date_achat, ua.date_ajout) as alb_date,
 	en.id_edition,
 	en.dte_parution,
 	en.flag_dte_parution,
 	ed.nom enom,
-	t.id_tome, 
-	t.titre, 
-	t.num_tome, 
-	t.flg_type, 
-	t.flg_int, 
-	t.prix_bdnet, 
-	ua.cote, 
-	s.id_serie, 
-	s.nom 
-FROM 
+	t.id_tome,
+	t.titre,
+	t.num_tome,
+	t.flg_type,
+	t.flg_int,
+	t.prix_bdnet,
+	ua.cote,
+	s.id_serie,
+	s.nom
+FROM
 	users_album ua
 	INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
 	INNER JOIN bd_tome t ON en.id_tome=t.id_tome
 	INNER JOIN bd_serie s ON t.id_serie=s.id_serie
 	INNER JOIN bd_collection c ON en.id_collection=c.id_collection
 	INNER JOIN bd_editeur ed ON ed.id_editeur=c.id_editeur
-WHERE 
+WHERE
 	ua.user_id=".$DB->escape($_SESSION["UserId"])."
 	AND ua.flg_achat = 'N'
 ";

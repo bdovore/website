@@ -18,7 +18,7 @@ $opt_type[1][1] = 'Coffret';
 if ($act=="update")
 {
 	$nb = 0;
-	
+
 	foreach ($id_tome as $idtome)
 	{
 		if (($txtISBN[$idtome] != "") & ($txtEAN[$idtome] == ""))
@@ -43,9 +43,9 @@ if ($act=="update")
 		else {
 			$dte_achat = substr($txtDateParution[$idtome],6,4)."-".substr($txtDateParution[$idtome],3,2)."-".substr($txtDateParution[$idtome],0,2);
 		}
-		
+
 		$query = "
-		UPDATE bd_tome SET 
+		UPDATE bd_tome SET
 			num_tome = ".sqlise($txtNumTome[$idtome],'int_null').",
 			titre = ".sqlise($txtTitre[$idtome],'text_simple').",
 			flg_type = ".$DB->escape($lstType[$idtome]).",
@@ -54,20 +54,20 @@ if ($act=="update")
 		WHERE
 			id_tome = ".$DB->escape($idtome);
 
-		
+
 		$DB->query ($query);
-		
+
 		$query = "
 		UPDATE bd_edition en INNER JOIN bd_tome t ON t.ID_EDITION=en.ID_EDITION
-		SET 
+		SET
 			en.isbn = ".sqlise($isbn,'text').",
 			en.ean = ".sqlise($ean,'text').",
 			en.dte_parution = ".sqlise($dte_achat,'text_simple')."
-		WHERE 
+		WHERE
 			t.id_tome = ".$DB->escape($idtome) ;
-		
+
 		$DB->query ($query);
-		
+
 		$nb++;
 	}
 	echo GetMetaTag(2,"$nb albums ont été traités.",(BDO_URL."admin/mu_detail.php?serie=".$serie));
@@ -85,7 +85,7 @@ elseif($act=="")
 
 	if ($serie != "")
 	{
-		
+
 		// récupère le infos liées à la série
 		$query = "SELECT nom FROM bd_serie WHERE id_serie = ".$DB->escape($serie);
 		$DB->query ($query);
@@ -97,36 +97,36 @@ elseif($act=="")
 
 
 		$query = "
-		SELECT 
-			t.id_tome, 
-			t.num_tome, 
-			t.titre, 
-			t.flg_int, 
-			t.flg_type, 
-			e.isbn, 
-			e.ean, 
-			IFNULL(date_format(e.dte_parution,'%d/%m/%Y'),NULL) dtpar, 
-			t.prix_bdnet, 
+		SELECT
+			t.id_tome,
+			t.num_tome,
+			t.titre,
+			t.flg_int,
+			t.flg_type,
+			e.isbn,
+			e.ean,
+			IFNULL(date_format(e.dte_parution,'%d/%m/%Y'),NULL) dtpar,
+			t.prix_bdnet,
 			count(e.id_edition) nbed
-		FROM 
-			bd_tome t, 
+		FROM
+			bd_tome t,
 			bd_edition e
-		WHERE 
-			t.id_tome = e.id_tome 
+		WHERE
+			t.id_tome = e.id_tome
 			AND t.id_serie = ".$DB->escape($serie)."
-		GROUP BY 
-			t.id_tome, 
-			t.num_tome, 
-			t.titre, 
-			t.flg_int, 
-			t.flg_type, 
-			e.isbn, 
-			e.ean, 
-			dtpar, 
+		GROUP BY
+			t.id_tome,
+			t.num_tome,
+			t.titre,
+			t.flg_int,
+			t.flg_type,
+			e.isbn,
+			e.ean,
+			dtpar,
 			t.prix_bdnet
-		ORDER BY 
-			t.flg_int DESC, 
-			t.flg_type, 
+		ORDER BY
+			t.flg_int DESC,
+			t.flg_type,
 			t.num_tome;";
 		$DB->query ($query);
 		// on déclare le block à utiliser

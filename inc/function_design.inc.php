@@ -386,7 +386,7 @@ function bMeteo($id,$flagtitle=true)
 }
 
 function do_offset($level){
-    $offset = "";             // offset for subarry 
+    $offset = "";             // offset for subarry
     for ($i=1; $i<$level;$i++){
     $offset = $offset . "<td></td>";
     }
@@ -409,12 +409,12 @@ function show_array($array, $level, $sub){
                $offset = do_offset($level);
            }
            $sub = 0;
-           echo $offset . "<td main ".$sub." width=\"120\">" . $key_val . 
-               "</td><td width=\"120\">" . $value . "</td>"; 
+           echo $offset . "<td main ".$sub." width=\"120\">" . $key_val .
+               "</td><td width=\"120\">" . $value . "</td>";
            echo "</tr>\n";
            }
        } //foreach $array
-    }  
+    }
     else{ // argument $array is not an array
         return;
     }

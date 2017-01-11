@@ -16,20 +16,20 @@ if($act=="update"){
 
 	// Récupère la valeur de l'album à mettre à jour
 	$query = "
-	SELECT 
-		t.id_serie, 
-		c.id_editeur, 
-		en.id_collection, 
+	SELECT
+		t.id_serie,
+		c.id_editeur,
+		en.id_collection,
 		t.id_scenar,
-		t.id_dessin, 
-		s.id_genre, 
-		en.id_edition 
-	FROM 
-		bd_tome t 
+		t.id_dessin,
+		s.id_genre,
+		en.id_edition
+	FROM
+		bd_tome t
 		INNER JOIN bd_edition en ON en.id_edition = t.id_edition
 		INNER JOIN bd_serie s ON s.id_serie = t.id_serie
 		INNER JOIN bd_collection c ON c.id_collection = en.id_collection
-	WHERE 
+	WHERE
 		t.id_tome = ".$DB->escape($new_idtome);
 
 	$DB->query($query);
@@ -54,12 +54,12 @@ if($act=="update"){
 
 		// Transfère les éditions sélectionnées sous le nouvel album
 		$query = "
-		UPDATE bd_edition SET 
-			id_tome = ".$DB->escape($new_idtome).", 
-			img_couv = ".sqlise($new_filename,'text_simple')." 
+		UPDATE bd_edition SET
+			id_tome = ".$DB->escape($new_idtome).",
+			img_couv = ".sqlise($new_filename,'text_simple')."
 		WHERE id_edition =". $idedition ;
 
-				
+
 		$DB->query($query);
 		echo "Nombre de records modifiées dans la table bd_edition : ".$DB->affected_rows()."<br />";
 
@@ -94,10 +94,10 @@ if($act=="update"){
 	// vide la table bd_edition
 	$DB->query ("DELETE FROM bd_edition WHERE id_tome=". $DB->escape($old_idtome));
 	echo 'Référence(s) à l\'album supprimée(s) dans la table bd_edition<br />';
-	
+
 	$DB->query ("DELETE FROM bd_tome WHERE id_tome=". $DB->escape($old_idtome));
 	echo 'Référence(s) à l\'album supprimée(s) dans la table bd_tome<br />';
-	
+
 	$DB->query("DELETE users_album.* FROM users_album INNER JOIN bd_edition USING(id_edition)
 	WHERE bd_edition.`id_tome`=".$DB->escape($old_idtome));
 	echo "Nombre de records supprimés dans la table users_album : ".$DB->affected_rows()."<br />";

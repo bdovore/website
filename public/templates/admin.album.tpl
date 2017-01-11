@@ -33,19 +33,19 @@ function verifFieldNull(myIDserie,myTitreVolume,myIDscen,myIDdess,myIDcolo,myIDe
         <tr>
             <!-- colonne de gauche -->
             <td width="65%" rowspan="4" valign="top">
-                {ADMINSERIEDETAIL}                                
-                {ADMINALBUMDETAIL}                                          
-                {ADMINEDITIONDETAIL}                
-                <div class="submit"> 
+                {ADMINSERIEDETAIL}
+                {ADMINALBUMDETAIL}
+                {ADMINEDITIONDETAIL}
+                <div class="submit">
                     <input type="submit" name="Submit" value="{ACTIONNAME}" />
                 </div>
             </td>
-            
+
             <!-- colonne de droite -->
-            <td width="35%" valign="top"> 
+            <td width="35%" valign="top">
                 {ADMINEDITIONCOUV}
                 <table class="cadre_texte-admin" width="100%">
-                    <tr> 
+                    <tr>
                         <td>
                             <p><div class="b">Statistiques</div></p>
                             <ul>

@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class User extends Bdo_Db_Line
 {
@@ -15,9 +15,9 @@ class User extends Bdo_Db_Line
     public $CARRE_TYPE = 0;
 
     public $error = '';
-    
+
     public $a_roleGlobal = array();
-    
+
     // initialisation
     public function __construct ($id = null)
     {
@@ -34,27 +34,27 @@ class User extends Bdo_Db_Line
 
     public function select ()
     {
-        return "SELECT 
-                `user_id` , 
-                `last_connect` , 
-                `nb_connect` , 
-                `username` , 
-                `password` , 
-                `level` , 
-                `email` , 
-                `birthday` , 
-                `location` , 
-                `image` , 
-                `OPEN_COLLEC` , 
-                `MSG_COLLEC` , 
-                `CARRE_TYPE` , 
-                `ROW_DISPLAY` , 
-                `ABT_NEWS` , 
-                `VAL_ALB` , 
-                `VAL_INT` , 
-                `VAL_COF` , 
-                `VAL_COF_TYPE` , 
-                `ROWSERIE` , 
+        return "SELECT
+                `user_id` ,
+                `last_connect` ,
+                `nb_connect` ,
+                `username` ,
+                `password` ,
+                `level` ,
+                `email` ,
+                `birthday` ,
+                `location` ,
+                `image` ,
+                `OPEN_COLLEC` ,
+                `MSG_COLLEC` ,
+                `CARRE_TYPE` ,
+                `ROW_DISPLAY` ,
+                `ABT_NEWS` ,
+                `VAL_ALB` ,
+                `VAL_INT` ,
+                `VAL_COF` ,
+                `VAL_COF_TYPE` ,
+                `ROWSERIE` ,
                 `PREF_EXPORT`
         FROM `" . $this->table_name . "`
  ";
@@ -70,47 +70,47 @@ class User extends Bdo_Db_Line
             $a_data['ch_username'] = "checked";
             $a_data['ch_email'] = "checked";
         }
-        
+
         $dbSearch = new Bdo_Db_Search();
-        
+
         $dbSearch->select = "
 SELECT
-                `user_id` , 
-                `last_connect` , 
-                `nb_connect` , 
-                `username` , 
-                `level` , 
-                `email` , 
-                `birthday` , 
-                `location` , 
-                `image` , 
-                `OPEN_COLLEC` , 
-                `MSG_COLLEC` , 
-                `CARRE_TYPE` , 
-                `ROW_DISPLAY` , 
-                `ABT_NEWS` , 
-                `VAL_ALB` , 
-                `VAL_INT` , 
-                `VAL_COF` , 
-                `VAL_COF_TYPE` , 
-                `ROWSERIE` , 
+                `user_id` ,
+                `last_connect` ,
+                `nb_connect` ,
+                `username` ,
+                `level` ,
+                `email` ,
+                `birthday` ,
+                `location` ,
+                `image` ,
+                `OPEN_COLLEC` ,
+                `MSG_COLLEC` ,
+                `CARRE_TYPE` ,
+                `ROW_DISPLAY` ,
+                `ABT_NEWS` ,
+                `VAL_ALB` ,
+                `VAL_INT` ,
+                `VAL_COF` ,
+                `VAL_COF_TYPE` ,
+                `ROWSERIE` ,
                 `PREF_EXPORT`
 ";
-        
+
         // dans les tables
         $dbSearch->from = "
 FROM " . $this->table_name . "
 ";
-        
+
         $dbSearch->where = "WHERE 1";
-        
+
         // dans l'ordre
         if ($a_data['daff'] == "") $a_data['daff'] = "0";
         if ($a_data['sens_tri'] == "") $a_data['sens_tri'] = "ASC";
         if ($a_data['col_tri'] == "") $a_data['col_tri'] = $this->table_name . ".username";
-        
+
         $dbSearch->groupby = "";
-        
+
         // --------------=======================----------------
         $dbSearch->infoQuery();
         // --------------=======================----------------
@@ -122,7 +122,7 @@ FROM " . $this->table_name . "
         else {
             $dbSearch->exec();
         }
-        
+
         return $dbSearch;
     }
 
@@ -132,10 +132,10 @@ FROM " . $this->table_name . "
         if (isset($_POST['submitLoginDisconnect'])) {
             $this->logout();
         }
-        
+
         // tentative de connexion automatique
-        if ((! isset($_SESSION['userConnect']->user_id) or empty($_SESSION['userConnect']->user_id)) 
-                and issetNotEmpty($_COOKIE["username"]) 
+        if ((! isset($_SESSION['userConnect']->user_id) or empty($_SESSION['userConnect']->user_id))
+                and issetNotEmpty($_COOKIE["username"])
                 and issetNotEmpty($_COOKIE["pass"])) {
 
             $this->load('c', "
@@ -154,25 +154,25 @@ FROM " . $this->table_name . "
         }
         // connexion demandee
         else if (isset($_POST['submitLoginConnect'])) {
-            
+
             // -----------
             // absence de cookie indique la non acceptation des cookies par le
             // navigateur
             if (isset($_COOKIE['PHPSESSID'])) {
                 // -----------
                 $this->load('c', "WHERE username ='" . Db_Escape_String($_POST['user_login']) . "'");
-                
+
                 if (1 == $this->dbSelect->nbLineResult) {
-                    
+
                     $mdp_user = md5($_POST['user_password']);
-                    
+
                     if ($mdp_user and ($this->password == md5($_POST['user_password']))) {
                         if ($this->level < 98) {
-                            
+
                             $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
-                            
+
                             $this->addNbConnect();
-                            
+
                             // défini les paramètres de cookie
                             setcookie("username", $this->username, time() + 31104000, "/");
                             // connexion automatique "se souvenir de moi"
@@ -180,7 +180,7 @@ FROM " . $this->table_name . "
                                 setcookie("pass", $this->password, time() + 31104000, "/");
                             }
                             // on retourne à la page d'origine de la connexion
-                             header('Location: '.$_SERVER['HTTP_REFERER']); 
+                             header('Location: '.$_SERVER['HTTP_REFERER']);
                         }
                         else {
                             $this->error = 'Compte bloqué';
@@ -199,14 +199,14 @@ FROM " . $this->table_name . "
             }
         }
             // connexion realise par openid username
-        else if ((! isset($_SESSION['userConnect']->user_id) or empty($_SESSION['userConnect']->user_id)) 
+        else if ((! isset($_SESSION['userConnect']->user_id) or empty($_SESSION['userConnect']->user_id))
                 and isset($_SESSION['userConnect']->username)){
             $this->load('c', "
     			WHERE username ='" . Db_Escape_String($_SESSION['userConnect']->username) . "'
     			AND level<98
                 ORDER BY nb_connect
     			");
-            
+
             if (1 <= $this->dbSelect->nbLineResult) {
                 $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
                 $this->addNbConnect();
@@ -214,7 +214,7 @@ FROM " . $this->table_name . "
             else {
                 $this->error = $_SESSION['userConnect']->username . ' -> pseudo inconnu';
             }
-            
+
         }
         // connexion realise par openid email
         else if ((! isset($_SESSION['userConnect']->user_id) or empty($_SESSION['userConnect']->user_id))
@@ -224,7 +224,7 @@ FROM " . $this->table_name . "
     			AND level<98
                 ORDER BY nb_connect
     			");
-        
+
             if (1 <= $this->dbSelect->nbLineResult) {
                 $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
                 $this->addNbConnect();
@@ -232,13 +232,13 @@ FROM " . $this->table_name . "
             else {
                 $this->error = $_SESSION['userConnect']->email . ' -> Email inconnu';
             }
-        
+
         }
-        
+
         if ($this->error) {
             $this->guest();
         }
-        
+
         foreach ((array) $_SESSION['userConnect'] as $var => $value) {
             $this->$var = $value;
         }
@@ -251,7 +251,7 @@ FROM " . $this->table_name . "
                 "nb_connect" => ($this->nb_connect + 1),
                 "last_connect" => date("Y-m-d H:i:s")
         );
-        
+
         $this->set_dataPaste($a_data);
         $this->insert();
     }
@@ -261,7 +261,7 @@ FROM " . $this->table_name . "
         // niveau d'acces publique
         unset($_SESSION['user']);
         unset($_SESSION['userConnect']);
-        
+
         $user = new stdClass();
         $user->level = 5;
         $user->user_id = null;
@@ -272,11 +272,11 @@ FROM " . $this->table_name . "
     public function logout ()
     {
         $this->guest();
-        
+
         // on efface le cookie
         if (isset($_COOKIE["pass"])) unset($_COOKIE["pass"]);
         setcookie("pass", "", time() + 3600, "/");
-        
+
         header("Location:" . BDO_URL);
         Bdo_Cfg::quit();
     }
@@ -301,21 +301,21 @@ FROM " . $this->table_name . "
         }
         // connaitre les roles
         if (empty($a_idAclRole)) {
-            
+
             // tableau des roles
             $a_idAclRole[] = $_SESSION['userConnect']->level;
         }
 
         $acl = Bdo_Cfg::getVar('acl');
-        
+
         $a_respriv = explode('.', $resPriv);
         $resource = $a_respriv[0];
         $privilege = $a_respriv[1];
-        
+
         if (! $acl->isResourcePrivilege($resource, $privilege)) {
             return false;
         }
-        
+
         foreach ($a_idAclRole as $id_acl_role) {
             //echo '<br/>'.$id_acl_role.'-'.$resource.'-'.$privilege;
             if ($acl->isAllowed($id_acl_role, $resource, $privilege)) {
@@ -323,7 +323,7 @@ FROM " . $this->table_name . "
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -336,7 +336,7 @@ FROM " . $this->table_name . "
             return true;
         }
     }
-    
+
     public function setForumAccount($username,$password, $email) {
         $connexion = Db_connect(array(
                 'login' => FORUM_DB_USER,
@@ -368,7 +368,7 @@ FROM " . $this->table_name . "
             $result = Db_query($query,$connexion);
         }
     }
-    
+
     public static function deleteAllDataForUser($profile_user_id) {
         /*
          * Suppression de toute les données d'un utilisateur
@@ -408,10 +408,10 @@ FROM " . $this->table_name . "
         return $this->load("c", $where . $orderby . $limit);
 
     }
-    
+
     public function countUserBy($type, $id) {
-	
-	
+
+
 	$query = '';
 	switch ($type) {
 		case "edition" :
@@ -419,7 +419,7 @@ FROM " . $this->table_name . "
 				$query = "
 			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
 			FROM
-				users_album ua 
+				users_album ua
 			WHERE
 				ua.id_edition=" . intval($id) . "
 			";
@@ -430,7 +430,7 @@ FROM " . $this->table_name . "
 				$query = "
 			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
 			FROM
-				users_album ua 
+				users_album ua
 				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
 			WHERE
 				en.id_tome=" . intval($id) . "
@@ -442,7 +442,7 @@ FROM " . $this->table_name . "
 				$query = "
 			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
 			FROM
-				users_album ua 
+				users_album ua
 				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
 			WHERE
 				en.id_collection=" . intval($id) . "
@@ -454,7 +454,7 @@ FROM " . $this->table_name . "
 				$query = "
 			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
 			FROM
-				users_album ua 
+				users_album ua
 				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
 				INNER JOIN bd_collection c ON en.id_collection = c.id_collection
 
@@ -468,7 +468,7 @@ FROM " . $this->table_name . "
 				$query = "
 			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
 			FROM
-				users_album ua 
+				users_album ua
 				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
 				INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 			WHERE
@@ -481,7 +481,7 @@ FROM " . $this->table_name . "
 				$query = "
 			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
 			FROM
-				users_album ua 
+				users_album ua
 				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
 				INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 				INNER JOIN bd_serie s ON t.id_serie = s.id_serie
@@ -495,15 +495,15 @@ FROM " . $this->table_name . "
 				$query = "
 			SELECT COUNT(DISTINCT(ua.user_id)) as nbr
 			FROM
-				users_album ua 
+				users_album ua
 				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
 				INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 			WHERE
-				t.id_scenar = " . intval($id) . " 
-				or t.id_dessin = " . intval($id) . " 
-				or t.id_scenar_alt = " . intval($id) . " 
-				or t.id_dessin_alt = " . intval($id) . " 
-				or t.id_color = " . intval($id) . " 
+				t.id_scenar = " . intval($id) . "
+				or t.id_dessin = " . intval($id) . "
+				or t.id_scenar_alt = " . intval($id) . "
+				or t.id_dessin_alt = " . intval($id) . "
+				or t.id_color = " . intval($id) . "
 				or t.id_color_alt = " . intval($id) . "
 			";
 				break;
@@ -513,7 +513,7 @@ FROM " . $this->table_name . "
 				$query = "
 			SELECT COUNT(DISTINCT(uc.user_id)) as nbr
 			FROM
-				users_comment uc 
+				users_comment uc
 			WHERE
 				uc.id_tome=" . intval($id) . "
 			";
@@ -524,7 +524,7 @@ FROM " . $this->table_name . "
 				$query = "
 			SELECT COUNT(DISTINCT(sc.user_id)) as nbr
 			FROM
-				serie_comment sc 
+				serie_comment sc
 			WHERE
 				sc.id_serie=" . intval($id) . "
 			";

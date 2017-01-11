@@ -50,12 +50,12 @@ if (isset($_POST["id_serie"]) && isset($_POST["note"])) {
 	if ($DB->num_rows() > 0) {
 		//mise à jour du commentaire
 		$update = "
-		update serie_comment set 
-			note = ".$DB->escape($note).", 
+		update serie_comment set
+			note = ".$DB->escape($note).",
 			comment = '".$DB->escape($comment)."',
-			dte_post = CURRENT_TIMESTAMP() 
-		where 
-			user_id = ".$DB->escape($_SESSION["UserId"])." 
+			dte_post = CURRENT_TIMESTAMP()
+		where
+			user_id = ".$DB->escape($_SESSION["UserId"])."
 			and id_serie =".$DB->escape($id_serie);
 
 		$DB->next_record();
@@ -70,9 +70,9 @@ if (isset($_POST["id_serie"]) && isset($_POST["note"])) {
 		$moy = $tot/$nb_note;
 
 		$update = "
-		update bd_serie set 
-		note =".$DB->escape($moy).", 
-		nb_note =".$DB->escape($nb_note)." 
+		update bd_serie set
+		note =".$DB->escape($moy).",
+		nb_note =".$DB->escape($nb_note)."
 		where id_serie =".$DB->escape($id_serie);
 
 		$DB->query($update);
@@ -103,18 +103,18 @@ if (isset($_POST["id_serie"]) && isset($_POST["note"])) {
 // affichage des commentaires
 $select = "
 select
-	u.username, 
-	us.comment, 
+	u.username,
+	us.comment,
 	DATE_FORMAT(us.dte_post,'%d/%m/%Y %H:%i'),
-	us.note, 
+	us.note,
 	us.dte_post
-from 
+from
 	serie_comment us
-	INNER JOIN users u ON u.user_id = us.user_id 
-where 
-	us.comment is not null 
-	and us.comment <> '' 
-	and us.id_serie=".$DB->escape($id_serie)." 
+	INNER JOIN users u ON u.user_id = us.user_id
+where
+	us.comment is not null
+	and us.comment <> ''
+	and us.id_serie=".$DB->escape($id_serie)."
 order by dte_post DESC
 ";
 $DB->query($select);

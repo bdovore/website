@@ -1,5 +1,5 @@
 <?php
-	
+
 
 
 minAccessLevel(1);
@@ -12,23 +12,23 @@ if ($act=="insert"){
 
 	$query = "
 	INSERT INTO `bd_serie` (
-		`NOM`, 
-		`ID_GENRE`, 
-		`NOTE`, 
-		`FLG_FINI`, 
-		`NB_TOME`, 
+		`NOM`,
+		`ID_GENRE`,
+		`NOTE`,
+		`FLG_FINI`,
+		`NB_TOME`,
 		`TRI`
 	) VALUES (
-		'".$DB->escape($_POST['txtNomSerie'])."', 
-		'".$DB->escape($_POST['txtGenreId'])."', 
-		'0', 
-		1, 
+		'".$DB->escape($_POST['txtNomSerie'])."',
+		'".$DB->escape($_POST['txtGenreId'])."',
+		'0',
+		1,
 		NULL,
 		'".$DB->escape($tri)."'
 	)
 	";
 	$DB->query ($query);
-	
+
 	// Creation d'un nouveau Template
 	$t = new Template(BDO_DIR."public/templates");
 	// fichier à utiliser

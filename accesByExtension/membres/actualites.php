@@ -69,22 +69,22 @@ if ($lstSource == 0)
 {
 	$query = "
 	SELECT SQL_CALC_FOUND_ROWS
-		t.id_tome, 
-		t.titre, 
-		t.num_tome, 
-		en.dte_parution, 
+		t.id_tome,
+		t.titre,
+		t.num_tome,
+		en.dte_parution,
 		s.nom s_nom,
 		g.libelle,
 		t.id_serie,
-		sc.pseudo scenar, 
+		sc.pseudo scenar,
 		de.pseudo dessin
-	FROM 
+	FROM
 		bd_tome t
 		INNER JOIN
 		(
 			SELECT DISTINCT t.id_serie,s.nom,s.id_genre
 			FROM
-				users_album ua 
+				users_album ua
 				INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
 				INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 				INNER JOIN bd_serie s ON s.id_serie = t.id_serie
@@ -92,35 +92,35 @@ if ($lstSource == 0)
 				ua.user_id=".$DB->escape($_SESSION["UserId"])."
 				AND NOT EXISTS (
 							SELECT NULL FROM users_exclusions ues
-							WHERE s.id_serie=ues.id_serie 
-							AND ues.id_tome = 0 
+							WHERE s.id_serie=ues.id_serie
+							AND ues.id_tome = 0
 							AND ues.user_id = ".$DB->escape($_SESSION["UserId"])."
-						) 	
+						)
 		) s ON t.id_serie=s.id_serie
 		INNER JOIN bd_edition en ON t.ID_EDITION=en.ID_EDITION
 		INNER JOIN bd_genre g ON s.id_genre = g.id_genre
 		INNER JOIN bd_auteur sc ON t.id_scenar = sc.id_auteur
-		INNER JOIN bd_auteur de ON t.id_dessin = de.id_auteur 
-	WHERE 
+		INNER JOIN bd_auteur de ON t.id_dessin = de.id_auteur
+	WHERE
 		NOT EXISTS (
-			SELECT NULL 
+			SELECT NULL
 			FROM users_album ua
 			INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
-			WHERE 
+			WHERE
 			ua.user_id = ".$DB->escape($_SESSION["UserId"])."
-			AND t.id_tome=en.id_tome 
+			AND t.id_tome=en.id_tome
 		)
 		AND NOT EXISTS (
-			SELECT NULL 
+			SELECT NULL
 			FROM users_exclusions uet
 			WHERE uet.user_id = ".$DB->escape($_SESSION["UserId"])."
 			AND t.id_tome=uet.id_tome
-		)  
+		)
 	";
-	
+
 }
 elseif ($lstSource == 1) {
-	
+
 	// recherche des auteurs preferes
 	$DB->query ("SELECT id_auteur FROM users_list_aut WHERE user_id = ".$DB->escape($_SESSION["UserId"]));
 	$a_auteurPref = array();
@@ -129,20 +129,20 @@ elseif ($lstSource == 1) {
 		$a_auteurPref[] = $DB->f("id_auteur");
 	}
 	if (empty($a_auteurPref)) $a_auteurPref[] = 0;
-	
+
 	// liste auteur
 	$query = "
 	SELECT SQL_CALC_FOUND_ROWS
-		t.id_tome, 
-		t.titre, 
-		t.num_tome, 
-		en.dte_parution, 
+		t.id_tome,
+		t.titre,
+		t.num_tome,
+		en.dte_parution,
 		s.nom s_nom,
 		g.libelle,
 		s.id_serie,
-		sc.pseudo scenar, 
+		sc.pseudo scenar,
 		de.pseudo dessin
-	FROM 
+	FROM
 		(
 			SELECT DISTINCT s.id_serie,s.nom,s.id_genre
 			FROM
@@ -150,49 +150,49 @@ elseif ($lstSource == 1) {
 			WHERE
 				NOT EXISTS (
 							SELECT NULL FROM users_exclusions ues
-							WHERE s.id_serie=ues.id_serie 
-							AND ues.id_tome = 0 
+							WHERE s.id_serie=ues.id_serie
+							AND ues.id_tome = 0
 							AND ues.user_id = ".$DB->escape($_SESSION["UserId"])."
-						) 	
-		) s 
+						)
+		) s
 		INNER JOIN bd_tome t ON t.id_serie=s.id_serie
 		INNER JOIN bd_edition en ON t.ID_EDITION=en.ID_EDITION
 		INNER JOIN bd_genre g ON s.id_genre = g.id_genre
 		INNER JOIN bd_auteur sc ON t.id_scenar = sc.id_auteur
-		INNER JOIN bd_auteur de ON t.id_dessin = de.id_auteur 
-	WHERE 
+		INNER JOIN bd_auteur de ON t.id_dessin = de.id_auteur
+	WHERE
 		(t.id_scenar IN (".implode(',',$a_auteurPref).") OR t.id_dessin IN (".implode(',',$a_auteurPref)."))
-		 	
+
 		AND	NOT EXISTS (
-			SELECT NULL 
+			SELECT NULL
 			FROM users_album ua
 			INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
-			WHERE 
+			WHERE
 			ua.user_id = ".$DB->escape($_SESSION["UserId"])."
-			AND t.id_tome=en.id_tome 
+			AND t.id_tome=en.id_tome
 		)
 		AND NOT EXISTS (
-			SELECT NULL 
+			SELECT NULL
 			FROM users_exclusions uet
 			WHERE uet.user_id = ".$DB->escape($_SESSION["UserId"])."
 			AND t.id_tome=uet.id_tome
-		)  
+		)
 	";
 }
 elseif ($lstSource == 2) {
 	// liste integrale et coffrets
 	$query = "
 	SELECT SQL_CALC_FOUND_ROWS
-		t.id_tome, 
-		t.titre, 
-		t.num_tome, 
-		en.dte_parution, 
+		t.id_tome,
+		t.titre,
+		t.num_tome,
+		en.dte_parution,
 		s.nom s_nom,
 		g.libelle,
 		s.id_serie,
-		sc.pseudo scenar, 
+		sc.pseudo scenar,
 		de.pseudo dessin
-	FROM 
+	FROM
 		bd_tome t
 		INNER JOIN
 		(
@@ -202,39 +202,39 @@ elseif ($lstSource == 2) {
 			WHERE
 				NOT EXISTS (
 							SELECT NULL FROM users_exclusions ues
-							WHERE s.id_serie=ues.id_serie 
-							AND ues.id_tome = 0 
+							WHERE s.id_serie=ues.id_serie
+							AND ues.id_tome = 0
 							AND ues.user_id = ".$DB->escape($_SESSION["UserId"])."
-						) 	
+						)
 		) s ON t.id_serie=s.id_serie
 		INNER JOIN bd_edition en ON t.ID_EDITION=en.ID_EDITION
 		INNER JOIN bd_genre g ON s.id_genre = g.id_genre
 		INNER JOIN bd_auteur sc ON t.id_scenar = sc.id_auteur
-		INNER JOIN bd_auteur de ON t.id_dessin = de.id_auteur 
-	WHERE 
+		INNER JOIN bd_auteur de ON t.id_dessin = de.id_auteur
+	WHERE
 		(t.flg_int ='O' OR t.flg_type = 1)
-		 	
+
 		AND	NOT EXISTS (
-			SELECT NULL 
+			SELECT NULL
 			FROM users_album ua
 			INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
-			WHERE 
+			WHERE
 			ua.user_id = ".$DB->escape($_SESSION["UserId"])."
-			AND t.id_tome=en.id_tome 
+			AND t.id_tome=en.id_tome
 		)
 		AND NOT EXISTS (
-			SELECT NULL 
+			SELECT NULL
 			FROM users_exclusions uet
 			WHERE uet.user_id = ".$DB->escape($_SESSION["UserId"])."
 			AND t.id_tome=uet.id_tome
-		)  
+		)
 	";
 }
 
 $query .= "
- 	AND en.dte_parution >= DATE_SUB(NOW(), INTERVAL ".$DB->escape($duree)." MONTH) 
+ 	AND en.dte_parution >= DATE_SUB(NOW(), INTERVAL ".$DB->escape($duree)." MONTH)
  	GROUP BY t.id_tome
-	ORDER BY ".$clerep[$cle]. " ".$DB->escape($sort)." 
+	ORDER BY ".$clerep[$cle]. " ".$DB->escape($sort)."
 	LIMIT ".$DB->escape($first)." , ".$DB->escape($nb);
 
 $DB->query ($query);

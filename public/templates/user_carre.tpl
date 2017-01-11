@@ -21,16 +21,16 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 
 {MENUCOLL}
 <div class="cadre1"> <h3>Les albums de mon carr&eacute; magique</h3>
-Choisissez dans la liste ci-dessous les 9 albums que vous souhaitez voir 
+Choisissez dans la liste ci-dessous les 9 albums que vous souhaitez voir
 apparaître dans votre carr&eacute; magique puis cliquez sur "Enregistrer".<br />
-<span class="texte">(Entrez simplement les ID-BDovores des albums si vous les connaissez 
+<span class="texte">(Entrez simplement les ID-BDovores des albums si vous les connaissez
 sinon faites une recherche sur le titre de l'album grâce au champ de droite et à la loupe)</span><br /><br />
   <table width="100%" border="0">
-          <tr> 
+          <tr>
          	<td width="5%">ID-BDovore</td>
             <td width="26%"><center>Titre de l'album</center></td>
           </tr>
-         
+
 	  <form action="{URLACTION}" method="post" name="myform" target="_self" id="myform">
           <!-- BEGIN DetailBlock -->
          <tr>
@@ -39,7 +39,7 @@ sinon faites une recherche sur le titre de l'album grâce au champ de droite et 
             <td width="69%"><img src="{URLSITEIMAGE}site/loupe.gif" onclick="newWindow('album',document.myform.txtAlbum{ID}.value,'myform','txtAlbum{ID}',true)" height="14" width="24"></td>
           </tr>
           <!-- END DetailBlock -->
-          <tr> 
+          <tr>
             <td colspan="2" align="center"><input name="Submit2" value="{ACTIONNAME}" type="submit"></td>
             <td width="69%">&nbsp;</td>
           </tr>

@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Accueil extends Bdo_Controller
 {
@@ -14,17 +14,17 @@ class Accueil extends Bdo_Controller
     {
         // pas la peine de faire un $this->loadModel('Actus'). il est fait par
         // defaut dans le Bdo_Controller
-        
+
         // modif Tom : on sort la gestion des derniers albums du model actus qui doit disparaitre à terme
         // TODO : créer model News, gérer le cache des top directement dans Accueil
-       
+
         $this->loadModel('Actus');
         $this->loadModel("Tome");
         $this->view->set_var(array(
                 'ACTUAIR' => $this->Actus->actuAir(),
                 'LASTAJOUT' => $this->Actus->lastAjout()
         ));
-       
+
         $this->view->set_var(
                 array(
                         'a_lastSorties' => $this->lastSorties(6),
@@ -36,17 +36,17 @@ class Accueil extends Bdo_Controller
                         'nbTome' => $this->Tome->getNbTotalTome(),
                         'PAGETITLE' => "BDOVORE.com - gestion de collection de BD, actualité BD et forums BD"
                 ));
-        
+
         $this->view->addPhtmlFile('news', 'LASTNEWS', true);
         $this->view->render();
     }
-    
+
     private function lastCommentaires ($max=5,$origine="BD")
     {
         $origine = Db_Escape_String($origine);
         $this->loadModel("Comment");
         $dbs = $this->Comment->load("c"," WHERE c.comment <> '' and g.origine = '$origine' order by DTE_POST desc limit 0,".intval($max));
-        
+
         return $dbs->a_dataQuery;
     }
 
@@ -69,7 +69,7 @@ class Accueil extends Bdo_Controller
     private function lastNews($limit = 5) {
         $this->loadModel("News");
         $dbs = $this->News->load("c", "WHERE news_level>=5  ORDER BY News_id DESC LIMIT 0, ".intval($limit));
-        
+
         return $dbs->a_dataQuery;
     }
 }

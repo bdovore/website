@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 
+ *
  */
 class Bdo_Acl
 {
@@ -33,9 +33,9 @@ class Bdo_Acl
     public function __construct ()
     {
         $this->_acl = new Zend_Acl();
-        
+
         if (BDO_CACHE_ENABLED) {
-            
+
             $this->cache = new Bdo_Cache('acl.serial');
         }
         // $this->reinitCacheFile();
@@ -46,7 +46,7 @@ class Bdo_Acl
     public function reinit ()
     {
         $this->reinitCacheFile();
-        
+
         $this->a_allRole = array();
         $this->a_allResource = array();
         $this->a_allPrivilegeByResource = array();
@@ -54,14 +54,14 @@ class Bdo_Acl
         $this->a_roleByParent = array();
         $this->a_ctrlAccessByRole = array();
         $this->a_accessByRole = array();
-        
+
         unset($this->_acl);
         $this->_acl = new Zend_Acl();
-        
+
         // $this->cache->delete();
-        
+
         $this->load();
-        
+
         $this->init();
     }
 
@@ -94,32 +94,32 @@ class Bdo_Acl
     protected function allPrivilegeByResource ()
     {
         $a_entity = $this->a_cache['a_allPrivilegeByResource'];
-        
+
         foreach ($a_entity as $idres => $a_priv) {
             $a_entity[$idres]['all'] = 'Tous';
         }
         $a_entity['all']['all'] = 'Tous';
-        
+
         return $a_entity;
     }
 
     private function load ()
     {
         $this->a_cache = $this->cache->load();
-        
+
         $this->a_allRole = $this->allRole();
-        
+
         $this->a_allResource = $this->allResource();
         $this->a_allPrivilegeByResource = $this->allPrivilegeByResource();
-        
+
         $this->a_ctrlAccessByRole = $this->a_cache['a_ctrlAccessByRole'];
         $this->a_roleByParent = $this->a_cache['a_roleByParent'];
-        
+
         foreach ($this->a_ctrlAccessByRole as $key => $access) {
             $a_id = explode('-', $key);
             // nettoyage au chargement
-            if (isset($this->a_allRole[$a_id[0]]) 
-                    and isset($this->a_allResource[$a_id[1]]) 
+            if (isset($this->a_allRole[$a_id[0]])
+                    and isset($this->a_allResource[$a_id[1]])
                     and isset($this->a_allPrivilegeByResource[$a_id[1]][$a_id[2]])){
                 $this->a_accessByRole[$a_id[0]][$a_id[1]][$a_id[2]] = $access;
             }
@@ -171,7 +171,7 @@ class Bdo_Acl
         foreach ($this->a_allPrivilegeByResource as $idres=>$privByRes) {
             if (isset($privByRes['all'])) unset($this->a_allPrivilegeByResource[$idres]['all']);
         }
-        
+
         $this->a_cache = array(
                 "a_allRole" => $this->a_allRole,
                 "a_allResource" => $this->a_allResource,
@@ -179,7 +179,7 @@ class Bdo_Acl
                 "a_allPrivilegeByResource" => $this->a_allPrivilegeByResource,
                 "a_ctrlAccessByRole" => $this->a_ctrlAccessByRole
         );
-        
+
         $this->cache->save($this->a_cache);
     }
 
@@ -187,12 +187,12 @@ class Bdo_Acl
     {
         // sauvegarde : $a_roleByParent destine a destruction
         $a_roleByParent = $this->a_roleByParent;
-        
+
         // detection de boucles
         foreach ($a_roleByParent as $id_acl_role_parent => $a_role) {
             $this->legacy($id_acl_role_parent);
         }
-        
+
         // Parcours des chaines
         while (! empty($a_roleByParent)) {
             foreach ($a_roleByParent as $id_acl_role_parent => $a_role) {
@@ -204,7 +204,7 @@ class Bdo_Acl
                             // ajout du role dans la ligne de creation
                             $this->a_lineCreationRole[$id_acl_role] = $id_acl_role;
                         }
-                        
+
                         // suppression du role
                         unset($a_roleByParent[$id_acl_role_parent][$key]);
                     }
@@ -217,7 +217,7 @@ class Bdo_Acl
                 }
             }
         }
-        
+
         // realisation ligne de creation totale
         // add independent role
         foreach ($this->a_allRole as $id_acl_role => $role) {
@@ -225,16 +225,16 @@ class Bdo_Acl
                 $this->a_lineCreationRole[$id_acl_role] = $id_acl_role;
             }
         }
-        
+
         // creation resource
         foreach ($this->a_allResource as $id_acl_resource => $nom_acl_resource) {
             if ('all' !== $id_acl_resource) {
                 if ($this->viewAclCreate) echo '<br />$this->_acl->add(new Zend_Acl_Resource(' . $nom_acl_resource . '));';
-                
+
                 $this->_acl->add(new Zend_Acl_Resource($nom_acl_resource));
-                
+
                 if (isset($this->a_allPrivilegeByResource[$id_acl_resource])) {
-                    
+
                     foreach ($this->a_allPrivilegeByResource[$id_acl_resource] as $id_acl_resource_privilege => $nom_acl_resource_privilege) {
                         if ('all' !== $id_acl_resource_privilege) {
                             if ($this->viewAclCreate) echo '<br />$this->_acl->add(new Zend_Acl_Resource(' . $nom_acl_resource . '.' . $nom_acl_resource_privilege . '));';
@@ -244,7 +244,7 @@ class Bdo_Acl
                 }
             }
         }
-        
+
         // parcours ligne creation
         foreach ($this->a_lineCreationRole as $id_acl_role) {
             $roleParent = array();
@@ -253,13 +253,13 @@ class Bdo_Acl
                     $roleParent[] = $id_acl_role_parent;
                 }
             }
-            
+
             // creation role
             if ('all' !== $id_acl_role) {
                 if ($this->viewAclCreate) echo '<br />$this->_acl->addRole ("' . $id_acl_role . '", ' . (empty($roleParent) ? 'null' : 'array("' . implode('","', $roleParent) . '")') . ');';
                 $this->_acl->addRole(new Zend_Acl_Role($id_acl_role), (empty($roleParent) ? null : $roleParent));
             }
-            
+
             // creation privilege by resource
             if (isset($this->a_accessByRole[$id_acl_role])) {
                 foreach ($this->a_accessByRole[$id_acl_role] as $id_acl_resource => $a_accessPrivilege) {
@@ -278,7 +278,7 @@ class Bdo_Acl
                 }
             }
         }
-        
+
         return true;
     }
 
@@ -329,7 +329,7 @@ class Bdo_Acl
     public function changePrivilege ($id_acl_role, $id_acl_resource, $id_acl_privilege)
     {
         $rrp = $id_acl_role . "-" . $id_acl_resource . "-" . $id_acl_privilege;
-        
+
         if ($this->isDefinedPrivilege($id_acl_role, $id_acl_resource, $id_acl_privilege)) {
             if ($this->isAllowedById($id_acl_role, $id_acl_resource, $id_acl_privilege)) {
                 unset($this->a_ctrlAccessByRole[$rrp]);
@@ -339,7 +339,7 @@ class Bdo_Acl
             }
         }
         else {
-            
+
             if ($this->isAllowedById($id_acl_role, $id_acl_resource, $id_acl_privilege)) {
                 $this->a_ctrlAccessByRole[$rrp] = 1;
             }
@@ -347,9 +347,9 @@ class Bdo_Acl
                 $this->a_ctrlAccessByRole[$rrp] = 0;
             }
         }
-        
+
         $this->reinit();
-        
+
         return $this->error;
     }
 
@@ -360,18 +360,18 @@ class Bdo_Acl
     public function accesPriv ($s_resourcePrivilege, $a_idAclRole)
     {
         $usersAllowed = false;
-        
+
         $a_priv = explode('.', $s_resourcePrivilege);
         $resource = $a_priv[0];
         $privilege = $a_priv[1];
-        
+
         // on verifie si l'un des roles du users a les droits d'acces
         foreach ($a_idAclRole as $id_acl_role) {
             if ($usersAllowed = $this->isAllowed($id_acl_role, $resource, $privilege)) {
                 break (1);
             }
         }
-        
+
         return $usersAllowed;
     }
 
@@ -425,7 +425,7 @@ class Bdo_Acl
     protected function legacy ($id_acl_role, $a_descendant = array())
     {
         $a_parent = array();
-        
+
         if (in_array($id_acl_role, $a_descendant)) {
             echo "\ndetection de boucle \najout de " . $id_acl_role . "\n";
             print_r($a_descendant);
@@ -434,14 +434,14 @@ class Bdo_Acl
         else {
             $a_descendant[] = $id_acl_role;
         }
-        
+
         if (isset($this->a_roleByParent[$id_acl_role])) {
             foreach ($this->a_roleByParent[$id_acl_role] as $id_acl_role_parent) {
                 $a_parent[] = $id_acl_role_parent;
                 $a_parent = array_merge($a_parent, array_diff($this->legacy($id_acl_role_parent, $a_descendant), $a_parent));
             }
         }
-        
+
         return $a_parent;
     }
 
@@ -537,7 +537,7 @@ class Bdo_Acl
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -575,7 +575,7 @@ class Bdo_Acl
         }
         return $this->error;
     }
-    
+
 
     /**
      *
@@ -635,12 +635,12 @@ class Bdo_Acl
         }
         return $this->error;
     }
-    
+
 
     /**
      *
 
-     *        
+     *
      */
     public function updateRole ($role)
     {
@@ -665,7 +665,7 @@ class Bdo_Acl
     public function deleteRole ($role)
     {
         if ($role['ID_ACL_ROLE'] != 'all') {
-            
+
             unset($this->a_allRole[$role['ID_ACL_ROLE']]);
             unset($this->a_allRole[$role['ID_ACL_ROLE']]);
             $this->reinit();
@@ -712,7 +712,7 @@ class Bdo_Acl
         }
         return $this->error;
     }
-    
+
     /**
      *
      * @return boolean
@@ -724,7 +724,7 @@ class Bdo_Acl
             unset($this->a_allPrivilegeByResource[$resourcePrivilege['ID_ACL_RESOURCE']]);
         }
         $this->reinit();
-        
+
         return $this->error;
     }
 
@@ -738,7 +738,7 @@ class Bdo_Acl
         if (in_array($nom_acl_resource, $this->a_allResource)) {
             return true;
         }
-        
+
         return false;
     }
 

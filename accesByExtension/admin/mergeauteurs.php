@@ -29,7 +29,7 @@ if ($act=="merge")
 
 	if ($conf=="ok")
 	{
-		
+
 		// Met à jour l'information contenue dans la base de données
 		$modif =0;
 		// scenar
@@ -78,7 +78,7 @@ if ($act=="merge")
 // AFFICHER
 elseif($act=="")
 {
-	
+
 	// Creation d'un nouveau Template
 	$t = new Template(BDO_DIR."public/templates");
 	// fichier à utiliser
@@ -91,13 +91,13 @@ elseif($act=="")
 	{
 		// récupère le nombre d'utilisateurs
 		$nb_users1 = countTomeBy("auteur",$source_id);
-				
+
 		// récupère les données principales
 		$query= "
-		select id_auteur, pseudo, prenom, nom, flg_scenar, flg_dessin, flg_color, comment, dte_nais, dte_deces, nationalite 
-		from bd_auteur 
+		select id_auteur, pseudo, prenom, nom, flg_scenar, flg_dessin, flg_color, comment, dte_nais, dte_deces, nationalite
+		from bd_auteur
 		where id_auteur = ".$DB->escape($source_id);
-		
+
 		$DB->query ($query);
 		$DB->next_record();
 		$t->set_var (array
@@ -129,12 +129,12 @@ elseif($act=="")
 		// récupère le nombre d'utilisateurs
 
 		$nb_users2 = countTomeBy("auteur",$dest_id);
-		
+
 		// récupère les données principales
 		$query= "
-		select id_auteur, pseudo, prenom, nom, flg_scenar, flg_dessin, flg_color, comment, dte_nais, dte_deces, nationalite 
+		select id_auteur, pseudo, prenom, nom, flg_scenar, flg_dessin, flg_color, comment, dte_nais, dte_deces, nationalite
 		from bd_auteur where id_auteur = ".$DB->escape($dest_id);
-		
+
 		$DB->query ($query);
 		$DB->next_record();
 

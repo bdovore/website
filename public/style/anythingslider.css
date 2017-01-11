@@ -108,11 +108,11 @@
 .anythingSlider-default .forward a.hover { background-position: right -140px; }
 
 /* Navigation Links */
-.anythingSlider-default .anythingControls { outline: 0; display: none; 
+.anythingSlider-default .anythingControls { outline: 0; display: none;
 
     bottom: 10px;
-    height: 20px;    
-    
+    height: 20px;
+
     margin-top: 5px;
     z-index: 10;
     clear: both;

@@ -25,7 +25,7 @@ function urlsource(){
 	return true;
 }
 
-function Chargement() { 
+function Chargement() {
  for (i = 0; i < document.myform.elements.length; i++) {
    if (document.myform.elements[i].name == "alb_id[]") {
      document.myform.elements[i].checked = true;
@@ -35,7 +35,7 @@ function Chargement() {
 //--></SCRIPT>
 <p><strong>Aide</strong><br>
               Ce form permet de renommer tous les albums d'une série.<br>
-              L'expression #tome# sera automatiquement remplacée par le numéro 
+              L'expression #tome# sera automatiquement remplacée par le numéro
               de tome.<br>
 			  Seul les albums selectionnés seront traités.
             </p>
@@ -44,62 +44,62 @@ function Chargement() {
             </p>
  <form name="form1" method="post" action="" onSubmit="return urlsource()">
         <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
-          <tr bordercolor="#FFFFCC"> 
+          <tr bordercolor="#FFFFCC">
             <td width="10%" class="label"> <div align="center">Serie</div></td>
-            <td width="10%"> <div align="left"> 
+            <td width="10%"> <div align="left">
                 <input name="txtSerieId" type="text" id="txtSerieId" value="<?php echo $view->IDSERIE;?>" size="5">
               </div></td>
-            <td width="30%"> <input name="txtSerie" type="text" id="txtSerie" value="<?php echo $view->SERIE;?>" size="40"></td>            
+            <td width="30%"> <input name="txtSerie" type="text" id="txtSerie" value="<?php echo $view->SERIE;?>" size="40"></td>
             <td > <input name="Submit1" type="submit" id="Submit1" value="Rafraichir"></td>
           </tr>
         </table>
       </form>
       <br> <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
         <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
-          <tr bordercolor="#FFFFCC"> 
+          <tr bordercolor="#FFFFCC">
             <td width="24%">Nouveau titre</td>
-            <td width="76%"> 
+            <td width="76%">
               <input name="txtNouvTitre" type="text" value="<?php echo $view->NOUVTITRE;?>" size="50"></td>
           </tr>
         </table>
         <br>
         <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
-          <tr bordercolor="#999999"> 
+          <tr bordercolor="#999999">
             <td width="11%" align="center">Tome</td>
             <td width="79%">Titre</td>
             <td width="10%">Traiter</td>
           </tr>
           <!-- BEGIN AlbumsBlock -->
           <?php foreach ($view->dbs_tome->a_dataQuery as $tome) {?>
-          <tr bordercolor="#999999"> 
+          <tr bordercolor="#999999">
             <td align="center"><?php echo $tome->NUM_TOME;?></td>
             <td><?php echo $tome->TITRE_TOME;?></td>
-            <td align="center"> 
+            <td align="center">
               <input type="checkbox" name="alb_id[]" value="<?php echo $tome->ID_TOME;?>">
               <input name="num_tome[<?php echo $tome->ID_TOME;?>]" type="hidden" value="<?php echo $tome->NUM_TOME;?>"> </td>
           </tr>
-          <?php } ?> 
+          <?php } ?>
           <!-- END AlbumsBlock -->
-          <tr bordercolor="#FFFFCC"> 
+          <tr bordercolor="#FFFFCC">
             <td>&nbsp;</td>
-            <td colspan="2" align="right"><a name="ici" href="#ici" onClick="Chargement();">Tout 
+            <td colspan="2" align="right"><a name="ici" href="#ici" onClick="Chargement();">Tout
               selectionner</a></td>
           </tr>
         </table>
         <br>
-        <p> 
-        <div align="center"></p> 
+        <p>
+        <div align="center"></p>
           <input type="submit" name="Submit" value="<?php echo $view->ACTIONNAME;?>">
           <br>
         </div>
       </form>
-      
+
       <script>
     /*
      * On remplit les champs de saisie par l'autocompletion
-     * 
+     *
      */
-    
-   
+
+
   addAutocomplete("txtSerie","txtSerieId","txtSerieId","<?php echo BDO_URL; ?>getjson?data=Serie");
 </script>

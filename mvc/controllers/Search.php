@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 
 class Search extends Bdo_Controller
@@ -17,7 +17,7 @@ class Search extends Bdo_Controller
         $arr = array();
 
         $term = Db_Escape_String(getVal("term",""));
-        
+
         if (strlen($term) > 2) {
             // recherche d'album, série ou auteur à partir de 4 caractères
             $this->loadModel ("Serie");
@@ -73,7 +73,7 @@ class Search extends Bdo_Controller
                 );
             }
         }
-        
+
         $this->loadModel("User");
         $this->User->load('c'," WHERE (username LIKE '". $term ."%') AND OPEN_COLLEC = 'Y'  ORDER BY username LIMIT 0,10");
         foreach ($this->User->dbSelect->a_dataQuery as $obj) {

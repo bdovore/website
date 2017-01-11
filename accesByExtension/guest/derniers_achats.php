@@ -31,41 +31,41 @@ if ($user <> $_SESSION["UserId"] ) {
 
 // Récupère les 20 derniers achats
 $query = "
-SELECT 
-	IFNULL(u.date_achat, u.date_ajout) dte_achat, 
-	t.id_tome, 
+SELECT
+	IFNULL(u.date_achat, u.date_ajout) dte_achat,
+	t.id_tome,
 	t.titre,
-	CASE flg_int when 'O' 
-	then 'Intégrale' 
+	CASE flg_int when 'O'
+	then 'Intégrale'
 	else (
-		CASE t.flg_type 
-		when 1 then 'Coffret' 
+		CASE t.flg_type
+		when 1 then 'Coffret'
 		else t.num_tome end
-	) 
-	end num_tome, 
-	s.id_serie, 
-	s.nom nom_serie, 
-	c.note, 
+	)
+	end num_tome,
+	s.id_serie,
+	s.nom nom_serie,
+	c.note,
 	c.comment,
-	scen.pseudo pseudo_scen, 
-	dess.pseudo pseudo_dess, 
-	e.nom nom_editeur, 
-	col.nom nom_collec, 
-	g.libelle genre, 
+	scen.pseudo pseudo_scen,
+	dess.pseudo pseudo_dess,
+	e.nom nom_editeur,
+	col.nom nom_collec,
+	g.libelle genre,
 	ed.img_couv
-FROM 
-users_album u 
-LEFT JOIN bd_edition ed ON u.id_edition = ed.ID_EDITION 
-LEFT JOIN bd_tome t ON ed.id_tome = t.ID_TOME 
-LEFT JOIN users_comment c ON (ed.id_tome = c.ID_TOME AND u.user_id = c.USER_ID) 
-LEFT JOIN bd_auteur scen ON t.ID_SCENAR = scen.ID_AUTEUR 
-LEFT JOIN bd_auteur dess ON t.ID_DESSIN = dess.ID_AUTEUR 
-LEFT JOIN bd_collection col ON ed.id_collection = col.ID_COLLECTION 
-LEFT JOIN bd_editeur e ON ed.id_editeur = e.ID_EDITEUR 
-LEFT JOIN bd_serie s ON t.id_serie = s.ID_SERIE 
-LEFT JOIN bd_genre g ON s.id_genre = g.ID_GENRE 
-WHERE 
-u.user_id=" . $DB->escape($user_id) . " 
+FROM
+users_album u
+LEFT JOIN bd_edition ed ON u.id_edition = ed.ID_EDITION
+LEFT JOIN bd_tome t ON ed.id_tome = t.ID_TOME
+LEFT JOIN users_comment c ON (ed.id_tome = c.ID_TOME AND u.user_id = c.USER_ID)
+LEFT JOIN bd_auteur scen ON t.ID_SCENAR = scen.ID_AUTEUR
+LEFT JOIN bd_auteur dess ON t.ID_DESSIN = dess.ID_AUTEUR
+LEFT JOIN bd_collection col ON ed.id_collection = col.ID_COLLECTION
+LEFT JOIN bd_editeur e ON ed.id_editeur = e.ID_EDITEUR
+LEFT JOIN bd_serie s ON t.id_serie = s.ID_SERIE
+LEFT JOIN bd_genre g ON s.id_genre = g.ID_GENRE
+WHERE
+u.user_id=" . $DB->escape($user_id) . "
 AND u.flg_achat='N'
 ORDER BY ifnull(u.date_achat, u.date_ajout) DESC, s.nom, t.num_tome, t.flg_type
 LIMIT 0,20;";

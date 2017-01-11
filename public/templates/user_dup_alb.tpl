@@ -17,7 +17,7 @@
 <tr>
     <td>
             <table width="100%" border="1" cellpadding="3" cellspacing="0" bordercolor="#000000" frame="border" rules="all">
-            <tr bgcolor="#C8857C"> 
+            <tr bgcolor="#C8857C">
               <td><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong></strong></font></td>
               <td><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Editeur</strong></font></td>
               <td><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Collection</strong></font></td>
@@ -31,16 +31,16 @@
               <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">{COLLECTION}</font></td>
               <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">{DTPAR}</font></td>
               <td bgcolor="#DAC1B3"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif"><img src="{URLIMAGE}" width="50" height="60" border="0" align="absmiddle" /></font></td>
-		</tr>  
-		<!-- END EditionBlock -->        
-        </table>           
+		</tr>
+		<!-- END EditionBlock -->
+        </table>
             </td>
   </tr>
 <tr><td>
 <input type="submit" name="Submit" value="{ACTIONNAME}">
 </tr></td>
-</table>  
-	
+</table>
+
 </form>
 
 

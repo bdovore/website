@@ -36,15 +36,15 @@ ID de l\'edition : <input type="text" name="valeur" value="' . $id_edition . '">
 if (isset($_POST['execformuseredition']))
 {
 	echo "<a href='".BDO_URL."admin/admineditions.php?edition_id=".$id_edition."'>Retour à la fiche édition</a><br />";
-		
+
 	$query = "SELECT SQL_CALC_FOUND_ROWS
-		`users`.`username`, `users`.`email` , `users_album`.`date_ajout` 
-		FROM `users` INNER JOIN users_album USING (user_id) 
+		`users`.`username`, `users`.`email` , `users_album`.`date_ajout`
+		FROM `users` INNER JOIN users_album USING (user_id)
 		WHERE `users_album`.`id_edition`= '".mysql_real_escape_string($_POST['valeur'])."'
 
 		LIMIT 0,50";
 
-	
+
 	$resultat = mysql_query($query);
 	$a_obj = array();
 	while ($obj = mysql_fetch_object($resultat)) {

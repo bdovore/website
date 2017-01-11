@@ -231,7 +231,7 @@ function ValidFormXhrReload(formulaire)
 // setInnerHTML Sécurisé
 function setInnerHTMLiD(idContent, HTML) {
 	divContent = document.getElementById(idContent);
-    divContent.innerHTML=HTML; 
+    divContent.innerHTML=HTML;
 //    try {
 //      var All=divContent.getElementsByTagName("*");
 //      for (var i=0; i<All.length; i++) {
@@ -256,7 +256,7 @@ function setInnerHTMLiD(idContent, HTML) {
       }, true)
     } catch (ex) {}
 }
- 
+
 String.prototype2.extractTags=function(tag) {
     var matchAll = new RegExp('(?:<'+tag+'.*?>)((\n|\r|.)*?)(?:<\/'+tag+'>)', 'img');
     var matchOne = new RegExp('(?:<'+tag+'.*?>)((\n|\r|.)*?)(?:<\/'+tag+'>)', 'im');
@@ -264,7 +264,7 @@ String.prototype2.extractTags=function(tag) {
       return (scriptTag.match(matchOne) || ['', ''])[1];
     });
   }
- 
+
 Object.prototype2.forEach=function(delegate, ownpropertiesonly) {
         if (typeof(delegate)=="function") {
             if (this instanceof Array && typeof(ownpropertiesonly)=="undefined") {
@@ -286,7 +286,7 @@ Object.prototype2.forEach=function(delegate, ownpropertiesonly) {
         }
         return false;
     }
- 
+
 Object.prototype2.map=function(iterator) {
     var results = [];
     this.forEach(function(value, index) {
@@ -294,4 +294,3 @@ Object.prototype2.map=function(iterator) {
     });
     return results;
   }
- 

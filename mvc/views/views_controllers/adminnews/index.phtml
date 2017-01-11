@@ -30,15 +30,15 @@ $(document).ready(function() {
             <th>Date</th>
             <th>Auteur</th>
             <th>Publication</th>
-            <th>Titre</th>       
+            <th>Titre</th>
             <th><img src="<?php echo BDO_URL_IMAGE; ?>poubelle.gif" width="25" height="24"> </th>
             </thead>
             <?php foreach ($view->dbs_news->a_dataQuery as $news) { ?>
-                <tr> 
+                <tr>
                     <td> <?php echo $news->news_id; ?></td>
                     <td><?php echo $news->news_date; ?></td>
                     <td><?php echo $news->news_posteur; ?></font></div></td>
-                    <td><?php echo $news->news_level; ?></td> 
+                    <td><?php echo $news->news_level; ?></td>
                     <td><a href="<?php echo BDO_URL; ?>adminnews/editnews?newsid=<?php echo $news->news_id; ?>" class="fancybox2 fancybox.iframe {width:600,height:400}" ><?php echo $news->news_titre; ?></a></td>
                     <td> <a href="?act=supprim&newsid=<?php echo $news->news_id; ?>"><img src="<?php echo BDO_URL_IMAGE; ?>poubelle.gif" width="20" height="21" border="0"></a></td>
                 </tr>

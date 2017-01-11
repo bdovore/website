@@ -1,4 +1,4 @@
-<?php 
+<?php
 $ficheAlbum = $view->getHelper('ficheAlbum');
 ?>
 <table class="browser" width="100%">
@@ -38,7 +38,7 @@ foreach ($view->a_row as $row) {
 			src="<?php echo BDO_URL_IMAGE;?>site/spacer.gif"
 			width=<?php echo $row['WSPACER'];?>
 			height=<?php echo $row['HSPACER'];?> /></td>
-		<td> 
+		<td>
 			<?php
     if ($row['ID_TOME']) {
         unset($row['NOM_SERIE']);
@@ -56,7 +56,7 @@ foreach ($view->a_row as $row) {
 	<!-- END DataBlock -->
 </table>
 <script>
-     // hack pour mobile 
+     // hack pour mobile
     if (!$.browser.mobile) {
     $(document).ready(function() {
             $(".fancybox")
@@ -73,5 +73,5 @@ foreach ($view->a_row as $row) {
         });
     });
  }
- 
+
  </script>

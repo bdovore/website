@@ -7,7 +7,7 @@ exit ('en travaux. Voir Thanaos.');
 
 // Mettre à jour les informations
 if ($act=="update"){
-	
+
 	$execute_query1 = false;
 	$execute_query2 = false;
 	$execute_query3 = false;
@@ -97,7 +97,7 @@ if ($act=="update"){
 	if ($execute_query2 == true){
 		$query2 = substr($query2,0,-2);
 		$query2 .= " WHERE t.id_tome = u.id_tome AND t.id_serie = ".$DB->escape($serie);
-		
+
 		$DB->query ($query2);
 		echo $DB->affected_rows()." lignes modifiées dans la table bd_edition.<br>";
 	}
@@ -105,12 +105,12 @@ if ($act=="update"){
 	if ($execute_query3 == true){
 		$query3 = substr($query3,0,-2);
 		$query3 .= " WHERE id_serie = $serie;";
-		
+
 		$DB->query ($query3);
 		echo $DB->affected_rows()." lignes modifiées dans la table users_album.<br>";
 	}
 	*/
-	
+
 	echo GetMetaTag(1,"Terminé",BDO_URL."admin/mu_serie.php?serie=".$serie);
 }
 
@@ -125,7 +125,7 @@ elseif($act==""){
 	));
 
 	if ($serie != ""){
-		
+
 		// récupère le infos liées à la série
 		$query = "SELECT nom FROM bd_serie WHERE id_serie = ".$DB->escape($serie);
 		$DB->query ($query);
@@ -227,16 +227,16 @@ elseif($act==""){
 
 		// Récupère les editeurs ayant publié la série
 		$query = "
-		SELECT DISTINCT 
-			er.id_editeur, 
-			er.nom 
-		FROM 
-			bd_tome t 
-			INNER JOIN bd_edition en ON t.id_tome = en.id_tome 
-			INNER JOIN bd_collection c ON en.id_collection = c.id_collection 
-			INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur 
-			
-		WHERE 
+		SELECT DISTINCT
+			er.id_editeur,
+			er.nom
+		FROM
+			bd_tome t
+			INNER JOIN bd_edition en ON t.id_tome = en.id_tome
+			INNER JOIN bd_collection c ON en.id_collection = c.id_collection
+			INNER JOIN bd_editeur er ON c.id_editeur = er.id_editeur
+
+		WHERE
 			t.id_serie = ".$DB->escape($serie);
 		$DB->query ($query);
 		// on déclare le block à utiliser
@@ -253,16 +253,16 @@ elseif($act==""){
 
 		// Récupère les collections sous lesquels la série a été éditée
 		$query = "
-		SELECT DISTINCT 
-			c.id_collection, 
-			c.nom 
+		SELECT DISTINCT
+			c.id_collection,
+			c.nom
 		FROM
-			bd_tome t 
-			INNER JOIN bd_edition en ON t.id_tome = en.id_tome 
+			bd_tome t
+			INNER JOIN bd_edition en ON t.id_tome = en.id_tome
 			INNER JOIN bd_collection c ON en.id_collection = c.id_collection
-		WHERE 
+		WHERE
 			t.id_serie = ".$DB->escape($serie);
-		
+
 		$DB->query ($query);
 		// on déclare le block à utiliser
 		$t->set_block('tpBody','CollectionBlock','ColBlock');

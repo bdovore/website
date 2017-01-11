@@ -38,7 +38,7 @@ foreach ($view->dbs_genre->a_dataQuery as $genre) {
                                 <input id="rb_mode1" name="rb_mode" value="2" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[1]["checked"]; ?>  type="radio"><label for="rb_mode1">Incontournables</label>
                             </div>
 
-                           
+
                     </tr>
 
                 </table>
@@ -50,8 +50,8 @@ foreach ($view->dbs_genre->a_dataQuery as $genre) {
 <?php
 if (isset($view->dbs_tome)) {?>
     <table class="list_album">
-        
-     <?php 
+
+     <?php
      $tr = true;
     foreach ($view->dbs_tome->a_dataQuery as $tome) {
         if ($tr)
@@ -63,7 +63,7 @@ if (isset($view->dbs_tome)) {?>
             echo "</tr>";
         }
         $tr = !$tr;
-        
+
     }
     if (!$tr)
                         echo "</tr>";
@@ -74,8 +74,8 @@ if (isset($view->dbs_tome)) {?>
 
 if (isset($view->dbs_serie)) {?>
     <table class="list_album">
-        
-     <?php 
+
+     <?php
      $tr = true;
 
     foreach ($view->dbs_serie->a_dataQuery as $serie) {
@@ -83,12 +83,12 @@ if (isset($view->dbs_serie)) {?>
                echo "<tr>";
 
             echo "<td class='mw50'>" . $ficheAlbum->serie($serie,"big");
-    
+
     if (!$tr) {
             echo "</tr>";
         }
         $tr = !$tr;
-        
+
     }
     if (!$tr)
                         echo "</tr>";
@@ -113,7 +113,7 @@ if (isset($view->dbs_comment)) {
                                 <td style='vertical-align:top'>
 
                                     <strong><?php echo $ficheAlbum->urlalbum($tome, 'albTitle'); ?></strong>
-                                    <span id='noteTome<?php echo $tome->ID_TOME; ?>'> </span>  
+                                    <span id='noteTome<?php echo $tome->ID_TOME; ?>'> </span>
                                         <?php if (User::minAccesslevel(1)) { ?>
                                     <a title="Passer ce commentaire en status privé" onclick="setCommentPrivate(<?php echo $tome->user_id;?>,<?php echo $tome->ID_TOME; ?>);"><img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif"></a>
                                         <?php } ?>
@@ -131,7 +131,7 @@ if (isset($view->dbs_comment)) {
 }
 ?><div align="center">
 <?php
-// pagination 
+// pagination
 
 $a_qstring = $_GET;
 unset($a_qstring["page"]);
@@ -159,6 +159,5 @@ if ($view->NUM_PAGE < 20)
          $("#rb_mode").buttonset();
           $("#a_idGenre").chosen({max_selected_options: 10});
     });
-     
+
 </script>
- 

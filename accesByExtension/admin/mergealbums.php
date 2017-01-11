@@ -42,7 +42,7 @@ if ($act=="merge"){
 		// Met � jour les carres
 		$DB->query("UPDATE IGNORE users_list_carre SET `id_tome` = ".$DB->escape($dest_id) ." WHERE `id_tome`=".$DB->escape($source_id));
 		echo "Nombre de records modifi�es dans la table users_list_carre : ".$DB->affected_rows()."<br />";
-		
+
 		// Met � jour les exclusions
 		$DB->query("UPDATE IGNORE users_exclusions SET `id_tome` = ".$DB->escape($dest_id) ." WHERE `id_tome`=".$DB->escape($source_id));
 		echo "Nombre de records modifi�es dans la table users_exclusions : ".$DB->affected_rows()."<br />";
@@ -64,11 +64,11 @@ if ($act=="merge"){
 		//		}
 		//	}
 		//}
-		
+
 		//$DB->query("DELETE users_album.* FROM users_album INNER JOIN bd_edition USING(id_edition)
 		//WHERE bd_edition.`id_tome`=".$DB->escape($source_id));
 		//echo "Nombre de records supprim�s dans la table users_album : ".$DB->affected_rows()."<br />";
-	
+
 		// vide la table bd_edition
 		$query = "DELETE FROM bd_edition WHERE id_tome =" . $DB->escape($source_id);
 		$DB->query ($query);
@@ -77,8 +77,8 @@ if ($act=="merge"){
 		$query = "DELETE FROM bd_tome WHERE id_tome=" . $DB->escape($source_id);
 		$DB->query ($query);
 		echo 'R�f�rence(s) � l\'album supprim�e(s) dans la table bd_tome<br />';
-		
-		
+
+
 		echo '<META http-equiv="refresh" content="4; URL='.BDO_URL.'admin/index.php">Les albums ont �t� fusionn�s.';
 	}
 	else
@@ -104,10 +104,10 @@ elseif($act==""){
 	if ((!is_null($source_id)) & ($source_id!='')){
 		// r�cup�re le nombre d'utilisateurs
 		$nb_comments1 = countUserBy("tomeComment",$source_id);
-		
+
 		// r�cup�re les donn�es principales
 		$query = q_tome("t.id_tome = ".$DB->escape($source_id));
-		
+
 		$DB->query ($query);
 		$DB->next_record();
 		// Determine l'URL image
@@ -158,13 +158,13 @@ elseif($act==""){
 	if ((!is_null($dest_id)) & ($dest_id!='')){
 		// r�cup�re le nombre d'utilisateurs
 		$nb_users2 = countUserBy("tome",$dest_id);
-		
+
 		// r�cup�re le nombre de commentaires
 		$nb_comments2 = countUserBy("tomeComment",$dest_id);
-		
+
 		// r�cup�re les donn�es principales
 		$query = q_tome("t.id_tome = ".$DB->escape($dest_id));
-				
+
 		$DB->query ($query);
 		$DB->next_record();
 		// Determine l'URL image
@@ -222,7 +222,7 @@ elseif($act==""){
 	));
 	// assigne la barre de login
 	$t->set_var (array(
-	
+
 	"URLSITE" => BDO_URL,
 	"URLSITEIMAGE" => BDO_URL_IMAGE,
 	));

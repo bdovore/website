@@ -9,22 +9,22 @@
 <script src="{URLSITE}script/calendar/calendar_fr.js" type="text/javascript"></script>
 
 
-	
+
 <script language="JavaScript">
 	<!--
 	function CheckDate(d) {
-	// Cette fonction vérifie le format JJ/MM/AAAA saisi et la validité de la date.	    
-	// Le séparateur est défini dans la variable separateur	    
-	var amin=1900; 
-	// année mini	    
-	var amax=2200; 
-	// année maxi	    
-	var separateur="/"; 
-	// separateur entre jour/mois/annee	    
-	var j=(d.substring(0,2));	    
-	var m=(d.substring(3,5));	    
-	var a=(d.substring(6));	    
-	var ok=1;	    
+	// Cette fonction vérifie le format JJ/MM/AAAA saisi et la validité de la date.
+	// Le séparateur est défini dans la variable separateur
+	var amin=1900;
+	// année mini
+	var amax=2200;
+	// année maxi
+	var separateur="/";
+	// separateur entre jour/mois/annee
+	var j=(d.substring(0,2));
+	var m=(d.substring(3,5));
+	var a=(d.substring(6));
+	var ok=1;
 	if (d == '' ) {
 		return ok;
 	}
@@ -193,8 +193,8 @@ function openSerie(){
 						<tr>
 							<td height="30" class="case_entete_fonce">
 								Mon édition :
-							</td>					            
-							<td class="case_fond_clair">									
+							</td>
+							<td class="case_fond_clair">
 									{OPTEDITION}
 								{COLLECTION}
 							</td>
@@ -298,8 +298,8 @@ function openSerie(){
 					<strong>
 						A acheter prochainement :
 					</strong>
-				</font> 		            
-				<input name="cb_achat" type="checkbox" id="cb_achat" value="checkbox" {ACHATCHECKED} onClick="setDteAchat()" />				
+				</font>
+				<input name="cb_achat" type="checkbox" id="cb_achat" value="checkbox" {ACHATCHECKED} onClick="setDteAchat()" />
 			</td>
 		</tr>
 		<tr>
@@ -308,12 +308,12 @@ function openSerie(){
 					<strong>Cadeau :</strong>
 				</font>
 				<input name="cb_cadeau" type="checkbox" id="cb_cadeau" value="checkbox" {CADEAUCHECKED} />
-				<font color="#990000" size="-1">						
+				<font color="#990000" size="-1">
 					<strong>
 						Date d'achat <span class="texte">(jj/mm/aaaa)</span> :
-					</strong>					
-				</font>					
-				<input name="date_achat" type="text" id="date_achat" value="{DTEACHAT}" size="10" maxlength="10" /><img id='date_achat_d_bn' SRC='{URLSITEIMAGE}/site/ico_calendrier.gif' border=0 align='absmiddle' style='cursor:hand'>	
+					</strong>
+				</font>
+				<input name="date_achat" type="text" id="date_achat" value="{DTEACHAT}" size="10" maxlength="10" /><img id='date_achat_d_bn' SRC='{URLSITEIMAGE}/site/ico_calendrier.gif' border=0 align='absmiddle' style='cursor:hand'>
 <SCRIPT type=text/javascript>
 Calendar.setup({
 firstDay :    1,
@@ -324,70 +324,70 @@ button         :    'date_achat_d_bn',   // trigger for the calendar (button ID)
 singleClick    :    true,           // double-click mode
 step           :    1                // show all years in drop-down boxes (instead of every other year as default)
 });
-</SCRIPT>		
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-							
-				<font color="#990000" size="-1">						
+</SCRIPT>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				<font color="#990000" size="-1">
 					<strong>Prix/cote : </strong>
-				</font>		            
+				</font>
 				<input name="prix" type="text" id="prix" value="{PRIX}" size="4" maxlength="8" />
 			</td>
-		</tr>		    
+		</tr>
 		<tr>
 			<td>
 				<font color="#990000" size="-1">
-					<strong>Prêt :</strong>					
+					<strong>Prêt :</strong>
 				</font>
-				<input name="cb_pret" type="checkbox" id="cb_pret" value="checkbox" {PRETCHECKED} />		            
-				<font color="#990000" size="-1">						
+				<input name="cb_pret" type="checkbox" id="cb_pret" value="checkbox" {PRETCHECKED} />
+				<font color="#990000" size="-1">
 					<strong>Dernier emprunteur :</strong>
-				</font> 			        
-				<input name="name_pret" type="text" id="name_pret" value="{NOMPRET}" size="15" maxlength="100" />			            
+				</font>
+				<input name="name_pret" type="text" id="name_pret" value="{NOMPRET}" size="15" maxlength="100" />
 				<strong>
-					<font color="#990000" size="-1">								
+					<font color="#990000" size="-1">
 						Email :
 					</font>
-				</strong> 		           
+				</strong>
 				<input name="email_pret" type="text" id="email_pret" value="{EMAILPRET}" size="15" maxlength="100" />
 			</td>
-		</tr>		    
+		</tr>
 		<tr>
 			<td>
-				<font color="#990000" size="-1">						
+				<font color="#990000" size="-1">
 					<strong>Remarque personnelle (état, mémo, ...)</strong> :
-				</font> 		            
+				</font>
 				<!--<textarea name="remarque" cols="50" rows="3" id="remarque" >{USERRQUE}
 			       </textarea>
 			       -->
 				<textarea name="remarque" class="champ_commentaire">{USERRQUE}</textarea>
 			</td>
-		</tr>		
+		</tr>
 	</table>
 	 Ajouté dans la collection le {DTEAJOUT}
-	<p align="center">		    
-		<input name="id_tome" type="hidden" id="id_tome" value="{TOMEID}" />			
-		<input name="id_edition" type="hidden" id="id_edition" value="{EDITIONID}" />    		
+	<p align="center">
+		<input name="id_tome" type="hidden" id="id_tome" value="{TOMEID}" />
+		<input name="id_edition" type="hidden" id="id_edition" value="{EDITIONID}" />
 		<input name="Submit" id="Submit" type='submit' value="Envoyer" />
 	</p>
 </form>
 
 </body>
-</html>                                                                                                                            
+</html>
