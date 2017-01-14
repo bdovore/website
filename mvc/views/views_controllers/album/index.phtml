@@ -455,7 +455,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             if (data.length > 0) {
 
                 for (var i=0; i<3;i++){                   
-                    $("#simil").append("<a href='./Album?id_tome="+data[i].ID_TOME+  "&mobile=<?php echo $view->mobile; ?>' title='"+ data[i].TITRE_TOME.replace(/'/g, "\\'") +"'><img class= 'couvSmall' src='http://www.bdovore.com/images/couv/"+ data[i].IMG_COUV+"'></a>&nbsp;");
+                    $("#simil").append("<a href='./Album?id_tome="+data[i].ID_TOME+  "&mobile=<?php echo $view->mobile; ?>&frame=<?php echo $view->frame; ?>' title='"+ data[i].TITRE_TOME.replace(/'/g, " ") +"'><img class= 'couvSmall' src='http://www.bdovore.com/images/couv/"+ data[i].IMG_COUV+"'></a>&nbsp;");
                 }
             }
         });});
