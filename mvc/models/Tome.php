@@ -369,7 +369,7 @@ class Tome extends Bdo_Db_Line
                     WHERE uet.user_id = ".$user_id."
                     AND bd_tome.id_tome=uet.id_tome
             ) 
-            order by s.tri, s.NOM, bd_tome.NUM_TOME";
+            order by s.tri, s.NOM, bd_tome.NUM_TOME, en.DTE_PARUTION";
         } else {
             $query = " WHERE s.id_serie = '".$id_serie."'
             AND
@@ -387,7 +387,7 @@ class Tome extends Bdo_Db_Line
                     WHERE uet.user_id = ".$user_id."
                     AND bd_tome.id_tome=uet.id_tome
             ) 
-            order by en.dte_parution desc";
+            order by bd_tome.NUM_TOME desc, en.DTE_PARUTION desc";
         }
         
         return $this->load("c",$query);
