@@ -6,36 +6,36 @@ include (BDO_DIR."vendors/jpgraph-3.5.0b1/src/jpgraph_bar.php");
 
 // Emplacement des fonctions
 function cv_date_req($date) {
-	$mois = month_to_text((int)substr($date,4,2));
-	$annee = substr($date,0,4);
-	return $mois." ".$annee;
+    $mois = month_to_text((int)substr($date,4,2));
+    $annee = substr($date,0,4);
+    return $mois." ".$annee;
 }
 
 // Variable d�finissant l'utilisateur
 if ($user != '') {
-	$user_id = decodeUserId($user);
+    $user_id = decodeUserId($user);
 }
 else{
-	$user_id = $_SESSION["userConnect"]->user_id;
+    $user_id = $_SESSION["userConnect"]->user_id;
 }
 
 if (empty($user_id)) exit();
 
 
 $query = "
-SELECT 
-	DATE_FORMAT(IFNULL(ua.date_achat,ua.date_ajout), '%Y%m') as my_date, 
-	count(en.id_edition) as nbtome 
-FROM 
-	users_album ua 
-	INNER JOIN bd_edition en ON en.id_edition = ua.id_edition 
-	INNER JOIN bd_tome t ON t.id_tome = en.id_tome 
-WHERE 
-	t.flg_type = 0 
-	AND ua.flg_achat = 'N' 
-	AND ua.user_id =".$DB->escape($user_id)."
-GROUP BY DATE_FORMAT(IFNULL(ua.date_achat,ua.date_ajout), '%Y%m') 
-ORDER BY DATE_FORMAT(IFNULL(ua.date_achat,ua.date_ajout), '%Y%m') 
+SELECT
+    DATE_FORMAT(IFNULL(ua.date_achat,ua.date_ajout), '%Y%m') as my_date,
+    count(en.id_edition) as nbtome
+FROM
+    users_album ua
+    INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
+    INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+WHERE
+    t.flg_type = 0
+    AND ua.flg_achat = 'N'
+    AND ua.user_id =".$DB->escape($user_id)."
+GROUP BY DATE_FORMAT(IFNULL(ua.date_achat,ua.date_ajout), '%Y%m')
+ORDER BY DATE_FORMAT(IFNULL(ua.date_achat,ua.date_ajout), '%Y%m')
 DESC limit 0,6
 ";
 $DB->query ($query);
@@ -49,9 +49,9 @@ $i=0;
 // r�cup�re les 10 premiers �l�ments
 while ($DB->next_record())
 {
-	$datay[$i] = $DB->f("nbtome");
-	$lbl[$i] = cv_date_req($DB->f("my_date"));
-	$i++;
+    $datay[$i] = $DB->f("nbtome");
+    $lbl[$i] = cv_date_req($DB->f("my_date"));
+    $i++;
 }
 
 

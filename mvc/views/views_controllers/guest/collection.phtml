@@ -81,7 +81,7 @@ $page = $view->getHelper('pagination');
         <div class="dataTables_wrapper">
             <form id="f_collection" method="GET" action="" >
                 <div id="filtre">
-                    Filtrer :  
+                    Filtrer :
                     E.O :<input id="cb_tete" type="checkbox" value="O" name="cb_tete" onChange='$("#f_collection").submit();' <?php if ($view->eo == "O") echo "checked"; ?>/>
                     Dédicace : <input id="cb_dedicace" type="checkbox" value="O" name="cb_dedicace" onChange='$("#f_collection").submit();'  <?php if ($view->dedicace == "O") echo "checked"; ?> />
 
@@ -90,7 +90,7 @@ $page = $view->getHelper('pagination');
                 <div id="data_length" class="dataTables_length">
                     <label>
 
-                        Voir :  
+                        Voir :
 
                         <select class="" id="length" name="length">
                             <option value="10" <?php if ($view->length == 10) {
@@ -128,13 +128,13 @@ $page = $view->getHelper('pagination');
             <table id="t_collection" class="display dataTable">
                 <thead>
                     <tr>
-                      
+
                         <th class="sorting">Couv.</th>
                         <th class="sorting">Titre</th>
                         <th class="sorting">Série</th>
                         <th class="sorting">Tome</th>
                         <th class="sorting">Edition</th>
-                       
+
                         <th class="sorting">Collection</th>
                         <th class="sorting">Scenario</th>
                         <th class="sorting">Dessin</th>
@@ -154,13 +154,13 @@ foreach ($view->dbs_tome->a_dataQuery as $album) {
     } else {
         echo "odd";
     } ?>" role="row">
-                           
+
                             <td><?php echo $ficheAlbum->urlAlbum($album, "couvSmall", true); ?></td>
                             <td><?php echo $ficheAlbum->urlAlbum($album, "albTitle", true); ?></td>
                             <td><?php echo $ficheAlbum->urlSerie($album); ?></td>
                             <td><?php echo $album->NUM_TOME; ?></td>
                             <td><?php echo $album->NOM_EDITION; ?></td>
-                           
+
                             <td><?php echo $album->NOM_COLLECTION; ?></td>
                             <td><?php echo $album->scpseudo; ?></td>
                             <td><?php echo $album->depseudo; ?></td>

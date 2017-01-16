@@ -1,50 +1,50 @@
-<?php 
+<?php
 $ficheAlbum = $view->getHelper('ficheAlbum');
 ?>
 <table class="browser" width="100%">
-	<tr>
-		<td class="milieu" align="center" colspan="3"><?php echo $view->TOTALROW;?></td>
-	</tr>
-	<tr>
-		<td class="milieu" align="center" colspan="3"><?php echo $view->URLPREVPAGE;?> <?php echo $view->URLNEXTPAGE;?></td>
-	</tr>
-	<!-- BEGIN DataBlock -->
-	<?php 
-	foreach ($view->a_row as $row) {
-	?>
-	<tr>
-		<td class="bord_gauche">&nbsp;</td>
-		<td class="milieu"><img
-			src="<?php echo BDO_URL_IMAGE;?>site/spacer.gif"
-			width=<?php echo $row['WSPACER'];?>
-			height=<?php echo $row['HSPACER'];?> />
-			<div id='onglet_div_plus_<?php echo $row['LEVSIGN'];?>'
-				style='DISPLAY: block'
-				onMouseOver='this.className="ui-state-hover"'
-				onMouseOut='this.className="off"'
-				onClick='Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
-				Block_None_Div("onglet_div_plus_<?php echo $row['LEVSIGN'];?>");
-				Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>");
-				$.get("<?php echo $row['URLEVEL'];?># <?php echo $row['LEVSIGN'];?>", function(data) {
+    <tr>
+        <td class="milieu" align="center" colspan="3"><?php echo $view->TOTALROW;?></td>
+    </tr>
+    <tr>
+        <td class="milieu" align="center" colspan="3"><?php echo $view->URLPREVPAGE;?> <?php echo $view->URLNEXTPAGE;?></td>
+    </tr>
+    <!-- BEGIN DataBlock -->
+    <?php
+    foreach ($view->a_row as $row) {
+    ?>
+    <tr>
+        <td class="bord_gauche">&nbsp;</td>
+        <td class="milieu"><img
+            src="<?php echo BDO_URL_IMAGE;?>site/spacer.gif"
+            width=<?php echo $row['WSPACER'];?>
+            height=<?php echo $row['HSPACER'];?> />
+            <div id='onglet_div_plus_<?php echo $row['LEVSIGN'];?>'
+                style='DISPLAY: block'
+                onMouseOver='this.className="ui-state-hover"'
+                onMouseOut='this.className="off"'
+                onClick='Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
+                Block_None_Div("onglet_div_plus_<?php echo $row['LEVSIGN'];?>");
+                Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>");
+                $.get("<?php echo $row['URLEVEL'];?># <?php echo $row['LEVSIGN'];?>", function(data) {
   $("#onglet_div_xhr_<?php echo $row['LEVSIGN'];?>").html(data);
 });
-				'>
+                '>
 <span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-arrowthick-2-n-s"></span>
-				<?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'];?></div>
-			<div class="ui-state-active" id='onglet_div_moins_<?php echo $row['LEVSIGN'];?>'
-				style='DISPLAY: none'
-				onMouseOver='this.className="ui-state-hover"'
-					onMouseOut='this.className="ui-state-active"'
-				onClick='Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
-				Block_None_Div("onglet_div_plus_<?php echo $row['LEVSIGN'];?>");
-				Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>")'>
+                <?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'];?></div>
+            <div class="ui-state-active" id='onglet_div_moins_<?php echo $row['LEVSIGN'];?>'
+                style='DISPLAY: none'
+                onMouseOver='this.className="ui-state-hover"'
+                    onMouseOut='this.className="ui-state-active"'
+                onClick='Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
+                Block_None_Div("onglet_div_plus_<?php echo $row['LEVSIGN'];?>");
+                Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>")'>
 <span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-arrowthickstop-1-n"></span><?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'];?></div>
-			<div id='onglet_div_xhr_<?php echo $row['LEVSIGN'];?>'
-				style='DISPLAY: none'></div></td>
-	</tr>
-	<?php
+            <div id='onglet_div_xhr_<?php echo $row['LEVSIGN'];?>'
+                style='DISPLAY: none'></div></td>
+    </tr>
+    <?php
 }
 ?>
-	
-	<!-- END DataBlock -->
+
+    <!-- END DataBlock -->
 </table>

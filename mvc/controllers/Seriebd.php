@@ -11,14 +11,14 @@
  * @author Tom
  */
 class SerieBD extends Bdo_Controller {
-    
+
     public function Index () {
-    
+
         $ID_SERIE = getValInteger('id_serie',1);
         $page = getValInteger('page',1);
-        
+
         $this->loadModel('Serie');
-        
+
         $this->Serie->set_dataPaste(array(
             "ID_SERIE" => $ID_SERIE
         ));
@@ -29,18 +29,18 @@ class SerieBD extends Bdo_Controller {
             'PAGETITLE' => "Série BD : " . $this->Serie->NOM_SERIE,
             'NUM_PAGE' => $page
         ));
-        
-        
+
+
         // liste d'albums
         $this->loadModel("Tome");
-       
-        $dbs_tome = $this->Tome->load('c', " 
+
+        $dbs_tome = $this->Tome->load('c', "
                             WHERE bd_tome.id_serie=
-                            ".$ID_SERIE." 
+                            ".$ID_SERIE."
                              ORDER BY bd_tome.FLG_INT DESC, bd_tome.FLG_TYPE, bd_tome.NUM_TOME, bd_tome.TITRE limit ".(($page-1)*20).",20");
         // selection des albums
         $this->view->set_var('dbs_tome', $dbs_tome);
-        
+
         // liste de série mêmes auteurs
         $this->loadModel("Serie");
         $this->view->set_var(array(
@@ -50,7 +50,7 @@ class SerieBD extends Bdo_Controller {
 
         $this->view->render();
     }
-    
+
 }
 
 ?>

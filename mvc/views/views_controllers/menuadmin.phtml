@@ -53,7 +53,7 @@ $m_controle->addFils(new Bdo_Menu_Lien("Règles", BDO_URL . 'controle/regles'));
 $m_aide = $menu->addItem(new Bdo_Menu_Lien("&nbsp;?&nbsp;"));
 $m_aide->addFils(new Bdo_Menu_Lien(LANG_MEDIA_FAQ, BDO_URL . 'faq'));
 if (issetNotEmpty($_SESSION['CFG_A_LANG'])) {
-    
+
     $m_aide_translate = $m_aide->addFils(new Bdo_Menu_Lien(LANG_TRADUCTION, "admin/constante?"));
     foreach ($_SESSION['CFG_A_LANG'] as $idLang => $objLang) {
         if ($idLang != $_SESSION['ID_LANG']) {
@@ -89,7 +89,7 @@ if ($view->addAriane) {
  */
 echo '
 <div id="ariane" style="position: relative;">
-		<div class="fond"></div>
+        <div class="fond"></div>
 ' . $menu->generateAriane() . '
 </div>
 <div id="menuAdmin">

@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Bdo_Cfg
 {
@@ -47,9 +47,9 @@ class Bdo_Cfg
     public static function quit ($msg = '')
     {
         Bdo_Cfg::getInstance();
-        
+
         if (isset(self::$instance->connexion)) self::$instance->connexion->close();
-        
+
         if ($msg) {
             header('Content-Type: text/html; charset=UTF-8');
             exit($msg);
@@ -62,16 +62,16 @@ class Bdo_Cfg
     public static function Db_connect ()
     {
         Bdo_Cfg::getInstance();
-        
+
         if (self::$instance->connexion) Db_close();
-        
+
         self::$instance->a_connect_vars = array(
                 'login' => BDO_DB_USER,
                 'password' => BDO_DB_PWD,
                 'sid' => BDO_DB_SID,
                 'server' => BDO_DB_HOST
         );
-        
+
         if ($connexion = Db_connect(self::$instance->a_connect_vars)) {
             self::$instance->connexion = $connexion;
             $connexion->query("SET NAMES 'utf8'");
@@ -79,14 +79,14 @@ class Bdo_Cfg
         else {
             $to = 'thanaos@bdovore.com';
             $from = CFG_MAIL_AUTO_NAME . '<' . CFG_MAIL_AUTO_EMAIL . '>';
-            
+
             $headers = 'From: ' . $from . "\r\n" . 'Reply-To: ' . $from . "\r\n" . 'X-Mailer: PHP/' . phpversion() . "\r\n" . 'Content-type: text/html; charset=utf-8' . "\r\n";
             ;
-            
+
             $msg = 'Alerte serveur MySQL ' . CFG_DB_HOST . ' - connexion impossible - ' . date('Y-m-d H:i') . print_r($_SERVER, true);
-            
+
             mail($to, CFG_NAME . ' : ALERTE CONNEXION MySQL - ' . CFG_DB_HOST, $msg, $headers);
-            
+
             Bdo_Cfg::quit('cfg : connection database error.');
         }
         return true;
@@ -130,17 +130,17 @@ class Bdo_Cfg
         if (! defined('CFG_LOGFILE_ACTIVE') or ! CFG_LOGFILE_ACTIVE or ! defined('CFG_LOGFILE_FILENAME') or ! CFG_LOGFILE_FILENAME) {
             return false;
         }
-        
+
         $line = date('Ymd H:i:s') . ' => ';
-        
+
         if ($msg) {
             $line .= (string) $msg;
-            
+
             if ($type) {
                 $line .= ' => ';
             }
         }
-        
+
         switch ($type) {
             case 'soap':
                 {
@@ -167,7 +167,7 @@ class Bdo_Cfg
 
     /**
      * affichage de variable
-     * 
+     *
      * @param unknown_type $var
      * @param string $mode
      * @param string $var_name

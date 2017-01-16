@@ -15,7 +15,7 @@ else {
 // repertoire de bdovore
 define('BDO_DIR', dirname(dirname(__FILE__)) . DS); //NB: dirname(__FILE__) === __DIR__ (since php 5.3.0)
 
-// utile uniquement si bdovore n'est pas à la racine 
+// utile uniquement si bdovore n'est pas à la racine
 // par exemple si l'url est http://localhost/bdovore/beta/Album?id_tome=1234
 // on utilisera define('BDO_URL_RELATIVE', '/bdovore/beta/' );
 // NB: il doit y avoir moyen d'automatiser ça ...
@@ -34,35 +34,35 @@ switch ($_SERVER["SERVER_NAME"]) {
     case 'bdovore.com':
     case 'www.bdovore.com':
         {
-            
+
             define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . '/');
             define('BDO_URL_IMAGE', BDO_URL . 'images/');
             define('BDO_URL_COUV', BDO_URL_IMAGE . 'couv/');
 
-			// BDO_DIR_IMAGE: location of all the images of the website
-			// BDO_DIR_COUV: location of all the album covers (usually inside the BDO_DIR_IMAGE folder)
+            // BDO_DIR_IMAGE: location of all the images of the website
+            // BDO_DIR_COUV: location of all the album covers (usually inside the BDO_DIR_IMAGE folder)
             define('BDO_DIR_IMAGE', BDO_DIR . 'images' . DS); // system path, but URL can be used as well
             define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
             define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
 
-			// BDO_DB_HOST: hostname for the DB. For instance 'localhost' for a local install
-			//              or 'mysql5-dev.bdb' if that's what your provider gives you
-			// BDO_DB_SID:  name/identifier of the database
-			// BDO_DB_USER: user's name for DB BDO_DB_SID (often the same as BDO_DB_SID)
-			// BDO_DB_PWD:  password for user BDO_DB_USER of database BDO_DB_SID
-			define('BDO_DB_HOST', 'mydatabase.bdb');
+            // BDO_DB_HOST: hostname for the DB. For instance 'localhost' for a local install
+            //              or 'mysql5-dev.bdb' if that's what your provider gives you
+            // BDO_DB_SID:  name/identifier of the database
+            // BDO_DB_USER: user's name for DB BDO_DB_SID (often the same as BDO_DB_SID)
+            // BDO_DB_PWD:  password for user BDO_DB_USER of database BDO_DB_SID
+            define('BDO_DB_HOST', 'mydatabase.bdb');
             define('BDO_DB_SID', 'bdovore');
             define('BDO_DB_USER', 'bdovore');
             define('BDO_DB_PWD', 'someverygoodpassword');
-            
+
             define('FORUM_DB_HOST', 'myforumdb.bdb');
             define('FORUM_DB_SID', 'bdovoreforum');
             define('FORUM_DB_USER', 'bdovoreforum');
             define('FORUM_DB_PWD', 'anothergoodpassword');
-            
+
             define('DEBUG', false); // mode debug
             define('READONLY', false); // mode lecture seul
-            
+
             break;
         }
     case 'beta.bdovore.com':
@@ -71,25 +71,25 @@ switch ($_SERVER["SERVER_NAME"]) {
             define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . '/');
             define('BDO_URL_IMAGE', BDO_PROTOCOL . '://www.bdovore.com/images/');
             define('BDO_URL_COUV', BDO_URL_IMAGE . 'couv/');
-            
+
             define('BDO_DIR_IMAGE', '/home/bdovore/www/images' . DS);
             define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
             define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
-			
-			//currently the same login info as bdovore.com, until we switch to the new DB schema
+
+            //currently the same login info as bdovore.com, until we switch to the new DB schema
             define('BDO_DB_HOST', '');
             define('BDO_DB_SID', '');
             define('BDO_DB_USER', '');
             define('BDO_DB_PWD', '');
-            
+
             define('FORUM_DB_HOST', '');
             define('FORUM_DB_SID', '');
             define('FORUM_DB_USER', '');
             define('FORUM_DB_PWD', '');
-            
+
             define('DEBUG', false); // mode debug
             define('READONLY', false); // mode lecture seul
-            
+
             break;
         }
     case 'phone.bdovore.com':
@@ -98,52 +98,52 @@ switch ($_SERVER["SERVER_NAME"]) {
             define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . '/');
             define('BDO_URL_IMAGE', BDO_PROTOCOL . '://www.bdovore.com/images/');
             define('BDO_URL_COUV', BDO_URL_IMAGE . 'couv/');
-            
+
             define('BDO_DIR_IMAGE', BDO_DIR . 'images' . DS);
             define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
             define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
 
-			//same as bdovore bdovore.com
+            //same as bdovore bdovore.com
             define('BDO_DB_HOST', '');
             define('BDO_DB_SID', '');
             define('BDO_DB_USER', '');
             define('BDO_DB_PWD', '');
-            
+
             define('FORUM_DB_HOST', '');
             define('FORUM_DB_SID', '');
             define('FORUM_DB_USER', '');
             define('FORUM_DB_PWD', '');
-            
+
             define('DEBUG', false); // mode debug
             define('READONLY', false); // mode lecture seul
-            
+
             break;
         }
     case 'dev.bdovore.com':
         {
             error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
-            
+
             define('BDO_URL', 'http://' . $_SERVER["SERVER_NAME"] . '/');
             define('BDO_URL_IMAGE', BDO_URL . 'images/');
             define('BDO_URL_COUV', BDO_URL_IMAGE . 'couv/');
-            
+
             define('BDO_DIR_IMAGE', BDO_DIR . 'images' . DS);
             define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
             define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
-            
+
             define('BDO_DB_HOST', '');
             define('BDO_DB_SID', '');
             define('BDO_DB_USER', '');
             define('BDO_DB_PWD', '');
-            
+
             define('FORUM_DB_HOST', '');
             define('FORUM_DB_SID', '');
             define('FORUM_DB_USER', '');
             define('FORUM_DB_PWD', '');
-            
+
             define('DEBUG', false); // mode debug
             define('READONLY', false); // mode lecture seul
-            
+
             break;
         }
     case '192.168.1.77':
@@ -151,33 +151,33 @@ switch ($_SERVER["SERVER_NAME"]) {
         {
             error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 
-			// use BDO_URL_RELATIVE here if available instead of /bdovore/beta/
-			// NB: configure Apache correctly so that it directly redirects to ./public/
-			if (defined('BDO_URL_RELATIVE'))
-				define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . BDO_URL_RELATIVE );
-			else
-	            define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . '/bdovore/beta/');
+            // use BDO_URL_RELATIVE here if available instead of /bdovore/beta/
+            // NB: configure Apache correctly so that it directly redirects to ./public/
+            if (defined('BDO_URL_RELATIVE'))
+                define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . BDO_URL_RELATIVE );
+            else
+                define('BDO_URL', BDO_PROTOCOL . '://' . $_SERVER["SERVER_NAME"] . '/bdovore/beta/');
 
             define('BDO_URL_IMAGE', 'http://www.bdovore.com/images/');
             define('BDO_URL_COUV', BDO_URL_IMAGE . 'couv/');
-            
+
             define('BDO_DIR_IMAGE', BDO_DIR . 'images' . DS);
             define('BDO_DIR_COUV', BDO_DIR_IMAGE . 'couv' . DS);
             define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
-            
+
             define('BDO_DB_HOST', 'localhost');
             define('BDO_DB_SID', 'bdovore');
             define('BDO_DB_USER', 'root');
             define('BDO_DB_PWD', '');
-            
+
             define('FORUM_DB_HOST', 'localhost');
             define('FORUM_DB_SID', 'bdovoreforum');
             define('FORUM_DB_USER', 'root');
             define('FORUM_DB_PWD', '');
-            
+
             define('DEBUG', true); // mode debug
             define('READONLY', false); // mode lecture seul
-            
+
             break;
         }
 }

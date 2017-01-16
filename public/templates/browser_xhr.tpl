@@ -1,10 +1,10 @@
     <table width="100%" class="browser">
-	<tr>
-	    <td class="milieu" align="center" colspan="3">{TOTALROW}</td>
-	</tr>
-	<tr>
-	    <td class="milieu" align="center" colspan="3">{URLPREVPAGE} {URLNEXTPAGE}</td>
-	</tr>
+    <tr>
+        <td class="milieu" align="center" colspan="3">{TOTALROW}</td>
+    </tr>
+    <tr>
+        <td class="milieu" align="center" colspan="3">{URLPREVPAGE} {URLNEXTPAGE}</td>
+    </tr>
           <!-- BEGIN DataBlock -->
         <tr>
             <td class="bord_gauche">&nbsp;</td>

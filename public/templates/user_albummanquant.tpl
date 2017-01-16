@@ -1,16 +1,16 @@
-<SCRIPT language="Javascript"> 
-<!-- 
-  
-function Chargement() { 
+<SCRIPT language="Javascript">
+<!--
+
+function Chargement() {
  d = document.exclAlb;
  for (i = 0; i < d.elements.length; i++) {
    if (d.elements[i].name == "sel_tome[]") {
      d.elements[i].checked = true;
    }
  }
-} 
-  
-//--> 
+}
+
+//-->
 </SCRIPT>
 
 
@@ -28,17 +28,17 @@ function Chargement() {
 
 </form>
 <form name ="exclAlb" action="{ACTION2}" method="post">
-<div class="genBlock"> 
+<div class="genBlock">
         <table class="genTable">
-          <tr> 
+          <tr>
             <td class="genTitle">Sel</td>
             <td class="genTitle"><a href="{URLSITE}membres/albmanquant.php?cle=1&sort=asc&id_serie={SERID}"><img src="{URLSITEIMAGE}flechehautr.gif" width="12" height="12" hspace="5" border="0"></a>Titre<a href="{URLSITE}membres/albmanquant.php?cle=1&sort=desc&id_serie={SERID}"><img src="{URLSITEIMAGE}flechebasr.gif" width="12" height="12" hspace="5" border="0"></a></td>
             <td class="genTitle"><a href="{URLSITE}membres/albmanquant.php?cle=2&sort=asc&id_serie={SERID}"><img src="{URLSITEIMAGE}flechehautr.gif" width="12" height="12" hspace="5" border="0"></a>Tome<a href="{URLSITE}membres/albmanquant.php?cle=2&sort=desc&id_serie={SERID}"><img src="{URLSITEIMAGE}flechebasr.gif" width="12" height="12" hspace="5" border="0"></a></td>
-            <td class="genTitle"><a href="{URLSITE}membres/albmanquant.php?cle=3&sort=asc&id_serie={SERID}"><img src="{URLSITEIMAGE}flechehautr.gif" width="12" height="12" hspace="5" border="0"></a>Date 
+            <td class="genTitle"><a href="{URLSITE}membres/albmanquant.php?cle=3&sort=asc&id_serie={SERID}"><img src="{URLSITEIMAGE}flechehautr.gif" width="12" height="12" hspace="5" border="0"></a>Date
               Parution <a href="{URLSITE}membres/albmanquant.php?cle=3&sort=desc&id_serie={SERID}"><img src="{URLSITEIMAGE}flechebasr.gif" width="12" height="12" hspace="5" border="0"></a></td>
           </tr>
           <!-- BEGIN DetailBlock -->
-          <tr> 
+          <tr>
             <td class="genData"><input type="checkbox" name="sel_tome[]" value="{IDTOME}"></td>
             <td class="genData"><a href="{URLTITRE}">{TITRE}</a></td>
             <td class="genData">{TOME}</td>

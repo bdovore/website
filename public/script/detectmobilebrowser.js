@@ -8,19 +8,19 @@
 
 /* suppression de la redirection qui pose pb pour le référencement ; le site est responsive donc a priori pas de souci
 if ($.browser.mobile) {
-	if (typeof($.cookie('prefmobile')) == "undefined") {
-		// pas de coockie, on pause la question
-		if (confirm("Voulez-vous utiliser le site mobile phone.bdovore.com ?")) {
-			$.cookie('prefmobile', 'mob', { expires: 7 });
-			window.location = "http://phone.bdovore.com";
-		} else {
-			$.cookie('prefmobile', 'site', { expires: 7 });
-		}
-		
-	}
-	
-	if ($.cookie('prefmobile') == "mob") {
-		window.location = "http://phone.bdovore.com";
-	}
+    if (typeof($.cookie('prefmobile')) == "undefined") {
+        // pas de coockie, on pause la question
+        if (confirm("Voulez-vous utiliser le site mobile phone.bdovore.com ?")) {
+            $.cookie('prefmobile', 'mob', { expires: 7 });
+            window.location = "http://phone.bdovore.com";
+        } else {
+            $.cookie('prefmobile', 'site', { expires: 7 });
+        }
+
+    }
+
+    if ($.cookie('prefmobile') == "mob") {
+        window.location = "http://phone.bdovore.com";
+    }
 }
 */

@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Bdo_Db_Line
 {
@@ -37,24 +37,24 @@ class Bdo_Db_Line
     public $error = array();
 
     public $orderSelect = '';
-    
+
     // initialisation
     public function __construct ($table_name, $a_data = array())
     {
         if (is_null($this->table_name)) {
             $this->table_name = $table_name;
         }
-        
+
         $schema = Bdo_Cfg::schema();
         if ($schema->is_table($this->table_name)) {
             $this->schema_name = $schema->schema;
-            
+
             $this->a_column = $schema->dbColumn[$this->table_name];
             $this->setColumn();
-            
+
             $this->setConstraint($schema);
         }
-        
+
         if (is_object($a_data)) $a_data = (array) $a_data;
         if (! empty($a_data)) {
             $this->set_dataPaste($a_data);
@@ -71,7 +71,7 @@ class Bdo_Db_Line
                 $query = $this->selectEdit();
                 break;
         }
-        
+
         if (is_null($where)) {
             if ($this->wherePk()) {
                 $query .= " WHERE " . $this->wherePkQuery;
@@ -89,18 +89,18 @@ class Bdo_Db_Line
                 $query .= $this->orderSelect;
             }
         }
-        
+
         $this->dbSelect = new Bdo_Db_Select($query);
-        
+
         // --------------=======================----------------
         $this->dbSelect->exec();
         $this->dbSelect->integreData();
         // --------------=======================----------------
-        
+
         if (1 == $this->dbSelect->nbLineResult) {
             $this->set_data($this->dbSelect->a_dataQuery[0]);
         }
-        
+
         return $this->dbSelect;
     }
 
@@ -118,11 +118,11 @@ class Bdo_Db_Line
         if (isset($this->$key)) {
             return $this->$key;
         }
-        
+
         if (isset($this->a_dataPaste[$key])) {
             return $this->a_dataPaste[$key];
         }
-        
+
         return null;
     }
 
@@ -133,7 +133,7 @@ class Bdo_Db_Line
     {
         foreach ($this->a_column as $column_name => $obj) {
             $lang = substr($column_name, - 3);
-            
+
             if (isset($_SESSION['CFG_A_LANG'][$lang])) {
                 $addLang = '(' . $_SESSION['CFG_A_LANG'][$lang]->{'NOM_LANG' . $_SESSION['ID_LANG']} . ')';
                 if (! stristr($this->a_column[$column_name]->TITRE_CHAMP, $addLang)) $this->a_column[$column_name]->TITRE_CHAMP .= ' ' . $addLang;
@@ -157,7 +157,7 @@ class Bdo_Db_Line
                 }
             }
         }
-        
+
         if (! isset($this->a_constraint['PRIMARY'])) {
             $this->error[] = 'Table `' . $this->schema_name . '`.`' . $this->table_name . '` has no primary key : Operation aborted !';
         }
@@ -168,20 +168,20 @@ class Bdo_Db_Line
      */
     public function wherePk ()
     {
-        
+
         /**
          * a voir ! ne gerer que des dates en version en pas fr(uniquement
          * affichage)
          */
         $a_wherePkQuery = array();
         $a_wherePkQuery_not = array();
-        
+
         foreach ($this->a_constraint['PRIMARY'] as $column_name) {
             if (isset($this->a_dataColumn[$column_name])) {
                 $this->a_conditionPk[$column_name] = $this->a_dataColumn[$column_name];
             }
         }
-        
+
         foreach ($this->a_conditionPk as $column_name => $val) {
             if (in_array($this->a_column[$column_name]->DATA_TYPE, array(
                     'date',
@@ -197,10 +197,10 @@ class Bdo_Db_Line
                 $a_wherePkQuery_not[] = "`" . $this->table_name . "`.`" . $column_name . "`!='" . $val . "'";
             }
         }
-        
+
         $this->wherePkQuery = implode(" \nAND ", $a_wherePkQuery);
         $this->wherePkQueryNot = implode(" \nAND ", $a_wherePkQuery_not);
-        
+
         return $this->wherePkQuery;
     }
 
@@ -226,7 +226,7 @@ class Bdo_Db_Line
     public function setDataColumn ()
     {
         $this->a_dataColumn = array();
-        
+
         foreach ($this->a_column as $obj) {
             if (isset($this->a_dataPaste[$obj->COLUMN_NAME])) {
                 // actions de nettoyage systematiques
@@ -240,11 +240,11 @@ class Bdo_Db_Line
                         }
                         break;
                 }
-                
+
                 if ('' != $this->a_dataPaste[$obj->COLUMN_NAME]) {
                     if ('FREE_ID_' == substr($obj->COLUMN_NAME, 0, 8)) {
                         $colNameForFree = substr($obj->COLUMN_NAME, 5);
-                        
+
                         if (1 != $this->a_dataPaste[$colNameForFree]) {
                             $this->a_dataPaste[$obj->COLUMN_NAME] = null;
                         }
@@ -299,9 +299,9 @@ class Bdo_Db_Line
     {
         foreach ($this->a_column as $column_name => $obj) {
             if (! isset($obj->EXTRA_CHAMP)) $obj->EXTRA_CHAMP = '';
-            
+
             if (array_key_exists($column_name, $this->a_dataColumn) and (is_null($this->entite) or ($this->entite->{$column_name} !== $this->a_dataColumn[$column_name]))) {
-                
+
                 if (is_null($this->a_dataColumn[$column_name])) {
                     if ('YES' == $obj->IS_NULLABLE) $this->a_updateColumn[$column_name] = "NULL";
                     else
@@ -309,7 +309,7 @@ class Bdo_Db_Line
                 }
                 else {
                     // vérification par type
-                    
+
                     switch ($obj->DATA_TYPE) {
                         case 'timestamp':
                         case 'date':
@@ -367,7 +367,7 @@ class Bdo_Db_Line
                                 else {
                                     $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR6;
                                 }
-                                
+
                                 break;
                             }
                         case 'double':
@@ -396,7 +396,7 @@ class Bdo_Db_Line
                                 else {
                                     $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR6;
                                 }
-                                
+
                                 break;
                             }
                         case 'time':
@@ -423,10 +423,10 @@ class Bdo_Db_Line
 //                                            if (isset($this->a_dataPaste['SALT_USER'])) $salt_password = $this->a_dataPaste['SALT_USER'];
 //                                            else
 //                                                $salt_password = CFG_SALT_PASSWORD;
-//                                            
+//
 //                                            if (is_null($this->entite)) {
 //                                                if (isset($this->a_dataPaste[$column_name . '_OLD']) and isset($this->a_dataPaste[$column_name])) {
-//                                                    
+//
 //                                                    if (! empty($this->a_dataPaste[$column_name . '_OLD']) and ($this->a_dataPaste[$column_name . '_OLD'] == $this->a_dataPaste[$column_name])) {
 //                                                        $this->a_updateColumn[$column_name] = "'" . sha1($salt_password . $this->a_dataPaste[$column_name]) . "'";
 //                                                    }
@@ -434,7 +434,7 @@ class Bdo_Db_Line
 //                                                        $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR12;
 //                                                    }
 //                                                }
-//                                                
+//
 //                                                else if (! empty($this->a_dataPaste[$column_name])) {
 //                                                    $mdp_user_clair = $this->a_dataPaste[$column_name];
 //                                                    $this->a_updateColumn[$column_name] = "'" . sha1($salt_password . $this->a_dataPaste[$column_name]) . "'";
@@ -505,12 +505,12 @@ class Bdo_Db_Line
 
         $this->wherePk();
         if (empty($this->error)) $this->controlPk();
-        
+
         if (! is_null($this->entite)) {
             $delete_query = "
-			DELETE FROM `" . $this->schema_name . "`.`" . $this->table_name . "` 
-			WHERE " . $this->wherePkQuery . " LIMIT 1";
-            
+            DELETE FROM `" . $this->schema_name . "`.`" . $this->table_name . "`
+            WHERE " . $this->wherePkQuery . " LIMIT 1";
+
             $typeQuery = "DELETE";
             if (Db_query($delete_query)) {
                 // mettre un log ici
@@ -533,9 +533,9 @@ class Bdo_Db_Line
         if (count($this->a_constraint['PRIMARY']) == count($this->a_conditionPk)) {
             // recherche de la ligne à modifier
             $resultat = Db_query("
-				SELECT * FROM `" . $this->schema_name . "`.`" . $this->table_name . "` 
-				WHERE " . $this->wherePkQuery . " LIMIT 1");
-            
+                SELECT * FROM `" . $this->schema_name . "`.`" . $this->table_name . "`
+                WHERE " . $this->wherePkQuery . " LIMIT 1");
+
             if ($obj = Db_fetch_object($resultat)) {
                 $this->entite = $obj;
             }
@@ -557,24 +557,24 @@ class Bdo_Db_Line
         foreach ($this->a_constraint as $cons_name => $a_cons_column) {
             if ($cons_name != 'PRIMARY') {
                 $a_conditionUk = array();
-                
+
                 foreach ($a_cons_column as $column_name) {
-                    
+
                     if (isset($this->a_dataColumn[$column_name])) {
                         $a_conditionUk[] = "`" . $column_name . "`='" . Db_Escape_String($this->a_dataColumn[$column_name]) . "'";
                     }
                 }
-                
+
                 // toutes les colonnes de la contrainte doivent avoir une valeur
                 if (count($a_cons_column) == count($a_conditionUk)) {
                     $whereUkQuery = implode(' AND ', $a_conditionUk);
                     // compte le nombre de ligne avec la même valeur transmise
                     // pour la uk en dehors de la pk
-                    
+
                     if (0 < Db_CountRow("
-				SELECT * FROM `" . $this->schema_name . "`.`" . $this->table_name . "` 
-				WHERE " . $whereUkQuery . " 
-				AND " . $this->wherePkQueryNot)) {
+                SELECT * FROM `" . $this->schema_name . "`.`" . $this->table_name . "`
+                WHERE " . $whereUkQuery . "
+                AND " . $this->wherePkQueryNot)) {
                         $error_uk = "[";
                         foreach ($a_cons_column as $column_name) {
                             $error_uk .= " " . $this->a_column[$column_name]->TITRE_CHAMP . " ";
@@ -603,24 +603,24 @@ class Bdo_Db_Line
         }
 
         $this->wherePk();
-        
+
         if (empty($this->error)) $this->controlPk();
         if (empty($this->error)) $this->controlUk();
         if (empty($this->error)) $this->ctrlDataPost();
 
-        if (empty($this->error)) {            
+        if (empty($this->error)) {
             // ----------------- cas UPDATE ------------------------
-            if (! is_null($this->entite) and (0 < count($this->a_updateColumn))) { 
+            if (! is_null($this->entite) and (0 < count($this->a_updateColumn))) {
                 $typeQuery = "UPDATE";
                 $tab = array();
                 foreach ($this->a_updateColumn as $key => $val) {
                     $tab[] = "`" . $key . "`=" . $val;
                 }
-                
+
                 $update_query = "
-					UPDATE `" . $this->schema_name . "`.`" . $this->table_name . "` 
-					SET " . implode(",\n", $tab) . " 
-					WHERE " . $this->wherePkQuery;
+                    UPDATE `" . $this->schema_name . "`.`" . $this->table_name . "`
+                    SET " . implode(",\n", $tab) . "
+                    WHERE " . $this->wherePkQuery;
             }
             // ----------------- cas INSERT ------------------------
             else if (is_null($this->entite)) {
@@ -631,10 +631,10 @@ class Bdo_Db_Line
                     $tabKey[] = "`" . $key . "`";
                     $tabVal[] = $val;
                 }
-                
+
                 $update_query = "INSERT INTO `" . $this->schema_name . "`.`" . $this->table_name . "` ( " . implode(",\n", $tabKey) . "
-					) VALUES ( " . implode(",\n", $tabVal) . "
-					)";
+                    ) VALUES ( " . implode(",\n", $tabVal) . "
+                    )";
             }
             // var_dump_pre($update_query);
             // Bdo_Cfg::quit();
@@ -647,14 +647,14 @@ class Bdo_Db_Line
                         $this->controlPk();
                     }
                     $this->affected_rows = Db_affected_rows();
-                    
+
                     $this->set_data($this->a_dataColumn);
                 }
             }
             else if (0 < count($this->a_updateColumn)) {
                 $this->error[] = "execute 'insert' query failed";
             }
-        } 
+        }
     }
 
     public function priColUrl ()

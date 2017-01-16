@@ -1,7 +1,7 @@
 <?php
 
 class FicheAlbum {
-    
+
     public function getTitreTome ($o_tome,$url=true) {
         $html = "";
         if ($o_tome->TITRE_TOME) {
@@ -12,19 +12,19 @@ class FicheAlbum {
             if ($o_tome->NUM_TOME AND preg_match("/n°".$o_tome->NUM_TOME."\b/i",$o_tome->TITRE_TOME) !== 1) {
                 $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
             }
-            
+
             if ($url) {
                 $html .=  "<strong>".$this->urlAlbum($o_tome, 'albTitle')."</strong>" ;
             } else {
                 $html .=  $o_tome->TITRE_TOME;
             }
-            
+
         }
         return $html;
     }
-    
+
     public function small($o_tome, $getUrlSerie = true) {
-        
+
         if (is_array($o_tome)) {
             $o_tome = (object) $o_tome;
         }
@@ -35,24 +35,24 @@ class FicheAlbum {
             ' . $this->urlAlbum($o_tome, 'couvSmall') . '
             </div>
             <div  class="mw50 textleft">';
-        
+
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
-            
+
             $html .= $this->getTitreTome($o_tome) . '<br>';
         }
-        
+
         // nom de la serie
         if ($o_tome->NOM_SERIE AND $o_tome->TITRE_TOME AND $getUrlSerie
             AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME)) ) {
             $html .= 'Série : ' . $this->urlSerie($o_tome) . '';
         }
-        
+
         // genre
         $html .= '</div><hr class="expSep"></div>';
         return $html;
     }
-        
+
     public function medium($o_tome, $getUrlSerie = true) {
         if (is_array($o_tome)) {
             $o_tome = (object) $o_tome;
@@ -65,7 +65,7 @@ class FicheAlbum {
             </div>
             <div style="float:left">';
         $html .= '<table>';
-        
+
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
             $html .= '<tr><td>Titre : </td><td>';
@@ -75,7 +75,7 @@ class FicheAlbum {
             }
             $html .= $this->getTitreTome($o_tome)  . '</td></tr>';
         }
-        
+
         // nom de la serie
         if ($o_tome->NOM_SERIE AND ($o_tome->TITRE_TOME AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME)) AND $getUrlSerie)) {
             $html .= '<tr><td>Série : </td><td>' . $this->urlSerie($o_tome) . '</td></tr>';
@@ -86,7 +86,7 @@ class FicheAlbum {
 
         return $html;
     }
-    
+
     public function big($o_tome, $sep = true, $getUrlSerie = true) {
         if (is_array($o_tome)) {
             $o_tome = (object) $o_tome;
@@ -101,7 +101,7 @@ class FicheAlbum {
 
         // titre de l'album
         if ($o_tome->TITRE_TOME) {
-           
+
             $html .=  $this->getTitreTome($o_tome) . '<br>';
         }
 
@@ -110,13 +110,13 @@ class FicheAlbum {
             $html .= '<div align="center" id=noteTome' . $o_tome->ID_TOME . '> </div>';
             $html .= "<script>$('#noteTome" . $o_tome->ID_TOME . "').raty({score: " . $o_tome->MOYENNE_NOTE_TOME / 2 . ", readOnly: true});</script>";
         }
-        
+
         // nom de la serie
         $html.="<p class='fiche_album'>";
         if ($o_tome->NOM_SERIE AND ($o_tome->TITRE_TOME AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME)) AND $getUrlSerie)) {
             $html .= 'Série : ' . $this->urlSerie($o_tome) . '<br>';
         }
-        
+
         // genre
         if ($o_tome->NOM_GENRE) {
             $html .= 'Genre : ';
@@ -128,7 +128,7 @@ class FicheAlbum {
             $url_dessin = $this->urlAuteur(array("ID_AUTEUR" => $o_tome->ID_DESSIN, "PSEUDO" =>$o_tome->depseudo ));
             $html .= '<i>' . $url_scenar . ($o_tome->ID_SCENAR == $o_tome->ID_DESSIN ? '' : " / " . $url_dessin ) . '</i><br>';
         }
-        
+
         // editeur
         if ($o_tome->NOM_EDITEUR) {
             $html .= 'Editeur : ';
@@ -138,7 +138,7 @@ class FicheAlbum {
             }
             $html .= "<br>";
         }
-        
+
         // collection editeur
         // date de parution
         if ($o_tome->DATE_PARUTION_EDITION) {
@@ -147,14 +147,14 @@ class FicheAlbum {
         }
 
         $html .= "</p>";
-        
+
         if (Bdo_Cfg::user()->minAccesslevel(2)) {
             // ajout des liens d'ajout dans la collection
             $html .= '<br>' . $this->linkCollection($o_tome);
         }
 
         $html .= '</div>';
-        
+
         if ($sep) {
             $html .= '<hr class="expSep">';
         }
@@ -162,7 +162,7 @@ class FicheAlbum {
 
         return $html;
     }
-    
+
     public function serie($o_serie, $size="small") {
         if (is_array($o_serie)) {
             $o_serie = (object) $o_serie;
@@ -179,14 +179,14 @@ class FicheAlbum {
             </div>
             <div style="float:left;margin-left: 5px;" class="mw50">';
 
-        
 
-        
+
+
         $html .= "<strong>".$this->urlSerie($o_serie)."</strong><br>";
         if ($o_serie->NB_NOTE_SERIE > 0 and $size == "big") {
              $html .= '<div align="center" id=noteSerie' . $o_serie->ID_SERIE . '> </div>';
             $html .= "<script>$('#noteSerie" . $o_serie->ID_SERIE . "').raty({score: " . $o_serie->NOTE_SERIE/2.0 . ", readOnly: true});</script>";
-        
+
         }
         $html.="<p class='fiche_album'>";
 
@@ -207,7 +207,7 @@ class FicheAlbum {
             if ($size == "big") $html.= "Avancement : ";
             $html .= "<i>" .$a_avancement[$o_serie->FLG_FINI_SERIE] . '</i><br>';
         }
-        
+
         if ($size== "big") {
             $html.= "Albums dans la base : ".$o_serie->NB_ALBUM;
         }
@@ -216,7 +216,7 @@ class FicheAlbum {
 
         return $html;
     }
-    
+
     /*
      * urlAlbum
      * fournit l'url d'un lien vers la iframe album
@@ -227,7 +227,7 @@ class FicheAlbum {
      *  Fonction de construction d'une url d'un album
      *  Si la variable $is_edition = true, on ajoute l'id édition dans les liens
      *  Utile pour l'accès depuis la collection de l'utilisateur, où on sélectionne une édition précise
-     */ 
+     */
     {
         if (is_array($o_tome)) {
             $o_tome = (object) $o_tome;
@@ -237,13 +237,13 @@ class FicheAlbum {
 
         if ($is_edition)
             $id_link.="&id_edition=" . $o_tome->ID_EDITION;
-        
+
         // couverture par defaut
         if (!$o_tome->IMG_COUV)
             $o_tome->IMG_COUV = "default.png";
 
         $x = getenv("HTTP_USER_AGENT");
-        
+
         if (strpos($x, 'MSIE 7.0') || strpos($x, 'MSIE 6.0')) {
             return '#" onclick="window.open(' . "'" . BDO_URL . $id_link . "','Album','width=600,height=700,scrollbars=1')" . ';return false;';
         } else {
@@ -263,7 +263,7 @@ class FicheAlbum {
 
             $html = '<a class="fancybox fancybox.iframe {width:600,height:600}"
                 href="' . BDO_URL . $id_link . '" title="' . $titleHtml . '">';
-            
+
             switch ($class) {
                 case "couvBig": {
                         $html .= '<img src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
@@ -305,12 +305,12 @@ class FicheAlbum {
         }
         return BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-' .clean_url($o_serie->NOM_SERIE);
     }
-    
+
     public function urlSerie($o_serie,$target="",$page=1) {
         if (is_array($o_serie)) {
             $o_serie = (object) $o_serie;
         }
-       
+
         $html = '<a href="' . $this->getURLSerie($o_serie,$page) .'" title="' . $o_serie->NOM_SERIE . '"'.( $target ? 'target="'. $target.'"' : '') .'>
             ' . $o_serie->NOM_SERIE . '</a>';
 
@@ -320,7 +320,7 @@ class FicheAlbum {
 
         return $html;
     }
-    
+
     public function getURLAuteur($o_auteur) {
          if (is_array($o_auteur)) {
             $o_auteur = (object) $o_auteur;
@@ -417,7 +417,7 @@ class FicheAlbum {
 
         return $dte_parution;
     }
-    
+
     public function getFicheWithComment($tome) {
          $html = "<div class='cadre1'>
                 <table>

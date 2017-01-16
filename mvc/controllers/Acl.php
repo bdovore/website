@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Acl extends Bdo_Controller
 {
@@ -15,7 +15,7 @@ class Acl extends Bdo_Controller
     public function __construct ()
     {
         Bdo_Security::page();
-        
+
         parent::__construct();
         $this->acl = Bdo_Cfg::getVar('acl');
         $this->view->addCssFile('css/acl/acl.css');
@@ -32,7 +32,7 @@ class Acl extends Bdo_Controller
         if (! is_null($ID_ACL_ROLE)) {
             $this->activeDiv = 1;
         }
-        
+
         $a_returnError = array();
         if (isset($_POST['formAction'])) {
             switch ($_POST['formAction']) {
@@ -60,7 +60,7 @@ class Acl extends Bdo_Controller
                         $a_returnError = $this->acl->updateResource($_POST);
                         break;
                     }
-                
+
                 case "delResource":
                     {
                         $this->activeDiv = 2;
@@ -79,7 +79,7 @@ class Acl extends Bdo_Controller
                         $a_returnError = $this->acl->updateResourcePrivilege($_POST);
                         break;
                     }
-                
+
                 case "delResourcePrivilege":
                     {
                         $this->activeDiv = 0;

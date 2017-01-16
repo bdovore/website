@@ -10,16 +10,16 @@
 
 
         <table align="center" border="0" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC">
-            <tr> 
+            <tr>
                 <td align="right">Adresse e-mail :</td>
                 <td><input name="txtemail" type="text" id="txtemail" value="<?php echo $view->EMAIL; ?>" size="50"></td>
 
             </tr>
-            <tr> 
+            <tr>
                 <td align="right">Ville :</td>
                 <td><input name="txtlocation" type="text" id="txtlocation" value="<?php echo $view->LOCATION; ?>"></td>
             </tr>
-            <tr> 
+            <tr>
                 <td align="right">Date de naissance :</td>
                 <td><input name="txtanniv" type="text" id="txtanniv" value="<?php echo $view->BIRTHDAY; ?>">(aaaa-mm-jj)</td>
             </tr>
@@ -30,23 +30,23 @@
         <h3>Personnalisation</h3>
         <table border="0" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC">
 
-            <tr> 
+            <tr>
                 <td  align="right">Autoriser les autres utilisateurs &agrave; consulter ma collection :</td>
                 <td><select name="lstOpenCollec" size="1">
                         <option value="Y" <?php echo $view->YESISSELECTED; ?>>Oui</option>
                         <option value="N" <?php echo $view->NOISSELECTED; ?>>Non</option>
                     </select></td>
             </tr>
-            <tr> 
-                <td colspan="2">D'autres utilisateurs pourront acc&eacute;der &agrave; 
+            <tr>
+                <td colspan="2">D'autres utilisateurs pourront acc&eacute;der &agrave;
                     votre collection via l'adresse suivante : <br /><a href="<?php echo $view->URLCOLLEC; ?>" target="_parent"><?php echo $view->URLCOLLEC; ?></a></td>
             </tr>
-            <tr> 
+            <tr>
                 <td align="right">Selection du carr&eacute; magique :</td>
                 <td><select name="lstCarre" size="1"><?php echo $view->OPTIONCARRE; ?>
                     </select></td>
             </tr>
-            <tr> 
+            <tr>
                 <td align="right">Je souhaite recevoir la newsletter de BDovore :</td>
                 <td><input type="checkbox" name="txtNewsletter" value="checked" <?php echo $view->IS_NEWSLETTER; ?>></td>
             </tr>
@@ -65,17 +65,17 @@
     <h3>Changement du mot de passe</h3>
     <form action="<?php echo BDO_URL; ?>compte?act=newpass&user_id=<?php echo $view->USERID; ?>" method="post">
         <table border="0" cellspacing="1" cellpadding="5" align="center">
-            <tr> 
+            <tr>
                 <td align="right">Nouveau mot de passe :</td>
                 <td ><input name="txtpass1" type="password" id="txtpass1"></td>
             </tr>
-            <tr> 
+            <tr>
                 <td align="right">Confirmation :</td>
                 <td><input name="txtpass2" type="password" id="txtpass2"></td>
             </tr>
-            <tr> 
+            <tr>
                 <td colspan="2" align="center">
-                    <input type="submit" name="SubmitPass" value="Valider">                                
+                    <input type="submit" name="SubmitPass" value="Valider">
                 </td>
             </tr>
         </table>

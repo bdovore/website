@@ -6,26 +6,26 @@ minAccessLevel();
 
 if (issetNotEmpty($_GET['supp']))
 {
-	$a_fileName=array($_GET['supp']);
+    $a_fileName=array($_GET['supp']);
 }
 else {
-	$a_fileName=array(
-	"gif_desentrelace.php",
-	"Thumbs.db",
-	"couv.jpg",
-	);
+    $a_fileName=array(
+    "gif_desentrelace.php",
+    "Thumbs.db",
+    "couv.jpg",
+    );
 }
 
 foreach ($a_fileName as $fileName)
 {
-	$fileSupp = BDO_DIR.'images/couv/'.$fileName;
-	if (is_file($fileSupp) and unlink($fileSupp))
-	{
-		echo '<br />'.$fileName." supprimé.";
-	}
-	else {
-				echo '<br />'.$fileName." inexistant.";
-	}
+    $fileSupp = BDO_DIR.'images/couv/'.$fileName;
+    if (is_file($fileSupp) and unlink($fileSupp))
+    {
+        echo '<br />'.$fileName." supprimé.";
+    }
+    else {
+                echo '<br />'.$fileName." inexistant.";
+    }
 }
 
 /*

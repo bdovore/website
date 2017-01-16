@@ -9,7 +9,7 @@
 class Import extends Bdo_Controller {
 
     public function Index() {
-       
+
         if (User::minAccesslevel(2)) {
             $act = postVal("act", "");
             $this->loadModel("Edition");
@@ -176,15 +176,15 @@ class Import extends Bdo_Controller {
                             $a_eanIsbn[] = Db_Escape_String($eanIsbn);
                             $a_editionByEanIsbn[$eanIsbn] = $editionAjout;
                         }
-                        
-                        
+
+
                         // controle d'existence ean ou isbn
                         $where = "
-			WHERE bd_edition." . Db_Escape_String($a_col[0]) . " IN ('" . implode("','", $a_eanIsbn) . "')
-			GROUP BY bd_edition." . Db_Escape_String($a_col[0]);
-                        
+            WHERE bd_edition." . Db_Escape_String($a_col[0]) . " IN ('" . implode("','", $a_eanIsbn) . "')
+            GROUP BY bd_edition." . Db_Escape_String($a_col[0]);
+
                         $dbs_edition = $this->Edition->load("c", $where);
-                        
+
                         if ($dbs_edition->nbLineResult != 0) {
 
                             $a_insert = array();
@@ -201,18 +201,18 @@ class Import extends Bdo_Controller {
                                     );
 
                                     $a_insert[] = "(
-						" . $_SESSION['userConnect']->user_id . ",
-						" . $id_edition . ",
-						NOW(),
-						" . (issetNotEmpty($field['date_achat']) ? "STR_TO_DATE('" . $a_editionByEanIsbn[$val]['date_achat'] . "','%d/%m/%Y')" : 'NULL') . ",
-						" . (issetNotEmpty($field['cote']) ? "'" . Db_Escape_String($a_editionByEanIsbn[$val]['cote']) . "'" : 'NULL') . ",
-						'" . (issetNotEmpty($field['flg_achat']) ? Db_Escape_String($a_editionByEanIsbn[$val]['flg_achat']) : 'N') . "',
-						'" . (issetNotEmpty($field['flg_pret']) ? Db_Escape_String($a_editionByEanIsbn[$val]['flg_pret']) : 'N') . "',
-						'" . (issetNotEmpty($field['flg_tete']) ? Db_Escape_String($a_editionByEanIsbn[$val]['flg_tete']) : 'N') . "',
-						'" . (issetNotEmpty($field['flg_dedicace']) ? Db_Escape_String($a_editionByEanIsbn[$val]['flg_dedicace']) : 'N') . "',
-						'" . (issetNotEmpty($field['flg_cadeau']) ? Db_Escape_String($a_editionByEanIsbn[$val]['flg_cadeau']) : 'N') . "'
-						)";
-                                
+                        " . $_SESSION['userConnect']->user_id . ",
+                        " . $id_edition . ",
+                        NOW(),
+                        " . (issetNotEmpty($field['date_achat']) ? "STR_TO_DATE('" . $a_editionByEanIsbn[$val]['date_achat'] . "','%d/%m/%Y')" : 'NULL') . ",
+                        " . (issetNotEmpty($field['cote']) ? "'" . Db_Escape_String($a_editionByEanIsbn[$val]['cote']) . "'" : 'NULL') . ",
+                        '" . (issetNotEmpty($field['flg_achat']) ? Db_Escape_String($a_editionByEanIsbn[$val]['flg_achat']) : 'N') . "',
+                        '" . (issetNotEmpty($field['flg_pret']) ? Db_Escape_String($a_editionByEanIsbn[$val]['flg_pret']) : 'N') . "',
+                        '" . (issetNotEmpty($field['flg_tete']) ? Db_Escape_String($a_editionByEanIsbn[$val]['flg_tete']) : 'N') . "',
+                        '" . (issetNotEmpty($field['flg_dedicace']) ? Db_Escape_String($a_editionByEanIsbn[$val]['flg_dedicace']) : 'N') . "',
+                        '" . (issetNotEmpty($field['flg_cadeau']) ? Db_Escape_String($a_editionByEanIsbn[$val]['flg_cadeau']) : 'N') . "'
+                        )";
+
                             }
 
                             foreach ($a_editionByEanIsbn as $eanIsbn => $editionAjout) {
@@ -223,20 +223,20 @@ class Import extends Bdo_Controller {
 
                             if (!empty($a_insert)) {
                                 $query_insert = "
-					INSERT IGNORE INTO users_album (
-						user_id, 
-						id_edition,
-						date_ajout,
-						date_achat,
-						cote,
-						flg_achat,
-						flg_pret,
-						flg_tete,
-						flg_dedicace,
-						flg_cadeau
-					)
-					VALUES
-					" . implode(",\n", $a_insert);
+                    INSERT IGNORE INTO users_album (
+                        user_id,
+                        id_edition,
+                        date_ajout,
+                        date_achat,
+                        cote,
+                        flg_achat,
+                        flg_pret,
+                        flg_tete,
+                        flg_dedicace,
+                        flg_cadeau
+                    )
+                    VALUES
+                    " . implode(",\n", $a_insert);
 
                                 Db_query($query_insert);
                                 $nb_insert = Db_affected_rows();
@@ -248,8 +248,8 @@ class Import extends Bdo_Controller {
                     ob_start();
                     echo '
 <div class="cadre1">
-	<div class="expTitle">Bilan de l\'importation du fichier ' . $_FILES["importFile"]["name"] . '</div>
-		';
+    <div class="expTitle">Bilan de l\'importation du fichier ' . $_FILES["importFile"]["name"] . '</div>
+        ';
                     foreach ($a_tblError as $aError => $aLibelle) {
                         if (!empty($$aError)) {
                             echo '<h3>' . $aLibelle . '</h3>' . implode('<br />', $$aError);
@@ -258,7 +258,7 @@ class Import extends Bdo_Controller {
 
                     echo "<h2>" . $nb_insert . " &eacute;dition(s) ajout&eacute;e(s) sur " . count($a_insert) . " lignes correctes dans le fichier envoy&eacute;.</h2>";
                     echo '
-	</div>';
+    </div>';
 
                     $bilan = ob_get_clean();
 

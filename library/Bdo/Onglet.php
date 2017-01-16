@@ -46,7 +46,7 @@ class Bdo_Onglet
             $_SESSION['id_onglet_div'] ++;
             $this->id = $_SESSION['id_onglet_div'];
         }
-        
+
         $this->nom = $nom;
         $this->text = $text;
         $this->style = $style;
@@ -93,7 +93,7 @@ class Bdo_Onglet
         if ($this->display == 'none') {
             $this->display_plus = 'block';
             $this->display_moins = 'none';
-            
+
             $this->css_onglet = $this->style . '_line_trbl';
             $this->css_onglet_on = $this->style . '_line_trbl_on';
             $this->css_onglet_out = $this->style . '_line_trbl_out';
@@ -101,7 +101,7 @@ class Bdo_Onglet
         else {
             $this->display_plus = 'none';
             $this->display_moins = 'block';
-            
+
             $this->css_onglet = $this->style . '_line_trl';
             $this->css_onglet_on = $this->style . '_line_trl_on';
             $this->css_onglet_out = $this->style . '_line_trl_out';
@@ -116,7 +116,7 @@ class Bdo_Onglet
                 $onglet->arbo .= ';' . $this->arbo;
             }
         }
-        
+
         $this->tabElement[] = $element;
     }
 
@@ -125,7 +125,7 @@ class Bdo_Onglet
         $html = '';
         if (0 < count($this->tabElement)) {
             foreach ($this->tabElement as $contenu) {
-                
+
                 // if (is_a($contenu,'Bdo_Onglet_Pack')) //php5.3.9
                 if ($contenu instanceof Bdo_Onglet_Pack) {
                     $html .= $contenu->affPack();
@@ -144,36 +144,36 @@ class Bdo_Onglet
     function vueOnglet ()
     {
         $html = "
-	  	<div class='" . $this->style . "' style='width:" . $this->width . "'>	
-	  		<div id='onglet_div_" . $this->id . "' 
-	  		style='DISPLAY: block; cursor:pointer' 
-	  		onClick='Block_None_Div(\"div_aff_" . $this->id . "\");
-	  		Block_None_Div(\"onglet_div_plus_" . $this->id . "\");
-	  		Block_None_Div(\"onglet_div_moins_" . $this->id . "\")' 
-	  		class='" . $this->style . "0' 
-	  		onmouseover='this.className=\"" . $this->style . "2\"' 
-	  		onmouseout='this.className=\"" . $this->style . "0\"'>
-	  			<table border=0 cellpadding=0 cellspacing=0 width=100%>
-	  			<tr>
-	  			<td id='" . $this->style . "_td_" . $this->id . "' width=100% nowrap align=center>" . $this->text . "</td>
-	  			<td id='" . $this->style . "_td_" . $this->id . "' align=center nowrap>
-	  			<div id='onglet_div_plus_" . $this->id . "' style='DISPLAY: " . $this->display_plus . "'><img src='" . CFG_URL_ROOT . "image/b_agrandir.gif' width='20' border=0 title='Agrandir'></div>
-	  			<div id='onglet_div_moins_" . $this->id . "' style='DISPLAY: " . $this->display_moins . "'><img src='" . CFG_URL_ROOT . "image/b_diminuer.gif' width='20' border=0 title='Diminuer'></div>
-	  			</td>
-	  			</tr>
-	  			</table>
-	  		</div>
+        <div class='" . $this->style . "' style='width:" . $this->width . "'>
+            <div id='onglet_div_" . $this->id . "'
+            style='DISPLAY: block; cursor:pointer'
+            onClick='Block_None_Div(\"div_aff_" . $this->id . "\");
+            Block_None_Div(\"onglet_div_plus_" . $this->id . "\");
+            Block_None_Div(\"onglet_div_moins_" . $this->id . "\")'
+            class='" . $this->style . "0'
+            onmouseover='this.className=\"" . $this->style . "2\"'
+            onmouseout='this.className=\"" . $this->style . "0\"'>
+                <table border=0 cellpadding=0 cellspacing=0 width=100%>
+                <tr>
+                <td id='" . $this->style . "_td_" . $this->id . "' width=100% nowrap align=center>" . $this->text . "</td>
+                <td id='" . $this->style . "_td_" . $this->id . "' align=center nowrap>
+                <div id='onglet_div_plus_" . $this->id . "' style='DISPLAY: " . $this->display_plus . "'><img src='" . CFG_URL_ROOT . "image/b_agrandir.gif' width='20' border=0 title='Agrandir'></div>
+                <div id='onglet_div_moins_" . $this->id . "' style='DISPLAY: " . $this->display_moins . "'><img src='" . CFG_URL_ROOT . "image/b_diminuer.gif' width='20' border=0 title='Diminuer'></div>
+                </td>
+                </tr>
+                </table>
+            </div>
 
-	  		<div id='div_aff_" . $this->id . "' style='DISPLAY:" . $this->display . ";" . ($this->height ? ("height:" . $this->height . ";overflow:auto") : "") . " '>
-	  		<input type=hidden name='vue_" . $this->id . "' id='id_vue_" . $this->id . "' value='vue_" . $this->id . "'>
-	  		";
-        
+            <div id='div_aff_" . $this->id . "' style='DISPLAY:" . $this->display . ";" . ($this->height ? ("height:" . $this->height . ";overflow:auto") : "") . " '>
+            <input type=hidden name='vue_" . $this->id . "' id='id_vue_" . $this->id . "' value='vue_" . $this->id . "'>
+            ";
+
         $html .= $this->affOnglet();
-        
+
         // &nbsp; pour bug IE7
         $html .= ($this->height ? "&nbsp;" : "") . "</div>
-		</div>
-	  	";
+        </div>
+        ";
         return $html;
     }
 }

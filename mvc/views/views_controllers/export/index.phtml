@@ -2,7 +2,7 @@
 <link href="<?php echo BDO_URL;?>style/export.css" rel="stylesheet" type="text/css">
 
 <div class="cadre1">
-   	
+
 <form action="?act=export" method="post" name="export">
 
 <hr class="expSep" />
@@ -11,10 +11,10 @@
 <div class="expRadioBlock">
 
       <div align="center">
-        	<div class="expTitle2">Informations à exporter</div>
+            <div class="expTitle2">Informations à exporter</div>
       </div>
 
-        <p> 
+        <p>
           <label><input type="radio" name="contenu" value="0" <?php echo $view->CONTENU0;?> />Collection</label><br/>
           <label><input type="radio" name="contenu" value="1" <?php echo $view->CONTENU1;?> />Achats Futurs</label><br/>
           <label><input type="radio" name="contenu" value="2" <?php echo $view->CONTENU2;?> />Albums manquants</label><br/>
@@ -58,13 +58,13 @@ Edition originale<input type="checkbox" name="sel_field[]" value="18" <?php echo
        <div class="expTitle2">Format</div>
       </div>
 
-        <p> 
-           
+        <p>
+
          <label><input type="radio" name="info" value="0" <?php echo $view->TYPE0;?> />Excel</label><br/>
           <label><input type="radio" name="info" value="1" <?php echo $view->TYPE1;?> />CSV</label><br/>
           <label><input type="radio" name="info" value="2" <?php echo $view->TYPE2;?> />XML</label><br/>
            <label><input type="radio" name="info" value="3" <?php echo $view->TYPE3;?> />PDF</label><br/>
-          
+
         </p>
 </div>
 
@@ -79,7 +79,7 @@ Mémoriser la selection<input type="checkbox" name="memsel" value="checked" /><b
         L'export PDF est limit&eacute; : pour les grandes collections (plus de 600 albums), nous vous conseillons l'outils de Chninkel
         (cf. <a href='http://forum.bdovore.com/viewtopic.php?p=44842#44842' target="_blank">ce post sur le forum</a> )
         <br>Téléchargez le programme ici : <a href="https://bitbucket.org/bdovore/bdopdf" target="_blank"> à compiler via Qt (version linux)</a> ou <a href="https://bitbucket.org/bdovore/bdopdf/downloads" target="_blank">executable (version windows)</a>
-    </p>                                              
+    </p>
  </div>
 <p>
 <input type="submit" name="Submit2" value="Exporter" /> <br />

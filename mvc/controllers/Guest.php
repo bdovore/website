@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 
 class Guest extends Bdo_Controller
@@ -32,11 +32,11 @@ class Guest extends Bdo_Controller
      */
     public function Index ()
     {
-        
+
         /*
          * user=4578 OK user=899 KO
          */
-        
+
         // Vérifie qu'un parametre a été passé
         $user = $this->getUserInfo();
 
@@ -44,20 +44,20 @@ class Guest extends Bdo_Controller
             // Charge les statistisques
             $this->loadModel("Useralbum");
             $stat = $this->Useralbum->getStatistiques($user->user_id);
-      
+
             // Selections des 9 albums les mieux notés
             $this->view->set_var('a_carre',  $this->Useralbum->carre($user));
-                
+
             // Selection des 4 derniers achats
             $this->view->set_var('a_lastAchat', $this->Useralbum->lastAchat($user->user_id));
-        
-            
+
+
             // Récupère les contributions
             $this->loadModel("User_album_prop");
             $prop_stat = $this->User_album_prop->getUserStat($user->user_id);
             $user_prop_alb =  $prop_stat["user_prop_alb"];
             $user_prop_corr = $prop_stat["user_prop_corr"];
-            
+
             // envoie les variables a la vue
             $this->view->set_var(
                     array(
@@ -78,14 +78,14 @@ class Guest extends Bdo_Controller
                             "USERID" => $ori_user,
                             "URLCOLLEC" => "www.bdovore.com/guest?user=" . $ori_user
                     ));
-        
+
             if (issetNotEmpty($_GET["user"])) {
                 $this->view->set_var("ADDTHIS", "<img src='" . BDO_URL_IMAGE . "site/lg-addthis-fr.gif' width='125' height='16' alt='Partager cette page' style='border:0'/>");
             }
         }
         $this->view->render();
     }
-    
+
     public function Collection() {
         /*
          * Affiche les albums de la collection d'un utilisateur
@@ -94,7 +94,7 @@ class Guest extends Bdo_Controller
         $user = $this->getUserInfo();
 
         if ($this->verifUserID($user)) {
-            // controle d'acces 
+            // controle d'acces
             if (($user->user_id != $_SESSION["userConnect"]->user_id) and ! $user->is_openCollection()) {
 
                 $this->view->addAlertPage("Cet utilisateur n'a pas rendu sa collection publique !");
@@ -103,7 +103,7 @@ class Guest extends Bdo_Controller
 
                 return;
             }
-            
+
             $this->loadModel('Useralbum');
 
             $page = getValInteger("page",1);
@@ -111,7 +111,7 @@ class Guest extends Bdo_Controller
             $searchvalue = Db_Escape_String(getVal("l_search",""));
 
             // tableau pour gérer les order by
-       
+
             $a_order[0]= "IMG_COUV";
             $a_order[1]= "TITRE_TOME";
             $a_order[2]= "NOM_SERIE";
@@ -128,7 +128,7 @@ class Guest extends Bdo_Controller
             //évite les injections SQL (inutile quand on aura écrit getValInArray())
             if ( strcmp($order,"ASC") !== 0 )
                 $order = "DESC";//si ça n'est pas ASC, ça doit être DESC ...
-            
+
             // variable $sort donne la colonne pour le tri
             // on s'assure que la variable est dans le bon intervale de valeur
             $sort = getValInteger("sort",9);
@@ -168,19 +168,19 @@ class Guest extends Bdo_Controller
                     )
                   ) ;
         }
-        
+
         $this->view->render();
     }
-    
+
     public function Wishlist() {
         /*
          * Affiche les futurs achats de la collection d'un utilisateur
          */
         // Vérifie qu'un parametre a été passé
         $user = $this->getUserInfo();
-       
+
         if ($this->verifUserID($user)) {
-            // controle d'acces 
+            // controle d'acces
             if (($user->user_id != $_SESSION["userConnect"]->user_id) and ! $user->is_openCollection()) {
                 $this->view->addAlertPage("Cet utilisateur n'a pas rendu sa collection publique !");
                 $this->view->addPhtmlFile('alert', 'BODY');
@@ -188,7 +188,7 @@ class Guest extends Bdo_Controller
 
                 return;
             }
-            
+
             $this->loadModel('Useralbum');
 
             $page = getValInteger("page",1);
@@ -196,7 +196,7 @@ class Guest extends Bdo_Controller
             $searchvalue = Db_Escape_String(getVal("l_search","" ));
 
             // tableau pour gérer les order by
-       
+
             $a_order[0]= "IMG_COUV";
             $a_order[1]= "TITRE_TOME";
             $a_order[2]= "NOM_SERIE";
@@ -248,10 +248,10 @@ class Guest extends Bdo_Controller
                     )
                   ) ;
         }
-        
+
         $this->view->render();
     }
-    
+
     private function getUserInfo() {
         /*
          * Récupère les infos du user, soit en paramètre soit user connecté
@@ -270,7 +270,7 @@ class Guest extends Bdo_Controller
 
         return $user;
     }
-    
+
     private function verifUserID($user){
         // controle d'acces de l'utilisateur
         // renvoie false et message d'erreur si la collection n'est pas accessible
@@ -279,35 +279,35 @@ class Guest extends Bdo_Controller
             $this->view->addPhtmlFile('alert', 'BODY');
 
             return false;
-        } 
+        }
         else if (!$user->user_id) {
             $this->view->addAlertPage("Cet utilisateur n'existe pas !");
             $this->view->addPhtmlFile('alert', 'BODY');
 
             return false;
-        } 
+        }
         else {
             return true;
         }
     }
-    
+
     public function Avis () {
         /*
          * Liste les avis de lecture de l'utilisateur
          */
         $user = $this->getUserInfo();
-       
+
         if ($this->verifUserID($user)) {
             $this->loadModel('Comment');
             $page = getValInteger('page',1);
-           
+
             $limit = "LIMIT ".(($page-1)*20).",20";
-          
+
             $dbs_comment = $this->Comment->load('c', "
                   WHERE c.comment <> '' and c.user_id = ".$user->user_id
-                  ." ORDER BY c.`DTE_POST` DESC ".$limit 
+                  ." ORDER BY c.`DTE_POST` DESC ".$limit
                   );
-           
+
             $this->view->set_var(array(
                "PAGETITLE" => "Bdovore.com : les avis BD de $user->username",
                "dbs_comment" => $dbs_comment,

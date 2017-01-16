@@ -76,7 +76,7 @@ else {
     else {
         $params = array();
     }
-   
+
     $controller = isset($params[0]) ? ucfirst(strtolower($params[0])) : 'Accueil';
 
     //TODO ça devrait vraiment être dans .htaccess un truc pareil ...
@@ -137,7 +137,7 @@ foreach ($a_GLOBALVAR as $GLOBALVAR) {
             else {
                 $corrVal = stripSlUtf8($val);
             }
-			
+
             ${$GLOBALVAR}[$key] = $corrVal;
 
             $$key = $corrVal;

@@ -1,18 +1,18 @@
 <script type="text/javascript"><!--
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 2)) {
-		alert('Veuillez saisir au moins 2 caractères');
-	}else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}else {
+    if ((isMandatory == true) && (myText.length < 2)) {
+        alert('Veuillez saisir au moins 2 caractères');
+    }else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }else {
                 mywindow=open("{URLSITE}admin/pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}else {
-			mywindow=open('{URLSITE}admin/pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+            }
+        }else {
+            mywindow=open('{URLSITE}admin/pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 //--></script>
 
@@ -53,7 +53,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
                     afin de vous éviter de saisir une proposition déjà faite récemment (et évidemment de bien vérifier
                     que l'album n'existe pas déjà via le moteur de recherche ou le <a href="{URLSITE}browser.php">BDoBrowser</a>.
                 </p>
-                
+
                 <div style="padding-top: 10px;"><span class="i">La meilleure source pour remplir ce formulaire est <span class="b">votre exemplaire</span> (si vous en possédez un)</span> - Proverbe bdovorien présocrato-cambrien</div>
                 <table class="table_form_public">
                     <tr width="100%">
@@ -104,7 +104,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
                         <td><input name="txtNumTome" id="txtNumTome" value="{TOME}" size="1" class="flat" type="text" /></td>
                         <td colspan="2"><span class="petite_police">vide si le volume contient toute la "série" ou pour les albums one-shot ; "HS" pour un hors-série</td>
                     </tr>
-                    <tr> 
+                    <tr>
                         <td colspan="4">
                             <table width="100%">
                                 <tr>
@@ -119,7 +119,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
                                     <td align="center">
                                         <select name="lstType" size="1">{OPTTYPE}</select>
                                     </td>
-                                    <td align="center" title="pas pris en compte lors d'une simple mise à jour"><input type="checkbox" name="chkIntegrale" value="checkbox" {ISINT} /></td> 
+                                    <td align="center" title="pas pris en compte lors d'une simple mise à jour"><input type="checkbox" name="chkIntegrale" value="checkbox" {ISINT} /></td>
                                     <!--<td align="center"><input name="txtPrixVente" type="text" id="txtPrixVente" value="{PRIX_VENTE}" size="3" style="text-align: center;" /> <span class="petite_police">euros</span></td>-->
                                     <td>&nbsp;</td>
                                 </tr>
@@ -154,7 +154,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
-                        <td width="14%" class="enonce_tr_form_public">Scenariste(s)</td>  
+                        <td width="14%" class="enonce_tr_form_public">Scenariste(s)</td>
                         <td width="0%"><input name="txtScenarId" value="" size="5" type="hidden" /></td>
                         <td width="28%"><input name="txtScenar" value="{SCENARISTE}" size="40" class="flat" type="text" /></td>
                         <td width="10%"><img src="{URLSITEIMAGE}site/loupe.gif" onclick="newWindow('auteur',document.myform.txtScenar.value,'myform','txtScenar',true)" height="14" width="24" /></td>
@@ -181,9 +181,9 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
                         <td><img src="{URLSITEIMAGE}site/loupe.gif" onclick="newWindow('auteur',document.myform.txtColoAlt.value,'myform','txtColoAlt',true)" height="14" width="24" /></td>
                     </tr>
                 </table>
-                        
+
                 <br />
-                        
+
                 <table class="table_form_public">
                     <tr width="100%">
                         <td width="13%"></td>
@@ -208,7 +208,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
                         <td><input name="txtDateParution" id="txtDateParution3" value="0000-00-00" size="9" class="flat" type="text" /></td>
                         <td colspan="2">
                             <span class="petite_police">
-                                BDovore ne gère pas les réimpressions, uniquement les rééditions 
+                                BDovore ne gère pas les réimpressions, uniquement les rééditions
                                 (changements de caractéristiques autres que la seule date d'impression)
                             </span>
                         </td>
@@ -243,9 +243,9 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
                         </td>
                     </tr>
                 </table>
-                        
+
                 <br />
-                
+
                 <table class="table_form_public">
                     <tr>
                         <td class="enonce_tr_form_public">Couverture</td>

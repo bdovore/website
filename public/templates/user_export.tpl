@@ -2,7 +2,7 @@
 <link href="{URLSITE}style/export.css" rel="stylesheet" type="text/css">
 
 <div class="cadre1">
-   	
+
 <form action="export.php?act=export" method="post" name="export">
 
 <div class="expTitle">Exportation de données</div>
@@ -43,8 +43,8 @@ Edition originale<input type="checkbox" name="sel_field[]" value="18" {SELFIELD1
        <div class="expTitle2">Format</div>
       </div>
 
-        <p> 
-           
+        <p>
+
          <label><input type="radio" name="info" value="0" {TYPE0} />Excel</label><br/>
           <label><input type="radio" name="info" value="1" {TYPE1} />CSV</label><br/>
           <label><input type="radio" name="info" value="2" {TYPE2} />XML</label><br/>
@@ -55,10 +55,10 @@ Edition originale<input type="checkbox" name="sel_field[]" value="18" {SELFIELD1
 <div class="expRadioBlock">
 
       <div align="center">
-        	<div class="expTitle2">Information à exporter</div>
+            <div class="expTitle2">Information à exporter</div>
       </div>
 
-        <p> 
+        <p>
           <label><input type="radio" name="contenu" value="0" {CONTENU0} />Collection</label><br/>
           <label><input type="radio" name="contenu" value="1" {CONTENU1} />Achats Futurs</label><br/>
           <label><input type="radio" name="contenu" value="2" {CONTENU2} />Albums manquants</label>

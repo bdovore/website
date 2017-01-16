@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 
 class Auteur extends Bdo_Db_Line
@@ -12,7 +12,7 @@ class Auteur extends Bdo_Db_Line
      */
     public $table_name = 'bd_auteur';
     public $error = '';
-    
+
     // initialisation
     public function __construct ($id = null)
     {
@@ -26,21 +26,21 @@ class Auteur extends Bdo_Db_Line
         }
         parent::__construct($this->table_name, $a_data);
     }
-    
+
     public function select ()
     {
         return "
-        SELECT 
-            `ID_AUTEUR` , 
-            `PSEUDO` , 
-            `PRENOM` , 
-            `NOM` , 
-            `FLG_SCENAR` , 
-            `FLG_DESSIN` , 
-            `FLG_COLOR` , 
-            `COMMENT` , 
-            `DTE_NAIS` , 
-            `DTE_DECES` , 
+        SELECT
+            `ID_AUTEUR` ,
+            `PSEUDO` ,
+            `PRENOM` ,
+            `NOM` ,
+            `FLG_SCENAR` ,
+            `FLG_DESSIN` ,
+            `FLG_COLOR` ,
+            `COMMENT` ,
+            `DTE_NAIS` ,
+            `DTE_DECES` ,
             `NATIONALITE`,
             VALIDATOR,
             VALID_DTE,
@@ -66,36 +66,36 @@ class Auteur extends Bdo_Db_Line
         }
 
         $dbSearch = new Bdo_Db_Search();
-        
+
         $dbSearch->select = "
-        SELECT 
-            `ID_AUTEUR` , 
-            `PSEUDO` , 
-            `PRENOM` , 
-            `NOM` , 
-            `FLG_SCENAR` , 
-            `FLG_DESSIN` , 
-            `FLG_COLOR` , 
-            `COMMENT` , 
-            `DTE_NAIS` , 
-            `DTE_DECES` , 
+        SELECT
+            `ID_AUTEUR` ,
+            `PSEUDO` ,
+            `PRENOM` ,
+            `NOM` ,
+            `FLG_SCENAR` ,
+            `FLG_DESSIN` ,
+            `FLG_COLOR` ,
+            `COMMENT` ,
+            `DTE_NAIS` ,
+            `DTE_DECES` ,
             `NATIONALITE`
         ";
 
         // dans les tables
         $dbSearch->from = "FROM " . $this->table_name . "";
         $dbSearch->where = "WHERE 1";
-        
+
         // dans l'ordre
         if ($a_data['daff'] == "") $a_data['daff'] = "0";
         if ($a_data['sens_tri'] == "") $a_data['sens_tri'] = "ASC";
         if ($a_data['col_tri'] == "") $a_data['col_tri'] = $this->table_name . ".NOM";
-        
+
         $dbSearch->groupby = "";
-        
+
         // --------------=======================----------------
         $dbSearch->infoQuery();
-        
+
         // --------------=======================----------------
         $dbSearch->integreData($a_data);
 
@@ -107,39 +107,39 @@ class Auteur extends Bdo_Db_Line
         else {
             $dbSearch->exec();
         }
-        
+
         return $dbSearch;
     }
-    
+
     public function searchJSON() {
-        
+
     }
-    
+
     public static function getNbAlbumForAuteur($auteur_id) {
         $query = "
-	select 
-		count(*) as nbtome 
-	from 
-		bd_tome 
-	where 
-		id_scenar = " . intval($auteur_id) . " 
-		or id_dessin = " . intval($auteur_id) . " 
-		or id_color = " . intval($auteur_id) . "";
+    select
+        count(*) as nbtome
+    from
+        bd_tome
+    where
+        id_scenar = " . intval($auteur_id) . "
+        or id_dessin = " . intval($auteur_id) . "
+        or id_color = " . intval($auteur_id) . "";
          $resultat = Db_query($query);
         $obj = Db_fetch_object($resultat);
-        
+
         return $obj->nbtome;
     }
-    
+
     public function getAuteurForSerie($serie_id) {
-        /* 
+        /*
          * Fournit la liste des auteurs contributeur sur une série
          */
-        $query = "SELECT distinct ID_AUTEUR, PSEUDO 
-	FROM 
-	bd_auteur, bd_tome 
-	WHERE id_serie = " . $serie_id . " 
-	and (id_scenar = id_auteur or id_dessin = id_auteur)";
+        $query = "SELECT distinct ID_AUTEUR, PSEUDO
+    FROM
+    bd_auteur, bd_tome
+    WHERE id_serie = " . $serie_id . "
+    and (id_scenar = id_auteur or id_dessin = id_auteur)";
         $resultat = Db_query($query);
         $a_obj = array();
         while ($obj = Db_fetch_object($resultat)) {
@@ -147,7 +147,7 @@ class Auteur extends Bdo_Db_Line
         }
         return $a_obj;
     }
-    
+
     public static function replaceAuteur($source_id, $dest_id) {
         // Remplace l'id d'auteur source par l'id auteur dest dans les différents champs de bd_tome
         // Met à jour l'information contenue dans la base de données
@@ -178,7 +178,7 @@ class Auteur extends Bdo_Db_Line
         $query = "UPDATE bd_tome SET id_color_alt = " . $dest_id . " where id_color_alt = " . $source_id;
         Db_query($query);
         $modif += Db_affected_rows() ;
-        
+
         return $modif;
     }
 }

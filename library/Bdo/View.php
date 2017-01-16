@@ -34,7 +34,7 @@ class Bdo_View
     public $vars = array();
 
     public $layout = "default";
-    
+
     // initialisation
     public function __construct ()
     {
@@ -141,7 +141,7 @@ class Bdo_View
         if ($value) {
             $this->addAriane = $value;
         }
-        
+
         if ($baseAriane) {
             Bdo_Cfg::setVar('baseAriane', $baseAriane);
         }
@@ -152,9 +152,9 @@ class Bdo_View
     {
         $this->addVar('acl', Bdo_Cfg::getVar('acl'));
         $this->addVar('user', Bdo_Cfg::getVar('user'));
-        
+
         // $this->a_alertPage = array();
-        
+
         if ($msg) {
             $this->addAlertPage($msg);
         }
@@ -166,7 +166,7 @@ class Bdo_View
                 $this->addAlertPage("<font size=4>" . LANG_BUGACCESNO . "</font><br />" . LANG_BUGACCESPAGE1);
             }
         }
-        
+
         $this->flush();
         Bdo_Cfg::quit();
     }
@@ -176,9 +176,9 @@ class Bdo_View
         foreach ($this->a_var as $key => $value) {
             $$key = $value;
         }
-        
+
         $this->addHeader('Content-Type: text/html; charset=UTF-8');
-        
+
         if ($this->type != 'xhr') {
             $this->addPhtmlFile(BDO_DIR . "design/header.php", true);
             $this->addPhtmlFile(BDO_DIR . "design/footer.php");
@@ -187,31 +187,31 @@ class Bdo_View
             $this->addHeader('cache-control: no-cache');
             if (! empty($this->onLoad)) {
                 $this->a_htmlEndFile[] = '
-				<script language="javascript">
-				' . $this->onLoad . '
-				</script>
-				';
+                <script language="javascript">
+                ' . $this->onLoad . '
+                </script>
+                ';
             }
         }
-        
+
         $view = $this;
-        
+
         foreach ($this->a_header as $header) {
             header($header);
         }
-        
+
         foreach ($this->a_phtmlFile as $filename) {
             include ($filename);
         }
-        
+
         foreach ($this->a_htmlEndFile as $code_html) {
             echo $code_html . "\n";
         }
         if ($this->type != 'xhr') {
             echo "
-		</body>
-		</html>
-		";
+        </body>
+        </html>
+        ";
         }
     }
 
@@ -238,7 +238,7 @@ class Bdo_View
             $view->sview[$var] = ob_get_clean();
             $view->$var = $view->sview[$var];
         }
-         
+
         if ($this->layout) {
             require BDO_DIR . 'mvc' . DS . 'views' . DS . 'layout' . DS . $this->layout . '.phtml';
         }
@@ -248,7 +248,7 @@ class Bdo_View
             }
         }
     }
-    
+
     public function getHelper ($helperName)
     {
          require BDO_DIR . 'mvc' . DS . 'views' . DS . 'helpers' . DS . strtolower($helperName) . '.php';

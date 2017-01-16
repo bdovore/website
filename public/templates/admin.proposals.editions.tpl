@@ -1,8 +1,8 @@
 <div class="fond_admin">
-	<div class="titre_admin">Nouvelles éditions en attente</div>
-	<div style="margin: 0 0 7px 14px; font-weight: bold; text-align: center">{DATEBEFOREVALID}</div>
+    <div class="titre_admin">Nouvelles éditions en attente</div>
+    <div style="margin: 0 0 7px 14px; font-weight: bold; text-align: center">{DATEBEFOREVALID}</div>
     <table class="donnees" align="center">
-        <tr> 
+        <tr>
             <td width="70" class="entete_admin"><a href="../admin/adminpropeditions.php?cle=1&sort=asc"><img src="{URLSITEIMAGE}flechehaut.gif" width="12" height="12" hspace="5" border="0" /></a>
                 ID
             <a href="../admin/adminpropeditions.php?cle=1&sort=DESC"><img src="{URLSITEIMAGE}flechebas.gif" width="12" height="12" hspace="5" border="0" /></a></td>
@@ -21,9 +21,9 @@
             <td width="30" class="entete_admin"><img src="{URLSITEIMAGE}edit.gif" width="18" height="13" /></td>
             <td width="30" class="entete"><img src="{URLSITEIMAGE}poubelle.gif" width="25" height="24" /></td>
         </tr>
-      
+
         <!-- BEGIN PropBlock -->
-        <tr> 
+        <tr>
             <td height="25" class="data_admin">{ID}</td>
             <td width="128" class="data_admin_petit">{DATE}</td>
             <td width="111" class="data_admin">{USER}</td>

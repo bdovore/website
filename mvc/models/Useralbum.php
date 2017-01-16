@@ -4,10 +4,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  * @author Tom
- * 
+ *
  * Classe ppur manipuler les données perso sur les albums dans la collection de l'utilisateur
  * + ajout d'album dans la collection, sélection, etc.
- * 
+ *
  * TODO : finir la méthode index, reprendre les méthodes lastachat, carre etc. dans user pour les mettre ici
  *         - refaire guest en utilisant la class useralbum
  */
@@ -20,7 +20,7 @@ class Useralbum extends Bdo_Db_Line
     public $table_name = 'users_album';
 
     public $error = '';
-    
+
     // initialisation
     public function __construct ($id = null)
     {
@@ -41,16 +41,16 @@ class Useralbum extends Bdo_Db_Line
     public function select ()
     {
         $select = "
-        SELECT 
+        SELECT
                 bd_tome.ID_TOME,
                 en.IMG_COUV,
                 bd_tome.TITRE as TITRE_TOME,
                 s.nom as NOM_SERIE,
-                bd_tome.NUM_TOME, 
+                bd_tome.NUM_TOME,
                 concat_ws(' ',er.nom, year(en.DTE_PARUTION)) as NOM_EDITION,
                 er.nom as NOM_EDITEUR,
                 c.nom as NOM_COLLECTION,
-                sc.pseudo as scpseudo, 
+                sc.pseudo as scpseudo,
                 de.pseudo as depseudo,
                  ua.date_ajout as DATE_AJOUT,
                 ua.user_id as USER_ID,
@@ -60,69 +60,69 @@ class Useralbum extends Bdo_Db_Line
                 ua.flg_dedicace as FLG_DEDICACE,
                 ua.flg_tete as FLG_TETE,
                 ua.comment,
-               
+
                 ua.flg_achat as FLG_ACHAT,
                 IFNULL(ua.date_achat, ua.date_ajout) as DATE_ACHAT,
                 ua.cote,
                 ua.flg_cadeau as FLG_CADEAU,
                 ua.FLG_LU as FLG_LU,
-        	
-        	
-        	bd_tome.PRIX_BDNET, 
-        	bd_tome.FLG_INT as FLG_INT_TOME, 
-        	bd_tome.FLG_TYPE as FLG_TYPE_TOME,
-        	bd_tome.HISTOIRE as HISTOIRE_TOME, 
-                
-                s.ID_SERIE, 
-        	
-                s.FLG_FINI, 
-        	g.ID_GENRE, 
-        	g.libelle as NOM_GENRE, 
-        
-        	en.ID_EDITION,
-        	en.DTE_PARUTION,
-        	en.ean as EAN_EDITION, 
-        	en.isbn as ISBN_EDITION, 
-        
+
+
+            bd_tome.PRIX_BDNET,
+            bd_tome.FLG_INT as FLG_INT_TOME,
+            bd_tome.FLG_TYPE as FLG_TYPE_TOME,
+            bd_tome.HISTOIRE as HISTOIRE_TOME,
+
+                s.ID_SERIE,
+
+                s.FLG_FINI,
+            g.ID_GENRE,
+            g.libelle as NOM_GENRE,
+
+            en.ID_EDITION,
+            en.DTE_PARUTION,
+            en.ean as EAN_EDITION,
+            en.isbn as ISBN_EDITION,
+
                 c.ID_COLLECTION,
-        	
-        	
-        	er.ID_EDITEUR,
-        	
-                
-        	bd_tome.ID_SCENAR, 
-        	
-        	bd_tome.ID_DESSIN, 
-        	
-        	bd_tome.ID_COLOR, 
-        	co.pseudo as copseudo,
-        	bd_tome.ID_SCENAR_ALT, 
-        	sca.pseudo as scapseudo, 
-        	bd_tome.ID_DESSIN_ALT, 	
-        	dea.pseudo as deapseudo, 
-        	bd_tome.ID_COLOR_ALT, 
-        	coa.pseudo as coapseudo,
-                DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%Y') as annee_achat, 
+
+
+            er.ID_EDITEUR,
+
+
+            bd_tome.ID_SCENAR,
+
+            bd_tome.ID_DESSIN,
+
+            bd_tome.ID_COLOR,
+            co.pseudo as copseudo,
+            bd_tome.ID_SCENAR_ALT,
+            sca.pseudo as scapseudo,
+            bd_tome.ID_DESSIN_ALT,
+            dea.pseudo as deapseudo,
+            bd_tome.ID_COLOR_ALT,
+            coa.pseudo as coapseudo,
+                DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%Y') as annee_achat,
 
                 DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%m') as mois_achat";
-        
-        $from = " 
+
+        $from = "
                 FROM users_album ua
                 INNER JOIN bd_edition en ON ua.id_edition = en.id_edition
                 INNER JOIN bd_tome ON  en.id_tome = bd_tome.id_tome
                 INNER JOIN bd_serie s ON bd_tome.id_serie = s.id_serie
                 INNER JOIN bd_genre g ON s.id_genre = g.id_genre
-                
+
                 LEFT JOIN bd_collection c ON en.id_collection = c.id_collection
                 LEFT JOIN bd_editeur er ON c.id_editeur = er.id_editeur
-                    
+
                 LEFT JOIN bd_auteur sc ON bd_tome.id_scenar = sc.id_auteur
-                LEFT JOIN bd_auteur de ON bd_tome.id_dessin = de.id_auteur 
+                LEFT JOIN bd_auteur de ON bd_tome.id_dessin = de.id_auteur
                 LEFT JOIN bd_auteur co ON bd_tome.id_color = co.id_auteur
                 LEFT JOIN bd_auteur sca ON bd_tome.id_scenar_alt = sca.id_auteur
                 LEFT JOIN bd_auteur dea ON bd_tome.id_dessin_alt = dea.id_auteur
                 LEFT JOIN bd_auteur coa ON bd_tome.id_color_alt = coa.id_auteur";
-        
+
         if ($this->withUserComment) {
             $select .= ",
                 uco.NOTE USER_NOTE,
@@ -177,13 +177,13 @@ class Useralbum extends Bdo_Db_Line
         }
 
         // Futurs achats
-        
+
         if ($stat == "all" or $stat == "achat") {
 
             $nbfuturs_achats = Db_CountRow("select * from users_album u where user_id=" . $user_id . " and flg_achat='O'");
         }
-        
-        
+
+
 
         // Inégrales
         if ($stat == "all" or $stat == "integrale") {
@@ -207,7 +207,7 @@ class Useralbum extends Bdo_Db_Line
 
             ");
         }
-        
+
 
         // coffrets
     if ($stat == "all" or $stat == "coffret") {
@@ -237,59 +237,59 @@ class Useralbum extends Bdo_Db_Line
             "nbfuturs_achats" => $nbfuturs_achats,
             "nbtomes" => $nbtomes,
             "nbseries" => $nbseries
-            
+
         );
-        
+
         return ($a_result);
-        
+
     }
-    
+
      public function lastAchat ($user_id, $limit = 5)
 
     {
          $where = " where
 
-        	ua.user_id=" . $user_id . "
+            ua.user_id=" . $user_id . "
 
-        	and ua.flg_achat='N'
+            and ua.flg_achat='N'
                  order by IFNULL(ua.date_achat,ua.date_ajout) desc
 
             limit 0,".$limit;
-         
+
          return $this->load("c", $where);
-        
+
 
     }
-    
+
     public function lastFuturAchat ($user_id, $limit = 5)
 
     {
          $where = " where
 
-        	ua.user_id=" . $user_id . "
+            ua.user_id=" . $user_id . "
 
-        	and ua.flg_achat='O'
+            and ua.flg_achat='O'
                  order by ua.date_ajout desc
 
             limit 0,".$limit;
-         
+
          return $this->load("c", $where);
-        
+
 
     }
-    
+
     public function getValorisation($user_id) {
         /*
          * Effectue la requête pour obtenir les détail de la valorisation de la collection
-         * Retour : 
+         * Retour :
          * - nb_album : nombre d'album
          * - valorisation : valorisation de la collection
-         * - 
+         * -
          */
-        $query = "select round(sum((case when ua.cote > 0 then ua.cote 
+        $query = "select round(sum((case when ua.cote > 0 then ua.cote
                                     when bd_tome.prix_bdnet > 0 then prix_bdnet
                                     when bd_tome.flg_int = 'O' then val_int else
-			val_alb end) + IF (bd_tome.flg_type = 1 AND u.val_cof_type = 0 , val_cof, 0)),2)  as valorisation,
+            val_alb end) + IF (bd_tome.flg_type = 1 AND u.val_cof_type = 0 , val_cof, 0)),2)  as valorisation,
                 count(*) nb_album,
                         count(IF((ua.cote > 0),1,null)) nb_val_user,
                         count(IF((ua.cote = 0 or ua.cote is null) and bd_tome.prix_bdnet > 0,1,null)) as nb_val_bdovore,
@@ -308,14 +308,14 @@ class Useralbum extends Bdo_Db_Line
         $resultat = Db_query($query);
 
          $obj = Db_fetch_object($resultat);
-        
+
          return $obj;
     }
-    
+
     public function Carre($user) {
         /*
-         * Fonction qui renvoie les albums du carré magique de l'utilisateur 
-         * 
+         * Fonction qui renvoie les albums du carré magique de l'utilisateur
+         *
          */
         // Selections des 9 albums les mieux notés
 
@@ -323,33 +323,33 @@ class Useralbum extends Bdo_Db_Line
 
             $query = "
 
-	SELECT
+    SELECT
 
-		t.ID_TOME,
+        t.ID_TOME,
 
-		t.TITRE as TITRE_TOME,
+        t.TITRE as TITRE_TOME,
 
-		en.IMG_COUV
+        en.IMG_COUV
 
-	FROM
+    FROM
 
-		users_album ua
+        users_album ua
 
-		INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
+        INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
 
-		INNER JOIN users_comment uc ON  uc.id_tome = en.id_tome AND uc.user_id = ua.user_id
+        INNER JOIN users_comment uc ON  uc.id_tome = en.id_tome AND uc.user_id = ua.user_id
 
-		INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+        INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 
-	WHERE
+    WHERE
 
-		ua.user_id=" . $user->user_id . "
+        ua.user_id=" . $user->user_id . "
 
-		and ua.flg_achat='N'
+        and ua.flg_achat='N'
 
-	ORDER BY uc.note desc
+    ORDER BY uc.note desc
 
-	LIMIT 0,9";
+    LIMIT 0,9";
 
         }
 
@@ -359,70 +359,70 @@ class Useralbum extends Bdo_Db_Line
 
             $query = "
 
-	select
+    select
 
-		t.ID_TOME,
+        t.ID_TOME,
 
-		t.TITRE as TITRE_TOME,
+        t.TITRE as TITRE_TOME,
 
-		en.IMG_COUV
+        en.IMG_COUV
 
-   	from
+    from
 
-		users_list_carre ulc
+        users_list_carre ulc
 
-		INNER JOIN bd_tome t ON t.id_tome = ulc.id_tome
+        INNER JOIN bd_tome t ON t.id_tome = ulc.id_tome
 
-		INNER JOIN bd_edition en ON en.id_edition = t.id_edition
+        INNER JOIN bd_edition en ON en.id_edition = t.id_edition
 
-	where
+    where
 
-		ulc.user_id=" . $user->user_id . "
+        ulc.user_id=" . $user->user_id . "
 
-	ORDER BY ulc.rang
+    ORDER BY ulc.rang
 
-	limit 0,9
+    limit 0,9
 
-	";
+    ";
 
         }
         $resultat = Db_query($query);
 
         return Db_fetch_all_obj($resultat, 'ID_TOME');
     }
-    
+
     public function deleteTome($id_tome) {
         /*
          * Suppresio d'id tome dans users_album
          */
         Db_query("DELETE users_album.* FROM users_album INNER JOIN bd_edition USING(id_edition)
-	WHERE bd_edition.`id_tome`=" . intval($id_tome));
-        
+    WHERE bd_edition.`id_tome`=" . intval($id_tome));
+
         return Db_affected_rows();
-        
+
     }
-    
+
     public function replaceEditionFromTome($id_tome,$id_edition) {
         /*
          * Suppresion d'id tome : on transfert les édition existantes d'un album vers une éditoin par défaut, si l'album n'est pas déjà référencé
          */
         Db_query("UPDATE IGNORE users_album INNER JOIN bd_edition using(id_edition)
-	SET id_edition = ". intval($id_edition)." WHERE  bd_edition.id_tome = ". intval($id_tome));
-        
+    SET id_edition = ". intval($id_edition)." WHERE  bd_edition.id_tome = ". intval($id_tome));
+
         return Db_affected_rows();
-        
+
     }
-    
+
     public function replaceEditionFromEdition($source_id,$dest_id) {
         /*
          * Suppresion d'id tome : on transfert les édition existantes d'un album vers une éditoin par défaut, si l'album n'est pas déjà référencé
          */
-        Db_query("UPDATE IGNORE users_album 
-	SET id_edition = ". intval($dest_id)." WHERE  id_edition = ". intval($source_id));
-        
+        Db_query("UPDATE IGNORE users_album
+    SET id_edition = ". intval($dest_id)." WHERE  id_edition = ". intval($source_id));
+
         return Db_affected_rows();
-        
+
     }
-    
+
 }
 ?>

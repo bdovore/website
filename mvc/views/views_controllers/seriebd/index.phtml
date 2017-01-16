@@ -4,7 +4,7 @@ $pageinate = $view->getHelper('Pagination');
 ?>
 
 <SCRIPT language="Javascript">
-<!-- 
+<!--
 
     function Chargement() {
         d = document.add_collect;
@@ -15,14 +15,14 @@ $pageinate = $view->getHelper('Pagination');
         }
     }
 
-//--> 
+//-->
 </SCRIPT>
 <div class="colleft">
 <div class="col1wrap">
-				<div class="col1 fond">
-						
-					
-	
+                <div class="col1 fond">
+
+
+
         <!-- Column 1 start -->
 
 
@@ -42,32 +42,32 @@ $pageinate = $view->getHelper('Pagination');
             </div>
 
             <div class="middle_title">
-                <h3>Fiche Série 
-           
+                <h3>Fiche Série
+
 <?php echo $view->serie->NOM_SERIE; ?> <?php if (User::minAccesslevel(1)) { ?><a class="fancybox fancybox.iframe {width:600,height:600}" href="admin/editserie?serie_id=<?php echo $view->serie->ID_SERIE; ?>"> <img src="<?php echo BDO_URL_IMAGE; ?>edit.gif" /></a> <?php } ?></h3></div>
             <br />
             <table><tr><td style="vertical-align:top">
           <img src="<?php echo BDO_URL_COUV.$view->serie->IMG_COUV_SERIE; ?>" class="couvBig" style="float:left; margin:2px;">
-                    </td> 
+                    </td>
                 <td style="vertical-align:top">
                    <?php if ($view->serie->NB_NOTE_SERIE > 0) { ?> <span id="note_serie"></span>
                    <script>$("#note_serie").raty({score: <?php echo $view->serie->NOTE_SERIE/2.0; ?>, readOnly: true});</script> <?php } ?>
-                    <div ><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+                    <div ><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
             <strong>Genre : </strong>
             </font>
 <?php echo $view->serie->NOM_GENRE; ?>
             <br />
-            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
             <strong>Nombre de tome: </strong>
             </font>
 <?php echo $view->serie->NB_TOME; ?>
             <br />
-            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
             <strong>Albums dans la base: </strong>
             </font>
 <?php echo $view->serie->NB_ALBUM; ?>
             <br />
-            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
             <strong>Avancement : </strong>
             </font>
 <?php echo $view->serie->LIB_FLG_FINI_SERIE; ?>
@@ -87,10 +87,10 @@ $pageinate = $view->getHelper('Pagination');
 <hr class="expSep" />
                 <!-- END CommentBlock -->
 
-              <br> 
+              <br>
         </div>
 
-       
+
             <div class="cadre1"><div class="middle_title">
  <h3>Albums </h3> </div>
                 <!-- BEGIN AlbBlock -->
@@ -132,23 +132,23 @@ if ($view->serie->NB_ALBUM > 20) {
                 <div align="center"> </div>
             </div>
        <!-- Column 1 end -->
-					</div>
+                    </div>
 </div>
-    				<!-- Debut de la partie de droite -->
+                    <!-- Debut de la partie de droite -->
 <div class="col2">
     <div id="actu" class="right fond">
-			<div class="middle_title">
+            <div class="middle_title">
 
-	<h3>Même auteur...</h3>
+    <h3>Même auteur...</h3>
 
-	</div>		<!-- Column 2 start -->
-	            <?php 
+    </div>      <!-- Column 2 start -->
+                <?php
                     //echo count($view->SERIESIMI);
                     foreach ($view->SERIESIMI as $o_serie)
                    {
-                      echo $ficheAlbum->serie($o_serie);  
+                      echo $ficheAlbum->serie($o_serie);
                     } ?>
     </div>
-				<!-- Column 2 end -->
+                <!-- Column 2 end -->
 </div>
 </div>

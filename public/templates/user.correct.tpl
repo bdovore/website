@@ -13,28 +13,28 @@ if (document.getElementById || document.all) {
 
 <SCRIPT LANGUAGE="JavaScript"><!--
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 2)) {
-		alert('Veuillez saisir au moins 2 caractères');
-	}
-	else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}
-			else {
-			mywindow=open("{URLSITE}admin/pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}
-		else {
-			mywindow=open('{URLSITE}admin/pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+    if ((isMandatory == true) && (myText.length < 2)) {
+        alert('Veuillez saisir au moins 2 caractères');
+    }
+    else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }
+            else {
+            mywindow=open("{URLSITE}admin/pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+            }
+        }
+        else {
+            mywindow=open('{URLSITE}admin/pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 //--></SCRIPT>
 
 <div class="cadre1">
 <h2>Proposition de correction</h2>
-    
+
 <form action="{URLACTION}" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
 <input name="txtTomeId" type="hidden" id="txtTomeId" value="{IDTOME}"><input name="txtEditionId" type="hidden" id="txtEditionId" value="{IDEDITION}">
 <table width="100%" border="0">
@@ -45,16 +45,16 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
             <tr bordercolor="#FFFFFF">
               <td width="907" rowspan="4" valign="top" bordercolor="#FFFFFF">
               <p>Avant, tout merci de prendre le temps de lire les guides de saisie disponibles :
-			  		  <ul type=SQUARE>
-			  		  	<li><a href="http://forum.bdovore.com/viewtopic.php?t=352" target="_blank">Tutorial : comment faire une demande d'ajout ou de correction</a>
-			  		  	<li><a href="http://forum.bdovore.com/viewtopic.php?t=617" target="_blank">Tutorial : les mangas V.O</a>
-			  		  	<li><a href="http://forum.bdovore.com/viewtopic.php?t=392" target="_blank">Tutorial : les BD et Comics V.O</a>
-			  		  	<li><a href="http://forum.bdovore.com/viewtopic.php?t=618" target="_blank">Tutorial : les séries francaises traduites en d'autres langues</a>
-			  		  	<li><a href="http://forum.bdovore.com/viewtopic.php?t=391" target="_blank">Tutorial : les artbooks</a>
-			  		  </ul>
-			  			</p>
-			  			<p>Nos valideurs et correcteurs travaillent d'arrache pied (et bénévolement) pour que notre base de données soit la plus complète possible, aidez les en renseignant au mieux toutes les informations à votre disposition et en utilisant les loupes !</p>
-			<br>
+                      <ul type=SQUARE>
+                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=352" target="_blank">Tutorial : comment faire une demande d'ajout ou de correction</a>
+                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=617" target="_blank">Tutorial : les mangas V.O</a>
+                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=392" target="_blank">Tutorial : les BD et Comics V.O</a>
+                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=618" target="_blank">Tutorial : les séries francaises traduites en d'autres langues</a>
+                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=391" target="_blank">Tutorial : les artbooks</a>
+                      </ul>
+                        </p>
+                        <p>Nos valideurs et correcteurs travaillent d'arrache pied (et bénévolement) pour que notre base de données soit la plus complète possible, aidez les en renseignant au mieux toutes les informations à votre disposition et en utilisant les loupes !</p>
+            <br>
                 <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC" bgcolor="#DAC1B3"   frame="box" rules="groups">
                   <!--DWLayoutTable-->
                   <tbody>
@@ -116,7 +116,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 
                     </tr>
 
-					<tr bordercolor="#DAC1B3">
+                    <tr bordercolor="#DAC1B3">
 
                       <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Serie</strong></font></td>
 
@@ -166,7 +166,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 
                 <br>
 
-				 <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC" bgcolor="#DAC1B3"  frame="box" rules="groups">
+                 <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC" bgcolor="#DAC1B3"  frame="box" rules="groups">
 
                   <tbody>
 
@@ -283,23 +283,23 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
                       <td bordercolor="#DAC1B3"> <img src="{URLSITEIMAGE}site/loupe.gif" onclick="newWindow('collection',document.myform.txtCollec.value,'myform','txtCollec',false,document.myform.txtEditeurId.value)" height="14" width="24"></td>
 
                     </tr>
-					
-					 <tr bordercolor="#DAC1B3">
 
-	                      <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-13</strong></font></td>
-		                    <td> <div align="left"> </div></td>
-							<td colspan="3">
-								<input name="txtEAN" id="txtEAN" value="{EAN}" size="13" class="flat" type="text" />
-								<span class="texte">ISBN à 13 chiffres <u>sans</u> trait d'union ni espace (aussi appelé EAN)</span>
-							</td>
-                    </tr>		 
-					<tr bordercolor="#DAC1B3">
-						<td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-10</strong></font></td>
-	                    <td> <div align="left"> </div></td>
-						<td colspan="3">
-							<input name="txtISBN" id="txtISBN" value="{ISBN}" size="10" class="flat" type="text" />
-							<span class="texte">ISBN à 10 chiffres <u>sans</u> trait d'union ni espace (obsolète depuis janvier 2007)</span>
-						</td>
+                     <tr bordercolor="#DAC1B3">
+
+                          <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-13</strong></font></td>
+                            <td> <div align="left"> </div></td>
+                            <td colspan="3">
+                                <input name="txtEAN" id="txtEAN" value="{EAN}" size="13" class="flat" type="text" />
+                                <span class="texte">ISBN à 13 chiffres <u>sans</u> trait d'union ni espace (aussi appelé EAN)</span>
+                            </td>
+                    </tr>
+                    <tr bordercolor="#DAC1B3">
+                        <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-10</strong></font></td>
+                        <td> <div align="left"> </div></td>
+                        <td colspan="3">
+                            <input name="txtISBN" id="txtISBN" value="{ISBN}" size="10" class="flat" type="text" />
+                            <span class="texte">ISBN à 10 chiffres <u>sans</u> trait d'union ni espace (obsolète depuis janvier 2007)</span>
+                        </td>
                     </tr>
 
                     <tr bordercolor="#DAC1B3">
@@ -356,7 +356,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 
                     </tr> -->
 
-					<!-- END EditionBlock -->
+                    <!-- END EditionBlock -->
 
                   </tbody>
 
@@ -386,13 +386,13 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 
     <td valign="top">
 
-	<table width="100%" align="center" cellpadding="10" cellspacing="10" bgcolor="EED8BF">
+    <table width="100%" align="center" cellpadding="10" cellspacing="10" bgcolor="EED8BF">
 
-	<tr>
+    <tr>
 
-	<td>
+    <td>
 
-	<table width="100%" border="1" cellpadding="5" bordercolor="#FFFFCC" bgcolor="#DAC1B3" frame="box" rules="groups">
+    <table width="100%" border="1" cellpadding="5" bordercolor="#FFFFCC" bgcolor="#DAC1B3" frame="box" rules="groups">
 
           <tbody>
 
@@ -450,15 +450,15 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 
         </table>
 
-		<br>
+        <br>
 
-		<table width="100%" border="1" cellpadding="5" bordercolor="#FFFFCC" bgcolor="#DAC1B3"  frame="box" rules="groups">
+        <table width="100%" border="1" cellpadding="5" bordercolor="#FFFFCC" bgcolor="#DAC1B3"  frame="box" rules="groups">
 
-			  <tbody>
+              <tbody>
 
-				<tr>
+                <tr>
 
-				    <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Ajoutez
+                    <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Ajoutez
 
                       ici votre commentaire sur votre correction</strong></font><br><font size="-2">(Vous
 
@@ -466,17 +466,17 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
 
                       <textarea name="txtCommentaire" cols="60" rows="8" id="textarea"></textarea>
 
-					<p> </p></td>
+                    <p> </p></td>
 
-				</tr>
+                </tr>
 
-			  </tbody>
+              </tbody>
 
-			</table>
+            </table>
 
-			</td></tr></table>
+            </td></tr></table>
 
-	   </td>
+       </td>
 
   </tr>
 

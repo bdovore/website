@@ -40,22 +40,22 @@ var closeButton = 'image/close.gif';
 //
 function getPageScroll(){
 
-	var xScroll;
-	var yScroll;
+    var xScroll;
+    var yScroll;
 
-	if (self.pageYOffset) {
-		xScroll = self.pageXOffset;
-		yScroll = self.pageYOffset;
-	} else if (document.documentElement && document.documentElement.scrollTop){	 // Explorer 6 Strict
-		xScroll = document.documentElement.scrollLeft;
-		yScroll = document.documentElement.scrollTop;
-	} else if (document.body) {// all other Explorers
-		xScroll = document.body.scrollLeft;
-		yScroll = document.body.scrollTop;
-	}
+    if (self.pageYOffset) {
+        xScroll = self.pageXOffset;
+        yScroll = self.pageYOffset;
+    } else if (document.documentElement && document.documentElement.scrollTop){  // Explorer 6 Strict
+        xScroll = document.documentElement.scrollLeft;
+        yScroll = document.documentElement.scrollTop;
+    } else if (document.body) {// all other Explorers
+        xScroll = document.body.scrollLeft;
+        yScroll = document.body.scrollTop;
+    }
 
-	arrayPageScroll = new Array(xScroll,yScroll)
-	return arrayPageScroll;
+    arrayPageScroll = new Array(xScroll,yScroll)
+    return arrayPageScroll;
 }
 
 
@@ -68,47 +68,47 @@ function getPageScroll(){
 //
 function getPageSize(){
 
-	var xScroll, yScroll;
+    var xScroll, yScroll;
 
-	if (window.innerHeight && window.scrollMaxY) {
-		xScroll = document.body.scrollWidth;
-		yScroll = window.innerHeight + window.scrollMaxY;
-	} else if (document.body.scrollHeight > document.body.offsetHeight){ // all but Explorer Mac
-		xScroll = document.body.scrollWidth;
-		yScroll = document.body.scrollHeight;
-	} else { // Explorer Mac...would also work in Explorer 6 Strict, Mozilla and Safari
-		xScroll = document.body.offsetWidth;
-		yScroll = document.body.offsetHeight;
-	}
+    if (window.innerHeight && window.scrollMaxY) {
+        xScroll = document.body.scrollWidth;
+        yScroll = window.innerHeight + window.scrollMaxY;
+    } else if (document.body.scrollHeight > document.body.offsetHeight){ // all but Explorer Mac
+        xScroll = document.body.scrollWidth;
+        yScroll = document.body.scrollHeight;
+    } else { // Explorer Mac...would also work in Explorer 6 Strict, Mozilla and Safari
+        xScroll = document.body.offsetWidth;
+        yScroll = document.body.offsetHeight;
+    }
 
-	var windowWidth, windowHeight;
-	if (self.innerHeight) {	// all except Explorer
-		windowWidth = self.innerWidth;
-		windowHeight = self.innerHeight;
-	} else if (document.documentElement && document.documentElement.clientHeight) { // Explorer 6 Strict Mode
-		windowWidth = document.documentElement.clientWidth;
-		windowHeight = document.documentElement.clientHeight;
-	} else if (document.body) { // other Explorers
-		windowWidth = document.body.clientWidth;
-		windowHeight = document.body.clientHeight;
-	}
+    var windowWidth, windowHeight;
+    if (self.innerHeight) { // all except Explorer
+        windowWidth = self.innerWidth;
+        windowHeight = self.innerHeight;
+    } else if (document.documentElement && document.documentElement.clientHeight) { // Explorer 6 Strict Mode
+        windowWidth = document.documentElement.clientWidth;
+        windowHeight = document.documentElement.clientHeight;
+    } else if (document.body) { // other Explorers
+        windowWidth = document.body.clientWidth;
+        windowHeight = document.body.clientHeight;
+    }
 
-	// for small pages with total height less then height of the viewport
-	if(yScroll < windowHeight){
-		pageHeight = windowHeight;
-	} else {
-		pageHeight = yScroll;
-	}
+    // for small pages with total height less then height of the viewport
+    if(yScroll < windowHeight){
+        pageHeight = windowHeight;
+    } else {
+        pageHeight = yScroll;
+    }
 
-	// for small pages with total width less then width of the viewport
-	if(xScroll < windowWidth){
-		pageWidth = windowWidth;
-	} else {
-		pageWidth = xScroll;
-	}
+    // for small pages with total width less then width of the viewport
+    if(xScroll < windowWidth){
+        pageWidth = windowWidth;
+    } else {
+        pageWidth = xScroll;
+    }
 
-	arrayPageSize = new Array(pageWidth,pageHeight,windowWidth,windowHeight);
-	return arrayPageSize;
+    arrayPageSize = new Array(pageWidth,pageHeight,windowWidth,windowHeight);
+    return arrayPageSize;
 }
 
 
@@ -118,13 +118,13 @@ function getPageSize(){
 // Code from http://www.faqts.com/knowledge_base/view.phtml/aid/1602
 //
 function pauseIE(numberMillis) {
-	var now = new Date();
-	var exitTime = now.getTime() + numberMillis;
-	while (true) {
-		now = new Date();
-		if (now.getTime() > exitTime)
-		return;
-	}
+    var now = new Date();
+    var exitTime = now.getTime() + numberMillis;
+    while (true) {
+        now = new Date();
+        if (now.getTime() > exitTime)
+        return;
+    }
 }
 
 
@@ -134,78 +134,78 @@ function pauseIE(numberMillis) {
 //
 function showLightbox(boxType,url,widthDiv,heightDiv)
 {
-	if (!document.getElementById('overlay'))
-	{
-		initLightbox();
-	}
+    if (!document.getElementById('overlay'))
+    {
+        initLightbox();
+    }
 
-	// prep objects
-	if (boxType == 'div')
-	{
-		var objoverlay = document.getElementById('overlay');
-		var objLightbox = document.getElementById('lightbox');
-	}
-	else
-	{
-		var objoverlay = document.getElementById('overlayIframe');
-		var objLightbox = document.getElementById('lightboxIframe');
-	}
+    // prep objects
+    if (boxType == 'div')
+    {
+        var objoverlay = document.getElementById('overlay');
+        var objLightbox = document.getElementById('lightbox');
+    }
+    else
+    {
+        var objoverlay = document.getElementById('overlayIframe');
+        var objLightbox = document.getElementById('lightboxIframe');
+    }
 
-	var arrayPageSize = getPageSize();
-	var arrayPageScroll = getPageScroll();
+    var arrayPageSize = getPageSize();
+    var arrayPageScroll = getPageScroll();
 
-	//	alert('pageWidth=[' +arrayPageSize[0] + ']\npageHeight=[' + arrayPageSize[1] + ']\nwindowWidth=[' + arrayPageSize[2] + ']\nwindowHeight=[' + arrayPageSize[3] + ']\nxScroll=[' + arrayPageScroll[0] + ']\nyScroll=[' + arrayPageScroll[1] + ']');
+    //  alert('pageWidth=[' +arrayPageSize[0] + ']\npageHeight=[' + arrayPageSize[1] + ']\nwindowWidth=[' + arrayPageSize[2] + ']\nwindowHeight=[' + arrayPageSize[3] + ']\nxScroll=[' + arrayPageScroll[0] + ']\nyScroll=[' + arrayPageScroll[1] + ']');
 
-	// set height of overlay to take up whole page and show
-	objoverlay.style.width = (arrayPageSize[0] + 'px');
-	objoverlay.style.height = (arrayPageSize[1] + 'px');
-	objoverlay.style.display = 'block';
-
-
-	// center Lightbox and make sure that the top and left values are not negative
-	// and the image placed outside the viewport
-	var LightboxTop = arrayPageScroll[1] + ((arrayPageSize[3] - 35 - heightDiv) / 2);
-	var LightboxLeft = arrayPageScroll[0] + ((arrayPageSize[2] - 20 - widthDiv) / 2);
-
-	objLightbox.style.width = widthDiv + "px";
-	objLightbox.style.height = heightDiv + "px";
-
-		
-	if (boxType == 'div')
-	{
-		var objLightboxDetails = document.getElementById('lightboxDetails');
-	}
-	else
-	{	
-		var objLightboxDetails = document.getElementById('lightboxDetailsIframe');
-		objLightboxDetails.setAttribute('src',url);
-	}
-		
-	objLightboxDetails.style.width = widthDiv + "px";
-	objLightboxDetails.style.height = heightDiv + "px";
-
-	objLightbox.style.top = (LightboxTop < 0) ? "0px" : LightboxTop + "px";
-	objLightbox.style.left = (LightboxLeft < 0) ? "0px" : LightboxLeft + "px";
+    // set height of overlay to take up whole page and show
+    objoverlay.style.width = (arrayPageSize[0] + 'px');
+    objoverlay.style.height = (arrayPageSize[1] + 'px');
+    objoverlay.style.display = 'block';
 
 
-	// A small pause between the image loading and displaying is required with IE,
-	// this prevents the previous image displaying for a short burst causing flicker.
-	if (navigator.appVersion.indexOf("MSIE")!=-1){
-		pauseIE(250);
-	}
+    // center Lightbox and make sure that the top and left values are not negative
+    // and the image placed outside the viewport
+    var LightboxTop = arrayPageScroll[1] + ((arrayPageSize[3] - 35 - heightDiv) / 2);
+    var LightboxLeft = arrayPageScroll[0] + ((arrayPageSize[2] - 20 - widthDiv) / 2);
 
-	// Hide select boxes as they will 'peek' through the image in IE
-	selects = document.getElementsByTagName("select");
-	for (i = 0; i != selects.length; i++) {
-		selects[i].style.visibility = "hidden";
-	}
+    objLightbox.style.width = widthDiv + "px";
+    objLightbox.style.height = heightDiv + "px";
 
-	objLightbox.style.display = 'block';
 
-	// After image is loaded, update the overlay height as the new image might have
-	// increased the overall page height.
-	arrayPageSize = getPageSize();
-	objoverlay.style.height = (arrayPageSize[1] + 'px');
+    if (boxType == 'div')
+    {
+        var objLightboxDetails = document.getElementById('lightboxDetails');
+    }
+    else
+    {
+        var objLightboxDetails = document.getElementById('lightboxDetailsIframe');
+        objLightboxDetails.setAttribute('src',url);
+    }
+
+    objLightboxDetails.style.width = widthDiv + "px";
+    objLightboxDetails.style.height = heightDiv + "px";
+
+    objLightbox.style.top = (LightboxTop < 0) ? "0px" : LightboxTop + "px";
+    objLightbox.style.left = (LightboxLeft < 0) ? "0px" : LightboxLeft + "px";
+
+
+    // A small pause between the image loading and displaying is required with IE,
+    // this prevents the previous image displaying for a short burst causing flicker.
+    if (navigator.appVersion.indexOf("MSIE")!=-1){
+        pauseIE(250);
+    }
+
+    // Hide select boxes as they will 'peek' through the image in IE
+    selects = document.getElementsByTagName("select");
+    for (i = 0; i != selects.length; i++) {
+        selects[i].style.visibility = "hidden";
+    }
+
+    objLightbox.style.display = 'block';
+
+    // After image is loaded, update the overlay height as the new image might have
+    // increased the overall page height.
+    arrayPageSize = getPageSize();
+    objoverlay.style.height = (arrayPageSize[1] + 'px');
 
 }
 
@@ -215,35 +215,35 @@ function showLightbox(boxType,url,widthDiv,heightDiv)
 //
 function hideLightbox(stmt)
 {
-	//----------------------div
-	// get objects
-	objOverlay = document.getElementById('overlay');
-	objLightbox = document.getElementById('lightbox');
+    //----------------------div
+    // get objects
+    objOverlay = document.getElementById('overlay');
+    objLightbox = document.getElementById('lightbox');
 
-	// hide lightbox and overlay
-	objOverlay.style.display = 'none';
-	objLightbox.style.display = 'none';
-	
-	//----------------------iframe
-	// get objects
-	objOverlayIframe = document.getElementById('overlayIframe');
-	objLightboxIframe = document.getElementById('lightboxIframe');
-	
-	if (stmt != 'self')
-	{
-		var objLightboxDetails = document.getElementById('lightboxDetailsIframe');
-		objLightboxDetails.setAttribute('src','design/noForward');
-	}
+    // hide lightbox and overlay
+    objOverlay.style.display = 'none';
+    objLightbox.style.display = 'none';
 
-	// hide lightboxIframe and overlayIframe
-	objOverlayIframe.style.display = 'none';
-	objLightboxIframe.style.display = 'none';
+    //----------------------iframe
+    // get objects
+    objOverlayIframe = document.getElementById('overlayIframe');
+    objLightboxIframe = document.getElementById('lightboxIframe');
 
-	// make select boxes visible
-	selects = document.getElementsByTagName("select");
-	for (i = 0; i != selects.length; i++) {
-		selects[i].style.visibility = "visible";
-	}
+    if (stmt != 'self')
+    {
+        var objLightboxDetails = document.getElementById('lightboxDetailsIframe');
+        objLightboxDetails.setAttribute('src','design/noForward');
+    }
+
+    // hide lightboxIframe and overlayIframe
+    objOverlayIframe.style.display = 'none';
+    objLightboxIframe.style.display = 'none';
+
+    // make select boxes visible
+    selects = document.getElementsByTagName("select");
+    for (i = 0; i != selects.length; i++) {
+        selects[i].style.visibility = "visible";
+    }
 }
 
 
@@ -257,91 +257,91 @@ function hideLightbox(stmt)
 function initLightbox()
 {
 
-	if (!document.getElementsByTagName){ return; }
+    if (!document.getElementsByTagName){ return; }
 
-	var objBody = document.getElementsByTagName("body").item(0);
+    var objBody = document.getElementsByTagName("body").item(0);
 
-	// create overlay div and hardcode some functional styles (aesthetic styles are in CSS file)
-	var objOverlay = document.createElement("div");
-	objOverlay.setAttribute('id','overlay');
-	objOverlay.onclick = function () {hideLightbox(''); return false;}
-	objOverlay.style.display = 'none';
-	objOverlay.style.position = 'absolute';
-	objOverlay.style.top = '0';
-	objOverlay.style.left = '0';
-	objOverlay.style.zIndex = '90';
-	objOverlay.style.width = '100%';
-	objBody.insertBefore(objOverlay, objBody.firstChild);
+    // create overlay div and hardcode some functional styles (aesthetic styles are in CSS file)
+    var objOverlay = document.createElement("div");
+    objOverlay.setAttribute('id','overlay');
+    objOverlay.onclick = function () {hideLightbox(''); return false;}
+    objOverlay.style.display = 'none';
+    objOverlay.style.position = 'absolute';
+    objOverlay.style.top = '0';
+    objOverlay.style.left = '0';
+    objOverlay.style.zIndex = '90';
+    objOverlay.style.width = '100%';
+    objBody.insertBefore(objOverlay, objBody.firstChild);
 
-	// create lightbox div, same note about styles as above
-	var objLightbox = document.createElement("div");
-	objLightbox.setAttribute('id','lightbox');
-	objLightbox.style.display = 'none';
-	objLightbox.style.position = 'absolute';
-	objLightbox.style.zIndex = '100';
-	objBody.insertBefore(objLightbox, objOverlay.nextSibling);
+    // create lightbox div, same note about styles as above
+    var objLightbox = document.createElement("div");
+    objLightbox.setAttribute('id','lightbox');
+    objLightbox.style.display = 'none';
+    objLightbox.style.position = 'absolute';
+    objLightbox.style.zIndex = '100';
+    objBody.insertBefore(objLightbox, objOverlay.nextSibling);
 
-	// create link
-	var objLink = document.createElement("a");
-	objLink.setAttribute('href','#');
-	//objLink.setAttribute('title','Click to close');
-	objLink.onclick = function () {hideLightbox(''); return false;}
-	objLightbox.appendChild(objLink);
+    // create link
+    var objLink = document.createElement("a");
+    objLink.setAttribute('href','#');
+    //objLink.setAttribute('title','Click to close');
+    objLink.onclick = function () {hideLightbox(''); return false;}
+    objLightbox.appendChild(objLink);
 
-	// preload and create close button image
-	var imgPreloadCloseButton = new Image();
+    // preload and create close button image
+    var imgPreloadCloseButton = new Image();
 
-	// if close button image found,
-	imgPreloadCloseButton.onload=function(){
+    // if close button image found,
+    imgPreloadCloseButton.onload=function(){
 
-		var objCloseButton = document.createElement("img");
-		objCloseButton.src = closeButton;
-		objCloseButton.setAttribute('id','closeButton');
-		objCloseButton.style.position = 'absolute';
-		objCloseButton.style.zIndex = '200';
-		objLink.appendChild(objCloseButton);
+        var objCloseButton = document.createElement("img");
+        objCloseButton.src = closeButton;
+        objCloseButton.setAttribute('id','closeButton');
+        objCloseButton.style.position = 'absolute';
+        objCloseButton.style.zIndex = '200';
+        objLink.appendChild(objCloseButton);
 
-		return false;
-	}
+        return false;
+    }
 
-	imgPreloadCloseButton.src = closeButton;
+    imgPreloadCloseButton.src = closeButton;
 
-	// create details div, a container for the caption and keyboard message
-	var objLightboxDetails = document.createElement("div");
-	objLightboxDetails.setAttribute('id','lightboxDetails');
-	objLightbox.appendChild(objLightboxDetails);
-	
-	
-	// create overlayIframe div and hardcode some functional styles (aesthetic styles are in CSS file)
-	var objOverlayIframe = document.createElement("div");
-	objOverlayIframe.setAttribute('id','overlayIframe');
-	objOverlayIframe.style.display = 'none';
-	objOverlayIframe.style.position = 'absolute';
-	objOverlayIframe.style.top = '0';
-	objOverlayIframe.style.left = '0';
-	objOverlayIframe.style.zIndex = '90';
-	objOverlayIframe.style.width = '100%';
-	objOverlayIframe.onclick = function () { hideLightbox(); };
-	objBody.insertBefore(objOverlayIframe, objBody.firstChild);
+    // create details div, a container for the caption and keyboard message
+    var objLightboxDetails = document.createElement("div");
+    objLightboxDetails.setAttribute('id','lightboxDetails');
+    objLightbox.appendChild(objLightboxDetails);
 
-	// create lightboxIframe div, same note about styles as above
-	var objLightboxIframe = document.createElement("div");
-	objLightboxIframe.setAttribute('id','lightboxIframe');
-	objLightboxIframe.style.display = 'none';
-	objLightboxIframe.style.position = 'absolute';
-	objLightboxIframe.style.zIndex = '100';
-	objBody.insertBefore(objLightboxIframe, objOverlayIframe.nextSibling);
-	
 
-	//	iframe id="frmMain" src="javascript:void(0)" name="frmMain" frameborder="0" height="100%" width="100%" scrolling="auto"
+    // create overlayIframe div and hardcode some functional styles (aesthetic styles are in CSS file)
+    var objOverlayIframe = document.createElement("div");
+    objOverlayIframe.setAttribute('id','overlayIframe');
+    objOverlayIframe.style.display = 'none';
+    objOverlayIframe.style.position = 'absolute';
+    objOverlayIframe.style.top = '0';
+    objOverlayIframe.style.left = '0';
+    objOverlayIframe.style.zIndex = '90';
+    objOverlayIframe.style.width = '100%';
+    objOverlayIframe.onclick = function () { hideLightbox(); };
+    objBody.insertBefore(objOverlayIframe, objBody.firstChild);
 
-	// create iframe
-	var objLightboxIframeDetails = document.createElement("iframe");
-	objLightboxIframeDetails.setAttribute('id','lightboxDetailsIframe');
-	objLightboxIframeDetails.setAttribute('name','lightboxDetailsIframe');
-	objLightboxDetails.setAttribute('src','design/noForward');
-	objLightboxIframeDetails.setAttribute('frameborder','0');
-	objLightboxIframeDetails.setAttribute('scrolling','auto');
-	objLightboxIframe.appendChild(objLightboxIframeDetails);
+    // create lightboxIframe div, same note about styles as above
+    var objLightboxIframe = document.createElement("div");
+    objLightboxIframe.setAttribute('id','lightboxIframe');
+    objLightboxIframe.style.display = 'none';
+    objLightboxIframe.style.position = 'absolute';
+    objLightboxIframe.style.zIndex = '100';
+    objBody.insertBefore(objLightboxIframe, objOverlayIframe.nextSibling);
+
+
+    //  iframe id="frmMain" src="javascript:void(0)" name="frmMain" frameborder="0" height="100%" width="100%" scrolling="auto"
+
+    // create iframe
+    var objLightboxIframeDetails = document.createElement("iframe");
+    objLightboxIframeDetails.setAttribute('id','lightboxDetailsIframe');
+    objLightboxIframeDetails.setAttribute('name','lightboxDetailsIframe');
+    objLightboxDetails.setAttribute('src','design/noForward');
+    objLightboxIframeDetails.setAttribute('frameborder','0');
+    objLightboxIframeDetails.setAttribute('scrolling','auto');
+    objLightboxIframe.appendChild(objLightboxIframeDetails);
 
 }

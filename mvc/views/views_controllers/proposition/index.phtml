@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $ficheAlbum = $view->getHelper('ficheAlbum');
 
@@ -10,11 +10,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     <div class="middle_title"><h3>Proposition d'ajout et de correction</h3></div>
    <?php if(IssetNotEmpty($view->edition)) { ?> <a href="#null" onclick="javascript:history.back();"> Retour à la fiche Album</a> <?php } ?>
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
-<form enctype="multipart/form-data" action="" name="action" value="append" method="POST"> 	
+<form enctype="multipart/form-data" action="" name="action" value="append" method="POST">
      <?php if(IssetNotEmpty($view->edition)) { ?>
         <input type="hidden" name="txtTomeId" value="<?php echo $view->edition->ID_TOME; ?>">
         <input type="hidden" name="txtEditionId" value="<?php echo $view->edition->ID_EDITION; ?>">
-               
+
     <?php } ?>
         <?php if(IssetNotEmpty($view->ID_TOME)) { ?>
          <input type="hidden" name="txtTomeId" value="<?php echo $view->ID_TOME; ?>">
@@ -44,7 +44,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                         </li></ul>
                           <p></p>
                           <p>Nos valideurs et correcteurs travaillent d'arrache pied (et bénévolement) pour que notre base de données soit la plus complète possible, aidez les en renseignant au mieux toutes les informations à votre disposition et en utilisant les propositions automatiques lors de la saisie !</p>
-            <br> 
+            <br>
              <?php if ($view->TYPE == "AJOUT") { ?>
                 <p>
                     Avant de commencer à remplir ce formulaire d'ajout, vous pouvez consulter la
@@ -54,7 +54,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 </p>
                  <div style="padding-top: 10px;"><span class="i">La meilleure source pour remplir ce formulaire est <span class="b">votre exemplaire</span> (si vous en possédez un)</span> - Proverbe bdovorien présocrato-cambrien</div>
                   <?php } ?>
-            
+
     <table frame="box" rules="groups" cellpadding="5" bgcolor="#DAC1B3" border="1" bordercolor="#FFFFCC" width="550px">
 
                   <tbody>
@@ -141,7 +141,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                     </tr>
                   </tbody>
                 </table>
-                
+
                 <br>
 
                 <table frame="box" rules="groups" cellpadding="5" bgcolor="#DAC1B3" border="1" bordercolor="#FFFFCC" width="550px">
@@ -173,7 +173,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td width="571"> <input name="txtSerie" id="txtSerie" value="<?php echo $view->edition->NOM_SERIE; ?>" size="50" class="flat" type="text"></td>
 
-                      
+
 
                     </tr>
 
@@ -184,10 +184,10 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                       <td width="6%"> <input name="txtGenreId" id="txtGenreId" value="<?php echo $view->edition->ID_GENRE; ?>" size="3" class="flat" type="hidden">
                                         <span id="spGenre" > <?php echo $view->edition->ID_GENRE; ?></span>
                       </td>
-                                    
+
                       <td width="73%"> <input name="txtGenre" id="txtGenre"  value="<?php echo $view->edition->NOM_GENRE; ?>" size="30" class="flat" type="text"></td>
 
-                      
+
                     </tr>
 
                     <tr bordercolor="#DAC1B3">
@@ -237,7 +237,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td width="59%"> <input name="txtScenar" id="txtScenar" value="<?php echo $view->edition->scpseudo; ?>" size="40" class="flat" type="text"></td>
 
-                      
+
 
                     </tr>
 
@@ -251,7 +251,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td> <input name="txtScenarAlt" id="txtScenarAlt" value="<?php echo $view->edition->scapseudo; ?>" size="40" class="flat" type="text"></td>
 
-                     
+
 
                     </tr>
 
@@ -265,7 +265,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3"> <input name="txtDessi"  id="txtDessi" value="<?php echo $view->edition->depseudo; ?>" size="40" class="flat" type="text"></td>
 
-                      
+
 
                     </tr>
 
@@ -279,7 +279,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3"> <input name="txtDessiAlt" id="txtDessiAlt"  value="<?php echo $view->edition->deapseudo; ?>" size="40" class="flat" type="text"></td>
 
-                     
+
 
                     </tr>
 
@@ -295,7 +295,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       </td>
 
-                     
+
 
                     </tr>
 
@@ -311,7 +311,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       </td>
 
-                     
+
 
                     </tr>
 
@@ -343,7 +343,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3" width="59%"> <input name="txtEditeur" id="txtEditeur" value="<?php echo $view->edition->NOM_EDITEUR; ?>" size="40" class="flat" type="text" onchange="changeEditeur();"></td>
 
-                     
+
 
                     </tr>
 
@@ -357,10 +357,10 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3"> <input name="txtCollec" id="txtCollec" value="<?php echo $view->edition->NOM_COLLECTION; ?>" size="40" class="flat" type="text"></td>
 
-                      
+
 
                     </tr>
-                   
+
                      <tr bordercolor="#DAC1B3">
 
                           <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-13 (EAN)</strong></font></td>
@@ -369,7 +369,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                 <input name="txtEAN" id="txtEAN" value="<?php echo $view->edition->EAN_EDITION; ?>" size="13" maxlength="13" class="flat" type="text">
                                 <span class="texte">ISBN à 13 chiffres <u>sans</u> trait d'union ni espace (aussi appelé EAN)</span>
                             </td>
-                    </tr>         
+                    </tr>
                     <tr bordercolor="#DAC1B3">
                         <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-10</strong></font></td>
                         <td> <div align="left"> </div></td>
@@ -395,7 +395,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                     <tr><td colspan="4"><span class="texte"><u>BDovore NE gère PAS les réimpressions</u>.<br>Assurez-vous que la date de l'album que vous proposez correspond à une édition originale ou à une réédition (couverture ou contenu différent), PAS à une réimpression (même contenu que la dernière édition)</span> </td></tr>
 
 
-                   
+
 
                   </tbody>
 
@@ -459,7 +459,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 <script>
     /*
      * On remplit les champs de saisie par l'autocompletion
-     * 
+     *
      */
     <?php  if ($view->TYPE <> "EDITION") { ?>
     addAutocomplete("txtSerie","spSerie","txtSerieId","<?php echo BDO_URL; ?>getjson?data=Serie");
@@ -468,21 +468,21 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     addAutocomplete("txtScenarAlt","spScenarAlt","txtScenarAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
     addAutocomplete("txtDessiAlt","spDessiAlt","txtDessiAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
     addAutocomplete("txtDessi","spDessi","txtDessiId","<?php echo BDO_URL; ?>getjson?data=Auteur");
-    
+
      addAutocomplete("txtColor","spColor","txtColorId","<?php echo BDO_URL; ?>getjson?data=Auteur");
      addAutocomplete("txtColorAlt","spColorAlt","txtColorAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
       <?php } ?>
      addAutocomplete("txtEditeur","spEditeur","txtEditeurId","<?php echo BDO_URL; ?>getjson?data=Editeur");
-     
+
      changeEditeur();
     function changeEditeur() {
         addAutocomplete("txtCollec","spCollec","txtCollecId","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val());
         //addSelectOption("txtCollec1","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo issetNotEmpty($view->edition) ? $view->edition->ID_COLLECTION : 0;?>);
-    
+
     }
      $(document).ready(function(){
   $('#txtDateParution3').mask('0000-00-00', {placeholder: "0000-00-00"});
 });
 </script>
-    
-    
+
+

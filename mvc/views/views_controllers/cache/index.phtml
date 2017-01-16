@@ -1,20 +1,20 @@
 <div class="cadre1">
-    <hr> 
+    <hr>
 <h2>Cache - ajout nouvelles éditions</h2>
 <button id="lancernewedition">lancer</button>
 <div id='ddcacheNewedition'>vide</div>
 <script>
   $(function() {
-	    $( "#lancernewedition" ).button({
-	        icons: {
-	          primary: "ui-icon-play"
-	        }
-	      })
-	      .click(function() {
+        $( "#lancernewedition" ).button({
+            icons: {
+              primary: "ui-icon-play"
+            }
+          })
+          .click(function() {
                 $.get("<?php echo BDO_URL;?>cache/addeditionstat",  function(data) {
-	         		 $("#ddcacheNewedition").html(data);
-	          		//alert("Data Loaded: " + data);
-	         		});
+                     $("#ddcacheNewedition").html(data);
+                    //alert("Data Loaded: " + data);
+                    });
               })});
 </script>
 <hr>
@@ -23,41 +23,41 @@
 
 <form id="cacheSimil" name="cacheSimil" method="get">
 <input type="hidden" name="continuer" value="">
-</form>  
-  
+</form>
+
 <div id='ddcacheSimil'>vide</div>
 <script>
   $(function() {
-	    $( "#lancerSimil" ).button({
-	        icons: {
-	          primary: "ui-icon-play"
-	        }
-	      })
-	      .click(function() {
-	        var options;
-	        if ( $( this ).text() === "lancer" ) {
-		        document.cacheSimil.continuer.value = "oui";
-	        	$.get("<?php echo BDO_URL;?>cache/simil", $("#cacheSimil").serialize(), function(data) {
-	         		 $("#ddcacheSimil").html(data);
-	          		//alert("Data Loaded: " + data);
-	         		});
-	          options = {
-	            label: "pause",
-	            icons: {
-	              primary: "ui-icon-pause"
-	            }
-	          };
-	        } else {
-		        document.cacheSimil.continuer.value = "";
-	        options = {
-	            label: "lancer",
-	            icons: {
-	              primary: "ui-icon-play"
-	            }
-	          };
-	        }
-	        $( this ).button( "option", options );
-	      })
+        $( "#lancerSimil" ).button({
+            icons: {
+              primary: "ui-icon-play"
+            }
+          })
+          .click(function() {
+            var options;
+            if ( $( this ).text() === "lancer" ) {
+                document.cacheSimil.continuer.value = "oui";
+                $.get("<?php echo BDO_URL;?>cache/simil", $("#cacheSimil").serialize(), function(data) {
+                     $("#ddcacheSimil").html(data);
+                    //alert("Data Loaded: " + data);
+                    });
+              options = {
+                label: "pause",
+                icons: {
+                  primary: "ui-icon-pause"
+                }
+              };
+            } else {
+                document.cacheSimil.continuer.value = "";
+            options = {
+                label: "lancer",
+                icons: {
+                  primary: "ui-icon-play"
+                }
+              };
+            }
+            $( this ).button( "option", options );
+          })
   });
   </script>
 
@@ -67,45 +67,45 @@
 <form id="cachenbuserbytome" name="cachenbuserbytome" method="get">
 <input type="text" name="nbruser_ID_TOME" value="<?php echo $view->nbruser_ID_TOME;?>">
 <input type="hidden" name="continuer" value="">
-</form>  
-  
+</form>
+
 <div id='ddcachenbuserbytome'>vide</div>
 <script>
   $(function() {
-	    $( "#lancernbuserbytome" ).button({
-	        icons: {
-	          primary: "ui-icon-play"
-	        }
-	      })
-	      .click(function() {
-	        var options;
-	        if ( $( this ).text() === "lancer" ) {
-		        document.cachenbuserbytome.continuer.value = "oui";
-	        	$.get("<?php echo BDO_URL;?>cache/nbuserbytome", $("#cachenbuserbytome").serialize(), function(data) {
-	         		 $("#ddcachenbuserbytome").html(data);
-	          		//alert("Data Loaded: " + data);
-	         		});
-	          options = {
-	            label: "pause",
-	            icons: {
-	              primary: "ui-icon-pause"
-	            }
-	          };
-	        } else {
-		        document.cachenbuserbytome.continuer.value = "";
-	        options = {
-	            label: "lancer",
-	            icons: {
-	              primary: "ui-icon-play"
-	            }
-	          };
-	        }
-	        $( this ).button( "option", options );
-	      })
+        $( "#lancernbuserbytome" ).button({
+            icons: {
+              primary: "ui-icon-play"
+            }
+          })
+          .click(function() {
+            var options;
+            if ( $( this ).text() === "lancer" ) {
+                document.cachenbuserbytome.continuer.value = "oui";
+                $.get("<?php echo BDO_URL;?>cache/nbuserbytome", $("#cachenbuserbytome").serialize(), function(data) {
+                     $("#ddcachenbuserbytome").html(data);
+                    //alert("Data Loaded: " + data);
+                    });
+              options = {
+                label: "pause",
+                icons: {
+                  primary: "ui-icon-pause"
+                }
+              };
+            } else {
+                document.cachenbuserbytome.continuer.value = "";
+            options = {
+                label: "lancer",
+                icons: {
+                  primary: "ui-icon-play"
+                }
+              };
+            }
+            $( this ).button( "option", options );
+          })
   });
   </script>
-<hr> 
-				
+<hr>
+
 
 <h2>Cache - nbr user by edition</h2>
 <button id="lancernbuserbyedition">lancer</button>
@@ -117,36 +117,36 @@
 <div id='ddcachenbuserbyedition'>vide</div>
 <script>
   $(function() {
-	    $( "#lancernbuserbyedition" ).button({
-	        icons: {
-	          primary: "ui-icon-play"
-	        }
-	      })
-	      .click(function() {
-	        var options;
-	        if ( $( this ).text() === "lancer" ) {
-		        document.cachenbuserbyedition.continuer.value = "oui";
-	        	$.get("<?php echo BDO_URL;?>cache/nbuserbyedition", $("#cachenbuserbyedition").serialize(), function(data) {
-	         		 $("#ddcachenbuserbyedition").html(data);
-	          		//alert("Data Loaded: " + data);
-	         		});
-	          options = {
-	            label: "pause",
-	            icons: {
-	              primary: "ui-icon-pause"
-	            }
-	          };
-	        } else {
-		        document.cachenbuserbyedition.continuer.value = "";
-	        options = {
-	            label: "lancer",
-	            icons: {
-	              primary: "ui-icon-play"
-	            }
-	          };
-	        }
-	        $( this ).button( "option", options );
-	      })
+        $( "#lancernbuserbyedition" ).button({
+            icons: {
+              primary: "ui-icon-play"
+            }
+          })
+          .click(function() {
+            var options;
+            if ( $( this ).text() === "lancer" ) {
+                document.cachenbuserbyedition.continuer.value = "oui";
+                $.get("<?php echo BDO_URL;?>cache/nbuserbyedition", $("#cachenbuserbyedition").serialize(), function(data) {
+                     $("#ddcachenbuserbyedition").html(data);
+                    //alert("Data Loaded: " + data);
+                    });
+              options = {
+                label: "pause",
+                icons: {
+                  primary: "ui-icon-pause"
+                }
+              };
+            } else {
+                document.cachenbuserbyedition.continuer.value = "";
+            options = {
+                label: "lancer",
+                icons: {
+                  primary: "ui-icon-play"
+                }
+              };
+            }
+            $( this ).button( "option", options );
+          })
   });
   </script>
 <hr>
@@ -161,36 +161,36 @@
 <div id='ddcachenbuserbyserie'>vide</div>
 <script>
   $(function() {
-	    $( "#lancernbuserbyserie" ).button({
-	        icons: {
-	          primary: "ui-icon-play"
-	        }
-	      })
-	      .click(function() {
-	        var options;
-	        if ( $( this ).text() === "lancer" ) {
-		        document.cachenbuserbyserie.continuer.value = "oui";
-	        	$.get("<?php echo BDO_URL;?>cache/nbuserbyserie", $("#cachenbuserbyserie").serialize(), function(data) {
-	         		 $("#ddcachenbuserbyserie").html(data);
-	          		//alert("Data Loaded: " + data);
-	         		});
-	          options = {
-	            label: "pause",
-	            icons: {
-	              primary: "ui-icon-pause"
-	            }
-	          };
-	        } else {
-		        document.cachenbuserbyserie.continuer.value = "";
-	        options = {
-	            label: "lancer",
-	            icons: {
-	              primary: "ui-icon-play"
-	            }
-	          };
-	        }
-	        $( this ).button( "option", options );
-	      })
+        $( "#lancernbuserbyserie" ).button({
+            icons: {
+              primary: "ui-icon-play"
+            }
+          })
+          .click(function() {
+            var options;
+            if ( $( this ).text() === "lancer" ) {
+                document.cachenbuserbyserie.continuer.value = "oui";
+                $.get("<?php echo BDO_URL;?>cache/nbuserbyserie", $("#cachenbuserbyserie").serialize(), function(data) {
+                     $("#ddcachenbuserbyserie").html(data);
+                    //alert("Data Loaded: " + data);
+                    });
+              options = {
+                label: "pause",
+                icons: {
+                  primary: "ui-icon-pause"
+                }
+              };
+            } else {
+                document.cachenbuserbyserie.continuer.value = "";
+            options = {
+                label: "lancer",
+                icons: {
+                  primary: "ui-icon-play"
+                }
+              };
+            }
+            $( this ).button( "option", options );
+          })
   });
   </script>
 

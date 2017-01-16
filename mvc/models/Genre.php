@@ -5,7 +5,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 
 class Genre extends Bdo_Db_Line
@@ -24,7 +24,7 @@ class Genre extends Bdo_Db_Line
 
     public $error = '';
 
-    
+
 
     // initialisation
 
@@ -59,9 +59,9 @@ class Genre extends Bdo_Db_Line
     {
 
         return "
-        SELECT 
-            `ID_GENRE` , 
-            `LIBELLE` , 
+        SELECT
+            `ID_GENRE` ,
+            `LIBELLE` ,
             `ORIGINE`
         FROM  `" . $this->table_name . "`
         ";
@@ -88,22 +88,22 @@ class Genre extends Bdo_Db_Line
 
         }
 
-        
+
 
         $dbSearch = new Bdo_Db_Search();
 
-        
+
 
         $dbSearch->select = "
-        SELECT 
-            `ID_GENRE` , 
+        SELECT
+            `ID_GENRE` ,
 
-            `LIBELLE` , 
+            `LIBELLE` ,
 
             `ORIGINE`
         ";
 
-        
+
 
         // dans les tables
 
@@ -111,11 +111,11 @@ class Genre extends Bdo_Db_Line
 FROM " . $this->table_name . "
 ";
 
-        
+
 
         $dbSearch->where = "WHERE 1";
 
-        
+
 
         // dans l'ordre
 
@@ -125,11 +125,11 @@ FROM " . $this->table_name . "
 
         if ($a_data['col_tri'] == "") $a_data['col_tri'] = $this->table_name . ".LIBELLE";
 
-        
+
 
         $dbSearch->groupby = "";
 
-        
+
 
         // --------------=======================----------------
 
@@ -153,13 +153,13 @@ FROM " . $this->table_name . "
 
         }
 
-        
+
 
         return $dbSearch;
 
     }
 
-    
+
 
     public function all() {
 
@@ -168,21 +168,21 @@ FROM " . $this->table_name . "
         return $this->load('c', " WHERE 1 ORDER BY `bd_genre`.`LIBELLE` ASC");
 
     }
-    
+
     public function bd(){
-        
+
         return $this->load('c'," WHERE ORIGINE = 'BD' ORDER BY `bd_genre`.`LIBELLE` ASC");
-        
+
     }
-    
+
     public function mangas() {
          return $this->load('c'," WHERE ORIGINE = 'Mangas' ORDER BY `bd_genre`.`LIBELLE` ASC");
     }
-    
+
     public function comics () {
          return $this->load('c'," WHERE ORIGINE = 'Comics' ORDER BY `bd_genre`.`LIBELLE` ASC");
     }
-    
+
     public function getNbSerieForGenre($id_genre) {
         /*
          * Prend un id genre et fournit en sortie le nombre de série concernées par le genre
@@ -190,9 +190,9 @@ FROM " . $this->table_name . "
         $query = "select count(*) as nbseries from bd_serie where id_genre =" . intval($id_genre);
         $resultat = Db_query($query);
         $obj = Db_fetch_object($resultat);
-        
+
         return $obj->nbseries;
     }
-    
+
 
 }

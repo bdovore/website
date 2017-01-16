@@ -1,85 +1,85 @@
-.oftAclRole, .oftAclRoleTitle, .oftAclResource, .oftAclResourceTitle, .oftAclPrivilege, .oftAclResourcePrivilege, 
-.oftAclLegacyDirect, .oftAclLegacyPossible, .oftAclLegacyIndirect, 
+.oftAclRole, .oftAclRoleTitle, .oftAclResource, .oftAclResourceTitle, .oftAclPrivilege, .oftAclResourcePrivilege,
+.oftAclLegacyDirect, .oftAclLegacyPossible, .oftAclLegacyIndirect,
 .oftAclAccess, .oftAclAccessAllow, .oftAclAccessAllowLegacy, .oftAclAccessDeny, .oftAclAccessDenyLegacy, .oftAclAccessON {
-	text-align : center;
+    text-align : center;
 }
-.oftAclRole, .oftAclResource, .oftAclPrivilege, .oftAclLegacyDirect, .oftAclLegacyPossible, .oftAclLegacyIndirect, 
+.oftAclRole, .oftAclResource, .oftAclPrivilege, .oftAclLegacyDirect, .oftAclLegacyPossible, .oftAclLegacyIndirect,
 .oftAclAccess, .oftAclAccessAllow, .oftAclAccessAllowLegacy, .oftAclAccessDeny, .oftAclAccessDenyLegacy, .oftAclAccessON,
 .oftAclLegacyDirectON {
-	cursor : pointer;
+    cursor : pointer;
 }
 .oftAclResourceAll, .oftAclPrivilegeAll {
-	text-align : right;
+    text-align : right;
 }
 
 .oftAclRole, .oftAclRoleTitle {
-	background-color: #666666;
-	color: #ffffff;
+    background-color: #666666;
+    color: #ffffff;
 }
 .oftAclResource, .oftAclResourceTitle {
-	background-color: #FFFF99;
-	color: #000000;
+    background-color: #FFFF99;
+    color: #000000;
 }
 .oftAclResourceAll {
-	background-color: #FFFF33;
-	color: #000000;
+    background-color: #FFFF33;
+    color: #000000;
 }
 .oftAclPrivilege {
-	background-color: #FFCC99;
-	color: #000000;
+    background-color: #FFCC99;
+    color: #000000;
 }
 .oftAclPrivilegeTitle {
-	background-color: #FFCC33;
-	color: #000000;
+    background-color: #FFCC33;
+    color: #000000;
 }
 .oftAclPrivilegeAll {
-	background-color: #FFCC66;
-	color: #000000;
+    background-color: #FFCC66;
+    color: #000000;
 }
 
 .oftAclLegacyDirect {
-	background-color: #ff3333;
-	color: #ffffff;
+    background-color: #ff3333;
+    color: #ffffff;
 }
 .oftAclLegacyDirectON {
-	background-color: #992222;
-	color: #ffffff;
+    background-color: #992222;
+    color: #ffffff;
 }
 .oftAclLegacyPossible {
-	background-color: #eeeeee;
-	color: #ffffff;
+    background-color: #eeeeee;
+    color: #ffffff;
 }
 .oftAclLegacyImpossible {
-	background-color: #bbbbbb;
-	color: #ffffff;
+    background-color: #bbbbbb;
+    color: #ffffff;
 }
 .oftAclLegacyIndirect {
-	background-color: #fec5b1;
-	color: #ffffff;
+    background-color: #fec5b1;
+    color: #ffffff;
 }
 
 .oftAclAccess {
-	background-color: #eeeeee;
-	color: #aaa;
+    background-color: #eeeeee;
+    color: #aaa;
 }
 .oftAclAccessAllow {
-	background-color: #0000ff;
-	color: #ffffff;
+    background-color: #0000ff;
+    color: #ffffff;
 }
 .oftAclAccessAllowLegacy {
-	background-color: #ccccff;
-	color: #000000;
+    background-color: #ccccff;
+    color: #000000;
 }
 .oftAclAccessDeny {
-	background-color: #ff0000;
-	color: #ffffff;
+    background-color: #ff0000;
+    color: #ffffff;
 }
 .oftAclAccessDenyLegacy {
-	background-color: #ffcccc;
-	color: #ffffff;
+    background-color: #ffcccc;
+    color: #ffffff;
 }
 
 .oftAclAccessON {
-	background-color: #666;
-	color: #fff;
+    background-color: #666;
+    color: #fff;
 }

@@ -3,102 +3,102 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Bdo_Cache {
-	
-	public $filename = null;
-	public $fileCache = null;
-	public $dateCreaCache=false;
-	
-	public $data = null;
-	public $dataCache = null;
 
-	public $mode = 'serial';
+    public $filename = null;
+    public $fileCache = null;
+    public $dateCreaCache=false;
 
-	public function __construct($filename)
-	{
-		$this->filename = $filename;
+    public $data = null;
+    public $dataCache = null;
 
-		$this->mode = pathinfo($filename,PATHINFO_EXTENSION);
+    public $mode = 'serial';
 
-		$this->fileCache = BDO_DIR_CACHE.$filename;
-	}
+    public function __construct($filename)
+    {
+        $this->filename = $filename;
 
-	public function setData($data)
-	{
-		$this->data = $data;
-	}
+        $this->mode = pathinfo($filename,PATHINFO_EXTENSION);
 
+        $this->fileCache = BDO_DIR_CACHE.$filename;
+    }
 
-	public function write()
-	{
-		switch($this->mode)
-		{
-			case "serial" : {
-				$this->dataCache = serialize($this->data);
-				break;
-			}
-		}
-
-		if(file_put_contents($this->fileCache, $this->dataCache)) {
-			return true;
-		}
-
-		exit('erreur fatale : sauvegarde fichier cache ['.$this->fileCache.'] impossible. Vérifiez les permissions du dossier cache');
-	}
-
-	public function delete()
-	{
-		if (is_file($this->fileCache))
-		{
-			if (@unlink($this->fileCache)) {
-				return true;
-			}
-			exit('erreur fatale : suppression fichier cache ['.$this->filename.'] impossible.');
-		}
-		return true;
-	}
-
-	public function read()
-	{
-
-		if ($this->dataCache = @file_get_contents($this->fileCache)) {
-			switch($this->mode)
-			{
-				case "serial" : {
-					$this->data = unserialize($this->dataCache);
-
-					break;
-				}
-			}
-
-			return true;
-		}
-		return false;
-	}
-
-	public function load()
-	{
-		if ($this->read()) {
-			$this->dateCreaCache = filemtime($this->fileCache);
-			return $this->data;
-		}
-
-		return false;
-	}
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
 
 
-	public function save($data)
-	{
-		$this->data = $data;
-		if ($this->write()) {
-			return true;
-		}
+    public function write()
+    {
+        switch($this->mode)
+        {
+            case "serial" : {
+                $this->dataCache = serialize($this->data);
+                break;
+            }
+        }
 
-		return false;
-	}
-	
+        if(file_put_contents($this->fileCache, $this->dataCache)) {
+            return true;
+        }
+
+        exit('erreur fatale : sauvegarde fichier cache ['.$this->fileCache.'] impossible. Vérifiez les permissions du dossier cache');
+    }
+
+    public function delete()
+    {
+        if (is_file($this->fileCache))
+        {
+            if (@unlink($this->fileCache)) {
+                return true;
+            }
+            exit('erreur fatale : suppression fichier cache ['.$this->filename.'] impossible.');
+        }
+        return true;
+    }
+
+    public function read()
+    {
+
+        if ($this->dataCache = @file_get_contents($this->fileCache)) {
+            switch($this->mode)
+            {
+                case "serial" : {
+                    $this->data = unserialize($this->dataCache);
+
+                    break;
+                }
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    public function load()
+    {
+        if ($this->read()) {
+            $this->dateCreaCache = filemtime($this->fileCache);
+            return $this->data;
+        }
+
+        return false;
+    }
+
+
+    public function save($data)
+    {
+        $this->data = $data;
+        if ($this->write()) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
 
 ?>

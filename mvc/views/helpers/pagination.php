@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 class Pagination{
-  
+
 /**
 * Affiche la pagination à l'endroit où cette fonction est appelée
 * @param string $url L'URL ou nom de la page appelant la fonction, ex: 'index.php' ou 'http://example.com/'
@@ -154,107 +154,107 @@ class Pagination{
         }
 
         return ($pagination);
-    }   
-    
+    }
+
     public function menuCollection() {
-        
-      
+
+
         // tableaux contenant les liens d'accès et le texte à afficher
         $tab_menu_lien = array( "macollection", "macollection/mesetageres", "macollection/futursachats", "macollection/monactu", "macollection/seriecomplete", "macollection/addition", "macollection/proposition","macollection/statistiques");
         $tab_menu_texte = array( "Accueil", "Mes Albums", "Futurs Achats", "Mon Actualité", "Séries à compléter", "L'Addition","Mes propositions", "Stats" );
-        
+
         // informations sur la page
-        
+
         $menu = "\n<div id=\"menu\" data-menu-title=\"Ma Collection\">\n    <ul id=\"onglets\">\n";
 
         $a_request_uri = explode('?',$_SERVER['REQUEST_URI']);
-        
+
         $onglet = $a_request_uri[0];
-        
+
         // boucle qui parcours les deux tableaux
         foreach($tab_menu_lien as $cle=>$lien)
         {
             $menu .= "    <li";
-            
-            
+
+
             // si le nom du fichier correspond à celui pointé par l'indice, alors on l'active
             if( $onglet == "/".$lien )
                 $menu .= " class=\"active\"";
-                
+
             $menu .= "><a href=\"" . BDO_URL.$lien . "\">" . $tab_menu_texte[$cle] . "</a></li>\n";
         }
-        
+
         $menu .= "</ul>\n</div>    <hr class='expSep'>";
-        
+
         // on renvoie le code xHTML
-        return $menu;        
-    
+        return $menu;
+
 
     }
-    
+
      public function menuGuest($user_id) {
          // tableaux contenant les liens d'accès et le texte à afficher
         $tab_menu_lien = array( "guest", "guest/collection", "guest/avis", "guest/wishlist" );
         $tab_menu_texte = array( "Accueil","Tous les albums","Avis de lecture","Wish-list");
-        
+
         $menu = "\n<div id=\"menu\">\n    <ul id=\"onglets\">\n";
 
         $a_request_uri = explode('?',$_SERVER['REQUEST_URI']);
-        
+
         $onglet = $a_request_uri[0];
-        
+
         // boucle qui parcours les deux tableaux
         foreach($tab_menu_lien as $cle=>$lien)
         {
             $menu .= "    <li";
-            
-            
+
+
             // si le nom du fichier correspond à celui pointé par l'indice, alors on l'active
             if( $onglet == "/".$lien )
                 $menu .= " class=\"active\"";
-                
+
             $menu .= "><a href=\"" . BDO_URL.$lien . "?user=".$user_id."\">" . $tab_menu_texte[$cle] . "</a></li>\n";
         }
-        
+
         $menu .= "</ul>\n</div>";
-        
+
         // on renvoie le code xHTML
-        return $menu;  
+        return $menu;
      }
-     
+
      public function menuAdmin() {
-        
-      
+
+
         // tableaux contenant les liens d'accès et le texte à afficher
         $tab_menu_lien = array( "admin", "adminproposition", "controle", "admin/ajout", "adminnews", "admin/user");
         $tab_menu_texte = array( "Tableau de bord", "Propositions", "Contrôles", "Ajout",  "News","Utilisateurs" );
-        
+
         // informations sur la page
-        
+
         $menu = "\n<div id=\"menu\">\n    <ul id=\"onglets\">\n";
 
         $a_request_uri = explode('?',$_SERVER['REQUEST_URI']);
-        
+
         $onglet = $a_request_uri[0];
-        
+
         // boucle qui parcours les deux tableaux
         foreach($tab_menu_lien as $cle=>$lien)
         {
             $menu .= "    <li";
-            
-            
+
+
             // si le nom du fichier correspond à celui pointé par l'indice, alors on l'active
             if( $onglet == "/".$lien )
                 $menu .= " class=\"active\"";
-                
+
             $menu .= "><a href=\"" . BDO_URL.$lien . "\">" . $tab_menu_texte[$cle] . "</a></li>\n";
         }
-        
+
         $menu .= "</ul>\n</div>";
-        
+
         // on renvoie le code xHTML
-        return $menu;        
-    
+        return $menu;
+
 
     }
  }

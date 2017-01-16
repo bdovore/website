@@ -1,18 +1,18 @@
 <?php
 
- 
+
 function saveBatchExec($batchFileName,$flagMail=true)
 {
     $txt= ob_get_clean();
     echo $txt;
 
     if ($flagMail) {
-    mail ( "laurent.mignot@gmail.com", 
-    $_SERVER["SERVER_NAME"] .' : '.basename($batchFileName), 
-    $txt, 
+    mail ( "laurent.mignot@gmail.com",
+    $_SERVER["SERVER_NAME"] .' : '.basename($batchFileName),
+    $txt,
     'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/plain; charset=UTF-8' . "\r\n" );
     }
-    
+
 
  return true;
 }

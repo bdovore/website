@@ -6,28 +6,28 @@ include (BDO_DIR."vendors/jpgraph-3.5.0b1/src/jpgraph_bar.php");
 
 // Variable d�finissant l'utilisateur
 if ($user != '') {
-	$user_id = decodeUserId($user);
+    $user_id = decodeUserId($user);
 }
 else{
-	$user_id = $_SESSION["userConnect"]->user_id;
+    $user_id = $_SESSION["userConnect"]->user_id;
 }
 
 if (empty($user_id)) exit();
 
 $query = "
-SELECT 
-	er.nom, 
-	count(en.id_edition) as nbtome 
-FROM 
-	users_album u 
-	INNER JOIN bd_edition en ON en.id_edition = u.id_edition 
-	INNER JOIN bd_editeur er ON er.id_editeur = en.id_editeur 
-	INNER JOIN bd_tome t ON t.id_tome = en.id_tome 
-WHERE 
-	t.flg_type = 0 
-	AND u.flg_achat = 'N' 
-	AND u.user_id =" . $user_id . "
-GROUP BY er.nom 
+SELECT
+    er.nom,
+    count(en.id_edition) as nbtome
+FROM
+    users_album u
+    INNER JOIN bd_edition en ON en.id_edition = u.id_edition
+    INNER JOIN bd_editeur er ON er.id_editeur = en.id_editeur
+    INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+WHERE
+    t.flg_type = 0
+    AND u.flg_achat = 'N'
+    AND u.user_id =" . $user_id . "
+GROUP BY er.nom
 ORDER BY nbtome DESC
 ";
 $DB->query ($query);
@@ -41,28 +41,28 @@ $i=0;
 // V�rifie le nombre de r�ponses renvoy�es
 if ($nb_records <= 10)
 {
-	while ($DB->next_record())
-	{
-		$datay[$i] = $DB->f("nbtome");
-		$lbl[$i] = $DB->f("nom");
-		$i++;
-	}
+    while ($DB->next_record())
+    {
+        $datay[$i] = $DB->f("nbtome");
+        $lbl[$i] = $DB->f("nom");
+        $i++;
+    }
 }else{
-	// r�cup�re les 9 premiers �l�ments
-	for ($compteur = 1;$compteur <= 9; $compteur++)
-	{
-		$DB->next_record();
-		$datay[$i] = $DB->f("nbtome");
-		$lbl[$i] = $DB->f("nom");
-		$i++;
-	}
-	// Compl�te avec les derniers
-	while ($DB->next_record())
-	{
-		$other += $DB->f("nbtome");
-	}
-	$datay[$i] = $other;
-	$lbl[$i] = "Autre";
+    // r�cup�re les 9 premiers �l�ments
+    for ($compteur = 1;$compteur <= 9; $compteur++)
+    {
+        $DB->next_record();
+        $datay[$i] = $DB->f("nbtome");
+        $lbl[$i] = $DB->f("nom");
+        $i++;
+    }
+    // Compl�te avec les derniers
+    while ($DB->next_record())
+    {
+        $other += $DB->f("nbtome");
+    }
+    $datay[$i] = $other;
+    $lbl[$i] = "Autre";
 }
 
 // Size of graph

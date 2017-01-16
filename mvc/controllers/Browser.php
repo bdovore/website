@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Browser extends Bdo_Controller
 {
@@ -17,9 +17,9 @@ class Browser extends Bdo_Controller
     public $pagetitle = "BDovore.com - Bandes dessinées ";
 
     public $rb_browse = "ser";
-    
+
     public $keyword = "";
-    
+
     public $lev_id = "";
     // TODO: $this->lev2_id est utilisé, selon les endroits, comme un id (donc un entier),
     // comme un string, ou comme un mix genre lev2_id=5269#2L5269 (dans les URL).
@@ -27,7 +27,7 @@ class Browser extends Bdo_Controller
     public $lev2_id = "";
 
     public $let = "";
-    
+
     public $url_edit = array(
                 "ALBUM" => "admin/editalbum?alb_id=",
                 "SERIE" =>  "admin/editserie?serie_id=",
@@ -36,7 +36,7 @@ class Browser extends Bdo_Controller
                 "AUTEUR" => "admin/editauteur?auteur_id=",
                 "EDITEUR" => "admin/editediteur?editeur_id="
         );
-    
+
     public $a_searchType = array(
             'ser' => 'Série',
             'aut' => 'Auteur',
@@ -48,18 +48,18 @@ class Browser extends Bdo_Controller
     public function __construct ()
     {
         parent::__construct();
-        
+
         $this->pageNum = getValInteger('pageNum', 0);
         $this->rb_browse = getVal('rb_browse', 'ser');
         $this->lev_id = getValInteger('lev_id',0);//comme ça il est 'clean' pour toutes les utilisations
         $this->lev2_id = getVal('lev2_id');//à vérifier cf. 'TODO' ci-dessus
         $this->let = getVal('let');
         $this->a_idGenre = getValInteger('a_idGenre',null);//NB a_idGenre est habituellement un array
-        
+
         $this->startRow = $this->pageNum * $this->maxRows;
-        
+
         if (! isset($this->a_searchType[$this->rb_browse])) $this->rb_browse = "ser";
-        
+
         // URL des pages d'edition
         $url_edit = array(
                 "ALBUM" => BDO_URL . "admin/editalbum?alb_id=",
@@ -83,7 +83,7 @@ class Browser extends Bdo_Controller
             $this->let = $search;
         }
         $dbs_genre = $this->Genre->all();
-        
+
         $this->view->set_var(array(
                 "TYPBROWSE" => $this->rb_browse,
                 "a_searchType" => $this->a_searchType,
@@ -102,7 +102,7 @@ class Browser extends Bdo_Controller
         $query_where = "";
         if ($this->rb_browse == 'ser' || ! $this->rb_browse) {
             $query_select = "SELECT SQL_CALC_FOUND_ROWS bd_serie.id_serie id, bd_serie.nom name,
-            bd_serie.FLG_FINI as FLG_FINI_SERIE	FROM bd_serie WHERE 1 ";
+            bd_serie.FLG_FINI as FLG_FINI_SERIE FROM bd_serie WHERE 1 ";
             if ($this->let) {
                 $query_where .= " AND nom like '" . PMA_sqlAddslashes($this->let, true) . "%' ";
             }
@@ -110,7 +110,7 @@ class Browser extends Bdo_Controller
                 $query_where .= " AND ID_GENRE IN (".implode(',',$this->a_idGenre). ")";
             }
 
-            
+
             $query_order = " ORDER BY nom ASC ";
         }
         elseif ($this->rb_browse == 'aut') {
@@ -131,7 +131,7 @@ class Browser extends Bdo_Controller
 
             }
 
-            
+
             $query_order = " ORDER BY PSEUDO ASC ";
         }
         elseif ($this->rb_browse == 'edit') {
@@ -167,11 +167,11 @@ class Browser extends Bdo_Controller
         }
 
         $totalPages = ceil($totalRows / $this->maxRows) - 1;
-        
-        
+
+
         // on déclare les blocks contenus sur la feuille
         // //$t->set_block('tpBody', 'DataBlock', 'DBlock');
-        
+
         $queryString = "";
         if (! empty($_SERVER['QUERY_STRING'])) {
             $params = explode("&", $_SERVER['QUERY_STRING']);
@@ -186,11 +186,11 @@ class Browser extends Bdo_Controller
             }
         }
         $queryString = sprintf("&totalRows=%d%s", $totalRows, $queryString);
-        
+
         if (! $this->rb_browse or $this->rb_browse == 'ser') {
             $this->view->set_var("TYPBROWSE", "ser");
             $url_edit = BDO_URL.$this->url_edit["SERIE"];
-            
+
         }
         if ($this->rb_browse == 'aut') {
             $this->view->set_var("AUTCHECK", "checked");
@@ -206,7 +206,7 @@ class Browser extends Bdo_Controller
             $this->view->set_var("TYPBROWSE", "edit");
              $url_edit = BDO_URL.$this->url_edit["EDITEUR"];
         }
-        
+
         $query_string = "";
         if ($this->rb_browse) {
             $query_string .= "rb_browse=" . $this->rb_browse;
@@ -216,7 +216,7 @@ class Browser extends Bdo_Controller
             $query_string .= "rb_browse=" . $this->rb_browse;
         }
         $queryString .= "&" . $query_string;
-        
+
         $a_row = array();
         if ($this->rb_browse != "ser") {
             while ($row = Db_fetch_array($RecAuteur)) {
@@ -264,11 +264,11 @@ class Browser extends Bdo_Controller
             $totalrow = 'lignes de ' . ($this->startRow + 1) . ' à ';
             $totalrow .= ($this->startRow + $this->maxRows > $totalRows) ? $totalRows : ($this->startRow + $this->maxRows);
             $totalrow .= ' ( sur ' . $totalRows . ' lignes )';
-            
+
             if ($this->pageNum > 0) $this->view->set_var("URLPREVPAGE", '<a href="javascript:document.browser.pageNum.value=\'' . max(0, $this->pageNum - 1) . '\';go1()">Pr&eacute;c&eacute;dent</a>');
             else
                 $this->view->set_var("URLPREVPAGE", '');
-            
+
             if ($this->pageNum < $totalPages) $this->view->set_var("URLNEXTPAGE", '<a href="javascript:document.browser.pageNum.value=\'' . min($totalPages, $this->pageNum + 1) . '\';go1()">Suivant</a>');
             else
                 $this->view->set_var("URLNEXTPAGE", '');
@@ -279,7 +279,7 @@ class Browser extends Bdo_Controller
             $this->view->set_var("URLNEXTPAGE", '');
             $this->view->set_var("TOTALROW", 'Aucune ligne de résultat !');
         }
-        
+
         $this->view->set_var(array(
                 "TITRESEARCH" => "<b>Commence par '<i>" . htmlspecialchars($this->let) . "</i>...'</b>"
         ));
@@ -295,14 +295,14 @@ class Browser extends Bdo_Controller
 
         if ($this->rb_browse == 'ser' || ! $this->rb_browse) {
             $query_select = "SELECT SQL_CALC_FOUND_ROWS distinct bd_serie.id_serie id, bd_serie.nom name,
-               bd_serie.FLG_FINI as FLG_FINI_SERIE	FROM bd_serie WHERE 1 ";
+               bd_serie.FLG_FINI as FLG_FINI_SERIE  FROM bd_serie WHERE 1 ";
             if ($this->let) {
                 $query_where .= " AND nom like '%" . PMA_sqlAddslashes($this->let, true) . "%' ";
             }
             if ($this->a_idGenre) {
                 $query_where .= " AND ID_GENRE IN (".implode(',',$this->a_idGenre). ")";
             }
-            
+
             $query_order = " ORDER BY nom ASC ";
         }
         elseif ($this->rb_browse == 'aut') {
@@ -344,14 +344,14 @@ class Browser extends Bdo_Controller
 
             }
 
-            
+
             $query_order = " ORDER BY NOM ASC ";
         }
 
         // echo $query_limit;
         $query_limit = $query_select . $query_where . $query_order . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows);
         $RecAuteur = Db_query($query_limit);
-        
+
         $totalRows = getValInteger('totalRows',-1);
 
         if ($totalRows < 0) {
@@ -364,11 +364,11 @@ class Browser extends Bdo_Controller
         }
 
         $totalPages = ceil($totalRows / $this->maxRows) - 1;
-        
-        
+
+
         // on déclare les blocks contenus sur la feuille
         // //$t->set_block('tpBody', 'DataBlock', 'DBlock');
-        
+
         $queryString = "";
         if (! empty($_SERVER['QUERY_STRING'])) {
             $params = explode("&", $_SERVER['QUERY_STRING']);
@@ -383,7 +383,7 @@ class Browser extends Bdo_Controller
             }
         }
         $queryString = sprintf("&totalRows=%d%s", $totalRows, $queryString);
-        
+
         if (! $this->rb_browse or $this->rb_browse == 'ser') {
             $this->view->set_var("TYPBROWSE", "ser");
         }
@@ -399,7 +399,7 @@ class Browser extends Bdo_Controller
             $this->view->set_var("EDITCHECK", "checked");
             $this->view->set_var("TYPBROWSE", "edit");
         }
-        
+
         $query_string = "";
         if ($this->rb_browse) {
             $query_string .= "rb_browse=" . $this->rb_browse;
@@ -409,7 +409,7 @@ class Browser extends Bdo_Controller
             $query_string .= "rb_browse=" . $this->rb_browse;
         }
         $queryString .= "&" . $query_string;
-        
+
         $a_row = array();
         if ($this->rb_browse != "ser") {
             while ($row = Db_fetch_array($RecAuteur)) {
@@ -455,11 +455,11 @@ class Browser extends Bdo_Controller
             $totalrow = 'lignes de ' . ($this->startRow + 1) . ' à ';
             $totalrow .= ($this->startRow + $this->maxRows > $totalRows) ? $totalRows : ($this->startRow + $this->maxRows);
             $totalrow .= ' ( sur ' . $totalRows . ' lignes )';
-            
+
             if ($this->pageNum > 0) $this->view->set_var("URLPREVPAGE", '<a href="javascript:document.browser.pageNum.value=\'' . max(0, $this->pageNum - 1) . '\';go2()">Pr&eacute;c&eacute;dent</a>');
             else
                 $this->view->set_var("URLPREVPAGE", '');
-            
+
             if ($this->pageNum < $totalPages) $this->view->set_var("URLNEXTPAGE", '<a href="javascript:document.browser.pageNum.value=\'' . min($totalPages, $this->pageNum + 1) . '\';go2()">Suivant</a>');
             else
                 $this->view->set_var("URLNEXTPAGE", '');
@@ -470,7 +470,7 @@ class Browser extends Bdo_Controller
             $this->view->set_var("URLNEXTPAGE", '');
             $this->view->set_var("TOTALROW", 'Aucune ligne de résultat !');
         }
-        
+
         $this->view->set_var(array(
                 "TITRESEARCH" => "Contient '...<i>" . htmlspecialchars($this->let) . "<i>...'</b>"
         ));
@@ -481,46 +481,46 @@ class Browser extends Bdo_Controller
     public function Xhr ()
     {
         if ($this->rb_browse == 'aut') {
-            
+
             $query_niv2 = "
-        	select SQL_CALC_FOUND_ROWS distinct
-        		bd_serie.id_serie id,
-        		bd_serie.nom name,
+            select SQL_CALC_FOUND_ROWS distinct
+                bd_serie.id_serie id,
+                bd_serie.nom name,
                bd_serie.FLG_FINI as FLG_FINI_SERIE
-        	from
-        		bd_serie
-        		INNER JOIN bd_tome USING(id_serie)
-        	where
-        		(bd_tome.id_dessin = " . $this->lev_id . "
-        		or bd_tome.id_scenar = " . $this->lev_id . "
-        		or bd_tome.id_color = " . $this->lev_id . "
-        		or bd_tome.id_scenar_alt = " . $this->lev_id . "
-        		or bd_tome.id_dessin_alt = " . $this->lev_id . "
-        		or bd_tome.id_color_alt = " . $this->lev_id . ")
-        		".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
-        	order by name ";
-            
+            from
+                bd_serie
+                INNER JOIN bd_tome USING(id_serie)
+            where
+                (bd_tome.id_dessin = " . $this->lev_id . "
+                or bd_tome.id_scenar = " . $this->lev_id . "
+                or bd_tome.id_color = " . $this->lev_id . "
+                or bd_tome.id_scenar_alt = " . $this->lev_id . "
+                or bd_tome.id_dessin_alt = " . $this->lev_id . "
+                or bd_tome.id_color_alt = " . $this->lev_id . ")
+                ".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
+            order by name ";
+
         }
         elseif ($this->rb_browse == 'edit') {
-            
+
             $query_niv2 = "
-        	select SQL_CALC_FOUND_ROWS
-        		id_collection id,
-        		nom name
-        	from
-        		bd_collection
-        	where
-        		id_editeur =" . $this->lev_id . "
-        	order by name
-        	";
+            select SQL_CALC_FOUND_ROWS
+                id_collection id,
+                nom name
+            from
+                bd_collection
+            where
+                id_editeur =" . $this->lev_id . "
+            order by name
+            ";
         }
-        
+
         $recLev2 = Db_query($query_niv2 . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
-        
+
         $resCount = Db_query('SELECT FOUND_ROWS() as nb');
         $rowCount = Db_fetch_array($resCount);
         $totalRows = $rowCount['nb'];
-        
+
         $a_row = array();
         while ($row_niv2 = Db_fetch_array($recLev2)) {
             $a_row[] = array(
@@ -534,7 +534,7 @@ class Browser extends Bdo_Controller
             );
         }
         $this->view->set_var("a_row", $a_row);
-        
+
         if (! empty($totalRows) and ($totalRows <= $this->maxRows)) {
             $this->view->set_var("URLPREVPAGE", '');
             $this->view->set_var("URLNEXTPAGE", '');
@@ -544,16 +544,16 @@ class Browser extends Bdo_Controller
             $totalrowhtml = 'lignes de ' . ($this->startRow + 1) . ' à ';
             $totalrowhtml .= ($this->startRow + $this->maxRows > $totalRows) ? $totalRows : ($this->startRow + $this->maxRows);
             $totalrowhtml .= ' ( sur ' . $totalRows . ' lignes )';
-            
+
             $totalPages = ceil($totalRows / $this->maxRows) - 1;
-            
- 
-            
-            
-            
+
+
+
+
+
             if ($this->pageNum > 0) {
 
-            
+
 
                 $jvs = '$.get("'.BDO_URL.'browser/xhr?rb_browse=' . $this->rb_browse . '&lev_id=' . $this->lev_id . '&pageNum=' . max(0, $this->pageNum - 1) . '",
 
@@ -568,7 +568,7 @@ class Browser extends Bdo_Controller
 
                 $this->view->set_var("URLPREVPAGE", '');
 
-            
+
 
             if ($this->pageNum < $totalPages) {
 
@@ -584,9 +584,9 @@ class Browser extends Bdo_Controller
 
             else
 
-                $this->view->set_var("URLNEXTPAGE", '');            
+                $this->view->set_var("URLNEXTPAGE", '');
 
-            
+
             $this->view->set_var("URLSITE", BDO_URL);
             $this->view->set_var("URLSITEIMAGE", BDO_URL_IMAGE);
             $this->view->set_var("TOTALROW", (empty($totalRows) ? 'Aucune ligne de résultat !' : $totalrowhtml));
@@ -596,7 +596,7 @@ class Browser extends Bdo_Controller
             $this->view->set_var("URLNEXTPAGE", '');
             $this->view->set_var("TOTALROW", 'Aucune ligne de résultat !');
         }
-        
+
         $this->view->layout = "ajax";
         $this->view->render();
     }
@@ -606,9 +606,9 @@ class Browser extends Bdo_Controller
         // defintion des variables
         $a_serie = explode('#', $this->lev2_id);
         $this->lev2_id = $a_serie[0];
-        
+
         if ($this->rb_browse == 'ser') {
-            
+
             $query_album = "
             select SQL_CALC_FOUND_ROWS
             bd_tome.id_tome id,
@@ -631,14 +631,14 @@ class Browser extends Bdo_Controller
                 bd_edition.IMG_COUV,
                 bd_serie.ID_SERIE
             from
-            bd_tome 
+            bd_tome
             INNER JOIN bd_serie USING(id_serie)
-        	INNER JOIN bd_edition USING(ID_EDITION)
-        	where
+            INNER JOIN bd_edition USING(ID_EDITION)
+            where
             bd_tome.id_serie = $this->lev_id
             order by num_tome, TITRE
             ";
-            
+
             // URL album
             $act_url = ' onclick="window.open(' . "'./membres/album?id_tome=%d','Album','width=550,height=600,scrollbars=1')" . ';return false;"';
             $act_url = ' rel="shadowbox;player=iframe;height=600;width=580;"';
@@ -648,10 +648,10 @@ class Browser extends Bdo_Controller
             $edit_lev3 = "<a href='" . $url_edit["ALBUM"] . "' target =_blank><img src='" . BDO_URL_IMAGE . "edit.gif' border=0 /></a>";
         }
         elseif ($this->rb_browse == 'aut') {
-            
+
             $query_album = "
             select SQL_CALC_FOUND_ROWS
-        		bd_tome.id_tome id,
+                bd_tome.id_tome id,
             bd_tome.ID_TOME,
                     (CASE
                 WHEN bd_tome.flg_int = 'O'
@@ -670,26 +670,26 @@ class Browser extends Bdo_Controller
                bd_serie.FLG_FINI as FLG_FINI_SERIE,
                 bd_genre.LIBELLE as NOM_GENRE,
                 bd_edition.IMG_COUV
-        	from
-        		bd_tome
-        		INNER JOIN bd_serie USING(id_serie)
-        		INNER JOIN bd_edition USING(ID_EDITION)
-        	INNER JOIN bd_genre ON bd_genre.ID_GENRE=bd_serie.ID_GENRE
+            from
+                bd_tome
+                INNER JOIN bd_serie USING(id_serie)
+                INNER JOIN bd_edition USING(ID_EDITION)
+            INNER JOIN bd_genre ON bd_genre.ID_GENRE=bd_serie.ID_GENRE
                     where
-        		bd_tome.id_serie =" . intval($this->lev2_id) . "
-                		and	(
-        			bd_tome.id_dessin = " . $this->lev_id . "
-                			or bd_tome.id_scenar = " . $this->lev_id . "
-                			or bd_tome.id_color = " . $this->lev_id . "
-                			or bd_tome.id_scenar_alt = " . $this->lev_id . "
-                			or bd_tome.id_dessin_alt = " . $this->lev_id . "
-                			or bd_tome.id_color_alt = " . $this->lev_id . "
-                			)
+                bd_tome.id_serie =" . intval($this->lev2_id) . "
+                        and (
+                    bd_tome.id_dessin = " . $this->lev_id . "
+                            or bd_tome.id_scenar = " . $this->lev_id . "
+                            or bd_tome.id_color = " . $this->lev_id . "
+                            or bd_tome.id_scenar_alt = " . $this->lev_id . "
+                            or bd_tome.id_dessin_alt = " . $this->lev_id . "
+                            or bd_tome.id_color_alt = " . $this->lev_id . "
+                            )
                 ".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
-                			        
-                			order by num_tome, titre
+
+                            order by num_tome, titre
             ";
-            
+
             // URL album
             $act_url = ' onclick="window.open(' . "'./membres/album?id_tome=%d','Album','width=550,height=600,scrollbars=1')" . ';return false;"';
             $url_alb = "#";
@@ -697,26 +697,26 @@ class Browser extends Bdo_Controller
             $edit_lev3 = "<a href='" . $url_edit["ALBUM"] . "' target =_blank><img src='" . BDO_URL_IMAGE . "edit.gif' border=0 /></a>";
         }
         elseif ($this->rb_browse == 'edit') {
-            
+
             $query_album = "
-        	select SQL_CALC_FOUND_ROWS distinct
-        		bd_serie.id_serie id,
+            select SQL_CALC_FOUND_ROWS distinct
+                bd_serie.id_serie id,
                     bd_serie.ID_SERIE,
-        		bd_serie.nom as titre,
+                bd_serie.nom as titre,
                     bd_serie.NOM as NOM_SERIE,
                bd_serie.FLG_FINI as FLG_FINI_SERIE
-        	from
-        	bd_edition
-        		INNER JOIN bd_tome USING(id_tome)
-        		INNER JOIN bd_serie USING(id_serie)
-        	where
-        		bd_edition.id_editeur=" . $this->lev_id . "
-        		and bd_edition.id_collection=" . intval($this->lev2_id) . "
-        		".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
-        		        
-        	order by bd_serie.nom
-        	";
-            
+            from
+            bd_edition
+                INNER JOIN bd_tome USING(id_tome)
+                INNER JOIN bd_serie USING(id_serie)
+            where
+                bd_edition.id_editeur=" . $this->lev_id . "
+                and bd_edition.id_collection=" . intval($this->lev2_id) . "
+                ".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
+
+            order by bd_serie.nom
+            ";
+
             // URL affichage
             $url_alb = "serie?id_serie=%d";
             $act_url = "";
@@ -724,35 +724,35 @@ class Browser extends Bdo_Controller
             $edit_lev3 = "<a href='" . $url_edit["SERIE"] . "' target =_blank><img src='" . BDO_URL_IMAGE . "edit.gif' border=0></a>";
         }
         elseif ($this->rb_browse == 'genr') {
-            
+
             $query_album = "
-        	select SQL_CALC_FOUND_ROWS
-        		distinct
-        		bd_serie.id_serie id,
+            select SQL_CALC_FOUND_ROWS
+                distinct
+                bd_serie.id_serie id,
                     bd_serie.ID_SERIE,
-        		bd_serie.nom as titre,
+                bd_serie.nom as titre,
                     bd_serie.NOM as NOM_SERIE,
                bd_serie.FLG_FINI as FLG_FINI_SERIE
-          	from
+            from
                 bd_serie
             where
                 bd_serie.id_genre=" . $this->lev_id . "
-        		and bd_serie.nom like '" . Db_Escape_String($this->lev2_id) . "%'
+                and bd_serie.nom like '" . Db_Escape_String($this->lev2_id) . "%'
             order by titre
-        	";
+            ";
             $url_alb = "serie?id_serie=%d";
             $act_url = "";
             // URL d'edition
             $edit_lev3 = "<a href='" . $url_edit["SERIE"] . "' target =_blank><img src='" . BDO_URL_IMAGE . "edit.gif' border=0></a>";
         }
-        
+
         if ($this->rb_browse != "ser") {
             $recAlbum = Db_query($query_album . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
-            
+
             $resCount = Db_query('SELECT FOUND_ROWS() as nb');
             $rowCount = Db_fetch_array($resCount);
             $totalRows = $rowCount['nb'];
-            
+
             $a_row = array();
             while ($rowAlbum = Db_fetch_array($recAlbum)) {
                 $a_row[] = array_merge($rowAlbum,array(
@@ -774,13 +774,13 @@ class Browser extends Bdo_Controller
                     array(
                             "FICHESERIE" => $this->lev_id,
                     ));
-            
+
             $recAlbum = Db_query($query_album . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
-            
+
             $resCount = Db_query('SELECT FOUND_ROWS() as nb');
             $rowCount = Db_fetch_array($resCount);
             $totalRows = $rowCount['nb'];
-            
+
             $a_row = array();
             while ($rowAlbum = Db_fetch_array($recAlbum)) {
                 $a_row[] = array_merge($rowAlbum,array(
@@ -795,7 +795,7 @@ class Browser extends Bdo_Controller
             }
             $this->view->set_var("a_row", $a_row);
         }
-        
+
         if (! empty($totalRows) and ($totalRows <= $this->maxRows)) {
             $this->view->set_var("URLPREVPAGE", '');
             $this->view->set_var("URLNEXTPAGE", '');
@@ -805,11 +805,11 @@ class Browser extends Bdo_Controller
             $totalrowhtml = 'lignes de ' . ($this->startRow + 1) . ' à ';
             $totalrowhtml .= ($this->startRow + $this->maxRows > $totalRows) ? $totalRows : ($this->startRow + $this->maxRows);
             $totalrowhtml .= ' ( sur ' . $totalRows . ' lignes )';
-            
+
             $totalPages = ceil($totalRows / $this->maxRows) - 1;
-            
+
             if ($this->pageNum > 0) {
-                
+
                 $jvs = '$.get("'.BDO_URL.'browser/xhr_level2?rb_browse=' . $this->rb_browse . '&lev_id=' . $this->lev_id . '&lev2_id=' . $this->lev2_id . '&pageNum=' . max(0, $this->pageNum - 1) .'",
                          function(data) {$("#onglet_div_xhr_1L' . $this->lev_id . (($this->rb_browse != 'ser') ? ('_2L' . $this->lev2_id) : '') . '").html(data);});';
                 $url = '<a href="#" onClick=\''.$jvs.';return false\'>Pr&eacute;c&eacute;dent</a>';
@@ -817,7 +817,7 @@ class Browser extends Bdo_Controller
             }
             else
                 $this->view->set_var("URLPREVPAGE", '');
-            
+
             if ($this->pageNum < $totalPages) {
                 $jvs = '$.get("'.BDO_URL.'browser/xhr_level2?rb_browse=' . $this->rb_browse . '&lev_id=' . $this->lev_id . '&lev2_id=' . $this->lev2_id . '&pageNum=' . min($totalPages, $this->pageNum + 1) .'",
 
@@ -829,7 +829,7 @@ class Browser extends Bdo_Controller
             }
             else
                 $this->view->set_var("URLNEXTPAGE", '');
-            
+
             $this->view->set_var("TOTALROW", $totalrowhtml);
         }
         else {

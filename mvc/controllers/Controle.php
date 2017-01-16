@@ -1,8 +1,8 @@
 <?php
 
-/** 
+/**
  * @author laurent
- * 
+ *
  */
 class Controle extends Bdo_Controller
 {
@@ -20,13 +20,13 @@ class Controle extends Bdo_Controller
                 array(
                     "title" => "Nom de série ne contenant pas la valeur de la colonne TRI",
                     "query" => "
-            SELECT SQL_CALC_FOUND_ROWS 
+            SELECT SQL_CALC_FOUND_ROWS
                     `ID_SERIE`,
                     `NOM`,
-                    `TRI` 
-            FROM 
-                    `bd_serie` 
-            WHERE 
+                    `TRI`
+            FROM
+                    `bd_serie`
+            WHERE
                     `NOM` NOT LIKE concat( '%', `TRI`, '%' )",
                     "url" => BDO_URL . "admin/editserie?serie_id=",
                     "colUrl" => "ID_SERIE",
@@ -34,18 +34,18 @@ class Controle extends Bdo_Controller
                 array(
                     "title" => "EAN référencés plusieurs fois dans la table des éditions pour des albums différents (parution >31/12/2006 ou non-renseignée)",
                     "query" => "
-            SELECT SQL_CALC_FOUND_ROWS 
+            SELECT SQL_CALC_FOUND_ROWS
                     COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums différents',
                     `EAN` ,
                     GROUP_CONCAT(distinct(`ID_EDITION`) SEPARATOR ';') as 'Liens vers les éditions (séparateur ;)'
-            FROM 
-                    `bd_edition` 
-            WHERE 
-                    `EAN` IS NOT NULL 
+            FROM
+                    `bd_edition`
+            WHERE
+                    `EAN` IS NOT NULL
                                     AND TRIM(`EAN`)<>''
             AND (`DTE_PARUTION` > '2006-12-31' OR `DTE_PARUTION` IS NULL )
-            GROUP BY `EAN` 
-            HAVING COUNT(DISTINCT(`ID_TOME`))>1  
+            GROUP BY `EAN`
+            HAVING COUNT(DISTINCT(`ID_TOME`))>1
             ORDER BY 1 DESC",
                     "colExplode" => 'Liens vers les éditions (séparateur ;)',
                     "urlExplode" => "<a href='" . BDO_URL . "admin/editedition?edition_id={col}' target='_blank'>{col}</a>",
@@ -53,19 +53,19 @@ class Controle extends Bdo_Controller
                 array(
                     "title" => "ISBN référencés plusieurs fois dans la table des éditions pour des albums différents (parution >31/12/1973 ou non-renseignée)",
                     "query" => "
-            SELECT SQL_CALC_FOUND_ROWS 
-                    COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums différents', 
+            SELECT SQL_CALC_FOUND_ROWS
+                    COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums différents',
                     `ISBN` ,
                     GROUP_CONCAT(distinct(`ID_EDITION`) SEPARATOR ';') as 'Liens vers les éditions (séparateur ;)'
-            FROM 
-                    `bd_edition` 
-            WHERE 
-                    `ISBN` IS NOT NULL 
+            FROM
+                    `bd_edition`
+            WHERE
+                    `ISBN` IS NOT NULL
                     AND TRIM(`ISBN`)<>''
-            AND (`DTE_PARUTION` > '1973-12-31' OR `DTE_PARUTION` IS NULL) 
+            AND (`DTE_PARUTION` > '1973-12-31' OR `DTE_PARUTION` IS NULL)
 
-            GROUP BY `ISBN`  
-            HAVING COUNT(DISTINCT(`ID_TOME`))>1  
+            GROUP BY `ISBN`
+            HAVING COUNT(DISTINCT(`ID_TOME`))>1
             ORDER BY 1 DESC",
                     "colExplode" => 'Liens vers les éditions (séparateur ;)',
                     "urlExplode" => "<a href='" . BDO_URL . "admin/editedition?edition_id={col}' target='_blank'>{col}</a>",
@@ -73,22 +73,22 @@ class Controle extends Bdo_Controller
                 array(
                     "title" => "Triplet PSEUDO, NOM, PRENOM référencés plusieurs fois dans la table des auteurs",
                     "query" => "
-            SELECT 
+            SELECT
                     bd_auteur.ID_AUTEUR,
                     bd_auteur.`PSEUDO`,
                     bd_auteur.`PRENOM`,
-                    bd_auteur.`NOM`  
-            FROM `bd_auteur`, 
+                    bd_auteur.`NOM`
+            FROM `bd_auteur`,
             (
-                    SELECT 
+                    SELECT
                     `PSEUDO`,
                     `PRENOM`,
-                    `NOM` 
-                    FROM `bd_auteur` 
-                    GROUP BY `PSEUDO`,`PRENOM`,`NOM` 
+                    `NOM`
+                    FROM `bd_auteur`
+                    GROUP BY `PSEUDO`,`PRENOM`,`NOM`
                     HAVING count(*)>1
             ) withDoublon
-            WHERE 
+            WHERE
                     bd_auteur.`PSEUDO`=withDoublon.`PSEUDO`
                     AND bd_auteur.`PRENOM`=withDoublon.`PRENOM`
                     AND bd_auteur.`NOM`=withDoublon.`NOM`",
@@ -98,30 +98,30 @@ class Controle extends Bdo_Controller
                 array(
                     "title" => "PSEUDO référencés plusieurs fois dans la table des auteurs",
                     "query" => "
-            SELECT SQL_CALC_FOUND_ROWS 
-                    COUNT(*) AS `Enregistrements`, 
-                    `PSEUDO` 
-            FROM 
-                    `bd_auteur` 
-            GROUP BY `PSEUDO` 
-            HAVING count(*)>1  
+            SELECT SQL_CALC_FOUND_ROWS
+                    COUNT(*) AS `Enregistrements`,
+                    `PSEUDO`
+            FROM
+                    `bd_auteur`
+            GROUP BY `PSEUDO`
+            HAVING count(*)>1
             ORDER BY `Enregistrements` DESC",
                 ),
                 array(
                     "title" => "Couple NOM, PRENOM référencés plusieurs fois dans la table des auteurs",
                     "query" => "
-            SELECT SQL_CALC_FOUND_ROWS 
-                    COUNT(*) AS `Enregistrements`, 
+            SELECT SQL_CALC_FOUND_ROWS
+                    COUNT(*) AS `Enregistrements`,
                     `NOM`,
                     `PRENOM`,
-                    GROUP_CONCAT(`PSEUDO` SEPARATOR ' ; ') as 'Liste des pseudos (séparateur ;)' 
-            FROM 
+                    GROUP_CONCAT(`PSEUDO` SEPARATOR ' ; ') as 'Liste des pseudos (séparateur ;)'
+            FROM
                     `bd_auteur`
-            WHERE 
+            WHERE
                     `NOM` IS NOT NULL
                     AND `PRENOM` IS NOT NULL
-            GROUP BY `NOM`,`PRENOM` 
-            HAVING count(*)>1 
+            GROUP BY `NOM`,`PRENOM`
+            HAVING count(*)>1
             ORDER BY `Enregistrements` DESC",
                 ),
                 array(
@@ -130,18 +130,18 @@ class Controle extends Bdo_Controller
             SELECT SQL_CALC_FOUND_ROWS
                     `bd_collection`.`ID_COLLECTION`,
                     `bd_collection`.`NOM`,
-                    `bd_collection`.`ID_EDITEUR`  
-            FROM `bd_collection`, 
+                    `bd_collection`.`ID_EDITEUR`
+            FROM `bd_collection`,
             (
-                    SELECT 
+                    SELECT
                             `NOM`,
-                            `ID_EDITEUR` 
-                    FROM 
-                            `bd_collection` 
-                    GROUP BY `NOM`,`ID_EDITEUR` 
+                            `ID_EDITEUR`
+                    FROM
+                            `bd_collection`
+                    GROUP BY `NOM`,`ID_EDITEUR`
                     HAVING count(*)>1
             ) withDoublon
-            WHERE 
+            WHERE
                     `bd_collection`.`NOM`=withDoublon.`NOM`
                     AND `bd_collection`.`ID_EDITEUR`=withDoublon.`ID_EDITEUR`",
                     "url" => BDO_URL . "admin/editcollection?collec_id=",
@@ -150,13 +150,13 @@ class Controle extends Bdo_Controller
                 array(
                     "title" => "triplet date / collection / Tome présent dans la table des éditions",
                     "query" => "
-            SELECT SQL_CALC_FOUND_ROWS 
-                    COUNT(*) AS `Enregistrements`, 
-                    `ID_TOME` 
-            FROM 
-                    `bd_edition` 
-            GROUP BY `ID_TOME`,`ID_COLLECTION`,`DTE_PARUTION` 
-            HAVING COUNT(*)>1  
+            SELECT SQL_CALC_FOUND_ROWS
+                    COUNT(*) AS `Enregistrements`,
+                    `ID_TOME`
+            FROM
+                    `bd_edition`
+            GROUP BY `ID_TOME`,`ID_COLLECTION`,`DTE_PARUTION`
+            HAVING COUNT(*)>1
             ORDER BY `Enregistrements` DESC",
                     "url" => BDO_URL . "admin/editalbum?alb_id=",
                     "colUrl" => "ID_TOME",
@@ -165,15 +165,15 @@ class Controle extends Bdo_Controller
                     "title" => "Séries déclarées one-shot (FLG_FINI=2) avec plus de 1 tome",
                     "query" => "
             SELECT SQL_CALC_FOUND_ROWS
-                    `bd_serie`.`ID_SERIE` , 
+                    `bd_serie`.`ID_SERIE` ,
                     count( bd_tome.ID_TOME ) as 'nbr de tomes'
-            FROM 
+            FROM
                     `bd_serie`
                     INNER JOIN `bd_tome` ON `bd_tome`.`ID_SERIE` = `bd_serie`.`ID_SERIE`
-            WHERE 
+            WHERE
                     `bd_serie`.`FLG_FINI` =2
             GROUP BY `bd_serie`.`ID_SERIE`
-            HAVING count( `bd_tome`.`ID_TOME` ) >1  
+            HAVING count( `bd_tome`.`ID_TOME` ) >1
             ORDER BY 2 DESC",
                     "url" => BDO_URL . "admin/editserie?serie_id=",
                     "colUrl" => "ID_SERIE",
@@ -181,15 +181,15 @@ class Controle extends Bdo_Controller
                 array(
                     "title" => "Albums de série one-shot (1 seul album) titre différent de celui de la série",
                     "query" => "
-            SELECT SQL_CALC_FOUND_ROWS 
-                    `bd_serie`.`ID_SERIE` , 
-                    `bd_serie`.`NOM` AS 'Titre de la série', 
-                    `bd_tome`.`ID_TOME` , 
+            SELECT SQL_CALC_FOUND_ROWS
+                    `bd_serie`.`ID_SERIE` ,
+                    `bd_serie`.`NOM` AS 'Titre de la série',
+                    `bd_tome`.`ID_TOME` ,
                     `bd_tome`.`TITRE` AS 'Titre de l''album'
-            FROM 
+            FROM
                     `bd_serie`
                     INNER JOIN `bd_tome` ON `bd_tome`.`ID_SERIE` = `bd_serie`.`ID_SERIE`
-            WHERE 
+            WHERE
                     `bd_serie`.`FLG_FINI` =2
                     AND `bd_serie`.`NOM` <> `bd_tome`.`TITRE`
             GROUP BY `bd_serie`.`ID_SERIE`
@@ -201,10 +201,10 @@ class Controle extends Bdo_Controller
                     "title" => "Editions dont la date de parution n'est pas renseignée (ou < 1800-01-01) (non marquées 'Introuvable')",
                     "query" => "
             SELECT SQL_CALC_FOUND_ROWS
-                    `ID_EDITION` , 
+                    `ID_EDITION` ,
                     `DTE_PARUTION`
             FROM `bd_edition`
-            WHERE 
+            WHERE
                     (`DTE_PARUTION` IS NULL
                     OR `DTE_PARUTION` < '1800-01-01')
                     AND `FLAG_DTE_PARUTION` IS NULL
@@ -212,13 +212,13 @@ class Controle extends Bdo_Controller
                     "url" => BDO_URL . "admin/editedition?edition_id=",
                     "colUrl" => "ID_EDITION"
             ),
-            array(    
+            array(
                 "title" => "EAN mal formés, selon le calcul de la clé ean",
                 "query" => "SELECT SQL_CALC_FOUND_ROWS
-                            `ID_EDITION` , 
+                            `ID_EDITION` ,
                     concat(mid(ean,1,12),RIGHT(10 - MOD((MID(ean,2,1) + MID(ean,4,1)+MID(ean,6,1)+MID(ean,8,1)+MID(ean,10,1)+MID(ean,12,1))*3
                     +MID(ean,1,1)+MID(ean,3,1)+MID(ean,5,1)+MID(ean,7,1)+MID(ean,9,1)+MID(ean,11,1),10),1)) as 'ean calculé', ean, isbn
-                    FROM `bd_edition` 
+                    FROM `bd_edition`
                     WHERE concat(mid(ean,1,12),RIGHT(10 - MOD((MID(ean,2,1) + MID(ean,4,1)+MID(ean,6,1)+MID(ean,8,1)+MID(ean,10,1)+MID(ean,12,1))*3
                         +MID(ean,1,1)+MID(ean,3,1)+MID(ean,5,1)+MID(ean,7,1)+MID(ean,9,1)+MID(ean,11,1),10),1)) <> ean and
                         ean is not null",
@@ -228,12 +228,12 @@ class Controle extends Bdo_Controller
                 array(
                     "title" => "Séries vide (sans album)",
                     "query" => "
-            SELECT SQL_CALC_FOUND_ROWS 
+            SELECT SQL_CALC_FOUND_ROWS
                     `ID_SERIE`,
                     `NOM`
-            FROM 
+            FROM
                     `bd_serie` left join bd_tome using (id_serie)
-            WHERE 
+            WHERE
                     id_tome is null ",
                     "url" => BDO_URL . "admin/editserie?serie_id=",
                     "colUrl" => "ID_SERIE",
@@ -241,12 +241,12 @@ class Controle extends Bdo_Controller
                 );
 
 
-          
+
             echo '(Le resultat est limit&eacute; &agrave; 200 lignes)';
 
             echo '<form name="formregle" method="post">
                 <div>
-                Controle : 
+                Controle :
                 <select name="id_queryRegle">';
             foreach ($a_queryRegle as $id_queryRegle => $queryRegle) {
                 $selected = ($id_queryRegle == $_POST['id_queryRegle']) ? 'SELECTED' : '';
@@ -305,7 +305,7 @@ class Controle extends Bdo_Controller
                 } else {
                     echo 'Aucune ligne de resultat !';
                 }
-               
+
             }
 
 
@@ -316,6 +316,6 @@ class Controle extends Bdo_Controller
         };
     }
 
-   
+
 }
 

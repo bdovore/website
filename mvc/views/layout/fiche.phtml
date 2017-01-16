@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="content-language" content="fr" />
 <meta name="description"
-	content="<?php echo $view->DESCRIPTION;?> BDovore - Le site des collectionneurs de BD. Gérer votre collection de bandes dessinées en ligne et gratuitement !" />
+    content="<?php echo $view->DESCRIPTION;?> BDovore - Le site des collectionneurs de BD. Gérer votre collection de bandes dessinées en ligne et gratuitement !" />
 <meta name="keywords"
-	content="bd, bandes dessinées, bandes, dessinées, bande, dessinée, profiler, bdprofiler, comics, manga, collection, collections, bdvore, collectionneur, dedicace, auteurs, albums, editeurs, gratuit, base de données, <?php echo $view->PAGEKEYWORD;?>" />
+    content="bd, bandes dessinées, bandes, dessinées, bande, dessinée, profiler, bdprofiler, comics, manga, collection, collections, bdvore, collectionneur, dedicace, auteurs, albums, editeurs, gratuit, base de données, <?php echo $view->PAGEKEYWORD;?>" />
 <meta name="author" content="Tomlameche/Latruffe/Zéas" />
 <meta name="identifier-url" content="http://www.bdovore.com" />
 <meta name="reply-to" content="" />
@@ -32,24 +32,24 @@
 
 <body onLoad="<?php echo $view->BODYONLOAD;?>">
 
-	<script>
+    <script>
 
 $(document).ready(function() {
-	$(".fancybox")
+    $(".fancybox")
     .fancybox({
         type: 'iframe',
         autoSize : false
     });
-});</script>	
-	
-		<div class="fond"></div>
-                <?php 
-					if (Bdo_Error::notEmpty()) echo $jquery->alert(Bdo_Error::flush());
-					if ($view->a_alertPage) echo $jquery->alert($view->a_alertPage);
+});</script>
+
+        <div class="fond"></div>
+                <?php
+                    if (Bdo_Error::notEmpty()) echo $jquery->alert(Bdo_Error::flush());
+                    if ($view->a_alertPage) echo $jquery->alert($view->a_alertPage);
                                         if ($view->a_infoPage) echo $jquery->info($view->a_infoPage);
-						
-					?>
-					<?php echo $view->BODY;?>
+
+                    ?>
+                    <?php echo $view->BODY;?>
 
 
 

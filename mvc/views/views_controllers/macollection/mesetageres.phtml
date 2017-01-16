@@ -3,7 +3,7 @@
     var order = "<?php echo $view->order; ?>";
     var column = <?php echo $view->sort ?>;
     var changeEdition = new Array;
-    
+
     var uri = "./mesetageres?";
     q = param();
     for (k in q) {
@@ -12,8 +12,8 @@
         }
     }
 
-   
-    
+
+
     function changeColumn() {
             var nb = $('#column>option').length;
             var pref = "";
@@ -38,15 +38,15 @@
         if (changeEdition.indexOf(idedition) == - 1) {
              changeEdition[changeEdition.length] = idedition;
         }
-       
+
     }
-    
+
     function saveCollection() {
-         $("#save_collection").html("<img src='./script/ajax-loader.gif'>"); 
-         
+         $("#save_collection").html("<img src='./script/ajax-loader.gif'>");
+
          for (var i=0;i< changeEdition.length;i++) {
                 var url = $.bdovore.URL + "Macollection/majcollection?id_edition="+changeEdition[i];
-                
+
                 url += "&flg_achat="+ ($("#cb_achat_"+changeEdition[i]).is(':checked') ? "O" : "N");
                 url+= "&flg_pret="+($("#cb_pret_"+changeEdition[i]).is(':checked') ? "O" : "N");
                 url+= "&flg_dedicace="+($("#cb_dedicace_"+changeEdition[i]).is(':checked') ? "O" : "N");
@@ -58,20 +58,20 @@
                 url+= "&nom_pret="+$("#nom_pret_"+changeEdition[i]).val();
                 url+= "&cote="+$("#prix_"+changeEdition[i]).val();
                 url+= "&comment="+encodeURIComponent($("#remarque_"+changeEdition[i]).val());
-                
+
 
 
                 $.getJSON(url, function (data) {  });
          }
-         $("#save_collection").html('<input type="button" value="Enregistrer les modifications" onclick="saveCollection();"/> <br>Données mises à jour !');   
+         $("#save_collection").html('<input type="button" value="Enregistrer les modifications" onclick="saveCollection();"/> <br>Données mises à jour !');
 
        }
-    
+
     $(document).ready(function() {
         $("#length").on('change', function (e) {
              $("#f_collection").submit();
         });
-        $('.numbersOnly').keyup(function () { 
+        $('.numbersOnly').keyup(function () {
             this.value = this.value.replace(/[^0-9\.]/g,'');
         });
         $("a#inline").fancybox({
@@ -86,7 +86,7 @@
         } else {
             pref = $.cookie('prefcollection');
         }
-        
+
         var nb = pref.length;
         for (var i = 0; i < nb; i++) {
             if (pref[i] == "1") {
@@ -97,14 +97,14 @@
         }
         changeColumn();
         $("#column").chosen({max_selected_options: 12});
-           
+
         $("#bsave").button("disable");
         $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
-    
+
         $(function() {
             $( "[name='date_achat']" ).datepicker({dateFormat: "dd/mm/yy"});
         });
-        
+
          $("th").each(function () {
             $(this).on("click", function (e) {
                 e.preventDefault();
@@ -150,7 +150,7 @@ $page = $view->getHelper('pagination');
     <div class="dataTables_wrapper">
         <form id="f_collection" method="GET" action="" >
             <div id="filtre">
-                Filtrer :  
+                Filtrer :
                 Type : <select id='sel_type' name='sel_type' onChange='$("#f_collection").submit();'>
                     <option value="Tous" <?php if ($view->sel_type  =="Tous") echo "selected" ?> >Tous</option>
                     <option value="BD" <?php if ($view->sel_type  =="BD") echo "selected" ?>>BD</option>
@@ -164,7 +164,7 @@ $page = $view->getHelper('pagination');
                 Non lu :<input id="cb_lu" name="cb_lu" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->non_lu == "O") echo "checked"; ?>/>
             </div><br>
             <div id="data_length" class="dataTables_length">
-                Voir : 
+                Voir :
                 <label>
 
 
@@ -186,11 +186,11 @@ $page = $view->getHelper('pagination');
 
                     lignes
 
-                </label> | 
+                </label> |
                 <a href="#selcolumn"  id="inline" >Afficher/Masquer les colonnes</a>
 
-            </div> 
-        
+            </div>
+
             <div id="filter" class="dataTables_filter">
 
                 <label>
@@ -206,17 +206,17 @@ $page = $view->getHelper('pagination');
             <input type="hidden" id="order" name="order" value="<?php echo $view->order; ?>" />
        </form>
             <div style="display:none;"><div id="selcolumn" height="500px">
-                   
+
                         <label>
 
-                            Colonnes à afficher : 
+                            Colonnes à afficher :
 
                             <select multiple class="" style="width: 350px;" size="12" id="column" name="column" onchange='changeColumn();'>
                                 <option value="1" selected >  Tome </option>
                                 <option value="2" selected >  Edition </option>
                                 <option value="3" selected >  Collection </option>
                                 <option value="4" selected >  Scenario </option>
-                                <option value="5" selected >  Dessin </option>                       
+                                <option value="5" selected >  Dessin </option>
                                 <option value="6" selected >  Date d'achat </option>
                                 <option value="7" >  Prix </option>
                                 <option value="8" >  Prêt </option>
@@ -235,7 +235,7 @@ $page = $view->getHelper('pagination');
 
                         </label>
 
-                    
+
                     <p>S&eacute;lectionnez les colonnes à afficher dans le tableau de résultat puis cliquez sur "Ok" pour enregistrer vos préférences.</p>
                     <p align="center"><input type="button" value="Ok" onclick="$.fancybox.close();"></p>
                 </div>
@@ -287,7 +287,7 @@ $page = $view->getHelper('pagination');
                         <td  name="col6"><?php echo htmlspecialchars( $album->NOM_COLLECTION); ?></td>
                         <td  name="col7"><?php echo $album->scpseudo; ?></td>
                         <td  name="col8"><?php echo $album->depseudo; ?></td>
-                        <td  name="col9"><input name="date_achat" id="date_achat_<?php echo $album->ID_EDITION; ?>" value="<?php echo date('d/m/Y', strtotime($album->DATE_ACHAT)); ?>" size="10" maxlength="10" type="text" onchange="addChange(<?php echo $album->ID_EDITION; ?>);">	</td>
+                        <td  name="col9"><input name="date_achat" id="date_achat_<?php echo $album->ID_EDITION; ?>" value="<?php echo date('d/m/Y', strtotime($album->DATE_ACHAT)); ?>" size="10" maxlength="10" type="text" onchange="addChange(<?php echo $album->ID_EDITION; ?>);">  </td>
                         <td  name="col10"><input name="prix" class="numbersOnly" id="prix_<?php echo $album->ID_EDITION; ?>" value="<?php echo $album->cote; ?>" size="4" maxlength="8" type="text" onchange="addChange(<?php echo $album->ID_EDITION; ?>);"></td>
                         <td  name="col11"><input name="cb_pret" id="cb_pret_<?php echo $album->ID_EDITION; ?>" value="checkbox" type="checkbox" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" <?php if ($album->FLG_PRET == 'O') echo "checked"; ?>> </td>
                         <td  name="col12"><input name="cb_cadeau" id="cb_cadeau_<?php echo $album->ID_EDITION; ?>" value="checkbox" type="checkbox" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" <?php if ($album->FLG_CADEAU == 'O') echo "checked"; ?>> </td>

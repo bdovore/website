@@ -2,14 +2,14 @@
 function valider(){
     // si la valeur du champ Série est non vide
     if((document.forms['input_form'].elements['txtSerie'].value != "") && (document.forms['input_form'].elements['txtGenreId'].value != "")) {
-        // les données sont ok, on peut envoyer le formulaire    
+        // les données sont ok, on peut envoyer le formulaire
         return true;
     }else {
         // sinon on affiche un message
         alert("Saisissez les champs requis");
         // et on indique de ne pas envoyer le formulaire
         return false;
-    } 
+    }
 }
 //--></SCRIPT>
 
@@ -19,15 +19,15 @@ function valider(){
     <table width="100%" class="fond_admin">
         <tr>
             <!-- colonne de gauche -->
-            <td width="73%"> 
+            <td width="73%">
                 {ADMINSERIEDETAIL}
 
-                <div class="submit"> 
+                <div class="submit">
                     <input type="submit" name="Submit" value="{ACTIONNAME}" />
                 </div>
-                
+
             </td>
-            
+
             <!-- colonne de droite -->
             <td width="27%" valign="top" class="cadre_texte-admin">
                 <div class="b">{NBALBUMS} albums dans la s&eacute;rie :</div>
@@ -37,7 +37,7 @@ function valider(){
                 <p><div class="b"><a href="{URLAJOUTALB}">Ajouter un album dans la série</a></div></p>
             </td>
         </tr>
-        <tr class="cadre_texte-admin"> 
+        <tr class="cadre_texte-admin">
             <td>
                 <p>
                     {WARNING_NOTE}
@@ -45,10 +45,10 @@ function valider(){
                     Fusionner cette s&eacute;rie
                 </p>
                 <p>
-                    {NBAUTEURS} auteurs ont travaill&eacute; sur la s&eacute;rie : 
+                    {NBAUTEURS} auteurs ont travaill&eacute; sur la s&eacute;rie :
                     <br />
                     <!-- BEGIN AutBlock -->
-                    <a href="{AUT_LIEN}">{AUT_TITRE}</a> - 
+                    <a href="{AUT_LIEN}">{AUT_TITRE}</a> -
                     <!-- END AutBlock -->
                 </p>
                 <p>&nbsp;</p>

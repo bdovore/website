@@ -5,46 +5,46 @@
 <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
     <table class="fond_admin">
         <!--DWLayoutTable-->
-        <tr> 
+        <tr>
             <td width="75%" rowspan="4" valign="top">
                 <table class="tableaux_admin">
-    <tr class="petite_police" align="center"> 
+    <tr class="petite_police" align="center">
         <td>&nbsp;</td>
         <td>#id-BDo</td>
         <td>titre</td>
         <td>&nbsp;</td>
         <td>ser</td>
     </tr>
-    <tr align="center"> 
+    <tr align="center">
         <td width="13%" height="27">Série</td>
         <td width="9%"><input name="txtSerieId" id="txtSerieId" type="text" value="<?php echo $view->IDSERIE;?>" size="3" class="<?php echo $view->CHAMPFORMSTYLE_NEWFSERIE;?>" /></td>
         <td width="60%"><input name="txtSerie" id="txtSerie" type="text" value="<?php echo $view->SERIE;?>" style="width: 100%" class="<?php echo $view->CHAMPFORMSTYLE_NEWFSERIE;?>" /></td>
         <td width="12%">
-            <a href="<?php echo $view->URLEDITSERIE;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a> 
+            <a href="<?php echo $view->URLEDITSERIE;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('serie',document.myform.txtSerie.value,'myform','txtSerie',true)" />
         </td>
         <td width="9%"><input name="txtTri" type="text" id="txtTri" value="<?php echo $view->TRI;?>" size="1" maxlength="3" class="<?php echo $view->CHAMPFORMSTYLE;?>" /></td>
     </tr>
-    <tr> 
+    <tr>
         <td height="28" align="center">Genre</td>
         <td align="center">
             <input name="txtGenreId" type="text" id="txtGenreId" value="<?php echo $view->IDGENRE;?>" size="1" class="<?php echo $view->CHAMPFORMSTYLE;?>" />
         </td>
         <td colspan="3">
             <input name="txtGenre" type="text" id="txtGenre" value="<?php echo $view->GENRE;?>" size="35" class="<?php echo $view->CHAMPFORMSTYLE;?>" />
-            <a href="<?php echo $view->URLEDITGENRE;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a> 
+            <a href="<?php echo $view->URLEDITGENRE;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('genre',document.input_form.txtGenre.value,'input_form','txtGenre',false)" />
         </td>
     </tr>
-    <tr> 
+    <tr>
         <td align="center">Statut</td>
         <td colspan="4"><select name="chkFini" size="1" class="<?php echo $view->CHAMPFORMSTYLE;?>"><?php echo $view->OPTSTATUS;?></select></td>
     </tr>
-    <tr> 
+    <tr>
         <td align="center">Nb final</td>
         <td colspan="4"><input name="txtNbTome" type="text" id="txtNbTome" value="<?php echo $view->NBTOME;?>" size="2" class="<?php echo $view->CHAMPFORMSTYLE;?>" style="text-align: center;" /> tomes</td>
     </tr>
-    <tr> 
+    <tr>
         <td>Intro Série</td>
         <td colspan="4"><textarea name="txtSerieHist" id="txtSerieHist" class="<?php echo $view->CHAMPFORMSTYLE;?>champ_commentaire"><?php echo nl2br($view->HISTOIRE_SERIE);?></textarea></td>
     </tr>
@@ -52,14 +52,14 @@
 
                <table class="tableaux_admin">
     <!--DWLayoutTable-->
-    <tr> 
+    <tr>
         <td width="15%" class="label">
             <div align="center">Titre</div>
         </td>
         <input name="txtTomeId" type="hidden" id="txtTomeId" value="<?php echo $view->IDTOME;?>" />
         <td colspan="3" width="85%"><input name="txtTitre" type="text" id="txtTitre" value="<?php echo $view->TITRE;?>" size="50" /></td>
     </tr>
-    <tr> 
+    <tr>
         <td colspan="4" class="label">
             <table width="100%">
                 <tr>
@@ -79,56 +79,56 @@
             </table>
         </td>
     </tr>
-    <tr> 
+    <tr>
         <td class="label">Intro Tome</td>
         <td colspan="3">
             <textarea name="txtHistoire" id="txtHistoire" class="champ_commentaire"><?php echo nl2br($view->HISTOIRE);?></textarea>
         </td>
     </tr>
-        
-        
-    <tr> 
+
+
+    <tr>
         <td width="88" class="label">Scenariste</td>
         <td width="37"><input name="txtScenarId" id="txtScenarId" type="text" value="<?php echo $view->IDSCEN;?>" size="5" /></td>
         <td width="278"><input name="txtScenar" id="txtScenar" type="text" value="<?php echo $view->SCENARISTE;?>" size="30" /></td>
         <td width="62">
-            <a href="<?php echo $view->URLEDITSCEN;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a> 
+            <a href="<?php echo $view->URLEDITSCEN;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenar.value,'myform','txtScenar',true)" />
         </td>
     </tr>
-    <tr> 
+    <tr>
         <td class="label">(Optionnel)</td>
         <td><input name="txtScenarAltId" id="txtScenarAltId" type="text" value="<?php echo $view->IDSCENALT;?>" size="5" /></td>
         <td><input name="txtScenarAlt" id="txtScenarAlt" type="text" value="<?php echo $view->SCENARISTEALT;?>" size="30" /></td>
         <td>
-            <a href="<?php echo $view->URLEDITSCENALT;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a> 
+            <a href="<?php echo $view->URLEDITSCENALT;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenarAlt.value,'myform','txtScenarAlt',true)" />
         </td>
     </tr>
-    <tr> 
+    <tr>
         <td class="label">Dessinateur</td>
         <td><input name="txtDessiId" id="txtDessiId" type="text" value="<?php echo $view->IDDESS;?>" size="5" /></td>
         <td><input name="txtDessi" id="txtDessi" type="text" value="<?php echo $view->DESSINATEUR;?>" size="30" /></td>
         <td>
-            <a href="<?php echo $view->URLEDITDESS;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a> 
+            <a href="<?php echo $view->URLEDITDESS;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessi.value,'myform','txtDessi',true)" />
         </td>
     </tr>
-    <tr> 
+    <tr>
         <td class="label">(optionnel)</td>
         <td><input name="txtDessiAltId" id="txtDessiAltId" type="text" value="<?php echo $view->IDDESSALT;?>" size="5" /></td>
         <td><input name="txtDessiAlt" id="txtDessiAlt" type="text" value="<?php echo $view->DESSINATEURALT;?>" size="30" /></td>
         <td>
-            <a href="<?php echo $view->URLEDITDESSALT;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a> 
+            <a href="<?php echo $view->URLEDITDESSALT;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessiAlt.value,'myform','txtDessiAlt',true)" />
         </td>
     </tr>
-    <tr> 
+    <tr>
         <td class="label">Coloriste</td>
         <td> <input name="txtColorId" id="txtColorId" type="text" value="<?php echo $view->IDCOLOR;?>" size="5" /></td>
         <td> <input name="txtColor" id="txtColor" type="text" value="<?php echo $view->COLORISTE;?>" size="30" /></td>
         <td>
-            <a href="<?php echo $view->URLEDITCOLOR;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a> 
+            <a href="<?php echo $view->URLEDITCOLOR;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColor.value,'myform','txtColor',true)" />
         </td>
     </tr>
@@ -137,7 +137,7 @@
         <td><input name="txtColorAltId" id="txtColorAltId" type="text" value="<?php echo $view->IDCOLORALT;?>" size="5" /></td>
         <td><input name="txtColorAlt" id="txtColorAlt" type="text" value="<?php echo $view->COLORISTEALT;?>" size="30" /></td>
         <td>
-            <a href="<?php echo $view->URLEDITCOLORALT;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a> 
+            <a href="<?php echo $view->URLEDITCOLORALT;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColorAlt.value,'myform','txtColorAlt',true)" />
         </td>
     </tr>
@@ -145,26 +145,26 @@
                 <!-- Partie Edition pour la création d'un nouvel album -->
                 <?php if (notIssetOrEmpty($view->dbs_edition)) { ?>
                 <table class="tableaux_admin">
-    <tr> 
+    <tr>
         <td align="center">
             <img src="<?php echo $view->URLIMAGE;?>" width="180" border="0" align="absmiddle" />
             <br />
             <?php echo $view->DIMIMAGE;?>
         </td>
     </tr>
-    <tr> 
+    <tr>
         <td class="label">
-            Redimensionner la couverture : 
+            Redimensionner la couverture :
             <input type="checkbox" name="chkResize" value="checked" />
         </td>
     </tr>
-    <tr> 
+    <tr>
         <td class="label">
             Envoyer depuis un fichier local :
             <br /><input name="txtFileLoc" type="file" id="txtFileLoc" style="width: 100%;" />
         </td>
     </tr>
-    <tr> 
+    <tr>
         <td class="label">
             Envoyer depuis une URL :
             <br /><input name="txtFileURL" type="text" id="txtFileURL" style="width: 100%;" />
@@ -172,44 +172,44 @@
     </tr>
 </table>
 <table class="tableaux_admin">
-    <tr> 
+    <tr>
         <td width="16%" class="label"><div align="center">Editeur</div></td>
         <td width="12%"><input name="txtEditeurId" id="txtEditeurId"  type="text" value="<?php echo $view->IDEDIT;?>" size="5" /></td>
         <td width="58%"><input name="txtEditeur"  id="txtEditeur" type="text" value="<?php echo $view->EDITEUR;?>" size="30" onchange="changeEditeur();" /></td>
         <td width="14%">
-            <a href="<?php echo $view->URLEDITEDIT;?>"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a> 
+            <a href="<?php echo $view->URLEDITEDIT;?>"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('editeur',document.myform.txtEditeur.value,'myform','txtEditeur',true)" />
         </td>
     </tr>
-    <tr> 
+    <tr>
         <td class="label"><div align="center">Collection</div></td>
         <td><input name="txtCollecId" id="txtCollecId" type="text" value="<?php echo $view->IDCOLLEC;?>" size="5" /></td>
         <td><input name="txtCollec"  id="txtCollec" type="text" value="<?php echo $view->COLLECTION;?>" size="30" /></td>
         <td>
-            <a href="<?php echo $view->URLEDITCOLL;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a> 
+            <a href="<?php echo $view->URLEDITCOLL;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('collection',document.myform.txtCollec.value,'myform','txtCollec',false,document.myform.txtEditeurId.value)" />
         </td>
     </tr>
-    <tr> 
+    <tr>
         <td colspan="4" class="label">
             <table class="tableaux_admin_sans-bord">
-                <tr> 
+                <tr>
                     <td align="center">
-                        ISBN-13 (EAN) : 
+                        ISBN-13 (EAN) :
                         <input name="txtEAN" type="text" value="<?php echo $view->EAN;?>" size="14" />
                     </td>
                     <td align="center">
-                        ISBN-10 : 
+                        ISBN-10 :
                         <input name="txtISBN" type="text" value="<?php echo $view->ISBN;?>" size="10" />
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
-    <tr> 
+    <tr>
         <td colspan="4" class="label">
             <table class="tableaux_admin_sans-bord">
-                <tr> 
+                <tr>
                     <td width="22%" align="center" title="si 0000-00-00 apparaît, cela signifie que le membre a mal saisi la date">
                         Date Parution
                         <div class="petite_police" style="margin-bottom: 10px;">(aaaa-mm-jj)</div>
@@ -235,11 +235,11 @@
                 <?php } ?>
                 <?php if (issetNotEmpty($view->dbs_edition)) { ?>
                 <table class="tableaux_admin" width="100%">
-                    <tr> 
+                    <tr>
                         <td class="label">
                             <p>Différentes éditions : <?php echo $view->NBEDITIONS; ?></p>
                             <table>
-                                <tr> 
+                                <tr>
                                     <td width="8%" class="entete">Defaut</td>
                                     <td width="23%" class="entete">Editeur</td>
                                     <td width="23%" class="entete">Collection</td>
@@ -249,8 +249,8 @@
                                     <td width="7%" class="entete">Editer</td>
                                 </tr>
                               <!-- BEGIN EditionBlock -->
-                              <?php foreach ($view->dbs_edition->a_dataQuery as $edition) { 
-                                $bgcolor =  ($edition->PROP_STATUS == 1)  ? "" : 'style ="background-color: #ff8282;"'; 
+                              <?php foreach ($view->dbs_edition->a_dataQuery as $edition) {
+                                $bgcolor =  ($edition->PROP_STATUS == 1)  ? "" : 'style ="background-color: #ff8282;"';
                                 if (is_null($edition->IMG_COUV) | ($edition->IMG_COUV=='')){
                                         $url_image = BDO_URL_IMAGE."couv/default.png";
                                 }else{
@@ -258,10 +258,10 @@
                                     }
                               ?>
 
-                              
-                                <tr> 
-                                    <td align="center" class="data"<?php echo $bgcolor ;?>><p> 
-                                        <label> 
+
+                                <tr>
+                                    <td align="center" class="data"<?php echo $bgcolor ;?>><p>
+                                        <label>
                                         <input name="btnDefEdit" type="radio" value="<?php echo $edition->ID_EDITION;?>" <?php echo ($edition->ID_EDITION == $view->ID_EDITION) ? "checked" : "" ;?> />
                                         </label>
                                         <br />
@@ -281,15 +281,15 @@
                     </tr>
                 </table>
                 <?php } ?>
-                <div class="submit"> 
+                <div class="submit">
                     <input type="submit" name="Submit" value="<?php echo $view->ACTIONNAME;?>" />
                 </div>
             </td>
             <td width="287" height="47" bordercolor="#FFFFFF"></td>
         </tr>
-        
+
         <!-- colonne de droite -->
-        <tr width="100%"> 
+        <tr width="100%">
             <td class="cadre_texte-admin">
                 <p><strong>Statistiques</strong></p>
                 <p>
@@ -305,7 +305,7 @@
                         <a href="<?php echo $view->URLFUSIONDELETE;?>"><li>Fusionner en conservant certaines éditions</li></a>
                         <a href="<?php echo $view->URLSPLIT;?>"><li>Créer un nouvel album à partir des éditions actuelles</li></a>
                         <a href="<?php echo $view->URLFUSION;?>"><li>Fusionner cet album</li></a>
-                        
+
                         <li><a href='<?php echo BDO_URL;?>admin/addserie' class="fancybox fancybox.iframe {width:400,height:160}">
                                         Ajout rapide d'une série
                                     </a>
@@ -322,23 +322,23 @@
 <script>
     /*
      * On remplit les champs de saisie par l'autocompletion
-     * 
+     *
      */
-    
+
     addAutocomplete("txtSerie","txtSerieId","txtSerieId","<?php echo BDO_URL; ?>getjson?data=Serie");
     addAutocomplete("txtGenre","txtGenreId","txtGenreId","<?php echo BDO_URL; ?>getjson?data=Genre");
     addAutocomplete("txtScenar","txtScenarId","txtScenarId","<?php echo BDO_URL; ?>getjson?data=Auteur");
     addAutocomplete("txtScenarAlt","txtScenarAltId","txtScenarAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
     addAutocomplete("txtDessiAlt","txtDessiAltId","txtDessiAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
     addAutocomplete("txtDessi","txtDessiId","txtDessiId","<?php echo BDO_URL; ?>getjson?data=Auteur");
-    
+
      addAutocomplete("txtColor","txtColorId","txtColorId","<?php echo BDO_URL; ?>getjson?data=Auteur");
      addAutocomplete("txtColorAlt","txtColorAltId","txtColorAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
      addAutocomplete("txtEditeur","txtEditeurId","txtEditeurId","<?php echo BDO_URL; ?>getjson?data=Editeur");
-     
-    
-     
-     
+
+
+
+
      changeEditeur();
     function changeEditeur() {
         //addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo $view->IDCOLLEC + 0;?>);

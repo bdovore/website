@@ -1,28 +1,28 @@
-d<?php 
+d<?php
 $ficheAlbum = $view->getHelper('ficheAlbum');
 ?>
 <div class="colleft">
 <div class="col1wrap">
-				<div class="col1 fond">
-						<!-- Column 1 start -->
+                <div class="col1 fond">
+                        <!-- Column 1 start -->
 
 <!-- cadre central de la page -->
 
 <div class="cadre1" id="message_accueil">
 
-	<h1>BDovore, le site des dévoreurs de BD </h1>
+    <h1>BDovore, le site des dévoreurs de BD </h1>
 
         G&eacute;rer votre <b>collection de bandes dessin&eacute;es</b> en ligne via une
 
-	gargantuesque base de données de plus de <strong><?php echo $view->nbTome; ?></strong> <a
+    gargantuesque base de données de plus de <strong><?php echo $view->nbTome; ?></strong> <a
 
-		href="<?php echo BDO_URL;?>leguide"><b>BDs</b></a>,  <a
+        href="<?php echo BDO_URL;?>leguide"><b>BDs</b></a>,  <a
 
-		href="<?php echo BDO_URL;?>leguide?origine=2"><b>Mangas</b></a> et 
+        href="<?php echo BDO_URL;?>leguide?origine=2"><b>Mangas</b></a> et
 
-	<a
+    <a
 
-		href="<?php echo BDO_URL;?>leguide?origine=3"><b>Comics</b></a>. <br>
+        href="<?php echo BDO_URL;?>leguide?origine=3"><b>Comics</b></a>. <br>
                 <br> Retrouvez par exemple :<br>
                 <ul>
                     <li><a href="<?php echo BDO_URL;?>browser?a_idGenre[]=82">- des revues</a>,
@@ -30,40 +30,40 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
             href="<?php echo BDO_URL;?>browser?a_idGenre[]=83">des p&eacute;riodiques</a>,
                     </li>
-                    <li>- des 
+                    <li>- des
                         <a
 
                                 href="<?php echo BDO_URL;?>browser?a_idGenre[]=14">ouvrages
-                            
+
             d'&eacute;tude</a> et des <a
 
-		href="<?php echo BDO_URL;?>browser?a_idGenre[]=4">recueils
+        href="<?php echo BDO_URL;?>browser?a_idGenre[]=4">recueils
 
-		d'illustrations</a> </li>
+        d'illustrations</a> </li>
                 <li>- et puis des <a
 
-		href="<?php echo BDO_URL;?>browser?a_idGenre[]=12">BD</a>,
+        href="<?php echo BDO_URL;?>browser?a_idGenre[]=12">BD</a>,
 
-	des <a
+    des <a
 
-		href="<?php echo BDO_URL;?>browser?a_idGenre[]=65">BD</a>,
+        href="<?php echo BDO_URL;?>browser?a_idGenre[]=65">BD</a>,
 
-	des <a
+    des <a
 
-		href="<?php echo BDO_URL;?>browser?a_idGenre[]=6">BD</a>,
+        href="<?php echo BDO_URL;?>browser?a_idGenre[]=6">BD</a>,
 
-	des <a
+    des <a
 
-		href="<?php echo BDO_URL;?>browser?a_idGenre[]=51">BD</a>
+        href="<?php echo BDO_URL;?>browser?a_idGenre[]=51">BD</a>
 
-	et encore <a
+    et encore <a
 
-		href="<?php echo BDO_URL;?>browser?a_idGenre[]=37">des
+        href="<?php echo BDO_URL;?>browser?a_idGenre[]=37">des
 
             BD</a>.</li>
                 </ul><br /> <a href="<?php echo BDO_URL;?>tutoriel" style="font-weight: bold;">D&eacute;couvrez
 
-		BDovore !</a> <span align="right">Bdovore sur mobile : <a href='http://phone.bdovore.com'>phone.bdovore.com</a> ou l'application Android sur <a href='https://play.google.com/store/apps/details?id=com.bdovore.phone.android&hl=fr_FR'>Google Play</a></span>
+        BDovore !</a> <span align="right">Bdovore sur mobile : <a href='http://phone.bdovore.com'>phone.bdovore.com</a> ou l'application Android sur <a href='https://play.google.com/store/apps/details?id=com.bdovore.phone.android&hl=fr_FR'>Google Play</a></span>
 
 </div>
 
@@ -128,15 +128,15 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             ?>
 </table>
             <hr class="expSep" />
-   <div class="fright"><a href="./leguide?rb_mode=4&rb_list=album&submitGuide=Envoyer">Toutes les dernières sorties</a></div>       
+   <div class="fright"><a href="./leguide?rb_mode=4&rb_list=album&submitGuide=Envoyer">Toutes les dernières sorties</a></div>
  <hr class="expSep" />
           </div>
-       <hr class="expSep" />   
-    
+       <hr class="expSep" />
+
 <div class="cadre1">
              <div class="middle_title"><h3><a href="./leguide?rb_mode=5&rb_list=album&submitGuide=Envoyer">Sorties &agrave; venir</a> <a href="<?php echo BDO_URL ; ?>rss/sorties_a_venir"> <img src="<?php echo BDO_URL_IMAGE ; ?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" /></a></h3></div>
 <table class="list_album">
-              		 <?php
+                     <?php
             $tr = true;
             foreach ($view->a_futurSorties as $futurSorties) {
                 if ($tr) echo "<tr>";
@@ -149,23 +149,23 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
             }
 
-            ?>	
+            ?>
     </table>
              <hr class="expSep" />
-   <div class="fright"><a href="./leguide?rb_mode=5&rb_list=album&submitGuide=Envoyer">Toutes les futures sorties</a></div>       
+   <div class="fright"><a href="./leguide?rb_mode=5&rb_list=album&submitGuide=Envoyer">Toutes les futures sorties</a></div>
  <hr class="expSep" />
 </div>
-                        <hr class="expSep" />	
+                        <hr class="expSep" />
 
-            
 
-        
 
-  
 
-       	
 
-       
+
+
+
+
+
 
 <hr class="expSep" />
 
@@ -174,16 +174,16 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 
 <?php echo $view->LASTNEWS;?>
-				
-					<!-- Column 1 end -->
-					</div>
+
+                    <!-- Column 1 end -->
+                    </div>
 </div>
-				<!-- Debut de la partie de droite -->
+                <!-- Debut de la partie de droite -->
 <div class="col2">
-					<!-- Column 2 start -->
-	            <?php echo $view->ACTUAIR;?>
-	            <?php echo $view->LASTAJOUT;?>
-				<!-- Column 2 end -->
+                    <!-- Column 2 start -->
+                <?php echo $view->ACTUAIR;?>
+                <?php echo $view->LASTAJOUT;?>
+                <!-- Column 2 end -->
 </div>
 </div>
 <!-- Fin de la partie de droite -->

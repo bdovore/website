@@ -2,12 +2,12 @@
 
 /*
  * @author : Tom
- * 
+ *
  * Contrôleur pour l'échange de fichier JSON sur les différentes tables de base
  * auteur, Collection, Série, Album etc... pour remplir les listes en mode AJAX
- * 
+ *
  * Peut servir de base d'une API pour mobile ?
- * 
+ *
  */
 
 class GetJSON extends Bdo_Controller {
@@ -88,7 +88,7 @@ class GetJSON extends Bdo_Controller {
         $mode = getValInteger("mode", 0);
         if ($id_edition or $isbn <> '' or $ean <> '' ) {
             //selection par isbn ou ean
-            
+
             if ($ean <> '') {
                 // selection par ean
                 $filter = "bd_edition.ean  ='" . Db_Escape_String($ean) . "'";
@@ -123,7 +123,7 @@ class GetJSON extends Bdo_Controller {
             $term = getVal("term", "");
             $this->loadModel('Tome');
             $this->Tome->load("c", " WHERE bd_tome.TITRE like '" . Db_Escape_String($term) . "%' limit 0,10");
-           
+
             if ($mode == 0) {
                 foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
 
@@ -280,7 +280,7 @@ class GetJSON extends Bdo_Controller {
         $this->view->layout = "ajax";
         $this->view->render();
     }
-    
+
     private function Useralbum(){
         $id_tome = getValInteger("id_tome",0);
         $id_edition = getValInteger("id_edition",0);
@@ -289,19 +289,19 @@ class GetJSON extends Bdo_Controller {
             if ($id_edition) {
                 // selection par edition
                 $this->Useralbum->load("c"," WHERE ua.user_id = ".intval($_SESSION['userConnect']->user_id). " AND ua.id_edition = ".$id_edition);
-                
+
             } else {
                 // selection par id_tome
                 $this->Useralbum->load("c"," WHERE ua.user_id = ".intval($_SESSION['userConnect']->user_id). " AND bd_tome.id_tome = ".$id_tome);
             }
-              $this->view->set_var('json', json_encode($this->Useralbum->dbSelect->a_dataQuery));   
-            
+              $this->view->set_var('json', json_encode($this->Useralbum->dbSelect->a_dataQuery));
+
         }
-        
+
         $this->view->layout = "ajax";
         $this->view->render();
-        
-        
+
+
     }
 
 }

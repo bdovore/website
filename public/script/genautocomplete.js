@@ -1,10 +1,10 @@
 function addAutocomplete (idInput, idSpan, idHiddenField, url, min){
-/* 
-* Crée un champs de saisie autocompletion sur l'input d'id "idinput" et 
-*	affiche le code dans le span idspan
+/*
+* Crée un champs de saisie autocompletion sur l'input d'id "idinput" et
+*   affiche le code dans le span idspan
 *   remplit le champ hidden avec l'id dans idhidden
-*/      
-    
+*/
+
     if (! min) {
        var min = 2;
     }
@@ -25,21 +25,21 @@ function addAutocomplete (idInput, idSpan, idHiddenField, url, min){
     select: function( event, ui ) {
         $("#"+idHiddenField).val(ui.item.id);
         $("#"+idSpan).text(ui.item.id);
-        
+
     }
     });
 }
-    
+
 function addSelectOption(idInput,url,id_select){
-    
+
     $("#"+idInput).empty();
     $.getJSON( url, function( data) {
-        
+
        $.each(data, function( item ) {
            $("#"+idInput).append("<option value='"+data[item].id+"'>"+htmlEscape(data[item].label)+"</option>");
            $("#"+idInput).val(id_select);
        });
-       }); 
+       });
     }
 function htmlEscape(str) {
 return String(str)

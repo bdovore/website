@@ -6,10 +6,10 @@ include (BDO_DIR."vendors/jpgraph-3.5.0b1/src/jpgraph_bar.php");
 
 // Variable d�finissant l'utilisateur
 if ($user != '') {
-	$user_id = decodeUserId($user);
+    $user_id = decodeUserId($user);
 }
 else{
-	$user_id = $_SESSION["userConnect"]->user_id;
+    $user_id = $_SESSION["userConnect"]->user_id;
 }
 
 if (empty($user_id)) exit();
@@ -38,22 +38,22 @@ $DB->next_record();
 // Traite les donn�es
 for ($i = 0; $i <= 10; $i++)
 {
-	if ($DB->f('note') == $i)
-	{
-		$datay[$i] = $DB->f('nbnotes');
-		$lbl[$i] = $i;
-		$DB->next_record();
-	}else{
-		$datay[$i] = 0;
-		$lbl[$i] = $i;
-	}
-//	if ($DB2->f('note') == $i)
-//	{
-//		$datay2[$i] = $DB2->f('nbnotes');
-//		$DB2->next_record();
-//	}else{
-//		$datay2[$i] = 0;
-//	}
+    if ($DB->f('note') == $i)
+    {
+        $datay[$i] = $DB->f('nbnotes');
+        $lbl[$i] = $i;
+        $DB->next_record();
+    }else{
+        $datay[$i] = 0;
+        $lbl[$i] = $i;
+    }
+//  if ($DB2->f('note') == $i)
+//  {
+//      $datay2[$i] = $DB2->f('nbnotes');
+//      $DB2->next_record();
+//  }else{
+//      $datay2[$i] = 0;
+//  }
 }
 
 // Size of graph

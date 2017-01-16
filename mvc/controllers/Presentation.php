@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Presentation extends Bdo_Controller
 {
@@ -14,7 +14,7 @@ class Presentation extends Bdo_Controller
     {
         //Bdo_Security::page();
 
-        
+
         // integration de stats dans la page presentation
         $this->loadModel('Statistique');
         $this->Statistique->showTables();
@@ -23,7 +23,7 @@ class Presentation extends Bdo_Controller
         $this->Statistique->visites();
         $this->Statistique->tomeComment();
         $this->Statistique->serieComment();
-        
+
         // affichage du nb de bd dans les collections
         // --------------------------------------
         // Album
@@ -43,7 +43,7 @@ class Presentation extends Bdo_Controller
                 "NBCOMMENTSERIE" => $this->Statistique->nbCommentSerie,
                 "PAGETITLE" => "BDoVORE.com : c'est quoi ?"
             ));
-        
+
         $this->view->render();
     }
 }

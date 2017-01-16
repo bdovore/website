@@ -4,7 +4,7 @@
     <form method='post' action='?status=ok'>
     <h3>Publication d'une nouvelle news</h3>
     <br>
-    
+
     Titre : <input name="txttitre" id="txttitre" value="<?php echo $view->titrenews;?>" size="50" type="text" /> <br/>
     <textarea name="txtcontent" cols="45" rows="8" id="txtcontent"><?php echo $view->txtnews;?></textarea>
     <input type='hidden' name="newsid" id='newsid' value='<?php echo $view->newsid;?>'/>
@@ -12,5 +12,4 @@
     </form>
 </div>
 <script>$("#txtcontent").jqte(); </script>
-    
-    
+

@@ -1,12 +1,12 @@
 <?php
     $ficheAlbum = $view->getHelper('ficheAlbum');
     $page = $view->getHelper('pagination');
-   
-    
+
+
 ?><div align="center" class="cadre1">
    <?php echo $page->menuCollection(); ?>
     <h1>Statistiques de la collection</h1>
-	
+
         <p>
 
                         Nombre d'albums : <?php echo $view->stat["nbtomes"];?> dont <?php echo $view->stat["nbintegrales"];?> int&eacute;grales.
@@ -23,7 +23,7 @@
 
                         Nombre d'achats pr&eacute;vus : <?php echo $view->stat["nbfuturs_achats"];?>
         </p>
-        
+
 
         <img src="<?php echo BDO_URL; ?>graphs/rep_genres.php" >
         <br>
@@ -33,5 +33,5 @@
         <br>
         <img src="<?php echo BDO_URL; ?>graphs/rep_notes.php" >
                 <br>
-     
+
 </div>

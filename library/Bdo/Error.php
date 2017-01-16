@@ -3,7 +3,7 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Bdo_Error
 {
@@ -36,9 +36,9 @@ public $a_error=array();
     public static function add ($value)
     {
         Bdo_Error::getInstance();
-        
+
         if (empty($value)) return true;
-        
+
         if (is_array($value)) {
             self::$instance->a_error = array_merge(self::$instance->a_error, $value);
         }
@@ -50,7 +50,7 @@ public $a_error=array();
     public static function notEmpty ()
     {
         Bdo_Error::getInstance();
-        
+
         if (self::$instance->a_error) {
             return true;
         }

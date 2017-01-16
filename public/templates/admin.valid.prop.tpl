@@ -1,18 +1,18 @@
 <SCRIPT type="text/javascript"><!--
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 2)) {
-		alert('Veuillez saisir au moins 2 caractères');
-	}else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}else {
+    if ((isMandatory == true) && (myText.length < 2)) {
+        alert('Veuillez saisir au moins 2 caractères');
+    }else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }else {
                 mywindow=open("pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}else {
-			mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+            }
+        }else {
+            mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 function verifFieldNull(myField) {
     if(myField == "0") {
@@ -36,26 +36,26 @@ function verifAddExisting(myIdTome,myAction) {
 //--></SCRIPT>
 
 <div class="fond_admin">
-	<div class="titre_admin">Traitement des albums en attente</div>
-	<div class="date_before_valid">{DATEBEFOREVALID}</div>
+    <div class="titre_admin">Traitement des albums en attente</div>
+    <div class="date_before_valid">{DATEBEFOREVALID}</div>
     <table width="100%">
         <tr>
             <form action="{URLACTION}" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" onsubmit="return verifFieldNull(document.myform.txtSerieId.value)">
                 <!--Debut colonne gauche -->
                 <td width="65%" valign="top">
                     <table class="tableaux_admin">
-                        <tr> 
+                        <tr>
                             <td width="15%" class="label" align="center">Album</td>
                             <input name="txtPropId" type="hidden" id="txtPropId" value="{PROPID}" />
                             <td width="85%">
                                 <input name="txtTitre" type="text" id="txtTitre" value="{TITRE}" size="65%" class="{CLTITRE}" />
                             </td>
                         </tr>
-                        <tr bordercolor="#FFFFCC"> 
+                        <tr bordercolor="#FFFFCC">
                             <td><!--DWLayoutEmptyCell-->&nbsp;</td>
                             <td class="original">{ORITITRE}&nbsp;</td>
                         </tr>
-                        <tr bordercolor="#FFFFCC"> 
+                        <tr bordercolor="#FFFFCC">
                             <td colspan="2" class="label">
                                 <table width="100%" border="0">
                                     <tr>
@@ -69,25 +69,25 @@ function verifAddExisting(myIdTome,myAction) {
                                             <select name="lstType" size="1">{OPTTYPE}</select>
                                         </td>
                                         <td align="center"><input name="txtNumTome" type="text" id="txtNumTome" value="{TOME}" size="2" class="{CLTOME}" /></td>
-                                        <td align="center"><input type="checkbox" name="chkIntegrale" value="checkbox" {ISINT} /></td> 
+                                        <td align="center"><input type="checkbox" name="chkIntegrale" value="checkbox" {ISINT} /></td>
                                         <td align="center"><input name="txtPrixVente" type="text" id="txtPrixVente" value="{PRIX_VENTE}" size="3" style="text-align: center;" /></td>
                                     </tr>
                                 </table>
                             </td>
                         </tr>
-                        <tr bordercolor="#FFFFCC"> 
+                        <tr bordercolor="#FFFFCC">
                             <td class="label">Intro Tome</td>
                             <td valign="top">
                                 <textarea name="txtHistoire" class="champ_commentaire">{HISTOIRE}</textarea>
                             </td>
                         </tr>
                     </table>
-                    
+
                     <table class="tableaux_admin">
-                        <tr> 
+                        <tr>
                             <td class="label" align="center">Serie</td>
                             <td>
-                                <div align="center"> 
+                                <div align="center">
                                     <input name="txtSerieId" type="text" id="txtSerieId2" value="{IDSERIE}" size="3" class="{CLIDSERIE}" />
                                 </div>
                             </td>
@@ -98,15 +98,15 @@ function verifAddExisting(myIdTome,myAction) {
                                 <img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('serie',document.myform.txtSerie.value,'myform','txtSerie',true)" />
                             </td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td colspan="2">&nbsp;</td>
                             <td class="original">{ORISERIE}</td>
                             <td><!--DWLayoutEmptyCell-->&nbsp;</td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td width="15%" class="label" align="center">Genre</td>
-                            <td width="14%"> 
-                                <div align="center"> 
+                            <td width="14%">
+                                <div align="center">
                                     <input name="txtGenreId" type="text" value="{IDGENRE}" size="1" class="{CLIDGENRE}" />
                                 </div>
                             </td>
@@ -117,15 +117,15 @@ function verifAddExisting(myIdTome,myAction) {
                                 <img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('genre',document.myform.txtGenre.value,'myform','txtGenre',false)" />
                             </td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td colspan="2">&nbsp;</td>
                             <td class="original">{ORIGENRE}</td>
                             <td>&nbsp;</td>
                         </tr>
                     </table>
-                    
+
                     <table class="tableaux_admin">
-                        <tr> 
+                        <tr>
                             <td width="18%" class="label">
                                 Scenariste
                             </td>
@@ -139,12 +139,12 @@ function verifAddExisting(myIdTome,myAction) {
                                 <img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenar.value,'myform','txtScenar',true)" />
                             </td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td colspan="2">&nbsp;</td>
                             <td class="original">{ORISCENARISTE}</td>
                             <td>&nbsp;</td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td width="18%" class="label">
                                 Scenariste #2
                             </td>
@@ -158,51 +158,51 @@ function verifAddExisting(myIdTome,myAction) {
                                 <img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenarAlt.value,'myform','txtScenarAlt',true)" />
                             </td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td colspan="2">&nbsp;</td>
                             <td class="original">{ORISCENARISTEALT}</td>
                             <td>&nbsp;</td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td class="label">Dessinateur</td>
                             <td> <input name="txtDessiId" type="text" value="{IDDESS}" size="4" class="{CLIDDESS}"></td>
                             <td> <input name="txtDessi" type="text" value="{DESSINATEUR}" size="33" class="{CLDESSINATEUR}"></td>
                             <td> <img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessi.value,'myform','txtDessi',true)"></td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td colspan="2">&nbsp;</td>
                             <td class="original">{ORIDESSINATEUR}</td>
                             <td>&nbsp;</td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td class="label">Dessinateur #2</td>
                             <td> <input name="txtDessiAltId" type="text" value="{IDDESSALT}" size="4" class="{CLIDDESSALT}"></td>
                             <td> <input name="txtDessiAlt" type="text" value="{DESSINATEURALT}" size="33" class="{CLDESSINATEURALT}"></td>
                             <td> <img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessiAlt.value,'myform','txtDessiAlt',true)"></td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td colspan="2">&nbsp;</td>
                             <td class="original">{ORIDESSINATEURALT}</td>
                             <td>&nbsp;</td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td class="label">Coloriste</td>
                             <td> <input name="txtColorId" type="text" value="{IDCOLOR}" size="4" class="{CLIDCOLOR}"></td>
                             <td> <input name="txtColor" type="text" value="{COLORISTE}" size="33" class="{CLCOLORISTE}"></td>
                             <td> <img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColor.value,'myform','txtColor',true)"></td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td colspan="2">&nbsp;</td>
                             <td class="original">{ORICOLORISTE}</td>
                             <td>&nbsp;</td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td class="label">Coloriste #2</td>
                             <td> <input name="txtColorAltId" type="text" value="{IDCOLORALT}" size="4" class="{CLIDCOLORALT}"></td>
                             <td> <input name="txtColorAlt" type="text" value="{COLORISTEALT}" size="33" class="{CLCOLORISTEALT}"></td>
                             <td> <img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColorAlt.value,'myform','txtColorAlt',true)"></td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td colspan="2">&nbsp;</td>
                             <td class="original">{ORICOLORISTEALT}</td>
                             <td>&nbsp;</td>
@@ -210,48 +210,48 @@ function verifAddExisting(myIdTome,myAction) {
                     </table>
 
                     <table class="tableaux_admin">
-                        <tr> 
+                        <tr>
                             <td width="16%" class="label">Editeur</td>
                             <td width="12%" align="center"><input name="txtEditeurId" type="text" value="{IDEDIT}" size="3" class="{CLIDEDIT}" /></td>
                             <td width="58%"><input name="txtEditeur" type="text" value="{EDITEUR}" size="33"class="{CLEDITEUR}" /></td>
                             <td width="14%"><img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('editeur',document.myform.txtEditeur.value,'myform','txtEditeur',true)"></td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td colspan="2">&nbsp;</td>
                             <td class="original">{ORIEDITEUR}</td>
                             <td>&nbsp;</td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td class="label">Collection</td>
                             <td align="center"><input name="txtCollecId" type="text" value="{IDCOLLEC}" size="3" class="{CLIDCOLLEC}" /></td>
                             <td><input name="txtCollec" type="text" value="{COLLECTION}" size="33" class="{CLCOLLECTION}" /></td>
                             <td><img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('collection',document.myform.txtCollec.value,'myform','txtCollec',false,document.myform.txtEditeurId.value)"></td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td colspan="2">&nbsp;</td>
                             <td class="original">{ORICOLLECTION}</td>
                             <td>&nbsp;</td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td colspan="4" class="label">
                                 <table class="tableaux_admin_sans-bord">
-                                    <tr> 
+                                    <tr>
                                         <td align="center">
-                                            <a href="{URLEAN}" title="Teste le code EAN sur BDNet" target="_blank">EAN</a> : 
+                                            <a href="{URLEAN}" title="Teste le code EAN sur BDNet" target="_blank">EAN</a> :
                                             <input name="txtEAN" type="text" value="{EAN}" size="14" />{ISEAN}
                                         </td>
                                         <td align="center">
-                                            <a href="{URLISBN}" title="Teste le code ISBN sur Amazon" target="_blank">ISBN</a> : 
+                                            <a href="{URLISBN}" title="Teste le code ISBN sur Amazon" target="_blank">ISBN</a> :
                                             <input name="txtISBN" type="text" value="{ISBN}" size="10" />{ISISBN}
                                         </td>
                                     </tr>
                                 </table>
                             </td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td colspan="4" class="label">
                                 <table class="tableaux_admin_sans-bord">
-                                    <tr> 
+                                    <tr>
                                         <td width="22%" align="center">
                                             Date Parution
                                             <div class="petite_police" style="margin-bottom: 10px;">(aaaa-mm-jj)</div>
@@ -274,17 +274,17 @@ function verifAddExisting(myIdTome,myAction) {
                     </table>
                     <br />
                     <table class="tableaux_admin">
-                        <tr> 
+                        <tr>
                             <td colspan="4" bordercolor="#FFFFCC" class="label">
                                 <p>
                                     <b>Ajouter comme nouvelle édition d'un album d&eacute;j&agrave; existant<br /></b>
                                 </p>
                             </td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td width="14%" class="label"><div align="center">Album</div></td>
                             <td width="13%">
-                                <div align="left"> 
+                                <div align="left">
                                     <input name="txtExistingTomeId" type="text" id="txtExistingTomeId" value="" size="5" />
                                 </div>
                             </td>
@@ -292,7 +292,7 @@ function verifAddExisting(myIdTome,myAction) {
                             <td width="11%"><img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('album',document.myform.txtExistingTome.value,'myform','txtExistingTome',true)"></td>
                         </tr>
                     </table>
-                    <div align="center"> 
+                    <div align="center">
                         <p></p>
                         <div style="float: left;">Simple mise à jour de la proposition :</div>
                         <div align="center" style="width: 20px; margin: auto; text-align: center;"><input type="checkbox" name="chkUpdate" value="O" /></div>
@@ -314,17 +314,17 @@ function verifAddExisting(myIdTome,myAction) {
                                 </td>
                             </tr>
                             <tr><td colspan="3">&nbsp;</td></tr>
-                            
+
                         </table>
                     </div>
                 <!--Fin colonne gauche -->
                 </td>
-                
-                
+
+
                 <!--Debut colonne droite -->
                 <td width="35%" valign="top">
                     <table width="100%" cellpadding="5" bgcolor="#D35E5E" style="font-size: 0.9em;">
-                        <tr> 
+                        <tr>
                             <td width="25%" align="center" class="to_be_corrected">
                                 rouge
                             </td>
@@ -332,7 +332,7 @@ function verifAddExisting(myIdTome,myAction) {
                                 Absence d'Information ou de Validation
                             </td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td align="center" class="has_changed">jaune</td>
                             <td align="center">Champ non validé ou Validé puis modifié</td>
                         </tr>
@@ -342,32 +342,32 @@ function verifAddExisting(myIdTome,myAction) {
                         </tr>
                     </table>
                     <table class="tableaux_admin">
-                        <tr> 
+                        <tr>
                             <td align="center">
                                 <img src="{URLIMAGE}" width="180" border="0" align="absmiddle" />
                                 <br />
                                 {DIMIMAGE}
                             </td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td class="label">
                                 Redimensionner la couverture :
                                 <input type="checkbox" name="chkResize" value="checked" />
                             </td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td class="label">
                                 Envoyer depuis un fichier local :
                                 <br /><input name="txtFileLoc" type="file" id="txtFileLoc2" style="width: 100%;" class="flat" />
                             </td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td class="label">
                                 Envoyer depuis une URL :
                                 <br /><input name="txtFileURL" type="text" id="txtFileURL2" style="width: 100%;" class="flat" />
                             </td>
                         </tr>
-                        <tr> 
+                        <tr>
                             <td class="label">
                                 Effacer cette couverture :
                                 <input type="checkbox" name="chkDelete" value="checked" />
@@ -392,7 +392,7 @@ function verifAddExisting(myIdTome,myAction) {
                                 </form>
                             </td>
                         </tr>
-                    </table>	
+                    </table>
                     <table class="cadre_texte-admin">
                         <tr>
                             <td>
@@ -415,17 +415,17 @@ function verifAddExisting(myIdTome,myAction) {
                                     </p>
                                     <p>
                                         <input name="PropAction" type="hidden" id="PropAction" value="{PROPACTION}" />
-                                        <input name="txtFutAlbId" type="text" id="txtFutAlbId" size="5" /> 
-                                        <input name="txtFutAlb" type="text" id="txtFutAlb" size="23" /> 
+                                        <input name="txtFutAlbId" type="text" id="txtFutAlbId" size="5" />
+                                        <input name="txtFutAlb" type="text" id="txtFutAlb" size="23" />
                                         <img src="{URLSITEIMAGE}site/loupe.gif" width="24" height="14" onClick="newWindow('album',document.subform.txtFutAlb.value,'subform','txtFutAlb',true)">
                                     </p>
                                     <p>
                                         <input name="txtFutButton" value="Valider" type="submit" />
                                     </p>
                                     <p class="texte">
-                                        Aide : Si l'album propos&eacute; existe d&eacute;j&agrave; 
-                                        et que l'utilisateur a demand&eacute; l'ajout de cet album dans 
-                                        sa collection, sélectionner l'album 
+                                        Aide : Si l'album propos&eacute; existe d&eacute;j&agrave;
+                                        et que l'utilisateur a demand&eacute; l'ajout de cet album dans
+                                        sa collection, sélectionner l'album
                                         existant via le formulaire et valider.
                                     </p>
                                 </td>

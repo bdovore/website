@@ -26,11 +26,11 @@ if (isset($view->dbs_comment)) {
 
 
         </td>
-       
+
        <td style='vertical-align:top'>
 
                                     <strong><?php echo $ficheAlbum->urlalbum($tome, 'albTitle'); ?></strong>
-                                    <span id='noteTome<?php echo $tome->ID_TOME; ?>'> </span>                                    
+                                    <span id='noteTome<?php echo $tome->ID_TOME; ?>'> </span>
                                     <p class="fiche_album">
                                      S&eacute;rie : <?php echo $ficheAlbum->urlSerie($tome); ?> <br>
                                     Publié par <a href='./guest?user=<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?></p>
@@ -43,7 +43,7 @@ if (isset($view->dbs_comment)) {
 }
 ?><div align="center">
     <?php
-    // pagination 
+    // pagination
 
     $a_qstring = $_GET;
     unset($a_qstring["page"]);

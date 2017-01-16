@@ -21,7 +21,7 @@ class Notetome extends Bdo_Db_Line
 
     public $error = '';
 
-    
+
 
     // initialisation
     // liste des commentaires pour un album donné
@@ -54,8 +54,8 @@ class Notetome extends Bdo_Db_Line
     public function select ()
 
     {
-        
-        
+
+
         return "
         SELECT ID_TOME,
                 MOYENNE_NOTE_TOME,
@@ -65,24 +65,24 @@ class Notetome extends Bdo_Db_Line
 
     }
 
-    
+
      public function update_stat($id_tome) {
         /*
          * Fonction de mise à jour des statistiques de note d'un album
          * Se calcul après chaque ajout de note / commentaire
-         * 
+         *
          */
-        
+
         $query= "replace into note_tome (id_tome, MOYENNE_NOTE_TOME , NB_NOTE_TOME )
                 select id_tome,  sum(note)/count(*) moyenne, count(*) nb_note from users_comment where id_tome=".$id_tome;
-        
-        $resultat = Db_query($query);     
-        
-        
+
+        $resultat = Db_query($query);
+
+
         return($resultat);
     }
 
-   
+
 
 }
 ?>

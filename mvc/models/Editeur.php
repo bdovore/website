@@ -3,16 +3,16 @@
 /**
  *
  * @author laurent
- *        
+ *
  */
 class Editeur extends Bdo_Db_Line {
-	
+
     /**
      */
     public $table_name = 'bd_editeur';
 
     public $error = '';
-    
+
     // initialisation
     public function __construct ($id = null)
     {
@@ -30,9 +30,9 @@ class Editeur extends Bdo_Db_Line {
     public function select ()
     {
         return "
-        SELECT 
-        `bd_editeur`.`ID_EDITEUR` , 
-        `bd_editeur`.`NOM` , 
+        SELECT
+        `bd_editeur`.`ID_EDITEUR` ,
+        `bd_editeur`.`NOM` ,
         `bd_editeur`.`URL_SITE`
         FROM `" . $this->table_name . "`
         ";
@@ -52,9 +52,9 @@ class Editeur extends Bdo_Db_Line {
         $dbSearch = new Bdo_Db_Search();
 
         $dbSearch->select = "
-        SELECT 
-        `bd_editeur`.`ID_EDITEUR` , 
-        `bd_editeur`.`NOM` , 
+        SELECT
+        `bd_editeur`.`ID_EDITEUR` ,
+        `bd_editeur`.`NOM` ,
         `bd_editeur`.`URL_SITE`
         ";
 

@@ -26,81 +26,81 @@ $max_date = 0;
 
 // R�cup�re la collection
 $query = "
-SELECT 
-	DATE_FORMAT(IFNULL(u.date_achat, u.date_ajout),'%Y') as date_annee, 
-	t.id_tome, 
-	t.titre, 
-	t.num_tome, 
-	t.flg_type, 
-	t.flg_int, 
-	t.prix_bdnet, 
-	u.cote, 
-	u.flg_cadeau 
-FROM 
-	users_album u 
-	INNER JOIN bd_edition en ON en.id_edition = u.id_edition 
-	INNER JOIN bd_tome t ON t.id_tome = en.id_tome 
-WHERE 
-	u.flg_achat = 'N' 
-	AND u.user_id = " . $DB->escape($_SESSION["userConnect"]->user_id);
+SELECT
+    DATE_FORMAT(IFNULL(u.date_achat, u.date_ajout),'%Y') as date_annee,
+    t.id_tome,
+    t.titre,
+    t.num_tome,
+    t.flg_type,
+    t.flg_int,
+    t.prix_bdnet,
+    u.cote,
+    u.flg_cadeau
+FROM
+    users_album u
+    INNER JOIN bd_edition en ON en.id_edition = u.id_edition
+    INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+WHERE
+    u.flg_achat = 'N'
+    AND u.user_id = " . $DB->escape($_SESSION["userConnect"]->user_id);
 
 $DB->query ($query);
 
 while ($DB->next_record())
 {
-	if ($DB->f("flg_int") == 'O')
-	$type = 1;
-	else
-	$type = 0;
-	if ($DB->f("flg_type") == 1) $type = 2;
+    if ($DB->f("flg_int") == 'O')
+    $type = 1;
+    else
+    $type = 0;
+    if ($DB->f("flg_type") == 1) $type = 2;
 
-	// V�rifie si l'album est cot� par l'utilisateur
-	if (($DB->f("cote") != '') & (($DB->f("flg_type") == 0) | ($defcoffret == 1)))
-	{
-		$tot_prix[$type] += $DB->f("cote");
-		$tot_count[$type]++;
-		$prix_retenu = $DB->f("cote");
-	}
-	// Verifie si l'album est not� par bdovore
-	elseif (($DB->f("prix_bdnet") != '') & ($DB->f("flg_type") == 0 | ($defcoffret == 1)))
-	{
-		$tot_prix[$type] += $DB->f("prix_bdnet");
-		$tot_count[$type]++;
-		$prix_retenu = $DB->f("prix_bdnet");
-	}
-	// Non valoris�
-	elseif (($DB->f("flg_type") == 0) | ($defcoffret == 1))
-	{
-		if ($defval[$type] == '')
-		{
-			$tot_count[$type]++;
-			$prix_retenu = 0;
-		}else{
-			$tot_prix[$type] += $defval[$type];
-			$tot_count[$type]++;
-			$prix_retenu = $defval[$type];
-		}
-	}
-	// Coffret valoris� album par album
-	elseif (($DB->f("flg_type") == 1) & ($defcoffret == 0))
-	{
-		$tot_prix[$type] += $defval[2];
-		$tot_count[$type]++;
-		$prix_retenu = $defval[2];
-	}
+    // V�rifie si l'album est cot� par l'utilisateur
+    if (($DB->f("cote") != '') & (($DB->f("flg_type") == 0) | ($defcoffret == 1)))
+    {
+        $tot_prix[$type] += $DB->f("cote");
+        $tot_count[$type]++;
+        $prix_retenu = $DB->f("cote");
+    }
+    // Verifie si l'album est not� par bdovore
+    elseif (($DB->f("prix_bdnet") != '') & ($DB->f("flg_type") == 0 | ($defcoffret == 1)))
+    {
+        $tot_prix[$type] += $DB->f("prix_bdnet");
+        $tot_count[$type]++;
+        $prix_retenu = $DB->f("prix_bdnet");
+    }
+    // Non valoris�
+    elseif (($DB->f("flg_type") == 0) | ($defcoffret == 1))
+    {
+        if ($defval[$type] == '')
+        {
+            $tot_count[$type]++;
+            $prix_retenu = 0;
+        }else{
+            $tot_prix[$type] += $defval[$type];
+            $tot_count[$type]++;
+            $prix_retenu = $defval[$type];
+        }
+    }
+    // Coffret valoris� album par album
+    elseif (($DB->f("flg_type") == 1) & ($defcoffret == 0))
+    {
+        $tot_prix[$type] += $defval[2];
+        $tot_count[$type]++;
+        $prix_retenu = $defval[2];
+    }
 
-	// stocke les mini et les maxi
-	$annee = $DB->f("date_annee");
-	if ($min_date > $annee) $min_date = $annee;
-	if ($max_date < $annee) $max_date = $annee;
+    // stocke les mini et les maxi
+    $annee = $DB->f("date_annee");
+    if ($min_date > $annee) $min_date = $annee;
+    if ($max_date < $annee) $max_date = $annee;
 
-	// Pr�pare le graph
-	$depense[$annee] += $prix_retenu;
-	// Compte si cadeau
-	if ($DB->f("flg_cadeau") == 'O')
-	$cadeau[$annee]++;
-	else
-	$nbalbums[$annee]++;
+    // Pr�pare le graph
+    $depense[$annee] += $prix_retenu;
+    // Compte si cadeau
+    if ($DB->f("flg_cadeau") == 'O')
+    $cadeau[$annee]++;
+    else
+    $nbalbums[$annee]++;
 }
 
 
@@ -108,16 +108,16 @@ while ($DB->next_record())
 $i=0;
 for ($compteur = $min_date;$compteur <= $max_date; $compteur++)
 {
-	if ($info == 0)
-	{
-		$datay[$i] = $depense[$compteur];
-	}else{
-		$datay[$i] = $nbalbums[$compteur];
-		$datay2[$i] = $cadeau[$compteur];
-	}
-	$lbl[$i] = $compteur;
-	//echo $lbl[$i].":".$datay[$i]." - ".$datay2[$i]."<br>";
-	$i++;
+    if ($info == 0)
+    {
+        $datay[$i] = $depense[$compteur];
+    }else{
+        $datay[$i] = $nbalbums[$compteur];
+        $datay2[$i] = $cadeau[$compteur];
+    }
+    $lbl[$i] = $compteur;
+    //echo $lbl[$i].":".$datay[$i]." - ".$datay2[$i]."<br>";
+    $i++;
 }
 
 // Size of graph
@@ -160,47 +160,47 @@ $graph->legend->Pos(0.010,0.010);
 
 if ($info == 0)
 {
-	// Create new bar plots
-	$bplot = new BarPlot($datay);
-	// Create the grouped bar plot
-	$graph->Add($bplot);
+    // Create new bar plots
+    $bplot = new BarPlot($datay);
+    // Create the grouped bar plot
+    $graph->Add($bplot);
 
-	// Setup color for gradient fill style - albums
-	$bplot->SetFillGradient("brown","beige",GRAD_MIDVER);
-	$bplot->SetWidth(.5);
-	$bplot->value->Show();
-	$bplot->value->SetColor('#000000');
-	$bplot->value->SetFormat('%d');
-	$bplot->value->SetAngle(90);
+    // Setup color for gradient fill style - albums
+    $bplot->SetFillGradient("brown","beige",GRAD_MIDVER);
+    $bplot->SetWidth(.5);
+    $bplot->value->Show();
+    $bplot->value->SetColor('#000000');
+    $bplot->value->SetFormat('%d');
+    $bplot->value->SetAngle(90);
 
 
 }else{
-	// Create two new bar plots
-	$bplot = new BarPlot($datay);
-	// Create new bar plots
-	$bplot2 = new BarPlot($datay2);
-	// Create the grouped bar plot
-	$gbplot = new GroupBarPlot(array($bplot,$bplot2));
-	// add group to graph
-	$graph->Add($gbplot);
-	// Setup color for gradient fill style - albums
-	$bplot->SetFillGradient("brown","beige",GRAD_MIDVER);
-	$bplot->SetWidth(.5);
-	$bplot->value->Show();
-	$bplot->value->SetColor('#000000');
-	$bplot->SetValuePos('top');
-	$bplot->value->SetFormat('%d');
-	$bplot->value->SetAngle(90);
-	$bplot->SetLegend("Achats");
+    // Create two new bar plots
+    $bplot = new BarPlot($datay);
+    // Create new bar plots
+    $bplot2 = new BarPlot($datay2);
+    // Create the grouped bar plot
+    $gbplot = new GroupBarPlot(array($bplot,$bplot2));
+    // add group to graph
+    $graph->Add($gbplot);
+    // Setup color for gradient fill style - albums
+    $bplot->SetFillGradient("brown","beige",GRAD_MIDVER);
+    $bplot->SetWidth(.5);
+    $bplot->value->Show();
+    $bplot->value->SetColor('#000000');
+    $bplot->SetValuePos('top');
+    $bplot->value->SetFormat('%d');
+    $bplot->value->SetAngle(90);
+    $bplot->SetLegend("Achats");
 
-	// Setup color for gradient fill style - albums
-	$bplot2->SetFillGradient("lightskyblue4","beige",GRAD_MIDVER);
-	$bplot2->SetWidth(.5);
-	$bplot2->value->Show();
-	$bplot2->value->SetColor('#000000');
-	$bplot2->value->SetFormat('%d');
-	$bplot2->value->SetAngle(90);
-	$bplot2->SetLegend("Cadeau");
+    // Setup color for gradient fill style - albums
+    $bplot2->SetFillGradient("lightskyblue4","beige",GRAD_MIDVER);
+    $bplot2->SetWidth(.5);
+    $bplot2->value->Show();
+    $bplot2->value->SetColor('#000000');
+    $bplot2->value->SetFormat('%d');
+    $bplot2->value->SetAngle(90);
+    $bplot2->SetLegend("Cadeau");
 
 }
 

@@ -17,6 +17,6 @@
 <a href="{URLSERIE}">{SERIE}</a><br />
 <!-- END SeriesBlock -->
 <br />
-<a href="indexation.php">Index des séries</a> 
+<a href="indexation.php">Index des séries</a>
 </body>
 </html>

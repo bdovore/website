@@ -3,7 +3,7 @@
 /**
  *
  * @author Tom
- *        
+ *
  */
 class Compte extends Bdo_Controller {
 
@@ -20,7 +20,7 @@ class Compte extends Bdo_Controller {
             if ($user_id != "" && $user_id != $_SESSION["userConnect"]->user_id) {
                 //un username et un userid ont été passés via l'URL
                 //On vérifie que l'utilisateur est authorisé à ouvrir cette page
-                
+
                 $this->User->set_dataPaste(array("user_id" =>$user_id ));
                 $this->User->load();
                 $currentstatus = $this->User->level;
@@ -48,7 +48,7 @@ class Compte extends Bdo_Controller {
                 } else {
                     // procède à la mise à jour
                     $this->User->set_dataPaste(array("user_id" =>$user_id,
-                       "email" => postVal("txtemail"), 
+                       "email" => postVal("txtemail"),
                         "birthday" => postVal("txtanniv"),
                         "OPEN_COLLEC" => postVal("lstOpenCollec"),
                         "ABT_NEWS" => (postVal("txtNewsletter") == "checked" ? "1" : "0")  ,
@@ -115,11 +115,11 @@ class Compte extends Bdo_Controller {
                             "password" => md5($newpass1)
                         ));
                         $this->User->update();
-                        
+
                         echo GetMetaTag(2, "Votre mot de passe est modifi&eacute;.", (BDO_URL . "Compte"));
                     }
-                
-            }     
+
+            }
             // Afficher le formulaire pré-remplis
             elseif ($act == "") {
                 //récupère les données utilisateur dans la base de données
@@ -145,7 +145,7 @@ class Compte extends Bdo_Controller {
                 $carre_options[0][1] = "Automatique";
                 $carre_options[1][0] = "1";
                 $carre_options[1][1] = "Manuel";
-              
+
 
                 $this->view->set_var(array
                     ("USERID" => $profile_user_id,
@@ -251,7 +251,7 @@ class Compte extends Bdo_Controller {
                         "level" => 2
                     ));
                     $user->update();
-                   
+
                     if (notIssetOrEmpty($user->error)) {
                         //ajout dans le forum si besoin
                         $user->setForumAccount($default_username, $defaut_pass1, $defaut_email);
@@ -290,56 +290,56 @@ class Compte extends Bdo_Controller {
         $this->view->layout = "iframe";
         $this->view->render();
     }
-    
+
     public function forgotPass() {
         $email = getVal("email");
         $this->view->layout = "iframe";
         if ($email=="ok")
-	{//initialise la procédure de renvoi
-		$user_username = postVal("txtusername");
-		$user_email = postVal("txtemail");
+    {//initialise la procédure de renvoi
+        $user_username = postVal("txtusername");
+        $user_email = postVal("txtemail");
                 $this->loadModel("User");
                 $this->User->load("c", " WHERE username= '".Db_Escape_String($user_username)."' and email = '".Db_Escape_String($user_email)."'");
-		
-		//Verifie qu'un nom a été retourné par la query
-		if (notIssetOrEmpty($this->User->user_id))
-		{
-			$this->view->addAlertPage("L'utilisateur n'existe pas ou l'adresse e-mail est erron&eacute;e !");
+
+        //Verifie qu'un nom a été retourné par la query
+        if (notIssetOrEmpty($this->User->user_id))
+        {
+            $this->view->addAlertPage("L'utilisateur n'existe pas ou l'adresse e-mail est erron&eacute;e !");
                         $this->view->addPhtmlFile('alert', 'BODY');
-                       
-		}
+
+        }
                 else {
 
-		//génère un nouveau mot de passe et l'envoie à l'utilisateur
-		
-		
-		$newpassword = passgen(8);
+        //génère un nouveau mot de passe et l'envoie à l'utilisateur
+
+
+        $newpassword = passgen(8);
                 $this->User->set_dataPaste(array("user_id" => $this->User->user_id, "password" =>md5($newpassword) ));
                 $this->User->update();
-		
+
                 if (issetNotEmpty($this->User->error)) {
                     var_dump($this->User->error);
                     exit;
                 }
 
-		//Prépare l'email à envoyer
-		$textemail = "Bonjour,\n\n";
-		$textemail .= "Suite à votre demande, votre mot de passe pour accéder à www.bdovore.com a été changé.\n";
-		$textemail .= "Votre nouveau mot de passe est :\n\n";
-		$textemail .= "$newpassword\n\n";
-		$textemail .= "N'oubliez pas de changer votre mot de passe dans votre profil lors de votre prochain login.\n";
-		$textemail .= "Amicalement\n";
+        //Prépare l'email à envoyer
+        $textemail = "Bonjour,\n\n";
+        $textemail .= "Suite à votre demande, votre mot de passe pour accéder à www.bdovore.com a été changé.\n";
+        $textemail .= "Votre nouveau mot de passe est :\n\n";
+        $textemail .= "$newpassword\n\n";
+        $textemail .= "N'oubliez pas de changer votre mot de passe dans votre profil lors de votre prochain login.\n";
+        $textemail .= "Amicalement\n";
 
 
-		mail($user_email,"Votre nouveau mot de passe",$textemail);
+        mail($user_email,"Votre nouveau mot de passe",$textemail);
 
-		echo  "Votre nouveau mot de passe a &eacute;t&eacute; envoy&eacute;. Vous pouvez fermer cette fenêtre.";
-		exit();
+        echo  "Votre nouveau mot de passe a &eacute;t&eacute; envoy&eacute;. Vous pouvez fermer cette fenêtre.";
+        exit();
                 }
-	}
-		
+    }
+
                 $this->view->render();
-	
+
     }
 
 }

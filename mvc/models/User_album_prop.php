@@ -3,7 +3,7 @@
 /**
  *
  * @author Tom
- *        
+ *
  */
 
 class User_album_prop extends Bdo_Db_Line
@@ -14,12 +14,12 @@ class User_album_prop extends Bdo_Db_Line
     public $table_name = 'users_alb_prop';
     // variable qui gère si on selectionne juste les data de la table, ou si on prend avec les données des albums d'origine
     private $iswithalbum = false;
-    
-    
+
+
     public $error = '';
 
     // initialisation
-    
+
     public function __construct ($id = null)
     {
         if (is_array($id)) {
@@ -33,97 +33,97 @@ class User_album_prop extends Bdo_Db_Line
 
         parent::__construct($this->table_name, $a_data);
     }
-    
+
     public function setWithAlbumInfo($bool){
         if ($bool) {
             $this->iswithalbum = true;}
         else {
             $this->iswithalbum = false;
-        } 
+        }
     }
-    
-    
-    
+
+
+
     public function select ()
     {
         if ($this->iswithalbum) {
             /*
              * Selection des données user_album_prop + id et libellé des tables liées
              */
-            $select = "SELECT 
-		users_alb_prop.USER_ID, 
-		users_alb_prop.ID_PROPOSAL, 
-		users_alb_prop.ACTION, 
+            $select = "SELECT
+        users_alb_prop.USER_ID,
+        users_alb_prop.ID_PROPOSAL,
+        users_alb_prop.ACTION,
                 users_alb_prop.ID_TOME,
                 users_alb_prop.ID_EDITION,
-		users_alb_prop.TITRE, 
-		users_alb_prop.NUM_TOME, 
-		users_alb_prop.PRIX, 
-		users_alb_prop.ID_SERIE, 
-		users_alb_prop.SERIE, 
-		users_alb_prop.FLG_FINI, 
-		bd_serie.NOM AS ACTUSERIE, 
-		users_alb_prop.DTE_PARUTION, 
-		users_alb_prop.ID_GENRE, 
-		users_alb_prop.GENRE,
-		bd_genre.LIBELLE AS ACTUGENRE, 
-		users_alb_prop.ID_EDITEUR, 
-		users_alb_prop.EDITEUR, 
-		bd_editeur.NOM AS ACTUEDITEUR, 
-		users_alb_prop.ID_SCENAR, 
-		users_alb_prop.SCENAR, 
-		bd_auteur.PSEUDO AS PSEUDO_SCENAR, 
-		users_alb_prop.ID_SCENAR_ALT, 
-		users_alb_prop.SCENAR_ALT, 
-		bd_auteur_3.PSEUDO AS PSEUDO_SCENAR_ALT, 
-		users_alb_prop.ID_DESSIN, 
-		users_alb_prop.DESSIN,
-		bd_auteur_1.PSEUDO AS PSEUDO_DESSIN, 
-		users_alb_prop.ID_DESSIN_ALT, 
-		users_alb_prop.DESSIN_ALT, 
-		bd_auteur_4.PSEUDO AS PSEUDO_DESSIN_ALT, 
-		users_alb_prop.ID_COLOR, 
-		users_alb_prop.COLOR, 
-		bd_auteur_2.PSEUDO AS PSEUDO_COLOR, 
-		users_alb_prop.ID_COLOR_ALT, 
-		users_alb_prop.COLOR_ALT, 
-		bd_auteur_5.PSEUDO AS PSEUDO_COLOR_ALT, 
-		users_alb_prop.DESCRIB_EDITION, 
-		users_alb_prop.ID_COLLECTION, 
-		users_alb_prop.COLLECTION, 
-		bd_collection.NOM AS ACTUCOLLECTION, 
-		users_alb_prop.HISTOIRE, 
-		users_alb_prop.IMG_COUV,
-		users_alb_prop.FLG_INT, 
-		users_alb_prop.FLG_TYPE, 
-		users_alb_prop.FLG_TT, 
-		users_alb_prop.EAN, 
-		users_alb_prop.ISBN, 
-		users_alb_prop.PRIX, 
-		users_alb_prop.DESCRIB_EDITION, 
-		users_alb_prop.CORR_COMMENT, 
-		users_alb_prop.STATUS,
+        users_alb_prop.TITRE,
+        users_alb_prop.NUM_TOME,
+        users_alb_prop.PRIX,
+        users_alb_prop.ID_SERIE,
+        users_alb_prop.SERIE,
+        users_alb_prop.FLG_FINI,
+        bd_serie.NOM AS ACTUSERIE,
+        users_alb_prop.DTE_PARUTION,
+        users_alb_prop.ID_GENRE,
+        users_alb_prop.GENRE,
+        bd_genre.LIBELLE AS ACTUGENRE,
+        users_alb_prop.ID_EDITEUR,
+        users_alb_prop.EDITEUR,
+        bd_editeur.NOM AS ACTUEDITEUR,
+        users_alb_prop.ID_SCENAR,
+        users_alb_prop.SCENAR,
+        bd_auteur.PSEUDO AS PSEUDO_SCENAR,
+        users_alb_prop.ID_SCENAR_ALT,
+        users_alb_prop.SCENAR_ALT,
+        bd_auteur_3.PSEUDO AS PSEUDO_SCENAR_ALT,
+        users_alb_prop.ID_DESSIN,
+        users_alb_prop.DESSIN,
+        bd_auteur_1.PSEUDO AS PSEUDO_DESSIN,
+        users_alb_prop.ID_DESSIN_ALT,
+        users_alb_prop.DESSIN_ALT,
+        bd_auteur_4.PSEUDO AS PSEUDO_DESSIN_ALT,
+        users_alb_prop.ID_COLOR,
+        users_alb_prop.COLOR,
+        bd_auteur_2.PSEUDO AS PSEUDO_COLOR,
+        users_alb_prop.ID_COLOR_ALT,
+        users_alb_prop.COLOR_ALT,
+        bd_auteur_5.PSEUDO AS PSEUDO_COLOR_ALT,
+        users_alb_prop.DESCRIB_EDITION,
+        users_alb_prop.ID_COLLECTION,
+        users_alb_prop.COLLECTION,
+        bd_collection.NOM AS ACTUCOLLECTION,
+        users_alb_prop.HISTOIRE,
+        users_alb_prop.IMG_COUV,
+        users_alb_prop.FLG_INT,
+        users_alb_prop.FLG_TYPE,
+        users_alb_prop.FLG_TT,
+        users_alb_prop.EAN,
+        users_alb_prop.ISBN,
+        users_alb_prop.PRIX,
+        users_alb_prop.DESCRIB_EDITION,
+        users_alb_prop.CORR_COMMENT,
+        users_alb_prop.STATUS,
                     users.USERNAME,
                     users.EMAIL,
                     users_alb_prop.COMMENTAIRE,
                     users_alb_prop.PROP_DTE
-	FROM 
-		users_alb_prop 
+    FROM
+        users_alb_prop
                 INNER JOIN users using(user_id)
-		LEFT JOIN bd_serie ON users_alb_prop.ID_SERIE = bd_serie.ID_SERIE 
-		LEFT JOIN bd_genre ON users_alb_prop.ID_GENRE = bd_genre.ID_GENRE
-		LEFT JOIN bd_editeur ON users_alb_prop.ID_EDITEUR = bd_editeur.ID_EDITEUR 
-		LEFT JOIN bd_auteur ON users_alb_prop.ID_SCENAR = bd_auteur.ID_AUTEUR
-		LEFT JOIN bd_auteur AS bd_auteur_1 ON users_alb_prop.ID_DESSIN = bd_auteur_1.ID_AUTEUR
-		LEFT JOIN bd_auteur AS bd_auteur_2 ON users_alb_prop.ID_COLOR = bd_auteur_2.ID_AUTEUR
-		LEFT JOIN bd_collection ON users_alb_prop.ID_COLLECTION = bd_collection.ID_COLLECTION
-		LEFT JOIN bd_auteur as bd_auteur_3 ON users_alb_prop.ID_SCENAR_ALT = bd_auteur_3.ID_AUTEUR 
-		LEFT JOIN bd_auteur as bd_auteur_4 ON users_alb_prop.ID_DESSIN_ALT = bd_auteur_4.ID_AUTEUR 
-		LEFT JOIN bd_auteur as bd_auteur_5 ON users_alb_prop.ID_COLOR_ALT = bd_auteur_5.ID_AUTEUR ";
+        LEFT JOIN bd_serie ON users_alb_prop.ID_SERIE = bd_serie.ID_SERIE
+        LEFT JOIN bd_genre ON users_alb_prop.ID_GENRE = bd_genre.ID_GENRE
+        LEFT JOIN bd_editeur ON users_alb_prop.ID_EDITEUR = bd_editeur.ID_EDITEUR
+        LEFT JOIN bd_auteur ON users_alb_prop.ID_SCENAR = bd_auteur.ID_AUTEUR
+        LEFT JOIN bd_auteur AS bd_auteur_1 ON users_alb_prop.ID_DESSIN = bd_auteur_1.ID_AUTEUR
+        LEFT JOIN bd_auteur AS bd_auteur_2 ON users_alb_prop.ID_COLOR = bd_auteur_2.ID_AUTEUR
+        LEFT JOIN bd_collection ON users_alb_prop.ID_COLLECTION = bd_collection.ID_COLLECTION
+        LEFT JOIN bd_auteur as bd_auteur_3 ON users_alb_prop.ID_SCENAR_ALT = bd_auteur_3.ID_AUTEUR
+        LEFT JOIN bd_auteur as bd_auteur_4 ON users_alb_prop.ID_DESSIN_ALT = bd_auteur_4.ID_AUTEUR
+        LEFT JOIN bd_auteur as bd_auteur_5 ON users_alb_prop.ID_COLOR_ALT = bd_auteur_5.ID_AUTEUR ";
             return $select;
         }else {
-        
-        
+
+
         return "
         SELECT `ID_PROPOSAL`,
                     `USER_ID`,
@@ -178,11 +178,11 @@ class User_album_prop extends Bdo_Db_Line
                     users.EMAIL
 
                     FROM " . $this->table_name . " INNER JOIN users using(user_id)
-                    
+
                 ";
         }
     }
-    
+
     public function getUserStat($user_id){
         $user_id = intval($user_id);
         $user_prop_alb = Db_CountRow("SELECT * FROM users_alb_prop WHERE prop_type = 'AJOUT' and user_id=" . $user_id );
@@ -193,7 +193,7 @@ class User_album_prop extends Bdo_Db_Line
             "user_prop_corr" => $user_prop_corr
         ));
     }
-    
+
     public function supprProposition($id, $user_id) {
         $query = "UPDATE users_alb_prop SET `STATUS` = 98, `VALIDATOR`=". intval($user_id)." , `VALID_DTE` = NOW() WHERE id_proposal=".intval($id);
         Db_query($query);
@@ -212,5 +212,5 @@ class User_album_prop extends Bdo_Db_Line
     }
 }
 
-    
+
 ?>

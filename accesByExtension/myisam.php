@@ -8,7 +8,7 @@ define('BDO_DB_HOST','localhost');
 define('BDO_DB_SID','bdovore_db5');
 define('BDO_DB_USER','root');
 define('BDO_DB_PWD','');
-				
+
 
 mysql_connect(BDO_DB_HOST, BDO_DB_USER, BDO_DB_PWD);
 mysql_select_db(BDO_DB_USER);
@@ -23,8 +23,8 @@ AND `ENGINE` LIKE 'InnoDB'";
 $res = mysql_query($query);
 
 while ($obj = mysql_fetch_object($res)) {
-	// mysql_query("ALTER TABLE `".$obj."` ENGINE = MYISAM");
-	echo "\$a_tableInnodb[]='".$obj->TABLE_NAME."';\n";
+    // mysql_query("ALTER TABLE `".$obj."` ENGINE = MYISAM");
+    echo "\$a_tableInnodb[]='".$obj->TABLE_NAME."';\n";
 }
 */
 
@@ -39,8 +39,8 @@ AND `CONSTRAINT_TYPE` LIKE 'FOREIGN KEY'";
 $res = mysql_query($query);
 
 while ($obj = mysql_fetch_object($res)) {
-	// mysql_query("ALTER TABLE `".$obj."` ENGINE = MYISAM");
-	echo "ALTER TABLE `".$obj->TABLE_NAME ."` DROP FOREIGN KEY `".$obj->CONSTRAINT_NAME ."` ;\n";
+    // mysql_query("ALTER TABLE `".$obj."` ENGINE = MYISAM");
+    echo "ALTER TABLE `".$obj->TABLE_NAME ."` DROP FOREIGN KEY `".$obj->CONSTRAINT_NAME ."` ;\n";
 }
 
 
@@ -100,9 +100,9 @@ mysql_query("SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;");
 mysql_query("SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;");
 mysql_query("SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='';");
 foreach ($a_tableInnodb as $table_name) {
-	$query = "ALTER TABLE `".$table_name."` ENGINE = MYISAM;";
-	echo $query."\n";
-	mysql_query($query);
+    $query = "ALTER TABLE `".$table_name."` ENGINE = MYISAM;";
+    echo $query."\n";
+    mysql_query($query);
 }
 
 echo '</pre>';

@@ -4,37 +4,37 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 <div class="colleft">
 <div class="col1wrap">
-				<div class="col1 fond">
-                                   
+                <div class="col1 fond">
+
                                     <div class="cadre1">
-                                        <p>Les Bdovore qui ont <?php echo $ficheAlbum->urlalbum($view->tome,$class='albTitle'); ?> <?php if ($view->tome->NOM_SERIE <> $view->tome->TITRE_TOME) { ?> (série  <?php echo $ficheAlbum->urlserie($view->tome); ?> )<?php } ?> dans leur collection, ont aussi : 
+                                        <p>Les Bdovore qui ont <?php echo $ficheAlbum->urlalbum($view->tome,$class='albTitle'); ?> <?php if ($view->tome->NOM_SERIE <> $view->tome->TITRE_TOME) { ?> (série  <?php echo $ficheAlbum->urlserie($view->tome); ?> )<?php } ?> dans leur collection, ont aussi :
                                             <br></p>
-						<!-- Column 1 start --> 
- 
-    <?php 
+                        <!-- Column 1 start -->
+
+    <?php
       $cpt = 1;
      foreach ($view->a_simil as $simil) {
             ?>
              <?php echo $ficheAlbum->big($simil,$sep=true,$getUrlSerie=true); ?>
-                  
-           
-            
-    <?php  
-           
+
+
+
+    <?php
+
     }
     ?>
- 
+
 <!-- Column 1 end -->
 <hr class="expSep">
                                     </div>
                      </div>
-                                    
+
 </div>
-    				<!-- Debut de la partie de droite -->
+                    <!-- Debut de la partie de droite -->
 <div class="col2">
-					<!-- Column 2 start -->
-	            <?php echo $view->ACTUAIR;?>
-	            <?php echo $view->LASTAJOUT;?>
-				<!-- Column 2 end -->
+                    <!-- Column 2 start -->
+                <?php echo $view->ACTUAIR;?>
+                <?php echo $view->LASTAJOUT;?>
+                <!-- Column 2 end -->
 </div>
-</div>	
+</div>

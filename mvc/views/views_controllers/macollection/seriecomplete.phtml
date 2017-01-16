@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $ficheAlbum = $view->getHelper('ficheAlbum');
  $page = $view->getHelper('pagination');
@@ -7,8 +7,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 ?>
 <div align="center" class="cadre1">
  <?php echo $page->menuCollection(); ?>
-						<!-- Column 1 start -->
-					
+                        <!-- Column 1 start -->
+
                                                 <div class="middle_title">
                                                 <h3>Séries à compléter </h3>
                                                 </div>
@@ -19,11 +19,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 <p><select name="lstSerie" size="1" id="lstSerie" onChange="submit();">
         <?php foreach ($view->listSerie as $serie) {
             echo "<option value='".$serie->ID_SERIE."'".($serie->ID_SERIE == $view->id_serie ? "selected" : "" ) .">".$serie->NOM_SERIE."</option>";
-            
+
         }
 ?>
-        
-        
+
+
     </select></p>
 <p><a href="<?php echo BDO_URL."macollection/seriecomplete?lstSerie=$view->id_serie&action=exclude" ?>">Exclure cette série de mes albums à compléter</a></p>
 <p><a href="<?php echo BDO_URL."macollection/seriecomplete?idSerieExclu=$view->id_serie&action=raz" ?>">Annuler les exclusions pour cette série</a></p>
@@ -32,9 +32,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 </form>
 
  <form name="selAlbum" action="" method="get">
-    <div class="genBlock"> 
+    <div class="genBlock">
         <table>
-           <?php 
+           <?php
            foreach ($view->dbs_tome->a_dataQuery as $tome) {
                echo "<tr>";
                echo "<td class='colselect'><input type='checkbox' name='sel_tome[]' value='$tome->ID_TOME'></td>";
@@ -60,7 +60,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 <p>Liste des séries avec au moins un album exclu :</p>
 
 <p><select name="idSerieExclu" size="1" id="idSerieExclu" >
-        <?php 
+        <?php
         foreach ($view->listExclu as $serie) {
             echo "<option value='".$serie->ID_SERIE."'>".$serie->NOM_SERIE."</option>";
         }
@@ -69,9 +69,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 <p><input name="actAnnExclu" type="submit" id="B_annEclu" value="Annuler les exclusions pour cette série"></p>
 </div>
 <hr class="genSep"/>
-</form>																												
-		
-	
+</form>
+
+
 </div>
 
-	

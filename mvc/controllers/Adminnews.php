@@ -3,7 +3,7 @@
 /*
  * @author : Tom
  * Contrôleur pour l'ajout, la consultation, l'édition des news
- * 
+ *
  */
 
 class Adminnews extends Bdo_Controller {
@@ -82,7 +82,7 @@ class Adminnews extends Bdo_Controller {
                 echo GetMetaTag(1, "Enregistrement effectu&eacute;", BDO_URL."adminnews/editnews?newsid=".$this->News->news_id);
                 exit;
             }
-            
+
             if ($newsid > 0) {
                 $this->News->add_dataPaste("news_id", $newsid);
                 $this->News->load();

@@ -1,7 +1,7 @@
 <h3><?php echo $view->TITREPAGE;?></h3>
 <form action="<?php echo $view->URLACTION;?>" method="post">
 <table width="745" height="57" class="donnees">
-  <tr> 
+  <tr>
     <td width="127" height="25" class="entete">Genre</td>
     <td width="216" class="entete">Serie</td>
     <td width="229" class="entete">Titre</td>
@@ -9,7 +9,7 @@
     <td width="90" class="entete"><div align="center">Oter de la liste</div></td>
   </tr>
   <!-- BEGIN SelBlock -->
-  <tr> 
+  <tr>
     <td width="127" height="24" class="data"><?php echo $view->GENRE;?></td>
     <td width="216" class="data"><?php echo $view->SERIE;?></td>
       <td width="229" class="data"><a href="<?php echo $view->URLTITRE;?>" target="_blank"><?php echo $view->TITRE;?></a></td>
@@ -20,7 +20,7 @@
 </table>
   <br>
   <table width="70%" border="0">
-    <tr> 
+    <tr>
       <td width="47%"><span class="texte"><?php echo $view->BARRENAVIGATION;?></span></td>
       <td width="31%"><a href="<?php echo $view->URLRETOURMENU;?>" class="texte">Retour au menu</a></td>
       <td width="22%"><input type="submit" name="Submit" value="Valider les modifications"></td>

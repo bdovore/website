@@ -1,8 +1,8 @@
-<?php 
+<?php
 header ( 'Content-Type: text/html; charset=UTF-8' );
 $jquery = $view->getHelper('jquery');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -35,9 +35,9 @@ $jquery = $view->getHelper('jquery');
 <script src="<?php echo BDO_URL;?>script/script.js" type="text/javascript"></script>
 
 
-<!-- Jquery -->	
+<!-- Jquery -->
 <script src="<?php echo BDO_URL;?>jquery/jquery-1.10.2.min.js" type="text/javascript"></script>
-<script type="text/javascript"> 
+<script type="text/javascript">
     $.bdovore= {} // namespace
     $.bdovore.URL = '<?php echo BDO_URL; ?>';
 </script>
@@ -69,17 +69,17 @@ $jquery = $view->getHelper('jquery');
 <link rel="stylesheet" type="text/css" href="<?php echo BDO_URL;?>jquery/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" />
 <script type="text/javascript" src="<?php echo BDO_URL;?>jquery/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
 <link href="<?php echo BDO_URL;?>jquery/datatable/css/jquery.dataTables.css" rel="stylesheet"
-	type="text/css" />
+    type="text/css" />
 <script src="<?php echo BDO_URL;?>script/comment.js" type="text/javascript"></script>
 <script src="<?php echo BDO_URL;?>jquery/jquery.cookie.js" type="text/javascript"></script>
 <script src="<?php echo BDO_URL;?>script/detectmobilebrowser.js" type="text/javascript"></script>
-<?php 
+<?php
 if (User::minAccesslevel(2)) {
 ?>
-   
+
     <script src="<?php echo BDO_URL;?>script/collection.js" type="text/javascript"></script>
-    
-    
+
+
 <?php
 }
 ?>
@@ -101,40 +101,40 @@ if (!$.browser.mobile) {
         });
     });
  }
- 
+
 
 // boutons haut / bas
 $(document).ready(function() {
 /*
-	$(window).scroll(function() {
-		if ($(this).scrollTop() < $(document).height() - 200) {
-			$('.scrolldown').fadeIn();
-		} else {
-			$('.scrolldown').fadeOut();
-		}
-		if ($(this).scrollTop() > 100) {
-			$('.scrollup').fadeIn();
-		} else {
-			$('.scrollup').fadeOut();
-		}
-	});
-	$('.scrollup').click(function() {
-		$("html, body").animate({
-			scrollTop : 0
-		}, 600);
-		return false;
-	});
+    $(window).scroll(function() {
+        if ($(this).scrollTop() < $(document).height() - 200) {
+            $('.scrolldown').fadeIn();
+        } else {
+            $('.scrolldown').fadeOut();
+        }
+        if ($(this).scrollTop() > 100) {
+            $('.scrollup').fadeIn();
+        } else {
+            $('.scrollup').fadeOut();
+        }
+    });
+    $('.scrollup').click(function() {
+        $("html, body").animate({
+            scrollTop : 0
+        }, 600);
+        return false;
+    });
 
-	$('.scrolldown').click(function() {
-		$("html, body").animate({
-			scrollTop : $(document).height()
-		}, 600);
-		return false;
-	});
-        */
+    $('.scrolldown').click(function() {
+        $("html, body").animate({
+            scrollTop : $(document).height()
+        }, 600);
+        return false;
+    });
+*/
         $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
 
-});	
+});
 </script>
 
 
@@ -153,50 +153,50 @@ $(document).ready(function() {
     }
   });
   $(function() {
-	    var cache = {};
-	    $( "#search" ).catcomplete({
-	      minLength: 2,
-	      source: function( request, response ) {
-	        var term = request.term;
-	        if ( term in cache ) {
-	          response( cache[ term ] );
-	          return;
-	        }
-	 
-	        $.getJSON( "<?php echo BDO_URL;?>search/auto", request, function( data, status, xhr ) {
-	          cache[ term ] = data;
-	          response( data );
-	        });
-	      },
-	      select: function( event, ui ) {
-	        //alert( ui.item.category + ' ' + ui.item.label);
-		        if (ui.item.category=='Séries') {
-			        window.location.href = "<?php echo BDO_URL;?>serie-bd-"+ encodeURIComponent(ui.item.ID_SERIE)+"-"+string_to_slug(ui.item.label);
-		        }
-		        if (ui.item.category=='Auteurs') {
-			        window.location.href = "<?php echo BDO_URL;?>auteur-bd-"+encodeURIComponent(ui.item.ID_AUTEUR)+"-"+string_to_slug(ui.item.label);
-		        }
-		        if (ui.item.category=='Albums') {
-		            $.fancybox.open(
+        var cache = {};
+        $( "#search" ).catcomplete({
+          minLength: 2,
+          source: function( request, response ) {
+            var term = request.term;
+            if ( term in cache ) {
+              response( cache[ term ] );
+              return;
+            }
+
+            $.getJSON( "<?php echo BDO_URL;?>search/auto", request, function( data, status, xhr ) {
+              cache[ term ] = data;
+              response( data );
+            });
+          },
+          select: function( event, ui ) {
+            //alert( ui.item.category + ' ' + ui.item.label);
+                if (ui.item.category=='Séries') {
+                    window.location.href = "<?php echo BDO_URL;?>serie-bd-"+ encodeURIComponent(ui.item.ID_SERIE)+"-"+string_to_slug(ui.item.label);
+                }
+                if (ui.item.category=='Auteurs') {
+                    window.location.href = "<?php echo BDO_URL;?>auteur-bd-"+encodeURIComponent(ui.item.ID_AUTEUR)+"-"+string_to_slug(ui.item.label);
+                }
+                if (ui.item.category=='Albums') {
+                    $.fancybox.open(
                             {
                                 type: 'iframe',
                                 autoSize : false,
-                                href : "<?php echo BDO_URL;?>Album?id_tome="+ui.item.ID_TOME,                
+                                href : "<?php echo BDO_URL;?>Album?id_tome="+ui.item.ID_TOME,
                                 title : ui.item.label,
                                 width:600,
                                 height:600
                             });
-		        }
+                }
                         if (ui.item.category=='Bdovore') {
-			        window.location.href = "<?php echo BDO_URL;?>guest?user="+encodeURIComponent(ui.item.ID_USER);
-		        }
-	      }
-	    });
-	  });
+                    window.location.href = "<?php echo BDO_URL;?>guest?user="+encodeURIComponent(ui.item.ID_USER);
+                }
+          }
+        });
+      });
 
   </script>
     <script>
- if (!$.browser.mobile) {   
+ if (!$.browser.mobile) {
   $(function() {
     $( '*' ).tooltip({
       position: {
@@ -214,9 +214,9 @@ $(document).ready(function() {
     });
   });
  }
-    
+
   </script>
-   
+
 <link href="<?php echo BDO_URL;?>jquery/jquery_util.css" rel="stylesheet">
 
 
@@ -224,26 +224,26 @@ $(document).ready(function() {
 <script src="<?php echo BDO_URL;?>jquery/cool-login/cool-login.js" type="text/javascript"></script>
 
 
-	<link type="text/css" rel="stylesheet" href="<?php echo BDO_URL;?>jquery/openid-selector/css/openid.css" />
-	<script type="text/javascript" src="<?php echo BDO_URL;?>jquery/openid-selector/js/openid-jquery.js"></script>
-	<script type="text/javascript" src="<?php echo BDO_URL;?>jquery/openid-selector/js/openid-fr.js"></script>
-		<script type="text/javascript">
-		$(document).ready(function() {
-			openid.init('openid_identifier');
-			openid.setDemoMode(false); //Stops form submission for client javascript-only test purposes
-		});
-	</script>
-	
+    <link type="text/css" rel="stylesheet" href="<?php echo BDO_URL;?>jquery/openid-selector/css/openid.css" />
+    <script type="text/javascript" src="<?php echo BDO_URL;?>jquery/openid-selector/js/openid-jquery.js"></script>
+    <script type="text/javascript" src="<?php echo BDO_URL;?>jquery/openid-selector/js/openid-fr.js"></script>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            openid.init('openid_identifier');
+            openid.setDemoMode(false); //Stops form submission for client javascript-only test purposes
+        });
+    </script>
+
 <!-- Multiselect chosen widget -->
 <script type="text/javascript" src="<?php echo BDO_URL;?>jquery/chosen/chosen/chosen.jquery.js"></script>
 <link type="text/css" rel="stylesheet" href="<?php echo BDO_URL;?>jquery/chosen/chosen/chosen.css" />
-<?php 
+<?php
 if ($view->a_cssFile){
 foreach($view->a_cssFile as $cssFile) {
 echo "\n".'<link type="text/css" rel="stylesheet" href="'.BDO_URL.$cssFile.'" />';
 }
 }
-//        	-o-transform: rotate(270deg);
+//          -o-transform: rotate(270deg);
 
 ?>
 
@@ -259,7 +259,7 @@ div.verticaltext {
  white-space:nowrap;
  border:0px solid red;
  display:block;
- text-align:left; 
+ text-align:left;
  width:20px;
  height:200px;
  text-shadow: 0px 0px 1px #333;
@@ -272,25 +272,25 @@ div.verticaltext {
 
 <body onLoad="<?php echo $view->BODYONLOAD;?>">
 
-	
-	<div id="header" style="position: relative; z-index: 10;">
-		<div class="fondNoir"></div>
-		<div id="logo">
-			<a href="<?php echo BDO_URL;?>"><img
-				src="<?php echo BDO_URL_IMAGE;?>site/bdovore4.gif" border="0"
-				alt="logo BDovore" id="logo" /></a>
-		</div>
-		<div id="searchtable" class="rmm">
-			<ul id="menusite1">
+
+    <div id="header" style="position: relative; z-index: 10;">
+        <div class="fondNoir"></div>
+        <div id="logo">
+            <a href="<?php echo BDO_URL;?>"><img
+                src="<?php echo BDO_URL_IMAGE;?>site/bdovore4.gif" border="0"
+                alt="logo BDovore" id="logo" /></a>
+        </div>
+        <div id="searchtable" class="rmm">
+            <ul id="menusite1">
                             <li> <a class="menuGene" href="<?php echo BDO_URL;?>"
-					title="Retour à l'accueil">Accueil</a></li>
-				<li><a class="menuGene" href="<?php echo BDO_URL;?>browser"
-					title="Le BDo'Browser ! Oh Yeah!">Browser</a></li>
-				<li><a class="menuGene" href="<?php echo BDO_URL;?>leguide"
-					title="Le top des votes, les albums les plus r&eacute;pandus, les derniers commentaires, les derni&egrave;res sorties...">Le
-						Guide BD</a></li>
-                               
-                                 <li><a class="menuGene" href=<?php 
+                    title="Retour à l'accueil">Accueil</a></li>
+                <li><a class="menuGene" href="<?php echo BDO_URL;?>browser"
+                    title="Le BDo'Browser ! Oh Yeah!">Browser</a></li>
+                <li><a class="menuGene" href="<?php echo BDO_URL;?>leguide"
+                    title="Le top des votes, les albums les plus r&eacute;pandus, les derniers commentaires, les derni&egrave;res sorties...">Le
+                        Guide BD</a></li>
+
+                                 <li><a class="menuGene" href=<?php
                                                 if (User::minAccesslevel(2)) {
                                                     echo '"'.BDO_URL."macollection".'"';
                                                 }
@@ -298,119 +298,119 @@ div.verticaltext {
                                                     echo ("'#' onclick='".'$("#loginBox").show()'."'");
                                                 }
                                                 ?>
-					title="Tout pour votre collection de BD">Ma Collection</a></li>
+                    title="Tout pour votre collection de BD">Ma Collection</a></li>
                                 <li><a class="menuGene" href="http://forum.bdovore.com/index"
-					title="Le forum">Forum</a></li>
+                    title="Le forum">Forum</a></li>
                                 <li><a class="menuGene" href="<?php echo BDO_URL;?>presentation"
-					title="C'est quoi ce bidule ?">Pr&eacute;sentation</a></li>
-                                <?php 
+                    title="C'est quoi ce bidule ?">Pr&eacute;sentation</a></li>
+                                <?php
 if (User::minAccesslevel(1)) { ?><li>
 <a class="menuGene" href="<?php echo BDO_URL;?>admin"
 title="Pour les admins !">Admin</a></li> <?php } ?>
-			</ul>
-			<br />
-			<form action="<?php echo BDO_URL;?>browser" method="post"
-				id="formsearch" name="formsearch" target="_self">
+            </ul>
+            <br />
+            <form action="<?php echo BDO_URL;?>browser" method="post"
+                id="formsearch" name="formsearch" target="_self">
 <div class="ui-widget">
-				<input name="search" type="text" id="search"
-					onblur="if (!this.value) this.value='Rechercher album, série, auteur...';"
-					onfocus="if (this.value=='Rechercher album, série, auteur...') this.value='';" size="40"
-					maxlength="60" value="Rechercher album, série, auteur..." /><img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif">
+                <input name="search" type="text" id="search"
+                    onblur="if (!this.value) this.value='Rechercher album, série, auteur...';"
+                    onfocus="if (this.value=='Rechercher album, série, auteur...') this.value='';" size="40"
+                    maxlength="60" value="Rechercher album, série, auteur..." /><img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif">
 </div>
-			</form>
-		</div>
-			<?php echo $view->LOGINBARRE;?>
+            </form>
+        </div>
+            <?php echo $view->LOGINBARRE;?>
 
-		<hr class="expSep" />
-	</div>
+        <hr class="expSep" />
+    </div>
 
-	
 
-	<div id="content">
-           
-		<div class="colmask rightmenu">
-                     <?php 
-					if (Bdo_Error::notEmpty()) echo $jquery->alert(Bdo_Error::flush());
-					if ($view->a_alertPage) echo $jquery->alert($view->a_alertPage);
 
-						
-					?>
-			
+    <div id="content">
+
+        <div class="colmask rightmenu">
+                     <?php
+                    if (Bdo_Error::notEmpty()) echo $jquery->alert(Bdo_Error::flush());
+                    if ($view->a_alertPage) echo $jquery->alert($view->a_alertPage);
+
+
+                    ?>
+
                             <?php echo $view->BODY;?>
-				
-			
-		</div>
-	</div>
 
 
-	<div id="footer" class="shadow fond">
+        </div>
+    </div>
 
-		<div id="titre_avertissement">Avertissement</div>
-		<div id="texte_avertissement">Les images pr&eacute;sentes sur ce site sont la
-			propri&eacute;t&eacute; de leurs auteurs et &eacute;diteurs respectifs et sont soumises &agrave;
-			copyright. Leur utilisation n'a pour but que d'illustrer
-			l'information contenue dans la base de donn&eacute;e du site. Cependant, si
-			ces derniers le d&eacute;sirent, ces images seront retir&eacute;es sur simple
-			demande de leur part.</div>
-		<div id="indexation">
-			<font color="#990000"> Toutes les séries de bandes-dessinées : </font> 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=A">A</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=B">B</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=C">C</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=D">D</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=E">E</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=F">F</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=G">G</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=H">H</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=I">I</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=J">J</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=K">K</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=L">L</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=M">M</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=N">N</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=O">O</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=P">P</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=Q">Q</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=R">R</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=S">S</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=T">T</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=U">U</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=V">V</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=W">W</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=X">X</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=Y">Y</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=Z">Z</a> - 
+
+    <div id="footer" class="shadow fond">
+
+        <div id="titre_avertissement">Avertissement</div>
+        <div id="texte_avertissement">Les images pr&eacute;sentes sur ce site sont la
+            propri&eacute;t&eacute; de leurs auteurs et &eacute;diteurs respectifs et sont soumises &agrave;
+            copyright. Leur utilisation n'a pour but que d'illustrer
+            l'information contenue dans la base de donn&eacute;e du site. Cependant, si
+            ces derniers le d&eacute;sirent, ces images seront retir&eacute;es sur simple
+            demande de leur part.</div>
+        <div id="indexation">
+            <font color="#990000"> Toutes les séries de bandes-dessinées : </font>
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=A">A</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=B">B</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=C">C</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=D">D</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=E">E</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=F">F</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=G">G</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=H">H</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=I">I</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=J">J</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=K">K</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=L">L</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=M">M</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=N">N</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=O">O</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=P">P</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=Q">Q</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=R">R</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=S">S</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=T">T</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=U">U</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=V">V</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=W">W</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=X">X</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=Y">Y</a> -
+                        <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=Z">Z</a> -
                         <br>
-                        <font color="#990000"> Tous les auteur de bandes-dessinées : </font> 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=A">A</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=B">B</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=C">C</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=D">D</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=E">E</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=F">F</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=G">G</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=H">H</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=I">I</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=J">J</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=K">K</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=L">L</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=M">M</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=N">N</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=O">O</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=P">P</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=Q">Q</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=R">R</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=S">S</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=T">T</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=U">U</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=V">V</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=W">W</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=X">X</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=Y">Y</a> - 
-                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=Z">Z</a> - 
-                        
-		</div>
-	</div>
+                        <font color="#990000"> Tous les auteur de bandes-dessinées : </font>
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=A">A</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=B">B</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=C">C</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=D">D</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=E">E</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=F">F</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=G">G</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=H">H</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=I">I</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=J">J</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=K">K</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=L">L</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=M">M</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=N">N</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=O">O</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=P">P</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=Q">Q</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=R">R</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=S">S</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=T">T</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=U">U</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=V">V</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=W">W</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=X">X</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=Y">Y</a> -
+                        <a href="<?php echo BDO_URL;?>liste_auteur_bd?lettre=Z">Z</a> -
+
+        </div>
+    </div>
 <a href="#" class="scrollup">Scroll</a>
 <a href="#" class="scrolldown">Scroll</a>
 <script>
@@ -422,6 +422,6 @@ title="Pour les admins !">Admin</a></li> <?php } ?>
   ga('create', '<?php echo GOOGLE_ID; ?>', 'auto');
   ga('send', 'pageview');
 
-</script>	
+</script>
 </body>
 </html>

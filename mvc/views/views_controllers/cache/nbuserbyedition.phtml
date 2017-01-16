@@ -6,26 +6,26 @@ echo date('d/m/Y H:i:s').'
 if ($view->continuer == "oui") {
     ?>
 <script>
-document.cachenbuserbyedition.nbruser_ID_EDITION.value = "<?php echo $view->nbruser_ID_EDITION;?>"; 
+document.cachenbuserbyedition.nbruser_ID_EDITION.value = "<?php echo $view->nbruser_ID_EDITION;?>";
     $.get("<?php echo BDO_URL;?>cache/nbuserbyedition", $("#cachenbuserbyedition").serialize(), function(data) {
-	 $("#ddcachenbuserbyedition").html(data);
-	//alert("Data Loaded: " + data);
-	});
+     $("#ddcachenbuserbyedition").html(data);
+    //alert("Data Loaded: " + data);
+    });
   </script>
 <?php
 }
 else {
     ?>
 <script>
-document.cachenbuserbyedition.continuer.value = ""; 
-document.cachenbuserbyedition.nbruser_ID_EDITION.value = "<?php echo $view->nbruser_ID_EDITION;?>"; 
+document.cachenbuserbyedition.continuer.value = "";
+document.cachenbuserbyedition.nbruser_ID_EDITION.value = "<?php echo $view->nbruser_ID_EDITION;?>";
 var options;
 options =
-{ label: "lancer", 
-icons: { 
-	primary: "ui-icon-play" 
-		} 
-}; 
+{ label: "lancer",
+icons: {
+    primary: "ui-icon-play"
+        }
+};
 $("#lancernbuserbyedition").button( "option", options );
 </script>
 <?php }?>

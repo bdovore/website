@@ -1,36 +1,36 @@
 .album {
-	border-color: black;
-	border-style: solid;
-	border-width: 1px;
-	width:200px;
-	margin : 10px;
-	padding: 5px;
-	float : left;
-	min-height:260px;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    width:200px;
+    margin : 10px;
+    padding: 5px;
+    float : left;
+    min-height:260px;
     height:auto;
 }
 
 .additional {
- 	min-height:100px;
+    min-height:100px;
     height:auto;
-	background: red;
-	margin-top: 10px;
+    background: red;
+    margin-top: 10px;
 }
 
 .default{
-	background-color:white;
+    background-color:white;
 }
 
 .incollec{
-	background-color:green;
+    background-color:green;
 }
 
 .excluded{
-	background-color:grey;
+    background-color:grey;
 }
 
 .alb_af{
-	background-color:orange;
+    background-color:orange;
 }
 
 .clickable {
@@ -38,7 +38,7 @@
 }
 
 .ui-autocomplete-loading {
-	background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
+    background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
 }
 
 .ui-autocomplete {
@@ -55,10 +55,10 @@ height: 350px;
 }
 
 img.couverture {
-	width: 100px;
-	border-color: black;
-	border-style: solid;
-	border-width: 1px;
-	float: left;
-	margin: 5px;
+    width: 100px;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    float: left;
+    margin: 5px;
 }

@@ -3,11 +3,11 @@
 /*
  * Controller la génération des flux rss
  * @author : Tom
- *  
+ *
  */
 
 class Rss extends Bdo_Controller {
-    
+
     public function Index () {
         // flux par défaut = derniers ajouts
         $this->loadModel("Tome");
@@ -17,12 +17,12 @@ class Rss extends Bdo_Controller {
         $this->view->set_var(array(
             "dbs_tome" => $dbs_tome,
             "title" => "Bdovore - derniers ajouts"
-            
+
         ));
         $this->view->layout = "rss";
         $this->view->render();
     }
-    
+
     public function Dernieres_sorties () {
           // flux dernières sorties
         $this->loadModel("Tome");
@@ -33,15 +33,15 @@ class Rss extends Bdo_Controller {
         $this->view->set_var(array(
             "dbs_tome" => $dbs_tome,
             "title" => "Bdovore - dernieres sorties"
-            
+
         ));
         $this->view->layout = "rss";
         $this->view->render();
-        
+
     }
-    
+
     public function Sorties_a_venir (){
-           // flux sorties à venir 
+           // flux sorties à venir
         $this->loadModel("Tome");
         $where = " WHERE en.DTE_PARUTION > CURDATE() ";
         $order = " ORDER BY en.DTE_PARUTION ASC ";
@@ -50,10 +50,10 @@ class Rss extends Bdo_Controller {
         $this->view->set_var(array(
             "dbs_tome" => $dbs_tome,
             "title" => "Bdovore - futures sorties"
-            
+
         ));
         $this->view->layout = "rss";
         $this->view->render();
     }
-    
+
 }

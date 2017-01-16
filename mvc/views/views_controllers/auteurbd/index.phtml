@@ -6,10 +6,10 @@ $pageinate = $view->getHelper('Pagination');
 
 <div class="colleft">
 <div class="col1wrap">
-				<div class="col1 fond">
-						
-					
-	
+                <div class="col1 fond">
+
+
+
         <!-- Column 1 start -->
 
 
@@ -29,59 +29,59 @@ $pageinate = $view->getHelper('Pagination');
             </div>
 
             <div class="middle_title">
-                <h3>Fiche Auteur 
-           
+                <h3>Fiche Auteur
+
 <?php echo $view->auteur->PSEUDO; ?> <?php if (User::minAccesslevel(1)) { ?><a class="fancybox fancybox.iframe {width:600,height:600}" href="admin/editauteur?auteur_id=<?php echo $view->auteur->ID_AUTEUR; ?>"> <img src="<?php echo BDO_URL_IMAGE; ?>edit.gif" /></a> <?php } ?></h3></div>
             <br />
             <table><tr><td style="vertical-align:top">
           <img src="<?php echo BDO_URL_IMAGE."auteur/".($view->auteur->IMG_AUT ?$view->auteur->IMG_AUT : "default_auteur.png" ); ?>" class="couvBig" style="float:left; margin:2px;">
-                    </td> 
+                    </td>
                 <td style="vertical-align:top">
-                  <div ><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+                  <div ><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
             <strong>Pseudo : </strong>
             </font>
 <?php echo $view->auteur->PSEUDO; ?>
             <br />
-            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
             <strong>Nom : </strong>
             </font>
 <?php echo $view->auteur->NOM." , ".$view->auteur->PRENOM; ?>
             <br />
-            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
             <strong>Activité : </strong>
             </font>
-<?php $sep = ""; if ($view->auteur->FLG_SCENAR) {echo ("scénariste" ); $sep = ", ";} 
+<?php $sep = ""; if ($view->auteur->FLG_SCENAR) {echo ("scénariste" ); $sep = ", ";}
 if ($view->auteur->FLG_DESSIN) {echo ($sep."dessinateur" ); $sep = ", ";}
 if ($view->auteur->FLG_COLOR) {echo ($sep."coloriste" ); $sep = ", ";}
 ?>
             <br />
-            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif"> 
+            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
             <strong>Albums dans la base: </strong>
             </font>
 <?php echo ($view->nb_total_album ); ?>
             <br />
    <?php echo $view->auteur->COMMENT; ?>
-           
+
             </div>
                 </td>
           </table>
 
-               
+
 <hr class="expSep" />
                 <!-- END CommentBlock -->
 
-              <br> 
+              <br>
         </div>
 
-       
+
             <div class="cadre1"><div class="middle_title">
   <form id="form1" name="form1" method="get">
                 <div id="select_activite">
                     <span id="album_as"> Albums en tant que...</span>   <label for="a1">Scénariste </label>  <input type="radio" name="activite" id="a1" value="1" <?php if ($view->activite == 1) echo "checked"; ?> onclick="$('#form1').submit();">  <label for="a2">Dessinateur </label> <input type="radio" name="activite" id="a2" value="2" <?php if ($view->activite == 2) echo "checked"; ?> onclick="$('#form1').submit();">  <label for="a3">Coloriste</label>  <input type="radio" name="activite" id="a3" value="3" <?php if ($view->activite == 3) echo "checked"; ?> onclick="$('#form1').submit();">
 
                 </div>
-              
-      
+
+
   </form>  </div>
                 <!-- BEGIN AlbBlock -->
                 <table class="list_album">
@@ -120,24 +120,24 @@ if ($view->nb_album > 20) {
 ?> </div>
             </div>
        <!-- Column 1 end -->
-					</div>
+                    </div>
 </div>
-    				<!-- Debut de la partie de droite -->
+                    <!-- Debut de la partie de droite -->
 <div class="col2">
     <div id="actu" class="right fond">
-			<div class="middle_title">
+            <div class="middle_title">
 
-	<h3>Derniers ajouts...</h3>
+    <h3>Derniers ajouts...</h3>
 
-	</div>		<!-- Column 2 start -->
-	            <?php 
+    </div>      <!-- Column 2 start -->
+                <?php
                     //echo count($view->SERIESIMI);
                     foreach ($view->lastAlbum->a_dataQuery as $o_tome)
                    {
-                      echo $ficheAlbum->small($o_tome);  
+                      echo $ficheAlbum->small($o_tome);
                     } ?>
     </div>
-				<!-- Column 2 end -->
+                <!-- Column 2 end -->
 </div>
 </div>
 <script>

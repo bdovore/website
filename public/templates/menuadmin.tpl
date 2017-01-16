@@ -15,7 +15,7 @@
   <a href="{URLSITE}admin/admincorrections.php">Corrections en attente</a> <br />
 
   <br />
-  
+
   <a href="{URLSITE}browser.php">BDBrowser</a> <br />
 
   <br />
@@ -33,7 +33,7 @@
   <a href="{URLSITE}admin/admingenres.php?act=new">Ajouter un genre</a><br />
 
   <br />
-  
+
   <a href="{URLSITE}admin/adminfromurl.php">Ajouter un album depuis une URL</a> <br />
 
   <br />

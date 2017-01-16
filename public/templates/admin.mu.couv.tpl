@@ -1,30 +1,30 @@
 <SCRIPT LANGAUGE="JavaScript"><!--
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-	if ((isMandatory == true) && (myText.length < 3)) {
-		alert('Veuillez saisir au moins 3 caractères');
-	}
-	else {
-		if (myCategory == "collection") {
-			if (myEditeur == '') {
-				alert("Veuillez saisir l'éditeur en premier");
-			}
-			else {
-			mywindow=open("pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-			}
-		}
-		else {
-			mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-		}
-	}
+    if ((isMandatory == true) && (myText.length < 3)) {
+        alert('Veuillez saisir au moins 3 caractères');
+    }
+    else {
+        if (myCategory == "collection") {
+            if (myEditeur == '') {
+                alert("Veuillez saisir l'éditeur en premier");
+            }
+            else {
+            mywindow=open("pickup.php?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+            }
+        }
+        else {
+            mywindow=open('pickup.php?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
+        }
+    }
 }
 
 function urlsource(){
-	document.forms['form1'].action = "{URLREFRESH}?serie="+document.forms['form1'].elements['txtSerieId'].value;
+    document.forms['form1'].action = "{URLREFRESH}?serie="+document.forms['form1'].elements['txtSerieId'].value;
     //alert("Saisissez les champs requis");
-	return true;
+    return true;
 }
 
-function Chargement() { 
+function Chargement() {
  for (i = 0; i < document.myform.elements.length; i++) {
    if (document.myform.elements[i].name == "alb_id[]") {
      document.myform.elements[i].checked = true;
@@ -33,13 +33,13 @@ function Chargement() {
 }
 //--></SCRIPT>
 <table width="100%" border="1">
-  <tr> 
+  <tr>
     <!-- Debut colonne Gauche-->
     <td width="50%" valign="top"> <form name="form1" method="post" action="" onSubmit="return urlsource()">
         <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
-          <tr bordercolor="#FFFFCC"> 
+          <tr bordercolor="#FFFFCC">
             <td width="10%" class="label"> <div align="center">Serie</div></td>
-            <td width="10%"> <div align="left"> 
+            <td width="10%"> <div align="left">
                 <input name="txtSerieId" type="text" id="txtSerieId" value="{IDSERIE}" size="5">
               </div></td>
             <td width="27%"> <input name="txtSerie" type="text" id="txtSerie" value="{SERIE}" size="40"></td>
@@ -51,36 +51,36 @@ function Chargement() {
       <br> <form action="{URLACTION}" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
         <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
           <!-- BEGIN AlbumsBlock -->
-          <tr bordercolor="#999999"> 
+          <tr bordercolor="#999999">
             <td colspan="3" align="center">{TOME} - {TITRE}</td>
           </tr>
-          <tr bordercolor="#999999"> 
+          <tr bordercolor="#999999">
             <td width="43%" align="center"><img src="{URLIMAGE}" width="111" height="150"><input type="hidden" name="url_bdo[{IDTOME}]" value="{IMAGENAME}"><br>
               {DIMENSION}<br>
               {SIZE}</td>
-            <td width="14%" align="center"><input type="checkbox" name="alb_id[]" value="{IDTOME}"> 
+            <td width="14%" align="center"><input type="checkbox" name="alb_id[]" value="{IDTOME}">
               <input name="num_tome[{IDTOME}]" type="hidden" value="{TOME}"></td>
-            <td width="43%" align="center"><p><img src="{URLIMGAMAZON}" width="111" height="150"> 
+            <td width="43%" align="center"><p><img src="{URLIMGAMAZON}" width="111" height="150">
                 <input type="hidden" name="url_amz[{IDTOME}]" value="{URLIMGAMAZON}">
               </p>
               <p><a href="{URLPAGEAMAZON}">Voir sur Amazon</a></p></td>
           </tr>
           <!-- END AlbumsBlock -->
-          <tr bordercolor="#FFFFCC"> 
-            <td colspan="3" align="center"><a name="ici" href="#ici" onClick="Chargement();">Tout 
+          <tr bordercolor="#FFFFCC">
+            <td colspan="3" align="center"><a name="ici" href="#ici" onClick="Chargement();">Tout
               selectionner</a></td>
           </tr>
         </table>
         <br>
-        <p> 
-        <div align="center"></p> 
+        <p>
+        <div align="center"></p>
           <input type="submit" name="Submit" value="{ACTIONNAME}">
           <br>
         </div>
       </form></td>
     <!-- Debut colonne Gauche-->
     <td width="50%"> <table width="100%" border="1">
-        <tr> 
+        <tr>
           <td bordercolor="#FFFFCC" bgcolor="#FFFFCC"><p>&nbsp;</p>
             <p><strong>Menu Express</strong><br>
               <a href="{URLEDITSERIE}">Retour à la fiche série</a><br>

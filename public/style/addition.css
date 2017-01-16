@@ -1,139 +1,139 @@
 /* Environnement de l'addition */
 div.addTitle {
-	text-align: center;
-	background-color: #C8857C;
-	font: normal small-caps bold 10pt Verdana;
-	color: #990000;
-	padding-left: 5px;
-	/*clear: both;*/
-	margin-top: 15px;
-	margin-bottom: 10px;
+    text-align: center;
+    background-color: #C8857C;
+    font: normal small-caps bold 10pt Verdana;
+    color: #990000;
+    padding-left: 5px;
+    /*clear: both;*/
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 
 div.addTitle2 {
-	text-align: center;
-	background-color: #C8857C;
-	font: normal 10pt Verdana;
-	color: #990000;
-	padding-left: 5px;
-	/*clear: both;*/
-	margin-top: 5px;
-	margin-bottom: 5px;
+    text-align: center;
+    background-color: #C8857C;
+    font: normal 10pt Verdana;
+    color: #990000;
+    padding-left: 5px;
+    /*clear: both;*/
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 hr.addSep {
-	clear: both;
-	visibility: hidden;
-	su
-	root
+    clear: both;
+    visibility: hidden;
+    su
+    root
 }
 
 .addMonthChoice { /*float: left;*/
-	width: auto;
+    width: auto;
 }
 
 .addMonthDetail { /*float: left;*/
-	height: 210px;
-	overflow: auto;
-	width: auto;
-	border: thin solid #C8857C;
-	font: 8pt Verdana;
-	padding: 2px 2px 2px 2px;
-	margin: 3px 3px 3px 3px;
-	max-width: 500px;
-	overflow-x: hidden;
+    height: 210px;
+    overflow: auto;
+    width: auto;
+    border: thin solid #C8857C;
+    font: 8pt Verdana;
+    padding: 2px 2px 2px 2px;
+    margin: 3px 3px 3px 3px;
+    max-width: 500px;
+    overflow-x: hidden;
 }
 
 .addFreeBlock {
-	vertical-align: middle;
-	float: left;
-	height: 210px;
-	overflow: auto;
-	width: auto;
-	border: thin solid #C8857C;
-	font: 8pt Verdana;
-	padding: 2px 2px 2px 2px;
-	margin: 3px 3px 3px 3px;
-	background-color: #FAF0F0;
+    vertical-align: middle;
+    float: left;
+    height: 210px;
+    overflow: auto;
+    width: auto;
+    border: thin solid #C8857C;
+    font: 8pt Verdana;
+    padding: 2px 2px 2px 2px;
+    margin: 3px 3px 3px 3px;
+    background-color: #FAF0F0;
 }
 
-.addTypeBlock { 
+.addTypeBlock {
         float: left;
-	height: 130px;
-	width: 100px;
-	border: thin solid #C8857C;
-	font: 8pt Verdana;
-	padding: 2px 2px 2px 2px;
-	margin: 3px 3px 3px 3px;
-	background-color: #FAF0F0;
+    height: 130px;
+    width: 100px;
+    border: thin solid #C8857C;
+    font: 8pt Verdana;
+    padding: 2px 2px 2px 2px;
+    margin: 3px 3px 3px 3px;
+    background-color: #FAF0F0;
 }
 
 select.addSelect {
-	font-family: Verdana;
-	font-size: 10pt;
-	overflow: hidden;
+    font-family: Verdana;
+    font-size: 10pt;
+    overflow: hidden;
 }
 
 /* Tableau */
 table.addTable {
-	font: Verdana;
+    font: Verdana;
 }
 
 td.addTitleMiddle {
-	padding: 2px 5px 2px 5px;
-	background-color: #C8857C;
-	width: auto;
-	border-right-color: #990000;
-	border-right-width: thin;
-	border-left: #990000;
-	border-left-width: thin;
-	color: #990000;
-	text-align: center;
+    padding: 2px 5px 2px 5px;
+    background-color: #C8857C;
+    width: auto;
+    border-right-color: #990000;
+    border-right-width: thin;
+    border-left: #990000;
+    border-left-width: thin;
+    color: #990000;
+    text-align: center;
 }
 
 td.addTitle {
-	padding: 2px 5px 2px 5px;
-	background-color: #C8857C;
-	width: auto;
-	color: #990000;
-	text-align: center;
+    padding: 2px 5px 2px 5px;
+    background-color: #C8857C;
+    width: auto;
+    color: #990000;
+    text-align: center;
 }
 
 td.addDataLeft {
-	text-align: left;
-	padding: 2px 5px 2px 5px;
+    text-align: left;
+    padding: 2px 5px 2px 5px;
 }
 
 td.addDataRight {
-	text-align: right;
-	padding: 2px 5px 2px 5px;
+    text-align: right;
+    padding: 2px 5px 2px 5px;
 }
 
 td.addData {
-	text-align: center;
-	padding: 2px 5px 2px 5px;
+    text-align: center;
+    padding: 2px 5px 2px 5px;
 }
 
 img.addImg { /*float: center;*/
-	text-align: center;
+    text-align: center;
 }
 
 td.addDataSmall {
-	font-size: 8pt;
-	text-align: center;
-	padding: 1px 2px 1px 2px;
-	font-family: Verdana;
+    font-size: 8pt;
+    text-align: center;
+    padding: 1px 2px 1px 2px;
+    font-family: Verdana;
 }
 
 /* Liens */
 a.addLiens {
-	font-size: 8pt;
-	text-align: center;
-	font-family: Verdana;
+    font-size: 8pt;
+    text-align: center;
+    font-family: Verdana;
 }
 
 /* Page statistique */
 +
 table.addStats {
-	font: Verdana;
+    font: Verdana;
 }

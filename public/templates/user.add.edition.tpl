@@ -2,13 +2,13 @@
 
 <html>
 
-<head> 
-	<title>{DOCTITRE}</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link href="{URLSITE}style/style1.css" rel="stylesheet" type="text/css" />
+<head>
+    <title>{DOCTITRE}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="{URLSITE}style/style1.css" rel="stylesheet" type="text/css" />
     <script src="{URLSITE}script/script.js" type="text/javascript"></script>
-	<SCRIPT type="text/javascript"><!--		 
-        function valid(){            
+    <SCRIPT type="text/javascript"><!--
+        function valid(){
             if ((document.myform.txtEditeurId.value == '') | (document.myform.txtCollecId.value == '')){
                 alert ("Validez l'éditeur et la collection à l'aide des loupes");
                 return false;
@@ -21,13 +21,13 @@
                 return true;
             }
         }
-	//--></SCRIPT>	 
+    //--></SCRIPT>
 </head>
 
 <body>
 
-<form action="{URLACTION}" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" OnSubmit="return valid()">	  
-	<table border="0">
+<form action="{URLACTION}" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" OnSubmit="return valid()">
+    <table border="0">
         <tr>
             <td width="610" valign="top">
                 {ERRORMESSAGE}
@@ -43,7 +43,7 @@
                                 - Si vous possédez une réimpression et voulez en tenir compte : après avoir ajouté l'édition correspondante dans votre collection,
                                  saisissez votre date d'impression dans le champ "note personnelle" de votre fiche album.
                             </div>
-                            
+
                         </td>
                     </tr>
                     <tr>
@@ -77,7 +77,7 @@
                         <td rowspan="2" colspan="2" align="center" valign="middle">
                             <strong>Important</strong>
                             : editeur et collection <strong>doivent</strong> &ecirc;tre validés à l'aide des loupes
-                        </td> 
+                        </td>
                     </tr>
                     <tr>
                         <td class="label">
@@ -106,14 +106,14 @@
                             <span class="texte">(sans tirets)</span>
                         </td>
                         <td>
-                            <input name="txtEAN" type="text" id="txtEAN" value="{EAN}" size="14" title="nécessaire pour les dates &gt; 2006-01-00" />  
+                            <input name="txtEAN" type="text" id="txtEAN" value="{EAN}" size="14" title="nécessaire pour les dates &gt; 2006-01-00" />
                         </td>
                         <td align="center">
                             <div align="left" class="enonce_tr_form_public">ISBN-10 :</div>
                             <span class="texte">(sans tirets)</span>
-                        </td>					  
+                        </td>
                         <td>
-                            <input name="txtISBN" type="text" id="txtISBN" value="{ISBN}" size="10" title="nécessaire pour les dates entre 1972-00-00 et 2007-01-00" />  
+                            <input name="txtISBN" type="text" id="txtISBN" value="{ISBN}" size="10" title="nécessaire pour les dates entre 1972-00-00 et 2007-01-00" />
                         </td>
                     </tr>
                     <tr>
@@ -181,7 +181,7 @@
                 </div>
             </td>
         </tr>
-	</table>
+    </table>
 </form>
 
 </body>

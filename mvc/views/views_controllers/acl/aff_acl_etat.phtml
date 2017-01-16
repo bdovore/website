@@ -1,200 +1,200 @@
-<?php  
+<?php
 
 
 if (0 < count($acl->getAllEtatForResource($ID_ACL_RESOURCE)))
 {
-	$resourceValHtml = TransConstante($a_resource[$ID_ACL_RESOURCE]->CODE_ACL_RESOURCE);
-	echo '
-	<table border="0" cellspacing="1" cellpadding="2">
-	<tr>
-	<td colspan=2>&nbsp;</td>
-	<td colspan='.count($acl->getAllEtatForResource($ID_ACL_RESOURCE)).' class="oftAclRoleTitle">'.LANG_ACL_RESOURCE_ETAT.'</td>
-	
-	</tr>
-	<tr>
-	<td class="oftAclResourceTitle">'.LANG_ACL_RESOURCE_PRIVILEGE.'</td>
-	<td class="oftAclPrivilegeTitle">'.LANG_ACL_ROLE.'</td>
+    $resourceValHtml = TransConstante($a_resource[$ID_ACL_RESOURCE]->CODE_ACL_RESOURCE);
+    echo '
+    <table border="0" cellspacing="1" cellpadding="2">
+    <tr>
+    <td colspan=2>&nbsp;</td>
+    <td colspan='.count($acl->getAllEtatForResource($ID_ACL_RESOURCE)).' class="oftAclRoleTitle">'.LANG_ACL_RESOURCE_ETAT.'</td>
 
-	';
-	foreach ($acl->getAllEtatForResource($ID_ACL_RESOURCE) as $id_acl_resource_etat=>$nom_etat) {
-		$etatValHtml = TransConstante((is_null($nom_etat)) ? LANG_ALL : $nom_etat);
+    </tr>
+    <tr>
+    <td class="oftAclResourceTitle">'.LANG_ACL_RESOURCE_PRIVILEGE.'</td>
+    <td class="oftAclPrivilegeTitle">'.LANG_ACL_ROLE.'</td>
 
-		if (!is_null($nom_etat))
-		{
-			$title = LANG_MODIFIER . ' '.htmlentities($nom_etat,ENT_QUOTES,'UTF-8');
-			$onClick = "showLightbox('iframe','acl/edit_resource_etat?ID_ACL_RESOURCE_ETAT=".$id_acl_resource_etat."',745,320)";
-		}
-		else {
-			$title='';
-			$onClick='';
-		}
-		//echo '<td class="oftAclRole" onClick="'.$onClick.'" title="'.$title.'">'.htmlentities($etatValHtml,ENT_QUOTES,'UTF-8').'</td>';
+    ';
+    foreach ($acl->getAllEtatForResource($ID_ACL_RESOURCE) as $id_acl_resource_etat=>$nom_etat) {
+        $etatValHtml = TransConstante((is_null($nom_etat)) ? LANG_ALL : $nom_etat);
 
-		echo '<td class="oftAclRole" onClick="'.$onClick.'" title="'.$title.'" valign=top>
-		<img src="'.CFG_URL_ROOT.'image/create?img=vertical&color=666666&haut='.(strlen($etatValHtml)*9).'&t='.urlencode($etatValHtml).'" border=0></td>';
+        if (!is_null($nom_etat))
+        {
+            $title = LANG_MODIFIER . ' '.htmlentities($nom_etat,ENT_QUOTES,'UTF-8');
+            $onClick = "showLightbox('iframe','acl/edit_resource_etat?ID_ACL_RESOURCE_ETAT=".$id_acl_resource_etat."',745,320)";
+        }
+        else {
+            $title='';
+            $onClick='';
+        }
+        //echo '<td class="oftAclRole" onClick="'.$onClick.'" title="'.$title.'">'.htmlentities($etatValHtml,ENT_QUOTES,'UTF-8').'</td>';
 
-	}
-	echo '</tr>';
+        echo '<td class="oftAclRole" onClick="'.$onClick.'" title="'.$title.'" valign=top>
+        <img src="'.CFG_URL_ROOT.'image/create?img=vertical&color=666666&haut='.(strlen($etatValHtml)*9).'&t='.urlencode($etatValHtml).'" border=0></td>';
 
-	$k = 0;
+    }
+    echo '</tr>';
 
-	foreach ($acl->getAllPrivilegeForResource($ID_ACL_RESOURCE) as $idpriv=>$privilege) {
+    $k = 0;
 
-		$privilegeValHtml = (is_null($privilege))?LANG_ALL:$privilege;
+    foreach ($acl->getAllPrivilegeForResource($ID_ACL_RESOURCE) as $idpriv=>$privilege) {
 
-		if ($privilege)
-		{
+        $privilegeValHtml = (is_null($privilege))?LANG_ALL:$privilege;
 
-
-			if (++$k != 1)
-			echo '<tr>';
-			if (is_null($privilege))
-			{
-				$privilege = '';
-				$class = "oftAclResourceAll";
-				$onClick = '';
-				$title = '';
-			}
-			else
-			{
-				$class = "oftAclResource";
-				$title = LANG_MODIFIER . ' '.htmlentities($privilege,ENT_QUOTES,'UTF-8');
-
-				$onClick = "showLightbox('iframe','acl/edit_resource_privilege?ID_ACL_RESOURCE_PRIVILEGE=".$idpriv."',745,320)";
-			}
-
-			$txtHtml = ' class="'.$class.'" OnClick='.$onClick.' title="'.$title.'" valign=top>'
-			.$resourceValHtml.'.'.$privilegeValHtml.'</td>' ;
-
-			$j = 0;
-			$rowspan = 0;
-			foreach ($acl->getAllIdRoleByCreationOrder() as $idrole) {
-				$role = $acl->getRole($idrole);
-				if ($acl->isAllowedById($idrole, $ID_ACL_RESOURCE, $idpriv) or (('all' == $idrole) and $rowspan))
-				{
-					$rowspan++;
-
-					$roleValHtml = ('all' == $idrole) ? LANG_ALL : $role->NOM_ACL_ROLE;
-
-					if (++$j != 1) $txtHtml .= '<tr>';
-					if ('all' == $idrole)
-					{
-						$privilege = '';
-						$class = "oftAclPrivilegeAll";
-						$onClick = '';
-						$title = '';
-					}
-					else
-					{
-						$class = "oftAclPrivilege";
-						$title = LANG_MODIFIER . ' '.htmlentities($role->NOM_ACL_ROLE,ENT_QUOTES,'UTF-8');
-
-						$onClick = "showLightbox('iframe','acl/edit_role?ID_ACL_ROLE=".$idrole."',745,320)";
-					}
-
-					$txtHtml .= '<td class="'.$class.'" OnClick='.$onClick.' title="'.$title.'" valign=top>'
-					.$roleValHtml.'</td>';
-
-					foreach ($acl->getAllEtatForResource($ID_ACL_RESOURCE) as $id_acl_resource_etat=>$nom_etat) {
-						$etatValHtml = TransConstante((is_null($nom_etat)) ? LANG_ALL : $nom_etat);
+        if ($privilege)
+        {
 
 
-						$k++;
-						$formName='changeEtatForm'.$k;
-						$onClick = 'document.'.$formName.'.submit()';
+            if (++$k != 1)
+            echo '<tr>';
+            if (is_null($privilege))
+            {
+                $privilege = '';
+                $class = "oftAclResourceAll";
+                $onClick = '';
+                $title = '';
+            }
+            else
+            {
+                $class = "oftAclResource";
+                $title = LANG_MODIFIER . ' '.htmlentities($privilege,ENT_QUOTES,'UTF-8');
+
+                $onClick = "showLightbox('iframe','acl/edit_resource_privilege?ID_ACL_RESOURCE_PRIVILEGE=".$idpriv."',745,320)";
+            }
+
+            $txtHtml = ' class="'.$class.'" OnClick='.$onClick.' title="'.$title.'" valign=top>'
+            .$resourceValHtml.'.'.$privilegeValHtml.'</td>' ;
+
+            $j = 0;
+            $rowspan = 0;
+            foreach ($acl->getAllIdRoleByCreationOrder() as $idrole) {
+                $role = $acl->getRole($idrole);
+                if ($acl->isAllowedById($idrole, $ID_ACL_RESOURCE, $idpriv) or (('all' == $idrole) and $rowspan))
+                {
+                    $rowspan++;
+
+                    $roleValHtml = ('all' == $idrole) ? LANG_ALL : $role->NOM_ACL_ROLE;
+
+                    if (++$j != 1) $txtHtml .= '<tr>';
+                    if ('all' == $idrole)
+                    {
+                        $privilege = '';
+                        $class = "oftAclPrivilegeAll";
+                        $onClick = '';
+                        $title = '';
+                    }
+                    else
+                    {
+                        $class = "oftAclPrivilege";
+                        $title = LANG_MODIFIER . ' '.htmlentities($role->NOM_ACL_ROLE,ENT_QUOTES,'UTF-8');
+
+                        $onClick = "showLightbox('iframe','acl/edit_role?ID_ACL_ROLE=".$idrole."',745,320)";
+                    }
+
+                    $txtHtml .= '<td class="'.$class.'" OnClick='.$onClick.' title="'.$title.'" valign=top>'
+                    .$roleValHtml.'</td>';
+
+                    foreach ($acl->getAllEtatForResource($ID_ACL_RESOURCE) as $id_acl_resource_etat=>$nom_etat) {
+                        $etatValHtml = TransConstante((is_null($nom_etat)) ? LANG_ALL : $nom_etat);
 
 
-//						if ($acl->isEtatAllowedById($ID_ACL_RESOURCE, $idpriv , $idrole,  (($id_acl_resource_etat=='all')? null : $id_acl_resource_etat)))
-						if ($acl->isEtatAllowedById($idrole, $ID_ACL_RESOURCE, $idpriv , $id_acl_resource_etat))
-						{
-							$title = htmlentities(LANG_ALLOW .' : '.$roleValHtml.' - '.$resourceValHtml.'.'.$privilegeValHtml.' - '.$etatValHtml, ENT_QUOTES,'UTF-8');
-							$val = 'A';
-							if ($acl->isDefinedEtatPrivilege($idrole, $idpriv, $id_acl_resource_etat))
-							{
-								$class = 'oftAclAccessAllow';
-							}
-							else
-							{
-								$class = 'oftAclAccessAllowLegacy';
+                        $k++;
+                        $formName='changeEtatForm'.$k;
+                        $onClick = 'document.'.$formName.'.submit()';
 
-								/* commenter cette partie pour un deny par defaut */
-								if ($acl->isDefinedEtatPrivilege($idrole, $idpriv, 'all')
-								or $acl->isDefinedEtatPrivilege('all', $idpriv,  'all')
-								or $acl->isDefinedEtatPrivilege('all', $idpriv,  $id_acl_resource_etat)
-								)
-								{
-									$class = 'oftAclAccessAllowLegacy';
-								}
-								else
-								{
-									$class = 'oftAclAccess';
-								}
-							}
-						}
-						else
-						{
-							$title = htmlentities( LANG_DENY.' : '.$roleValHtml.' - '.$resourceValHtml.'.'.$privilegeValHtml.' - '.$etatValHtml, ENT_QUOTES,'UTF-8');
-							$val = 'D';
-							if ($acl->isDefinedEtatPrivilege($idrole, $idpriv, $id_acl_resource_etat))
-							{
-								$class = 'oftAclAccessDeny';
-							}
-							else
-							{
-								if ($acl->isDefinedEtatPrivilege($idrole, $idpriv, 'all')
-								or $acl->isDefinedEtatPrivilege('all', $idpriv,  'all')
-								or $acl->isDefinedEtatPrivilege('all', $idpriv,  $id_acl_resource_etat)
-								)
-								{
-									$class = 'oftAclAccessDenyLegacy';
-								}
-								else
-								{
-									$class = 'oftAclAccess';
-								}
-							}
-						}
 
-						$txtHtml .= '<td class="'.$class.'" onClick="'.$onClick.'" title="'.$title.'" 
-						onmouseover="this.className=\'oftAclAccessON\'" 
-	  		onmouseout="this.className=\''.$class.'\'">'.$val;
-						$txtHtml .= '
-				<form name="'.$formName.'" method="POST" action="">
-				<input type="hidden" name="formAction" value="changeEtatPrivilege">
-				<input type="hidden" name="ID_ACL_ROLE" value="'.$idrole.'">
-				<input type="hidden" name="ID_ACL_RESOURCE" value="'.$ID_ACL_RESOURCE.'">
-				<input type="hidden" name="ID_ACL_RESOURCE_PRIVILEGE" value="'.$idpriv.'">
-				<input type="hidden" name="ID_ACL_RESOURCE_ETAT" value="'.$id_acl_resource_etat.'">
-				</form>';
+//                      if ($acl->isEtatAllowedById($ID_ACL_RESOURCE, $idpriv , $idrole,  (($id_acl_resource_etat=='all')? null : $id_acl_resource_etat)))
+                        if ($acl->isEtatAllowedById($idrole, $ID_ACL_RESOURCE, $idpriv , $id_acl_resource_etat))
+                        {
+                            $title = htmlentities(LANG_ALLOW .' : '.$roleValHtml.' - '.$resourceValHtml.'.'.$privilegeValHtml.' - '.$etatValHtml, ENT_QUOTES,'UTF-8');
+                            $val = 'A';
+                            if ($acl->isDefinedEtatPrivilege($idrole, $idpriv, $id_acl_resource_etat))
+                            {
+                                $class = 'oftAclAccessAllow';
+                            }
+                            else
+                            {
+                                $class = 'oftAclAccessAllowLegacy';
 
-						$txtHtml .= '
-			</td>';
+                                /* commenter cette partie pour un deny par defaut */
+                                if ($acl->isDefinedEtatPrivilege($idrole, $idpriv, 'all')
+                                or $acl->isDefinedEtatPrivilege('all', $idpriv,  'all')
+                                or $acl->isDefinedEtatPrivilege('all', $idpriv,  $id_acl_resource_etat)
+                                )
+                                {
+                                    $class = 'oftAclAccessAllowLegacy';
+                                }
+                                else
+                                {
+                                    $class = 'oftAclAccess';
+                                }
+                            }
+                        }
+                        else
+                        {
+                            $title = htmlentities( LANG_DENY.' : '.$roleValHtml.' - '.$resourceValHtml.'.'.$privilegeValHtml.' - '.$etatValHtml, ENT_QUOTES,'UTF-8');
+                            $val = 'D';
+                            if ($acl->isDefinedEtatPrivilege($idrole, $idpriv, $id_acl_resource_etat))
+                            {
+                                $class = 'oftAclAccessDeny';
+                            }
+                            else
+                            {
+                                if ($acl->isDefinedEtatPrivilege($idrole, $idpriv, 'all')
+                                or $acl->isDefinedEtatPrivilege('all', $idpriv,  'all')
+                                or $acl->isDefinedEtatPrivilege('all', $idpriv,  $id_acl_resource_etat)
+                                )
+                                {
+                                    $class = 'oftAclAccessDenyLegacy';
+                                }
+                                else
+                                {
+                                    $class = 'oftAclAccess';
+                                }
+                            }
+                        }
 
-					}
-					$txtHtml .= '</tr>';
+                        $txtHtml .= '<td class="'.$class.'" onClick="'.$onClick.'" title="'.$title.'"
+                        onmouseover="this.className=\'oftAclAccessON\'"
+            onmouseout="this.className=\''.$class.'\'">'.$val;
+                        $txtHtml .= '
+                <form name="'.$formName.'" method="POST" action="">
+                <input type="hidden" name="formAction" value="changeEtatPrivilege">
+                <input type="hidden" name="ID_ACL_ROLE" value="'.$idrole.'">
+                <input type="hidden" name="ID_ACL_RESOURCE" value="'.$ID_ACL_RESOURCE.'">
+                <input type="hidden" name="ID_ACL_RESOURCE_PRIVILEGE" value="'.$idpriv.'">
+                <input type="hidden" name="ID_ACL_RESOURCE_ETAT" value="'.$id_acl_resource_etat.'">
+                </form>';
 
-				}
-			}
+                        $txtHtml .= '
+            </td>';
 
-			if ($rowspan) echo '<td rowspan="'.$rowspan.'" '. $txtHtml;
-		}
-	}
-	echo '</table>';
+                    }
+                    $txtHtml .= '</tr>';
+
+                }
+            }
+
+            if ($rowspan) echo '<td rowspan="'.$rowspan.'" '. $txtHtml;
+        }
+    }
+    echo '</table>';
 
 ?>
 <u><?php echo LANG_LEGEND;?> :</u>
 <table border="0" cellspacing="1" cellpadding="2">
 <tr>
 <td valign=top><i><?php echo LANG_ACCES;?></i><br />
-	<table>
-		<tr><td class="oftAclAccess" title="<?php echo LANG_ALLOW;?>" >A</td><td><?php echo LANG_UNDEFINED;?> (<?php echo LANG_ALLOW;?>)</td></tr>
-		<tr><td class="oftAclAccessAllow" title="<?php echo LANG_ALLOW;?>" >A</td><td><?php echo LANG_ALLOW;?></td></tr>
-		<tr><td class="oftAclAccessAllowLegacy" title="<?php echo LANG_ALLOW;?>" >A</td><td><?php echo LANG_ALLOW;?> (<?php echo LANG_LEGACY;?>)</td></tr>
-		<tr><td class="oftAclAccessDeny" title="<?php echo LANG_DENY;?>" >D</td><td><?php echo LANG_DENY;?></td></tr>
-		<tr><td class="oftAclAccessDenyLegacy" title="<?php echo LANG_DENY;?>" >D</td><td><?php echo LANG_DENY;?> (<?php echo LANG_LEGACY;?>)</td></tr>
-	</table>
+    <table>
+        <tr><td class="oftAclAccess" title="<?php echo LANG_ALLOW;?>" >A</td><td><?php echo LANG_UNDEFINED;?> (<?php echo LANG_ALLOW;?>)</td></tr>
+        <tr><td class="oftAclAccessAllow" title="<?php echo LANG_ALLOW;?>" >A</td><td><?php echo LANG_ALLOW;?></td></tr>
+        <tr><td class="oftAclAccessAllowLegacy" title="<?php echo LANG_ALLOW;?>" >A</td><td><?php echo LANG_ALLOW;?> (<?php echo LANG_LEGACY;?>)</td></tr>
+        <tr><td class="oftAclAccessDeny" title="<?php echo LANG_DENY;?>" >D</td><td><?php echo LANG_DENY;?></td></tr>
+        <tr><td class="oftAclAccessDenyLegacy" title="<?php echo LANG_DENY;?>" >D</td><td><?php echo LANG_DENY;?> (<?php echo LANG_LEGACY;?>)</td></tr>
+    </table>
 </td></tr>
 </table>
-<?php	
+<?php
 }
 

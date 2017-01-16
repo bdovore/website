@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-    
+
 <head>
 
 <title>{DOCTITRE}</title>
@@ -9,8 +9,8 @@
 <script type="text/javascript"><!--
 function changeSource(myForm, myElement, myTitle, withID) {
     window.opener.document.forms[myForm].elements[myElement].value = myTitle;
-	window.opener.document.forms[myForm].elements[myElement+'Id'].value = withID;
-	window.close(self);
+    window.opener.document.forms[myForm].elements[myElement+'Id'].value = withID;
+    window.close(self);
 }
 //--></script>
 
