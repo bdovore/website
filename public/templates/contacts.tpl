@@ -38,7 +38,8 @@
                 Co-créateur du site avec Latruffe et qui garde un oeil de conseiller. Vous pouvez aussi le retrouver sur son <a href="http://lameche.zique.free.fr" title="Ouvre directement le lien dans la page courante">site musical</a>.
                 <br />
                 - <a href="mailto:feyd@bdovore.com" title="Cliquez pour envoyer un email à feyd_chez_bdovore.com"><b>Feyd</b></a> :
-                C'est lui qui est en charge de la décoration. Il est aussi dessinateur, colorise des <a href="http://www.bdovore.com/serie.php?id_serie=9362">BD</a> (parfois sous le mystérieux pseudonyme "Jean-Marie Jourdane") et a un blog par <a href="http://narcolepsy.fr/blog/">là</a>.
+                C'est lui qui est en charge de la décoration. Il est aussi
+                dessinateur, colorise des <a href="{URLSITE}serie.php?id_serie=9362">BD</a> (parfois sous le mystérieux pseudonyme "Jean-Marie Jourdane") et a un blog par <a href="http://narcolepsy.fr/blog/">là</a>.
                 <br />
                 - <a href="mailto:thanaos@bdovore.com" title="Cliquez pour envoyer un email à thanaos_chez_bdovore.com"><b>Thanaos</b></a> :
                 Lui c'est un troll. il bouffe du code au boulot et il continu pour nous. Le BDoBrowser, le BDo'Phone, mais aussi tout les bugs sur le site, cherchez pas c'est lui !
@@ -54,7 +55,7 @@
                     N'hésitez pas à les contacter si vous avez des questions sur la manière
                     dont la base est organisée et gérée ou sur l'utilisation générale du site.
                     <br />
-                    N'oubliez pas de lire la <a href="http://www.bdovore.com/bdovore-tuto.php"><b>présentation du site</b></a> dans un premier temps et de suivre la petite <a href="http://www.bdovore.com/bdovore-tuto.php?page=1"><b>visite guidée</b></a>
+                    N'oubliez pas de lire la <a href="{URLSITE}bdovore-tuto.php"><b>présentation du site</b></a> dans un premier temps et de suivre la petite <a href="{URLSITE}bdovore-tuto.php?page=1"><b>visite guidée</b></a>
                 </i>.
             </p>
             <p>
