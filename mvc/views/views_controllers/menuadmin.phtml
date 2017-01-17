@@ -40,8 +40,8 @@ foreach($a_model as $model) {
 //${'m_gestion_'.$model}->addFils(new Bdo_Menu_Lien("Création", "javascript:showLightbox('iframe','admin/edit/".$model."',680,250)"));
 }
 // ---------------------------------------------------------
-$menu->addItem(new Bdo_Menu_Lien("Bdo'Bug","http://www.bdovore.com/mantisbt/"));
-$menu->addItem(new Bdo_Menu_Lien("PhpMyAdmin","http://www.bdovore.com/pma-3"));
+$menu->addItem(new Bdo_Menu_Lien("Bdo'Bug", BDO_URL . "mantisbt/"));
+$menu->addItem(new Bdo_Menu_Lien("PhpMyAdmin", BDO_URL . "pma-3"));
 // ---------------------------------------------------------
 // controle aide
 $m_controle = $menu->addItem(new Bdo_Menu_Lien("Contrôles"));

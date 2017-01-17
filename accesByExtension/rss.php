@@ -3,11 +3,9 @@ Header("content-type: application/xml");
 
 echo '<?xml version="1.0" encoding="utf-8"?>';
 echo '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">';
-//echo '   xmlns="http://www.bdovore.com/">';
-//echo '   xmlns:Comics="http://www.bdovore.com/">';
 
 echo '<channel>';
-echo '<atom:link href="http://www.bdovore.com/rss.php" rel="self" type="application/rss+xml" />';
+echo '<atom:link href="'.BDO_URL.'rss.php" rel="self" type="application/rss+xml" />';
 echo '<title>Bdovore - Albums</title>';
 echo '<link>'.BDO_URL.'</link>';
 echo '<description>Les derniers albums, coffrets, magazines, fascicules, etc... ajoutés sur le site</description>';
