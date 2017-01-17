@@ -14,13 +14,13 @@ if (isset($_SESSION["UserId"]))
 }
 
 
-// **************** nombre d'album à afficher par page : 5
+// **************** nombre d'album Ã  afficher par page : 5
 
 // **********************************************
 
 // Creation d'un nouveau Template
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpBody" => "strip.tpl",
 "tpMenu" => "menu.tpl",
@@ -65,7 +65,8 @@ $t->set_var("NAVPAGE",$nav);
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
 "PAGETITLE" =>"Les Aventures des Bdovore, par Feyd, Latruffe et Tomlameche",
 "PAGEKEYWORD" => $keyword));
 $t->parse("BODY","tpBody");

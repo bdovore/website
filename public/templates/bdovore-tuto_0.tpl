@@ -62,7 +62,7 @@
             <br />
         </li>
         <li>
-            Un <a href="http://forum.bdovore.com/index.php">forum</a> pour discuter de tout ce qui touche à la BD mais
+            Un <a href="{URLSITEFORUM}index.php">forum</a> pour discuter de tout ce qui touche à la BD mais
             pas seulement
         </li>
     </ul>
@@ -74,7 +74,7 @@
         communauté&nbsp;? <a href="{URLSITE}membres/inscription.php">Inscrivez-vous&nbsp;!</a>
     </p>
     <p>
-        Encore des questions sur BDovore ? Rendez-vous sur le <a href="http://forum.bdovore.com/index.php">forum</a> !
+        Encore des questions sur BDovore ? Rendez-vous sur le <a href="{URLSITEFORUM}index.php">forum</a> !
     </p>
     <p align="right">
         <a href="{URLSITE}bdovore-tuto.php?page=1">Pour le début de la visite guidée</a>

@@ -15,7 +15,7 @@ mysql_select_db(BDO_DB_SID);
 // defintion des variables
 $maxRows = 25;
 
-$pagetitle = "BDovore.com - Bandes dessinées par ";
+$pagetitle = "BDovore.com - Bandes dessinÃ©es par ";
 
 $pageNum = getVal('pageNum',0);
 $rb_browse = getVal('rb_browse','ser');
@@ -50,7 +50,7 @@ if ($rb_browse == 'ser') {
     id_tome id,
     CONCAT(
     CASE
-        when bd_tome.flg_int = 'O'  then 'Intégrale '
+        when bd_tome.flg_int = 'O'  then 'IntÃ©grale '
         when bd_tome.flg_type = 1 then 'Coffret '
         when bd_serie.flg_fini = 2 then 'One shot'
         else IFNULL(concat('Tome ',bd_tome.num_tome),'HS')
@@ -75,7 +75,7 @@ elseif ($rb_browse == 'aut') {
         id_tome id,
         CONCAT(
         CASE
-        when bd_tome.flg_int = 'O' then 'Intégrale '
+        when bd_tome.flg_int = 'O' then 'IntÃ©grale '
         when bd_tome.flg_type = 1 then 'Coffret '
         when bd_serie.flg_fini = 2 then 'One shot'
         else IFNULL(concat('Tome ',bd_tome.num_tome),'HS')
@@ -150,7 +150,7 @@ $t->set_file(array(
 "tpBody" => "browser_xhr_level2.tpl",
 ));
 
-// on déclare les blocks contenus sur la feuille
+// on dÃ©clare les blocks contenus sur la feuille
 $t->set_block('tpBody','DataBlock','DBlock');
 
 
@@ -180,14 +180,14 @@ if ($rb_browse != "ser") {
     }
 }
 else {
-    // browse par série : seulement 2 niveaux
-    // aJOUT DE LA PREmière ligne Fiche Série
+    // browse par sÃ©rie : seulement 2 niveaux
+    // aJOUT DE LA PREmiÃ¨re ligne Fiche SÃ©rie
     $t->set_var(array(
     "WSPACER"=>"16px",
     "HSPACER"=>"1px",
     "IMGNAVIG"=>"spacer.gif",
     "URLEVEL"=> "serie.php?id_serie=".$lev_id,
-    "NAMELEVEL"=> '- Fiche Série -',
+    "NAMELEVEL"=> '- Fiche SÃ©rie -',
     "ACTLEVEL"=> "",
     "URLEDIT" =>"",
     "LEVSIGN" =>""
@@ -225,7 +225,7 @@ if (!empty($totalRows) and ($totalRows <= $maxRows))
 }
 else if (!empty($totalRows))
 {
-    $totalrowhtml = 'lignes de '.($startRow+1).' à ';
+    $totalrowhtml = 'lignes de '.($startRow+1).' Ã  ';
     $totalrowhtml .= ($startRow+$maxRows > $totalRows) ? $totalRows : ($startRow+$maxRows);
     $totalrowhtml .= ' ( sur '.$totalRows.' lignes )';
 
@@ -253,7 +253,7 @@ else
 {
     $t->set_var("URLPREVPAGE",'');
     $t->set_var("URLNEXTPAGE",'');
-    $t->set_var("TOTALROW",'Aucune ligne de résultat !');
+    $t->set_var("TOTALROW",'Aucune ligne de rÃ©sultat !');
 }
 
 
@@ -261,6 +261,7 @@ $t->set_var("PAGETITLE",$pagetitle);
 $t->set_var("ACTBROWSER",$_SERVER["PHP_SELF"]."?");
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 $t->set_var (array("LOGINBARRE" => GetIdentificationBar()));
 
 $t->parse("BODY","tpBody");

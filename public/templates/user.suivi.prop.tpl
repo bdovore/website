@@ -1,8 +1,8 @@
 {MENUCOLL}
 <div class="cadre1">
             <h3>Historique des propositions</h3>
-            Il y a actuellement <a href="http://www.bdovore.com/listpropal.php?type=AJOUT"><b>{NBAJOUT} propositions d'album</b></a>, <a href="http://www.bdovore.com/listpropal.php?type=EDITION"><b>{NBEDITION} propositions de nouvelle édition</b></a>
-             et <a href="http://www.bdovore.com/listpropal.php?type=CORRECTION"><b>{NBCORRECT} propositions de correction</b></a>
+            Il y a actuellement <a href="{URLSITE}listpropal.php?type=AJOUT"><b>{NBAJOUT} propositions d'album</b></a>, <a href="{URLSITE}listpropal.php?type=EDITION"><b>{NBEDITION} propositions de nouvelle édition</b></a>
+             et <a href="{URLSITE}listpropal.php?type=CORRECTION"><b>{NBCORRECT} propositions de correction</b></a>
              en cours de traitement pour l'ensemble de la communauté BDovore.
             <br />
 

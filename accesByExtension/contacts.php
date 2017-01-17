@@ -5,7 +5,7 @@
 
 // dossier contenant les templates
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpBody" => "contacts.tpl",
 "tpMenu" => "menu.tpl",
@@ -15,6 +15,7 @@ $t->set_file(array(
 $t->set_var("PAGETITLE","Contacts");
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar()));;
 $t->parse("BODY","tpBody");

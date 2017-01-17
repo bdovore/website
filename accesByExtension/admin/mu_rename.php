@@ -5,7 +5,7 @@
 minAccessLevel(1);
 
 
-// Mettre à jour les informations
+// Mettre Ã  jour les informations
 if ($act=="update"){
     $nb = 0;
 
@@ -15,14 +15,14 @@ if ($act=="update"){
         $DB->query ($query);
         $nb++;
     }
-    echo GetMetaTag(2,"$nb albums ont été traités.",(BDO_URL."admin/mu_rename.php?serie=".$serie));
+    echo GetMetaTag(2,"$nb albums ont Ã©tÃ© traitÃ©s.",(BDO_URL."admin/mu_rename.php?serie=".$serie));
 }
 
 // AFFICHER UNE FICHE SERIE
 elseif($act==""){
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.mu.rename.tpl",
     "tpBase" => "body.tpl"
@@ -31,7 +31,7 @@ elseif($act==""){
     if ($serie != ""){
 
 
-        // récupère le infos liées à la série
+        // rÃ©cupÃ¨re le infos liÃ©es Ã  la sÃ©rie
         $query = "SELECT nom FROM bd_serie WHERE id_serie = ".$DB->escape($serie);
         $DB->query ($query);
         $DB->next_record();
@@ -41,12 +41,12 @@ elseif($act==""){
         "NOUVTITRE" => stripslashes($DB->f("nom")).", Tome #tome#"
         ));
 
-        // Récupère les coloristes secondaires ayant travaillé sur la série
+        // RÃ©cupÃ¨re les coloristes secondaires ayant travaillÃ© sur la sÃ©rie
         $query = "SELECT t.id_tome, t.num_tome, t.titre FROM bd_tome t WHERE t.flg_type = 0 AND t.flg_int = 'N' AND t.id_serie = ".$DB->escape($serie)." ORDER BY t.id_tome";
         $DB->query ($query);
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','AlbumsBlock','ABlock');
-        //Affiche les différentes éléments
+        //Affiche les diffÃ©rentes Ã©lÃ©ments
         while ($DB->next_record()){
             $t->set_var (array(
             "TOME" => $DB->f("num_tome"),
@@ -58,7 +58,7 @@ elseif($act==""){
     }
 
     $t->set_var (array(
-    "ACTIONNAME" => "Mettre à Jour",
+    "ACTIONNAME" => "Mettre Ã  Jour",
     "URLACTION" => BDO_URL."admin/mu_rename.php?act=update&serie=".$serie,
     "URLREFRESH" => BDO_URL."admin/mu_rename.php",
     "URLEDITSERIE" => BDO_URL."admin/adminseries.php?serie_id=".$serie
@@ -70,6 +70,7 @@ elseif($act==""){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");

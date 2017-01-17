@@ -278,7 +278,7 @@ private function getDateBeforeValid() {
                 "URLEAN" => "http://www.bdnet.com/" . $this->User_album_prop->EAN . "/alb.htm",
                 "ISEAN" => check_EAN($this->User_album_prop->EAN) ? "" : "*",
                 "ISBN" => $this->User_album_prop->ISBN,
-                "URLISBN" => "http://www.amazon.fr/exec/obidos/ASIN/" . $this->User_album_prop->ISBN,
+                "URLISBN" => BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . $this->User_album_prop->ISBN,
                 "ISISBN" => check_ISBN($this->User_album_prop->ISBN) ? "" : "*",
                 "PRIX" => $this->User_album_prop->PRIX,
                 "ISTT" => (($this->User_album_prop->FLG_TT == 'O') ? 'checked' : ''),

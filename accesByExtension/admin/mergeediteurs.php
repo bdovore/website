@@ -5,17 +5,17 @@
 minAccessLevel(1);
 
 
-$error_msg[0] = "Album à supprimer non défini";
-$error_msg[1] = "Album à garder non défini";
-$error_msg[2] = "Album à garder et album à supprimer identiques";
+$error_msg[0] = "Album Ã  supprimer non dÃ©fini";
+$error_msg[1] = "Album Ã  garder non dÃ©fini";
+$error_msg[2] = "Album Ã  garder et album Ã  supprimer identiques";
 
 
-// Mettre à jour les informations
+// Mettre Ã  jour les informations
 
 
 if ($act=="merge")
 {
-    // vérifie que source_id et dest_id ont été defini
+    // vÃ©rifie que source_id et dest_id ont Ã©tÃ© defini
     if ((is_null($dest_id)) | ($dest_id==""))
     {header("Location:".BDO_URL."admin/mergeediteurs.php?source_id=$source_id&error=1");
     }
@@ -30,28 +30,28 @@ if ($act=="merge")
     if ($conf=="ok")
     {
 
-        // Met à jour l'information contenue dans la base de données
+        // Met Ã  jour l'information contenue dans la base de donnÃ©es
         $query = "UPDATE bd_edition SET id_editeur = ".$DB->escape($dest_id)." where id_editeur = ".$DB->escape($source_id);
         $DB->query($query);
-        echo "Nombre de records modifiées dans la table bd_tome : ".$DB->affected_rows()."<br />";
+        echo "Nombre de records modifiÃ©es dans la table bd_tome : ".$DB->affected_rows()."<br />";
 
-        // Met à jour la table collection
+        // Met Ã  jour la table collection
         $query = "UPDATE bd_collection SET id_editeur = ".$DB->escape($dest_id)." where id_editeur = ".$DB->escape($source_id);
         $DB->query($query);
-        echo "Nombre de records modifiées dans la table bd_collection : ".$DB->affected_rows()."<br />";
+        echo "Nombre de records modifiÃ©es dans la table bd_collection : ".$DB->affected_rows()."<br />";
 
         // Supprime l'ancien editeur
         $query = "DELETE FROM bd_editeur WHERE id_editeur = $source_id;";
         $DB->query($query);
-        echo "Nombre de records modifiées dans la table bd_editeur : ".$DB->affected_rows()."<br />";
+        echo "Nombre de records modifiÃ©es dans la table bd_editeur : ".$DB->affected_rows()."<br />";
 
         $redirection = BDO_URL."admin/index.php";
-        echo '<META http-equiv="refresh" content="4; URL='.$redirection.'">Les éditeurs ont été fusionnés.';
+        echo '<META http-equiv="refresh" content="4; URL='.$redirection.'">Les Ã©diteurs ont Ã©tÃ© fusionnÃ©s.';
 
     }else{
         // Demande de confirmation
 
-        echo 'Etes-vous sûr de vouloir fusionner les editeurs n°'.$source_id.' et '.$dest_id.'? <a href="'.BDO_URL.'admin/mergeediteurs.php?act=merge&conf=ok&source_id='.$source_id.'&dest_id='.$dest_id.'">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
+        echo 'Etes-vous sÃ»r de vouloir fusionner les editeurs nÂ°'.$source_id.' et '.$dest_id.'? <a href="'.BDO_URL.'admin/mergeediteurs.php?act=merge&conf=ok&source_id='.$source_id.'&dest_id='.$dest_id.'">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
         exit();
     }
 }
@@ -64,7 +64,7 @@ elseif($act=="")
 
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "merge.editeurs.tpl",
     "tpBase" => "body.tpl"));
@@ -72,10 +72,10 @@ elseif($act=="")
     // REMPLISSAGE PARTIE GAUCHE
     if ((!is_null($source_id)) & ($source_id!=''))
     {
-        // récupère le nombre d'utilisateurs
+        // rÃ©cupÃ¨re le nombre d'utilisateurs
         $nb_users1 = countUserBy("editeur",$source_id);
 
-        // récupère les données principales
+        // rÃ©cupÃ¨re les donnÃ©es principales
         $query= "select id_editeur, nom, url_site from bd_editeur where id_editeur = ".$DB->escape($source_id);
         $DB->query ($query);
         $DB->next_record();
@@ -90,17 +90,17 @@ elseif($act=="")
     }else{
         $t->set_var (array
         ("NBUSERS1" => "0",
-        "URLEDITEDIT1" => "javascript:alert('Désactivé')"
+        "URLEDITEDIT1" => "javascript:alert('DÃ©sactivÃ©')"
         ));
     }
 
     //REMPLISSAGE DE LA PARTIE DROITE
     if ((!is_null($dest_id)) & ($dest_id!=''))
     {
-        // récupère le nombre d'utilisateurs
+        // rÃ©cupÃ¨re le nombre d'utilisateurs
         $nb_users2 = countUserBy("editeur",$dest_id);
 
-        // récupère les données principales
+        // rÃ©cupÃ¨re les donnÃ©es principales
         $query= "select id_editeur, nom, url_site from bd_editeur where id_editeur =".$DB->escape($dest_id);
         $DB->query ($query);
         $DB->next_record();
@@ -116,7 +116,7 @@ elseif($act=="")
     }else{
         $t->set_var (array
         ("NBUSERS2" => "0",
-        "URLEDITEDIT2" => "javascript:alert('Désactivé')"
+        "URLEDITEDIT2" => "javascript:alert('DÃ©sactivÃ©')"
         ));
     }
     // Message d'erreur
@@ -126,7 +126,7 @@ elseif($act=="")
     }
 
 
-    // variables misesà jour dans tous les cas
+    // variables misesÃ  jour dans tous les cas
     $t->set_var (array
     ("URLREFRESH" => BDO_URL."admin/mergeediteurs.php",
     "URLECHANGE" => BDO_URL."admin/mergeediteurs.php?source_id=$dest_id&dest_id=$source_id",
@@ -138,7 +138,9 @@ elseif($act=="")
     ("LOGINBARRE" => GetIdentificationBar(),
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
+    ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
 }

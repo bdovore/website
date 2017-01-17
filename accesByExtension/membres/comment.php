@@ -134,13 +134,13 @@ if ($DB->num_rows() > 0) {
         if (($_SESSION["UserId"] == $DB->f("user_id")) or minAccessLevel(1,false))
         {
             $t->set_var(array(
-            "URLDELETE"=>'<a onClick="if (confirm(\'Transférer de public à privé ce commentaire posté par '.$DB->f("username").' ?\'))
+            "URLDELETE"=>'<a onClick="if (confirm(\'TransfÃ©rer de public Ã  privÃ© ce commentaire postÃ© par '.$DB->f("username").' ?\'))
             window.location.href=\''.BDO_URL.'membres/comment.php?act=del&aut='.$aut.'&lib_tome='.urlencode($lib_tome).'&id_tome='.$id_tome.'&user_id='.$DB->f("user_id").'\'">
             <img src="'.BDO_URL_IMAGE.'poubelle.gif" border=0 /></a>',
-            //          "URLDELETE"=>'<a onClick="if (confirm(\'Supprimer ce commentaire/note posté par '.$DB->f("username").' ?\')) alert(\''.$DB->f("user_id").'\');"><img src="'.BDO_URL_IMAGE.'poubelle.gif" border=0 ></a>',
+            //          "URLDELETE"=>'<a onClick="if (confirm(\'Supprimer ce commentaire/note postÃ© par '.$DB->f("username").' ?\')) alert(\''.$DB->f("user_id").'\');"><img src="'.BDO_URL_IMAGE.'poubelle.gif" border=0 ></a>',
             "USERNAME"=>'<a href="mailto:'.$DB->f("email").'?Subject=BDOVORE - Erreur de saisie de remarque personnelle&Body=Bonjour, %0A
-                Vous avez enregistré une remarque de nature personnelle en tant que commentaire public sur le site. %0A Les remarques personnelles ne sont pas à saisir en tant que note publique sur le site mais en bas de page de votre fiche album, dans le champ REMARQUE PERSONNELLE (consultation par vous uniquement). %0A
-                Votre commentaire a été converti en remarque personnelle. %0A BDovorement.">'.$DB->f("username").'</a>',
+                Vous avez enregistrÃ© une remarque de nature personnelle en tant que commentaire public sur le site. %0A Les remarques personnelles ne sont pas Ã  saisir en tant que note publique sur le site mais en bas de page de votre fiche album, dans le champ REMARQUE PERSONNELLE (consultation par vous uniquement). %0A
+                Votre commentaire a Ã©tÃ© converti en remarque personnelle. %0A BDovorement.">'.$DB->f("username").'</a>',
                 ));
         }
         else {
@@ -160,5 +160,6 @@ if ($DB->num_rows() > 0) {
 
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 $t->pparse("Output","tpBody");
 

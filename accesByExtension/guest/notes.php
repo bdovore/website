@@ -8,12 +8,12 @@ include_once (BDO_DIR."inc/bdovore.php");
 include (BDO_DIR."inc/queryfunction.php");
 
 
-// Vérifie qu'un parametre a été passé
+// VÃ©rifie qu'un parametre a Ã©tÃ© passÃ©
 if (!isset($user)){
     if (issetNotEmpty($_SESSION["UserId"])) {
         $user = encodeUserId($_SESSION["UserId"]);
     }else {
-        echo GetMetaTag(3,"Erreur lors du chargement de cette page : vous allez être redirigé.",(BDO_URL."index.php"));
+        echo GetMetaTag(3,"Erreur lors du chargement de cette page : vous allez Ãªtre redirigÃ©.",(BDO_URL."index.php"));
         exit();
     }
 }
@@ -28,7 +28,7 @@ if ($user <> $_SESSION["UserId"] ) {
     $username = $_SESSION["UserName"];
 }
 
-// prépare le template
+// prÃ©pare le template
 $t = new Template(BDO_DIR."public/templates");
 $t->set_file(array(
 "tpBody" => "guest_notes.tpl",
@@ -44,11 +44,13 @@ $t->set_var (array(
 "USERID" => $ori_user
 ));
 
-// Envoie les info générales et publie la page
+// Envoie les info gÃ©nÃ©rales et publie la page
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM
+));
 
 $t->parse("BODY","tpBody");
 $t->parse("MENUBARRE","tpMenu");

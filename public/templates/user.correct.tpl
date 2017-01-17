@@ -46,11 +46,11 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
               <td width="907" rowspan="4" valign="top" bordercolor="#FFFFFF">
               <p>Avant, tout merci de prendre le temps de lire les guides de saisie disponibles :
                       <ul type=SQUARE>
-                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=352" target="_blank">Tutorial : comment faire une demande d'ajout ou de correction</a>
-                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=617" target="_blank">Tutorial : les mangas V.O</a>
-                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=392" target="_blank">Tutorial : les BD et Comics V.O</a>
-                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=618" target="_blank">Tutorial : les séries francaises traduites en d'autres langues</a>
-                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=391" target="_blank">Tutorial : les artbooks</a>
+                        <li><a href="{URLSITEFORUM}viewtopic.php?t=352" target="_blank">Tutorial : comment faire une demande d'ajout ou de correction</a>
+                        <li><a href="{URLSITEFORUM}viewtopic.php?t=617" target="_blank">Tutorial : les mangas V.O</a>
+                        <li><a href="{URLSITEFORUM}viewtopic.php?t=392" target="_blank">Tutorial : les BD et Comics V.O</a>
+                        <li><a href="{URLSITEFORUM}viewtopic.php?t=618" target="_blank">Tutorial : les séries francaises traduites en d'autres langues</a>
+                        <li><a href="{URLSITEFORUM}viewtopic.php?t=391" target="_blank">Tutorial : les artbooks</a>
                       </ul>
                         </p>
                         <p>Nos valideurs et correcteurs travaillent d'arrache pied (et bénévolement) pour que notre base de données soit la plus complète possible, aidez les en renseignant au mieux toutes les informations à votre disposition et en utilisant les loupes !</p>

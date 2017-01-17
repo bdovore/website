@@ -21,7 +21,7 @@ if ($act=='submit')
     $query = "DELETE FROM users_list_aut WHERE user_id = ".$DB->escape($_SESSION["UserId"]);
     $DB->query ($query);
 
-    // Insère la nouvelle liste
+    // InsÃ¨re la nouvelle liste
     for ($i=0; $i <= 20; $i++)
     {
         $champs = "txtAuteur".$i."Id";
@@ -36,7 +36,7 @@ if ($act=='submit')
             $DB->query ($query);
         }
     }
-    echo GetMetaTag(1,"Vos modifications ont été prises en compte.",BDO_URL."membres/actualites.php");
+    echo GetMetaTag(1,"Vos modifications ont Ã©tÃ© prises en compte.",BDO_URL."membres/actualites.php");
 
 }
 // Affichage de la liste existante
@@ -57,14 +57,14 @@ else if ($act=='')
 
     // Creation d'une nouvelle instance Fast Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "aut_favoris.tpl",
     "tpMenu" => "user.menu.tpl",
     "tpMenuColl" => "menu_coll.tpl",
     "tpBase" => "body.tpl"));
 
-    // on déclare le block à utiliser
+    // on dÃ©clare le block Ã  utiliser
     $t->set_block('tpBody','DetailBlock','DBlock');
 
     $i=1;
@@ -94,7 +94,7 @@ else if ($act=='')
         $i++;
     }
 
-    // variables générales
+    // variables gÃ©nÃ©rales
     $t->set_var (array
     ("ACTIONNAME" => 'Enregistrer',
     "URLACTION" => BDO_URL.'membres/aut_favoris.php?act=submit',
@@ -105,6 +105,7 @@ else if ($act=='')
     ("LOGINBARRE" => GetIdentificationBar(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM,
     "PAGETITLE" => "Mes auteurs favoris"));
     $t->parse("BODY","tpBody");
     $t->parse("MENUCOLL","tpMenuColl");

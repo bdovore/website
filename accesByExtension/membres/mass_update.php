@@ -9,7 +9,7 @@ var_dump_pre($_POST);
 */
 minAccessLevel(2);
 
-// Variables générales
+// Variables gÃ©nÃ©rales
 $nb = 20;
 if ($first=='') {$first = 0;}
 
@@ -34,13 +34,13 @@ for ($i = 1; $i <= 10; $i++)
     $opt_notes[$i][1] = $i;
 }
 
-// Tableaux $paramètres
-// Intitulé,table contenant les données,Champ de la table correspondant,Presentation des données,valeurs dispo
+// Tableaux $paramÃ¨tres
+// IntitulÃ©,table contenant les donnÃ©es,Champ de la table correspondant,Presentation des donnÃ©es,valeurs dispo
 $param = array(
 array("Remarques","users_album","comment","textarea"),
 array("Edition Originale","users_album","flg_tete","checkbox"),
 array("Dedicace","users_album","flg_dedicace","checkbox"),
-array("Prêts","users_album","flg_pret","checkbox"),
+array("PrÃªts","users_album","flg_pret","checkbox"),
 array("Emprunteur","users_album","nom_pret","textbox"),
 array("Email Emprunteur","users_album","email_pret","textbox"),
 array("Futur Achats","users_album","flg_achat","checkbox"),
@@ -94,7 +94,7 @@ if ($act == 'update')
     }
 }
 
-// vérifie si la variable display a été passée
+// vÃ©rifie si la variable display a Ã©tÃ© passÃ©e
 $query_fields = "";
 $query_filtre = "";
 
@@ -102,7 +102,7 @@ if (isset($display))
 {
     // Structure de la variale display
     // 001122334455abcd
-    // chifre : clés
+    // chifre : clÃ©s
     // lettre : filtre
     $nb_cles = 0;
     $cle = array();
@@ -123,7 +123,7 @@ if (isset($display))
         $query_filtre .= $filtre[$i];
     }
 }else{
-    // récupère les clés qui ont été selectionnées
+    // rÃ©cupÃ¨re les clÃ©s qui ont Ã©tÃ© selectionnÃ©es
     $j = 0;
     $display = "";
     for ($i=0; $i<= 4; $i++)
@@ -162,7 +162,7 @@ if (isset($display))
     }
 }
 
-// filtre de recherche supplémentaire
+// filtre de recherche supplÃ©mentaire
 $query_string = "";
 if ($str_search) {
 
@@ -189,7 +189,7 @@ else {
     $checkalb = "checked";
 }
 
-// Constitue la base d'albums à mettre à jours
+// Constitue la base d'albums Ã  mettre Ã  jours
 $query = "
 SELECT SQL_CALC_FOUND_ROWS
     bd_tome.id_tome,
@@ -221,7 +221,7 @@ $nb_alb = $rowCount['nb'];
 
 // Creation d'une nouvelle instance Template
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpBody" => "user_mass_update.tpl",
 "tpMenuColl" => "menu_coll.tpl",
@@ -234,7 +234,7 @@ $t->set_var(array(
 "STRSEARCH" =>$str_search
 ));
 // Affiche les titre
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpBody','TitleBlock','TBlock');
 for ($i=0; $i < $nb_cles; $i++)
 {
@@ -254,8 +254,8 @@ $urlform = BDO_URL."membres/mass_update.php?act=update&display=".$display."&firs
 $urldelete = BDO_URL."membres/mass_update.php?act=del&display=".$display."&first=".$first."&nb=".$nb.$query_string;
 
 
-// Affiche les données fixes
-// on déclare le block à utiliser
+// Affiche les donnÃ©es fixes
+// on dÃ©clare le block Ã  utiliser
 $t->set_block("tpBody", "ColumnBlock", "CBlock");
 $t->set_block("tpBody", "RowBlock", "RBlock");
 
@@ -335,7 +335,8 @@ $t->set_var (array
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
 "PAGETITLE" => "Mes Albums : formulaire"));
 $t->parse("MENUCOLL","tpMenuColl");
 $t->parse("BODY","tpBody");

@@ -4,14 +4,14 @@
 
 minAccessLevel(1);
 
-// Mettre à jour les informations
+// Mettre Ã  jour les informations
 if ($act=="update"){
 
     $query = "UPDATE bd_genre SET
     `libelle` = '".$DB->escape($_POST['txtGenre'])."'
     WHERE (`id_genre`=".$DB->escape($_POST["txtIdGenre"]).");";
     $DB->query($query);
-    echo '<META http-equiv="refresh" content="1; URL=javascript:history.go(-1)">'."Mise à jour effectuée";
+    echo '<META http-equiv="refresh" content="1; URL=javascript:history.go(-1)">'."Mise Ã  jour effectuÃ©e";
 }
 
 // EFFACEMENT D'UN GENRE
@@ -22,7 +22,7 @@ elseif($act=="delete")
             $query = "DELETE FROM bd_genre WHERE id_genre= ".$DB->escape($genre_id)." LIMIT 1";
             $DB->query ($query);
             $redirection = BDO_URL."admin/index.php";
-            echo '<META http-equiv="refresh" content="2; URL='.$redirection.'">Le genre a été effacé de la base.';
+            echo '<META http-equiv="refresh" content="2; URL='.$redirection.'">Le genre a Ã©tÃ© effacÃ© de la base.';
             exit();
     }
     else
@@ -36,7 +36,7 @@ elseif($act=="new")
 {
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.genre.tpl",
     "tpBase" => "body.tpl"
@@ -44,8 +44,8 @@ elseif($act=="new")
 
     $t->set_var (array(
     "NBSERIES" => "0",
-    "URLDELETE" => "javascript:alert('Désactivé');",
-    "URLFUSION" => "javascript:alert('Désactivé');",
+    "URLDELETE" => "javascript:alert('DÃ©sactivÃ©');",
+    "URLFUSION" => "javascript:alert('DÃ©sactivÃ©');",
     "ACTIONNAME" => "Enregistrer",
     "URLACTION" => BDO_URL."admin/admingenres.php?act=append"
     ));
@@ -55,6 +55,7 @@ elseif($act=="new")
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
@@ -67,7 +68,7 @@ elseif($act=="append"){
     $query .= " VALUES ('".$DB->escape($_POST['txtGenre'])."')";
     $DB->query ($query);
     $lid= mysql_insert_id();
-    echo GetMetaTag(2,"Le nouveau genre a été ajouté",(BDO_URL."admin/admingenres.php?genre_id=".$lid));
+    echo GetMetaTag(2,"Le nouveau genre a Ã©tÃ© ajoutÃ©",(BDO_URL."admin/admingenres.php?genre_id=".$lid));
 }
 
 // AFFICHER UN GENRE
@@ -75,18 +76,18 @@ elseif($act==""){
 
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.genre.tpl",
     "tpBase" => "body.tpl"
     ));
-    // Compte les albums pour lesquels les auteurs ont travaillé
+    // Compte les albums pour lesquels les auteurs ont travaillÃ©
     $query = "select count(*) as nbseries from bd_serie where id_genre =".$DB->escape($genre_id);
     $DB->query ($query);
     $DB->next_record();
     $nb_serie = $DB->f("nbseries");
 
-    //récupère les données utilisateur dans la base de donnée
+    //rÃ©cupÃ¨re les donnÃ©es utilisateur dans la base de donnÃ©e
     $query = "SELECT id_genre, libelle FROM bd_genre WHERE id_genre=".$DB->escape($genre_id);
     $DB->query ($query);
     $DB->next_record();
@@ -105,6 +106,7 @@ elseif($act==""){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");

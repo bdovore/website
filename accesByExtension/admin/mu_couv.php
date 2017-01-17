@@ -7,12 +7,12 @@ include (BDO_DIR."inc/function.amazon.inc.php");
 minAccessLevel(1);
 
 
-// Mettre à jour les informations
+// Mettre Ã  jour les informations
 if ($act=="update"){
     $nb = 0;
 
     foreach ($alb_id as $idtome){
-        // Selection le numéro de l'edition en cours
+        // Selection le numÃ©ro de l'edition en cours
         $query = "
         SELECT
             en.id_edition,
@@ -31,29 +31,29 @@ if ($act=="update"){
         $oldfile = $DB->f("img_couv");
         @unlink (BDO_DIR."images/couv/".$oldfile);
 
-        // détermine le nouveau nom
+        // dÃ©termine le nouveau nom
         $newfilename = "CV-".sprintf("%06d",$idtome)."-".sprintf("%06d",$idedition);
 
-        // Copie le fichier dans le répertoire temporaire
+        // Copie le fichier dans le rÃ©pertoire temporaire
         $new_filename = get_img_from_url($url_amz[$idtome],BDO_DIR."images/tmp/",$newfilename);
 
-        // Déplace le fichier dans le répertoire couv
+        // DÃ©place le fichier dans le rÃ©pertoire couv
         rename (BDO_DIR."images/tmp/".$new_filename, BDO_DIR."images/couv/".$new_filename);
 
-        // Met à jour bd_edition
+        // Met Ã  jour bd_edition
         $query = "UPDATE bd_edition SET img_couv = ".sqlise($new_filename,'text')." WHERE id_edition = ".$DB->escape($idedition);
         $DB->query ($query);
 
         $nb++;
     }
-    echo GetMetaTag(2,"$nb albums ont été traités.",(BDO_URL."admin/mu_couv.php?serie=".$serie));
+    echo GetMetaTag(2,"$nb albums ont Ã©tÃ© traitÃ©s.",(BDO_URL."admin/mu_couv.php?serie=".$serie));
 }
 
 // AFFICHER UNE FICHE SERIE
 elseif($act==""){
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.mu.couv.tpl",
     "tpBase" => "body.tpl"
@@ -64,11 +64,12 @@ elseif($act==""){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
 
     if ($serie != ""){
 
-        // récupère le infos liées à la série
+        // rÃ©cupÃ¨re le infos liÃ©es Ã  la sÃ©rie
         $query = "SELECT nom FROM bd_serie WHERE id_serie = ".$DB->escape($serie);
         $DB->query ($query);
         $DB->next_record();
@@ -93,9 +94,9 @@ elseif($act==""){
         t.id_serie = ".$DB->escape($serie)."
         ORDER BY t.num_tome";
         $DB->query ($query);
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','AlbumsBlock','ABlock');
-        // Stocke les résultats retournés dans un tableau pour eviter la deconnexion
+        // Stocke les rÃ©sultats retournÃ©s dans un tableau pour eviter la deconnexion
         $compteur = 0;
         while ($DB->next_record()){
             $result_query[0][$compteur] = $DB->f("id_tome");
@@ -106,9 +107,9 @@ elseif($act==""){
             $compteur++;
         }
 
-        //Affiche les différentes éléments
+        //Affiche les diffÃ©rentes Ã©lÃ©ments
         for ($i=0; $i<$compteur; $i++){
-            // Vérifie l'existence d'une image chez bdovore
+            // VÃ©rifie l'existence d'une image chez bdovore
             if (is_null($result_query[3][$i]) | ($result_query[3][$i]=='')){
                 $url_image = BDO_URL_IMAGE."couv/default.png";
                 $dimension="";
@@ -124,12 +125,12 @@ elseif($act==""){
                 $poids .="Ko";
                 $imagename = $result_query[3][$i];
             }
-            // Vérifie l'existence d'une couv chez amazon
-            $url_page_amazon = "http://www.amazon.fr/exec/obidos/ASIN/".$result_query[4][$i];
+            // VÃ©rifie l'existence d'une couv chez amazon
+            $url_page_amazon = BDO_PROTOCOL."://www.amazon.fr/exec/obidos/ASIN/".$result_query[4][$i];
             $url_img_amazon = get_couv_url($url_page_amazon,$result_query[4][$i]);
             if ($url_img_amazon == "") $url_img_amazon = BDO_URL."images/couv/default.png";
 
-            // Affiche les données
+            // Affiche les donnÃ©es
             $t->set_var (array(
             "TOME" => $result_query[1][$i],
             "TITRE" => stripslashes($result_query[2][$i]),
@@ -145,7 +146,7 @@ elseif($act==""){
         }
     }
     $t->set_var (array(
-    "ACTIONNAME" => "Mettre à Jour",
+    "ACTIONNAME" => "Mettre Ã  Jour",
     "URLACTION" => BDO_URL."admin/mu_couv.php?act=update&serie=".$serie,
     "URLREFRESH" => BDO_URL."admin/mu_couv.php",
     "URLEDITSERIE" => BDO_URL."admin/adminseries.php?serie_id=".$serie

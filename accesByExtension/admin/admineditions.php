@@ -192,6 +192,7 @@ elseif($act=="new"){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->parse("ADMINEDITIONDETAIL","tpAdminEditionDetail");
@@ -382,7 +383,7 @@ elseif($act==""){
     "EAN" => $DB->f("ean"),
     "URLEAN" => "http://www.bdnet.com/".$DB->f("ean")."/alb.htm",
     "ISBN" => $DB->f("isbn"),
-    "URLISBN" => "http://www.amazon.fr/exec/obidos/ASIN/".$DB->f("isbn"),
+    "URLISBN" => BDO_PROTOCOL."://www.amazon.fr/exec/obidos/ASIN/".$DB->f("isbn"),
     "URLIMAGE" => $url_image,
     "DIMIMAGE" => $dim_image,
     "NBUSERS" => $nbusers,
@@ -407,6 +408,7 @@ elseif($act==""){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->parse("ADMINEDITIONDETAIL","tpAdminEditionDetail");

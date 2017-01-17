@@ -12,7 +12,7 @@ mysql_select_db(BDO_DB_SID);
 
 include_once (BDO_DIR . "inc/relation.inc.php");
 
-echo '<h2>Utilisateurs possédant l\'édition</h2>';
+echo '<h2>Utilisateurs possÃ©dant l\'Ã©dition</h2>';
 
 if (isset($_POST['valeur']))
 {
@@ -35,7 +35,7 @@ ID de l\'edition : <input type="text" name="valeur" value="' . $id_edition . '">
 
 if (isset($_POST['execformuseredition']))
 {
-    echo "<a href='".BDO_URL."admin/admineditions.php?edition_id=".$id_edition."'>Retour à la fiche édition</a><br />";
+    echo "<a href='".BDO_URL."admin/admineditions.php?edition_id=".$id_edition."'>Retour Ã  la fiche Ã©dition</a><br />";
 
     $query = "SELECT SQL_CALC_FOUND_ROWS
         `users`.`username`, `users`.`email` , `users_album`.`date_ajout`
@@ -58,7 +58,7 @@ if (isset($_POST['execformuseredition']))
 
     if (0 < $nbr)
     {echo '<br />' . $nbr . '/'.$nbrtotal.' utilisateur(s).
-    <br />Recherche limitée à 50 utilisateurs.';
+    <br />Recherche limitÃ©e Ã  50 utilisateurs.';
 
     tableOfFetchObj($a_obj);
     }
@@ -69,7 +69,7 @@ if (isset($_POST['execformuseredition']))
 
 // dossier contenant les templates
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpForm_Recherche" => "form_recherche.tpl",
 "tpControl" => "control.tpl",
@@ -82,6 +82,7 @@ $t->set_var("MENUBARRE",admin_menu());
 $t->set_var("LOGINBARRE",GetIdentificationBar());
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 
 $t->parse("BODY","tpControl");
 $t->parse("FORM_RECHERCHE","tpForm_Recherche");

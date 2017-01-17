@@ -399,7 +399,7 @@ class Admin extends Bdo_Controller {
                     "EAN" => $this->Edition->EAN_EDITION,
                     "URLEAN" => "http://www.bdnet.com/" . $this->Edition->EAN_EDITION . "/alb.htm",
                     "ISBN" => $this->Edition->ISBN_EDITION,
-                    "URLISBN" => "http://www.amazon.fr/exec/obidos/ASIN/" . $this->Edition->ISBN_EDITION,
+                    "URLISBN" => BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . $this->Edition->ISBN_EDITION,
                     "URLIMAGE" => $url_image,
                     "DIMIMAGE" => $dim_image,
                     "NBUSERS" => $nbusers,

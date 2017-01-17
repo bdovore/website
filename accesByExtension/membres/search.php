@@ -4,7 +4,7 @@
 
 include (BDO_DIR."inc/queryfunction.php");
 
-// DÈfini les paramËtres d'affichage
+// D√©fini les param√®tres d'affichage
 if (minAccessLevel(2,false)) {
     $query = "SELECT row_display FROM users WHERE user_id =".$DB->escape($_SESSION["UserId"]);
     $DB->query($query);
@@ -23,7 +23,7 @@ $startRow = $pageNum * $maxRows;
 // Creation d'un nouveau Template
 $t = new Template(BDO_DIR."public/templates");
 
-// fichier ‡ utiliser
+// fichier √† utiliser
 $t->set_file(array(
 "tpForm_Recherche" => "form_recherche.tpl",
 "tpBody" => "search.tpl",
@@ -37,7 +37,7 @@ $cb_serie = postVal("cb_serie", getVal("cb_serie"));
 $cb_album = postVal("cb_album", getVal("cb_album"));
 $cb_aut = postVal("cb_aut", getVal("cb_aut"));
 
-// on dÈclare les blocks contenus sur la feuille
+// on d√©clare les blocks contenus sur la feuille
 $t->set_block('tpBody','ResultBlock','RBlock');
 $t->set_block('tpBody','ButtonBlock','BBlock');
 
@@ -120,7 +120,7 @@ if ($str_search)
     if ($DB->nf() != 0 ) {
         while ($DB->next_record()) {
             if ($DB->f("flg_int") == 'O') {
-                $lib_serie = stripslashes($DB->f("serie"))." - IntÈgrale";
+                $lib_serie = stripslashes($DB->f("serie"))." - Int√©grale";
             }else {
                 if ($DB->f("flg_fini") == 2 ) {
                     $lib_serie = stripslashes($DB->f("serie")). " (One shot)";
@@ -131,7 +131,7 @@ if ($str_search)
                         if ($DB->f("num_tome") == 0 || !$DB->f("num_tome")) {
                             $lib_serie = stripslashes($DB->f("serie"))." - HS";
                         }else {
-                            $lib_serie = stripslashes($DB->f("serie"))." n∞".$DB->f("num_tome");
+                            $lib_serie = stripslashes($DB->f("serie"))." n¬∞".$DB->f("num_tome");
                         }
                     }
                 }
@@ -173,9 +173,9 @@ if ($str_search)
             $t->parse ("RBlock", "ResultBlock",true);
         }
     }
-    // Nb de rÈponses retournÈes par la query
+    // Nb de r√©ponses retourn√©es par la query
     if ($totalRows > 0 ) {
-        $t->set_var("NBREPONSES",$totalRows." album(s) trouvÈ(s) !");
+        $t->set_var("NBREPONSES",$totalRows." album(s) trouv√©(s) !");
         $navig = '<a href="'.sprintf("%s?pageNum=%d%s", $_SERVER["PHP_SELF"], max(0, $pageNum - 1), $queryString).'">&lt;&lt;</a>&nbsp;';
         for ($i=max($pageNum - 10, 0);$i < min($pageNum+10,$totalPages)+1;$i++) {
             if ($i == $pageNum){
@@ -188,13 +188,13 @@ if ($str_search)
         $t->set_var("NAVPAGE",$navig);
         $t->parse ("BBlock", "ButtonBlock",true);
     }else {
-        $t->set_var("NBREPONSES","Aucun album trouvÈ, dÈsolÈ ! <br>
+        $t->set_var("NBREPONSES","Aucun album trouv√©, d√©sol√© ! <br>
                     <a href='prop_album.php'>Proposer l'ajout d'un album</a>"
                     );
     }
 }
 
-// variable cachÈ du formulaire d'ajout pour la validation
+// variable cach√© du formulaire d'ajout pour la validation
 $t->set_var(array(
 "SEARCHSTR"=> stripslashes($str_search),
 "NBROW"=>$totalRows,
@@ -206,7 +206,8 @@ $t->set_var(array(
 $t->set_var (array(
 "LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM
 ));
 
 // Check box
@@ -226,7 +227,7 @@ if ($cb_aut) {
 $t->set_var("PAGETITLE","BDOVORE.com : Recherche des albums dans la base");
 $t->set_var("PAGEKEYWORD",$str_search);
 
-// Valeur de recherche par dÈfault
+// Valeur de recherche par d√©fault
 $t->set_var("DEFSEARCH","'".stripslashes(htmlentities($str_search,ENT_QUOTES))."'");
 $t->parse("FORM_RECHERCHE","tpForm_Recherche");
 $t->parse("BODY","tpBody");

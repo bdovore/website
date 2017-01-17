@@ -12,9 +12,8 @@ body {
     font-size: 1em;
     color: #000000;
     background-color: #3D201C;
-    background-image: url("http://www.bdovore.com/images/site/bdo_fond1.jpg");
+    background-image: url("images/site/bdo_fond1.jpg");
     background-repeat: repeat-x;
-
     background-attachment:fixed;
     margin: 0;
     margin-top: 40px;
@@ -179,11 +178,9 @@ textarea {
     font-size: 1.3em;
 }
 
-
 #bienvenu {
     border-top: 1px solid #B64045;
 }
-
 
 .arial {
     font-family: Arial, Helvetica, sans-serif;
@@ -239,8 +236,9 @@ td.bordure {
 }
 
 td.bord_gauche {
-    /*background-image: url(http://www.bdovore.com/images/site/gauche.gif);
-    background-repeat: repeat-y;*/
+    /* background-image: url(images/site/gauche.gif);
+     * background-repeat: repeat-y;
+     */
     height: 13px;
     width: 13px;
 }
@@ -543,15 +541,18 @@ td.data {
 .status0{
     background-color: #E7CCBD !important;
 }
-.status1{
 
+.status1{
 }
+
 .status2{
     background-color: #FFDB70 !important;
 }
+
 .status3{
     background-color: #8374E7 !important;
 }
+
 .status4{
     background-color: #82FF70 !important;
 }
@@ -578,8 +579,7 @@ td.data {
     padding: 10px 5px 5px 10px;
 }
 
-.cadre_texte-admin td a,td.cadre_texte-admin a,.cadre_texte-admin td a:hover,td.cadre_texte-admin a:hover
-{
+.cadre_texte-admin td a,td.cadre_texte-admin a,.cadre_texte-admin td a:hover,td.cadre_texte-admin a:hover {
     color: #F7E4D9 !important;
 }
 
@@ -838,26 +838,18 @@ div.middle_title {
 
 /* style de la div d'accueil actualit? (partie droite) */
 #actu2 {
-
-
     width: 150px;
     min-width: 150px;
     float: right;
     padding: 0;
 }
 
-
-
-
-
 #news {
-
     width: 100%;
     margin-top: 15px;
     border-top: 1px solid #B64045;
     padding-right: 0;
     padding-left: 0;
-
 }
 
 #top {
@@ -1068,8 +1060,7 @@ font.pucenum {
     list-style-type:circle
 }
 
-#onglets
-{
+#onglets {
     font : bold 2em;
     list-style-type : none;
     padding-bottom : 28px; /* à modifier suivant la taille de la police ET de la hauteur de l'onglet dans #onglets li */
@@ -1077,8 +1068,7 @@ font.pucenum {
     margin-left : 0;
 }
 
-#onglets li
-{
+#onglets li {
     float : left;
     height : 21px; /* à modifier suivant la taille de la police pour centrer le texte dans l'onglet */
     background-color: #F4F9FD;
@@ -1088,8 +1078,7 @@ font.pucenum {
     padding: 2px 2px 2px 2px;
 }
 
-#onglets li.active
-{
+#onglets li.active {
     border-bottom: 1px solid #fff;
     background-color: #fff;
 }
@@ -1102,12 +1091,11 @@ font.pucenum {
     font-weight: bold;
 }
 
-#onglets a:hover
-{
+#onglets a:hover {
     background : #fff;
 }
-#menu
-{
+
+#menu {
     border-bottom : 1px solid #9EA0A1;
     padding-bottom : 25px;
 }
@@ -1123,9 +1111,7 @@ table.list_album {
 
 table.list_album td {
     height:95%;
-
     padding: 1px;
-
 }
 
 table.list_album tr {
@@ -1155,7 +1141,6 @@ table.list_album tr {
 }
 
 .fiche_big{
-
 }
 
 .couvleft {
@@ -1167,13 +1152,15 @@ table.list_album tr {
     float:left;
     font-size:0.9em;
 }
+
 #list-last-critique {
     border-spacing: 5px;
 }
- #carre_magique {
-        width: 300px;
-        border-width: 0px;
-    }
+
+#carre_magique {
+    width: 300px;
+    border-width: 0px;
+}
 
 @media screen and (max-width: 1200px) {
     .colleft {
@@ -1206,9 +1193,11 @@ table.list_album tr {
     .cadre1 {
         padding:0px !important;
     }
+
     #searchtable{
         padding:0px 4px 0px 0px !important;
     }
+
     .colleft {
         float: left;
         width: 200%;
@@ -1217,6 +1206,7 @@ table.list_album tr {
         right: 100%;
         min-height: 600px;
     }
+
     .col1 {
         overflow: hidden;
         padding: 5px;
@@ -1227,9 +1217,11 @@ table.list_album tr {
     .col2 {
         display:none;
     }
+
     #message_accueil {
         display:none;
     }
+
     #header {
         width: 100% !important;
         margin: auto !important;
@@ -1240,22 +1232,24 @@ table.list_album tr {
     #search {
         width : 80% !important;
     }
+
     #content {
         width: 100% !important;
         margin: auto !important;
         min-width: 0 !important;
     }
-    #list-last-critique thead {
-        display:none;
-    }
-    #list-last-critique thead {
-        display:none;
-    }
-    #list-last-critique>tbody>tr>td {
 
+    #list-last-critique thead {
+        display:none;
+    }
+
+    #list-last-critique thead {
+        display:none;
+    }
+
+    #list-last-critique>tbody>tr>td {
         display:block;
     }
-
 
     #list-last-critique>tfoot>tr>td{
         display:block;
@@ -1268,13 +1262,15 @@ table.list_album tr {
     table.list_album>tbody>tr{
         display:block;
     }
+
     table.list_album>tbody {
         display:block;
     }
+
     td.mw50 {
         max-width: 100% !important;
-
     }
+
     .mw30 {
         max-width: 50% !important;
     }
@@ -1283,6 +1279,7 @@ table.list_album tr {
         margin-right : 0px !important;
         padding-left: 1em;
     }
+
     #logo {
         display:none;
     }
@@ -1303,6 +1300,7 @@ table.list_album tr {
     .listcomment {
         width:95%;
     }
+
     .synopsis{
         width : 100% !important;
         padding:20px 0px !important;
@@ -1316,91 +1314,116 @@ table.list_album tr {
     td[name="col5"] {
         display: none!important;
     }
+
     td[name="col6"] {
         display: none!important;
     }
+
     td[name="col7"] {
         display: none!important;
     }
+
     td[name="col8"] {
         display: none!important;
     }
+
     td[name="col9"] {
         display: none!important;
     }
+
     td[name="col10"] {
         display: none!important;
     }
+
     td[name="col11"] {
         display: none!important;
     }
+
     td[name="col12"] {
         display: none!important;
     }
+
     td[name="col13"] {
         display: none!important;
     }
+
     td[name="col13"] {
         display: none!important;
     }
+
     td[name="col14"] {
         display: none!important;
     }
+
     td[name="col15"] {
         display: none!important;
     }
+
     td[name="col16"] {
         display: none!important;
     }
+
     td[name="col17"] {
         display: none;
     }
+
     td[name="col18"] {
         display: none!important;
     }
 
-
-
     th[name="col5"] {
         display: none!important;
     }
+
     th[name="col6"] {
         display: none!important;
     }
+
     th[name="col7"] {
         display: none!important;
     }
+
     th[name="col8"] {
         display: none!important;
     }
+
     th[name="col9"] {
         display: none!important;
     }
+
     th[name="col10"] {
         display: none!important;
     }
+
     th[name="col11"] {
         display: none!important;
     }
+
     th[name="col12"] {
         display: none!important;
     }
+
     th[name="col13"] {
         display: none!important;
     }
-     th[name="col14"] {
+
+    th[name="col14"] {
         display: none!important;
     }
-     th[name="col15"] {
+
+    th[name="col15"] {
         display: none!important;
     }
-     th[name="col16"] {
+
+    th[name="col16"] {
         display: none!important;
     }
-     th[name="col17"] {
+
+    th[name="col17"] {
         display: none!important;
     }
-     th[name="col18"] {
+
+    th[name="col18"] {
         display: none!important;
     }
 
@@ -1411,6 +1434,7 @@ table.list_album tr {
     .pagination {
         margin: 0px !important;
     }
+
     #album_as {
         display:none;
     }
@@ -1423,23 +1447,27 @@ table.list_album tr {
         width: 100%;
         border-width: 0px;
     }
-
 }
+
 @media screen and (max-width: 680px), screen and (max-device-width: 667px) {
     body {
         overflow:hidden !important;
         width:100%;
         font-size:1.1em;
     }
+
     label[for=rb_mode4] {
         display:none;
     }
+
     label[for=rb_mode0] {
         display:none;
     }
+
     label[for=rb_mode1] {
         display:none;
     }
+
     label[for=rb_mode5] {
         display:none;
     }
@@ -1447,20 +1475,24 @@ table.list_album tr {
     #select_genre{
         display:none;
     }
+
     #onglets > li:nth-child(6) {
          display:none;
     }
-     #onglets > li:nth-child(7) {
-         display:none;
-    }
-     #onglets > li:nth-child(8) {
-         display:none;
-    }
-     #onglets > li:nth-child(4) {
+
+    #onglets > li:nth-child(7) {
          display:none;
     }
 
-     td[class="colselect"] {
+    #onglets > li:nth-child(8) {
+         display:none;
+    }
+
+    #onglets > li:nth-child(4) {
+         display:none;
+    }
+
+    td[class="colselect"] {
         display: none!important;
     }
 
@@ -1469,17 +1501,15 @@ table.list_album tr {
         height: 500px !important;
         max-height:640px;
         font-size: 1.2em;
-
     }
+
     ul.ui-autocomplete-category:focus {
         border:1px solid #898989;
-    background:#855a28 url(images/ui-bg_highlight-hard_30_855a28_1x100.png) 50% 50% repeat-x;
-
-    color:#fff
+        background:#855a28 url(images/ui-bg_highlight-hard_30_855a28_1x100.png) 50% 50% repeat-x;
+        color:#fff
     }
 
     table.browse {
         font-size: 1.2em;
     }
 }
-

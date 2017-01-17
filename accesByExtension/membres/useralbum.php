@@ -38,26 +38,26 @@ if (isset($_POST["lstEdition"]))
     if ($cb_pret){
         $pret = "O";
     }
-    // si l'utilisateur sélection "Proposer une nouvelle edition/J'ai plusieurs editions", et que plus tard il clique sur "Envoyer",
+    // si l'utilisateur sÃ©lection "Proposer une nouvelle edition/J'ai plusieurs editions", et que plus tard il clique sur "Envoyer",
     // il y a un "bug", $id_edition n'est pas valide (0 ou 1) --> erreur SQL
-    //solutions : réutiliser l'édition de départ ou retirer les deux options de la liste des éditions et les mettre ailleurs
+    //solutions : rÃ©utiliser l'Ã©dition de dÃ©part ou retirer les deux options de la liste des Ã©ditions et les mettre ailleurs
     /*thanaos
-    à revoir */
+    Ã  revoir */
     if ($id_edition == 0 || $id_edition == 1) {
         $id_edition = $ori_id_edition;
     }
 
-    // en cas de changement d'edition, on vérifie que l'edition selectionnée n'est pas déjà dans la collection
+    // en cas de changement d'edition, on vÃ©rifie que l'edition selectionnÃ©e n'est pas dÃ©jÃ  dans la collection
     if ($id_edition != $ori_id_edition){
         $query = "select count(*) as nb from users_album where user_id=".$DB->escape($_SESSION["UserId"])." and id_edition = ".$DB->escape($id_edition);
         $DB->query($query);
         $DB->next_record();
         if ($DB->f("nb") > 0){
             echo $DB->f("nb");
-            // erreur, l'edition existe déjà
-            // dans ce cas, on met bien à jour les autres champs, mais on ne modifie pas l'edition et on affiche un message d'erreur
+            // erreur, l'edition existe dÃ©jÃ 
+            // dans ce cas, on met bien Ã  jour les autres champs, mais on ne modifie pas l'edition et on affiche un message d'erreur
             $id_edition = $ori_id_edition;//pas de changement
-            $onload = 'onload="javascript:alert('."'Attention : vous possédez déjà cette édition dans votre collection !'".');"';
+            $onload = 'onload="javascript:alert('."'Attention : vous possÃ©dez dÃ©jÃ  cette Ã©dition dans votre collection !'".');"';
         }
     }
 
@@ -119,7 +119,7 @@ if (isset($_POST["lstEdition"]))
 
     }
     if ($note != 'NULL') {
-        // si une note, mise à jour de la moyenne de l'album
+        // si une note, mise Ã  jour de la moyenne de l'album
         $select = "select sum(note) tot, count(note) nb from users_comment where id_tome =".$DB->escape($id_tome);
         $DB->query($select);
         $DB->next_record();
@@ -136,7 +136,7 @@ else {
 // Creation d'un nouveau Template
 $t = new Template(BDO_DIR."public/templates");
 
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpBody" => "useralbum.tpl",
 "tpHead" => "head.tpl"
@@ -304,7 +304,7 @@ if ($id_tome or $id_edition)
         }
 
         if ($DB->f("flg_int") == 'O') {
-            $num_tome = "Intégrale";
+            $num_tome = "IntÃ©grale";
         }
         else {
             if ($DB->f("flg_fini") == 2 ) {
@@ -331,7 +331,7 @@ if ($id_tome or $id_edition)
             $couv = $DB->f("img_couv");
         }
         if ($DB->f("comment_ed")) {
-            $comment_edition = "<tr><td class=\"case_entete_fonce\"> Description de l'édition :</td>";
+            $comment_edition = "<tr><td class=\"case_entete_fonce\"> Description de l'Ã©dition :</td>";
             $comment_edition .= "<td class=\"case_fond_clair\">" . stripslashes($DB->f('comment_ed'));
             $comment_edition .= "</td></tr>";
         }else {
@@ -344,7 +344,7 @@ if ($id_tome or $id_edition)
         }
 
 
-        $newedit = "<input name=\"Submit\" id=\"newedit\" type='button' value=\"Proposer une nouvelle édition\" onClick=\"window.open('addedition.php?id_tome=".$id_tome."','myEdition','scrollbars=yes,resizable=yes,width=630,height=460')\"/>";
+        $newedit = "<input name=\"Submit\" id=\"newedit\" type='button' value=\"Proposer une nouvelle Ã©dition\" onClick=\"window.open('addedition.php?id_tome=".$id_tome."','myEdition','scrollbars=yes,resizable=yes,width=630,height=460')\"/>";
 
         if ($nbEdition > 1)
         {
@@ -353,7 +353,7 @@ if ($id_tome or $id_edition)
             '.GetOptionValue($opt_edition,$DB->f("id_edition")).'
             </select>
             ';
-            $otheredit = "<input name=\"Submit\" id=\"otheredit\" type='button' value=\"J'ai plusieurs éditions\"  onClick=\"window.open('userdupalb.php?id_tome=".$id_tome."','myEdition','scrollbars=yes,resizable=yes,width=630,height=380')\"/>";
+            $otheredit = "<input name=\"Submit\" id=\"otheredit\" type='button' value=\"J'ai plusieurs Ã©ditions\"  onClick=\"window.open('userdupalb.php?id_tome=".$id_tome."','myEdition','scrollbars=yes,resizable=yes,width=630,height=380')\"/>";
         }
         else {
             $optionEdition = '<input type=hidden name="lstEdition" value="'.$opt_edition[0][0].'">'.$opt_edition[0][1];
@@ -421,7 +421,8 @@ if ($id_tome or $id_edition)
 
     $t->set_var("JSCRIPT",$onload);
     $t->set_var("URLSITE",BDO_URL);
-$t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+    $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+    $t->set_var("URLSITEFORUM",BDO_URL_FORUM);
     $t->parse("HEAD","tpHead");
     $t->pparse("Output","tpBody");
 }

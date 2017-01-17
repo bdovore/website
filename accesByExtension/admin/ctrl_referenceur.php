@@ -13,7 +13,7 @@ mysql_select_db(BDO_DB_SID);
 
 include_once (BDO_DIR . "inc/relation.inc.php");
 
-echo '<h2>Bilan des relations par référenceur</h2>';
+echo '<h2>Bilan des relations par rÃ©fÃ©renceur</h2>';
 
 if (!isset($_POST['tableOrigine'])) $_POST['tableOrigine'] = array();
 
@@ -25,7 +25,7 @@ foreach( $a_liaison as $a_lien)
 
 echo '<form name="formrelation" method="post">
 <div>
-Table référenceur :
+Table rÃ©fÃ©renceur :
 <select name="tableOrigine[]" >';
 foreach( $a_td as $_td)
 {
@@ -33,8 +33,8 @@ foreach( $a_td as $_td)
     echo '<option value="'.$_td.'" '.$selected.' >'.$_td.'</option>';
 }
 echo '</select>
-<br /><label for="onlyDiff"><input type="checkbox" id="onlyDiff" name="onlyDiff" value="checked" '.$_POST['onlyDiff'].'> voir seulement les écarts</label>
-<br /><label for="viewQuery"><input type="checkbox" id="viewQuery" name="viewQuery" value="checked" '.$_POST['viewQuery'].'> voir les requêtes</label>
+<br /><label for="onlyDiff"><input type="checkbox" id="onlyDiff" name="onlyDiff" value="checked" '.$_POST['onlyDiff'].'> voir seulement les Ã©carts</label>
+<br /><label for="viewQuery"><input type="checkbox" id="viewQuery" name="viewQuery" value="checked" '.$_POST['viewQuery'].'> voir les requÃªtes</label>
 <br /><input type="submit" name="execformrelation" value="Tester les relations">
 </div>
 </form>';
@@ -78,7 +78,7 @@ if (isset($_POST['execformrelation']))
 
 
                 echo  "<hr>Valeur de la colonne [".$cd."] table [<font color=blue><b>".$td."</b></font>]
-            <br />inconnues dans la table de référence [<font color=blue><b>".$to."</b></font>] colonne [".$co."]";
+            <br />inconnues dans la table de rÃ©fÃ©rence [<font color=blue><b>".$to."</b></font>] colonne [".$co."]";
                 if (0 < $nbr)
                 {
                     echo  "<br /><font color=red><b>nbr = " . $nbr ."</b></font><br />";
@@ -135,7 +135,7 @@ if (isset($_POST['execformrelation']))
 
 // dossier contenant les templates
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpForm_Recherche" => "form_recherche.tpl",
 "tpControl" => "control.tpl",
@@ -148,6 +148,7 @@ $t->set_var("MENUBARRE",admin_menu());
 $t->set_var("LOGINBARRE",GetIdentificationBar());
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 
 $t->parse("BODY","tpControl");
 $t->parse("FORM_RECHERCHE","tpForm_Recherche");

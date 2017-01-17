@@ -48,7 +48,7 @@ if (isset($_POST["id_serie"]) && isset($_POST["note"])) {
     $DB->query($verif);
     //echo $DB->num_rows;
     if ($DB->num_rows() > 0) {
-        //mise à jour du commentaire
+        //mise Ã  jour du commentaire
         $update = "
         update serie_comment set
             note = ".$DB->escape($note).",
@@ -61,7 +61,7 @@ if (isset($_POST["id_serie"]) && isset($_POST["note"])) {
         $DB->next_record();
         $old_note = $DB->f("note");
         $DB->query($update);
-        //on récupere le nombre de note pour la moyenne
+        //on rÃ©cupere le nombre de note pour la moyenne
         $select = "select sum(note) tot, count(note) nb from serie_comment where id_serie =".$DB->escape($id_serie);
         $DB->query($select);
         $DB->next_record();
@@ -138,4 +138,5 @@ if ($DB->num_rows() > 0) {
 
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 $t->pparse("Output","tpBody");

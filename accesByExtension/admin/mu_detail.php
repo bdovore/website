@@ -14,7 +14,7 @@ $opt_type[1][0] = 1;
 $opt_type[1][1] = 'Coffret';
 
 
-// Mettre à jour les informations
+// Mettre Ã  jour les informations
 if ($act=="update")
 {
     $nb = 0;
@@ -70,7 +70,7 @@ if ($act=="update")
 
         $nb++;
     }
-    echo GetMetaTag(2,"$nb albums ont été traités.",(BDO_URL."admin/mu_detail.php?serie=".$serie));
+    echo GetMetaTag(2,"$nb albums ont Ã©tÃ© traitÃ©s.",(BDO_URL."admin/mu_detail.php?serie=".$serie));
 }
 
 // AFFICHER UNE FICHE SERIE
@@ -78,7 +78,7 @@ elseif($act=="")
 {
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.mu.detail.tpl",
     "tpBase" => "body.tpl"));
@@ -86,7 +86,7 @@ elseif($act=="")
     if ($serie != "")
     {
 
-        // récupère le infos liées à la série
+        // rÃ©cupÃ¨re le infos liÃ©es Ã  la sÃ©rie
         $query = "SELECT nom FROM bd_serie WHERE id_serie = ".$DB->escape($serie);
         $DB->query ($query);
         $DB->next_record();
@@ -129,9 +129,9 @@ elseif($act=="")
             t.flg_type,
             t.num_tome;";
         $DB->query ($query);
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','AlbumsBlock','ABlock');
-        //Affiche les différentes éléments
+        //Affiche les diffÃ©rentes Ã©lÃ©ments
         while ($DB->next_record())
         {
             $t->set_var (array
@@ -152,7 +152,7 @@ elseif($act=="")
     }
 
     $t->set_var (array
-    ("ACTIONNAME" => "Mettre à Jour",
+    ("ACTIONNAME" => "Mettre Ã  Jour",
     "URLACTION" => BDO_URL."admin/mu_detail.php?act=update&serie=".$serie,
     "URLREFRESH" => BDO_URL."admin/mu_detail.php",
     "URLEDITSERIE" => BDO_URL."admin/adminseries.php?serie_id=".$serie
@@ -163,7 +163,9 @@ elseif($act=="")
     ("LOGINBARRE" => GetIdentificationBar(),
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
+    ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
 }

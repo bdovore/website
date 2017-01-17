@@ -138,7 +138,8 @@ $user = $_SESSION["userConnect"]->user_id; //  --->>> marche pas ... Thanaos
 $t->set_var (array(
 "LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
 "PAGETITLE" => $pagetitle,
 "DESCRIPTION" => htmlspecialchars($copyright." - ".$description1),
 "PAGEKEYWORD" => $keyword

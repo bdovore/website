@@ -94,7 +94,7 @@ if ($sel_alb) {
                 $nb_up ++;
             }
             else {
-                // cas où l'album est déjà dans la collection
+                // cas oÃ¹ l'album est dÃ©jÃ  dans la collection
                 $nb_rejet ++;
             }
         }
@@ -106,25 +106,25 @@ if ($sel_alb) {
     }
 
     if ($nb_add > 0 ) {
-        $mes = "Vous avez ajouté ".$nb_add." album(s) dans votre collection !";
+        $mes = "Vous avez ajoutÃ© ".$nb_add." album(s) dans votre collection !";
     }
     else  {
-        $mes = "Aucun album ajouté !";
+        $mes = "Aucun album ajoutÃ© !";
     }
     if ($nb_rejet > 0 ) {
-        $mes.=" <br />".$nb_rejet." déjà présent(s) dans votre collection !";
+        $mes.=" <br />".$nb_rejet." dÃ©jÃ  prÃ©sent(s) dans votre collection !";
     }
     if ($nb_up > 0){
-        $mes .="<br />".$nb_up." futur(s) achat(s) mis à jour !";
+        $mes .="<br />".$nb_up." futur(s) achat(s) mis Ã  jour !";
     }
 
 }
 else {
-    $mes = "Aucun album sélectionné !";
+    $mes = "Aucun album sÃ©lectionnÃ© !";
 
 }
 $t->set_var("PAGETITLE", "BDOVORE.com : ajouter des albums");
-// ajout de la query string dans le lien vers la fenêtre de recherche
+// ajout de la query string dans le lien vers la fenÃªtre de recherche
 if ($src == "serie") {
     $query_string = "../serie.php?id_serie=$id_serie&page=$page";
 }
@@ -135,6 +135,7 @@ $t->set_var("QUERYSTRING",$query_string);
 $t->set_var ("LOGINBARRE", GetIdentificationBar());
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 $t->set_var("MESSAGE",$mes);
 $t->parse("BODY","tpBody");
 $t->parse("MENUBARRE","tpMenu");

@@ -34,11 +34,11 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
                 <p>Afin de proposer un nouvel album, merci de prendre tout d'abord le temps de prendre connaissance des guides adaptés à votre album :
                     <div align="center">
                     <ul>
-                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=352" target="_blank">Tutoriel : comment faire une demande d'ajout ou de correction</a>
-                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=617" target="_blank">Tutoriel : les mangas V.O.</a>
-                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=392" target="_blank">Tutoriel : les BD et Comics V.O.</a>
-                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=618" target="_blank">Tutoriel : les séries françaises traduites en d'autres langues</a>
-                        <li><a href="http://forum.bdovore.com/viewtopic.php?t=391" target="_blank">Tutoriel : les artbooks</a>
+                        <li><a href="{URLSITEFORUM}viewtopic.php?t=352" target="_blank">Tutoriel : comment faire une demande d'ajout ou de correction</a>
+                        <li><a href="{URLSITEFORUM}viewtopic.php?t=617" target="_blank">Tutoriel : les mangas V.O.</a>
+                        <li><a href="{URLSITEFORUM}viewtopic.php?t=392" target="_blank">Tutoriel : les BD et Comics V.O.</a>
+                        <li><a href="{URLSITEFORUM}viewtopic.php?t=618" target="_blank">Tutoriel : les séries françaises traduites en d'autres langues</a>
+                        <li><a href="{URLSITEFORUM}viewtopic.php?t=391" target="_blank">Tutoriel : les artbooks</a>
                     </ul>
                     </div>
                 </p>

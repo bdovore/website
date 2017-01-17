@@ -12,7 +12,7 @@ function cv_date_bd($date) {
 }
 
 
-// récupère les variables postées
+// rÃ©cupÃ¨re les variables postÃ©es
 $id_editeur = $_POST["txtEditeurId"];
 $editeur = $_POST["txtEditeur"];
 $id_collection = $_POST["txtCollecId"];
@@ -30,7 +30,7 @@ $is_tt = $_POST["chkTT"];
 $file_url = $_POST["txtFileURL"];
 $describ = $_POST["txtDescrib"];
 
-// insertion de la nouvelle édition en tant que proposition
+// insertion de la nouvelle Ã©dition en tant que proposition
 if ($act=="append"){
 
     $id_tome = $_POST['txtTomeId'];
@@ -52,19 +52,19 @@ if ($act=="append"){
     $query = insert_query("bd_edition",$query_el);
     $DB->query ($query);
 
-    // récupère la valeur de la dernière insertion
+    // rÃ©cupÃ¨re la valeur de la derniÃ¨re insertion
     $lid= mysql_insert_id();
 
-    // Verifie la présence d'une image à télécharger
+    // Verifie la prÃ©sence d'une image Ã  tÃ©lÃ©charger
     if (is_file($txtFileLoc) | (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary))){
-        if (is_file($txtFileLoc)){ // un fichier à uploader
+        if (is_file($txtFileLoc)){ // un fichier Ã  uploader
             $imageproperties = getimagesize($txtFileLoc);
             $imagetype = $imageproperties[2];
             $imagelargeur = $imageproperties[0];
             $imagehauteur = $imageproperties[1];
-            // vérifie le type d'image
+            // vÃ©rifie le type d'image
             if (($imagetype != 1) and ($imagetype != 2)){
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent Ãªtre chargÃ©s. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }
             $uploaddir = BDO_DIR."images/couv/";
@@ -75,13 +75,13 @@ if ($act=="append"){
                 $newfilename .=".jpg";
             }
             if(!copy($txtFileLoc,$uploaddir.$newfilename)){
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }else{
                 $img_couv=$newfilename;
             }
         }
-        else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)){ // un fichier à télécharg ?????A  ?  $ier
+        else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)){ // un fichier Ã  tÃ©lÃ©charg ?????A  ?  $ier
             $newfilename = "CV-".sprintf("%06d",$id_tome)."-".sprintf("%06d",$lid);
             $new_filename = get_img_from_url($_POST['txtFileURL'],BDO_DIR."images/tmp/",$newfilename);
             $tmp_filename = BDO_DIR."images/tmp/".$new_filename;
@@ -99,7 +99,7 @@ if ($act=="append"){
             $img_couv='';
         }
 
-        // met à jour la référence au fichier dans la table bd_edition
+        // met Ã  jour la rÃ©fÃ©rence au fichier dans la table bd_edition
         $query = "
         UPDATE bd_edition SET
             `img_couv` = '".$DB->escape($img_couv)."'
@@ -107,17 +107,17 @@ if ($act=="append"){
             `id_edition`=".$DB->escape($lid);
         $DB->query($query);
     }
-    // N'ajoute pas automatiquement l'édition mais se contente dé confirmer qu'elle a été proposée
-    echo GetMetaTag(3,"La nouvelle édition a bien été proposée pour être ajoutée à la base de données BDovore. Elle sera prochainement traitée part l'équipe de validation et votre collection sera mise à jour en conséquence. Merci de votre contribution à la base BDovore.","javascript:window.close()");
+    // N'ajoute pas automatiquement l'Ã©dition mais se contente dÃ© confirmer qu'elle a Ã©tÃ© proposÃ©e
+    echo GetMetaTag(3,"La nouvelle Ã©dition a bien Ã©tÃ© proposÃ©e pour Ãªtre ajoutÃ©e Ã  la base de donnÃ©es BDovore. Elle sera prochainement traitÃ©e part l'Ã©quipe de validation et votre collection sera mise Ã  jour en consÃ©quence. Merci de votre contribution Ã  la base BDovore.","javascript:window.close()");
 }
 
 // Affichage du formulaire
 if ($act==''){
-    // variables générales
+    // variables gÃ©nÃ©rales
     // Creation d'une nouvelle instance Fast Template
     $t = new Template(BDO_DIR."public/templates");
 
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "user.add.edition.tpl"));
 
@@ -145,6 +145,7 @@ if ($act==''){
     "LOGINBARRE" => GetIdentificationBar(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->pparse("MyFinalOutput","tpBody");
 }

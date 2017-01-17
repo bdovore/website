@@ -9,7 +9,7 @@ minAccessLevel(2);
 // Creation d'un nouveau Template
 $t = new Template(BDO_DIR."public/templates");
 
-// Vérification s'il s'agit d'un ordre d'ajout
+// VÃ©rification s'il s'agit d'un ordre d'ajout
 if ($act == "insert")
 {
     //Situation d'insert
@@ -29,12 +29,13 @@ if ($act == "insert")
     $t->set_file(array(
     "tpBody" => "user_dup_alb_conf.tpl"));
 
-    // Complète les variables
+    // ComplÃ¨te les variables
     $t->set_var(array(
     "WNDTITLE" => "Confirmation"
     ));
-$t->set_var("URLSITE",BDO_URL);
-$t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+    $t->set_var("URLSITE",BDO_URL);
+    $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+    $t->set_var("URLSITEFORUM",BDO_URL_FORUM);
     $t->pparse("Output","tpBody");
 
     exit();
@@ -68,23 +69,23 @@ WHERE
 ";
 $DB->query($request);
 
-// Vérifie si l'utilisateur possède toutes les collections
+// VÃ©rifie si l'utilisateur possÃ¨de toutes les collections
 if ($DB->nf() == 0) {
     // Selectionne le template de non ajout
     $t->set_file(array(
     "tpBody" => "user_nodup_alb.tpl"));
 
-    // Complète les variables
+    // ComplÃ¨te les variables
     $t->set_var(array(
-    "WNDTITLE" => "Aucune édition à ajouter"
+    "WNDTITLE" => "Aucune Ã©dition Ã  ajouter"
     ));
 }else{
-    // Dans le cas contraire, présente le formulaire d'ajout avec les éditions disponibles
+    // Dans le cas contraire, prÃ©sente le formulaire d'ajout avec les Ã©ditions disponibles
     // Selectionne le template d'ajout
     $t->set_file(array(
     "tpBody" => "user_dup_alb.tpl"));
 
-    // Selection du block édition
+    // Selection du block Ã©dition
     $t->set_block('tpBody','EditionBlock','EBlock');
     $ischecked = "checked";
 
@@ -97,7 +98,7 @@ if ($DB->nf() == 0) {
         }else{
             $url_image = BDO_URL_IMAGE."couv/".$DB->f("img_couv");
         }
-        // Affiche le résultat
+        // Affiche le rÃ©sultat
         $t->set_var (array
         ("EDITEUR" => stripslashes($DB->f("enom")),
         "COLLECTION" => htmlentities(stripslashes($DB->f("cnom"))),
@@ -121,5 +122,6 @@ if ($DB->nf() == 0) {
 }
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 
 $t->pparse("Output","tpBody");

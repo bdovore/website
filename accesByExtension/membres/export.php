@@ -11,7 +11,7 @@ minAccessLevel(2);
 
 if ($act=="export") {
 
-    // met à jour la sélection
+    // met Ã  jour la sÃ©lection
     $codesel = "";
     for ($i=0; $i<=18; $i++) {
         if (in_array($i, $sel_field)) {
@@ -80,7 +80,7 @@ if ($act=="export") {
         AND users_album.flg_achat='".$DB->escape($flg_achat)."'
     ORDER BY bd_serie.tri, bd_serie.NOM, bd_tome.NUM_TOME
     ";
-            $entete = array('Serie', 'Titre','Tome','ISBN', 'Genre','Scénariste','Dessinateur','Editeur','Collection','Date parution','Date d\'ajout','Note','Remarque','Prêté','Emprunteur','Date d\'achat', 'Prix','Cadeau','Edition originale');
+            $entete = array('Serie', 'Titre','Tome','ISBN', 'Genre','ScÃ©nariste','Dessinateur','Editeur','Collection','Date parution','Date d\'ajout','Note','Remarque','PrÃªtÃ©','Emprunteur','Date d\'achat', 'Prix','Cadeau','Edition originale');
             $largeur = array(20,20,5,10, 15,15,15,15,15,15,15,5,20,5,10,15,10,5,5);
             $nbpages = 100;
             break;
@@ -250,7 +250,7 @@ ORDER BY s.tri, s.NOM, t.NUM_TOME
             $txtTitre = substr($txtTitre, 0, -1);
             echo $txtTitre."\n";
 
-            // Données de l'export
+            // DonnÃ©es de l'export
             $DB->query($query);
             while ($DB->next_record()) {
                 $txtCol ="";
@@ -295,7 +295,7 @@ else
 {
 
 
-    // récupère les paramètres par défaut de l'utilisateur
+    // rÃ©cupÃ¨re les paramÃ¨tres par dÃ©faut de l'utilisateur
     $query = "SELECT pref_export FROM users WHERE ".$DB->escape($_SESSION["UserId"]);
     $DB->query($query);
     $DB->next_record();
@@ -304,14 +304,14 @@ else
 
     // Creation d'une nouvelle instance Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "user_export.tpl",
     "tpMenu" => "user.menu.tpl",
     "tpMenuColl" => "menu_coll.tpl",
     "tpBase" => "body.tpl"));
 
-    // Préremplie les case à cocher
+    // PrÃ©remplie les case Ã  cocher
     for ($i=0; $i<=18; $i++) {
         if (substr($codesel,$i,1)=="1") {
             $t->set_var("SELFIELD".$i, 'checked');
@@ -338,7 +338,8 @@ else
     ("LOGINBARRE" => GetIdentificationBar(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
-    "PAGETITLE" => "Export de données"));
+    "URLSITEFORUM" => BDO_URL_FORUM,
+    "PAGETITLE" => "Export de donnÃ©es"));
     $t->parse("BODY","tpBody");
     $t->parse("MENUCOLL","tpMenuColl");
     $t->parse("MENUBARRE","tpMenu");

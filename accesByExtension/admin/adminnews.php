@@ -26,7 +26,7 @@ if ($act==""){
         $sort = " ASC";
     }
 
-    // Selection des utilisateurs à afficher
+    // Selection des utilisateurs Ã  afficher
     $clerep[1] = "news_id";
     $clerep[2] = "news_date";
     $clerep[3] = "news_posteur";
@@ -39,12 +39,12 @@ if ($act==""){
 
     // Creation d'une nouvelle instance Fast Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "adminnews.tpl",
     "tpBase" => "body.tpl"
     ));
-    // on déclare le block à utiliser
+    // on dÃ©clare le block Ã  utiliser
     $t->set_block('tpBody','NewsBlock','NBlock');
 
     //Liste les news
@@ -80,6 +80,7 @@ if ($act==""){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
@@ -94,13 +95,13 @@ elseif($act=="ajout"){
         '".$DB->escape($_POST["txtcontent"])."');";
         $DB->query($query);
         //rouvre la page
-        echo GetMetaTag(2,"La nouvelle news a été ajoutée",(BDO_URL."admin/adminnews.php"));
+        echo GetMetaTag(2,"La nouvelle news a Ã©tÃ© ajoutÃ©e",(BDO_URL."admin/adminnews.php"));
         exit;
     }
     //sinon affiche le formulaire de saisie de news
     // Creation d'une nouvelle instance Fast Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "addnews.tpl",
     "tpBase" => "body.tpl"
@@ -121,6 +122,7 @@ elseif($act=="ajout"){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
@@ -134,10 +136,10 @@ elseif($act=="supprim"){
         $query = "DELETE FROM news WHERE news_id=".$DB->escape($newsid);
         $DB->query($query);
         //rouvre la page
-        echo GetMetaTag(2,"La news a été effacée",(BDO_URL."admin/adminnews.php"));
+        echo GetMetaTag(2,"La news a Ã©tÃ© effacÃ©e",(BDO_URL."admin/adminnews.php"));
         exit;
     }else{
-        // affiche la confirmation de la demande d'éffacement
+        // affiche la confirmation de la demande d'Ã©ffacement
         echo 'Etes-vous s&ucirc;r de vouloir effacer la news n&deg;'.$newsid.'  ?   <a href="adminnews.php?act=supprim&newsid='.$newsid.'&status=ok">oui</a>
           - <a href="javascript:history.go(-1)">non</a>';
         exit();
@@ -156,11 +158,11 @@ elseif($act=="modif"){
         WHERE `news_id`=".$DB->escape($newsid).";";
         $DB->query($query);
         //rouvre la page
-        echo GetMetaTag(2,"La news a été éditée.",(BDO_URL."admin/adminnews.php"));
+        echo GetMetaTag(2,"La news a Ã©tÃ© Ã©ditÃ©e.",(BDO_URL."admin/adminnews.php"));
         exit;
     }else{
         //sinon affiche le formulaire de saisie de news et remplie la vieille news
-        //Récupération des informations de la news
+        //RÃ©cupÃ©ration des informations de la news
 
         $DB->query("SELECT * FROM news WHERE news_id=".$DB->escape($newsid));
         $DB->next_record();
@@ -170,7 +172,7 @@ elseif($act=="modif"){
 
         // Creation d'une nouvelle instance Fast Template
         $t = new Template(BDO_DIR."public/templates");
-        // fichier à utiliser
+        // fichier Ã  utiliser
         $t->set_file(array(
         "tpBody" => "addnews.tpl",
         "tpBase" => "body.tpl"
@@ -190,7 +192,8 @@ elseif($act=="modif"){
         "LOGINBARRE" => GetIdentificationBar(),
         "MENUBARRE" => admin_menu(),
         "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
+        "URLSITEIMAGE" => BDO_URL_IMAGE,
+        "URLSITEFORUM" => BDO_URL_FORUM
         ));
         $t->parse("BODY","tpBody");
         $t->pparse("MyFinalOutput","tpBase");

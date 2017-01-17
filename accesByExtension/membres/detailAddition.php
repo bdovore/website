@@ -6,7 +6,7 @@ include (BDO_DIR."inc/function.html.inc.php");
 
 minAccessLevel(2);
 
-// vérifie si on a une mise à jour des prix
+// vÃ©rifie si on a une mise Ã  jour des prix
 if ($action == 'update')
 {
     foreach ($prix_achat as $key => $value)
@@ -17,7 +17,7 @@ if ($action == 'update')
     }
 }
 
-// Vérifie si mise à jour des valeurs
+// VÃ©rifie si mise Ã  jour des valeurs
 if ($action == 'refresh')
 {
     $defval[0] = $_POST["txtPrixAlbum"];
@@ -42,7 +42,7 @@ else{
     $defcoffret = $DB->f("val_cof_type");
 }
 
-// Variables générales
+// Variables gÃ©nÃ©rales
 $nb = 20;
 if ($first=='') $first = 0;
 
@@ -54,14 +54,14 @@ $count[3] = 0;
 $count[4] = 0;
 $count_all =0;
 
-// Tableaux $paramètres
+// Tableaux $paramÃ¨tres
 // Valo des coffret
 $opt_coffret[0][0] = 0;
 $opt_coffret[0][1] = "Par album + Surcout";
 $opt_coffret[1][0] = 1;
 $opt_coffret[1][1] = "Valeur du coffret";
 
-// Récupère la collection
+// RÃ©cupÃ¨re la collection
 $query = "
 SELECT
     IFNULL(ua.date_achat, ua.date_ajout) as alb_date,
@@ -100,29 +100,29 @@ while ($DB->next_record())
     $type = 0;
     if ($DB->f("flg_type") == 1) $type = 2;
 
-    // Vérifie si l'album est coté par l'utilisateur
+    // VÃ©rifie si l'album est cotÃ© par l'utilisateur
     if (($DB->f("cote") != '') & (($DB->f("flg_type") == 0) | ($defcoffret == 1)))
     {
         $class = 0;
-        // Stocke les infos liées au prix
+        // Stocke les infos liÃ©es au prix
         $matrice_prix[0][$type] += $DB->f("cote");
         $matrice_count[0][$type]++;
         $tot_prix[$type] += $DB->f("cote");
         $tot_count[$type]++;
         $prix_retenu = $DB->f("cote");
     }
-    // Verifie si l'album est noté par bdovore
+    // Verifie si l'album est notÃ© par bdovore
     elseif (($DB->f("prix_bdnet") != '') & ($DB->f("flg_type") == 0 | ($defcoffret == 1)))
     {
         $class = 1;
-        // Stocke les infos liées au prix
+        // Stocke les infos liÃ©es au prix
         $matrice_prix[1][$type] += $DB->f("prix_bdnet");
         $matrice_count[1][$type]++;
         $tot_prix[$type] += $DB->f("prix_bdnet");
         $tot_count[$type]++;
         $prix_retenu = $DB->f("prix_bdnet");
     }
-    // Non valorisé
+    // Non valorisÃ©
     elseif (($DB->f("flg_type") == 0) | ($defcoffret == 1))
     {
         if ($defval[$type] == '')
@@ -140,7 +140,7 @@ while ($DB->next_record())
             $prix_retenu = $defval[$type];
         }
     }
-    // Coffret valorisé album par album
+    // Coffret valorisÃ© album par album
     elseif (($DB->f("flg_type") == 1) & ($defcoffret == 0))
     {
         $class = 4;
@@ -151,7 +151,7 @@ while ($DB->next_record())
         $prix_retenu = $defval[2];
     }
 
-    // stocke les valeurs de détail
+    // stocke les valeurs de dÃ©tail
     $idedition[$class][$count[$class]] = $DB->f("id_edition");
     $serie[$class][$count[$class]] = stripslashes($DB->f("nom"));
     $idserie[$class][$count[$class]] = stripslashes($DB->f("id_serie"));
@@ -175,11 +175,11 @@ while ($DB->next_record())
     $count_all++;
 }
 
-// Affichage du tableau de détail
+// Affichage du tableau de dÃ©tail
 
 // Creation d'une nouvelle instance Template
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpMenuColl" => "menu_coll.tpl",
 "tpBody" => "user_addition_detail.tpl",
@@ -190,26 +190,26 @@ $t->set_file(array(
 $t->set_var (array
 ("NBPA" => $matrice_count[0][0]+$matrice_count[0][1]+$matrice_count[0][2],
 "VALPA" => $matrice_prix[0][0]+$matrice_prix[0][1]+$matrice_prix[0][2],
-"TITRENBPA" => (($matrice_count[0][0] > 0) ? $matrice_count[0][0]." albums" : '').(($matrice_count[0][1] > 0) ? " - ".$matrice_count[0][1]." intégrales" : '').(($matrice_count[0][2] > 0) ? " - ".$matrice_count[0][2]." coffrets" : ''),
+"TITRENBPA" => (($matrice_count[0][0] > 0) ? $matrice_count[0][0]." albums" : '').(($matrice_count[0][1] > 0) ? " - ".$matrice_count[0][1]." intÃ©grales" : '').(($matrice_count[0][2] > 0) ? " - ".$matrice_count[0][2]." coffrets" : ''),
 "URLNBPA" => BDO_URL."membres/detailAddition.php?detail=0",
 "NBPB" => $matrice_count[1][0]+$matrice_count[1][1]+$matrice_count[1][2],
 "VALPB" => $matrice_prix[1][0]+$matrice_prix[1][1]+$matrice_prix[1][2],
-"TITRENBPB" => (($matrice_count[1][0] > 0) ? $matrice_count[1][0]." albums" : '').(($matrice_count[1][1] > 0) ? " - ".$matrice_count[1][1]." intégrales" : '').(($matrice_count[1][2] > 0) ? " - ".$matrice_count[1][2]." coffrets" : ''),
+"TITRENBPB" => (($matrice_count[1][0] > 0) ? $matrice_count[1][0]." albums" : '').(($matrice_count[1][1] > 0) ? " - ".$matrice_count[1][1]." intÃ©grales" : '').(($matrice_count[1][2] > 0) ? " - ".$matrice_count[1][2]." coffrets" : ''),
 "URLNBPB" => BDO_URL."membres/detailAddition.php?detail=1",
 "NBPD" => $matrice_count[3][0]+$matrice_count[3][1]+$matrice_count[3][2],
 "VALPD" => $matrice_prix[3][0]+$matrice_prix[3][1]+$matrice_prix[3][2],
-"TITRENBPD" => (($matrice_count[3][0] > 0) ? $matrice_count[3][0]." albums" : '').(($matrice_count[3][1] > 0) ? " - ".$matrice_count[3][1]." intégrales" : '').(($matrice_count[3][2] > 0) ? " - ".$matrice_count[3][2]." coffrets" : ''),
+"TITRENBPD" => (($matrice_count[3][0] > 0) ? $matrice_count[3][0]." albums" : '').(($matrice_count[3][1] > 0) ? " - ".$matrice_count[3][1]." intÃ©grales" : '').(($matrice_count[3][2] > 0) ? " - ".$matrice_count[3][2]." coffrets" : ''),
 "URLNBPD" => BDO_URL."membres/detailAddition.php?detail=3",
 "NBC" => $matrice_count[4][0],
 "VALC" => $matrice_prix[4][0],
 "URLNBC" => BDO_URL."membres/detailAddition.php?detail=4",
 "NBNV" => $matrice_count[2][0]+$matrice_count[2][1],
 "VALNV" => $matrice_prix[2][0]+$matrice_prix[2][1],
-"TITRENBNV" => (($matrice_count[2][0] > 0) ? $matrice_count[2][0]." albums" : '').(($matrice_count[2][1] > 0) ? " - ".$matrice_count[2][1]." intégrales" : '').(($matrice_count[2][2] > 0) ? " - ".$matrice_count[2][2]." coffrets" : ''),
+"TITRENBNV" => (($matrice_count[2][0] > 0) ? $matrice_count[2][0]." albums" : '').(($matrice_count[2][1] > 0) ? " - ".$matrice_count[2][1]." intÃ©grales" : '').(($matrice_count[2][2] > 0) ? " - ".$matrice_count[2][2]." coffrets" : ''),
 "URLNBNV" => BDO_URL."membres/detailAddition.php?detail=2",
 "NBTOT" => $tot_count[0] + $tot_count[1] + $tot_count[2],
 "VALTOT" => $tot_prix[0] + $tot_prix[1] + $tot_prix[2],
-"TITRENBTOT" => (($tot_count[0] > 0) ? $tot_count[0]." albums" : '').(($tot_count[1] > 0) ?  " - ".$tot_count[1]." intégrales" : '').(($tot_count[2] > 0) ?  " - ".$tot_count[2]." coffrets" : ''),
+"TITRENBTOT" => (($tot_count[0] > 0) ? $tot_count[0]." albums" : '').(($tot_count[1] > 0) ?  " - ".$tot_count[1]." intÃ©grales" : '').(($tot_count[2] > 0) ?  " - ".$tot_count[2]." coffrets" : ''),
 "URLNBTOT" => BDO_URL."membres/detailAddition.php?detail=5",
 ));
 
@@ -223,7 +223,7 @@ if (isset($detail))
         else
         $max_display = ($first + $nb -1);
 
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','RowBlock','RBlock');
         for ($i=$first ; $i <= $max_display; $i++)
         {
@@ -241,14 +241,14 @@ if (isset($detail))
             $t->parse ("RBlock", "RowBlock",true);
         }
     }else{
-        // Affiche uniquement la catégorie concernée
+        // Affiche uniquement la catÃ©gorie concernÃ©e
         $num_alb = $count[$detail]-1;
         if (($first + $nb) > $num_alb)
         $max_display = $num_alb;
         else
         $max_display = ($first + $nb -1);
 
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','RowBlock','RBlock');
         for ($i=$first ; $i <= $max_display; $i++)
         {
@@ -271,7 +271,7 @@ if (isset($detail))
     }
 }
 
-// Rempli les paramètres
+// Rempli les paramÃ¨tres
 $t->set_var (array
 ("DEFALB" => $defval[0],
 "DEFINT" => $defval[1],
@@ -291,7 +291,8 @@ $t->set_var (array
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
 "PAGETITLE" => "L'addition"));
 
 $t->parse("MENUCOLL","tpMenuColl");

@@ -6,7 +6,7 @@ include (BDO_DIR."inc/function.html.inc.php");
 
 minAccessLevel(2);
 
-// Variables générales
+// Variables gÃ©nÃ©rales
 $nb = 20;
 
 if ($annee=='') $annee=date("Y");
@@ -15,7 +15,7 @@ if ($info=='') $info=1;
 
 
 // Valeurs d'option
-$tb_mois=array("Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre");
+$tb_mois=array("Janvier","FÃ©vrier","Mars","Avril","Mai","Juin","Juillet","AoÃ»t","Septembre","Octobre","Novembre","DÃ©cembre");
 for ($i=0; $i<12; $i++)
 {
     $opt_mois[$i][0] = $i+1;
@@ -25,7 +25,7 @@ for ($i=0; $i<12; $i++)
 // initialise les compteurs
 $count = 0;
 
-// Récupère les valeurs par défaut
+// RÃ©cupÃ¨re les valeurs par dÃ©faut
 $query = "SELECT val_alb, val_cof, val_int, val_cof_type FROM users WHERE user_id = ".$DB->escape($_SESSION["UserId"]);
 $DB->query ($query);
 $DB->next_record();
@@ -34,7 +34,7 @@ $defval[1] = $DB->f("val_int");
 $defval[2] = $DB->f("val_cof");
 $defcoffret = $DB->f("val_cof_type");
 
-// Récupère la collection
+// RÃ©cupÃ¨re la collection
 $query = "
 SELECT
     DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%d/%m/%y') as date_achat,
@@ -71,21 +71,21 @@ while ($DB->next_record())
     $type = 0;
     if ($DB->f("flg_type") == 1) $type = 2;
 
-    // Vérifie si l'album est coté par l'utilisateur
+    // VÃ©rifie si l'album est cotÃ© par l'utilisateur
     if (($DB->f("cote") != '') & (($DB->f("flg_type") == 0) | ($defcoffret == 1)))
     {
         $tot_prix[$type] += $DB->f("cote");
         $tot_count[$type]++;
         $prix_retenu = $DB->f("cote");
     }
-    // Verifie si l'album est noté par bdovore
+    // Verifie si l'album est notÃ© par bdovore
     elseif (($DB->f("prix_bdnet") != '') & ($DB->f("flg_type") == 0 | ($defcoffret == 1)))
     {
         $tot_prix[$type] += $DB->f("prix_bdnet");
         $tot_count[$type]++;
         $prix_retenu = $DB->f("prix_bdnet");
     }
-    // Non valorisé
+    // Non valorisÃ©
     elseif (($DB->f("flg_type") == 0) | ($defcoffret == 1))
     {
         if ($defval[$type] == '')
@@ -98,7 +98,7 @@ while ($DB->next_record())
             $prix_retenu = $defval[$type];
         }
     }
-    // Coffret valorisé album par album
+    // Coffret valorisÃ© album par album
     elseif (($DB->f("flg_type") == 1) & ($defcoffret == 0))
     {
         $tot_prix[$type] += $defval[2];
@@ -111,7 +111,7 @@ while ($DB->next_record())
     $depense[$year] += $prix_retenu;
     $nbalbums[$year]++;
 
-    // stocke le détail par mois
+    // stocke le dÃ©tail par mois
     $month = $DB->f("mois_achat");
 
     if (($year == $annee) & ($month == $mois))
@@ -130,7 +130,7 @@ while ($DB->next_record())
 
 // Creation d'une nouvelle instance Template
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpMenuColl" => "menu_coll.tpl",
 "tpBody" => "user_addition_stats.tpl",
@@ -194,7 +194,8 @@ $t->set_var (array
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
 "PAGETITLE" => "L'addition"));
 
 $t->parse("MENUCOLL","tpMenuColl");

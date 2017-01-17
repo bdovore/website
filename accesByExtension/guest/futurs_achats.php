@@ -8,12 +8,12 @@ include_once (BDO_DIR."inc/bdovore.php");
 include (BDO_DIR."inc/queryfunction.php");
 
 
-// Vérifie qu'un parametre a été passé
+// VÃ©rifie qu'un parametre a Ã©tÃ© passÃ©
 if (!isset($user)){
     if (issetNotEmpty($_SESSION["UserId"])) {
         $user = encodeUserId($_SESSION["UserId"]);
     }else {
-        echo GetMetaTag(3,"Erreur lors du chargement de cette page : vous allez être redirigé.",(BDO_URL."index.php"));
+        echo GetMetaTag(3,"Erreur lors du chargement de cette page : vous allez Ãªtre redirigÃ©.",(BDO_URL."index.php"));
         exit();
     }
 }
@@ -29,7 +29,7 @@ if ($user_id <> $_SESSION["UserId"] ) {
 }
 
 
-// variables générales
+// variables gÃ©nÃ©rales
 $nb = 10;
 if ($first=='') {$first = 0;}
 
@@ -39,16 +39,16 @@ $DB->query ($query);
 $DB->next_record();
 $num_fa = $DB->f("fut_achat");
 
-if ($num_fa == 0) $message_err = "Pas d'achats prévus";
+if ($num_fa == 0) $message_err = "Pas d'achats prÃ©vus";
 
-// Récupère les 20 derniers achats
+// RÃ©cupÃ¨re les 20 derniers achats
 $query = "
 SELECT
     t.id_tome,
     t.titre,
     CASE flg_int
     when 'O'
-    then 'Intégrale'
+    then 'IntÃ©grale'
     else (
         CASE t.flg_type
         when 1
@@ -83,7 +83,7 @@ ORDER BY s.nom, t.num_tome, t.flg_type
 LIMIT ".$DB->escape($first).", ".$DB->escape($nb);
 
 $DB->query ($query);
-// prépare le template
+// prÃ©pare le template
 $t = new Template(BDO_DIR."public/templates");
 $t->set_file(array(
 "tpBody" => "guest_futurs_achats.tpl",
@@ -92,7 +92,7 @@ $t->set_file(array(
 "tpMenuUser" => "menu_user".(minAccessLevel(2,false) ? '' : '_logout').".tpl",
 "tpBase" => "body.tpl"));
 
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpBody','AlbBlock','ABlock');
 
 //Liste les futurs achats
@@ -106,7 +106,7 @@ while ($DB->next_record())
         $tome = $DB->f("num_tome");
     }
 
-    // Détermine si la collection est disponible
+    // DÃ©termine si la collection est disponible
     if ($DB->f("nom_collec") == '<N/A>')
     {
         $combi = $DB->f("nom_editeur");
@@ -114,7 +114,7 @@ while ($DB->next_record())
         $combi = $DB->f("nom_editeur")." - ".$DB->f("nom_collec");
     }
 
-    // Genère la remarque
+    // GenÃ¨re la remarque
     if ($DB->f("comment") != '')
     {
         $comment = nl2br(stripslashes($DB->f("comment")));
@@ -123,10 +123,10 @@ while ($DB->next_record())
         $comment = "Aucune";
     }
     if ($DB->f("isbn")) {
-        $amazon = "http://www.amazon.fr/exec/obidos/ASIN/".$DB->f("isbn")."/bdovorecom-21/";
+        $amazon = BDO_PROTOCOL."://www.amazon.fr/exec/obidos/ASIN/".$DB->f("isbn")."/bdovorecom-21/";
     }
     else {
-        $amazon = "http://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=".htmlspecialchars(stripslashes($DB->f("serie")))."%20".htmlspecialchars(stripslashes($DB->f("titre")))."&mode=books-fr";
+        $amazon = BDO_PROTOCOL."://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=".htmlspecialchars(stripslashes($DB->f("serie")))."%20".htmlspecialchars(stripslashes($DB->f("titre")))."&mode=books-fr";
 
     }
     $t->set_var (array
@@ -158,11 +158,13 @@ $t->set_var (array
 "USERID" => $ori_user
 ));
 
-// Envoie les info générales et publie la page
+// Envoie les info gÃ©nÃ©rales et publie la page
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM
+));
 
 $t->parse("BODY","tpBody");
 $t->parse("MENUBARRE","tpMenu");

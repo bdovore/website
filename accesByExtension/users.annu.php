@@ -64,7 +64,7 @@ $DB->query($select);
 // Creation d'une nouvelle instance Fast Template
 $t = new Template(BDO_DIR."public/templates");
 
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpBody" => "annuaire.tpl",
 "tpMenu" => "menu.tpl",
@@ -112,7 +112,8 @@ $t->set_var("NAVBLOCK",$nav);
 $t->set_var (array(
 "LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
 "PAGETITLE" => "L'annuaire des collectionneurs")
 );
 $t->parse("BODY","tpBody");

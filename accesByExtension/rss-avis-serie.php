@@ -7,15 +7,15 @@ echo '<?xml version="1.0" encoding="iso-8859-1"?>';
 echo '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">';
 
 echo '<channel>';
-echo '<atom:link href="http://www.bdovore.com/rss-avis-serie.php" rel="self" type="application/rss+xml" />';
-echo '<title>Bdovore - Avis séries</title>';
+echo '<atom:link href="'.BDO_URL.'rss-avis-serie.php" rel="self" type="application/rss+xml" />';
+echo '<title>Bdovore - Avis sÃ©ries</title>';
 echo '<link>'.BDO_URL.'</link>';
-echo '<description>Les derniers avis de lecture postés sur les séries/one-shots</description>';
+echo '<description>Les derniers avis de lecture postÃ©s sur les sÃ©ries/one-shots</description>';
 echo '<copyright>Bdovore</copyright>';
 echo '<language>fr</language>';
 
 
-// Requête pour récupérer les 50 derniers avis avec leurs couvertures
+// RequÃªte pour rÃ©cupÃ©rer les 50 derniers avis avec leurs couvertures
 $select = "
 SELECT
     s.nom serie,
@@ -55,7 +55,7 @@ while ($DB->next_record())
     $titre = str_replace ( chr(0x96), '\'',  $titre );
     $histoire = str_replace ( chr(0x96), '\'',  $histoire );
 
-    //Conversion de la date de MySQL (yyyy-mm-jj hh:mm:ss) à RFC822 (format rss : wed, 30 apr 2009 hh:mm:ss GMT)
+    //Conversion de la date de MySQL (yyyy-mm-jj hh:mm:ss) Ã  RFC822 (format rss : wed, 30 apr 2009 hh:mm:ss GMT)
     $date_array = explode("-",$dte_post);
     $day_array = explode(" ",$date_array[2]);
     $time_array = explode(":",$day_array[1]);

@@ -6,14 +6,14 @@ include (BDO_DIR."inc/queryfunction.php");
 
 minAccessLevel(2);
 
-// **************** nombre d'album à afficher par page : 5
+// **************** nombre d'album Ã  afficher par page : 5
 $limPage = 5;
 
 // **********************************************
 // Creation d'un nouveau Template
 $t = new Template(BDO_DIR."public/templates");
 
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpForm_Recherche_Membre" => "form_recherche_membre.tpl",
 "tpBody" => "userseries.tpl",
@@ -24,7 +24,7 @@ $t->set_file(array(
 $t->set_block('tpBody','AlbBlock','ABlock');
 
 // ****************************************************
-// S'il faut mettre à jour des infos....
+// S'il faut mettre Ã  jour des infos....
 // ****************************************************
 if (isset($_POST["B_Add"]))
 {
@@ -36,7 +36,7 @@ if (isset($_POST["B_Add"]))
         $DB->query($verif);
         //echo $DB->num_rows;
         if ($DB->num_rows() > 0) {
-            //mise à jour du commentaire
+            //mise Ã  jour du commentaire
             $update = "
             update serie_comment
                 set note = ".$DB->escape($sernote).",
@@ -47,7 +47,7 @@ if (isset($_POST["B_Add"]))
             $DB->next_record();
             $old_note = $DB->f("note");
             $DB->query($update);
-            //on récupere le nombre de note pour la moyenne
+            //on rÃ©cupere le nombre de note pour la moyenne
             $select = sprintf("select sum(note) tot, count(note) nb from serie_comment where id_serie = %d",$DB->escape($id_serie));
             $DB->query($select);
             $DB->next_record();
@@ -143,7 +143,7 @@ if (isset($_POST["B_Add"]))
 
         $DB->query($select);
         if ($note[$i] != 'NULL' || $comment[$i]) {
-            // si un commentaire ou une note a été donné on insert dans la table
+            // si un commentaire ou une note a Ã©tÃ© donnÃ© on insert dans la table
             if ($DB->num_rows() > 0) {
                 $update = "update users_comment set note = ".$DB->escape($note[$i]).", comment='".$DB->escape($comment[$i])."'
         where user_id =".$DB->escape($_SESSION["UserId"])." and id_tome = ".$DB->escape($id_tome[$i]);
@@ -163,12 +163,12 @@ if (isset($_POST["B_Add"]))
                 $DB->query($update);
             }
         }
-        // on vérifie s'il y a des notes/comment
+        // on vÃ©rifie s'il y a des notes/comment
         $DB->query("select count(*) nb from users_comment where user_id =".$DB->escape($_SESSION["UserId"])." and id_tome = ".$DB->escape($id_tome[$i]));
         $DB->next_record();
         $nb = $DB->f("nb");
         if ($note[$i] != 'NULL' || $nb == 1) {
-            // si une note, mise à jour de la moyenne de l'album
+            // si une note, mise Ã  jour de la moyenne de l'album
             $select = "select sum(note) tot, count(note) nb from users_comment where id_tome =".$DB->escape($id_tome[$i]);
             $DB->query($select);
             $DB->next_record();
@@ -184,15 +184,15 @@ if (isset($_POST["B_Add"]))
         }
 
     }
-    echo GetMetaTag(3,"Les albums de la série ont été mis à jour avec succès !",("userserie.php?id_serie=".$id_serie));
+    echo GetMetaTag(3,"Les albums de la sÃ©rie ont Ã©tÃ© mis Ã  jour avec succÃ¨s !",("userserie.php?id_serie=".$id_serie));
     exit();
 }
 
 // ******************************************
-// Affichage de la série
+// Affichage de la sÃ©rie
 // ******************************************
 if ($id_serie) {
-    // information général sur la série
+    // information gÃ©nÃ©ral sur la sÃ©rie
     $query_serie = "
     select
     s.nom,
@@ -220,7 +220,7 @@ if ($id_serie) {
         "NBALB" => $DB->f("nbalb"),
         "SERID" => $id_serie
         ));
-        $pagetitle = "Série : ".$DB->f("nom");
+        $pagetitle = "SÃ©rie : ".$DB->f("nom");
 
         // nombre de page
         $nb_tome = $DB->f("nbalb");
@@ -250,7 +250,7 @@ if ($id_serie) {
         "CMTSERIE"=> $DB->f("comment")
         ));
 
-        // La série est elle complète ?
+        // La sÃ©rie est elle complÃ¨te ?
         // -----------------------------------------------------
         $select = "
         SELECT
@@ -297,7 +297,7 @@ if ($id_serie) {
             en.img_couv,
             g.libelle,
             ua.cote,
-            CASE t.flg_int when 'O' then 'Intégrale' else t.num_tome end ntome,
+            CASE t.flg_int when 'O' then 'IntÃ©grale' else t.num_tome end ntome,
             ua.flg_dedicace,
             ua.flg_achat,
             ua.flg_tete,
@@ -370,7 +370,7 @@ if ($id_serie) {
 
                 $t->set_var(array(
                 "OPTIONNOTE" => $option_note,
-                "USERCOMMENT"=> ("--- Voir l'édition ci-dessus pour modifier le commentaire et la note de cet album ---.\n\n".$DB->f("comment")),
+                "USERCOMMENT"=> ("--- Voir l'Ã©dition ci-dessus pour modifier le commentaire et la note de cet album ---.\n\n".$DB->f("comment")),
                 "DISABLEDUSERCOMMENT"=> 'DISABLED'
                 ));
 
@@ -406,7 +406,7 @@ if ($id_serie) {
                 $edition.="<br />Collection ".$DB->f("collection");
             }
             if ($DB->f("comment_ed")) {
-                $comment_edition = "<tr><td class=\"case_entete_fonce\"> Description de l'édition :</td>";
+                $comment_edition = "<tr><td class=\"case_entete_fonce\"> Description de l'Ã©dition :</td>";
                 $comment_edition .= "<td class=\"case_fond_clair\">" . stripslashes($DB->f('comment_ed'));
                 $comment_edition .= "</td></tr>";
             } else {
@@ -463,7 +463,8 @@ if ($id_serie) {
 $t->set_var (array(
 "LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
 "PAGETITLE" =>$pagetitle,
 "PAGEKEYWORD" => $keyword));
 $t->parse("BODY","tpBody");

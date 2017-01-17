@@ -16,7 +16,7 @@ if ($act == 'add') {
         $id_tome = idTomeByIdEdition($id_edition);
     }
 
-    $flg_achat = $_GET["flg_achat"]; // Déclaration de la variable et récupération dans l'url
+    $flg_achat = $_GET["flg_achat"]; // DÃ©claration de la variable et rÃ©cupÃ©ration dans l'url
     $verif = "
     select
         flg_achat
@@ -28,7 +28,7 @@ if ($act == 'add') {
 
     $DB->query($verif);
     if ($DB->num_rows() > 0)
-    { // Album déjà présent dans la collection
+    { // Album dÃ©jÃ  prÃ©sent dans la collection
         $DB->next_record();
         if ($DB->f("flg_achat") == "O" and $flg_achat == "N") // "O" : Achat futur ; "N" : Achat;
         {
@@ -40,16 +40,16 @@ if ($act == 'add') {
                 id_edition=".$DB->escape($id_edition)."
                 and user_id=".$DB->escape($_SESSION["UserId"]));
 
-            echo GetMetaTag(4,"L'édition était présente dans vos achats futurs et a été placé dans votre collection. Vous allez être redirigé vers votre fiche côté Collection",(BDO_URL."/membres/useralbum.php?id_tome=$id_tome&id_edition=$id_edition"));
+            echo GetMetaTag(4,"L'Ã©dition Ã©tait prÃ©sente dans vos achats futurs et a Ã©tÃ© placÃ© dans votre collection. Vous allez Ãªtre redirigÃ© vers votre fiche cÃ´tÃ© Collection",(BDO_URL."/membres/useralbum.php?id_tome=$id_tome&id_edition=$id_edition"));
             exit();
         }else {
-            echo GetMetaTag(3,"L'édition est déjà présente dans votre collection, vous allez être redirigé vers votre fiche côté Collection",(BDO_URL."/membres/useralbum.php?id_tome=$id_tome&id_edition=$id_edition"));
+            echo GetMetaTag(3,"L'Ã©dition est dÃ©jÃ  prÃ©sente dans votre collection, vous allez Ãªtre redirigÃ© vers votre fiche cÃ´tÃ© Collection",(BDO_URL."/membres/useralbum.php?id_tome=$id_tome&id_edition=$id_edition"));
             exit();
         }
     }
     else
     {
-        // Album non présent dans la collection
+        // Album non prÃ©sent dans la collection
         // ajout de l'album dans la collection
 /* modif id_scenar
         $insert_new = "
@@ -90,7 +90,7 @@ if ($act == 'add') {
         )";
 
                 $DB->query($insert_new);
-        echo GetMetaTag(3,"L'album a été ajouté dans votre collection, vous allez être redirigé vers sa fiche côté Collection",(BDO_URL."/membres/useralbum.php?id_tome=$id_tome&id_edition=$id_edition"));
+        echo GetMetaTag(3,"L'album a Ã©tÃ© ajoutÃ© dans votre collection, vous allez Ãªtre redirigÃ© vers sa fiche cÃ´tÃ© Collection",(BDO_URL."/membres/useralbum.php?id_tome=$id_tome&id_edition=$id_edition"));
         exit();
     }
 }
@@ -106,13 +106,13 @@ if (isset($_POST["id_tome"]) && isset($_POST["note"])) {
     $DB->query($verif);
     //echo $DB->num_rows;
     if ($DB->num_rows() > 0) {
-        //mise à jour du commentaire
+        //mise Ã  jour du commentaire
         $update = "update users_comment set note = ".$DB->escape($note).", comment = '".$DB->escape($comment)."',dte_post = CURRENT_TIMESTAMP() where user_id = ";
         $update .= sprintf("%d and id_tome =%d",$DB->escape($_SESSION["UserId"]), $DB->escape($id_tome));
         $DB->next_record();
         $old_note = $DB->f("note");
         $DB->query($update);
-        //on récupere le nombre de note pour la moyenne
+        //on rÃ©cupere le nombre de note pour la moyenne
         $select = sprintf("select sum(note) tot, count(note) nb from users_comment where id_tome = %d",$DB->escape($id_tome));
         $DB->query($select);
         $DB->next_record();
@@ -140,7 +140,7 @@ if (isset($_POST["id_tome"]) && isset($_POST["note"])) {
 // Creation d'un nouveau Template
 $t = new Template(BDO_DIR."public/templates");
 
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpBody" => "album.tpl",
 "tpComment"=> "viewcomment.tpl"
@@ -201,7 +201,7 @@ if ($id_tome or $id_edition)
             htmlspecialchars($DB->f("depseudo"))."'".'"'.">".$DB->f("depseudo")."</a>";
         }
         if ($DB->f("flg_int") == 'O') {
-            $num_tome = "Intégrale";
+            $num_tome = "IntÃ©grale";
         }else {
             if ($DB->f("flg_fini") == 2 ) {
                 $num_tome = "One shot";
@@ -222,7 +222,7 @@ if ($id_tome or $id_edition)
         $nom_scenar1 = $scenar1[0];
         $dessin1 = explode(",",stripslashes($DB->f('depseudo')));
         $nom_dessin1 = $dessin1[0];
-        $copyright = "©".$nom_scenar1."/".$nom_dessin1."-".stripslashes($DB->f('enom'));
+        $copyright = "Â©".$nom_scenar1."/".$nom_dessin1."-".stripslashes($DB->f('enom'));
 
         $t->set_var(array(
         "WNDTITLE" => stripslashes($DB->f("titre"))." (".stripslashes($DB->f("s_nom")).")",
@@ -251,9 +251,9 @@ if ($id_tome or $id_edition)
             $couv = $DB->f("img_couv");
         }
         if ($DB->f("isbn")) {
-            $amazon = "http://www.amazon.fr/exec/obidos/ASIN/".$DB->f("isbn")."/bdovorecom-21/";
+            $amazon = BDO_PROTOCOL."://www.amazon.fr/exec/obidos/ASIN/".$DB->f("isbn")."/bdovorecom-21/";
         } else {
-            $amazon = "http://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=".htmlspecialchars(stripslashes($DB->f("s_nom")))."%20".htmlspecialchars(stripslashes($DB->f("titre")))."&mode=books-fr";
+            $amazon = BDO_PROTOCOL."://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=".htmlspecialchars(stripslashes($DB->f("s_nom")))."%20".htmlspecialchars(stripslashes($DB->f("titre")))."&mode=books-fr";
         }
         if ($DB->f("cnom") <> "<N/A>") {
             $collection = "<br />Collection ".$DB->f("cnom");
@@ -261,7 +261,7 @@ if ($id_tome or $id_edition)
             $collection = "";
         }
         if ($DB->f("comment")) {
-            $comment_edition = '<div class="case_fond_clair" style="border: 1px solid #000; padding: 5px;"><span style="font-weight: bold;">Description de l\'édition</span><br />-----<br />'.stripslashes($DB->f('comment')).'</div>';
+            $comment_edition = '<div class="case_fond_clair" style="border: 1px solid #000; padding: 5px;"><span style="font-weight: bold;">Description de l\'Ã©dition</span><br />-----<br />'.stripslashes($DB->f('comment')).'</div>';
         }else {
             $comment_edition = "";
         }
@@ -326,7 +326,8 @@ if ($id_tome or $id_edition)
         $t->set_var("COMMENT","<em>Aucun commentaire actuellement</em>");
     }
     $t->set_var("URLSITE",BDO_URL);
-$t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+    $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+    $t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 
     // Envoi de la fiche album par email
     $t->set_var (array(

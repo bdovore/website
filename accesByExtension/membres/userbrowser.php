@@ -64,7 +64,7 @@ if ($rb_browse == 'ser' || !$rb_browse) {
     WHERE
     u.user_id =".mysql_real_escape_string($_SESSION["UserId"])."
     and flg_achat = 'N' ".$filter;
-    $pagetitle.= "série ";
+    $pagetitle.= "sÃ©rie ";
 
     if ($let) {
         if (strlen($let) < 4) {
@@ -80,7 +80,7 @@ if ($rb_browse == 'ser' || !$rb_browse) {
     select
         t.id_tome,
         CONCAT(CASE when t.flg_int = 'O'
-        then 'Intégrale '
+        then 'IntÃ©grale '
         when t.flg_type = 1
         then 'Coffret '
         else IFNULL(concat('Tome ',t.num_tome),'HS') end,': ', t.titre) as titre,
@@ -164,7 +164,7 @@ elseif ($rb_browse == 'aut') {
     select
         t.id_tome,
         CONCAT(CASE when t.flg_int = 'O'
-        then 'Intégrale '
+        then 'IntÃ©grale '
         when t.flg_type = 1
         then 'Coffret '
         else IFNULL(concat('Tome ',t.num_tome),'HS') end,': ', t.titre) as titre,
@@ -183,7 +183,7 @@ elseif ($rb_browse == 'aut') {
 
 }
 elseif ($rb_browse == 'edit'){
-    $pagetitle."mes éditeurs ";
+    $pagetitle."mes Ã©diteurs ";
     $query_RecAuteur = "
     SELECT distinct
         e.ID_EDITEUR id,
@@ -221,7 +221,7 @@ elseif ($rb_browse == 'edit'){
     select
         t.id_tome,
         CONCAT(s.nom,' : ',CASE when t.flg_int = 'O'
-        then 'Intégrale '
+        then 'IntÃ©grale '
         when t.flg_type = 1
         then 'Coffret '
         else IFNULL(concat('Tome ',t.num_tome),'HS') end,': ', t.titre) as titre,
@@ -281,7 +281,7 @@ elseif ($rb_browse == 'genr') {
     select
         t.id_tome,
         CONCAT(CASE when t.flg_int = 'O'
-        then 'Intégrale '
+        then 'IntÃ©grale '
         when t.flg_type = 1
         then 'Coffret '
         else IFNULL(concat('Tome ',t.num_tome),'HS') end,': ', t.titre) as titre,
@@ -313,7 +313,7 @@ $t->set_file(array(
 "tpMenu" => "user.menu.tpl",
 "tpBase" => "body.tpl"));
 
-// on déclare les blocks contenus sur la feuille
+// on dÃ©clare les blocks contenus sur la feuille
 $t->set_block('tpBody','NavBlock','NBlock');
 $t->set_block('tpBody','DataBlock','DBlock');
 
@@ -436,7 +436,7 @@ if ($rb_browse != "ser") {
     }
 }
 else {
-    // browse par série : seulement 2 niveaux
+    // browse par sÃ©rie : seulement 2 niveaux
     while ($row_RecAuteur = mysql_fetch_assoc($RecAuteur)) {
         if ($lev_id == $row_RecAuteur['id']) {
             $img = "aro_3_2.gif";
@@ -498,7 +498,9 @@ $t->set_var(array(
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM
+));
 
 $t->parse("MENUCOLL","tpMenuColl");
 $t->parse("BODY","tpBody");

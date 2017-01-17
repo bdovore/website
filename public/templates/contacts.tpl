@@ -29,7 +29,7 @@
                 - <a href="mailto:zeas@bdovore.com" title="Cliquez pour envoyer un email à zeas_chez_bdovore.com"><b>Zéas</b></a> :
                 Coordinateur du joyeux bordel actuel, il manie à merveille le fouet. Signe particulier : sa toque est trog grande pour sa tête, ce qui explique le goût un peu étrange de certains plats...
                 <br />
-                - <a href="mailto:chninkel@bdovore.com" title="Cliquez pour envoyer un email à chninkel_chez_bdovore.com"><b>Chninkel</b></a> : Aidant depuis longtemps les autres membres sur le <a href="http://forum.bdovore.com/index.php">forum</a>, le voici qui met son grain de sel dans la soupe du code.
+                - <a href="mailto:chninkel@bdovore.com" title="Cliquez pour envoyer un email à chninkel_chez_bdovore.com"><b>Chninkel</b></a> : Aidant depuis longtemps les autres membres sur le <a href="{URLSITEFORUM}index.php">forum</a>, le voici qui met son grain de sel dans la soupe du code.
                 <br />
                 - <a href="" title="Désolé, nous ne pouvons divulguer l'adresse de l'association des BDOvores anonymes. Latruffe est en cure de désyntoxication suite à une trop forte accoutumance à la BD et au site..."><b>Latruffe</b></a> :
                 Co-créateur du site avec Tomlamèche et qui cuisine encore de temps en temps.
@@ -38,7 +38,8 @@
                 Co-créateur du site avec Latruffe et qui garde un oeil de conseiller. Vous pouvez aussi le retrouver sur son <a href="http://lameche.zique.free.fr" title="Ouvre directement le lien dans la page courante">site musical</a>.
                 <br />
                 - <a href="mailto:feyd@bdovore.com" title="Cliquez pour envoyer un email à feyd_chez_bdovore.com"><b>Feyd</b></a> :
-                C'est lui qui est en charge de la décoration. Il est aussi dessinateur, colorise des <a href="http://www.bdovore.com/serie.php?id_serie=9362">BD</a> (parfois sous le mystérieux pseudonyme "Jean-Marie Jourdane") et a un blog par <a href="http://narcolepsy.fr/blog/">là</a>.
+                C'est lui qui est en charge de la décoration. Il est aussi
+                dessinateur, colorise des <a href="{URLSITE}serie.php?id_serie=9362">BD</a> (parfois sous le mystérieux pseudonyme "Jean-Marie Jourdane") et a un blog par <a href="http://narcolepsy.fr/blog/">là</a>.
                 <br />
                 - <a href="mailto:thanaos@bdovore.com" title="Cliquez pour envoyer un email à thanaos_chez_bdovore.com"><b>Thanaos</b></a> :
                 Lui c'est un troll. il bouffe du code au boulot et il continu pour nous. Le BDoBrowser, le BDo'Phone, mais aussi tout les bugs sur le site, cherchez pas c'est lui !
@@ -54,7 +55,7 @@
                     N'hésitez pas à les contacter si vous avez des questions sur la manière
                     dont la base est organisée et gérée ou sur l'utilisation générale du site.
                     <br />
-                    N'oubliez pas de lire la <a href="http://www.bdovore.com/bdovore-tuto.php"><b>présentation du site</b></a> dans un premier temps et de suivre la petite <a href="http://www.bdovore.com/bdovore-tuto.php?page=1"><b>visite guidée</b></a>
+                    N'oubliez pas de lire la <a href="{URLSITE}bdovore-tuto.php"><b>présentation du site</b></a> dans un premier temps et de suivre la petite <a href="{URLSITE}bdovore-tuto.php?page=1"><b>visite guidée</b></a>
                 </i>.
             </p>
             <p>
@@ -94,7 +95,7 @@
                 <font color="#990000" size="-1"><b>Les clients râlent quand ce n'est pas assez salé</b></font>
             </p>
             <p>
-                N'hésitez pas à faire un tour sur le <a href="{URLSITE}forum"><b>forum</b></a> (vous pouvez commencer par vous prèsenter <a href="http://forum.bdovore.com/viewtopic.php?t=146" title="Ouvre le lien dans la page courante">ici</a>)
+                N'hésitez pas à faire un tour sur le <a href="{URLSITEFORUM}"><b>forum</b></a> (vous pouvez commencer par vous prèsenter <a href="{URLSITEFORUM}viewtopic.php?t=146" title="Ouvre le lien dans la page courante">ici</a>)
                 si les plats qui vous sont servis ne sont pas à votre goût ou si, au contraire, vous avez aimé.
             </p>
             <p>

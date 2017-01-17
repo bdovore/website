@@ -11,7 +11,7 @@ function cv_date_bd($date) {
 
 minAccessLevel(2);
 
-// variables générales
+// variables gÃ©nÃ©rales
 $nb = 20;
 if ($first=='') {$first = 0;}
 
@@ -23,11 +23,11 @@ $clerep[4] = "sc.pseudo";
 // Tableau pour les choix d'options
 // Type de recherche
 $opt_source[0][0] = 0;
-$opt_source[0][1] = 'Mes Séries';
+$opt_source[0][1] = 'Mes SÃ©ries';
 $opt_source[1][0] = 1;
 $opt_source[1][1] = 'Mes Auteurs Favoris';
 $opt_source[2][0] = 2;
-$opt_source[2][1] = 'Intégrales/Coffrets';
+$opt_source[2][1] = 'IntÃ©grales/Coffrets';
 // Echelle de temps
 $opt_duree[0][0] = 1;
 $opt_duree[0][1] = '1 mois';
@@ -53,18 +53,18 @@ else
     $sort=" ".$sort;
 }
 
-// vérifie si la page est un refresh ou si on arrive directement du form
+// vÃ©rifie si la page est un refresh ou si on arrive directement du form
 if ($duree == '')
-{// on viens du form : il faut récupérer les paramétres nb de pages, pages en cours et mois à explorer
+{// on viens du form : il faut rÃ©cupÃ©rer les paramÃ©tres nb de pages, pages en cours et mois Ã  explorer
     $duree = ($_POST["lstDuree"] != '' ? $_POST["lstDuree"] : 1);
 }
 
 if ($lstSource == '')
-{// on viens du form : il faut récupérer les paramétres nb de pages, pages en cours et mois à explorer
+{// on viens du form : il faut rÃ©cupÃ©rer les paramÃ©tres nb de pages, pages en cours et mois Ã  explorer
     $lstSource = ($_POST["lstSource"] != '' ? $_POST["lstSource"] : 0);
 }
 
-// Récupère le nombre d'albums
+// RÃ©cupÃ¨re le nombre d'albums
 if ($lstSource == 0)
 {
     $query = "
@@ -246,7 +246,7 @@ $num_alb = $rowCount['nb'];
 
 // Creation d'une nouvelle instance Fast Template
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpBody" => "user_actualites.tpl",
 "tpMenu" => "user.menu.tpl",
@@ -257,11 +257,11 @@ $t->set_var(array(
 "OPTDUREE" => GetOptionValue($opt_duree,$duree),
 "SRC" => $lstSource
 ));
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpBody','DetailBlock','DBlock');
 
 
-//Liste les nouveautés par mois
+//Liste les nouveautÃ©s par mois
 while ($DB->next_record())
 {
     if ($DB->f("scenar") == $DB->f("dessin")) {
@@ -295,8 +295,9 @@ $t->set_var (array
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
-"PAGETITLE" => "Mon actualité"));
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
+"PAGETITLE" => "Mon actualitÃ©"));
 $t->set_var("VIEWPUB","none");
 $t->parse("BODY","tpBody");
 $t->parse("MENUCOLL","tpMenuColl");

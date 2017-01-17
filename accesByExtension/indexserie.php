@@ -1,32 +1,32 @@
 <?php
 
 
-// Début du code
+// DÃ©but du code
 include_once (BDO_DIR."inc/bdovore.php");
 
 
-// récupère la variable de passage
+// rÃ©cupÃ¨re la variable de passage
 $initiale = $_GET["init"];
 
 // construction de la query
 if ($initiale == "0") {
     $query = "SELECT id_serie, nom FROM bd_serie WHERE LOWER(LEFT(tri,1)) < 'a' or LOWER(LEFT(tri,1)) > 'z';";
-    $doctitre = "Autres séries BD sur BDovore";
+    $doctitre = "Autres sÃ©ries BD sur BDovore";
 }else{
     $query = "SELECT id_serie, nom FROM bd_serie WHERE LOWER(LEFT(tri,1)) = '" . $DB->escape($initiale) . "' ORDER BY tri;";
-    $doctitre = "Séries BD commençant par un ".$initiale." sur BDovore";
+    $doctitre = "SÃ©ries BD commenÃ§ant par un ".$initiale." sur BDovore";
 }
 
-// exécution de la query
+// exÃ©cution de la query
 $DB->query ($query);
 
-// prépare le template
+// prÃ©pare le template
 $t = new Template(BDO_DIR."public/templates");
 $t->set_file(array(
     "tpBase" => "google_serie.tpl"
     ));
 
-// définition du block à utiliser et remplissage
+// dÃ©finition du block Ã  utiliser et remplissage
 $t->set_block('tpBase','SeriesBlock','SBlock');
 while ($DB->next_record()) {
     $t->set_var (array(
@@ -39,10 +39,11 @@ $t->set_var (array(
     "INITIALE" => $initiale
     ));
 
-// Envoie les info générales et publie la page
+// Envoie les info gÃ©nÃ©rales et publie la page
 $t->set_var (array(
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM,
     "DOCTITRE" => $doctitre
     ));
 $t->pparse("MyFinalOutput","tpBase");

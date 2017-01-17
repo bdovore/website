@@ -8,24 +8,24 @@ minAccessLevel(1);
 // FUSIONNE LES EDITIONS
 if($act=="update")
 {
-    // vérifie si une série a été passé
+    // vÃ©rifie si une sÃ©rie a Ã©tÃ© passÃ©
     $new_serie_id = $_POST["txtNewSerieId"];
     $old_tome_id = $_POST["txtTomeId"];
 
-    // teste si des editions ont été cochée
+    // teste si des editions ont Ã©tÃ© cochÃ©e
     if (count($chkEdition) == 0) {
-        echo GetMetaTag(2,"Aucune édition à transférer.",(BDO_URL."admin/admin.split.php?alb_id=".$old_tome_id));
+        echo GetMetaTag(2,"Aucune Ã©dition Ã  transfÃ©rer.",(BDO_URL."admin/admin.split.php?alb_id=".$old_tome_id));
         exit();
     }
 
-    // Récupère le genre de la nouvelle série
+    // RÃ©cupÃ¨re le genre de la nouvelle sÃ©rie
     $query = "SELECT id_genre FROM bd_serie WHERE id_serie =".$DB->escape($new_serie_id);
     $DB->query($query);
     $DB->next_record();
 
     $id_genre = $DB->f("id_genre");
 
-    // création du nouvel album dans la base bd_tome
+    // crÃ©ation du nouvel album dans la base bd_tome
 
     $query = "
     INSERT INTO `bd_tome` (
@@ -55,18 +55,18 @@ if($act=="update")
 
     $DB->query($query);
 
-    // récupère la valeur du dernier album inséré
+    // rÃ©cupÃ¨re la valeur du dernier album insÃ©rÃ©
     $new_tome_id = mysql_insert_id();
 
     echo "new tome:".$new_tome_id."<br>";
 
-    // transfère les éditions à transférer sur le nouvel album
-    // et prend la première édition comme édition par défaut
+    // transfÃ¨re les Ã©ditions Ã  transfÃ©rer sur le nouvel album
+    // et prend la premiÃ¨re Ã©dition comme Ã©dition par dÃ©faut
     $flg_edition = "O";
 
     foreach ($chkEdition as $idedition) {
 
-        // si une couverture existe, son nom est modifié
+        // si une couverture existe, son nom est modifiÃ©
         $old_filename = $txtCouv[$idedition];
         if ($old_filename == "")
         {
@@ -77,13 +77,13 @@ if($act=="update")
             rename(BDO_DIR."images/couv/".$old_filename, BDO_DIR."images/couv/".$new_filename);
         }
 
-        if ($flg_edition == "O") //première édition comme édition par défaut
+        if ($flg_edition == "O") //premiÃ¨re Ã©dition comme Ã©dition par dÃ©faut
         {
             // renseigne cette edition comme defaut pour bd_tome
             $DB->query("UPDATE bd_tome SET ID_EDITION='" . $DB->escape($idedition) . "' WHERE id_tome=" . $DB->escape($new_tome_id));
         }
 
-        // Transfère les éditions sélectionnées sous le nouvel albums
+        // TransfÃ¨re les Ã©ditions sÃ©lectionnÃ©es sous le nouvel albums
         $query = "UPDATE bd_edition SET
         id_tome = ".$DB->escape($new_tome_id).",
         img_couv = ".sqlise($new_filename,'text_simple')."
@@ -91,10 +91,10 @@ if($act=="update")
 
         $DB->query($query);
 
-        echo "Nombre de records modifiées dans la table bd_edition : ".$DB->affected_rows()."<br>";
+        echo "Nombre de records modifiÃ©es dans la table bd_edition : ".$DB->affected_rows()."<br>";
     }
 
-    echo GetMetaTag(2,"Split effectué.",(BDO_URL."admin/adminalbums.php?alb_id=".$new_tome_id));
+    echo GetMetaTag(2,"Split effectuÃ©.",(BDO_URL."admin/adminalbums.php?alb_id=".$new_tome_id));
     exit();
 }
 
@@ -107,14 +107,14 @@ elseif($act=="")
 
     $id_edition = $DB->f("id_edition");
 
-    // Détermine l'affichage des infos
+    // DÃ©termine l'affichage des infos
     $scenaristes1 = ($DB->f("id_scenar_alt") == 0) ? stripslashes($DB->f("scpseudo")) : stripslashes($DB->f("scpseudo"))." / ".stripslashes($DB->f("scapseudo"));
     $dessinateurs1 = ($DB->f("id_dessin_alt") == 0) ? stripslashes($DB->f("depseudo")) : stripslashes($DB->f("scdeeudo"))." / ".stripslashes($DB->f("deapseudo"));
     $coloristes1 = ($DB->f("id_color_alt") == 0) ? stripslashes($DB->f("copseudo")) : stripslashes($DB->f("codeeudo"))." / ".stripslashes($DB->f("coapseudo"));
     $edcollec1 = ($DB->f("cnom") == "<N/A>") ? stripslashes($DB->f("enom")) : stripslashes($DB->f("enom"))." / ".stripslashes($DB->f("cnom"));
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.split.album.tpl",
     "tpBase" => "body.tpl"));
@@ -131,14 +131,14 @@ elseif($act=="")
     "EDCOLLEC" => $edcollec1,
     ));
 
-    // Affiche les informations relatives aux différentes éditions sauf celle par defaut
+    // Affiche les informations relatives aux diffÃ©rentes Ã©ditions sauf celle par defaut
     $query = q_AllEditionByIdTome($DB->escape($alb_id), "AND en.id_edition<>".$DB->escape($id_edition));
     $DB->query ($query);
 
-    // on déclare le block à utiliser
+    // on dÃ©clare le block Ã  utiliser
     $t->set_block('tpBody','EditionBlock','EBlock');
 
-    //Affiche les différentes éditions
+    //Affiche les diffÃ©rentes Ã©ditions
     while ($DB->next_record())
     {
         // Determine l'URL image
@@ -150,7 +150,7 @@ elseif($act=="")
             $url_image = BDO_URL."images/couv/".$DB->f("img_couv");
             $url_couv = $DB->f("img_couv");
         }
-        // Affiche le résultat
+        // Affiche le rÃ©sultat
         $t->set_var (array
         ("EDITEUR" => stripslashes($DB->f("enom")),
         "COLLECTION" => htmlentities(stripslashes($DB->f("cnom"))),
@@ -177,7 +177,9 @@ elseif($act=="")
     ("LOGINBARRE" => GetIdentificationBar(),
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
+    ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
 }

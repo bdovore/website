@@ -7,7 +7,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 echo '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">';
 
 echo '<channel>';
-echo '<atom:link href="http://www.bdovore.com/rss-avis.php" rel="self" type="application/rss+xml" />';
+echo '<atom:link href="'.BDO_URL.'rss-avis.php" rel="self" type="application/rss+xml" />';
 echo '<title>Bdovore - Avis albums</title>';
 echo '<link>'.BDO_URL.'</link>';
 echo '<description>Les derniers avis de lecture postés sur les albums</description>';

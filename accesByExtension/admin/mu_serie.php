@@ -5,7 +5,7 @@
 minAccessLevel(1);
 exit ('en travaux. Voir Thanaos.');
 
-// Mettre à jour les informations
+// Mettre Ã  jour les informations
 if ($act=="update"){
 
     $execute_query1 = false;
@@ -16,7 +16,7 @@ if ($act=="update"){
     $query3 = "UPDATE users_album u SET ";
     $addendum = "";
 
-    // Scénariste
+    // ScÃ©nariste
     if ($_POST["txtScenarId"]!=""){
         $execute_query1 = true;
         $execute_query3 = true;
@@ -25,7 +25,7 @@ if ($act=="update"){
         $query3 .= $addendum;
     }
 
-    // Scénariste Secondaire
+    // ScÃ©nariste Secondaire
     if ($_POST["txtScenarAltId"]!=""){
         $execute_query1 = true;
         $addendum = "u.id_scenar_alt = ".$DB->escape($_POST["txtScenarAltId"]).", ";
@@ -91,7 +91,7 @@ if ($act=="update"){
         $query1 .= " WHERE id_serie = ".$DB->escape($serie);
 
         $DB->query ($query1);
-        echo $DB->affected_rows()." lignes modifiées dans la table bd_tome.<br>";
+        echo $DB->affected_rows()." lignes modifiÃ©es dans la table bd_tome.<br>";
     }
 
     if ($execute_query2 == true){
@@ -99,7 +99,7 @@ if ($act=="update"){
         $query2 .= " WHERE t.id_tome = u.id_tome AND t.id_serie = ".$DB->escape($serie);
 
         $DB->query ($query2);
-        echo $DB->affected_rows()." lignes modifiées dans la table bd_edition.<br>";
+        echo $DB->affected_rows()." lignes modifiÃ©es dans la table bd_edition.<br>";
     }
     /* modif
     if ($execute_query3 == true){
@@ -107,18 +107,18 @@ if ($act=="update"){
         $query3 .= " WHERE id_serie = $serie;";
 
         $DB->query ($query3);
-        echo $DB->affected_rows()." lignes modifiées dans la table users_album.<br>";
+        echo $DB->affected_rows()." lignes modifiÃ©es dans la table users_album.<br>";
     }
     */
 
-    echo GetMetaTag(1,"Terminé",BDO_URL."admin/mu_serie.php?serie=".$serie);
+    echo GetMetaTag(1,"TerminÃ©",BDO_URL."admin/mu_serie.php?serie=".$serie);
 }
 
 // AFFICHER UNE FICHE SERIE
 elseif($act==""){
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.mu.serie.tpl",
     "tpBase" => "body.tpl"
@@ -126,7 +126,7 @@ elseif($act==""){
 
     if ($serie != ""){
 
-        // récupère le infos liées à la série
+        // rÃ©cupÃ¨re le infos liÃ©es Ã  la sÃ©rie
         $query = "SELECT nom FROM bd_serie WHERE id_serie = ".$DB->escape($serie);
         $DB->query ($query);
         $DB->next_record();
@@ -135,12 +135,12 @@ elseif($act==""){
         "IDSERIE" => $serie
         ));
 
-        // Récupère les scénaristes ayant travaillé sur la série
+        // RÃ©cupÃ¨re les scÃ©naristes ayant travaillÃ© sur la sÃ©rie
         $query = "SELECT DISTINCT a.id_auteur, a.pseudo FROM bd_tome t, bd_auteur a WHERE t.id_scenar = a.id_auteur AND t.id_serie = ".$DB->escape($serie);
         $DB->query ($query);
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','Scen1Block','S1Block');
-        //Affiche les différentes éléments
+        //Affiche les diffÃ©rentes Ã©lÃ©ments
         while ($DB->next_record()){
             $t->set_var (array(
             "IDSCENARISTE1" => $DB->f("id_auteur"),
@@ -150,12 +150,12 @@ elseif($act==""){
             $t->parse ("S1Block", "Scen1Block",true);
         }
 
-        // Récupère les scénaristes secondaires ayant travaillé sur la série
+        // RÃ©cupÃ¨re les scÃ©naristes secondaires ayant travaillÃ© sur la sÃ©rie
         $query = "SELECT DISTINCT a.id_auteur, a.pseudo FROM bd_tome t, bd_auteur a WHERE t.id_scenar_alt = a.id_auteur AND t.id_serie = ".$DB->escape($serie);
         $DB->query ($query);
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','Scen2Block','S2Block');
-        //Affiche les différentes éléments
+        //Affiche les diffÃ©rentes Ã©lÃ©ments
         while ($DB->next_record()){
             $t->set_var (array(
             "IDSCENARISTE2" => $DB->f("id_auteur"),
@@ -165,12 +165,12 @@ elseif($act==""){
             $t->parse ("S2Block", "Scen2Block",true);
         }
 
-        // Récupère les dessinateurs ayant travaillé sur la série
+        // RÃ©cupÃ¨re les dessinateurs ayant travaillÃ© sur la sÃ©rie
         $query = "SELECT DISTINCT a.id_auteur, a.pseudo FROM bd_tome t, bd_auteur a WHERE t.id_dessin = a.id_auteur AND t.id_serie = ".$DB->escape($serie);
         $DB->query ($query);
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','Dess1Block','D1Block');
-        //Affiche les différentes éléments
+        //Affiche les diffÃ©rentes Ã©lÃ©ments
         while ($DB->next_record()){
             $t->set_var (array(
             "IDDESSINATEUR1" => $DB->f("id_auteur"),
@@ -180,12 +180,12 @@ elseif($act==""){
             $t->parse ("D1Block", "Dess1Block",true);
         }
 
-        // Récupère les dessinateurs secondaires ayant travaillé sur la série
+        // RÃ©cupÃ¨re les dessinateurs secondaires ayant travaillÃ© sur la sÃ©rie
         $query = "SELECT DISTINCT a.id_auteur, a.pseudo FROM bd_tome t, bd_auteur a WHERE t.id_dessin_alt = a.id_auteur AND t.id_serie = ".$DB->escape($serie);
         $DB->query ($query);
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','Dess2Block','D2Block');
-        //Affiche les différentes éléments
+        //Affiche les diffÃ©rentes Ã©lÃ©ments
         while ($DB->next_record()){
             $t->set_var (array(
             "IDDESSINATEUR2" => $DB->f("id_auteur"),
@@ -195,12 +195,12 @@ elseif($act==""){
             $t->parse ("D2Block", "Dess2Block",true);
         }
 
-        // Récupère les coloristes ayant travaillé sur la série
+        // RÃ©cupÃ¨re les coloristes ayant travaillÃ© sur la sÃ©rie
         $query = "SELECT DISTINCT a.id_auteur, a.pseudo FROM bd_tome t, bd_auteur a WHERE t.id_color = a.id_auteur AND t.id_serie = ".$DB->escape($serie);
         $DB->query ($query);
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','Color1Block','C1Block');
-        //Affiche les différentes éléments
+        //Affiche les diffÃ©rentes Ã©lÃ©ments
         while ($DB->next_record()){
             $t->set_var (array(
             "IDCOLORISTE1" => $DB->f("id_auteur"),
@@ -210,12 +210,12 @@ elseif($act==""){
             $t->parse ("C1Block", "Color1Block",true);
         }
 
-        // Récupère les coloristes secondaires ayant travaillé sur la série
+        // RÃ©cupÃ¨re les coloristes secondaires ayant travaillÃ© sur la sÃ©rie
         $query = "SELECT DISTINCT a.id_auteur, a.pseudo FROM bd_tome t, bd_auteur a WHERE t.id_color_alt = a.id_auteur AND t.id_serie = ".$DB->escape($serie);
         $DB->query ($query);
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','Color2Block','C2Block');
-        //Affiche les différentes éléments
+        //Affiche les diffÃ©rentes Ã©lÃ©ments
         while ($DB->next_record()){
             $t->set_var (array(
             "IDCOLORISTE2" => $DB->f("id_auteur"),
@@ -225,7 +225,7 @@ elseif($act==""){
             $t->parse ("C2Block", "Color2Block",true);
         }
 
-        // Récupère les editeurs ayant publié la série
+        // RÃ©cupÃ¨re les editeurs ayant publiÃ© la sÃ©rie
         $query = "
         SELECT DISTINCT
             er.id_editeur,
@@ -239,9 +239,9 @@ elseif($act==""){
         WHERE
             t.id_serie = ".$DB->escape($serie);
         $DB->query ($query);
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','EditeurBlock','EBlock');
-        //Affiche les différentes éléments
+        //Affiche les diffÃ©rentes Ã©lÃ©ments
         while ($DB->next_record()){
             $t->set_var (array(
             "IDEDITEUR" => $DB->f("id_editeur"),
@@ -251,7 +251,7 @@ elseif($act==""){
             $t->parse ("EBlock", "EditeurBlock",true);
         }
 
-        // Récupère les collections sous lesquels la série a été éditée
+        // RÃ©cupÃ¨re les collections sous lesquels la sÃ©rie a Ã©tÃ© Ã©ditÃ©e
         $query = "
         SELECT DISTINCT
             c.id_collection,
@@ -264,9 +264,9 @@ elseif($act==""){
             t.id_serie = ".$DB->escape($serie);
 
         $DB->query ($query);
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','CollectionBlock','ColBlock');
-        //Affiche les différentes éléments
+        //Affiche les diffÃ©rentes Ã©lÃ©ments
         while ($DB->next_record()){
             $t->set_var (array(
             "IDCOLLECTION" => $DB->f("id_collection"),
@@ -278,7 +278,7 @@ elseif($act==""){
     }
 
     $t->set_var (array(
-    "ACTIONNAME" => "Mettre à Jour",
+    "ACTIONNAME" => "Mettre Ã  Jour",
     "URLACTION" => BDO_URL."admin/mu_serie.php?act=update&serie=".$serie,
     "URLREFRESH" => BDO_URL."admin/mu_serie.php",
     "URLEDITSERIE" => BDO_URL."admin/adminseries.php?serie_id=".$serie
@@ -290,6 +290,7 @@ elseif($act==""){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");

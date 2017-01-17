@@ -4,17 +4,17 @@
 
 minAccessLevel(1);
 
-// Fusionne les albums et transfère les éditions cochées
+// Fusionne les albums et transfÃ¨re les Ã©ditions cochÃ©es
 if($act=="update"){
     $old_idtome = $_POST["txtTomeId"];
     $new_idtome = $_POST["txtTome2Id"];
     if ($_POST["txtTome2Id"] == ""){
-        echo GetMetaTag(2, "L'ID de l'album à conserver n'a pas été précisé.",(BDO_URL."admin/adminalbums.php?alb_id=".$old_idtome));
+        echo GetMetaTag(2, "L'ID de l'album Ã  conserver n'a pas Ã©tÃ© prÃ©cisÃ©.",(BDO_URL."admin/adminalbums.php?alb_id=".$old_idtome));
         exit();
     }
     $nb = 0;
 
-    // Récupère la valeur de l'album à mettre à jour
+    // RÃ©cupÃ¨re la valeur de l'album Ã  mettre Ã  jour
     $query = "
     SELECT
         t.id_serie,
@@ -52,7 +52,7 @@ if($act=="update"){
             rename(BDO_DIR."images/couv/".$old_filename, BDO_DIR."images/couv/".$new_filename);
         }
 
-        // Transfère les éditions sélectionnées sous le nouvel album
+        // TransfÃ¨re les Ã©ditions sÃ©lectionnÃ©es sous le nouvel album
         $query = "
         UPDATE bd_edition SET
             id_tome = ".$DB->escape($new_idtome).",
@@ -61,23 +61,23 @@ if($act=="update"){
 
 
         $DB->query($query);
-        echo "Nombre de records modifiées dans la table bd_edition : ".$DB->affected_rows()."<br />";
+        echo "Nombre de records modifiÃ©es dans la table bd_edition : ".$DB->affected_rows()."<br />";
 
     }
 
-    // Met à jour les commentaires
+    // Met Ã  jour les commentaires
     $DB->query("UPDATE IGNORE users_comment SET `id_tome` = ".$DB->escape($new_idtome)." WHERE `id_tome`=".$DB->escape($old_idtome));
-    echo "Nombre de records modifiées dans la table users_comment : ".$DB->affected_rows()."<br />";
+    echo "Nombre de records modifiÃ©es dans la table users_comment : ".$DB->affected_rows()."<br />";
 
-    // Met à jour les carres
+    // Met Ã  jour les carres
     $DB->query("UPDATE IGNORE users_list_carre SET `id_tome` = ".$DB->escape($new_idtome) ." WHERE `id_tome`=".$DB->escape($old_idtome));
-    echo "Nombre de records modifiées dans la table users_list_carre : ".$DB->affected_rows()."<br />";
+    echo "Nombre de records modifiÃ©es dans la table users_list_carre : ".$DB->affected_rows()."<br />";
 
-    // Met à jour les exclusions
+    // Met Ã  jour les exclusions
     $DB->query("UPDATE IGNORE users_exclusions SET `id_tome` = ".$DB->escape($new_idtome) ." WHERE `id_tome`=".$DB->escape($old_idtome));
-    echo "Nombre de records modifiées dans la table users_exclusions : ".$DB->affected_rows()."<br />";
+    echo "Nombre de records modifiÃ©es dans la table users_exclusions : ".$DB->affected_rows()."<br />";
 
-    // Efface les éditions et les couvertures correspondantes
+    // Efface les Ã©ditions et les couvertures correspondantes
     $query = "SELECT id_edition, img_couv FROM bd_edition WHERE id_tome=".$DB->escape($old_idtome);
     $DB->query ($query);
     while ($DB->next_record()){
@@ -86,41 +86,41 @@ if($act=="update"){
             $filename = $DB->f("img_couv");
             if (file_exists(BDO_DIR."images/couv/$filename")){
                 @unlink(BDO_DIR."images/couv/$filename");
-                echo "Couverture effacée pour l'édition N°".$DB->f("id_edition")."<br />";
+                echo "Couverture effacÃ©e pour l'Ã©dition NÂ°".$DB->f("id_edition")."<br />";
             }
         }
     }
 
     // vide la table bd_edition
     $DB->query ("DELETE FROM bd_edition WHERE id_tome=". $DB->escape($old_idtome));
-    echo 'Référence(s) à l\'album supprimée(s) dans la table bd_edition<br />';
+    echo 'RÃ©fÃ©rence(s) Ã  l\'album supprimÃ©e(s) dans la table bd_edition<br />';
 
     $DB->query ("DELETE FROM bd_tome WHERE id_tome=". $DB->escape($old_idtome));
-    echo 'Référence(s) à l\'album supprimée(s) dans la table bd_tome<br />';
+    echo 'RÃ©fÃ©rence(s) Ã  l\'album supprimÃ©e(s) dans la table bd_tome<br />';
 
     $DB->query("DELETE users_album.* FROM users_album INNER JOIN bd_edition USING(id_edition)
     WHERE bd_edition.`id_tome`=".$DB->escape($old_idtome));
-    echo "Nombre de records supprimés dans la table users_album : ".$DB->affected_rows()."<br />";
+    echo "Nombre de records supprimÃ©s dans la table users_album : ".$DB->affected_rows()."<br />";
 
-    echo GetMetaTag(2,"Fusion effectuée.",(BDO_URL."admin/adminalbums.php?alb_id=".$DB->escape($new_idtome)));
+    echo GetMetaTag(2,"Fusion effectuÃ©e.",(BDO_URL."admin/adminalbums.php?alb_id=".$DB->escape($new_idtome)));
 }
 
 // AFFICHER UN ALBUM
 elseif($act==""){
 
-    // récupère les données principales
+    // rÃ©cupÃ¨re les donnÃ©es principales
     $query = q_tome("t.id_tome = ".$DB->escape($alb_id));
     $DB->query ($query);
     $DB->next_record();
 
-    // Détermine l'affichage des infos
+    // DÃ©termine l'affichage des infos
     $scenaristes1 = ($DB->f("id_scenar_alt") == 0) ? stripslashes($DB->f("scpseudo")) : stripslashes($DB->f("scpseudo"))." / ".stripslashes($DB->f("scapseudo"));
     $dessinateurs1 = ($DB->f("id_dessin_alt") == 0) ? stripslashes($DB->f("depseudo")) : stripslashes($DB->f("scdeeudo"))." / ".stripslashes($DB->f("deapseudo"));
     $coloristes1 = ($DB->f("id_color_alt") == 0) ? stripslashes($DB->f("copseudo")) : stripslashes($DB->f("codeeudo"))." / ".stripslashes($DB->f("coapseudo"));
     $edcollec1 = ($DB->f("cnom") == "<N/A>") ? stripslashes($DB->f("enom")) : stripslashes($DB->f("enom"))." / ".stripslashes($DB->f("cnom"));
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.delete.album.tpl",
     "tpBase" => "body.tpl"
@@ -138,12 +138,12 @@ elseif($act==""){
 
     if ($report_id != "")
     {
-        // récupère les données sur le nouveau tome
+        // rÃ©cupÃ¨re les donnÃ©es sur le nouveau tome
         $query = q_tome("t.id_tome = ".$DB->escape($report_id));
         $DB->query ($query);
         $DB->next_record();
 
-        // Détermine l'affichage des infos
+        // DÃ©termine l'affichage des infos
         $scenaristes2 = ($DB->f("id_scenar_alt") == 0) ? stripslashes($DB->f("scpseudo")) : stripslashes($DB->f("scpseudo"))." / ".stripslashes($DB->f("scapseudo"));
         $dessinateurs2 = ($DB->f("id_dessin_alt") == 0) ? stripslashes($DB->f("depseudo")) : stripslashes($DB->f("scdeeudo"))." / ".stripslashes($DB->f("deapseudo"));
         $coloristes2 = ($DB->f("id_color_alt") == 0) ? stripslashes($DB->f("copseudo")) : stripslashes($DB->f("codeeudo"))." / ".stripslashes($DB->f("coapseudo"));
@@ -160,14 +160,14 @@ elseif($act==""){
         "EDCOLLEC2" => $edcollec2,
         ));
 
-        // Affiche les informations relatives aux différentes éditions
+        // Affiche les informations relatives aux diffÃ©rentes Ã©ditions
         $query = q_AllEditionByIdTome($DB->escape($report_id));
         $DB->query ($query);
 
-        // on déclare le block à utiliser
+        // on dÃ©clare le block Ã  utiliser
         $t->set_block('tpBody','Edition2Block','E2Block');
 
-        //Affiche les différentes éditions
+        //Affiche les diffÃ©rentes Ã©ditions
         while ($DB->next_record()){
             // Determine l'URL image
             if (is_null($DB->f("img_couv")) | ($DB->f("img_couv")=='')){
@@ -177,7 +177,7 @@ elseif($act==""){
                 $url_image = BDO_URL."images/couv/".$DB->f("img_couv");
                 $url_couv = $DB->f("img_couv");
             }
-            // Affiche le résultat
+            // Affiche le rÃ©sultat
             $t->set_var (array(
             "EDITEUR2" => stripslashes($DB->f("enom")),
             "COLLECTION2" => htmlentities(stripslashes($DB->f("cnom"))),
@@ -189,14 +189,14 @@ elseif($act==""){
         $nb_editions2 = $DB->num_rows();
     }
 
-    // Affiche les informations relatives aux différentes éditions
+    // Affiche les informations relatives aux diffÃ©rentes Ã©ditions
     $query = q_AllEditionByIdTome($DB->escape($alb_id));
     $DB->query ($query);
 
-    // on déclare le block à utiliser
+    // on dÃ©clare le block Ã  utiliser
     $t->set_block('tpBody','EditionBlock','EBlock');
 
-    //Affiche les différentes éditions
+    //Affiche les diffÃ©rentes Ã©ditions
     while ($DB->next_record()){
         // Determine l'URL image
         if (is_null($DB->f("img_couv")) | ($DB->f("img_couv")=='')){
@@ -206,7 +206,7 @@ elseif($act==""){
             $url_image = BDO_URL."images/couv/".$DB->f("img_couv");
             $url_couv = $DB->f("img_couv");
         }
-        // Affiche le résultat
+        // Affiche le rÃ©sultat
         $t->set_var (array(
         "EDITEUR" => stripslashes($DB->f("enom")),
         "COLLECTION" => htmlentities(stripslashes($DB->f("cnom"))),
@@ -225,7 +225,7 @@ elseif($act==""){
     "NBEDITIONS2" => $nb_editions2,
     "REFRESHPAGE" => "admin.delete.php?alb_id=".$alb_id,
     "URLRETOURFICHE" => BDO_URL."admin/adminalbums.php?alb_id=".$DB->f("id_tome"),
-    "ACTIONNAME" => "Transférer les éditions et effacer l'album",
+    "ACTIONNAME" => "TransfÃ©rer les Ã©ditions et effacer l'album",
     "URLACTION" => BDO_URL."admin/admin.delete.php?act=update"
     ));
 
@@ -235,6 +235,7 @@ elseif($act==""){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");

@@ -81,7 +81,7 @@ else {
 
     //TODO ça devrait vraiment être dans .htaccess un truc pareil ...
     if ($controller === "Forum") {
-        header("Location: " . BDO_PROTOCOL . "://forum.bdovore.com/");
+        header("Location: " . BDO_URL_FORUM);
         die();
     } elseif ($controller === "Phone") {
         header("Location: " . BDO_PROTOCOL . "://phone.bdovore.com/");
