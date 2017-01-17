@@ -1,5 +1,5 @@
 /* ---------- scrollup scrolldown */
-.scrollup{
+.scrollup {
     width:40px;
     height:40px;
     opacity:0.7;
@@ -8,9 +8,9 @@
     left: 0px;
     display:none;
     text-indent:-9999px;
-    background: url('http://www.bdovore.com/images/site/icon_top.png') no-repeat;
+    background: url('images/site/icon_top.png') no-repeat;
 }
-.scrolldown{
+.scrolldown {
     width:40px;
     height:40px;
     opacity:0.7;
@@ -19,67 +19,72 @@
     left: 0px;
     display:none;
     text-indent:-9999px;
-    background: url('http://www.bdovore.com/images/site/icon_bottom.png') no-repeat;
+    background: url('images/site/icon_bottom.png') no-repeat;
 }
 /* ---------- fin scrollup scrolldown */
 
 /* ---------- ombrage */
-.shadow
-{
-  -moz-box-shadow: 4px 4px 10px #888;  
-  -webkit-box-shadow: 4px 4px 8px #888;  
-  box-shadow:4px 4px 6px #888;
+.shadow {
+    -moz-box-shadow: 4px 4px 10px #888;
+    -webkit-box-shadow: 4px 4px 8px #888;
+    box-shadow:4px 4px 6px #888;
 }
 /* ---------- fin ombrage */
 
 /* ---------- tooltip aide contextuelle */
 body .ui-tooltip, .arrow:after {
-	background: white;
-	border: 1px solid #555;
+    background: white;
+    border: 1px solid #555;
 }
+
 .ui-tooltip {
-	padding: 10px 20px;
-	color:  #555;
-	border-radius: 30px 20px 30px 20px;
-	font: bold 11px "Helvetica Neue", Sans-Serif;
-	/*text-transform: uppercase;*/
-	-moz-box-shadow: 5px 5px 8px #555;  
-	-webkit-box-shadow: 5px 5px 8px #555;  
-	box-shadow:2px 2px 6px #555;
-	min-width : 50px;
+    padding: 10px 20px;
+    color:  #555;
+    border-radius: 30px 20px 30px 20px;
+    font: bold 11px "Helvetica Neue", Sans-Serif;
+    /*text-transform: uppercase;*/
+    -moz-box-shadow: 5px 5px 8px #555;
+    -webkit-box-shadow: 5px 5px 8px #555;
+    box-shadow:2px 2px 6px #555;
+    min-width : 50px;
 }
+
 .arrow {
-	width: 70px;
-	height: 16px;
-	overflow: hidden;
-	position: absolute;
-	left: 50%;
-	margin-left: -35px;
-	bottom: -16px;
+    width: 70px;
+    height: 16px;
+    overflow: hidden;
+    position: absolute;
+    left: 50%;
+    margin-left: -35px;
+    bottom: -16px;
 }
+
 .arrow.top {
-	top: -16px;
-	bottom: auto;
+    top: -16px;
+    bottom: auto;
 }
+
 .arrow.left {
-	left: 20%;
+    left: 20%;
 }
+
 .arrow:after {
-	content: "";
-	position: absolute;
-	left: 20px;
-	top: -20px;
-	width: 25px;
-	height: 25px;
-	-moz-box-shadow: 2px 2px 8px #555;  
-	-webkit-box-shadow: 2px 2px 8px #555;  
-	box-shadow:2px 2px 6px #555;
-	-webkit-transform: rotate(45deg);
-	-moz-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	-o-transform: rotate(45deg);
-	tranform: rotate(45deg);
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: -20px;
+    width: 25px;
+    height: 25px;
+    -moz-box-shadow: 2px 2px 8px #555;
+    -webkit-box-shadow: 2px 2px 8px #555;
+    box-shadow:2px 2px 6px #555;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    tranform: rotate(45deg);
 }
+
 .arrow.top:after {
    bottom: -20px;
    top: auto;
@@ -88,24 +93,27 @@ body .ui-tooltip, .arrow:after {
 
 /* ---------- auto-completion */
 .ui-autocomplete-loading {
-	background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
+    background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
 }
+
 .ui-autocomplete {
-	max-height: 200px;
-	overflow-y: auto;
-	/* prevent horizontal scrollbar */
-	overflow-x: hidden;
+    max-height: 200px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
 }
+
 /* IE 6 doesn't support max-height
  * we use height instead, but this forces the menu to always be this tall
  */
 html .ui-autocomplete {
-	height: 200px;
+    height: 200px;
 }
+
 .ui-autocomplete-category {
-	font-weight: bold;
-	padding: .2em .4em;
-	margin: .8em 0 .2em;
-	line-height: 1.5;
+    font-weight: bold;
+    padding: .2em .4em;
+    margin: .8em 0 .2em;
+    line-height: 1.5;
 }
 /* ---------- fin auto-completion */
