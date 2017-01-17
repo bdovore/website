@@ -246,9 +246,9 @@ if ($id_tome or $id_edition) {
             $couv = $DB->f ( "img_couv" );
         }
         if ($DB->f ( "isbn" )) {
-            $amazon = "http://www.amazon.fr/exec/obidos/ASIN/" . $DB->f ( "isbn" ) . "/bdovorecom-21/";
+            $amazon = BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . $DB->f ( "isbn" ) . "/bdovorecom-21/";
         } else {
-            $amazon = "http://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=" . htmlspecialchars ( stripslashes ( $DB->f ( "s_nom" ) ) ) . "%20" . htmlspecialchars ( stripslashes ( $DB->f ( "titre" ) ) ) . "&mode=books-fr";
+            $amazon = BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=" . htmlspecialchars ( stripslashes ( $DB->f ( "s_nom" ) ) ) . "%20" . htmlspecialchars ( stripslashes ( $DB->f ( "titre" ) ) ) . "&mode=books-fr";
         }
         if ($DB->f ( "cnom" ) != "<N/A>") {
             $collection = "<br />Collection " . $DB->f ( "cnom" );

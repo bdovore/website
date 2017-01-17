@@ -75,7 +75,7 @@ function Chargement() {
                             $isbn = $tome->ISBN_EDITION;
                         }
             // Vérifie l'existence d'une couv chez amazon
-            $url_page_amazon = "http://www.amazon.fr/exec/obidos/ASIN/".$isbn;
+            $url_page_amazon = BDO_PROTOCOL."://www.amazon.fr/exec/obidos/ASIN/".$isbn;
             $url_img_amazon = get_couv_url($url_page_amazon,$isbn);
             if ($url_img_amazon == "") $url_img_amazon = BDO_URL_COUV."default.png";
 
