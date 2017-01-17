@@ -185,6 +185,7 @@ switch ($_SERVER["SERVER_NAME"]) {
 define('BDO_CACHE_ENABLED', true);
 define('BDO_DIR_CACHE', BDO_DIR . 'cache' . DS);
 
+define('BDO_URL_FORUM', BDO_PROTOCOL . '://' . 'forum.bdovore.com' . '/');
 
 define('BDO_NBLINEBYPAGE_DEFAULT', 25);
 define('BDO_NBLINEBYPAGE_MIN', 10);
