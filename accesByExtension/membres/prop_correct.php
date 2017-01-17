@@ -7,7 +7,7 @@ minAccessLevel(2);
 
 
 // Tableau pour les choix d'options
-// Différents stades d'une série
+// DiffÃ©rents stades d'une sÃ©rie
 $opt_status[0][0] = 0;
 $opt_status[0][1] = 'Finie';
 $opt_status[1][0] = 1;
@@ -15,9 +15,9 @@ $opt_status[1][1] = 'En cours';
 $opt_status[2][0] = 2;
 $opt_status[2][1] = 'One Shot';
 $opt_status[3][0] = 3;
-$opt_status[3][1] = 'Interrompue/Abandonnée';
+$opt_status[3][1] = 'Interrompue/AbandonnÃ©e';
 
-// différents types d'articles
+// diffÃ©rents types d'articles
 $opt_type[0][0] = 0;
 $opt_type[0][1] = 'Album';
 $opt_type[1][0] = 1;
@@ -71,22 +71,22 @@ if($act=="append")
     $query = insert_query("users_alb_prop",$query_el);
     //echo $query;
     $DB->query ($query);
-    // récupère la valeur de la dernière insertion
+    // rÃ©cupÃ¨re la valeur de la derniÃ¨re insertion
     $lid= mysql_insert_id();
 
-    // Verifie la présence d'une image à télécharger
+    // Verifie la prÃ©sence d'une image Ã  tÃ©lÃ©charger
     if (is_file($txtFileLoc) | (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)))
     {
         if (is_file($txtFileLoc))
-        { // un fichier à uploader
+        { // un fichier Ã  uploader
             $imageproperties = getimagesize($txtFileLoc);
             $imagetype = $imageproperties[2];
             $imagelargeur = $imageproperties[0];
             $imagehauteur = $imageproperties[1];
-            // vérifie le type d'image
+            // vÃ©rifie le type d'image
             if (($imagetype != 1) and ($imagetype != 2))
             {
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent Ãªtre chargÃ©s. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }
             $uploaddir = BDO_DIR."images/tmp/";
@@ -99,30 +99,30 @@ if($act=="append")
             }
             if(!copy($txtFileLoc,$uploaddir.$newfilename))
             {
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }else{
                 $img_couv=$newfilename;
             }
         }
         else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary))
-        { // un fichier à télécharger
+        { // un fichier Ã  tÃ©lÃ©charger
             if ( empty($url_ary[4]) )
             {
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplète. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplÃ¨te. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }
             $base_get = '/' . $url_ary[4];
             $port = ( !empty($url_ary[3]) ) ? $url_ary[3] : 80;
-            // Connection au serveur hébergeant l'image
+            // Connection au serveur hÃ©bergeant l'image
             if ( !($fsock = @fsockopen($url_ary[2], $port, $errno, $errstr)) )
             {
                 $error = true;
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image innacessible. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image innacessible. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }
 
-            // Récupère l'image
+            // RÃ©cupÃ¨re l'image
             @fputs($fsock, "GET $base_get HTTP/1.1\r\n");
             @fputs($fsock, "HOST: " . $url_ary[2] . "\r\n");
             @fputs($fsock, "Connection: close\r\n\r\n");
@@ -134,11 +134,11 @@ if($act=="append")
             }
             @fclose($fsock);
 
-            // Check la validité de l'image
+            // Check la validitÃ© de l'image
             if (!preg_match('#Content-Length\: ([0-9]+)[^ /][\s]+#i', $avatar_data, $file_data1) || !preg_match('#Content-Type\: image/[x\-]*([a-z]+)[\s]+#i', $avatar_data, $file_data2))
             {
                 $error = true;
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du téléchargement de l\'image. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du tÃ©lÃ©chargement de l\'image. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }
 
@@ -157,7 +157,7 @@ if($act=="append")
             if ( $bytes_written != $avatar_filesize )
             {
                 @unlink($tmp_filename);
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Could not write avatar file to local storage. Please contact the board administrator with this message. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Could not write avatar file to local storage. Please contact the board administrator with this message. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }
             // newfilemname
@@ -195,11 +195,11 @@ if($act=="append")
         $imagelargeur = $imageproperties[0];
         $imagehauteur = $imageproperties[1];
 
-        //Détermine s'il y a lieu de redimensionner l'image
+        //DÃ©termine s'il y a lieu de redimensionner l'image
         if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $maxsize)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
 
         if ($imagelargeur < $imagehauteur) {
-        // image de type panorama : on limite la largeur à 128
+        // image de type panorama : on limite la largeur Ã  128
         $new_w = $max_size;
         $new_h = round($imagehauteur * $max_size / $imagelargeur);
         }else {
@@ -240,14 +240,14 @@ if($act=="append")
 
 
 
-        // met à jours la référence au fichier dans la base
+        // met Ã  jours la rÃ©fÃ©rence au fichier dans la base
         $query = "UPDATE users_alb_prop SET";
         $query .= " `img_couv` = '".$DB->escape($img_couv)."'";
         $query .=" WHERE (`id_proposal`=".$DB->escape($lid).");";
         $DB->query($query);
     }
-//  echo GetMetaTag(2,"Votre proposition a été prise en compte. Elle sera validée par un administrateur.",("javascript:window.close()"));
-    echo GetMetaTag(2,"Votre proposition a été prise en compte. Elle sera traitée par un correcteur.",BDO_URL."membres/suiviproposals.php?cle=1&sort=DESC&lstSource=2");
+//  echo GetMetaTag(2,"Votre proposition a Ã©tÃ© prise en compte. Elle sera validÃ©e par un administrateur.",("javascript:window.close()"));
+    echo GetMetaTag(2,"Votre proposition a Ã©tÃ© prise en compte. Elle sera traitÃ©e par un correcteur.",BDO_URL."membres/suiviproposals.php?cle=1&sort=DESC&lstSource=2");
 }
 
 
@@ -255,9 +255,9 @@ if($act=="append")
 // AFFICHE UN FORMULAIRE AVEC L'ALBUM A EDITER
 elseif($act=="")
 {
-    // Vérifie si une édition a été passée
+    // VÃ©rifie si une Ã©dition a Ã©tÃ© passÃ©e
     if ($id_edition == '')
-    {// Récupère l'édition par défaut
+    {// RÃ©cupÃ¨re l'Ã©dition par dÃ©faut
         $query = "SELECT id_edition FROM bd_tome WHERE id_tome = ".$DB->escape($alb_id);
         $DB->query ($query);
         $DB->next_record();
@@ -267,7 +267,7 @@ elseif($act=="")
     // prepare la liste des editions disponibles
     $DB->query(q_AllEditionByIdTome($DB->escape($alb_id)),"ORDER BY en.dte_parution");
     $opt_edition[0][0] = 0;
-    $opt_edition[0][1] = "Toutes les éditions";
+    $opt_edition[0][1] = "Toutes les Ã©ditions";
     $i=1;
 
     while ($DB->next_record())
@@ -278,7 +278,7 @@ elseif($act=="")
     }
     $nb_edition = $i-1;
 
-    // récupère les données principales
+    // rÃ©cupÃ¨re les donnÃ©es principales
     $query = q_edition("en.id_edition=".$DB->escape($id_edition));
 
     $DB->query ($query);
@@ -294,11 +294,11 @@ elseif($act=="")
     }
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
 //  $t->set_file(array(
 //  "tpBody" => "user.correct.tpl"));
 
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpForm_Recherche" => "form_recherche.tpl",
 "tpBody" => "user.correct.tpl",
@@ -343,9 +343,10 @@ $t->set_file(array(
     "URLACTION" => BDO_URL."membres/prop_correct.php?act=append",
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
 
-    // affiche (ou non) l'info édition
+    // affiche (ou non) l'info Ã©dition
     $t->set_block('tpBody','EditionBlock','EBlock');
 
     if ($nb_edition > 1)
@@ -362,7 +363,8 @@ $t->set_file(array(
 $t->set_var (array(
 "LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
 "PAGETITLE" => $pagetitle,
 "DESCRIPTION" => htmlspecialchars($copyright." - ".$description1),
 "PAGEKEYWORD" => $keyword

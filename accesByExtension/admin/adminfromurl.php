@@ -9,7 +9,7 @@ if ($act=="")
 {
     // Creation d'une nouvelle instance Fast Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.add.from.url.tpl",
     "tpBase" => "body.tpl"));
@@ -23,7 +23,9 @@ if ($act=="")
     ("LOGINBARRE" => GetIdentificationBar(),
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
+    ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
 
@@ -35,7 +37,7 @@ elseif($act=="generate")
 {
     if($source=="bdnet")
     {
-        //Récupère la page html
+        //RÃ©cupÃ¨re la page html
         $file_content = file_get_contents($_POST["txtURLBDNET"]);
 
         //titre
@@ -99,27 +101,27 @@ elseif($act=="generate")
     $query .= "NULL, NULL, NULL, ".sqlise($_POST["txtURLBDNET"],'text').");";
     $DB->query ($query);
     //echo $query;
-    // récupère la valeur de la dernière insertion
+    // rÃ©cupÃ¨re la valeur de la derniÃ¨re insertion
     $lid= mysql_insert_id();
 
     if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $url_image, $url_ary))
-    { // un fichier à télécharger
+    { // un fichier Ã  tÃ©lÃ©charger
         if ( empty($url_ary[4]) )
         {
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplète. Vous allez être redirigé.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplÃ¨te. Vous allez Ãªtre redirigÃ©.';
             exit();
         }
         $base_get = '/' . $url_ary[4];
         $port = ( !empty($url_ary[3]) ) ? $url_ary[3] : 80;
-        // Connection au serveur hébergeant l'image
+        // Connection au serveur hÃ©bergeant l'image
         if ( !($fsock = @fsockopen($url_ary[2], $port, $errno, $errstr)) )
         {
             $error = true;
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image innacessible. Vous allez être redirigé.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image innacessible. Vous allez Ãªtre redirigÃ©.';
             exit();
         }
 
-        // Récupère l'image
+        // RÃ©cupÃ¨re l'image
         @fputs($fsock, "GET $base_get HTTP/1.1\r\n");
         @fputs($fsock, "HOST: " . $url_ary[2] . "\r\n");
         @fputs($fsock, "Connection: close\r\n\r\n");
@@ -131,11 +133,11 @@ elseif($act=="generate")
         }
         @fclose($fsock);
 
-        // Check la validité de l'image
+        // Check la validitÃ© de l'image
         if (!preg_match('#Content-Length\: ([0-9]+)[^ /][\s]+#i', $avatar_data, $file_data1) || !preg_match('#Content-Type\: image/[x\-]*([a-z]+)[\s]+#i', $avatar_data, $file_data2))
         {
             $error = true;
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du téléchargement de l\'image. Vous allez être redirigé.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du tÃ©lÃ©chargement de l\'image. Vous allez Ãªtre redirigÃ©.';
             exit();
         }
 
@@ -154,7 +156,7 @@ elseif($act=="generate")
         if ( $bytes_written != $avatar_filesize )
         {
             @unlink($tmp_filename);
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Could not write avatar file to local storage. Please contact the board administrator with this message. Vous allez être redirigé.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Could not write avatar file to local storage. Please contact the board administrator with this message. Vous allez Ãªtre redirigÃ©.';
             exit();
         }
         // newfilemname
@@ -177,12 +179,12 @@ elseif($act=="generate")
 
         $img_couv=$new_filename;
 
-        // met à jours la référence au fichier dans la base
+        // met Ã  jours la rÃ©fÃ©rence au fichier dans la base
         $query = "UPDATE users_alb_prop SET
         `img_couv` = '".$DB->escape($img_couv)."'
         WHERE (`id_proposal`=".$lid.");";
         $DB->query($query);
     }
 
-    echo GetMetaTag(2,"L'album a été ajouté. Merci de le valider.",(BDO_URL."admin/adminproposals.php"));
+    echo GetMetaTag(2,"L'album a Ã©tÃ© ajoutÃ©. Merci de le valider.",(BDO_URL."admin/adminproposals.php"));
 }

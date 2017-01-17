@@ -11,11 +11,11 @@ $opt_type[0][0] = 0;
 $opt_type[0][1] = 'Album';
 $opt_type[1][0] = 1;
 $opt_type[1][1] = 'Coffret';
-// Définie les choix possibles apres insertion dans la base
+// DÃ©finie les choix possibles apres insertion dans la base
 $action[0][0] = 0;
-$action[0][1] = "Insérer dans ma collection";
+$action[0][1] = "InsÃ©rer dans ma collection";
 $action[1][0] = 1;
-$action[1][1] = "Insérer dans mes achats futurs";
+$action[1][1] = "InsÃ©rer dans mes achats futurs";
 $action[2][0] = 2;
 $action[2][1] = "Ne rien faire";
 
@@ -68,19 +68,19 @@ INSERT INTO `users_alb_prop` (
 )";
 $DB->query ($query);
 
-    // récupère la valeur de la dernière insertion
+    // rÃ©cupÃ¨re la valeur de la derniÃ¨re insertion
     $lid= mysql_insert_id();
 
-    // Verifie la présence d'une image à télécharger
+    // Verifie la prÃ©sence d'une image Ã  tÃ©lÃ©charger
     if (is_file($txtFileLoc) | (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary))){
-        if (is_file($txtFileLoc)){ // un fichier à uploader
+        if (is_file($txtFileLoc)){ // un fichier Ã  uploader
             $imageproperties = getimagesize($txtFileLoc);
             $imagetype = $imageproperties[2];
             $imagelargeur = $imageproperties[0];
             $imagehauteur = $imageproperties[1];
-            // vérifie le type d'image
+            // vÃ©rifie le type d'image
             if (($imagetype != 1) and ($imagetype != 2)){
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent Ãªtre chargÃ©s. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }
             $uploaddir = BDO_DIR."images/tmp/";
@@ -91,26 +91,26 @@ $DB->query ($query);
                 $newfilename .=".jpg";
             }
             if(!copy($txtFileLoc,$uploaddir.$newfilename)){
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi de l\'image au serveur. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }else{
                 $img_couv=$newfilename;
             }
-        }else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)){ // un fichier à télécharger
+        }else if (preg_match('/^(http:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', $_POST['txtFileURL'], $url_ary)){ // un fichier Ã  tÃ©lÃ©charger
             if ( empty($url_ary[4]) ){
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplète. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplÃ¨te. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }
             $base_get = '/' . $url_ary[4];
             $port = ( !empty($url_ary[3]) ) ? $url_ary[3] : 80;
-            // Connection au serveur hébergeant l'image
+            // Connection au serveur hÃ©bergeant l'image
             if ( !($fsock = @fsockopen($url_ary[2], $port, $errno, $errstr)) ){
                 $error = true;
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image innacessible. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image innacessible. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }
 
-            // Récupère l'image
+            // RÃ©cupÃ¨re l'image
             @fputs($fsock, "GET $base_get HTTP/1.1\r\n");
             @fputs($fsock, "HOST: " . $url_ary[2] . "\r\n");
             @fputs($fsock, "Connection: close\r\n\r\n");
@@ -120,10 +120,10 @@ $DB->query ($query);
             }
             @fclose($fsock);
 
-            // Check la validité de l'image
+            // Check la validitÃ© de l'image
             if (!preg_match('#Content-Length\: ([0-9]+)[^ /][\s]+#i', $avatar_data, $file_data1) || !preg_match('#Content-Type\: image/[x\-]*([a-z]+)[\s]+#i', $avatar_data, $file_data2)){
                 $error = true;
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du téléchargement de l\'image. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du tÃ©lÃ©chargement de l\'image. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }
             $avatar_filesize = $file_data1[1];
@@ -136,7 +136,7 @@ $DB->query ($query);
             @fclose($fptr);
             if ( $bytes_written != $avatar_filesize ){
                 @unlink($tmp_filename);
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Could not write avatar file to local storage. Please contact the board administrator with this message. Vous allez être redirigé.';
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Could not write avatar file to local storage. Please contact the board administrator with this message. Vous allez Ãªtre redirigÃ©.';
                 exit();
             }
 
@@ -159,14 +159,14 @@ $DB->query ($query);
             $img_couv='';
         }
 
-        // met à jours la référence au fichier image dans la base
+        // met Ã  jours la rÃ©fÃ©rence au fichier image dans la base
         $query = "UPDATE users_alb_prop SET";
         $query .= " `img_couv` = '".$DB->escape($img_couv)."'";
         $query .=" WHERE (`id_proposal`=".$DB->escape($lid).");";
         $DB->query($query);
     }
     // message de confirmation
-    echo GetMetaTag(2,"Votre proposition a été ajoutée à la liste des demandes. Merci de votre contribution à la base BDovore.",(BDO_URL."membres/suiviproposals.php?cle=1&sort=DESC"));
+    echo GetMetaTag(2,"Votre proposition a Ã©tÃ© ajoutÃ©e Ã  la liste des demandes. Merci de votre contribution Ã  la base BDovore.",(BDO_URL."membres/suiviproposals.php?cle=1&sort=DESC"));
 }
 
 // AFFICHE UN FORMULAIRE VIDE
@@ -176,7 +176,7 @@ elseif($act==""){
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
 
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpMenuColl" => "menu_coll.tpl",
     "tpBody" => "user.prop.album.tpl",
@@ -197,6 +197,7 @@ elseif($act==""){
     "LOGINBARRE" => GetIdentificationBar(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("MENUCOLL","tpMenuColl");
     $t->parse("BODY","tpBody");

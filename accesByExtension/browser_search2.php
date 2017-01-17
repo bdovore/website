@@ -135,7 +135,7 @@ $t->set_file(array(
 "tpBody" => "browser_search.tpl",
 ));
 
-// on déclare les blocks contenus sur la feuille
+// on dÃ©clare les blocks contenus sur la feuille
 $t->set_block('tpBody','DataBlock','DBlock');
 
 
@@ -204,7 +204,7 @@ if ($rb_browse != "ser") {
     }
 }
 else {
-    // browse par série : seulement 2 niveaux
+    // browse par sÃ©rie : seulement 2 niveaux
     while ($row = mysql_fetch_assoc($RecAuteur)) {
         $t->set_var(array(
         "WSPACER"=>"0",
@@ -232,7 +232,7 @@ if (!empty($totalRows) and ($totalRows <= $maxRows))
 }
 else if (!empty($totalRows))
 {
-    $totalrow = 'lignes de '.($startRow+1).' à ';
+    $totalrow = 'lignes de '.($startRow+1).' Ã  ';
     $totalrow .= ($startRow+$maxRows > $totalRows) ? $totalRows : ($startRow+$maxRows);
     $totalrow .= ' ( sur '.$totalRows.' lignes )';
 
@@ -245,17 +245,18 @@ else if (!empty($totalRows))
     $t->set_var("URLNEXTPAGE",'<a href="javascript:document.browser.pageNum.value=\''.min($totalPages, $pageNum + 1).'\';go2()">Suivant</a>');
     else
     $t->set_var("URLNEXTPAGE",'');
-    $t->set_var("TOTALROW",(empty($totalRows) ? 'Aucune ligne de résultat !' : $totalrow));
+    $t->set_var("TOTALROW",(empty($totalRows) ? 'Aucune ligne de rÃ©sultat !' : $totalrow));
 }
 else
 {
     $t->set_var("URLPREVPAGE",'');
     $t->set_var("URLNEXTPAGE",'');
-    $t->set_var("TOTALROW",'Aucune ligne de résultat !');
+    $t->set_var("TOTALROW",'Aucune ligne de rÃ©sultat !');
 }
 
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 $t->set_var("TITRESEARCH","<b>Contient '...<i>" . htmlspecialchars($let) . "<i>...'</b>");
 $t->parse("BODY","tpBody");
 $t->pparse("MyFinalOutput","tpBody");

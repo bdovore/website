@@ -31,14 +31,14 @@ if ($act=="export") {
 
     // Creation d'une nouvelle instance Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "user_export_pdf.tpl",
     "tpMenu" => "user.menu.tpl",
     "tpMenuColl" => "menu_coll.tpl",
     "tpBase" => "body.tpl"));
 
-    // Préremplie les case à cocher
+    // PrÃ©remplie les case Ã  cocher
     for ($i=0; $i<=17; $i++) {
         if (substr($codesel,$i,1)=="1") {
             $t->set_var("SELFIELD".$i, 'checked');
@@ -62,7 +62,8 @@ if ($act=="export") {
     ("LOGINBARRE" => GetIdentificationBar(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
-    "PAGETITLE" => "Export de données"));
+    "URLSITEFORUM" => BDO_URL_FORUM,
+    "PAGETITLE" => "Export de donnÃ©es"));
     $t->parse("BODY","tpBody");
     $t->parse("MENUCOLL","tpMenuColl");
     $t->parse("MENUBARRE","tpMenu");

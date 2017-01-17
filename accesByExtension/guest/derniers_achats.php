@@ -7,12 +7,12 @@ include_once (BDO_DIR."inc/bdovore.php");
 include (BDO_DIR."inc/queryfunction.php");
 
 
-// Vérifie qu'un parametre a été passé
+// VÃ©rifie qu'un parametre a Ã©tÃ© passÃ©
 if (!isset($user)){
     if (issetNotEmpty($_SESSION["UserId"])) {
         $user = encodeUserId($_SESSION["UserId"]);
     }else {
-        echo GetMetaTag(3,"Erreur lors du chargement de cette page : vous allez être redirigé.",(BDO_URL."index.php"));
+        echo GetMetaTag(3,"Erreur lors du chargement de cette page : vous allez Ãªtre redirigÃ©.",(BDO_URL."index.php"));
         exit();
     }
 }
@@ -29,14 +29,14 @@ if ($user <> $_SESSION["UserId"] ) {
 }
 
 
-// Récupère les 20 derniers achats
+// RÃ©cupÃ¨re les 20 derniers achats
 $query = "
 SELECT
     IFNULL(u.date_achat, u.date_ajout) dte_achat,
     t.id_tome,
     t.titre,
     CASE flg_int when 'O'
-    then 'Intégrale'
+    then 'IntÃ©grale'
     else (
         CASE t.flg_type
         when 1 then 'Coffret'
@@ -71,7 +71,7 @@ ORDER BY ifnull(u.date_achat, u.date_ajout) DESC, s.nom, t.num_tome, t.flg_type
 LIMIT 0,20;";
 
 $DB->query ($query);
-// prépare le template
+// prÃ©pare le template
 $t = new Template(BDO_DIR."public/templates");
 $t->set_file(array(
 "tpBody" => "guest_derniers_achats.tpl",
@@ -80,7 +80,7 @@ $t->set_file(array(
 "tpMenuUser" => "menu_user".(minAccessLevel(2,false) ? '' : '_logout').".tpl",
 "tpBase" => "body.tpl"));
 
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpBody','AlbBlock','ABlock');
 
 //Liste les news
@@ -94,7 +94,7 @@ while ($DB->next_record())
         $tome = $DB->f("num_tome");
     }
 
-    // Détermine si la collection est disponible
+    // DÃ©termine si la collection est disponible
     if ($DB->f("nom_collec") == '<N/A>')
     {
         $combi = $DB->f("nom_editeur");
@@ -102,7 +102,7 @@ while ($DB->next_record())
         $combi = $DB->f("nom_editeur")." - ".$DB->f("nom_collec");
     }
 
-    // Génère la note
+    // GÃ©nÃ¨re la note
     if ($DB->f("note") != '')
     {
         $note = gen_img_tag(BDO_URL."images/imgnote.php?note=".$DB->f("note"),"","","",$DB->f("note").'/10');
@@ -111,7 +111,7 @@ while ($DB->next_record())
         $note = "";
     }
 
-    // Genère les commentaires
+    // GenÃ¨re les commentaires
     if ($DB->f("comment") != '')
     {
         $comment = nl2br(stripslashes($DB->f("comment")));
@@ -150,7 +150,9 @@ $t->set_var (array
 "USERID" => $ori_user,
 "LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-"URLSITEIMAGE" => BDO_URL_IMAGE,));
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM
+));
 
 $t->parse("BODY","tpBody");
 $t->parse("MENUBARRE","tpMenu");

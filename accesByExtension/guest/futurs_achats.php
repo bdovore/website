@@ -162,7 +162,9 @@ $t->set_var (array
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM
+));
 
 $t->parse("BODY","tpBody");
 $t->parse("MENUBARRE","tpMenu");

@@ -14,7 +14,7 @@ $t->set_file(array(
 "tpBase" => "body.tpl"));
 
 
-// Selections des scénaristes
+// Selections des scÃ©naristes
 $query = "
 SELECT
     count(distinct(t.id_tome)) as nbtome,
@@ -31,7 +31,7 @@ group by a.pseudo
 order by nbtome desc
 ";
 $DB->query ($query);
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpBody','ScenarBlock','SBlock');
 //Liste les news
 while ($DB->next_record())
@@ -60,7 +60,7 @@ order by nbtome desc
 ";
 $DB->query ($query);
 
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpBody','DessinBlock','DBlock');
 //Liste les news
 while ($DB->next_record())
@@ -72,6 +72,7 @@ while ($DB->next_record())
 }
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 $t->set_var("IDUSER",encodeUserId($_SESSION["UserId"]));
 
 

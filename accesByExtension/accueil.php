@@ -15,7 +15,7 @@ function unhtmlspecialchars( $string ){
 
 // dossier contenant les templates
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpForm_Recherche" => "form_recherche.tpl",
 "tpAccueil" => "accueil.tpl",
@@ -32,7 +32,7 @@ $t->set_file(array(
 
 
 // ajout des news
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpNews','NewsBlock','NBlock');
 
 // Ajout de 2 autres news bdovore
@@ -56,11 +56,11 @@ if ($DB->nf() != 0){
     }
 }
 else {
-    $t->set_var (array("NEWSITEMS" => "aucune news à afficher"));
+    $t->set_var (array("NEWSITEMS" => "aucune news Ã  afficher"));
 }
 
 // insertion des 5 derniers commentaires
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpAccueil','ComBlock','CMBlock');
 $select = "
 select
@@ -100,7 +100,7 @@ while ($DB->next_record()) {
 }
 
 // insertion des 5 dernieres sorties
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpAccueil','LastSortieBlock','LSBlock');
 $select ="select
             t.titre,
@@ -137,7 +137,7 @@ while ($DB->next_record()) {
 }
 
 // insertion des 5 prochaines sorties
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpAccueil','FuturSortieBlock','FSBlock');
 $select ="select
             t.titre,
@@ -177,7 +177,8 @@ while ($DB->next_record()) {
 $t->set_var("LOGINBARRE",GetIdentificationBar());
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
-$t->set_var("PAGETITLE","BDOVORE.com, gestion de collection de BD en ligne, actualité BD et forum BD");
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
+$t->set_var("PAGETITLE","BDOVORE.com, gestion de collection de BD en ligne, actualitÃ© BD et forum BD");
 $t->set_var("PAGEKEYWORD","bdvore");
 $t->parse("FORM_RECHERCHE","tpForm_Recherche");
 $t->parse("LASTNEWS","tpNews");

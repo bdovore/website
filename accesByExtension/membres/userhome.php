@@ -39,7 +39,7 @@ $DB->query($select);
 $DB->next_record();
 
 if ($DB->f("nb") != $DB->f("nb_tome"))
-$t->set_var("NBUSEREDITION"," (".$DB->f("nb")." éditions différentes) ");
+$t->set_var("NBUSEREDITION"," (".$DB->f("nb")." Ã©ditions diffÃ©rentes) ");
 $t->set_var("NBUSERTOME",$DB->f("nb_tome"));
 $t->set_var("NBSERIES",$DB->f("nbserie"));
 
@@ -49,13 +49,13 @@ $DB->query($selectnote);
 $DB->next_record();
 $t->set_var("NBNOTES",$DB->f("nbnote"));
 
-//affichage du nb de bd commentées
+//affichage du nb de bd commentÃ©es
 $selectcomment = "SELECT count(*) nbcomment FROM `users_comment` WHERE comment != '' AND user_id =".$DB->escape($_SESSION["UserId"]);
 $DB->query($selectcomment);
 $DB->next_record();
 $t->set_var("NBCOMMENTS",$DB->f("nbcomment"));
 
-// Selections des 5 albums les mieux notés
+// Selections des 5 albums les mieux notÃ©s
 $query = "
 select
     uc.note,
@@ -75,7 +75,7 @@ order by uc.note desc
 limit 0,5";
 $DB->query ($query);
 
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpBody','Top10Block','TBlock');
 
 //Liste les news
@@ -87,7 +87,7 @@ while ($DB->next_record()){
     $t->parse ("TBlock", "Top10Block",true);
 }
 
-// Selections des 5 Genres les plus représentés
+// Selections des 5 Genres les plus reprÃ©sentÃ©s
 $query = "
 SELECT
     count(distinct(t.id_tome)) as nbtome,
@@ -107,7 +107,7 @@ order by nbtome
 desc limit 0,5";
 $DB->query ($query);
 
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpBody','GenreBlock','GBlock');
 
 //Liste les news
@@ -118,7 +118,7 @@ while ($DB->next_record()){
     $t->parse ("GBlock", "GenreBlock",true);
 }
 
-// Selections des 5 dessinateurs les plus représentés
+// Selections des 5 dessinateurs les plus reprÃ©sentÃ©s
 $query = "
 SELECT
     count(t.id_tome) as nbtome,
@@ -136,7 +136,7 @@ order by nbtome desc limit 0,5
 ";
 $DB->query ($query);
 
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpBody','DessinBlock','DBlock');
 
 //Liste les news
@@ -148,7 +148,7 @@ while ($DB->next_record()){
 }
 
 ///* Je ne capte rien au code Tomesque. Je le remplace donc par une query classique mais je le garde pour mes petits enfants
-// je remet le code tomesque incompréhensible ;-)
+// je remet le code tomesque incomprÃ©hensible ;-)
 $Album = new QueryAlbum;
 $Album->setUserMode($_SESSION["UserId"]);
 $Album->setOrder("u.date_ajout DESC");
@@ -159,7 +159,7 @@ if ($DB->nf() != 0 ) {
     while ($DB->next_record()) {
         $urldelete = $_SERVER["PHP_SELF"]."?del=1&id_tome=".$DB->f("id_tome")."&id_edition=".$DB->f("id_edition");
         if ($DB->f("flg_int") == 'O') {
-            $lib_serie = stripslashes($DB->f("serie"))." - Intégrale";
+            $lib_serie = stripslashes($DB->f("serie"))." - IntÃ©grale";
         }else {
             if ($DB->f("flg_fini") == 2 ) {
                 $lib_serie = stripslashes($DB->f("serie")). " (One shot)";
@@ -170,7 +170,7 @@ if ($DB->nf() != 0 ) {
                     if ($DB->f("num_tome") == 0 || !$DB->f("num_tome")) {
                         $lib_serie = stripslashes($DB->f("serie"))." - HS";
                     }else {
-                        $lib_serie = stripslashes($DB->f("serie"))." n°".$DB->f("num_tome");
+                        $lib_serie = stripslashes($DB->f("serie"))." nÂ°".$DB->f("num_tome");
                     }
                 }
             }
@@ -223,6 +223,7 @@ $t->set_var("NBPRET",$DB->f("nb"));
 $t->set_var ("LOGINBARRE", GetIdentificationBar());
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 $t->set_var("PAGETITLE","BDOVORE.com : mon Garde-manger");
 
 $t->parse("MENUCOLL","tpMenuColl");

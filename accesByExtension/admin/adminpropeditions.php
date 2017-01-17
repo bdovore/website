@@ -12,8 +12,8 @@ $opt_type[0][1] = 'Album';
 $opt_type[1][0] = 1;
 $opt_type[1][1] = 'Coffret';
 
-$opt_action[0] = "Insérer dans la collection";
-$opt_action[1] = "Insérer comme achat futur";
+$opt_action[0] = "InsÃ©rer dans la collection";
+$opt_action[1] = "InsÃ©rer comme achat futur";
 $opt_action[2] = "Aucune";
 
 
@@ -32,7 +32,7 @@ if ($act==""){
         $sort="";
     }
 
-    // Selection des champs à afficher
+    // Selection des champs Ã  afficher
     $clerep[1] = "id_edition";
     $clerep[2] = "prop_dte";
     $clerep[3] = "user_id";
@@ -66,15 +66,15 @@ if ($act==""){
 
     // Creation d'une nouvelle instance Fast Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.proposals.editions.tpl",
     "tpBase" => "body.tpl"));
-    // on déclare le block à utiliser
+    // on dÃ©clare le block Ã  utiliser
     $t->set_block('tpBody','PropBlock','PBlock');
 
-    $validationdelay = 21;//nbre de jours après lesquels on ne valide pas (pour les parutions futures)
-    $datebeforevalid = "Ne pas valider les éditions qui paraissent après le " . date("d/m/Y", mktime(0, 0, 0, date("m"),date("d")+$validationdelay,date("Y"))) . " ($validationdelay jours)";
+    $validationdelay = 21;//nbre de jours aprÃ¨s lesquels on ne valide pas (pour les parutions futures)
+    $datebeforevalid = "Ne pas valider les Ã©ditions qui paraissent aprÃ¨s le " . date("d/m/Y", mktime(0, 0, 0, date("m"),date("d")+$validationdelay,date("Y"))) . " ($validationdelay jours)";
     $t->set_var (array("DATEBEFOREVALID" => $datebeforevalid));
 
     //Liste les propositions
@@ -86,7 +86,7 @@ if ($act==""){
         "TITRE" => stripslashes($DB->f ("titre")),
         "SERIE" => stripslashes($DB->f ("serie")),
         "URLEDIT" => BDO_URL."admin/adminalbums.php?alb_id=".$DB->f ("id_proposal"),
-        "URLDELETE" => "javascript:alert('Impossible d\'effacer cette proposition depuis cet écran');")
+        "URLDELETE" => "javascript:alert('Impossible d\'effacer cette proposition depuis cet Ã©cran');")
         );
         $t->parse ("PBlock", "PropBlock",true);
     }
@@ -96,8 +96,9 @@ if ($act==""){
     "LOGINBARRE" => GetIdentificationBar(),
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,)
-    );
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
+    ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
 }
@@ -108,7 +109,7 @@ elseif($act=="supprim"){
     if($status=="ok"){
         //suppression de la news
 
-        // Vérifie l'existence d'une couverture
+        // VÃ©rifie l'existence d'une couverture
 
         $query = "SELECT user_id, img_couv, action, notif_mail, titre FROM users_alb_prop WHERE id_proposal = ".$DB->escape($propid);
         $DB->query ($query);
@@ -129,8 +130,8 @@ elseif($act=="supprim"){
         $query = "UPDATE users_alb_prop SET `STATUS` = 99, `VALIDATOR` = " . $DB->escape($_SESSION["UserId"]) . " , `VALID_DTE` = NOW() WHERE id_proposal=".$DB->escape($propid);
         $DB->query ($query);
 
-        //Vérifie si un email doit être envoyé
-        if ($notif_mail==1){// Récupère l'adresse du posteur
+        //VÃ©rifie si un email doit Ãªtre envoyÃ©
+        if ($notif_mail==1){// RÃ©cupÃ¨re l'adresse du posteur
             $query = "SELECT email FROM users WHERE user_id = $prop_user;";
             $DB->query ($query);
             $DB->next_record();
@@ -138,11 +139,11 @@ elseif($act=="supprim"){
             $mail_sujet = "Ajout d'un album dans la base BDOVORE";
             $mail_entete = "From: no-reply@bdovore.com";
             $mail_text = "Bonjour, \n\n";
-            $mail_text .="Votre proposition à la base de donnée de BDOVORE n'a pas été prise en compte.\n\n";
+            $mail_text .="Votre proposition Ã  la base de donnÃ©e de BDOVORE n'a pas Ã©tÃ© prise en compte.\n\n";
             $mail_text .="Titre : ".$prop_titre."\n\n";
-            $mail_text .="Cet album figurait sans doute dans notre base ou l'information fournie n'était pas suffisante.\n\n";
-            $mail_text .="Merci pour votre compréhension\n\n";
-            $mail_text .="L'équipe BDOVORE";
+            $mail_text .="Cet album figurait sans doute dans notre base ou l'information fournie n'Ã©tait pas suffisante.\n\n";
+            $mail_text .="Merci pour votre comprÃ©hension\n\n";
+            $mail_text .="L'Ã©quipe BDOVORE";
             mail($mail_adress,$mail_sujet,$mail_text,$mail_entete);
         }
 
@@ -157,7 +158,7 @@ elseif($act=="supprim"){
         }
 
         //rouvre la page
-        echo GetMetaTag(1,"La proposition a été effacée",($next_url));
+        echo GetMetaTag(1,"La proposition a Ã©tÃ© effacÃ©e",($next_url));
         exit;
     }else{
         // affiche la confirmation de la demande d'effacement

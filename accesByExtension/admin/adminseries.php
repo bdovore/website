@@ -13,11 +13,11 @@ $opt_status[1][1] = 'En cours';
 $opt_status[2][0] = 2;
 $opt_status[2][1] = 'One Shot';
 $opt_status[3][0] = 3;
-$opt_status[3][1] = 'Interrompue/Abandonnée';
+$opt_status[3][1] = 'Interrompue/AbandonnÃ©e';
 
 $act = $_GET["act"];
 
-// Mettre à jour les informations
+// Mettre Ã  jour les informations
 if ($act=="update"){
 
     $query = "
@@ -32,12 +32,12 @@ if ($act=="update"){
         `id_serie`=".$DB->escape($_POST["txtSerieId"])."
     ";
     $DB->query($query);
-    echo $DB->affected_rows()." lignes modifiées dans la table bd_serie.<br />";
+    echo $DB->affected_rows()." lignes modifiÃ©es dans la table bd_serie.<br />";
     $query = "UPDATE bd_tome SET id_genre = ".$DB->escape($_POST['txtGenreId']). " WHERE (`id_serie`=".$DB->escape($_POST["txtSerieId"]).");";
     $DB->query($query);
-    echo $DB->affected_rows()." lignes modifiées dans la table bd_tome.<br />";
+    echo $DB->affected_rows()." lignes modifiÃ©es dans la table bd_tome.<br />";
 
-    echo '<META http-equiv="refresh" content="1; URL=javascript:history.go(-1)">'."Mise à jour effectuée";
+    echo '<META http-equiv="refresh" content="1; URL=javascript:history.go(-1)">'."Mise Ã  jour effectuÃ©e";
 }
 
 // EFFACEMENT D'UN ALBUM
@@ -48,30 +48,30 @@ elseif($act=="delete"){
         $DB->query ($query);
         $nb_tome = $DB->num_rows();
         if ($nb_tome > 0)
-            exit('La série contient encore '.$nb_tome.' album(s). Suppression interdite.');
+            exit('La sÃ©rie contient encore '.$nb_tome.' album(s). Suppression interdite.');
 
         $query = "SELECT * FROM serie_comment WHERE id_serie= ".$DB->escape($idserie);
         $DB->query ($query);
         $nb_tome = $DB->num_rows();
         if ($nb_tome > 0)
-            exit('La série contient encore '.$nb_tome.' commentaire(s). Suppression interdite.');
+            exit('La sÃ©rie contient encore '.$nb_tome.' commentaire(s). Suppression interdite.');
 
         $query = "SELECT * FROM users_exclusions WHERE id_serie= ".$DB->escape($idserie);
         $DB->query ($query);
         $nb_tome = $DB->num_rows();
         if ($nb_tome > 0)
-            exit('La série contient encore '.$nb_tome.' exclusion(s) d\'utilisateur. Suppression interdite.');
+            exit('La sÃ©rie contient encore '.$nb_tome.' exclusion(s) d\'utilisateur. Suppression interdite.');
 
         $query = "DELETE FROM bd_serie WHERE id_serie= ".$DB->escape($idserie)." LIMIT 1";
         $DB->query ($query);
-        echo $DB->affected_rows()." ligne modifiée dans la table bd_serie.<br />";
-        echo '<META http-equiv="refresh" content="2; URL='.BDO_URL.'admin/index.php">La serie a été effacée de la base.';
+        echo $DB->affected_rows()." ligne modifiÃ©e dans la table bd_serie.<br />";
+        echo '<META http-equiv="refresh" content="2; URL='.BDO_URL.'admin/index.php">La serie a Ã©tÃ© effacÃ©e de la base.';
         exit();
 
     }
     else
     {// Affiche la demande de confirmation
-        echo 'Etes-vous sûr de vouloir effacer la série n. '.$idserie.' ? <a href="'.BDO_URL.'admin/adminseries.php?act=delete&conf=ok&idserie='.$idserie.'">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
+        echo 'Etes-vous sÃ»r de vouloir effacer la sÃ©rie n. '.$idserie.' ? <a href="'.BDO_URL.'admin/adminseries.php?act=delete&conf=ok&idserie='.$idserie.'">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
 
         exit();
     }
@@ -80,7 +80,7 @@ elseif($act=="delete"){
 elseif($act=="new"){
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpAdminSerieDetail" => "admin.serie.detail.tpl",
     "tpBody" => "admin.serie.tpl",
@@ -94,7 +94,7 @@ elseif($act=="new"){
     "NBCOMMENTS" => "0",
     "STYLE_NOTATION" => "",
     "OPTSTATUS" => GetOptionValue($opt_status,1),
-    "URLDELETE" => "javascript:alert('Désactivé');",
+    "URLDELETE" => "javascript:alert('DÃ©sactivÃ©');",
     "ACTIONNAME" => "Enregistrer",
     "URLEDITGENRE" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
     "URLACTION" => BDO_URL."admin/adminseries.php?act=append"
@@ -105,6 +105,7 @@ elseif($act=="new"){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->parse("ADMINSERIEDETAIL","tpAdminSerieDetail");
@@ -133,7 +134,7 @@ elseif($act=="append"){
     ";
     $DB->query ($query);
     $lid= mysql_insert_id();
-    echo GetMetaTag(2,"La série a été ajouté",(BDO_URL."admin/adminseries.php?serie_id=".$lid));
+    echo GetMetaTag(2,"La sÃ©rie a Ã©tÃ© ajoutÃ©",(BDO_URL."admin/adminseries.php?serie_id=".$lid));
 }
 
 // AFFICHER UNE SERIE
@@ -142,14 +143,14 @@ elseif($act==""){
 
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpAdminSerieDetail" => "admin.serie.detail.tpl",
     "tpBody" => "admin.serie.tpl",
     "tpMenu" => "menuadmin.tpl",
     "tpBase" => "body.tpl"
     ));
-    // Selectionne les albums présents dans la série
+    // Selectionne les albums prÃ©sents dans la sÃ©rie
     $query = "SELECT id_tome, titre FROM bd_tome WHERE id_serie=".$DB->escape($serie_id);
     $DB->query ($query);
     $nb_tome = $DB->num_rows();
@@ -164,7 +165,7 @@ elseif($act==""){
         $t->parse ("ABlock", "AlbBlock",true);
     }
 
-    // Selectionne les auteurs ayant travaillé pour la série
+    // Selectionne les auteurs ayant travaillÃ© pour la sÃ©rie
     $query = "SELECT distinct id_auteur, pseudo
     FROM
     bd_auteur, bd_tome
@@ -182,7 +183,7 @@ elseif($act==""){
         $t->parse ("AuBlock", "AutBlock",true);
     }
 
-    //récupère les données dans la base
+    //rÃ©cupÃ¨re les donnÃ©es dans la base
     $query = "
     SELECT
         s.ID_SERIE,
@@ -206,9 +207,9 @@ elseif($act==""){
     $note = $DB->f("NOTE");
     $warning_note = "";
     if ($note == '0'){
-        $warning_note = '<div>Aucun membre n\'a noté/commenté la série.</div>';
+        $warning_note = '<div>Aucun membre n\'a notÃ©/commentÃ© la sÃ©rie.</div>';
     }else{
-        $warning_note = '<div class="b">Des membres ont noté/commenté la série.</div>';
+        $warning_note = '<div class="b">Des membres ont notÃ©/commentÃ© la sÃ©rie.</div>';
     }
 
     $t->set_var (array(
@@ -240,6 +241,7 @@ elseif($act==""){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->parse("ADMINSERIEDETAIL","tpAdminSerieDetail");

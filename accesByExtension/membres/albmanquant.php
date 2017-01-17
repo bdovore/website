@@ -10,21 +10,21 @@ function cv_date_bd($date) {
     $annee =substr($date,0,4);
     return $mois." ".$annee;
 }
-// Début du code
+// DÃ©but du code
 
 $act = $_GET["act"];
 
 if ($act=="excserie") {
 
-    // on récupère l'id_serie
+    // on rÃ©cupÃ¨re l'id_serie
     $id_serie = intval($_GET["id"]);
     $prev = intval($_GET["prev"]);
 
-    // on efface les anciennes références à la série
+    // on efface les anciennes rÃ©fÃ©rences Ã  la sÃ©rie
     $query = "DELETE FROM users_exclusions WHERE user_id = ".$DB->escape($_SESSION["UserId"])." AND id_serie = ".$DB->escape($id_serie);
     $DB->query($query);
 
-    // on crée la nouvelle exclusion
+    // on crÃ©e la nouvelle exclusion
     $query = "
     INSERT INTO users_exclusions (
     `user_id` ,`id_tome` ,`id_serie`
@@ -38,12 +38,12 @@ if ($act=="excserie") {
 
 if ($act=="excalb") {
 
-    // on récupère l'id_serie
+    // on rÃ©cupÃ¨re l'id_serie
     $id_serie = intval($_GET["id"]);
     $prev = intval($_GET["prev"]);
     //$sel_tome = $_GET["sel_tome"];
 
-    // on insère les tomes cochés dans la table users_exclusion
+    // on insÃ¨re les tomes cochÃ©s dans la table users_exclusion
     $sel_tome = $_POST["sel_tome"];
     if (count($sel_tome)>0){
         foreach ($sel_tome as $id_tome) {
@@ -62,7 +62,7 @@ if ($act=="excalb") {
 
 if ($act == "razserie") {
 
-    // on récupère l'id_serie
+    // on rÃ©cupÃ¨re l'id_serie
     $id_serie = intval($_GET["id"]);
     $query = "DELETE FROM users_exclusions WHERE user_id = ".$DB->escape($_SESSION["UserId"])." AND id_serie = ".$DB->escape($id_serie);
     $DB->query($query);
@@ -73,7 +73,7 @@ if ($act == "razserie") {
 // annulation de l'exclusion pour une serie (tout albums)
 if (isset($_POST['actAnnExclu']) and isset($_POST['id_serie'])) {
 
-    // on récupère l'id_serie
+    // on rÃ©cupÃ¨re l'id_serie
     $id_serie = intval($_POST['id_serie']);
     $query = "DELETE FROM users_exclusions WHERE user_id = ".$DB->escape($_SESSION["UserId"])." AND id_serie = ".$DB->escape($id_serie);
     $DB->query($query);
@@ -82,7 +82,7 @@ if (isset($_POST['actAnnExclu']) and isset($_POST['id_serie'])) {
     exit;
 }
 
-// variables générales
+// variables gÃ©nÃ©rales
 
 $clerep[1] = "t.titre";
 $clerep[2] = "t.num_tome";
@@ -92,7 +92,7 @@ $cle = ( isset($_GET['cle']) ) ? intval($_GET['cle']) : 2;
 if ($cle < 1 || $cle > 3) $cle = 2;
 $sort = ( !strcasecmp($_GET['sort'],"DESC") ) ? "DESC" : "ASC";
 
-// On rempli la liste déroulante avec les séries pour lesquelles il manque des albums
+// On rempli la liste dÃ©roulante avec les sÃ©ries pour lesquelles il manque des albums
 
 
 $query = "
@@ -139,7 +139,7 @@ ORDER BY user_serie.nom
 ";
 
 $DB->query($query);
-// création de la liste
+// crÃ©ation de la liste
 if (isset($_POST["lstSerie"])) {
     $id_serie = $_POST["lstSerie"];
 }
@@ -165,7 +165,7 @@ while ($DB->next_record()) {
     $option .= "> ".$DB->f("nom")."</option>";
 }
 
-// récuperation des séries avec exclusions
+// rÃ©cuperation des sÃ©ries avec exclusions
 $query = "
 SELECT bd_serie.nom, bd_serie.id_serie
 FROM users_exclusions INNER JOIN bd_serie USING(id_serie)
@@ -214,7 +214,7 @@ $DB->query ($query);
 
 // Creation d'une nouvelle instance Fast Template
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpBody" => "user_albummanquant_lm.tpl",
 "tpMenu" => "user.menu.tpl",
@@ -224,11 +224,11 @@ $t->set_var(array(
 "OPTSOURCE" => $option,
 "OPTSOURCEEXCLU" => $optionExclu
 ));
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpBody','DetailBlock','DBlock');
 
 
-//Liste les nouveautés par mois
+//Liste les nouveautÃ©s par mois
 while ($DB->next_record())
 {
 
@@ -258,8 +258,9 @@ $t->set_var (array
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
-"PAGETITLE" => "Séries à compléter"));
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
+"PAGETITLE" => "SÃ©ries Ã  complÃ©ter"));
 $t->parse("BODY","tpBody");
 $t->parse("MENUCOLL","tpMenuColl");
 $t->parse("MENUBARRE","tpMenu");

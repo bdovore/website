@@ -589,6 +589,7 @@ class Browser extends Bdo_Controller
 
             $this->view->set_var("URLSITE", BDO_URL);
             $this->view->set_var("URLSITEIMAGE", BDO_URL_IMAGE);
+            $this->view->set_var("URLSITEFORUM", BDO_URL_FORUM);
             $this->view->set_var("TOTALROW", (empty($totalRows) ? 'Aucune ligne de résultat !' : $totalrowhtml));
         }
         else {

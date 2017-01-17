@@ -4,7 +4,7 @@
 
 minAccessLevel(1);
 
-// Mettre à jour les informations
+// Mettre Ã  jour les informations
 if ($act=="update"){
 
     $query = "
@@ -15,7 +15,7 @@ if ($act=="update"){
         `id_collection`=".$DB->escape($_POST["txtIdColl"])."
     ";
     $DB->query($query);
-    echo '<META http-equiv="refresh" content="1; URL=javascript:history.go(-1)">'."Mise à jour effectuée";
+    echo '<META http-equiv="refresh" content="1; URL=javascript:history.go(-1)">'."Mise Ã  jour effectuÃ©e";
 }
 
 // EFFACEMENT D'UNE COLLECTION
@@ -26,7 +26,7 @@ elseif($act=="delete")
         $query = "DELETE FROM bd_collection WHERE id_collection=".$DB->escape($collec_id);
         $DB->query ($query);
         $redirection = BDO_URL."admin/index.php";
-        echo '<META http-equiv="refresh" content="2; URL='.$redirection.'">La collection a été effacée de la base.';
+        echo '<META http-equiv="refresh" content="2; URL='.$redirection.'">La collection a Ã©tÃ© effacÃ©e de la base.';
         exit();
     }
     else
@@ -40,12 +40,12 @@ elseif($act=="delete")
 elseif($act=="new"){
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.collec.tpl",
     "tpBase" => "body.tpl"
     ));
-    if (!is_null($editeur_id)){// Un éditeur a été passé dans l'URL
+    if (!is_null($editeur_id)){// Un Ã©diteur a Ã©tÃ© passÃ© dans l'URL
 
         $query = "SELECT id_editeur, nom FROM bd_editeur WHERE id_editeur = ".$DB->escape($editeur_id);
         $DB->query ($query);
@@ -59,7 +59,7 @@ elseif($act=="new"){
 
     $t->set_var (array(
     "NBCOLALB" => "0",
-    "URLDELETE" => "javascript:alert('Désactivé');",
+    "URLDELETE" => "javascript:alert('DÃ©sactivÃ©');",
     "ACTIONNAME" => "Enregistrer",
     "URLEDITEDIT" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
     "URLACTION" => BDO_URL."admin/admincollections.php?act=append"
@@ -70,6 +70,7 @@ elseif($act=="new"){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
@@ -83,7 +84,7 @@ elseif($act=="append"){
     $query .= $_POST['txtEditeurId'].");";
     $DB->query ($query);
     $lid= mysql_insert_id();
-    echo GetMetaTag(2,"La collection a été ajouté",(BDO_URL."admin/admincollections.php?collec_id=".$lid));
+    echo GetMetaTag(2,"La collection a Ã©tÃ© ajoutÃ©",(BDO_URL."admin/admincollections.php?collec_id=".$lid));
 }
 
 // AFFICHER UNE COLLECTION
@@ -91,7 +92,7 @@ elseif($act==""){
 
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.collec.tpl",
     "tpBase" => "body.tpl"
@@ -106,7 +107,7 @@ elseif($act==""){
     $DB->next_record();
     $nb_albums = $DB->f("numofalb");
 
-    //récupère les données
+    //rÃ©cupÃ¨re les donnÃ©es
     $query = "
     SELECT
         c.id_collection,
@@ -138,6 +139,7 @@ elseif($act==""){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");

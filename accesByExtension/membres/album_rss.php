@@ -326,7 +326,8 @@ if ($id_tome or $id_edition)
         $t->set_var("COMMENT","<em>Aucun commentaire actuellement</em>");
     }
     $t->set_var("URLSITE",BDO_URL);
-$t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+    $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+    $t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 
     // Envoi de la fiche album par email
     $t->set_var (array(

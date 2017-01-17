@@ -47,12 +47,12 @@ $a_tableByColumn[$obj->COLUMN_NAME][] = $obj->TABLE_NAME;
 */
 
 
-echo '<h2>Recherche id de référence</h2>';
+echo '<h2>Recherche id de rÃ©fÃ©rence</h2>';
 
 
 echo '<form name="formvalue" method="post">
 <div>
-Référence :
+RÃ©fÃ©rence :
 <select name="column_name">';
 foreach( $a_column as $column_name=>$table_name)
 {
@@ -60,7 +60,7 @@ foreach( $a_column as $column_name=>$table_name)
     echo '<option value="'.$column_name.'" '.$selected.' >'.$table_name.'.'.$column_name.'</option>';
 }
 echo '</select> = \' <input type="text" name="valeur" value="'.$_POST['valeur'].'"> \'
-<br /><label for="viewQuery"><input type="checkbox" id="viewQuery" name="viewQuery" value="checked" '.$_POST['viewQuery'].'> voir les requêtes</label>
+<br /><label for="viewQuery"><input type="checkbox" id="viewQuery" name="viewQuery" value="checked" '.$_POST['viewQuery'].'> voir les requÃªtes</label>
 <br /><input type="submit" name="execformvalue" value="Chercher">
 </div>
 </form>';
@@ -145,7 +145,7 @@ if (isset($_POST['execformvalue']) and isset($_POST['valeur']))
 
 // dossier contenant les templates
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpForm_Recherche" => "form_recherche.tpl",
 "tpControl" => "control.tpl",
@@ -158,6 +158,7 @@ $t->set_var("MENUBARRE",admin_menu());
 $t->set_var("LOGINBARRE",GetIdentificationBar());
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 
 $t->parse("BODY","tpControl");
 $t->parse("FORM_RECHERCHE","tpForm_Recherche");

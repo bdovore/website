@@ -8,8 +8,8 @@ minAccessLevel(2);
 
 if ($user_id != "" && $user_id != $_SESSION["UserId"])
 {
-    //un username et un userid ont été passés via l'URL
-    //On vérifie que l'utilisateur est authorisé à ouvrir cette page
+    //un username et un userid ont Ã©tÃ© passÃ©s via l'URL
+    //On vÃ©rifie que l'utilisateur est authorisÃ© Ã  ouvrir cette page
 
     $DBTemp = new DB_Sql;
     $DBTemp->query("SELECT level,username FROM users WHERE (user_id=".$DB->escape($user_id).");");
@@ -19,7 +19,7 @@ if ($user_id != "" && $user_id != $_SESSION["UserId"])
 
     if ($currentstatus <= $_SESSION["UserLevel"])
     {
-        echo GetMetaTag(3,"Vous n'avez pas les authorisations nécessaire pour afficher cette page.",(BDO_URL."index.php"));
+        echo GetMetaTag(3,"Vous n'avez pas les authorisations nÃ©cessaire pour afficher cette page.",(BDO_URL."index.php"));
         exit();
     }else{
         $profile_user_id = $user_id;
@@ -32,18 +32,18 @@ else {
 }
 
 
-// Mettre à jour les informations
+// Mettre Ã  jour les informations
 
 if ($act=="update")
 {
-    // vérifie que ni nom, prénom ou email ne sont nuls
+    // vÃ©rifie que ni nom, prÃ©nom ou email ne sont nuls
     if ($_POST["txtemail"]=='' or !Checkmail($_POST["txtemail"]))
     {
-        echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">'."L'adresse email n'est pas valide. Vous allez être redirigé.";
+        echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">'."L'adresse email n'est pas valide. Vous allez Ãªtre redirigÃ©.";
     }
     else
     {
-        // procède à la mise à jour
+        // procÃ¨de Ã  la mise Ã  jour
 
         $query = "UPDATE users SET `email`='".$DB->escape($_POST["txtemail"])."', ";
         $query .= "`birthday`='".$DB->escape($_POST["txtanniv"])."', ";
@@ -54,7 +54,7 @@ if ($act=="update")
         $query .= "`location`='".$DB->escape($_POST["txtlocation"])."', ";
         $query .= "`carre_type`='".$DB->escape($_POST["lstCarre"])."' WHERE (user_id=".$DB->escape($profile_user_id).")";
         $DB->query($query);
-        echo GetMetaTag(1,"Votre profil a &eacute;t&eacute; mis à jour.",(BDO_URL."index.php"));
+        echo GetMetaTag(1,"Votre profil a &eacute;t&eacute; mis Ã  jour.",(BDO_URL."index.php"));
     }
 }
 
@@ -89,10 +89,10 @@ else if (($act=="delete") and (minAccessLevel() or $profile_user_id==$_SESSION["
     $mail_sujet = "BDOVORE - suppression de votre compte";
     $mail_entete = "From: BDoVore <no-reply@bdovore.com>";
     $mail_text = "Bonjour ".$username.", \n\n";
-    $mail_text .="Votre compte BDoVore a été supprimé.\n\n";
-    $mail_text .="Votre compte sur le forum BDoVore n'a pas été supprimé.\nSi vous le désirez, merci de nous faire part des raisons ayant motivées votre départ.\n\n";
-    $mail_text .="Nous respectons votre décision et espérons vous revoir très bientôt.\n\n";
-    $mail_text .="L'équipe BDOVORE";
+    $mail_text .="Votre compte BDoVore a Ã©tÃ© supprimÃ©.\n\n";
+    $mail_text .="Votre compte sur le forum BDoVore n'a pas Ã©tÃ© supprimÃ©.\nSi vous le dÃ©sirez, merci de nous faire part des raisons ayant motivÃ©es votre dÃ©part.\n\n";
+    $mail_text .="Nous respectons votre dÃ©cision et espÃ©rons vous revoir trÃ¨s bientÃ´t.\n\n";
+    $mail_text .="L'Ã©quipe BDOVORE";
 
     mail($mail_adress,$mail_sujet,$mail_text,$mail_entete);
 
@@ -119,25 +119,25 @@ else if ($act=="newpass")
         $validpassword = Checkpassword($newpass1);
         if ($validpassword != 1)
         {
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">'.$validpassword.' Vous allez être redirigé.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">'.$validpassword.' Vous allez Ãªtre redirigÃ©.';
         }
         elseif (($newpass1 != $newpass2) and ($validpassword == 1))
         {
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Les mots de passe ne concordent pas. Vous allez être redirigé.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Les mots de passe ne concordent pas. Vous allez Ãªtre redirigÃ©.';
         }
         elseif (($validpassword == 1) and ($newpass1 == $newpass2))
         {
             $query = "UPDATE users SET `password`='".md5($newpass1)."' WHERE (user_id=".$DB->escape($profile_user_id).")";
             $DB->query($query);
             $act="";
-            echo GetMetaTag(1,"Mise à jour effectuée avec succès.",(BDO_URL."membres/profil.php"));
+            echo GetMetaTag(1,"Mise Ã  jour effectuÃ©e avec succÃ¨s.",(BDO_URL."membres/profil.php"));
         }
     }
     else
     {// affichage du formulaire de saisie de mot de passe
         // Creation d'un nouveau Template
         $t = new Template(BDO_DIR."public/templates");
-        // fichier à utiliser
+        // fichier Ã  utiliser
         $t->set_file(array(
         "tpMenuColl" => "menu_coll.tpl",
         "tpBody" => "newpassword.tpl",
@@ -145,7 +145,7 @@ else if ($act=="newpass")
         "tpBase" => "body.tpl"));
 
 
-        //complète le path image
+        //complÃ¨te le path image
         $t->set_var (array
         ("UTILISATEUR" => $profile_user_username,
         "USERID" => $profile_user_id,
@@ -160,7 +160,9 @@ else if ($act=="newpass")
         $t->set_var (array
         ("LOGINBARRE" => GetIdentificationBar(),
         "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+        "URLSITEIMAGE" => BDO_URL_IMAGE,
+        "URLSITEFORUM" => BDO_URL_FORUM
+        ));
         $t->parse("MENUCOLL","tpMenuColl");
         $t->parse("BODY","tpBody");
         $t->parse("MENUBARRE","tpMenu");
@@ -177,24 +179,24 @@ elseif ($act=="image")
     if ($status=="ok")
     {//post de l'image
         if (!is_file($imgfile))
-        {// pas de fichier selectionné
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du chargement du fichier. Votre fichier excède peut-être la limite requise. Vous allez être redirigé.';
+        {// pas de fichier selectionnÃ©
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du chargement du fichier. Votre fichier excÃ¨de peut-Ãªtre la limite requise. Vous allez Ãªtre redirigÃ©.';
             exit();
         }
         $imageproperties = getimagesize($imgfile);
         $imagetype = $imageproperties[2];
         $imagelargeur = $imageproperties[0];
         $imagehauteur = $imageproperties[1];
-        // vérifie le type d'image
+        // vÃ©rifie le type d'image
         if (($imagetype != 1) and ($imagetype != 2))
         {
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers JPEG ou GIF peuvent Ãªtre chargÃ©s. Vous allez Ãªtre redirigÃ©.';
             exit();
         }
-        // vérifie les dimensions de l'image
+        // vÃ©rifie les dimensions de l'image
         if (($imagelargeur > 120) or ($imagehauteur > 150))
         {
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">L\'image ne respecte pas la limite de taille. Vous allez être redirigé.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">L\'image ne respecte pas la limite de taille. Vous allez Ãªtre redirigÃ©.';
             exit();
         }
         // copie le fichier sur le serveur
@@ -209,13 +211,13 @@ elseif ($act=="image")
         }
         if(!copy($imgfile,$uploaddir.$newfilename))
         {
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi au serveur. Vous allez être redirigé.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'envoi au serveur. Vous allez Ãªtre redirigÃ©.';
             exit();
         }else{
 
             $query = "UPDATE users SET `image`='".$DB->escape($newfilename)."' WHERE (user_id=".$DB->escape($profile_user_id).")";
             $DB->query($query);
-            echo GetMetaTag(3,"Mise à jour effectuée avec succès.",(BDO_URL."pages/profil.php"));
+            echo GetMetaTag(3,"Mise Ã  jour effectuÃ©e avec succÃ¨s.",(BDO_URL."pages/profil.php"));
             exit();
         }
     }
@@ -224,7 +226,7 @@ elseif ($act=="image")
         // affichage du form d'upload
         // Creation d'un nouveau Template
         $t = new Template(BDO_DIR."public/templates");
-        // fichier à utiliser
+        // fichier Ã  utiliser
         $t->set_file(array(
         "tpMenuColl" => "menu_coll.tpl",
         "tpBody" => "uploadfile.tpl",
@@ -235,7 +237,9 @@ elseif ($act=="image")
         ("USERNAME" => $profile_user_username,
         "USERID" => $profile_user_id,
         "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+        "URLSITEIMAGE" => BDO_URL_IMAGE,
+        "URLSITEFORUM" => BDO_URL_FORUM
+        ));
 
         $t->set_var("PAGETITLE","BDOVORE.com : mon Avatar");
         // assigne la barre de login
@@ -249,16 +253,16 @@ elseif ($act=="image")
     }
 }
 
-// Afficher le formulaire pré - remplis
+// Afficher le formulaire prÃ© - remplis
 elseif($act=="")
 {
-    //récupère les données utilisateur dans la base de donnée
+    //rÃ©cupÃ¨re les donnÃ©es utilisateur dans la base de donnÃ©e
     $query= "SELECT username, email, birthday, location, open_collec, image, row_display, rowserie, abt_news, carre_type FROM users
     WHERE user_id = ".$DB->escape($profile_user_id);
     $DB->query ($query);
     $DB->next_record();
 
-    //crée le tableau d'options
+    //crÃ©e le tableau d'options
     $my_options[0][0] = 10;
     $my_options[0][1] = 10;
     $my_options[1][0] = 20;
@@ -280,14 +284,14 @@ elseif($act=="")
 
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpMenuColl" => "menu_coll.tpl",
     "tpBody" => "profil.tpl",
     "tpMenu" => "user.menu.tpl",
     "tpBase" => "body.tpl"));
 
-    //Recupère et complète le path image
+    //RecupÃ¨re et complÃ¨te le path image
     $imagename = $DB->f("image");
     $pathimage = BDO_URL_IMAGE."trombi/".$imagename;
 
@@ -311,7 +315,9 @@ elseif($act=="")
     $t->set_var (array
     ("LOGINBARRE" => GetIdentificationBar(),
     "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
+    ));
     $t->parse("MENUCOLL","tpMenuColl");
     $t->parse("BODY","tpBody");
     $t->parse("MENUBARRE","tpMenu");

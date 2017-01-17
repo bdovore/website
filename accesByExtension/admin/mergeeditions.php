@@ -4,13 +4,13 @@
 
 minAccessLevel(1);
 
-$error_msg[0] = "Edition à supprimer non définie";
-$error_msg[1] = "Edition à garder non définie";
-$error_msg[2] = "Edition à garder et à supprimer identiques";
+$error_msg[0] = "Edition Ã  supprimer non dÃ©finie";
+$error_msg[1] = "Edition Ã  garder non dÃ©finie";
+$error_msg[2] = "Edition Ã  garder et Ã  supprimer identiques";
 
 // Fusionne les editions
 if ($act=="merge"){
-    // vérifie que source_id et dest_id ont été definis
+    // vÃ©rifie que source_id et dest_id ont Ã©tÃ© definis
     if ((is_null($dest_id)) | ($dest_id=="")){
         header("Location:".BDO_URL."admin/mergeeditions.php?source_id=$source_id&error=1");
     }
@@ -22,7 +22,7 @@ if ($act=="merge"){
     }
     if ($conf=="ok"){
 
-        // Récupère les données de l'edition à mettre à jour (de destination)
+        // RÃ©cupÃ¨re les donnÃ©es de l'edition Ã  mettre Ã  jour (de destination)
         $query = "
         SELECT
             t.id_tome,
@@ -53,7 +53,7 @@ if ($act=="merge"){
         $id_genre = $DB->f("id_genre");
         $id_tome = $DB->f("id_tome");
 
-        // Efface les éditions et les couvertures correspondantes
+        // Efface les Ã©ditions et les couvertures correspondantes
 
         $query = "SELECT id_edition, img_couv FROM bd_edition WHERE id_edition = ".$DB->escape($source_id);
         $DB->query ($query);
@@ -63,29 +63,29 @@ if ($act=="merge"){
                 $filename = $DB->f("img_couv");
                 if (file_exists(BDO_DIR."images/couv/$filename")){
                     @unlink(BDO_DIR."images/couv/$filename");
-                    echo "Couverture effacée pour l'édition N°".$DB->f("id_edition")."<br />";
+                    echo "Couverture effacÃ©e pour l'Ã©dition NÂ°".$DB->f("id_edition")."<br />";
                 }
             }
         }
         $query = "UPDATE IGNORE users_album SET id_edition=".$DB->escape($dest_id)." WHERE id_edition = ".$DB->escape($source_id);
         $DB->query ($query);
-        echo 'Référence(s) à l\'édition modifiée(s) dans la table users_album<br />';
+        echo 'RÃ©fÃ©rence(s) Ã  l\'Ã©dition modifiÃ©e(s) dans la table users_album<br />';
 
         $query = "delete from users_album where id_edition = ".$DB->escape($source_id);
         $DB->query ($query);
-        echo 'Référence(s) à l\'édition supprimée(s) dans la table users_album (sécurité au cas ou un utilisateur possède les deux éditions fusionnées)<br />';
+        echo 'RÃ©fÃ©rence(s) Ã  l\'Ã©dition supprimÃ©e(s) dans la table users_album (sÃ©curitÃ© au cas ou un utilisateur possÃ¨de les deux Ã©ditions fusionnÃ©es)<br />';
 
         // vide la table bd_edition
         $query = "DELETE FROM bd_edition WHERE id_edition = ".$DB->escape($source_id)." LIMIT 1";
         $DB->query ($query);
-        echo 'Référence(s) à l\'album supprimée(s) dans la table bd_edition<br />';
+        echo 'RÃ©fÃ©rence(s) Ã  l\'album supprimÃ©e(s) dans la table bd_edition<br />';
 
 
         $redirection = BDO_URL."admin/admineditions.php?edition_id=".$dest_id;
-        echo '<META http-equiv="refresh" content="4; URL='.$redirection.'">Les éditions ont été fusionnées.';
+        echo '<META http-equiv="refresh" content="4; URL='.$redirection.'">Les Ã©ditions ont Ã©tÃ© fusionnÃ©es.';
     }else{
         // Demande de confirmation
-        echo 'Etes-vous s&ucirc;r de vouloir fusionner les éditions n°'.$source_id.' et '.$dest_id.'? <a href="'.BDO_URL.'admin/mergeeditions.php?act=merge&conf=ok&source_id='.$source_id.'&dest_id='.$dest_id.'">Oui</a> - <a href="javascript:history.go(-1)">Non</a><br />Si l\'édition à supprimer est l\'édition par défaut, n\'oubliez pas de redéfinir une édition par défaut à l\'album en question.';
+        echo 'Etes-vous s&ucirc;r de vouloir fusionner les Ã©ditions nÂ°'.$source_id.' et '.$dest_id.'? <a href="'.BDO_URL.'admin/mergeeditions.php?act=merge&conf=ok&source_id='.$source_id.'&dest_id='.$dest_id.'">Oui</a> - <a href="javascript:history.go(-1)">Non</a><br />Si l\'Ã©dition Ã  supprimer est l\'Ã©dition par dÃ©faut, n\'oubliez pas de redÃ©finir une Ã©dition par dÃ©faut Ã  l\'album en question.';
         exit();
     }
 }
@@ -95,7 +95,7 @@ elseif($act==""){
 
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "merge.editions.tpl",
     "tpBase" => "body.tpl"
@@ -103,10 +103,10 @@ elseif($act==""){
 
     // REMPLISSAGE PARTIE GAUCHE
     if ((!is_null($source_id)) & ($source_id!='')){
-        // récupère le nombre d'utilisateurs
+        // rÃ©cupÃ¨re le nombre d'utilisateurs
         $nb_users1 = countUserBy("edition", $source_id);
 
-        // récupère les données principales
+        // rÃ©cupÃ¨re les donnÃ©es principales
         $query = q_edition("en.id_edition=".$DB->escape($source_id));
 
         $DB->query ($query);
@@ -157,10 +157,10 @@ elseif($act==""){
 
     //REMPLISSAGE DE LA PARTIE DROITE
     if ((!is_null($dest_id)) & ($dest_id!='')){
-        // récupère le nombre d'utilisateurs
+        // rÃ©cupÃ¨re le nombre d'utilisateurs
         $nb_users2 = countUserBy("edition", $dest_id);
 
-        // récupère les données principales
+        // rÃ©cupÃ¨re les donnÃ©es principales
         $query = q_edition("en.id_edition=".$DB->escape($dest_id));
 
         $DB->query($query);
@@ -212,7 +212,7 @@ elseif($act==""){
     if (!is_null($error)){
         $t->set_var ("ERRORMESSAGE",$error_msg[$error]);
     }
-    // variables mises à jour dans tous les cas
+    // variables mises Ã  jour dans tous les cas
     $t->set_var (array(
     "URLEDITION1" => BDO_URL."admin/admineditions.php?edition_id=".$source_id,
     "URLEDITION2" => BDO_URL."admin/admineditions.php?edition_id=".$dest_id,
@@ -226,6 +226,7 @@ elseif($act==""){
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");

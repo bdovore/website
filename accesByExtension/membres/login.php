@@ -3,40 +3,40 @@
 
 
 
-// Par défaut, cette page ferme la session en cours et considère l'utilisateur comme public
+// Par dÃ©faut, cette page ferme la session en cours et considÃ¨re l'utilisateur comme public
 if (isset($_SESSION["UserName"]))
 {
     session_destroy();
 }
 
 
-//Password Oublié
+//Password OubliÃ©
 if ($act=="forgotpass")
 {
     if ($email=="ok")
-    {//initialise la procédure de renvoie
+    {//initialise la procÃ©dure de renvoie
         $user_username = $_POST["txtusername"];
         $user_email = $_POST["txtemail"];
 
         $query = "SELECT user_id FROM users WHERE username = '".$DB->escape($user_username)."' AND email='".$DB->escape($user_email)."'";
         $DB->query($query);
-        //Verifie qu'un nom a été retourné par la query
+        //Verifie qu'un nom a Ã©tÃ© retournÃ© par la query
         if ($DB->nf() != 1)
         {
-            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">L\'utilisateur n\'existe pas ou l\'adresse e-mail est erronée.';
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">L\'utilisateur n\'existe pas ou l\'adresse e-mail est erronÃ©e.';
             exit();
         }
 
-        //génère un nouveau mot de passe et l'envoie à l'utilisateur
+        //gÃ©nÃ¨re un nouveau mot de passe et l'envoie Ã  l'utilisateur
         $DB->next_record();
         $current_user = $DB->f("user_id");
         $newpassword = passgen(8);
         $query = "UPDATE users SET password = '".md5($newpassword)."' WHERE user_id = ".$DB->escape($current_user);
         $DB->query($query);
 
-        //Prépare l'email à envoyer
+        //PrÃ©pare l'email Ã  envoyer
         $textemail = "Bonjour,\n\n";
-        $textemail .= "Suite à votre demande, votre mot de passe pour accéder à www.bdovore.com a été changé.\n";
+        $textemail .= "Suite Ã  votre demande, votre mot de passe pour accÃ©der Ã  www.bdovore.com a Ã©tÃ© changÃ©.\n";
         $textemail .= "Votre nouveau mot de passe est :\n\n";
         $textemail .= "$newpassword\n\n";
         $textemail .= "N'oubliez pas de changer votre mot de passe dans votre profil lors de votre prochain login.\n";
@@ -45,14 +45,14 @@ if ($act=="forgotpass")
 
         mail($user_email,"Votre nouveau mot de passe",$textemail);
 
-        echo GetMetaTag(3,"Votre nouveau mot de passe a été envoyé",(BDO_URL."index.php"));
+        echo GetMetaTag(3,"Votre nouveau mot de passe a Ã©tÃ© envoyÃ©",(BDO_URL."index.php"));
         exit();
     }
     else
     {//Affiche le formulaire de saisie
         // Creation d'un nouveau template
         $t = new Template(BDO_DIR."public/templates");
-        // fichier à utiliser
+        // fichier Ã  utiliser
         $t->set_file(array(
         "tpBody" => "forgotpass.tpl",
         "tpMenu" => "user.menu.tpl",
@@ -62,7 +62,9 @@ if ($act=="forgotpass")
         $t->set_var (array
         ("LOGINBARRE" => GetIdentificationBar(),
         "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+        "URLSITEIMAGE" => BDO_URL_IMAGE,
+        "URLSITEFORUM" => BDO_URL_FORUM,
+        ));
         $t->parse("BODY","tpBody");
         $t->parse("MENUBARRE","tpMenu");
         $t->pparse("MyFinalOutput","tpBase");
@@ -72,7 +74,7 @@ if ($act=="forgotpass")
 elseif ($act=="")
 {
     $log = $_GET["log"];
-    // Verification que le login a été rempli
+    // Verification que le login a Ã©tÃ© rempli
     if ($log == 1)
     {
         $user_login = $_POST["txtlogin"];
@@ -91,7 +93,7 @@ elseif ($act=="")
             header("Location:".BDO_URL."membres/login.php?errornum=1");
             exit ();
         }
-        //vérifie que le password est OK
+        //vÃ©rifie que le password est OK
         $query = "SELECT user_id,level FROM users WHERE username ='".$DB->escape($user_login)."' AND password='".md5($user_password)."' AND level <98;";
         $DB->query($query);
         if ($DB->nf() != 1) {
@@ -105,11 +107,11 @@ elseif ($act=="")
         $_SESSION["UserId"] = $DB->f("user_id");
         $_SESSION["UserName"] = $user_login;
 
-        //met à jour les information de la base
+        //met Ã  jour les information de la base
         $query = "UPDATE users Set nb_connect = (nb_connect + 1), last_connect = NOW() WHERE user_id=" . $DB->escape($_SESSION["UserId"]);
         $DB->query ($query);
         if ($user_askcookie ==1)
-        {//défini les paramètres de cookie
+        {//dÃ©fini les paramÃ¨tres de cookie
 
             setcookie ("username",$user_login,time()+31104000,"/");
             setcookie ("pass",md5($user_password),time()+31104000,"/");
@@ -119,9 +121,9 @@ elseif ($act=="")
     // Affichage du formulaire de login
     else
     {
-        $errortype[0] = "La session a expiré. Veuillez vous identifier à nouveau";
+        $errortype[0] = "La session a expirÃ©. Veuillez vous identifier Ã  nouveau";
         $errortype[1] = "Utilisateur Inconnu.";
-        $errortype[2] = "Mot de passe erroné";
+        $errortype[2] = "Mot de passe erronÃ©";
         $errortype[5] = "Veuillez vous identifier";
         if ($errornum =="") {
             $errornum = 5;
@@ -130,7 +132,7 @@ elseif ($act=="")
 
         // Creation d'un nouveau template
         $t = new Template(BDO_DIR."public/templates");
-        // fichier à utiliser
+        // fichier Ã  utiliser
         $t->set_file(array(
         "tpBody" => "login.tpl",
         "tpMenu" => "menu.tpl",
@@ -148,7 +150,9 @@ elseif ($act=="")
         $t->set_var (array
         ("LOGINBARRE" => GetIdentificationBar(),
         "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+        "URLSITEIMAGE" => BDO_URL_IMAGE,
+        "URLSITEFORUM" => BDO_URL_FORUM
+        ));
         $t->parse("BODY","tpBody");
         $t->parse("MENUBARRE","tpMenu");
 $t->parse("MENUBARREUSER","tpMenuUser");

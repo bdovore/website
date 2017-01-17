@@ -6,7 +6,7 @@ include (BDO_DIR."inc/queryfunction.php");
 
 minAccessLevel(2);
 
-// DÈfini les paramËtres d'affichage
+// D√©fini les param√®tres d'affichage
 
 $query = "SELECT row_display FROM users WHERE user_id=".$DB->escape($_SESSION["UserId"]);
 $DB->query($query);
@@ -25,14 +25,14 @@ $startRow = $pageNum * $maxRows;
 // Creation d'un nouveau Template
 $t = new Template(BDO_DIR."public/templates");
 
-// fichier ‡ utiliser
+// fichier √† utiliser
 $t->set_file(array(
 "tpMenuColl" => "menu_coll.tpl",
 "tpBody" => "userspace.search.tpl",
 "tpMenu" => "user.menu.tpl",
 "tpBase" => "body.tpl"));
 
-// on dÈclare les blocks contenus sur la feuille
+// on d√©clare les blocks contenus sur la feuille
 $t->set_block('tpBody','ResultBlock','RBlock');
 $t->set_block('tpBody','ButtonBlock','BBlock');
 
@@ -146,7 +146,7 @@ if ($DB->nf() != 0 ) {
     while ($DB->next_record()) {
         $urldelete = $_SERVER["PHP_SELF"]."?del=1&id_tome=".$DB->f("id_tome")."&id_edition=".$DB->f("id_edition");
         if ($DB->f("flg_int") == 'O') {
-            $lib_serie = stripslashes($DB->f("serie"))." - IntÈgrale";
+            $lib_serie = stripslashes($DB->f("serie"))." - Int√©grale";
         }
         else {
             if ($DB->f("flg_fini") == 2 ) {
@@ -161,7 +161,7 @@ if ($DB->nf() != 0 ) {
                         $lib_serie = stripslashes($DB->f("serie"))." - HS";
                     }
                     else {
-                        $lib_serie = stripslashes($DB->f("serie"))." n∞".$DB->f("num_tome");
+                        $lib_serie = stripslashes($DB->f("serie"))." n¬∞".$DB->f("num_tome");
                     }
                 }
             }
@@ -198,9 +198,9 @@ if ($DB->nf() != 0 ) {
         $t->parse ("RBlock", "ResultBlock",true);
     }
 }
-// Nb de rÈponses retournÈes par la query
+// Nb de r√©ponses retourn√©es par la query
 if ($totalRows > 0 ) {
-    $t->set_var("NBREPONSES",$totalRows." album(s) trouvÈ(s) !");
+    $t->set_var("NBREPONSES",$totalRows." album(s) trouv√©(s) !");
     $navig = '<a href="'.sprintf("%s?pageNum=%d%s", $_SERVER["PHP_SELF"], max(0, $pageNum - 1), $queryString).'">&lt;&lt;</a> ';
     for ($i=0;$i < $totalPages+1;$i++) {
         if ($i == $pageNum)
@@ -214,14 +214,16 @@ if ($totalRows > 0 ) {
     $t->parse ("BBlock", "ButtonBlock",true);
 }
 else {
-    $t->set_var("NBREPONSES","Aucun album trouvÈ, dÈsolÈ !");
+    $t->set_var("NBREPONSES","Aucun album trouv√©, d√©sol√© !");
 }
 
 // assigne la barre de login
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM
+));
 
 // Check box
 
@@ -232,7 +234,7 @@ $t->set_var (array
 if ($cb_serie) {$t->set_var("SERCHECK","checked");}
 if ($cb_aut) {$t->set_var("AUTCHECK","checked");}
 
-foreach (array(1=>'sÈries',2=>'albums',3=>'auteurs') as $id_tri=>$tri) {
+foreach (array(1=>'s√©ries',2=>'albums',3=>'auteurs') as $id_tri=>$tri) {
     $option.= '<option value="'.$id_tri.'"';
     if ($ch_tri == $id_tri) {
         $option.= " selected";
@@ -251,7 +253,7 @@ $t->set_var(array(
 "RBMODE"=>$rb_mode,
 "FLG_ACHAT" =>$flg_achat
 ));
-// Valeur de recherche par dÈfault
+// Valeur de recherche par d√©fault
 $t->set_var("DEFSEARCH","'".stripslashes(htmlspecialchars($str_search, ENT_QUOTES))."'");
 $t->set_var("PAGETITLE",$pagetitle);
 $t->parse("MENUCOLL","tpMenuColl");

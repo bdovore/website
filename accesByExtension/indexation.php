@@ -1,18 +1,18 @@
 <?php
 
 
-// Début du code
+// DÃ©but du code
 include_once (BDO_DIR."inc/bdovore.php");
 
 
 
-// prépare le template
+// prÃ©pare le template
 $t = new Template(BDO_DIR."public/templates");
 $t->set_file(array(
 "tpBase" => "google_index_serie.tpl"
 ));
 
-// complète le block série
+// complÃ¨te le block sÃ©rie
 $t->set_block('tpBase','SeriesBlock','SBlock');
 for($letter = ord('a'); $letter <= ord('z'); $letter++)
 {
@@ -22,17 +22,18 @@ for($letter = ord('a'); $letter <= ord('z'); $letter++)
     $t->parse ("SBlock", "SeriesBlock",true);
 }
 
-// complète la partie autre
+// complÃ¨te la partie autre
 $t->set_var (array(
 "URLAUTRE" => BDO_URL."indexserie.php?init=0"));
 
 
 
-// Envoie les info générales et publie la page
+// Envoie les info gÃ©nÃ©rales et publie la page
 $css_sheets = array("fiche.css");
 $t->set_var (array(
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
-"DOCTITRE" => "Séries BD présentes sur Bdovore"));
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
+"DOCTITRE" => "SÃ©ries BD prÃ©sentes sur Bdovore"));
 
 $t->pparse("MyFinalOutput","tpBase");

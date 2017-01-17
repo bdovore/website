@@ -17,7 +17,7 @@ mysql_select_db(BDO_DB_SID);
 // defintion des variables
 $maxRows = 25;
 $pageNum = 0;
-$pagetitle = "BDovore.com - Bandes dessinées par ";
+$pagetitle = "BDovore.com - Bandes dessinÃ©es par ";
 $keyword = "";
 
 $pageNum = getVal('pageNum');
@@ -108,7 +108,7 @@ $t->set_file(array(
 "tpBody" => "browser_xhr.tpl",
 ));
 
-// on déclare les blocks contenus sur la feuille
+// on dÃ©clare les blocks contenus sur la feuille
 $t->set_block('tpBody','DataBlock','DBlock');
 
 
@@ -145,7 +145,7 @@ if (!empty($totalRows) and ($totalRows <= $maxRows))
 }
 else if (!empty($totalRows))
 {
-    $totalrowhtml = 'lignes de '.($startRow+1).' à ';
+    $totalrowhtml = 'lignes de '.($startRow+1).' Ã  ';
     $totalrowhtml .= ($startRow+$maxRows > $totalRows) ? $totalRows : ($startRow+$maxRows);
     $totalrowhtml .= ' ( sur '.$totalRows.' lignes )';
 
@@ -168,14 +168,15 @@ else if (!empty($totalRows))
     $t->set_var("URLNEXTPAGE",'');
 
     $t->set_var("URLSITE",BDO_URL);
-$t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
-    $t->set_var("TOTALROW",(empty($totalRows) ? 'Aucune ligne de résultat !' : $totalrowhtml));
+    $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+    $t->set_var("URLSITEFORUM",BDO_URL_FORUM);
+    $t->set_var("TOTALROW",(empty($totalRows) ? 'Aucune ligne de rÃ©sultat !' : $totalrowhtml));
 }
 else
 {
     $t->set_var("URLPREVPAGE",'');
     $t->set_var("URLNEXTPAGE",'');
-    $t->set_var("TOTALROW",'Aucune ligne de résultat !');
+    $t->set_var("TOTALROW",'Aucune ligne de rÃ©sultat !');
 }
 
 
@@ -184,6 +185,7 @@ $t->set_var("PAGEKEYWORD",$keyword);
 $t->set_var("ACTBROWSER",$_SERVER["PHP_SELF"]."?");
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 $t->set_var (array("LOGINBARRE" => GetIdentificationBar()));
 
 $t->parse("BODY","tpBody");

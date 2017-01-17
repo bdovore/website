@@ -5,17 +5,17 @@
 minAccessLevel(1);
 
 
-$error_msg[0] = "Auteur à supprimer non défini";
-$error_msg[1] = "Auteur à garder non défini";
-$error_msg[2] = "Auteur à garder et auteur à fusionner identiques";
+$error_msg[0] = "Auteur Ã  supprimer non dÃ©fini";
+$error_msg[1] = "Auteur Ã  garder non dÃ©fini";
+$error_msg[2] = "Auteur Ã  garder et auteur Ã  fusionner identiques";
 
 
-// Mettre à jour les informations
+// Mettre Ã  jour les informations
 
 
 if ($act=="merge")
 {
-    // vérifie que source_id et dest_id ont été defini
+    // vÃ©rifie que source_id et dest_id ont Ã©tÃ© defini
     if ((is_null($dest_id)) | ($dest_id==""))
     {header("Location:".BDO_URL."admin/mergeauteurs.php?source_id=$source_id&error=1");
     }
@@ -30,7 +30,7 @@ if ($act=="merge")
     if ($conf=="ok")
     {
 
-        // Met à jour l'information contenue dans la base de données
+        // Met Ã  jour l'information contenue dans la base de donnÃ©es
         $modif =0;
         // scenar
         $query = "UPDATE bd_tome SET id_scenar = ".$DB->escape($dest_id)." where id_scenar = ".$DB->escape($source_id);
@@ -57,20 +57,20 @@ if ($act=="merge")
         $DB->query($query);
         $modif += $DB->affected_rows();
 
-        echo "Nombre de records modifiées dans la table bd_tome : ".$modif ."<br>";
+        echo "Nombre de records modifiÃ©es dans la table bd_tome : ".$modif ."<br>";
 
         // Supprime l'ancien auteur
         $query = "DELETE FROM bd_auteur WHERE id_auteur = ".$DB->escape($source_id);
         $DB->query($query);
-        echo "Nombre de records modifiées dans la table bd_auteur : ".$DB->affected_rows()."<br>";
+        echo "Nombre de records modifiÃ©es dans la table bd_auteur : ".$DB->affected_rows()."<br>";
 
         $redirection = BDO_URL."admin/index.php";
-        echo '<META http-equiv="refresh" content="4; URL='.$redirection.'">Les auteurs ont été fusionnés.';
+        echo '<META http-equiv="refresh" content="4; URL='.$redirection.'">Les auteurs ont Ã©tÃ© fusionnÃ©s.';
 
     }else{
         // Demande de confirmation
 
-        echo 'Etes-vous s&ucirc;r de vouloir fusionner les auteurs n°'.$source_id.' et '.$dest_id.'? <a href="'.BDO_URL.'admin/mergeauteurs.php?act=merge&conf=ok&source_id='.$source_id.'&dest_id='.$dest_id.'">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
+        echo 'Etes-vous s&ucirc;r de vouloir fusionner les auteurs nÂ°'.$source_id.' et '.$dest_id.'? <a href="'.BDO_URL.'admin/mergeauteurs.php?act=merge&conf=ok&source_id='.$source_id.'&dest_id='.$dest_id.'">Oui</a> - <a href="javascript:history.go(-1)">Non</a>';
         exit();
     }
 }
@@ -81,7 +81,7 @@ elseif($act=="")
 
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "merge.auteurs.tpl",
     "tpBase" => "body.tpl"));
@@ -89,10 +89,10 @@ elseif($act=="")
     // REMPLISSAGE PARTIE GAUCHE
     if ((!is_null($source_id)) & ($source_id!=''))
     {
-        // récupère le nombre d'utilisateurs
+        // rÃ©cupÃ¨re le nombre d'utilisateurs
         $nb_users1 = countTomeBy("auteur",$source_id);
 
-        // récupère les données principales
+        // rÃ©cupÃ¨re les donnÃ©es principales
         $query= "
         select id_auteur, pseudo, prenom, nom, flg_scenar, flg_dessin, flg_color, comment, dte_nais, dte_deces, nationalite
         from bd_auteur
@@ -119,18 +119,18 @@ elseif($act=="")
     }else{
         $t->set_var (array
         ("NBUSERS1" => "0",
-        "URLEDITEDIT1" => "javascript:alert('Désactivé')"
+        "URLEDITEDIT1" => "javascript:alert('DÃ©sactivÃ©')"
         ));
     }
 
     //REMPLISSAGE DE LA PARTIE DROITE
     if ((!is_null($dest_id)) & ($dest_id!=''))
     {
-        // récupère le nombre d'utilisateurs
+        // rÃ©cupÃ¨re le nombre d'utilisateurs
 
         $nb_users2 = countTomeBy("auteur",$dest_id);
 
-        // récupère les données principales
+        // rÃ©cupÃ¨re les donnÃ©es principales
         $query= "
         select id_auteur, pseudo, prenom, nom, flg_scenar, flg_dessin, flg_color, comment, dte_nais, dte_deces, nationalite
         from bd_auteur where id_auteur = ".$DB->escape($dest_id);
@@ -157,7 +157,7 @@ elseif($act=="")
     }else{
         $t->set_var (array
         ("NBUSERS2" => "0",
-        "URLEDITEDIT2" => "javascript:alert('Désactivé')"
+        "URLEDITEDIT2" => "javascript:alert('DÃ©sactivÃ©')"
         ));
     }
     // Message d'erreur
@@ -167,7 +167,7 @@ elseif($act=="")
     }
 
 
-    // variables misesà jour dans tous les cas
+    // variables misesÃ  jour dans tous les cas
     $t->set_var (array
     ("URLREFRESH" => BDO_URL."admin/mergeauteurs.php",
     "URLECHANGE" => BDO_URL."admin/mergeauteurs.php?source_id=$dest_id&dest_id=$source_id",
@@ -179,7 +179,9 @@ elseif($act=="")
     ("LOGINBARRE" => GetIdentificationBar(),
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
+    ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
 }

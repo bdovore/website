@@ -13,7 +13,7 @@ mysql_select_db(BDO_DB_SID);
 
 $a_queryRegle = array(
 array (
-    "title" => "Nom de série ne contenant pas la valeur de la colonne TRI",
+    "title" => "Nom de sÃ©rie ne contenant pas la valeur de la colonne TRI",
     "query" => "
     SELECT SQL_CALC_FOUND_ROWS
         `ID_SERIE`,
@@ -27,12 +27,12 @@ array (
     "colUrl" => "ID_SERIE",
 ),
 array (
-    "title" => "EAN référencés plusieurs fois dans la table des éditions pour des albums différents (parution >31/12/2006 ou non-renseignée)",
+    "title" => "EAN rÃ©fÃ©rencÃ©s plusieurs fois dans la table des Ã©ditions pour des albums diffÃ©rents (parution >31/12/2006 ou non-renseignÃ©e)",
     "query" => "
     SELECT SQL_CALC_FOUND_ROWS
-        COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums différents',
+        COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums diffÃ©rents',
         `EAN` ,
-        GROUP_CONCAT(distinct(`ID_EDITION`) SEPARATOR ';') as 'Liens vers les éditions (séparateur ;)'
+        GROUP_CONCAT(distinct(`ID_EDITION`) SEPARATOR ';') as 'Liens vers les Ã©ditions (sÃ©parateur ;)'
     FROM
         `bd_edition`
     WHERE
@@ -43,17 +43,17 @@ array (
     HAVING COUNT(DISTINCT(`ID_TOME`))>1
     ORDER BY 1 DESC",
 
-    "colExplode" => 'Liens vers les éditions (séparateur ;)',
+    "colExplode" => 'Liens vers les Ã©ditions (sÃ©parateur ;)',
     "urlExplode" => "<a href='".BDO_URL."admin/admineditions.php?edition_id={col}' target='_blank'>{col}</a>",
 
 ),
 array (
-    "title" => "ISBN référencés plusieurs fois dans la table des éditions pour des albums différents (parution >31/12/1973 ou non-renseignée)",
+    "title" => "ISBN rÃ©fÃ©rencÃ©s plusieurs fois dans la table des Ã©ditions pour des albums diffÃ©rents (parution >31/12/1973 ou non-renseignÃ©e)",
     "query" => "
     SELECT SQL_CALC_FOUND_ROWS
-        COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums différents',
+        COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums diffÃ©rents',
         `ISBN` ,
-        GROUP_CONCAT(distinct(`ID_EDITION`) SEPARATOR ';') as 'Liens vers les éditions (séparateur ;)'
+        GROUP_CONCAT(distinct(`ID_EDITION`) SEPARATOR ';') as 'Liens vers les Ã©ditions (sÃ©parateur ;)'
     FROM
         `bd_edition`
     WHERE
@@ -64,11 +64,11 @@ array (
     GROUP BY `ISBN`
     HAVING COUNT(DISTINCT(`ID_TOME`))>1
     ORDER BY 1 DESC",
-    "colExplode" => 'Liens vers les éditions (séparateur ;)',
+    "colExplode" => 'Liens vers les Ã©ditions (sÃ©parateur ;)',
     "urlExplode" => "<a href='".BDO_URL."admin/admineditions.php?edition_id={col}' target='_blank'>{col}</a>",
 ),
 array (
-    "title" => "Triplet PSEUDO, NOM, PRENOM référencés plusieurs fois dans la table des auteurs",
+    "title" => "Triplet PSEUDO, NOM, PRENOM rÃ©fÃ©rencÃ©s plusieurs fois dans la table des auteurs",
     "query" => "
     SELECT
         bd_auteur.ID_AUTEUR,
@@ -93,7 +93,7 @@ array (
     "colUrl" => "ID_AUTEUR",
 ),
 array (
-    "title" => "PSEUDO référencés plusieurs fois dans la table des auteurs",
+    "title" => "PSEUDO rÃ©fÃ©rencÃ©s plusieurs fois dans la table des auteurs",
     "query" => "
     SELECT SQL_CALC_FOUND_ROWS
         COUNT(*) AS `Enregistrements`,
@@ -105,13 +105,13 @@ array (
     ORDER BY `Enregistrements` DESC",
 ),
 array (
-    "title" => "Couple NOM, PRENOM référencés plusieurs fois dans la table des auteurs",
+    "title" => "Couple NOM, PRENOM rÃ©fÃ©rencÃ©s plusieurs fois dans la table des auteurs",
     "query" => "
     SELECT SQL_CALC_FOUND_ROWS
         COUNT(*) AS `Enregistrements`,
         `NOM`,
         `PRENOM`,
-        GROUP_CONCAT(`PSEUDO` SEPARATOR ' ; ') as 'Liste des pseudos (séparateur ;)'
+        GROUP_CONCAT(`PSEUDO` SEPARATOR ' ; ') as 'Liste des pseudos (sÃ©parateur ;)'
     FROM
         `bd_auteur`
     WHERE
@@ -122,7 +122,7 @@ array (
     ORDER BY `Enregistrements` DESC",
 ),
 array (
-    "title" => "Couple NOM, ID_EDITEUR référencés plusieurs fois dans la table des collections",
+    "title" => "Couple NOM, ID_EDITEUR rÃ©fÃ©rencÃ©s plusieurs fois dans la table des collections",
     "query" => "
     SELECT SQL_CALC_FOUND_ROWS
         `bd_collection`.`ID_COLLECTION`,
@@ -145,7 +145,7 @@ array (
     "colUrl" => "ID_COLLECTION",
 ),
 array (
-    "title" => "triplet date / collection / Tome présent dans la table des éditions",
+    "title" => "triplet date / collection / Tome prÃ©sent dans la table des Ã©ditions",
     "query" => "
     SELECT SQL_CALC_FOUND_ROWS
         COUNT(*) AS `Enregistrements`,
@@ -159,7 +159,7 @@ array (
     "colUrl" => "ID_TOME",
 ),
 array (
-    "title" => "Séries déclarées one-shot (FLG_FINI=2) avec plus de 1 tome",
+    "title" => "SÃ©ries dÃ©clarÃ©es one-shot (FLG_FINI=2) avec plus de 1 tome",
     "query" => "
     SELECT SQL_CALC_FOUND_ROWS
         `bd_serie`.`ID_SERIE` ,
@@ -176,11 +176,11 @@ array (
     "colUrl" => "ID_SERIE",
 ),
 array (
-    "title" => "Albums de série one-shot (1 seul album) titre différent de celui de la série",
+    "title" => "Albums de sÃ©rie one-shot (1 seul album) titre diffÃ©rent de celui de la sÃ©rie",
     "query" => "
     SELECT SQL_CALC_FOUND_ROWS
         `bd_serie`.`ID_SERIE` ,
-        `bd_serie`.`NOM` AS 'Titre de la série',
+        `bd_serie`.`NOM` AS 'Titre de la sÃ©rie',
         `bd_tome`.`ID_TOME` ,
         `bd_tome`.`TITRE` AS 'Titre de l''album'
     FROM
@@ -196,7 +196,7 @@ array (
 ),
 
 array (
-    "title" => "Éditions dont la date de parution n'est pas renseignée (ou < 1800-01-01) (non marquées 'Introuvable')",
+    "title" => "Ã‰ditions dont la date de parution n'est pas renseignÃ©e (ou < 1800-01-01) (non marquÃ©es 'Introuvable')",
     "query" => "
     SELECT SQL_CALC_FOUND_ROWS
         `ID_EDITION` ,
@@ -212,7 +212,7 @@ array (
 ),
 /*
 array (
-    "title" => "Couvertures dans le répertoire images/couv absentes des éditions",
+    "title" => "Couvertures dans le rÃ©pertoire images/couv absentes des Ã©ditions",
     "query" => "
     SELECT SQL_CALC_FOUND_ROWS couv.IMG_COUV FROM couv
     WHERE NOT EXISTS (SELECT NULL FROM bd_edition WHERE couv.IMG_COUV = bd_edition.IMG_COUV)
@@ -222,7 +222,7 @@ array (
 ),
 
 array (
-    "title" => "Couvertures dans les éditions absentes du répertoire images/couv",
+    "title" => "Couvertures dans les Ã©ditions absentes du rÃ©pertoire images/couv",
     "query" => "
     SELECT SQL_CALC_FOUND_ROWS bd_edition.IMG_COUV,bd_edition.ID_TOME FROM bd_edition
     WHERE NOT EXISTS (SELECT NULL FROM couv WHERE couv.IMG_COUV = bd_edition.IMG_COUV)
@@ -267,12 +267,12 @@ AND `users_alb_prop`.`ID_EDITEUR` IS NOT NULL
 AND `bd_collection`.`NOM` IS NULL
 */
 
-echo '<h2>Contrôle des règles de cohérence des données</h2>';
-echo '(Le résultat est limité à 200 lignes)';
+echo '<h2>ContrÃ´le des rÃ¨gles de cohÃ©rence des donnÃ©es</h2>';
+echo '(Le rÃ©sultat est limitÃ© Ã  200 lignes)';
 
 echo '<form name="formregle" method="post">
 <div>
-Contrôle :
+ContrÃ´le :
 <select name="id_queryRegle">';
 foreach( $a_queryRegle as $id_queryRegle=>$queryRegle)
 {
@@ -280,7 +280,7 @@ foreach( $a_queryRegle as $id_queryRegle=>$queryRegle)
     echo '<option value="'.$id_queryRegle.'" '.$selected.' >'.$queryRegle['title'].'</option>';
 }
 echo '</select><br />
-<label for="viewQuery"><input type="checkbox" id="viewQuery" name="viewQuery" value="checked" '.$_POST['viewQuery'].'> voir la requête</label>
+<label for="viewQuery"><input type="checkbox" id="viewQuery" name="viewQuery" value="checked" '.$_POST['viewQuery'].'> voir la requÃªte</label>
 <br /><input type="submit" name="execformvalue" value="Chercher">
 </div>
 </form>';
@@ -336,7 +336,7 @@ if (isset($_POST['execformvalue']) and isset($_POST['id_queryRegle']))
             tableOfFetchObj($a_obj,$a_onlyCol,false);
         }
         else {
-            echo 'Aucune ligne de résultat !';
+            echo 'Aucune ligne de rÃ©sultat !';
         }
 
 }
@@ -350,7 +350,7 @@ if (isset($_POST['execformvalue']) and isset($_POST['id_queryRegle']))
 
 // dossier contenant les templates
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpForm_Recherche" => "form_recherche.tpl",
 "tpControl" => "control.tpl",
@@ -363,6 +363,7 @@ $t->set_var("MENUBARRE",admin_menu());
 $t->set_var("LOGINBARRE",GetIdentificationBar());
 $t->set_var("URLSITE",BDO_URL);
 $t->set_var("URLSITEIMAGE",BDO_URL_IMAGE);
+$t->set_var("URLSITEFORUM",BDO_URL_FORUM);
 
 $t->parse("BODY","tpControl");
 $t->parse("FORM_RECHERCHE","tpForm_Recherche");

@@ -22,9 +22,9 @@ elseif ($act=="viewstatus")
         $sendemail = $_POST["cmbemail"];
         if ($sendemail == 1)
         {// Envoie un email
-            echo "email envoyé";
+            echo "email envoyÃ©";
         }
-        echo GetMetaTag(2,"Mise à jour effectuée",(BDO_URL."admin/usermanagement.php"));;
+        echo GetMetaTag(2,"Mise Ã  jour effectuÃ©e",(BDO_URL."admin/usermanagement.php"));;
         exit();
     }
 
@@ -33,15 +33,15 @@ elseif ($act=="viewstatus")
     $DB->next_record();
 
     $currentstatus = $DB->f ("level");
-    // Vérifie si un utilisateur n'essaie pas de modifier un utilisateur plus haut placé
+    // VÃ©rifie si un utilisateur n'essaie pas de modifier un utilisateur plus haut placÃ©
     if ($currentstatus <= $_SESSION["UserLevel"])
     {
-        exit("Vous n'êtes pas autorisé à effectuer cette opération");
+        exit("Vous n'Ãªtes pas autorisÃ© Ã  effectuer cette opÃ©ration");
     }
     $username = $DB->f ("username");
     $userstatus = $user_status[$currentstatus];
 
-    // Determine les choix possibles pour le modérateur
+    // Determine les choix possibles pour le modÃ©rateur
     $optionvalue[0][0]=99;
     $optionvalue[0][1]="D&eacute;sactiv&eacute;";
     $optionvalue[1][0]=2;
@@ -57,7 +57,7 @@ elseif ($act=="viewstatus")
     {// Affichage du formulaire
         // Creation d'un nouveau Template
         $t = new Template(BDO_DIR."public/templates");
-        // fichier à utiliser
+        // fichier Ã  utiliser
         $t->set_file(array(
         "tpBody" => "userchgstatus.tpl",
         "tpBase" => "body.tpl"));
@@ -73,7 +73,9 @@ elseif ($act=="viewstatus")
         ("LOGINBARRE" => GetIdentificationBar(),
         "MENUBARRE" => admin_menu(),
         "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+        "URLSITEIMAGE" => BDO_URL_IMAGE,
+        "URLSITEFORUM" => BDO_URL_FORUM
+        ));
         $t->parse("BODY","tpBody");
         $t->pparse("MyFinalOutput","tpBase");
         exit();
@@ -88,7 +90,7 @@ elseif($act=="delete")
         $query = "DELETE FROM users WHERE user_id = ".$DB->escape($userid)." LIMIT 1";
         $DB->query ($query);
         $redirection = BDO_URL."admin/usermanagement.php";
-        echo '<META http-equiv="refresh" content="2; URL='.$redirection.'">L\'utilisateur a été effacé de la base.';
+        echo '<META http-equiv="refresh" content="2; URL='.$redirection.'">L\'utilisateur a Ã©tÃ© effacÃ© de la base.';
         exit();
     }
     else
@@ -113,7 +115,7 @@ elseif ($act=="")
         $sort="";
     }
 
-    // Selection des utilisateurs à afficher
+    // Selection des utilisateurs Ã  afficher
     $clerep[1] = "user_id";
     $clerep[2] = "username";
     $clerep[3] = "nom";
@@ -140,11 +142,11 @@ elseif ($act=="")
 
     // Creation d'une nouvelle instance Fast Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "usermanagement.tpl",
     "tpBase" => "body.tpl"));
-    // on déclare le block à utiliser
+    // on dÃ©clare le block Ã  utiliser
     $t->set_block('tpBody','UsersBlock','UBlock');
 
     //Liste les users
@@ -197,7 +199,9 @@ elseif ($act=="")
     ("LOGINBARRE" => GetIdentificationBar(),
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
+    ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
 }

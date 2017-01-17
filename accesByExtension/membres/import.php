@@ -20,7 +20,7 @@ delete  FROM `users_album` WHERE `date_ajout`>'2011-08-26'
 
 // Creation d'une nouvelle instance Template
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpBody" => "user_import.tpl",
 "tpMenu" => "user.menu.tpl",
@@ -45,11 +45,11 @@ if ($act=="import") {
 
         $a_tblError = array(
         'a_lineErrorNbrCarac' => 'Erreurs nombre de caracteres dans la ligne',
-        'a_lineErrorDoublon' => 'Erreurs doublon de référence dans les lignes du fichier',
+        'a_lineErrorDoublon' => 'Erreurs doublon de rÃ©fÃ©rence dans les lignes du fichier',
         'a_lineErrorNbrField' => 'Erreurs nombre de champ dans une ligne',
-        'a_lineErrorTypeVal' => 'Erreurs de type de données envoyées',
-        'a_lineErrorRef' => 'Erreurs dans la base de références BDoVore',
-        'a_lineErrorInconnue' => 'Erreurs éditions inconnues',
+        'a_lineErrorTypeVal' => 'Erreurs de type de donnÃ©es envoyÃ©es',
+        'a_lineErrorRef' => 'Erreurs dans la base de rÃ©fÃ©rences BDoVore',
+        'a_lineErrorInconnue' => 'Erreurs Ã©ditions inconnues',
         );
 
         $a_lineErrorNbrCarac = array(); // erreur nombre de caracteres dans la ligne
@@ -91,7 +91,7 @@ if ($act=="import") {
 
             // erreur de nombre de champ
             if (count($a_line) != count($a_col)) {
-                $a_lineErrorNbrField[] = 'ligne '.$nb_line.' - '.count($a_line).' colonnes pour '.count($a_col).' annoncés - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
+                $a_lineErrorNbrField[] = 'ligne '.$nb_line.' - '.count($a_line).' colonnes pour '.count($a_col).' annoncÃ©s - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
                 $errorLine = true;
             }
 
@@ -112,7 +112,7 @@ if ($act=="import") {
                                     if (!check_EAN($val))
                                     {
                                         $errorLine = true;
-                                        $a_lineErrorTypeVal[] = 'ligne '.$nb_line.' - colonne '.($id_col+1).' ('.$col.') - doit être un EAN valide - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
+                                        $a_lineErrorTypeVal[] = 'ligne '.$nb_line.' - colonne '.($id_col+1).' ('.$col.') - doit Ãªtre un EAN valide - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
                                     }
                                     else {
                                         $field[$col] = $val;
@@ -124,7 +124,7 @@ if ($act=="import") {
                                     if (!check_ISBN($val))
                                     {
                                         $errorLine = true;
-                                        $a_lineErrorTypeVal[] = 'ligne '.$nb_line.' - colonne '.($id_col+1).' ('.$col.') - doit être un ISBN valide - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
+                                        $a_lineErrorTypeVal[] = 'ligne '.$nb_line.' - colonne '.($id_col+1).' ('.$col.') - doit Ãªtre un ISBN valide - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
                                     }
                                     else {
                                         $field[$col] = $val;
@@ -136,7 +136,7 @@ if ($act=="import") {
                                     if (!is_dateFr($val))
                                     {
                                         $errorLine = true;
-                                        $a_lineErrorTypeVal[] = 'ligne '.$nb_line.' - colonne '.($id_col+1).' ('.$col.') - doit être une date valide au format JJ/MM/AAAA - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
+                                        $a_lineErrorTypeVal[] = 'ligne '.$nb_line.' - colonne '.($id_col+1).' ('.$col.') - doit Ãªtre une date valide au format JJ/MM/AAAA - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
                                     }
                                     else {
                                         $field[$col] = $val;
@@ -152,7 +152,7 @@ if ($act=="import") {
                                         if ($val <=0)
                                         {
                                             $errorLine = true;
-                                            $a_lineErrorTypeVal[] = 'ligne '.$nb_line.' - colonne '.($id_col+1).' ('.$col.') - doit être un réel positif supérieur à 0 - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
+                                            $a_lineErrorTypeVal[] = 'ligne '.$nb_line.' - colonne '.($id_col+1).' ('.$col.') - doit Ãªtre un rÃ©el positif supÃ©rieur Ã  0 - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
                                         }
                                         else {
                                             $val = round(($val + 0),2);
@@ -161,7 +161,7 @@ if ($act=="import") {
                                     }
                                     else {
                                         $errorLine = true;
-                                        $a_lineErrorTypeVal[] = 'ligne '.$nb_line.' - colonne '.($id_col+1).' ('.$col.') - doit être de type numérique - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
+                                        $a_lineErrorTypeVal[] = 'ligne '.$nb_line.' - colonne '.($id_col+1).' ('.$col.') - doit Ãªtre de type numÃ©rique - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
                                     }
 
 
@@ -199,7 +199,7 @@ if ($act=="import") {
                 }
                 else {
                     // erreur ligne en doublon
-                    $a_lineErrorDoublon[] = 'ligne '.$nb_line.' - colonne 1 ('.$a_line[0].') - référence déjà présente dans votre fichier - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
+                    $a_lineErrorDoublon[] = 'ligne '.$nb_line.' - colonne 1 ('.$a_line[0].') - rÃ©fÃ©rence dÃ©jÃ  prÃ©sente dans votre fichier - la ligne = [ <i>' .htmlspecialchars(str_replace(';',' ; ',$s_line)) .'</i> ]';
                 }
             }
         }
@@ -246,7 +246,7 @@ if ($act=="import") {
 
                     if ($DB->f('nbval') != 1)
                     {
-                        $a_lineErrorRef[] = 'Erreur BDoVore : l\''.$a_col[0].' ' . $DB->f($a_col[0]) . ' est référencée '.$DB->f('nbval').' fois et demande une correction.';
+                        $a_lineErrorRef[] = 'Erreur BDoVore : l\''.$a_col[0].' ' . $DB->f($a_col[0]) . ' est rÃ©fÃ©rencÃ©e '.$DB->f('nbval').' fois et demande une correction.';
                     }
                     else {
 
@@ -280,7 +280,7 @@ if ($act=="import") {
                 {
                     if (!isset($a_albumAjout[$eanIsbn]))
                     {
-                        $a_lineErrorInconnue[] = 'Erreur BDoVore : l\''.$a_col[0].' ' . $eanIsbn . ' est inconnue dans la base. Merci de demander son intégration.';
+                        $a_lineErrorInconnue[] = 'Erreur BDoVore : l\''.$a_col[0].' ' . $eanIsbn . ' est inconnue dans la base. Merci de demander son intÃ©gration.';
                     }
                 }
 
@@ -324,7 +324,7 @@ if ($act=="import") {
             }
         }
 
-        echo "<h2>".$nb_insert." édition(s) ajoutée(s) sur ".count($a_insert)." lignes correctes dans le fichier envoyé.</h2>";
+        echo "<h2>".$nb_insert." Ã©dition(s) ajoutÃ©e(s) sur ".count($a_insert)." lignes correctes dans le fichier envoyÃ©.</h2>";
         echo '
     </div>';
 
@@ -342,10 +342,10 @@ if ($act=="import") {
 Date d'achat<input type="checkbox" name="sel_field[]" value="date_achat" {SELdate_achat} /><br />
 Prix d'achat<input type="checkbox" name="sel_field[]" value="cote" {SELcote} /><br />
 Futur achat<input type="checkbox" name="sel_field[]" value="flg_achat" {SELflg_achat} /><br />
-Album prêté<input type="checkbox" name="sel_field[]" value="flg_pret" {SELflg_pret} /><br />
+Album prÃªtÃ©<input type="checkbox" name="sel_field[]" value="flg_pret" {SELflg_pret} /><br />
 Cadeau<input type="checkbox" name="sel_field[]" value="flg_cadeau" {SELflg_cadeau} /><br />
 Edition originale<input type="checkbox" name="sel_field[]" value="flg_tete" {SELflg_tete} /><br />
-Dédicacée<input type="checkbox" name="sel_field[]" value="flg_dedicace" {SELflg_dedicace} /><br />
+DÃ©dicacÃ©e<input type="checkbox" name="sel_field[]" value="flg_dedicace" {SELflg_dedicace} /><br />
 */
 
 
@@ -375,8 +375,9 @@ $t->set_var (array
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
-"PAGETITLE" => "Import de données"));
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
+"PAGETITLE" => "Import de donnÃ©es"));
 $t->parse("BODY","tpBody");
 $t->parse("MENUBARRE","tpMenu");
 $t->pparse("MyFinalOutput","tpBase");

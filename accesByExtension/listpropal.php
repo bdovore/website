@@ -6,7 +6,7 @@
 
 $link_album = "<a href='#' onclick=".'"'."window.open('". BDO_URL."membres/album.php?id_tome=%d','Album','width=500,height=400,scrollbars=1');return false;".'"'.">";
 $link_serie = "<a href='serie.php?id_serie=%d'>";
-// variables générales
+// variables gÃ©nÃ©rales
 $nb = 30;
 $first = $_GET["first"];
 if ($first=='') {$first = 0;}
@@ -108,17 +108,17 @@ $DB->query ($query);
 
 // Creation d'une nouvelle instance Fast Template
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+// fichier Ã  utiliser
 $t->set_file(array(
 "tpBody" => "listpropal.tpl",
 "tpMenu" => "menu.tpl",
 "tpMenuUser" => "menu_user".(minAccessLevel(2,false) ? '' : '_logout').".tpl",
 "tpBase" => "body.tpl"));
 
-// on déclare le block à utiliser
+// on dÃ©clare le block Ã  utiliser
 $t->set_block('tpBody','DetailBlock','DBlock');
 
-//Liste les nouveautés par mois
+//Liste les nouveautÃ©s par mois
 while ($DB->next_record())
 {
 
@@ -151,10 +151,10 @@ $t->set_block('tpBody','LinksBlock','LBlock');
 $typeautre = array("AJOUT", "CORRECTION", "EDITION");
 $typeencours = array("AJOUT" => "d'ajout",
 "CORRECTION" => "de corrections",
-"EDITION" => "d'ajout d'édition");
+"EDITION" => "d'ajout d'Ã©dition");
 $texteautre = array("AJOUT" => "Demandes d'ajout",
 "CORRECTION" => "Demandes de corrections",
-"EDITION" => "Demandes d'ajout d'édition");
+"EDITION" => "Demandes d'ajout d'Ã©dition");
 
 // titre de la liste + liens vers les autres listes
 $t->set_var(array(
@@ -183,7 +183,8 @@ $t->set_var (array
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM,
 "PAGETITLE" => "Proposition en cours..."));
 
 $t->parse("BODY","tpBody");

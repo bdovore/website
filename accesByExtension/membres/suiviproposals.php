@@ -69,7 +69,7 @@ if ($act==""){
         $choix_filtre = -1;
     }
 
-    // Selection des valeurs à afficher
+    // Selection des valeurs Ã  afficher
     $clerep[1] = "prop_dte";
     $clerep[2] = "titre";
 
@@ -83,7 +83,7 @@ if ($act==""){
 
     $orderby = $clerep[$cle];
 
-    // Requete sur les données à afficher
+    // Requete sur les donnÃ©es Ã  afficher
     if ($_POST['lstSource']==1){
         $query = "SELECT e.id_edition, e.prop_dte, e.user_id, e.prop_status, t.id_tome, t.titre
             FROM bd_edition e, bd_tome t
@@ -111,7 +111,7 @@ if ($act==""){
     // Creation d'une nouvelle instance Fast Template
     $t = new Template(BDO_DIR."public/templates");
 
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "user.suivi.prop.tpl",
     "tpMenu" => "user.menu.tpl",
@@ -119,10 +119,10 @@ if ($act==""){
     "tpBase" => "body.tpl"
     ));
 
-    // on déclare le block à utiliser
+    // on dÃ©clare le block Ã  utiliser
     $t->set_block('tpBody','PropBlock','PBlock');
 
-    //Attribue les données à afficher
+    //Attribue les donnÃ©es Ã  afficher
     while ($DB->next_record()){
         if ($_POST['lstSource']==1){
             $t->set_var (array(
@@ -154,6 +154,7 @@ if ($act==""){
     "LOGINBARRE" => GetIdentificationBar(),
     "URLSITE" => BDO_URL,
     "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
     ));
     // COMPTAGE ALBUMS ET CORRECTIONS
 
@@ -199,9 +200,9 @@ elseif($act=="supprim")
     $status = $_GET["status"];
     $type = $_GET["type"];
 
-    if($status=="ok"){// Supression Confirmée
+    if($status=="ok"){// Supression ConfirmÃ©e
 
-        if ($type == 'EDITION'){// Définie les valeurs dans le cas d'une édition
+        if ($type == 'EDITION'){// DÃ©finie les valeurs dans le cas d'une Ã©dition
 
             $query = "SELECT e.user_id, e.img_couv, e.id_tome, t.titre FROM bd_edition e, bd_tome t
             WHERE e.id_edition = ".$DB->escape($propid)." AND t.id_tome = e.id_tome;";
@@ -211,7 +212,7 @@ elseif($act=="supprim")
             $prop_img = $DB->f("img_couv");
             $prop_action = $DB->f("action");
             $prop_titre = $DB->f("titre");
-        }else {// Définie les valeurs dans le cas d'un ajout d'album ou d'une correction
+        }else {// DÃ©finie les valeurs dans le cas d'un ajout d'album ou d'une correction
 
             $query = "SELECT user_id, img_couv, titre FROM users_alb_prop WHERE id_proposal = ".$DB->escape($propid);
             $DB->query ($query);
@@ -222,7 +223,7 @@ elseif($act=="supprim")
             $prop_titre = $DB->f("titre");
         }
 
-        // Vérifie que l'utilisateur essaie bien d'effacer un album qu'il a proposé
+        // VÃ©rifie que l'utilisateur essaie bien d'effacer un album qu'il a proposÃ©
         if ($_SESSION["UserId"] != $prop_user){
             echo GetMetaTag(3,"Vous ne pouvez pas supprimer la proposition d'un autre membre.",(BDO_URL."index.php"));
             exit();
@@ -244,7 +245,7 @@ elseif($act=="supprim")
         }
 
         //rouvre la page
-        echo GetMetaTag(2,"La proposition a été effacée",(BDO_URL."membres/suiviproposals.php?cle=1&sort=DESC"));
+        echo GetMetaTag(2,"La proposition a Ã©tÃ© effacÃ©e",(BDO_URL."membres/suiviproposals.php?cle=1&sort=DESC"));
         exit;
     }
     else

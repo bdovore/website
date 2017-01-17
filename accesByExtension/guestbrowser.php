@@ -7,7 +7,7 @@ include_once (BDO_DIR."inc/bdovore.php");
 include (BDO_DIR."inc/queryfunction.php");
 
 
-// Vérifie qu'un parametre a été passé
+// VÃ©rifie qu'un parametre a Ã©tÃ© passÃ©
 if (!isset($user))
 {
     if (issetNotEmpty($_SESSION["UserId"])) {
@@ -15,7 +15,7 @@ if (!isset($user))
     }
     else
     {
-        echo GetMetaTag(3,"Erreur lors du chargement de cette page : vous allez être redirigé.",(BDO_URL."index.php"));
+        echo GetMetaTag(3,"Erreur lors du chargement de cette page : vous allez Ãªtre redirigÃ©.",(BDO_URL."index.php"));
         exit();
     }
 }
@@ -32,7 +32,7 @@ if ($user <> $_SESSION["UserId"]) {
     $tab = mysql_fetch_assoc($result);
     if ($tab["open_collec"]!='Y')
     {
-        echo GetMetaTag(3,"Erreur lors du chargement de cette page : vous allez être redirigé.",(BDO_URL."index.php"));
+        echo GetMetaTag(3,"Erreur lors du chargement de cette page : vous allez Ãªtre redirigÃ©.",(BDO_URL."index.php"));
         exit();
     }
     $username = $tab["username"];
@@ -69,7 +69,7 @@ if ($rb_browse == 'ser' || !$rb_browse) {
     and flg_achat= 'N'
     ";
 
-    $pagetitle.= "série ";
+    $pagetitle.= "sÃ©rie ";
     if ($let) {
         if (strlen($let) < 4) {
             $query_RecAuteur .= "and LCASE(s.tri) like LCASE('".mysql_real_escape_string($let)."%') ";
@@ -85,7 +85,7 @@ if ($rb_browse == 'ser' || !$rb_browse) {
         t.id_tome,
         CONCAT(CASE
         when t.flg_int = 'O'
-        then 'Intégrale '
+        then 'IntÃ©grale '
         when t.flg_type = 1
         then 'Coffret '
         else IFNULL(concat('Tome ',t.num_tome),'HS')
@@ -171,7 +171,7 @@ elseif ($rb_browse == 'aut' ) {
     CONCAT(
     CASE
         when t.flg_int = 'O'
-        then 'Intégrale '
+        then 'IntÃ©grale '
         when t.flg_type = 1
         then 'Coffret '
         else IFNULL(concat('Tome ',t.num_tome),'HS') end,': '
@@ -229,7 +229,7 @@ elseif ($rb_browse == 'edit'){
         CONCAT(s.NOM, ' ' ,
         CASE
         when t.flg_int = 'O'
-        then 'Intégrale '
+        then 'IntÃ©grale '
         when t.flg_type = 1
         then 'Coffret '
         else IFNULL(concat('Tome ',t.num_tome),'HS')
@@ -288,7 +288,7 @@ elseif ($rb_browse == 'genr') {
     $query_album = "
     select distinct
     t.id_tome,
-    CONCAT(CASE when t.flg_int = 'O' then 'Intégrale ' when t.flg_type = 1 then 'Coffret ' else IFNULL(concat('Tome ',t.num_tome),'HS') end,': ', t.titre) as titre
+    CONCAT(CASE when t.flg_int = 'O' then 'IntÃ©grale ' when t.flg_type = 1 then 'Coffret ' else IFNULL(concat('Tome ',t.num_tome),'HS') end,': ', t.titre) as titre
     FROM
         users_album ua
         INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
@@ -316,7 +316,7 @@ $t->set_file(array(
 "tpBase" => "body.tpl"));
 
 
-// on déclare les blocks contenus sur la feuille
+// on dÃ©clare les blocks contenus sur la feuille
 $t->set_block('tpBody','NavBlock','NBlock');
 $t->set_block('tpBody','DataBlock','DBlock');
 
@@ -437,7 +437,7 @@ if ($rb_browse != "ser") {
     }
 }
 else {
-    // browse par série : seulement 2 niveaux
+    // browse par sÃ©rie : seulement 2 niveaux
     while ($row_RecAuteur = mysql_fetch_assoc($RecAuteur)) {
         if ($lev_id == $row_RecAuteur['id']) {
             $img = "aro_3_2.gif";
@@ -487,7 +487,9 @@ $t->set_var("USERID",$code_user);
 $t->set_var (array
 ("LOGINBARRE" => GetIdentificationBar(),
 "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE));
+"URLSITEIMAGE" => BDO_URL_IMAGE,
+"URLSITEFORUM" => BDO_URL_FORUM
+));
 
     // envoie les variables de la page
 $t->set_var (array(

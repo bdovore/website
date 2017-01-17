@@ -4,7 +4,7 @@
 
 minAccessLevel(1);
 
-// Mettre à jour les informations
+// Mettre Ã  jour les informations
 if ($act=="update")
 {
     $nom = ($_POST['txtNomAuteur'] == '' ? 'NULL' : "'".$DB->escape($_POST['txtNomAuteur'])."'");
@@ -25,7 +25,7 @@ if ($act=="update")
     $query .= " `nationalite` = ".($_POST['txtNation'] == '' ? 'NULL' : "'".$DB->escape($_POST['txtNation'])."'");
     $query .=" WHERE (`id_auteur`=".$DB->escape($_POST["txtIdAuteur"]).");";
     $DB->query($query);
-    echo '<META http-equiv="refresh" content="1; URL=javascript:history.go(-1)">'."Mise à jour effectuée";
+    echo '<META http-equiv="refresh" content="1; URL=javascript:history.go(-1)">'."Mise Ã  jour effectuÃ©e";
 }
 
 // effacement d'un auteur
@@ -33,12 +33,12 @@ elseif($act=="delete")
 {
     if ($conf == "ok")
     {
-        if (minAccessLevel(1))//Revérifie que c'est bien l'administrateur qui travaille
+        if (minAccessLevel(1))//RevÃ©rifie que c'est bien l'administrateur qui travaille
         {
             $query = "DELETE FROM bd_auteur WHERE id_auteur=".$DB->escape($auteur_id);
             $DB->query ($query);
             $redirection = BDO_URL."admin/index.php";
-            echo '<META http-equiv="refresh" content="2; URL='.$redirection.'">L\'auteur a été effacée de la base.';
+            echo '<META http-equiv="refresh" content="2; URL='.$redirection.'">L\'auteur a Ã©tÃ© effacÃ©e de la base.';
             exit();
         }
     }
@@ -53,7 +53,7 @@ elseif($act=="new")
 {
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.auteur.tpl",
     "tpBase" => "body.tpl"));
@@ -61,8 +61,8 @@ elseif($act=="new")
     //echo htmlspecialchars($DB->f("id_color"));
     $t->set_var (array
     ("NBALBUMS" => "0",
-    "URLDELETE" => "javascript:alert('Désactivé');",
-    "URLFUSION" => "javascript:alert('Désactivé');",
+    "URLDELETE" => "javascript:alert('DÃ©sactivÃ©');",
+    "URLFUSION" => "javascript:alert('DÃ©sactivÃ©');",
     "ACTIONNAME" => "Enregistrer",
     "URLACTION" => BDO_URL."admin/adminauteurs.php?act=append"
     ));
@@ -71,7 +71,9 @@ elseif($act=="new")
     ("LOGINBARRE" => GetIdentificationBar(),
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
+    ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
 }
@@ -98,7 +100,7 @@ elseif($act=="append")
     $query .= ($_POST['txtNation'] == '' ? 'NULL' : "'".$DB->escape($_POST['txtNation'])."'").")";
     $DB->query ($query);
     $lid= mysql_insert_id();
-    echo GetMetaTag(2,"L'auteur a été ajouté",(BDO_URL."admin/adminauteurs.php?auteur_id=".$lid));
+    echo GetMetaTag(2,"L'auteur a Ã©tÃ© ajoutÃ©",(BDO_URL."admin/adminauteurs.php?auteur_id=".$lid));
 }
 
 // AFFICHER UN EDITEUR
@@ -106,11 +108,11 @@ elseif($act=="")
 {
     // Creation d'un nouveau Template
     $t = new Template(BDO_DIR."public/templates");
-    // fichier à utiliser
+    // fichier Ã  utiliser
     $t->set_file(array(
     "tpBody" => "admin.auteur.tpl",
     "tpBase" => "body.tpl"));
-    // Compte les albums pour lesquels les auteurs ont travaillé
+    // Compte les albums pour lesquels les auteurs ont travaillÃ©
     $query = "
     select
         count(*) as nbtome
@@ -124,7 +126,7 @@ elseif($act=="")
     $DB->next_record();
     $nb_auteur = $DB->f("nbtome");
 
-    //récupère les données utilisateur dans la base de donnée
+    //rÃ©cupÃ¨re les donnÃ©es utilisateur dans la base de donnÃ©e
     $query = "
     SELECT
         id_auteur,
@@ -167,7 +169,9 @@ elseif($act=="")
     ("LOGINBARRE" => GetIdentificationBar(),
     "MENUBARRE" => admin_menu(),
     "URLSITE" => BDO_URL,
-    "URLSITEIMAGE" => BDO_URL_IMAGE,));
+    "URLSITEIMAGE" => BDO_URL_IMAGE,
+    "URLSITEFORUM" => BDO_URL_FORUM
+    ));
     $t->parse("BODY","tpBody");
     $t->pparse("MyFinalOutput","tpBase");
 }
