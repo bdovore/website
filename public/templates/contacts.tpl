@@ -29,7 +29,7 @@
                 - <a href="mailto:zeas@bdovore.com" title="Cliquez pour envoyer un email à zeas_chez_bdovore.com"><b>Zéas</b></a> :
                 Coordinateur du joyeux bordel actuel, il manie à merveille le fouet. Signe particulier : sa toque est trog grande pour sa tête, ce qui explique le goût un peu étrange de certains plats...
                 <br />
-                - <a href="mailto:chninkel@bdovore.com" title="Cliquez pour envoyer un email à chninkel_chez_bdovore.com"><b>Chninkel</b></a> : Aidant depuis longtemps les autres membres sur le <a href="http://forum.bdovore.com/index.php">forum</a>, le voici qui met son grain de sel dans la soupe du code.
+                - <a href="mailto:chninkel@bdovore.com" title="Cliquez pour envoyer un email à chninkel_chez_bdovore.com"><b>Chninkel</b></a> : Aidant depuis longtemps les autres membres sur le <a href="{URLSITEFORUM}index.php">forum</a>, le voici qui met son grain de sel dans la soupe du code.
                 <br />
                 - <a href="" title="Désolé, nous ne pouvons divulguer l'adresse de l'association des BDOvores anonymes. Latruffe est en cure de désyntoxication suite à une trop forte accoutumance à la BD et au site..."><b>Latruffe</b></a> :
                 Co-créateur du site avec Tomlamèche et qui cuisine encore de temps en temps.
@@ -95,7 +95,7 @@
                 <font color="#990000" size="-1"><b>Les clients râlent quand ce n'est pas assez salé</b></font>
             </p>
             <p>
-                N'hésitez pas à faire un tour sur le <a href="{URLSITE}forum"><b>forum</b></a> (vous pouvez commencer par vous prèsenter <a href="http://forum.bdovore.com/viewtopic.php?t=146" title="Ouvre le lien dans la page courante">ici</a>)
+                N'hésitez pas à faire un tour sur le <a href="{URLSITEFORUM}"><b>forum</b></a> (vous pouvez commencer par vous prèsenter <a href="{URLSITEFORUM}viewtopic.php?t=146" title="Ouvre le lien dans la page courante">ici</a>)
                 si les plats qui vous sont servis ne sont pas à votre goût ou si, au contraire, vous avez aimé.
             </p>
             <p>

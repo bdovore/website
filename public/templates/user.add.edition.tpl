@@ -48,15 +48,15 @@
                     </tr>
                     <tr>
                         <td width="100%" colspan="5" align="center"><hr width="75%" />
-                            <a href="../forum/viewtopic.php?t=1298" target="_blank" title="Ce lien s'ouvre dans un nouvel onglet ou dans une nouvelle page">
+                            <a href="{URLSITEFORUM}viewtopic.php?t=1298" target="_blank" title="Ce lien s'ouvre dans un nouvel onglet ou dans une nouvelle page">
                                 <i>Consulter le tutoriel d'ajout d'édition</i>
                             </a>
                             <br />
-                            <a href="../listpropal.php?type=EDITION" target="_blank" title="Ce lien s'ouvre dans un nouvel onglet ou dans une nouvelle page">
+                            <a href="{URLSITE}listpropal.php?type=EDITION" target="_blank" title="Ce lien s'ouvre dans un nouvel onglet ou dans une nouvelle page">
                                 <i>Liste des demandes d'ajout d'édition en cours de traitement</i>
                             </a>
                             <br />
-                            <a href="../membres/prop_album.php" target="_blank" title="Ce lien s'ouvre dans un nouvel onglet ou dans une nouvelle page">
+                            <a href="{URLSITE}membres/prop_album.php" target="_blank" title="Ce lien s'ouvre dans un nouvel onglet ou dans une nouvelle page">
                                 <i>Proposer l'ajout d'un nouvel album</i>
                             </a>
                             <hr width="75%" />

@@ -27,7 +27,7 @@
       </table>
 
       <p>
-        Encore des questions sur BDovore ? Rendez-vous sur le <a href="http://forum.bdovore.com/index.php">forum</a> !
+        Encore des questions sur BDovore ? Rendez-vous sur le <a href="{URLSITEFORUM}index.php">forum</a> !
       </p>
 
 </div>
