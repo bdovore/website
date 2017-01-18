@@ -215,14 +215,6 @@ class Actus
 
         $html .= '</div>';
 
-        //le cache généré pour le moment contient l'URL complète avec http(s)://
-        //ça cause des problèmes pour les utilisateurs (~ 99%) qui sont en HTTP
-        //et qui n'ont pas accepté le certificat de OVH pour bdovore (pas d'image).
-        //Pour résoudre ça, il suffit de toujours avoir le cache en HTTP.
-        //Au pire, ceux qui utilisent HTTPS auront un simple avertissement du genre
-        //"attention il y a du contenu non-sécurisé sur cette page".
-        $html = preg_replace("/https:/i", "http:", $html);
-
         return file_put_contents($file, $html);
     }
 
@@ -257,9 +249,6 @@ class Actus
             $html .=urlAlbum ($obj,'albTitle').'<br />';
         }
         $html .= '</div></div>';
-
-        //cf. setTopActu()
-        $html = preg_replace("/https:/i", "http:", $html);
 
         return file_put_contents($file, $html);
     }
