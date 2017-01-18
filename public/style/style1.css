@@ -12,7 +12,7 @@ body {
     font-size: 1em;
     color: #000000;
     background-color: #3D201C;
-    background-image: url("images/site/bdo_fond1.jpg");
+    background-image: url("../images/site/bdo_fond1.jpg");
     background-repeat: repeat-x;
     background-attachment:fixed;
     margin: 0;
@@ -1477,19 +1477,19 @@ table.list_album tr {
     }
 
     #onglets > li:nth-child(6) {
-         display:none;
+        display:none;
     }
 
     #onglets > li:nth-child(7) {
-         display:none;
+        display:none;
     }
 
     #onglets > li:nth-child(8) {
-         display:none;
+        display:none;
     }
 
     #onglets > li:nth-child(4) {
-         display:none;
+        display:none;
     }
 
     td[class="colselect"] {

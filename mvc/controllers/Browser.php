@@ -842,4 +842,3 @@ class Browser extends Bdo_Controller
         $this->view->render();
     }
 }
-
