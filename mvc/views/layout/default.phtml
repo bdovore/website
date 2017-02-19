@@ -236,6 +236,8 @@ $(document).ready(function() {
 
 <!-- Multiselect chosen widget -->
 <script type="text/javascript" src="<?php echo BDO_URL;?>jquery/chosen/chosen/chosen.jquery.js"></script>
+<!-- coockiechoice -->
+<script src="<?php echo BDO_URL; ?>script/cookiechoices.js"></script><script>document.addEventListener('DOMContentLoaded', function(event){cookieChoices.showCookieConsentBar('Ce site utilise des cookies pour vous offrir le meilleur service. En poursuivant votre navigation, vous acceptez l’utilisation des cookies.', 'J’accepte', 'En savoir plus', '<?php echo BDO_URL;?>/mentionslegales/');});</script>
 <link type="text/css" rel="stylesheet" href="<?php echo BDO_URL;?>jquery/chosen/chosen/chosen.css" />
 <?php
 if ($view->a_cssFile){
@@ -352,6 +354,7 @@ title="Pour les admins !">Admin</a></li> <?php } ?>
             l'information contenue dans la base de donn&eacute;e du site. Cependant, si
             ces derniers le d&eacute;sirent, ces images seront retir&eacute;es sur simple
             demande de leur part.</div>
+        <div id="mentionsllegales"><a href="<?php echo BDO_URL; ?>mentionslegales">Mentions Légales</a></div>
         <div id="indexation">
             <font color="#990000"> Toutes les séries de bandes-dessinées : </font>
                         <a href="<?php echo BDO_URL;?>liste_serie_bd?lettre=A">A</a> -
