@@ -1172,7 +1172,7 @@ table.list_album tr {
         min-height: 600px;
     }
     .col1 {
-        overflow: hidden;
+        /*overflow: hidden;*/
         padding: 5px;
         border-radius: 5px;
         margin: 0px 25px 0px 0px !important;
@@ -1208,7 +1208,7 @@ table.list_album tr {
     }
 
     .col1 {
-        overflow: hidden;
+        /*overflow: hidden;*/
         padding: 5px;
         border-radius: 5px;
         margin: auto !important;
@@ -1451,7 +1451,7 @@ table.list_album tr {
 
 @media screen and (max-width: 680px), screen and (max-device-width: 667px) {
     body {
-        overflow:hidden !important;
+        /*overflow:hidden !important;*/
         width:100%;
         font-size:1.1em;
     }
