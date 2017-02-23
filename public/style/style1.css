@@ -1311,7 +1311,7 @@ table.list_album tr {
         padding-top: 2em;
     }
 
-    td[name="col5"] {
+   /* td[name="col5"] {
         display: none!important;
     }
 
@@ -1425,7 +1425,7 @@ table.list_album tr {
 
     th[name="col18"] {
         display: none!important;
-    }
+    } */
 
     a[id="inline"] {
         display:none;
