@@ -233,7 +233,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                             }
                                         })});
 
-                                        $("#sponsor").append($("<a/>").attr("href", "http://player.izneo.com/read/<?php echo $view->tome->EAN_EDITION;?>-<?php echo IZNEO_ID; ?>.html").attr("target","_blank").append("<img src='http://www.izneo.com/images/desktop/logo-izneo.png' width='80' >"));
+                                        $("#sponsor").append($("<a/>").attr("href", "http://player.izneo.com/read/<?php echo $view->tome->EAN_EDITION;?>-<?php echo IZNEO_ID; ?>.html").attr("target","_blank").append("<img src='<?php echo BDO_URL_IMAGE; ?>logo-izneo-baseline-fr.svg' width='80' >"));
                                         </script>
                                         <?php }
                                         else { ?>
