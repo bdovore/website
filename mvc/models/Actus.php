@@ -142,7 +142,7 @@ class Actus
         INNER JOIN bd_genre g ON s.id_genre = g.id_genre
                 INNER JOIN note_tome on note_tome.ID_TOME= t.id_tome
     WHERE
-        en.dte_parution >= DATE_SUB(NOW(),INTERVAL 4 MONTH) AND
+        en.dte_parution >= DATE_SUB(NOW(),INTERVAL 4 MONTH)AND
                 en.dte_parution <= NOW()
     ";
 
