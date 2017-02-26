@@ -148,8 +148,40 @@ if ($view->NUM_PAGE < 20)
     <!-- Debut de la partie de droite -->
     <div class="col2">
         <!-- Column 2 start -->
-                <?php echo $view->ACTUAIR; ?>
-                <?php echo $view->LASTAJOUT; ?>
+               <!-- Column 2 start -->
+        <div id="actu" class="right fond">
+        <div class="middle_title">
+            <h3>Actualité</h3>
+        </div>
+            
+            <div class="right">
+        <?php 
+         $genre ="";
+        foreach ($view->ACTUAIR as $actu) { 
+            if ($actu->ORIGINE_GENRE <> $genre) {
+                echo "<div class='middle_content'>".$actu->ORIGINE_GENRE ."</div>";
+            }
+            echo $ficheAlbum->urlAlbum($actu,$class="couvMedium",$sponsor=FALSE)." ";
+            $genre = $actu->ORIGINE_GENRE;
+      } ?>
+            </div>
+        </div>
+         <div id="last" class="right fond">
+    <div class="middle_title">
+    <h3><a href="<?php echo BDO_URL;?>leguide?rb_mode=6&rb_list=album&submitGuide=Envoyer">Derniers ajouts</a>
+    <a href="<?php echo BDO_URL;?>rss">
+    <img src="<?php echo BDO_URL_IMAGE;?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" />
+    </a></h3>
+    </div>
+        <div class="cadre1" style="margin:3px 3px 3px 3px ;">
+            <?php 
+           
+            foreach ($view->LASTAJOUT as $ajout) {
+                echo $ficheAlbum->urlAlbum($ajout,$class="albTitle")."<br />";
+            }?>
+        </div>
+        
+         </div>
         <!-- Column 2 end -->
     </div>
 </div>

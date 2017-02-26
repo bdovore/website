@@ -96,23 +96,23 @@ class Actus
     public function actuAir ()
     {
         // dernier topactu recharger si cree avant 0h00
-        $file = BDO_DIR . "cache/actualite.html";
+        $file = BDO_DIR . "cache/actualite.json";
         if (! file_exists($file) or @filemtime($file) < mktime(0, 0, 0, date("m"), date("d"), date("Y")) or (@filesize($file) == 0)) {
             $size = $this->setTopActu($file);
         }
         // $this->set_var("ACTUAIR",file_get_contents($file));
-        return file_get_contents($file);
+        return json_decode(file_get_contents($file));
     }
 
     public function lastAjout ()
     {
         // dernier ajout recharger toutes les 10min
-        $file = BDO_DIR . "cache/lastajout.html";
+        $file = BDO_DIR . "cache/lastajout.json";
         if (! file_exists($file) or (@filemtime($file) < (time() - 600)) or (@filesize($file) == 0)) {
             $size = $this->setLastAjout($file);
         }
         // $this->set_var("LASTAVIS",file_get_contents($file));
-        return file_get_contents($file);
+        return json_decode(file_get_contents($file));
     }
 
     function setTopActu ($file)
@@ -142,7 +142,7 @@ class Actus
         INNER JOIN bd_genre g ON s.id_genre = g.id_genre
                 INNER JOIN note_tome on note_tome.ID_TOME= t.id_tome
     WHERE
-        en.dte_parution >= DATE_SUB(NOW(),INTERVAL 2 MONTH) AND
+        en.dte_parution >= DATE_SUB(NOW(),INTERVAL 1 YEAR) AND
                 en.dte_parution <= NOW()
     ";
 
@@ -167,7 +167,7 @@ class Actus
         INNER JOIN bd_genre g ON s.id_genre=g.id_genre
     WHERE
         ua.date_ajout >= DATE_SUB(NOW(),INTERVAL 1 MONTH)
-        and en.dte_parution >= DATE_SUB(NOW(),INTERVAL 3 MONTH) AND
+        and en.dte_parution >= DATE_SUB(NOW(),INTERVAL 1 YEAR) AND
                 en.dte_parution <= NOW()
         ";
 
@@ -176,26 +176,21 @@ class Actus
     ORDER BY nb DESC, IFNULL(ua.date_achat,ua.date_ajout) DESC
     LIMIT 0,2";
 
-        $html = '
-    <div id="actu" class="right fond">
-    <div class="middle_title">
-    <h3>Actualité</h3>
-    </div>
-    ';
-
+      
+        $a_actu= array();
         foreach ($a_genre as $genre) {
-            $html .= '<div class="right"><div class="middle_content">' . $genre . '</div><br />';
+           
             $filter = " and g.origine = '" . $genre . "' ";
 
             // actu
             $requete = $select_topactu . $filter . " " . $order_actu;
             $resultat = Db_query($requete);
             if ($obj = Db_fetch_object($resultat)) {
-                 $html .= urlAlbum ($obj,'couvMedium');
+                 $a_actu[] = $obj;
                  $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";
             }
              if ($obj = Db_fetch_object($resultat)) {
-                 $html .= '&nbsp;' . urlAlbum ($obj,'couvMedium');
+                  $a_actu[] = $obj;
                  $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";
             }
 
@@ -203,35 +198,24 @@ class Actus
             $requete = $select_topair . $filter . $order_air;
             $resultat = Db_query($requete);
             if ($obj = Db_fetch_object($resultat)) {
-                $html .= '&nbsp;' . urlAlbum ($obj,'couvMedium');
+                 $a_actu[] = $obj;
             }
             if ($obj = Db_fetch_object($resultat)) {
-                $html .= '&nbsp;' . urlAlbum ($obj,'couvMedium');
+                 $a_actu[] = $obj;
             }
-            $html .= '
-        </div>
-        ';
+           
         }
 
-        $html .= '</div>';
+       
 
-        return file_put_contents($file, $html);
+        return file_put_contents($file, json_encode($a_actu));
     }
 
     function setLastAjout ($file)
     {
 
         // insertion des 10 derniers albums ajoutés
-        $html = '
-    <div id="last" class="right fond">
-    <div class="middle_title">
-    <h3><a href="' . BDO_URL . 'leguide?rb_mode=6&rb_list=album&submitGuide=Envoyer">Derniers ajouts</a>
-    <a href="' . BDO_URL . 'rss">
-    <img src="' . BDO_URL_IMAGE . 'site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l\'actualité des ajouts d\'albums sur le site grace à ce fil rss" />
-    </a></h3>
-    </div>
-        <div class="cadre1" style="margin:3px 3px 3px 3px ;">
-';
+       $a_ajout = array();
         $requete = "SELECT
                 bd_tome.TITRE as TITRE_TOME,
                 bd_tome.ID_TOME,
@@ -246,10 +230,10 @@ class Actus
         $resultat = Db_query($requete);
         while ($obj = Db_fetch_object($resultat)) {
             $obj->TITRE_TOME = ' - '.$obj->TITRE_TOME;
-            $html .=urlAlbum ($obj,'albTitle').'<br />';
+            $a_ajout[] = $obj;
         }
-        $html .= '</div></div>';
+        
 
-        return file_put_contents($file, $html);
+        return file_put_contents($file, json_encode($a_ajout));
     }
 }
