@@ -197,7 +197,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             <?php } ?>
                                         <?php // test existence d'image Izneo
 
-                                        $file_headers = @get_headers("https://images.izneo.com/page/".$view->tome->EAN_EDITION."/300/1.jpg");
+                                        $file_headers = @get_headers("http://images.izneo.com/page/".$view->tome->EAN_EDITION."/300/1.jpg");
 
                                         if($file_headers[0] != 'HTTP/1.0 404 Not Found' and $file_headers[0] != 'HTTP/1.1 404 Not Found') {
                                         ?>
