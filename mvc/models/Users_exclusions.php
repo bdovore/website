@@ -128,7 +128,8 @@ class Users_exclusions extends Bdo_Db_Line
                                     INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
                                     WHERE
                                     ua.user_id = ".intval($user_id)."
-                                    AND t.id_tome=en.id_tome
+                                    AND t.id_tome=en.id_tome AND
+                                    ua.flg_achat = 'N'
                             )
                             AND NOT EXISTS (
                                     SELECT NULL
