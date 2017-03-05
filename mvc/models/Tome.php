@@ -363,6 +363,7 @@ class Tome extends Bdo_Db_Line
                     WHERE
                     ua.user_id = ".$user_id."
                     AND bd_tome.id_tome=en.id_tome
+                    AND bd_tome.flg_achat = 'N'
             )
             AND NOT EXISTS (
                     SELECT NULL
