@@ -112,6 +112,7 @@ class Users_exclusions extends Bdo_Db_Line
                                     INNER JOIN bd_serie s ON t.ID_SERIE=s.ID_SERIE
                             WHERE
                                     ua.user_id = ".intval($user_id)."
+                                    AND flg_achat = 'N' 
                                     AND NOT EXISTS (
                                                             SELECT NULL FROM users_exclusions ues
                                                             WHERE s.id_serie=ues.id_serie
