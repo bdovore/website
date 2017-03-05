@@ -347,7 +347,7 @@ class Tome extends Bdo_Db_Line
             INNER JOIN bd_serie s ON t.ID_SERIE=s.ID_SERIE
         WHERE
             ua.user_id = ".$user_id." AND
-           t.flg_achat = 'N' 
+           ua.flg_achat = 'N' 
             AND NOT EXISTS (
                         SELECT NULL FROM users_exclusions ues
                         WHERE s.id_serie=ues.id_serie
@@ -363,7 +363,7 @@ class Tome extends Bdo_Db_Line
                     WHERE
                     ua.user_id = ".$user_id."
                     AND bd_tome.id_tome=en.id_tome
-                    AND bd_tome.flg_achat = 'N'
+                    AND ua.flg_achat = 'N'
             )
             AND NOT EXISTS (
                     SELECT NULL
@@ -381,7 +381,7 @@ class Tome extends Bdo_Db_Line
                     INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
                     WHERE
                     ua.user_id = ".$user_id."
-                    AND bd_tome.id_tome=en.id_tome
+                    AND bd_tome.id_tome=en.id_tome and ua.flg_achat = 'N'
             )
             AND NOT EXISTS (
                     SELECT NULL
