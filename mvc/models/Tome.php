@@ -331,11 +331,16 @@ class Tome extends Bdo_Db_Line
 
     }
 
-    public function getListAlbumToComplete($user_id, $id_serie=0) {
+    public function getListAlbumToComplete($user_id, $id_serie=0, $flg_achat= true) {
 
         $user_id = intval($user_id);
         $id_serie = intval($id_serie);
-
+        if (!$flg_achat) {
+            $q_achat = " AND ua.flg_achat = 'N'";
+        } 
+        else {
+            $q_achat = "";
+        }
         if ($id_serie == 0) {
             $query = " , (
         SELECT DISTINCT
@@ -363,7 +368,7 @@ class Tome extends Bdo_Db_Line
                     WHERE
                     ua.user_id = ".$user_id."
                     AND bd_tome.id_tome=en.id_tome
-                    AND ua.flg_achat = 'N'
+                    ".$q_achat ."
             )
             AND NOT EXISTS (
                     SELECT NULL
@@ -381,7 +386,7 @@ class Tome extends Bdo_Db_Line
                     INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
                     WHERE
                     ua.user_id = ".$user_id."
-                    AND bd_tome.id_tome=en.id_tome and ua.flg_achat = 'N'
+                    AND bd_tome.id_tome=en.id_tome ".$q_achat ."
             )
             AND NOT EXISTS (
                     SELECT NULL

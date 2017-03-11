@@ -24,7 +24,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 ?>
 
 
-    </select></p>
+    </select><br>Inclure les futurs achats : <input name="flg_achat" type="checkbox" id="flg_achat" value="1" <?php echo ($view->flg_achat ? "checked" : "");  ?> onchange="submit();"></p>
 <p><a href="<?php echo BDO_URL."macollection/seriecomplete?lstSerie=$view->id_serie&action=exclude" ?>">Exclure cette série de mes albums à compléter</a></p>
 <p><a href="<?php echo BDO_URL."macollection/seriecomplete?idSerieExclu=$view->id_serie&action=raz" ?>">Annuler les exclusions pour cette série</a></p>
 </div>

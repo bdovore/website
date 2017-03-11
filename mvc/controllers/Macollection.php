@@ -381,7 +381,8 @@ class Macollection extends Bdo_Controller {
              $user_id = intval($_SESSION["userConnect"]->user_id);
              $id_serie = getValInteger("lstSerie",0);
              $action = getVal("action","none"); // variable d'action pour l'ajout ou suppression de série à compléter
-
+             $flg_achat = getValInteger("flg_achat",0); // filtre ou non sur les futurs achats
+             
              $this->loadModel("Tome");
              $this->loadModel("Users_exclusions");
 
@@ -413,12 +414,13 @@ class Macollection extends Bdo_Controller {
                  $id_serie = $listSerie[0]->ID_SERIE;
              }
 
-             $dbs_tome  = $this->Tome->getListAlbumToComplete($user_id,$id_serie);
+             $dbs_tome  = $this->Tome->getListAlbumToComplete($user_id,$id_serie, !$flg_achat);
              $this->view->set_var(array(
                  "listSerie" =>  $listSerie,
                  "id_serie" => $id_serie,
                  "dbs_tome" => $dbs_tome,
-                 "listExclu" => $listExclu
+                 "listExclu" => $listExclu,
+                  "flg_achat" => $flg_achat
              ));
 
              $this->view->set_var("PAGETITLE","Séries à compléter");
