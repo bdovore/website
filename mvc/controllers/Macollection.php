@@ -405,16 +405,24 @@ class Macollection extends Bdo_Controller {
              }
 
 
-             $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id);
+             $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id, $flg_achat);
 
              $listExclu = $this->Users_exclusions->getListSerieExclu($user_id);
 
+             $checkserie = false;
              if ($id_serie == 0 and count($listSerie) > 0) {
                  // selection de la première série de la liste
                  $id_serie = $listSerie[0]->ID_SERIE;
+                 $checkserie = true;
+             } else if ($id_serie > 0 and count($listSerie) > 0) {
+                 foreach ($listSerie as $serie) {
+                     if ($id_serie == $serie->ID_SERIE) {$checkserie = true;} // vérification que la série demandé est bien récupérée
+                 }
              }
-
+             if (!$checkserie) { $id_serie = $listSerie[0]->ID_SERIE;}
+             
              $dbs_tome  = $this->Tome->getListAlbumToComplete($user_id,$id_serie, !$flg_achat);
+             // si la liste est vide, il faut re
              $this->view->set_var(array(
                  "listSerie" =>  $listSerie,
                  "id_serie" => $id_serie,

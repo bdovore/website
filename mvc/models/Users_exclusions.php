@@ -91,11 +91,15 @@ class Users_exclusions extends Bdo_Db_Line
             return $a_obj;
     }
 
-    public function getListSerieToComplete ($user_id) {
+    public function getListSerieToComplete ($user_id, $flg_achat=false) {
         /*
          * Liste des séries pour lesquels il y a au moins un album à completer
          */
-
+        if ($flg_achat) {
+            $q_achat = "AND  ua.flg_achat = 'N'";
+        } else {
+            $q_achat = "";
+        }
         $query = "
             SELECT DISTINCT
                     user_serie.id_serie as ID_SERIE,
@@ -129,8 +133,7 @@ class Users_exclusions extends Bdo_Db_Line
                                     INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
                                     WHERE
                                     ua.user_id = ".intval($user_id)."
-                                    AND t.id_tome=en.id_tome AND
-                                    ua.flg_achat = 'N'
+                                    AND t.id_tome=en.id_tome ".$q_achat ."
                             )
                             AND NOT EXISTS (
                                     SELECT NULL
