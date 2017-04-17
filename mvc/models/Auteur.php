@@ -44,8 +44,10 @@ class Auteur extends Bdo_Db_Line
             `NATIONALITE`,
             VALIDATOR,
             VALID_DTE,
-            IMG_AUT
-        FROM `" . $this->table_name . "`";
+            IMG_AUT,
+            users.username VALIDATOR_USERNAME
+        FROM `" . $this->table_name . "`"
+                . " LEFT JOIN users on (users.user_id = VALIDATOR)";
     }
 
     public function search ($a_data = array())

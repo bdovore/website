@@ -33,10 +33,10 @@ $pageinate = $view->getHelper('Pagination');
 
 <?php echo $view->auteur->PSEUDO; ?> <?php if (User::minAccesslevel(1)) { ?><a class="fancybox fancybox.iframe {width:600,height:600}" href="admin/editauteur?auteur_id=<?php echo $view->auteur->ID_AUTEUR; ?>"> <img src="<?php echo BDO_URL_IMAGE; ?>edit.gif" /></a> <?php } ?></h3></div>
             <br />
-            <table><tr><td style="vertical-align:top">
+          
           <img src="<?php echo BDO_URL_IMAGE."auteur/".($view->auteur->IMG_AUT ?$view->auteur->IMG_AUT : "default_auteur.png" ); ?>" class="couvBig" style="float:left; margin:2px;">
                     </td>
-                <td style="vertical-align:top">
+                
                   <div ><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
             <strong>Pseudo : </strong>
             </font>
@@ -63,8 +63,7 @@ if ($view->auteur->FLG_COLOR) {echo ($sep."coloriste" ); $sep = ", ";}
    <?php echo $view->auteur->COMMENT; ?>
 
             </div>
-                </td>
-          </table>
+               
 
 
 <hr class="expSep" />
