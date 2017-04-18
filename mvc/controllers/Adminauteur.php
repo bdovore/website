@@ -15,14 +15,19 @@ class Adminauteur extends Bdo_Controller {
            
         $this->loadModel("Auteur");
         
-        $flg_filter_bio = getVal("filter_bio","N");
+        $filter = getVal("filter","0");
         $query = ""; 
-        if ($flg_filter_bio == "O") {
-            $query .= " WHERE COMMENT = '' ";
+        if ($filter == "1") {
+            $query .= " WHERE COMMENT = '' OR COMMENT IS NULL ";
+        }
+        if ($filter == "2") {
+            $query .= " WHERE FLG_SCENAR <> 1 AND"
+                    . " FLG_DESSIN <> 1 AND FLG_COLOR <> 1  ";
         }
         $query .= " ORDER BY VALID_DTE DESC LIMIT 0, 100";
         $dbs_auteur = $this->Auteur->load("c",$query);
         $this->view->set_var("dbs_auteur", $dbs_auteur);
+        $this->view->set_var("filter", $filter);
         $this->view->set_var("PAGETITLE", "Administration Bdovore - Auteur");
         $this->view->render();
     }

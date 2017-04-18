@@ -11,12 +11,22 @@
     <h1>Suivi des fiches auteurs</h1>
 
     <div class="cadre1">
-        
+         <form id="form1" name="form1" method="get">
+            <div id="filter">
+                <label for="f1">Dernières modifications </label>
+                <input type="radio" name="filter" id="f1" value="0" <?php if ($view->filter == 0) echo "checked"; ?> onclick="$('#form1').submit();"> 
+                <label for="f2">Sans bio</label>
+                <input type="radio" name="filter" id="f2" value="1" <?php if ($view->filter == 1) echo "checked"; ?> onclick="$('#form1').submit();"> 
+                <label for="f3">Sans rôle</label>
+                <input type="radio" name="filter" id="f3" value="2" <?php if ($view->filter == 2) echo "checked"; ?> onclick="$('#form1').submit();"> 
+            
+            </div>
+         </form>
     </div>
     <br>
 
     <div class="cadre1">
-        <h3>100 Dernières modifications de fiche auteur</h3>
+        <h3>100 dernières fiches auteur</h3>
         <br />
         <table id="listAlbum">
             <thead>
@@ -50,6 +60,7 @@ $(document).ready(function() {
         "searching": false,
         "order": [[ 2, "desc" ]]
     } );
+    $("#filter").buttonset();
 } );
 
 </script>
