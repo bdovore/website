@@ -36,6 +36,7 @@ class Browser extends Bdo_Controller
                 "AUTEUR" => "admin/editauteur?auteur_id=",
                 "EDITEUR" => "admin/editediteur?editeur_id="
         );
+    
 
     public $a_searchType = array(
             'ser' => 'Série',
@@ -60,15 +61,7 @@ class Browser extends Bdo_Controller
 
         if (! isset($this->a_searchType[$this->rb_browse])) $this->rb_browse = "ser";
 
-        // URL des pages d'edition
-        $url_edit = array(
-                "ALBUM" => BDO_URL . "admin/editalbum?alb_id=",
-                "SERIE" => BDO_URL . "admin/editserie?serie_id=",
-                "GENRE" => BDO_URL . "admin/editgenre?genre_id=",
-                "COLLECTION" => BDO_URL . "admin/editcollection?collec_id=",
-                "AUTEUR" => BDO_URL . "admin/editauteur?auteur_id=",
-                "EDITEUR" => BDO_URL . "admin/editediteur?editeur_id="
-        );
+      
     }
 
     /**
@@ -114,7 +107,7 @@ class Browser extends Bdo_Controller
             $query_order = " ORDER BY nom ASC ";
         }
         elseif ($this->rb_browse == 'aut') {
-            $query_select = "SELECT SQL_CALC_FOUND_ROWS ID_AUTEUR id, PSEUDO name FROM bd_auteur WHERE 1 ";
+            $query_select = "SELECT SQL_CALC_FOUND_ROWS ID_AUTEUR id, PSEUDO name, COMMENT FROM bd_auteur WHERE 1 ";
             if ($this->let) {
                 $query_where .= " AND pseudo like '" . PMA_sqlAddslashes($this->let, true) . "%'";
             }
@@ -186,7 +179,8 @@ class Browser extends Bdo_Controller
             }
         }
         $queryString = sprintf("&totalRows=%d%s", $totalRows, $queryString);
-
+        
+       
         if (! $this->rb_browse or $this->rb_browse == 'ser') {
             $this->view->set_var("TYPBROWSE", "ser");
             $url_edit = BDO_URL.$this->url_edit["SERIE"];
@@ -218,8 +212,17 @@ class Browser extends Bdo_Controller
         $queryString .= "&" . $query_string;
 
         $a_row = array();
+        $img_edit = "edit.gif";
         if ($this->rb_browse != "ser") {
             while ($row = Db_fetch_array($RecAuteur)) {
+                if ($this->rb_browse == "aut") {
+                    // class pour le bouton d'édition en fonction de présence d'une bio ou non
+                    if (strlen( $row["COMMENT"]) > 0 ) {
+                        $img_edit ="aut_edit.jpg";
+                    }  else {
+                        $img_edit = "edit.gif";
+                    }
+                }
                 $a_row[] = array(
                         "WSPACER" => "0px",
                         "HSPACER" => "0px",
@@ -228,7 +231,7 @@ class Browser extends Bdo_Controller
                         "NAMELEVEL" => htmlspecialchars($row['name']),
                         "ACTLEVEL" => "",
                         "LEVSIGN" => "1L" . $row['id'],
-                     "URLEDIT" => (User::minAccesslevel(1)) ? "<a href='".$url_edit.$row['id']."'".' class="fancybox fancybox.iframe {width:700,height:600}" ><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>' : ""
+                        "URLEDIT" => (User::minAccesslevel(1)) ? "<a href='".$url_edit.$row['id']."'".' class="fancybox fancybox.iframe {width:700,height:600} " ><img src="' . BDO_URL_IMAGE . $img_edit.'" border=0></a>' : ""
                 );
                 $this->keyword .= htmlspecialchars($row['name']) . ",";
                 // //$t->parse("DBlock", "DataBlock", true);
