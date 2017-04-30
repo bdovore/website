@@ -9,9 +9,9 @@
 <div align="center" class="cadre1">
    <?php echo $page->menuAdmin(); ?>
     <h1>Suivi des fiches auteurs</h1>
-
+ <form id="form1" name="form1" method="get">
     <div class="cadre1">
-         <form id="form1" name="form1" method="get">
+        
             <div id="filter">
                 <label for="f1">Dernières modifications </label>
                 <input type="radio" name="filter" id="f1" value="0" <?php if ($view->filter == 0) echo "checked"; ?> onclick="$('#form1').submit();"> 
@@ -21,13 +21,26 @@
                 <input type="radio" name="filter" id="f3" value="2" <?php if ($view->filter == 2) echo "checked"; ?> onclick="$('#form1').submit();"> 
             
             </div>
-         </form>
+              
+         
     </div>
     <br>
 
     <div class="cadre1">
-        <h3>100 dernières fiches auteur</h3>
-        <br />
+       
+       
+       
+         <div id="listAlbum_filter" class="dataTables_filter">
+
+                <label>
+
+                    100 dernières fiches filtrées par pseudo :
+
+                    <input class="" type="search" placeholder="" id="l_search" onchange="submit();" name="l_search" value="<?php echo $view->searchvalue; ?>" />
+                </label>
+
+            </div>
+        <br>
         <table id="listAlbum">
             <thead>
                 <th>Auteur</th>
@@ -48,7 +61,7 @@
             </tbody>
         </table>
     </div>
-    
+    </form>
 
 </div>
 <script>
@@ -57,7 +70,7 @@ $(document).ready(function() {
         "paging":   true,
         "ordering": true,
         "info":     false,
-        "searching": false,
+        "searching": true,
         "order": [[ 2, "desc" ]]
     } );
     $("#filter").buttonset();
