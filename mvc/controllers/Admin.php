@@ -1,7 +1,7 @@
 <?php
 
 
-
+use Wikidata;
 /**
  * @author Tom
  *
