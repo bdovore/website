@@ -93,11 +93,17 @@ class Browser extends Bdo_Controller
     public function Search ()
     {
         $query_where = "";
+        if (strlen($this->let) > 2) {
+            $pre_filtre = '%';
+        } else 
+        {
+            $pre_filtre = "";
+        }
         if ($this->rb_browse == 'ser' || ! $this->rb_browse) {
             $query_select = "SELECT SQL_CALC_FOUND_ROWS bd_serie.id_serie id, bd_serie.nom name,
             bd_serie.FLG_FINI as FLG_FINI_SERIE FROM bd_serie WHERE 1 ";
             if ($this->let) {
-                $query_where .= " AND nom like '" . PMA_sqlAddslashes($this->let, true) . "%' ";
+                $query_where .= " AND nom like '" .$pre_filtre. PMA_sqlAddslashes($this->let, true) . "%' ";
             }
             if ($this->a_idGenre) {
                 $query_where .= " AND ID_GENRE IN (".implode(',',$this->a_idGenre). ")";
@@ -109,7 +115,7 @@ class Browser extends Bdo_Controller
         elseif ($this->rb_browse == 'aut') {
             $query_select = "SELECT SQL_CALC_FOUND_ROWS ID_AUTEUR id, PSEUDO name, COMMENT FROM bd_auteur WHERE 1 ";
             if ($this->let) {
-                $query_where .= " AND pseudo like '" . PMA_sqlAddslashes($this->let, true) . "%'";
+                $query_where .= " AND pseudo like '".$pre_filtre. PMA_sqlAddslashes($this->let, true) . "%'";
             }
 
             if ($this->a_idGenre) {
@@ -130,7 +136,7 @@ class Browser extends Bdo_Controller
         elseif ($this->rb_browse == 'edit') {
             $query_select = "SELECT SQL_CALC_FOUND_ROWS ID_EDITEUR id, NOM name FROM bd_editeur WHERE 1";
             if ($this->let) {
-                $query_where .= " AND NOM like '" . PMA_sqlAddslashes($this->let, true) . "%'";
+                $query_where .= " AND NOM like '".$pre_filtre. PMA_sqlAddslashes($this->let, true) . "%'";
             }
             if ($this->a_idGenre) {
 
@@ -284,7 +290,7 @@ class Browser extends Bdo_Controller
         }
 
         $this->view->set_var(array(
-                "TITRESEARCH" => "<b>Commence par '<i>" . htmlspecialchars($this->let) . "</i>...'</b>"
+                "TITRESEARCH" => "<b>Résultat pour '<i>" . htmlspecialchars($this->let) . "</i>...'</b>"
         ));
         $this->view->layout = "ajax";
         $this->view->render();
