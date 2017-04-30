@@ -48,21 +48,26 @@ function valider(){
                 <br /><input name="txtFileLoc" type="file" id="txtFileLoc" style="width: 100%;" />
                 <br>
                  Envoyer depuis une URL :
-            <br /><input name="txtFileURL" type="text" id="txtFileURL" style="width: 100%;" />
+                 <br /><input name="txtFileURL" type="text" id="txtFileURL" style="width: 100%;" /> 
+                 <?php if (isset($view->WIKIIMAGE)) echo "<a href='https://commons.wikimedia.org/w/thumb.php?width=200&f=".$view->WIKIIMAGE[0]."'>".$view->WIKIIMAGE[0]."</a>"; ?>
               </td>
 
           </tr>
           <tr bordercolor="#FFFFCC">
             <td height="28">Date Naissance</td>
-            <td colspan="4"><input name="txtDateNaiss" type="text" id="txtDateNaiss" value="<?php echo $view->DTNAIS;?>" size="10"></td>
+            <td colspan="4"><input name="txtDateNaiss" type="text" id="txtDateNaiss" value="<?php echo $view->DTNAIS;?>" size="10">
+                <?php if (isset($view->WIKIBIRTH)) echo $view->WIKIBIRTH[0]->time; ?> 
+            </td>
           </tr>
           <tr bordercolor="#FFFFCC">
             <td height="28">Date d&eacute;c&egrave;s</td>
-            <td colspan="4"><input name="txtDateDeces" type="text" id="txtDateDeces" value="<?php echo $view->DTDECES;?>" size="10"></td>
+            <td colspan="4"><input name="txtDateDeces" type="text" id="txtDateDeces" value="<?php echo $view->DTDECES;?>" size="10">
+            <?php if (isset($view->WIKIDEATH)) echo $view->WIKIDEATH[0]->time; ?> </td>
           </tr>
           <tr bordercolor="#FFFFCC">
             <td height="28">Nationalite</td>
-            <td colspan="4"><input name="txtNation" type="text" id="txtNation" value="<?php echo $view->DTNATION;?>" size="15"></td>
+            <td colspan="4"><input name="txtNation" type="text" id="txtNation" value="<?php echo $view->DTNATION;?>" size="15">
+            <?php if (isset($view->WIKINATIONALITY)) echo $view->WIKINATIONALITY[0]; ?> </td>
           </tr>
           <tr bordercolor="#FFFFCC">
             <td height="28">&nbsp;</td>
@@ -86,7 +91,9 @@ function valider(){
           </tr>
           <tr bordercolor="#FFFFCC">
             <td height="28">Biographie</td>
-            <td colspan="4"><textarea name="txtCommentaire" id="txtCommentaire"cols="40" rows="20"><?php echo $view->COMMENT;?></textarea></td>
+            <td colspan="4"><textarea name="txtCommentaire" id="txtCommentaire"cols="40" rows="20"><?php echo $view->COMMENT;?></textarea>
+           <?php if (isset($view->WIKIENTITY)) { ?><input type="button" value="Get Wiki !" onclick="getWikiText();"/> <?php } ?> 
+            </td>
           </tr>
           <tr bordercolor="#FFFFCC">
             <td colspan="5"> <input type="submit" name="Submit" value="<?php echo $view->ACTIONNAME;?>"></td>
@@ -126,4 +133,23 @@ $("#txtFileLoc").change(function(){
 $("#txtFileUrl").change(function(){
     $('#imgAut').attr('src',$("#txtFileUrl").val());
 });
+
+function getWikiText() {
+    //Get Leading paragraphs (section 0)
+    $.getJSON("http://fr.wikipedia.org/w/api.php?format=json&action=parse&page=<?php echo $view->WIKISEARCH;?>&prop=text&section=0&callback=?", function (data) {
+        console.log(Object.values(data.parse.text)); 
+        pText = Object.values(data.parse.text)[0];
+       
+        
+       
+        
+            pText = pText.replace(/\[\d+\]/g, ""); //Remove reference tags (e.x. [1], [4], etc)
+            pText += "<a href='http://creativecommons.org/licenses/by-sa/3.0/deed.fr' target='blank'>Contenu soumis à la licence CC-BY-SA.</a> Source : <a href='https://fr.wikipedia.org/wiki/<?php echo $view->WIKISEARCH;?>' target='_blank'>Wikipédia</a>"
+            $('#txtCommentaire').jqteVal(pText);;
+            console.log(pText);
+            
+           
+        
+    });
+    }
 </script>

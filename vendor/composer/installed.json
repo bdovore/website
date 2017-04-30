@@ -1,0 +1,47 @@
+[
+    {
+        "name": "freearhey/wikidata",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/freearhey/wikidata.git",
+            "reference": "a750b12aaf74195feefa5a7d66f6e22dec234a2f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/freearhey/wikidata/zipball/a750b12aaf74195feefa5a7d66f6e22dec234a2f",
+            "reference": "a750b12aaf74195feefa5a7d66f6e22dec234a2f",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "time": "2016-08-08T20:55:54+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Wikidata\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Aleksandr Statciuk",
+                "email": "free.arhey@gmail.com",
+                "role": "developer"
+            }
+        ],
+        "description": "A PHP client for working with Wikidata API.",
+        "homepage": "https://github.com/freearhey/wikidata",
+        "keywords": [
+            "client",
+            "php",
+            "wikidata"
+        ]
+    }
+]

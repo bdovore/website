@@ -1,0 +1,63 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "738fc9a9ba52733b69adde245608ab53",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "freearhey/wikidata",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/freearhey/wikidata.git",
+                "reference": "a750b12aaf74195feefa5a7d66f6e22dec234a2f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/freearhey/wikidata/zipball/a750b12aaf74195feefa5a7d66f6e22dec234a2f",
+                "reference": "a750b12aaf74195feefa5a7d66f6e22dec234a2f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Wikidata\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksandr Statciuk",
+                    "email": "free.arhey@gmail.com",
+                    "role": "developer"
+                }
+            ],
+            "description": "A PHP client for working with Wikidata API.",
+            "homepage": "https://github.com/freearhey/wikidata",
+            "keywords": [
+                "client",
+                "php",
+                "wikidata"
+            ],
+            "time": "2016-08-08T20:55:54+00:00"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "freearhey/wikidata": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

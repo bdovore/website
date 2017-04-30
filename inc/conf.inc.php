@@ -7,7 +7,7 @@
  */
 
 require_once ('..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'constante.php');
-
+require_once BDO_DIR . "vendor".DS."autoload.php";
 // ----------------------------------------------------
 // time Zone
 date_default_timezone_set ( 'Europe/Paris' );

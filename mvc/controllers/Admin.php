@@ -1,5 +1,7 @@
 <?php
 
+use Wikidata;
+
 /**
  * @author Tom
  *
@@ -1517,8 +1519,29 @@ class Admin extends Bdo_Controller {
                 $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $auteur_id));
                 $this->Auteur->load();
                 $nb_auteur = intval($this->Auteur->getNbAlbumForAuteur($auteur_id));
-
-
+                
+                $wikidata = new Wikidata\Wikidata();
+                if ($this->Auteur->PSEUDO == $this->Auteur->NOM.", ".$this->Auteur->PRENOM) {
+                    $search_wiki = $this->Auteur->PRENOM." ".$this->Auteur->NOM;
+                } else {
+                    $search_wiki = $this->Auteur->PSEUDO;
+                }
+                $result = $wikidata->search($search_wiki);
+                if(!$result->isEmpty()) {
+                       $singleResult = $result->first();
+                       $entityId = $singleResult->getEntityId();
+                       $entities = $wikidata->entities($entityId, 'fr');
+                       $entity = $entities->first();
+                       $wikilabel = $entity->getLabel(); // Steve Jobs
+                       $wikidescription = $entity->getDescription('fr'); // US-amerikanischer Unternehmer, Mitbegründer von Apple Computer
+                       $wikiimage = $entity->getPropertyValues('P18');
+                       
+                       $wikiwebsite = $entity->getPropertyValues('P856');
+                       $wikibirth = $entity->getPropertyValues('P569');
+                       $wikideath = $entity->getPropertyValues('P570');
+                       $wikinationality = $entity->getPropertyValues('P27');
+                       
+                }
                 $this->view->set_var(array
                     ("IDAUTEUR" => $this->Auteur->ID_AUTEUR,
                     "PSEUDO" => stripslashes($this->Auteur->PSEUDO),
@@ -1536,7 +1559,16 @@ class Admin extends Bdo_Controller {
                     "URLFUSION" => BDO_URL . "admin/mergeauteurs?source_id=" . $this->Auteur->ID_AUTEUR,
                     "ACTIONNAME" => "Valider les Modifications",
                     "URLACTION" => BDO_URL . "admin/editauteur?act=update",
-                    "IMG_AUT" => ($this->Auteur->IMG_AUT ? $this->Auteur->IMG_AUT : "default_auteur.png")));
+                    "IMG_AUT" => ($this->Auteur->IMG_AUT ? $this->Auteur->IMG_AUT : "default_auteur.png"),
+                    "WIKISEARCH" => $search_wiki,
+                    "WIKILABEL" => $wikilabel,
+                    "WIKIDESCRIPTION" => $wikidescription,
+                    "WIKIIMAGE" => $wikiimage,
+                    "WIKIBIRTH" => $wikibirth,
+                    "WIKIWEBSITE" => $wikiwebsite,
+                    "WIKIDEATH" => $wikideath,
+                    "WIKINATIONALITY" => $wikinationality,
+                    "WIKIENTITY" => $entityId));
                 $this->view->render();
             }
         } else {

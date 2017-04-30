@@ -1,0 +1,12 @@
+{
+    "name": "bdovore/bdovore",
+    "description": "Site web Bdovore",
+    "type": "project",
+    "require": {
+    },
+    "license": "CC",
+    "minimum-stability": "dev",
+    "require-dev": {
+        "freearhey/wikidata": "dev-master"
+    }
+}
