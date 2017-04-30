@@ -1,6 +1,6 @@
 <?php
 
-use Wikidata;
+
 
 /**
  * @author Tom
@@ -10,6 +10,7 @@ class Admin extends Bdo_Controller {
 
     /**
      */
+
     public function Index() {
 
         if (User::minAccesslevel(1)) {
