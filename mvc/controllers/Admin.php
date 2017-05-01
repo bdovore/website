@@ -1,7 +1,7 @@
 <?php
 
 
-use Wikidata;
+use Wikidata\Wikidata;
 /**
  * @author Tom
  *
@@ -1521,7 +1521,7 @@ class Admin extends Bdo_Controller {
                 $this->Auteur->load();
                 $nb_auteur = intval($this->Auteur->getNbAlbumForAuteur($auteur_id));
                 
-                $wikidata = new Wikidata\Wikidata();
+                $wikidata = new Wikidata();
                 if ($this->Auteur->PSEUDO == $this->Auteur->NOM.", ".$this->Auteur->PRENOM) {
                     $search_wiki = $this->Auteur->PRENOM." ".$this->Auteur->NOM;
                 } else {
