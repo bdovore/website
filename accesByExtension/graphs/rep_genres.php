@@ -1,6 +1,6 @@
 <?php
-include (BDO_DIR."vendors/jpgraph-3.5.0b1/src/jpgraph.php");
-include (BDO_DIR."vendors/jpgraph-3.5.0b1/src/jpgraph_bar.php");
+require_once (BDO_DIR."vendor/jpgraph/jpgraph/lib/jpgraph/src/jpgraph.php");
+require_once  (BDO_DIR."vendor/jpgraph/jpgraph/lib/jpgraph/src/jpgraph_bar.php");
 
 // Variable d�finissant l'utilisateur
 if ($user != '') {

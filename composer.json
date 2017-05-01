@@ -5,8 +5,13 @@
     "require": {
     },
     "license": "CC",
-    "minimum-stability": "dev",
-    "require-dev": {
-        "freearhey/wikidata": "dev-master"
+    "minimum-stability": "stable",
+    "require": {
+        "freearhey/wikidata": "dev-master",
+   
+        "jpgraph/jpgraph": ">=3.5",
+        "mpdf/mpdf" : ">=6.0",
+        "phpoffice/phpexcel":">= 1.7.8"
     }
+    
 }
