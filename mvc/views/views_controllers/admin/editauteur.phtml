@@ -137,8 +137,8 @@ $("#txtFileUrl").change(function(){
 function getWikiText() {
     //Get Leading paragraphs (section 0)
     $.getJSON("<?php echo BDO_URL; ?>Wikipediainfo?search_item=<?php echo $view->WIKISEARCH;?>", function (data) {
-        Console.log(data);
-        console.log(Object.values(data.parse.text)); 
+        
+        //console.log(Object.values(data.parse.text)); 
         pText = Object.values(data.parse.text)[0];
        
         
