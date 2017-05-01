@@ -21,3 +21,4 @@ Collection au*
 *.pdf
 !/mvc/views/views_controllers/cache/
 /public/tmp/
+/vendor/
