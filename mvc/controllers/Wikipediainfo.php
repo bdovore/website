@@ -11,8 +11,29 @@ class Wikipediainfo extends Bdo_Controller {
 
     public function Index() {
         $search_item = getVal("search_item","");
-        
-        $url = 'http://fr.wikipedia.org/w/api.php?format=json&action=parse&page='.urlencode($search_item)."&prop=text&section=0";
+        $section = getValInteger("section",0);
+        $url = 'http://fr.wikipedia.org/w/api.php?format=json&action=parse&page='.urlencode($search_item)."&prop=text&section=".$section;
+       
+        $data2 =file_get_contents($url);
+       
+        $this->view->layout = "json";
+        $this->view->set_var('json', $data2);
+        $this->view->render();
+    }
+    
+    public function Extract() {
+         $search_item = getVal("search_item","");
+         $url = "https://fr.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=".urlencode($search_item);
+         
+         $data2 =file_get_contents($url);
+         $this->view->layout = "json";
+        $this->view->set_var('json', $data2);
+        $this->view->render();
+    }
+    
+    public function Sections() {
+         $search_item = getVal("search_item","");
+         $url = 'http://fr.wikipedia.org/w/api.php?format=json&action=parse&page='.urlencode($search_item)."&prop=sections";
        
         $data2 =file_get_contents($url);
        
