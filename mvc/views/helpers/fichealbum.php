@@ -381,8 +381,8 @@ class FicheAlbum {
     }
 
     public function getSponsor($o_tome, $img=true) {
-        $html = "<a href='";
-
+        $html = "<a title='Achetez sur Amazon !' href='";
+        // amazon
         if ($o_tome->ISBN_EDITION) {
             $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . $o_tome->ISBN_EDITION . "/bdovorecom-21/";
         } else if ($o_tome->EAN_EDITION) {
@@ -391,11 +391,14 @@ class FicheAlbum {
             $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=" . htmlentities ($o_tome->TITRE_TOME,$flag=ENT_QUOTES) . "&mode=books-fr";
         }
         if ($img) {
-            $html .= "' target='_blank'><img src='" . BDO_URL_IMAGE . "amazon.gif'></a>";
+            $html .= "' target='_blank'><img src='" . BDO_URL_IMAGE . "icon-amazon.jpg' class='img-sponsor' width='32px'></a>";
         } else {
             $html .= "' target='_blank'>Commandez sur Amazon</a>";
         }
-
+        // bdfugue
+        if ($o_tome->EAN_EDITION) {
+            $html .= "&nbsp;<a title='Achetez sur BDfugue !' target='_blank' href='" . BDO_PROTOCOL . "://www.bdfugue.com/a/?ref=295&ean=" . $o_tome->EAN_EDITION ."'><img src='" . BDO_URL_IMAGE . "icon-bdfugue.png' width='32px' class='img-sponsor'></a>";
+        } 
         return $html;
     }
 
