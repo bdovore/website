@@ -111,7 +111,7 @@ class Export extends Bdo_Controller {
 
                     case 0:
                         // Export sous format Excel
-                        //require_once (BDO_DIR . "vendors/PHPExcel_1.7.8/Classes/PHPExcel.php");
+                        require_once (BDO_DIR . "vendor/phpoffice/phpexcel/Classes/PHPExcel.php");
 
                         // Create new PHPExcel object
                         $objPHPExcel = new PHPExcel();
