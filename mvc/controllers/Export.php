@@ -335,7 +335,7 @@ class Export extends Bdo_Controller {
                     case 3:
                         // Export en PDF
 
-                        require_once(BDO_DIR . "vendor/mpdf/mpdf.php");
+                        require_once(BDO_DIR . "vendor/mpdf/mpdf/mpdf.php");
                         ob_implicit_flush(true);
                         $opt_status[0][0] = 0;
                         $opt_status[0][1] = 'Finie';
