@@ -17,10 +17,10 @@ class Adminauteur extends Bdo_Controller {
         
         $filter = getVal("filter","0");
         $search_filter = getVal("l_search","");
-        $query = ""; 
+        $query = " WHERE 1 "; 
          if ($search_filter)  {
-            $query .= " WHERE pseudo like '%".$search_filter."%' ";
-        }
+            $query .= " AND pseudo like '%".$search_filter."%' ";
+        } 
         if ($filter == "1") {
             $query .= " AND (COMMENT = '' OR COMMENT IS NULL ) ";
         }
