@@ -222,7 +222,7 @@ class FicheAlbum {
      * fournit l'url d'un lien vers la iframe album
      *
      */
-    public function urlAlbum($o_tome, $class = 'couvBig', $is_edition = false, $sponsor=true)
+    public function urlAlbum($o_tome, $class = 'couvBig', $is_edition = false, $sponsor=true,$gotocomment = false)
     /*
      *  Fonction de construction d'une url d'un album
      *  Si la variable $is_edition = true, on ajoute l'id édition dans les liens
@@ -237,7 +237,9 @@ class FicheAlbum {
 
         if ($is_edition)
             $id_link.="&id_edition=" . $o_tome->ID_EDITION;
-
+        
+        if ($gotocomment) 
+            $id_link .="#comment";
         // couverture par defaut
         if (!$o_tome->IMG_COUV)
             $o_tome->IMG_COUV = "default.png";
@@ -427,7 +429,7 @@ class FicheAlbum {
             <tr class='listAlbum'>
                 <td style='vertical-align:top'>".$this->urlalbum($tome,'couvBig')."</td>
             <td style='vertical-align:top'>
-                <strong>".$this->urlalbum($tome,'albTitle')."</strong><br>
+                <strong>".$this->urlalbum($tome,'albTitle',$is_edition = false, $sponsor = true,  $gotocomment= true)."</strong><br>
                 <span id='noteTome".$tome->ID_TOME."'> </span>
                 <p class='fiche_album'>
                 S&eacute;rie : ".$this->urlSerie($tome)." <br>
