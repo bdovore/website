@@ -128,7 +128,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                                 <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
                                 <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION;?></div>
-                                <div id="sponsor" align="center"><?php echo $ficheAlbum->getSponsor($view->tome); ?></div>
+                                <div id="sponsor" align="center"><?php echo $ficheAlbum->getSponsor($view->tome, $img=true, $all=true); ?></div>
 
 
 

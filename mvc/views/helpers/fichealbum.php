@@ -382,7 +382,7 @@ class FicheAlbum {
         return $html;
     }
 
-    public function getSponsor($o_tome, $img=true) {
+    public function getSponsor($o_tome, $img=true, $all=false) {
         $html = "<a title='Achetez sur Amazon !' href='";
         // amazon
         if ($o_tome->ISBN_EDITION) {
@@ -398,7 +398,7 @@ class FicheAlbum {
             $html .= "' target='_blank'>Commandez sur Amazon</a>";
         }
         // bdfugue
-        if ($o_tome->EAN_EDITION) {
+        if ($o_tome->EAN_EDITION and $all) {
             $html .= "&nbsp;<a title='Achetez sur BDfugue !' target='_blank' href='" . BDO_PROTOCOL . "://www.bdfugue.com/a/?ref=295&ean=" . $o_tome->EAN_EDITION ."'><img src='" . BDO_URL_IMAGE . "bdfuguebanner.png' height='22px' class='img-sponsor'></a>";
         } 
         return $html;
