@@ -97,7 +97,17 @@ if (!$.browser.mobile) {
     $(document).ready(function() {
             $(".fancybox")
         .each( function () {
-            this.href = this.href + "&mobile=T";
+            var q_string = this.href.split("?");
+            var q_anchor = this.href.split("#");
+            if (q_string.length == 1) {
+                this.href = q_anchor[0] + "?mobile=T";
+            } else {
+                this.href = q_anchor[0] + "&mobile=T" ;
+            }
+            if (q_anchor.length == 2) {
+                this.href = this.href + "#" + q_anchor[1];
+            } 
+            
         });
     });
  }
