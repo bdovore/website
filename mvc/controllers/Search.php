@@ -32,7 +32,7 @@ class Search extends Bdo_Controller
             }
 
             $this->loadModel ("Tome");
-            $this->Tome->load('c'," WHERE (TITRE LIKE '". $term ."%' ) ORDER BY NBR_USER_ID_TOME desc, TITRE LIMIT 0,10");
+            $this->Tome->load('c'," WHERE (TITRE LIKE '". $term ."%' OR TITRE LIKE '% ".$term ."%') ORDER BY NBR_USER_ID_TOME desc, TITRE LIMIT 0,10");
 
             foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
                 $arr[] = (object) array(
