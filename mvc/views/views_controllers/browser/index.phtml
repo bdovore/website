@@ -30,18 +30,7 @@
 
             //SubmitXhr(document.browser,"livesearch1","browser/search",false);
         }
-        function go2()
-        {
-            var div=getObj("livesearch2");
-            div.style.display = "block";
-            //SubmitXhr(document.browser,"livesearch2","browser/search2",false);
-
-            $.get("<?php echo BDO_URL;?>browser/search2", $("#browser").serialize(), function(data) {
-                 $("#livesearch2").html(data);
-                //alert("Data Loaded: " + data);
-                });
-
-        }
+       
 
     </script>
     <form id="browser" name="browser" method="get" onsubmit='return false;'>
