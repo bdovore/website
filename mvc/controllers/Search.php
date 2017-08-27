@@ -19,9 +19,10 @@ class Search extends Bdo_Controller
         $term = Db_Escape_String(getVal("term",""));
 
         if (strlen($term) > 2) {
+            
             // recherche d'album, série ou auteur à partir de 4 caractères
             $this->loadModel ("Serie");
-            $this->Serie->load('c'," WHERE MATCH (NOM) AGAINST ( '".$term."*' IN BOOLEAN MODE)  GROUP BY ID_SERIE ORDER BY NBR_USER_ID_SERIE desc, NOM LIMIT 0,10");
+            $this->Serie->load('c'," WHERE MATCH (NOM) AGAINST ( '".$term."' IN NATURAL LANGUAGE MODE)  GROUP BY ID_SERIE ORDER BY (NBR_USER_ID_SERIE + MATCH (NOM) AGAINST ( '".$term."' IN NATURAL LANGUAGE MODE)) desc, NOM LIMIT 0,10");
 
             foreach ($this->Serie->dbSelect->a_dataQuery as $obj) {
                 $arr[] = (object) array(
@@ -32,7 +33,7 @@ class Search extends Bdo_Controller
             }
 
             $this->loadModel ("Tome");
-            $this->Tome->load('c'," WHERE MATCH (TITRE) AGAINST   ( '".$term."*' IN BOOLEAN MODE)  ORDER BY NBR_USER_ID_TOME desc, TITRE LIMIT 0,10");
+            $this->Tome->load('c'," WHERE MATCH (TITRE) AGAINST   ( '".$term."' IN NATURAL LANGUAGE MODE)  ORDER BY (NBR_USER_ID_TOME + MATCH (TITRE) AGAINST   ( '".$term."' IN NATURAL LANGUAGE MODE)) desc, TITRE LIMIT 0,10");
 
             foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
                 $arr[] = (object) array(
