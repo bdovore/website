@@ -423,6 +423,23 @@ class Useralbum extends Bdo_Db_Line
         return Db_affected_rows();
 
     }
+    
+    public function addSerieForUser($id_serie, $user_id, $flg_achat = 'N') {
+        /*
+         * Ajout de l'ensemble des albums d'une série dans la collection du user connecté
+         */
+        if ($flg_achat <> "N") {
+            $flg_achat = "O";
+           
+        }
+        $query = "INSERT INTO users_album (user_id, id_edition, flg_pret, nom_pret, email_pret, flg_dedicace, flg_tete, comment, date_ajout, flg_achat, date_achat, cote, flg_cadeau, FLG_LU) "
+                . "select  ".intVal($user_id) .", bd_tome.id_edition, 'N', null, null, 'N', 'N', null, now(), '".$flg_achat."', ".(($flg_achat == "N") ? "now()," : "null," ) ." null, 'N', 'N' 
+                    from bd_tome LEFT JOIN users_album on (bd_tome.id_edition = users_album.id_edition and users_album.user_id = ".intVal($user_id) .")
+                    WHERE  bd_tome.id_serie = ".intVal($id_serie) ." AND users_album.id_edition is null "
+                . "";
+         Db_query($query);
+        return Db_affected_rows();
+    }
 
 }
 ?>

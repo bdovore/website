@@ -79,7 +79,11 @@ $pageinate = $view->getHelper('Pagination');
             <?php echo nl2br($view->serie->HISTOIRE_SERIE); ?>
             <?php } ?>
             </p>
-            </div>
+            <?php  if (! empty($_SESSION['userConnect']->user_id)) { ?>
+            <p>
+                <div id="addSerie<?php echo $view->serie->ID_SERIE; ?>" style="font-size:0.9em;"><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addSerie(<?php echo $view->serie->ID_SERIE; ?>,'N')" title="Ajouter tous les albums dans votre collection">Dans ma collection</a> - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addSerie(<?php echo $view->serie->ID_SERIE; ?>,'O')" title="Ajouter tous les albums en futur achat">Futur Achat</a></div>
+             </p>
+            <?php } ?></div>
              
 <?php echo $view->SERNOTE; ?>
                 <br />

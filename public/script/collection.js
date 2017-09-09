@@ -35,6 +35,21 @@ function addAlbum(id_tome, id_edition, flg_achat) {
     );
 }
 
+function addSerie(id_serie, flg_achat) {
+    if (confirm("Toutes les éditions par défaut de la série seront ajoutées à votre collection. Etes vous sûr ?")) {
+        $("#addSerie" + id_serie).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
+         var url = $.bdovore.URL + "macollection/addserie?id_serie=" + id_serie  + "&flg_achat=" + flg_achat;
+         $.getJSON(url, function(data) {
+           if (data.length == 0) {
+               alert("Tous les albums de la série ont été ajoutés :)");
+               window.location.reload();
+           }
+           else {
+               alert("Une erreur est survenue. Veuillez contacter l'administrateur du site.");
+           }
+         });
+    }
+}
 function getInfoCollectionFromTome(id_tome, id_edition) {
     /*
      * Appel à getJson pour récupérer les infos de la collection d'un album et crée les infos si besoin

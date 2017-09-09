@@ -144,7 +144,33 @@ class Macollection extends Bdo_Controller {
             $this->view->render();
         }
     }
+    
+    public function addSerie () {
+        /*
+         * Ajut d'une série complète dans sa collection pour aller plus vite
+         * On met l'édition par défaut pour tous les albums de la série
+         * Possible de passer toute ue série en futur achat via flg_achat
+         */
+         if (! empty($_SESSION['userConnect']->user_id)) {
+            $user_id = intval($_SESSION['userConnect']->user_id);
+            $id_serie = getValInteger("id_serie",0);
+            $flg_achat = getVal('flg_achat','N');
+            
+            $this->loadModel('Useralbum');
+            if ($id_serie <> 0) {
+                $this->Useralbum->addSerieForUser($id_serie, $user_id, $flg_achat);
+                $this->view->set_var('json', json_encode($this->Useralbum->error));
+            } else {
+                $this->view->set_var('json', json_encode(array('CODE'=> 'ERR_SERIE', 'MSG' => "Id serie nécessaire")));
 
+            }
+            
+         }
+        
+         $this->view->layout = "ajax";
+         $this->view->render();
+        
+    }
     public function mesEtageres () {
         if (User::minAccesslevel(2)) {
             $user_id = intval($_SESSION["userConnect"]->user_id);
