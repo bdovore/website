@@ -848,7 +848,7 @@ class Admin extends Bdo_Controller {
 
                 // Affiche les informations relatives aux différentes éditions
                 $this->loadModel("Edition");
-                $dbs_edition = $this->Edition->load(c, "where bd_tome.id_tome =" . $this->Tome->ID_TOME);
+                $dbs_edition = $this->Edition->load(c, "where bd_tome.id_tome =" . $this->Tome->ID_TOME ." ORDER BY DATE_PARUTION_EDITION");
 
 
 
