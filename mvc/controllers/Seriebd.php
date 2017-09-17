@@ -48,6 +48,14 @@ class SerieBD extends Bdo_Controller {
                 'LASTAJOUT' => ""
         ));
 
+        // liste des séries liées
+        $this->loadModel("Groupeserie");
+        $listSerieLiee = $this->Groupeserie->getSerieLiee( $ID_SERIE);
+         $this->view->set_var(array(
+                'dbs_SerieLie' =>  $listSerieLiee
+              
+        ));
+        
         $this->view->render();
     }
 

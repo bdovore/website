@@ -57,6 +57,21 @@ function valider(){
                         <td>Intro Série</td>
                         <td colspan="4"><textarea name="txtSerieHist" id="txtSerieHist" class="<?php echo $view->CHAMPFORMSTYLE; ?>champ_commentaire"><?php echo nl2br($view->HISTOIRE_SERIE); ?></textarea></td>
                     </tr>
+                    <tr>
+                        <td>Séries liées</td>
+                        <td colspan="4"><div id="listSerieLiee">
+                                <?php $nbserieliee = 0; 
+                                foreach ($view->dbs_serie_liee as $serieLiee) { 
+                                    $nbserieliee++; ?>
+                                <div id="serieLiee<?php echo $nbserieliee; ?>">
+                                    <input name="idSerie[]" id="idSerieLie<?php echo $nbserieliee; ?>" type="text" value="<?php echo $serieLiee->ID_SERIE ?>" size=3  />
+                                    <input name="txtSerieLie[]" id="txtSerieLie<?php echo $nbserieliee; ?>" type="text" value="<?php echo $serieLiee->NOM_SERIE ?>" style="width: 70%" />
+                                    <a href='#' onclick='supprSerieLiee("<?php echo $nbserieliee; ?>");'> Suppr.</a><br>
+                                </div>
+                                <?php   } ?>
+                            </div><a href="#" onclick="addSerieLiee();">Ajouter</a>
+                        </td>
+                    </tr>
                 </table>
     <div class="submit">
                     <input type="submit" name="Submit" value="<?php echo $view->ACTIONNAME; ?>" />
@@ -105,7 +120,19 @@ function valider(){
      *
      */
 
-
+    var nbserielie = <?php echo $nbserieliee; ?>;
   addAutocomplete("txtGenre","txtGenreId","txtGenreId","<?php echo BDO_URL; ?>getjson?data=Genre");
+  function addSerieLiee() {
+      nbserielie++;
+      $("#listSerieLiee").append("<div id='serieLiee"+nbserielie+"'></div>");
+            $("#serieLiee"+nbserielie).append('<input name="idSerie[]" id="idSerieLie'+ nbserielie +'" type="text" value="" size=3  />');
+      $("#serieLiee"+nbserielie).append('<input name="txtSerieLie[]" id="txtSerieLie'+ nbserielie +'" type="text" value="" style="width: 70%" />');
+    $("#serieLiee"+nbserielie).append("<a href='#' onclick='supprSerieLiee("+nbserielie+");'> Suppr.</a><br>");
+     // $("#idSerieLie"+ nbserielie ).hide();
+       addAutocomplete("txtSerieLie"+ nbserielie,"idSerieLie"+ nbserielie,"idSerieLie"+ nbserielie,"<?php echo BDO_URL; ?>getjson?data=Serie");
+  }
+  function supprSerieLiee(id) {
+      $("#serieLiee"+id).remove();
+  }
 </script>
 <script>$("#txtSerieHist").jqte(); </script>

@@ -1612,6 +1612,14 @@ class Admin extends Bdo_Controller {
                     exit();
                 }
                 $this->Tome->updateGenreForSerie(postValInteger("txtSerieId"), postValInteger('txtGenreId'));
+                
+                // mise à jour des liens entre séries
+                $this->loadModel("Groupeserie");
+                $this->Groupeserie->deleteLiens(postVal("txtSerieId"));
+                $listSerieLiee = postVal("idSerie","");
+                if (count($listSerieLiee) > 0 ) {
+                    $this->Groupeserie->addLiens(postVal("txtSerieId"),$listSerieLiee);
+                }
 
                 echo '<META http-equiv="refresh" content="1; URL=editserie?serie_id=' . postVal("txtSerieId") . '">' . "Mise &agrave; jour effectu&eacute;e";
             }
@@ -1705,7 +1713,9 @@ class Admin extends Bdo_Controller {
                 } else {
                     $warning_note = '<div class="b">Des membres ont not&eacute;/comment&eacute; la s&eacute;rie.</div>';
                 }
-
+                $this->loadModel("Groupeserie");
+                $listSerieLiee = $this->Groupeserie->getSerieLiee( $this->Serie->ID_SERIE);
+                
                 $this->view->set_var(array(
                     "IDSERIE" => $this->Serie->ID_SERIE,
                     "SERIE" => stripslashes($this->Serie->NOM_SERIE),
@@ -1729,7 +1739,8 @@ class Admin extends Bdo_Controller {
                     "URLAJOUTALB" => BDO_URL . "admin/editalbum?act=newfserie&id_serie=" . $this->Serie->ID_SERIE,
                     "URLACTION" => BDO_URL . "admin/editserie?act=update",
                     "dbs_tome" => $dbs_tome,
-                    "dbs_auteur" => $dbs_auteur
+                    "dbs_auteur" => $dbs_auteur,
+                    "dbs_serie_liee" => $listSerieLiee
                 ));
 
                 $this->view->layout = "iframe";
