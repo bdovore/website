@@ -89,7 +89,7 @@ $pageinate = $view->getHelper('Pagination');
                 <br />
 <hr class="expSep" />
                 <!-- END CommentBlock -->
-                <?php if (count($view->dbs_SerieLie > 0)) { ?>
+                <?php if (count($view->dbs_SerieLie ) > 0) { ?>
                         Séries liées : <?php foreach ($view->dbs_SerieLie as $serieLie) { 
                         echo $ficheAlbum->urlSerie($serieLie)."&nbsp; ";  } ?>
                 <?php } ?>
