@@ -232,12 +232,12 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                                 launchSlider();
                                             }
                                         })});*/
-                                        $("#couv").append("<li><img src='<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : 'default.png';?>' width='180' border='1' name='imgEdition' id='imgEdition' alt='couverture'> ");
+                                        $("#couv").append("<li><img src='<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : 'default.png';?>'  border='1' name='imgEdition' id='imgEdition' alt='couverture'> ");
                                         $("#couv").append($("<a/>").attr("href", "http://player.izneo.com/read/<?php echo $view->tome->EAN_EDITION;?>-<?php echo IZNEO_ID; ?>.html").attr("target","_blank").append("<span class='petite_police'>Preview avec Izneo</span>"));
                                         </script>
                                         <?php }
                                         else { ?>
-                                       <script> $("#couv").append("<li><img src='<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : 'default.png';?>' width='180' border='1' name='imgEdition' id='imgEdition' alt='couverture'> ");</script>
+                                       <script> $("#couv").append("<li><img src='<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : 'default.png';?>'  border='1' name='imgEdition' id='imgEdition' alt='couverture'> ");</script>
                                         <?php } ?>
                                        <br>
                                        <div id="simil">
@@ -455,7 +455,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             if (data.length > 0) {
 
                 for (var i=0; i<3;i++){
-                    $("#simil").append("<a href='./Album?id_tome="+data[i].ID_TOME+  "&mobile=<?php echo $view->mobile; ?>&frame=<?php echo $view->frame; ?>' title='"+ data[i].TITRE_TOME.replace(/'/g, " ") +"'><img class= 'couvSmall' src='<?php echo BDO_URL_IMAGE;?>couv/"+ data[i].IMG_COUV+"'></a>&nbsp;");
+                    $("#simil").append("<a href='./Album?id_tome="+data[i].ID_TOME+  "&mobile=<?php echo $view->mobile; ?>&frame=<?php echo $view->frame; ?>' title='"+ data[i].TITRE_TOME.replace(/'/g, " ") +"'><img class= 'couvMedium' src='<?php echo BDO_URL_IMAGE;?>couv/"+ data[i].IMG_COUV+"'></a>&nbsp;");
                 }
             }
         });});
