@@ -12,7 +12,7 @@
              $i++;
              ?>
           <tr>
-            <td width="20px;"><input name="txtAuteurId[]" type ="hidden" value="<?php echo $auteur->ID_AUTEUR;?>" size="5" class="flat" type="text"><span id="spAuteurId<?php echo $i;?>"><?php echo $auteur->ID_AUTEUR; ?></span></td>
+            <td width="20px;"><input name="txtAuteurId[]" id="txtAuteurId<?php echo $i; ?>" type ="hidden" value="<?php echo $auteur->ID_AUTEUR;?>" size="5" class="flat" type="text"><span id="spAuteurId<?php echo $i;?>"><?php echo $auteur->ID_AUTEUR; ?></span></td>
             <td><input name="txtAuteur[]" id="txtAuteur<?php echo $i;?>" value="<?php echo $auteur->PSEUDO; ?>" size="40" class="flat" type="text"></td>
             <td><a onclick="suppAuteur(this);">Supprimer</a> </td>
           </tr>
