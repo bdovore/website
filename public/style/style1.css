@@ -1161,7 +1161,9 @@ table.list_album tr {
     width: 300px;
     border-width: 0px;
 }
-
+#imgEdition {
+    max-width:180px;
+}
 @media screen and (max-width: 1200px) {
     .colleft {
         float: left;
