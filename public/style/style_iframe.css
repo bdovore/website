@@ -88,6 +88,8 @@ textarea {
     border: 1px solid;
     padding: 3px;
 }
+img,video,svg{max-width: 100%;height: auto;}
+
 /* ---------- fin balises de base */
 
 /* ---------- entites par leur id */
