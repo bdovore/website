@@ -22,7 +22,7 @@ class Search extends Bdo_Controller
             
             // recherche d'album, série ou auteur à partir de 4 caractères
             $this->loadModel ("Serie");
-            $this->Serie->load('c'," WHERE MATCH (NOM) AGAINST ( '".$term."' IN NATURAL LANGUAGE MODE)  GROUP BY ID_SERIE ORDER BY (LOG(NBR_USER_ID_SERIE +1) * MATCH (NOM) AGAINST ( '".$term."' IN NATURAL LANGUAGE MODE)) desc, NOM LIMIT 0,10");
+            $this->Serie->load('c'," WHERE NOM like '". $term ."%' OR MATCH (NOM) AGAINST ( '.$term.' IN NATURAL LANGUAGE MODE)  GROUP BY ID_SERIE ORDER BY (LOG(NBR_USER_ID_SERIE +2) * IF('".$term."' = NOM, 1000, MATCH (NOM) AGAINST ( '".$term."' IN NATURAL LANGUAGE MODE))) desc, NOM LIMIT 0,10");
 
             foreach ($this->Serie->dbSelect->a_dataQuery as $obj) {
                 $arr[] = (object) array(
@@ -33,7 +33,7 @@ class Search extends Bdo_Controller
             }
 
             $this->loadModel ("Tome");
-            $this->Tome->load('c'," WHERE MATCH (TITRE) AGAINST   ( '".$term."' IN NATURAL LANGUAGE MODE)  ORDER BY (LOG(NBR_USER_ID_TOME + 1)* MATCH (TITRE) AGAINST   ( '".$term."' IN NATURAL LANGUAGE MODE)) desc, TITRE LIMIT 0,10");
+            $this->Tome->load('c'," WHERE MATCH (TITRE) AGAINST   ( '.$term.' IN NATURAL LANGUAGE MODE)  ORDER BY (LOG(NBR_USER_ID_TOME + 1)* MATCH (TITRE) AGAINST   ( '".$term."' IN NATURAL LANGUAGE MODE)) desc, TITRE LIMIT 0,10");
 
             foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
                 $arr[] = (object) array(
