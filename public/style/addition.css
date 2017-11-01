@@ -23,9 +23,7 @@ div.addTitle2 {
 
 hr.addSep {
     clear: both;
-    visibility: hidden;
-    su
-    root
+    visibility: hidden;    
 }
 
 .addMonthChoice { /*float: left;*/
@@ -133,7 +131,6 @@ a.addLiens {
 }
 
 /* Page statistique */
-+
 table.addStats {
     font: Verdana;
 }
