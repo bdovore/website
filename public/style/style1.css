@@ -1376,9 +1376,9 @@ table.list_album tr {
         display:none;
     }
 
-    #onglets > li:nth-child(4) {
+    /*#onglets > li:nth-child(4) {
         display:none;
-    }
+    }*/
 
     td[class="colselect"] {
         display: none!important;
