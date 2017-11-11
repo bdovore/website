@@ -1164,6 +1164,10 @@ table.list_album tr {
 #imgEdition {
     max-width:180px;
 }
+div.textmasked {
+    overflow: hidden;
+    height: 60px;
+}
 @media screen and (max-width: 1200px) {
     .colleft {
         float: left;
