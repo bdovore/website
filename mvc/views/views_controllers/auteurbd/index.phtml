@@ -60,7 +60,8 @@ if ($view->auteur->FLG_COLOR) {echo ($sep."coloriste" ); $sep = ", ";}
             </font>
 <?php echo ($view->nb_total_album ); ?>
             <br />
-   <?php echo $view->auteur->COMMENT; ?>
+            
+   <?php if ($view->page == 1) echo $view->auteur->COMMENT; ?>
 
             </div>
                

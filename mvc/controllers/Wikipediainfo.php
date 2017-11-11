@@ -23,7 +23,7 @@ class Wikipediainfo extends Bdo_Controller {
     
     public function Extract() {
          $search_item = getVal("search_item","");
-         $url = "https://fr.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=".urlencode($search_item);
+         $url = "https://fr.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exlimit=1&titles=".urlencode($search_item);
          
          $data2 =file_get_contents($url);
          $this->view->layout = "json";

@@ -136,15 +136,24 @@ $("#txtFileUrl").change(function(){
 
 function getWikiText() {
     //Get Leading paragraphs (section 0)
-    $.getJSON("<?php echo BDO_URL; ?>Wikipediainfo?search_item=<?php echo $view->WIKISEARCH;?>", function (data) {
-        
+    $.getJSON("<?php echo BDO_URL; ?>Wikipediainfo/Extract?search_item=<?php echo $view->WIKISEARCH;?>", function (data) {
+        var pText = "";
         //console.log(Object.values(data.parse.text)); 
-        pText = Object.values(data.parse.text)[0];
+        for (var key in data.query.pages) {
+            var  p = data.query.pages[key];
+            pText += p.extract;
+        }
+       
+        //pText = Object.values(data.query.pages[0].extract);
        
         
-       
-        
+        var find1 = pText.search(/<h2><span .+>Notes et références<\/span><\/h2>/);
+        if (find1 > 0) {
+            pText = pText.substring(0,find1);
+        }
             pText = pText.replace(/\[\d+\]/g, ""); //Remove reference tags (e.x. [1], [4], etc)
+             pText = pText.replace(/<h2>/g,"<h4>");
+             pText = pText.replace(/<h3>/g,"<h5>");
             pText += "<a href='http://creativecommons.org/licenses/by-sa/3.0/deed.fr' target='blank'>Contenu soumis à la licence CC-BY-SA.</a> Source : <a href='https://fr.wikipedia.org/wiki/<?php echo $view->WIKISEARCH;?>' target='_blank'>Wikipédia</a>"
             $('#txtCommentaire').jqteVal(pText);;
             console.log(pText);
