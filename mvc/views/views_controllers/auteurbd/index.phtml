@@ -62,8 +62,10 @@ if ($view->auteur->FLG_COLOR) {echo ($sep."coloriste" ); $sep = ", ";}
             <br />
             <div id="bioauteur">
                  <?php if ($view->page == 1) echo $view->auteur->COMMENT; ?>
+                
             </div>
-            <span id="more"><a href="#" onclick="moreBio();">Voir plus...</a></span><span id="less"><a href="#" onclick="lessBio();">Voir moins...</a></span>
+             <span class="read-more" id="more"><a href="#" onclick="moreBio();">Voir plus...</a></span><span id="less"><a href="#" onclick="lessBio();">Voir moins...</a></span>
+                
             </div>
                
 
@@ -148,7 +150,7 @@ if ($view->nb_album > 20) {
         
     });
     // affichage des infos de bio : on affiche le début et un bouton "voir plus"
-        if ($("#bioauteur").text().length > 200) {
+        if ($("#bioauteur").height() > 120) {
              $("#bioauteur").addClass("textmasked");
              $("#more").show();
             $("#less").hide();

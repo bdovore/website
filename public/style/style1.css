@@ -1166,7 +1166,18 @@ table.list_album tr {
 }
 div.textmasked {
     overflow: hidden;
-    height: 60px;
+    max-height: 120px;
+    position: relative;
+}
+ .read-more {
+    
+  
+  width: 100%; 
+  text-align: center; 
+  margin: 0; padding: 10px 0; 	
+  
+  
+
 }
 @media screen and (max-width: 1200px) {
     .colleft {
