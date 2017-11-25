@@ -1395,9 +1395,9 @@ div.textmasked {
         display:none;
     }*/
 
-    td[class="colselect"] {
+   /* td[class="colselect"] {
         display: none!important;
-    }
+    }*/
 
     ul.ui-autocomplete {
         width:100%;
