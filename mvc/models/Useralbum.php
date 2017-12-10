@@ -180,7 +180,10 @@ class Useralbum extends Bdo_Db_Line
 
         if ($stat == "all" or $stat == "achat") {
 
-            $nbfuturs_achats = Db_CountRow("select * from users_album u where user_id=" . $user_id . " and flg_achat='O'");
+            $nbfuturs_achats = Db_CountRow("select * from users_album u "
+                    . "INNER JOIN bd_edition en ON en.id_edition = u.id_edition
+
+                    INNER JOIN bd_tome t ON t.id_tome = en.id_tome where u.user_id=" . $user_id . " and u.flg_achat='O'");
         }
 
 
