@@ -171,14 +171,128 @@ class Macollection extends Bdo_Controller {
          $this->view->render();
         
     }
+
     public function mesEtageres () {
+      if (User::minAccesslevel(2)) {
+          $user_id = intval($_SESSION["userConnect"]->user_id);
+          $this->loadModel('Useralbum');
+
+          $page = getValInteger("page",1);
+          $length = getValInteger("length",0);
+          $sel_type = getVal("sel_type","Tous");
+          //TODO mettre une longueur max. pour la recherche ?
+          if (!$length) {
+              if ($_COOKIE["l_etageres"] ) {
+                  // récupére la valeur dans un coockie
+                  $length = $_COOKIE["l_etageres"];
+              } else {
+                  $length = 10;
+              }
+          }
+          setcookie("l_etageres",$length,time()+2592000);
+
+          $l_search = getVal("l_search","" );
+
+
+          // variable $sort donne la colonne pour le tri
+          // on s'assure que la variable est dans le bon intervale de valeur
+          $sort = getValInteger("sort",9);
+          $sort = max(min($sort,17),1);
+          //if ($sort <= 0) $sort = 1;//inutile grace a max(min()) juste au-dessus
+
+          //TODO getValInArray("order",array("ASC","DESC")); ou quelque chose du genre
+          $order = getVal("order","DESC");
+
+          //évite les injections SQL (inutile quand on aura écrit getValInArray())
+          if ( strcmp($order,"ASC") !== 0 )
+              $order = "DESC";//si ça n'est pas ASC, ça doit être DESC ...
+
+          // tableau pour gérer les order by
+          $a_order[0]= "IMG_COUV";
+          $a_order[1]= "TITRE_TOME $order, NUM_TOME"; // MySQL: "ORDER BY column1 TRI1, column2 TRI2". TRI1, TRI2 dans [ASC, DESC]
+          $a_order[2]= "NOM_SERIE $order, NUM_TOME";
+          $a_order[3]= "NUM_TOME";
+          $a_order[4]= "NOM_EDITION";
+          $a_order[5]= "NOM_COLLECTION";
+          $a_order[6]= "scpseudo";
+          $a_order[7]= "depseudo";
+          $a_order[8]= "DATE_ACHAT";
+          $a_order[9]= "cote";
+          $a_order[10]= "FLG_PRET";
+          $a_order[11]= "FLG_CADEAU";
+          $a_order[12]= "FLG_LU";
+          $a_order[13]= "FLG_TETE";
+          $a_order[14]= "FLG_DEDICACE";
+          $a_order[15]= "comment";
+          $a_order[16]= "NOM_PRET";
+          $a_order[17]= "EMAIL_PRET";
+
+          $pret = getVal("cb_pret","N");
+
+          $cadeau = getVal("cb_cadeau","N");
+          $eo = getVal("cb_tete","N");
+          $dedicace = getVal("cb_dedicace","N");
+          $non_lu = getVal("cb_lu","N");
+
+          $limit = " limit ".(($page - 1)*$length).", ".$length;
+          $orderby = " order by ".$a_order[$sort-1]." ".$order;
+
+          $where = " where ua.user_id = ".$user_id ." and flg_achat = 'N' ";
+
+          if ($pret == "O") $where .= " and flg_pret='O' ";
+          if ($cadeau == "O") $where .= " and flg_cadeau = 'O' ";
+          if ($eo == "O") $where .= " and flg_tete = 'O' ";
+          if ($dedicace== "O") $where .= " and flg_dedicace = 'O' ";
+          if ($non_lu== "O") $where .= " and FLG_LU <> 'O' ";
+
+          if ($sel_type <> "Tous") {
+              $where .= " and g.ORIGINE = '".Db_Escape_String($sel_type) ."'";
+          }
+          if($l_search <> "") {
+              $searchvalue = Db_Escape_String($l_search);
+              $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
+          }
+
+          // echo  $this->Useralbum->select()." where ua.user_id = ".$user_id ." and flg_achat = 'N' ".$orderby. $limit;
+          $dbs_tome = $this->Useralbum->load("c",$where.$orderby. $limit);
+
+          $nbr = Db_CountRow($this->Useralbum->select().$where);
+
+          $this->view->set_var( array (
+              "dbs_tome" => $dbs_tome,
+              "page" => $page,
+              "length" => $length,
+              "nbr" => $nbr,
+              "sort" => $sort,
+              "order" => $order,
+              "pret" => $pret,
+              "cadeau" => $cadeau,
+              "eo" => $eo,
+              "non_lu" => $non_lu,
+              "dedicace" => $dedicace,
+              "searchvalue" => $l_search,
+               "sel_type" => $sel_type
+              ));
+      }
+      else {
+          die("Vous devez vous authentifier pour accéder à cette page.");
+      }
+
+      $this->view->set_var("PAGETITLE","Ma Collection de sur Bdovore");
+      $this->view->render();
+    }
+
+    public function mesSeries () {
         if (User::minAccesslevel(2)) {
             $user_id = intval($_SESSION["userConnect"]->user_id);
-            $this->loadModel('Useralbum');
+            $this->loadModel('Userserie');
 
             $page = getValInteger("page",1);
             $length = getValInteger("length",0);
             $sel_type = getVal("sel_type","Tous");
+            // FRED - Pour le moment, on utilise la meme longueur max
+            //        que pour la collection par album.
+            //        voir si cela fait du sens de dissocier ces 2 longueurs ?
             //TODO mettre une longueur max. pour la recherche ?
             if (!$length) {
                 if ($_COOKIE["l_etageres"] ) {
@@ -192,92 +306,46 @@ class Macollection extends Bdo_Controller {
 
             $l_search = getVal("l_search","" );
 
-
-            // variable $sort donne la colonne pour le tri
-            // on s'assure que la variable est dans le bon intervale de valeur
-            $sort = getValInteger("sort",9);
-            $sort = max(min($sort,17),1);
-            //if ($sort <= 0) $sort = 1;//inutile grace a max(min()) juste au-dessus
-
-            //TODO getValInArray("order",array("ASC","DESC")); ou quelque chose du genre
-            $order = getVal("order","DESC");
-
-            //évite les injections SQL (inutile quand on aura écrit getValInArray())
-            if ( strcmp($order,"ASC") !== 0 )
-                $order = "DESC";//si ça n'est pas ASC, ça doit être DESC ...
-
-            // tableau pour gérer les order by
-            $a_order[0]= "IMG_COUV";
-            $a_order[1]= "TITRE_TOME $order, NUM_TOME"; // MySQL: "ORDER BY column1 TRI1, column2 TRI2". TRI1, TRI2 dans [ASC, DESC]
-            $a_order[2]= "NOM_SERIE $order, NUM_TOME";
-            $a_order[3]= "NUM_TOME";
-            $a_order[4]= "NOM_EDITION";
-            $a_order[5]= "NOM_COLLECTION";
-            $a_order[6]= "scpseudo";
-            $a_order[7]= "depseudo";
-            $a_order[8]= "DATE_ACHAT";
-            $a_order[9]= "cote";
-            $a_order[10]= "FLG_PRET";
-            $a_order[11]= "FLG_CADEAU";
-            $a_order[12]= "FLG_LU";
-            $a_order[13]= "FLG_TETE";
-            $a_order[14]= "FLG_DEDICACE";
-            $a_order[15]= "comment";
-            $a_order[16]= "NOM_PRET";
-            $a_order[17]= "EMAIL_PRET";
-
-            $pret = getVal("cb_pret","N");
-
-            $cadeau = getVal("cb_cadeau","N");
-            $eo = getVal("cb_tete","N");
-            $dedicace = getVal("cb_dedicace","N");
-            $non_lu = getVal("cb_lu","N");
-
+            // Le sort est systématiquement par nom de série par ordre alphabétique croissant
+            $sort = 3;
+            $order = "ASC";
+            $a_order= "NOM_SERIE";
+            $orderby = " order by ".$a_order." ".$order;
+            
             $limit = " limit ".(($page - 1)*$length).", ".$length;
-            $orderby = " order by ".$a_order[$sort-1]." ".$order;
 
-            $where = " where ua.user_id = ".$user_id ." and flg_achat = 'N' ";
-
-            if ($pret == "O") $where .= " and flg_pret='O' ";
-            if ($cadeau == "O") $where .= " and flg_cadeau = 'O' ";
-            if ($eo == "O") $where .= " and flg_tete = 'O' ";
-            if ($dedicace== "O") $where .= " and flg_dedicace = 'O' ";
-            if ($non_lu== "O") $where .= " and FLG_LU <> 'O' ";
+            $where = " where u.user_id = ".$user_id;
+            $group = " group by id_serie, NBR_USER_ID_SERIE";
 
             if ($sel_type <> "Tous") {
                 $where .= " and g.ORIGINE = '".Db_Escape_String($sel_type) ."'";
             }
+
             if($l_search <> "") {
                 $searchvalue = Db_Escape_String($l_search);
-                $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
+                $where .= " and ( s.nom like '%". $searchvalue ."%' ) ";
             }
 
-            // echo  $this->Useralbum->select()." where ua.user_id = ".$user_id ." and flg_achat = 'N' ".$orderby. $limit;
-            $dbs_tome = $this->Useralbum->load("c",$where.$orderby. $limit);
+            $dbs_serie = $this->Userserie->load("c",$where.$group.$orderby.$limit);
 
-            $nbr = Db_CountRow($this->Useralbum->select().$where);
+            $nbr = Db_CountRow($this->Userserie->select().$where.$group);
 
             $this->view->set_var( array (
-                "dbs_tome" => $dbs_tome,
+                "dbs_serie" => $dbs_serie,
                 "page" => $page,
                 "length" => $length,
                 "nbr" => $nbr,
                 "sort" => $sort,
                 "order" => $order,
-                "pret" => $pret,
-                "cadeau" => $cadeau,
-                "eo" => $eo,
-                "non_lu" => $non_lu,
-                "dedicace" => $dedicace,
                 "searchvalue" => $l_search,
-                 "sel_type" => $sel_type
+                "sel_type" => $sel_type
                 ));
         }
         else {
             die("Vous devez vous authentifier pour accéder à cette page.");
         }
 
-        $this->view->set_var("PAGETITLE","Ma Collection de sur Bdovore");
+        $this->view->set_var("PAGETITLE","Ma Collection de Séries sur Bdovore");
         $this->view->render();
     }
 

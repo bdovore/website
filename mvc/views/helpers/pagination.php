@@ -160,8 +160,8 @@ class Pagination{
 
 
         // tableaux contenant les liens d'accès et le texte à afficher
-        $tab_menu_lien = array( "macollection", "macollection/mesetageres", "macollection/futursachats", "macollection/monactu", "macollection/seriecomplete", "macollection/addition", "macollection/proposition","macollection/statistiques");
-        $tab_menu_texte = array( "Accueil", "Mes Albums", "Futurs Achats", "Mon Actualité", "Séries à compléter", "L'Addition","Mes propositions", "Stats" );
+        $tab_menu_lien = array( "macollection", "macollection/mesetageres", "macollection/messeries", "macollection/futursachats", "macollection/monactu", "macollection/seriecomplete", "macollection/addition", "macollection/proposition","macollection/statistiques");
+        $tab_menu_texte = array( "Accueil", "Mes Albums", "Mes Séries", "Futurs Achats", "Mon Actualité", "Séries à compléter", "L'Addition","Mes propositions", "Stats" );
 
         // informations sur la page
 

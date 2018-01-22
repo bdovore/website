@@ -1,0 +1,121 @@
+<script src="<?php echo BDO_URL;?>jquery/jquery.cookie.js" type="text/javascript"></script>
+<script language ='javascript'>
+    var uri = "./messeries?";
+    q = param();
+    for (k in q) {
+        if (k.substring(0, 4) != "sort" && k.substring(0, 5) != "order") {
+          uri += k + "=" + encodeURIComponent(q[k][0]) + "&";
+        }
+    }
+
+    $(document).ready(function() {
+        $("#length").on('change', function (e) {
+             $("#f_collection").submit();
+        });
+        $('.numbersOnly').keyup(function () {
+            this.value = this.value.replace(/[^0-9\.]/g,'');
+        });
+        $("a#inline").fancybox({
+          'autoDimensions': false,
+               'minHeight': 320,
+               'maxWidth' : 500,
+        });
+
+        $("#bsave").button("disable");
+        $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
+
+        $(function() {
+            $( "[name='date_achat']" ).datepicker({dateFormat: "dd/mm/yy"});
+        });
+    });
+</script>
+
+
+<?php
+  $ficheSerie = $view->getHelper('ficheSerie');
+  $page = $view->getHelper('pagination');
+?>
+<div align="center" class="cadre1">
+  <?php echo $page->menuCollection(); ?>
+
+  <div class="middle_title"><h3 >Mes Séries</h3></div>
+
+  <b> <?php echo $view->nbr; ?> séries dans la collection. </b>
+
+  <br>
+  <input type="hidden" name="page" id="page" value="<?php echo $view->page; ?>" />
+  <br>
+  <div class="dataTables_wrapper">
+      <form id="f_collection" method="GET" action="" >
+        <div id="filtre">
+          Type :  <select id='sel_type' name='sel_type' onChange='$("#f_collection").submit();'>
+                    <option value="Tous" <?php if ($view->sel_type  =="Tous") echo "selected" ?> >Tous</option>
+                    <option value="BD" <?php if ($view->sel_type  =="BD") echo "selected" ?>>BD</option>
+                    <option value="Mangas" <?php if ($view->sel_type  =="Mangas") echo "selected" ?>>Mangas</option>
+                    <option value = "Comics" <?php if ($view->sel_type  =="Comics") echo "selected" ?> >Comics</option>
+                  </select>
+        </div><br>
+
+        <div id="data_length" class="dataTables_length">
+          Voir :
+            <label>
+              <select class="" id="length" name="length">
+                <option value="10" <?php if ($view->length == 10) { echo "selected"; } ?> >  10</option>
+                <option value="25" <?php if ($view->length == 25) { echo "selected"; } ?>>  25</option>
+                <option value="50" <?php if ($view->length == 50) { echo "selected"; } ?>>  50</option>
+                <option value="100" <?php if ($view->length == 100) { echo "selected"; } ?>> 100</option>
+              </select>
+              éléments
+            </label>
+        </div>
+
+        <div id="filter" class="dataTables_filter">
+          <label>
+            Rechercher:
+              <input class="" type="search" placeholder="" id="l_search" name="l_search" value="<?php echo $view->searchvalue; ?>" />
+          </label>
+        </div>
+      </form>
+  </div>
+  <hr>
+  <div class="cadre1">
+    <table class="list_album">
+      <tr>
+        <?php
+          $i=0;
+          foreach ($view->dbs_serie->a_dataQuery as $serie) {
+            $i++;
+        ?>
+            <td class="mw50">
+              <?php echo $ficheSerie->big($serie); ?>
+              <hr class="expSep">
+            </td>
+        <?php
+            if ($i >= 2) {
+              $i=0;
+              echo "</tr>
+                   <tr>";
+            }
+          }
+        ?>
+      </tr>
+    </table>
+  </div>
+  
+  <div align="center">
+    <?php
+      $nbpage = ceil($view->nbr / $view->length);
+      $uri = "";
+      $a_uri = explode("?", $_SERVER['REQUEST_URI']);
+      $a_uri = explode("&", $a_uri [1]);
+      foreach ($a_uri as $key => $value) {
+          if (substr($a_uri[$key], 0, 4) <> "page" and $a_uri[$key] <> "") {
+              $uri .= "&" . $a_uri[$key];
+          }
+      }
+      $url = BDO_URL . "macollection/messeries?" . $uri . "&";
+
+      echo $page->paginate($url, "page=", $nbpage, $view->page);
+    ?>
+  </div>
+</div>
