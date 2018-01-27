@@ -443,6 +443,70 @@ class Useralbum extends Bdo_Db_Line
          Db_query($query);
         return Db_affected_rows();
     }
+    
+    public function getUserSerie ($user_id, $page=1, $length=10, $search = "", $origin= "") {
+        $select = "
+       SELECT
+
+                `bd_serie`.`ID_SERIE`  ,
+
+                `bd_serie`.`NOM` as `NOM_SERIE` ,
+
+                `bd_serie`.`FLG_FINI` as `FLG_FINI_SERIE`,
+
+                CASE bd_serie.FLG_FINI WHEN 0 then 'Fini' when 1 then 'En cours' when 2 then 'One Shot' when 3 then 'Interrompue/Abandonn&eacute;e' ELSE '?' end LIB_FLG_FINI_SERIE,
+
+                CASE WHEN bd_serie.NB_TOME > 0 THEN bd_serie.NB_TOME ELSE max(bd_tome.NUM_TOME) END  as `NB_TOME` ,
+                bd_serie.NB_TOME as NB_TOME_FINAL,
+
+                `bd_serie`.`TRI` as `TRI_SERIE`,
+
+                `bd_serie`.`HISTOIRE` as `HISTOIRE_SERIE`,
+
+                `bd_genre`.`ID_GENRE`,
+
+                `bd_genre`.`LIBELLE` as `NOM_GENRE`,
+
+
+                `bd_edition_stat`.`NBR_USER_ID_SERIE`,
+
+
+                count(distinct bd_tome.ID_TOME) as NB_ALBUM,
+                max(img_couv) as IMG_COUV_SERIE,
+                avg(MOYENNE_NOTE_TOME) NOTE_SERIE,
+                sum(NB_NOTE_TOME) NB_NOTE_SERIE,
+USER_SERIE.NB_USER_ALBUM
+
+                FROM bd_serie 
+                INNER JOIN (select bd_tome.id_serie, count(*) NB_USER_ALBUM 
+                            from users_album 
+                                inner join bd_edition using (id_edition) 
+                                inner join bd_tome using (id_tome)
+                             where flg_achat = 'N' and users_album.user_id = ".$user_id ." group by id_serie) USER_SERIE on USER_SERIE.id_serie = bd_serie.id_serie
+
+                LEFT JOIN `bd_genre` USING(`ID_GENRE`)
+                LEFT JOIN (SELECT `ID_SERIE`,NBR_USER_ID_SERIE FROM `bd_edition_stat` group by id_serie) `bd_edition_stat` on(bd_serie.ID_SERIE = `bd_edition_stat`.`ID_SERIE`)
+              LEFT JOIN bd_tome on bd_tome.ID_SERIE = bd_serie.ID_SERIE
+              LEFT JOIN bd_edition using (id_edition)
+              LEFT JOIN note_tome on (bd_tome.ID_TOME =note_tome.ID_TOME)";
+       $where = " WHERE 1 ";
+        if ($origin <> "") {
+                $where .= " and bd_genre.ORIGINE = '".$origin ."'";
+            }
+
+        if($search <> "") {
+            $where .= " and ( bd_serie.nom like '%". $search ."%' ) ";
+        }
+        $group= "
+           group by bd_serie.nom, bd_serie.ID_SERIE 
+             LIMIT ".(($page - 1)*$length).", ".$length
+        ;
+        $query = $select.$where.$group;
+        $resultat = Db_query($query);
+         $obj = Db_fetch_all_obj($resultat,"ID_SERIE");
+
+         return $obj;
+    }
 
 }
 ?>

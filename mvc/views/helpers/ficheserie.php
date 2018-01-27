@@ -11,8 +11,8 @@ class FicheSerie {
         $id_link = $this->getURLSerie($o_serie);
 
         // couverture par defaut
-        if (!$o_serie->IMG_COUV)
-            $o_serie->IMG_COUV = "default.png";
+        if (!$o_serie->IMG_COUV_SERIE)
+            $o_serie->IMG_COUV_SERIE = "default.png";
 
         $x = getenv("HTTP_USER_AGENT");
 
@@ -26,17 +26,17 @@ class FicheSerie {
 
             switch ($class) {
                 case "couvBig": {
-                        $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
+                        $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
                         break;
                 }
 
                 case "couvMedium": {
-                        $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
+                        $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
                         break;
                 }
 
                 case "couvSmall": {
-                        $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
+                        $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
                         break;
                 }
                 case "serTitle": {
@@ -90,15 +90,19 @@ class FicheSerie {
       }
 
       // Possédés
-      if ($o_serie->NB_ALBUM) {
+      if ($o_serie->NB_USER_ALBUM) {
         $html .= '<strong>Dans ma collection : </strong>';
-        $html .= '<i>' . $o_serie->NB_ALBUM . '</i><br>';
+        $html .= '<i>' . $o_serie->NB_USER_ALBUM . '</i><br>';
     }
-
+    // Nb Tome
+      if ($o_serie->NB_TOME) {
+        $html .= '<strong>Nombre de tome : </strong>';
+        $html .= '<i>' . $o_serie->NB_TOME . '</i><br>';
+    }
       // Possédés
       if ($o_serie->NB_ALBUM) {
         $html .= '<strong>Albums dans la base : </strong>';
-        $html .= '<i>' . $o_serie->NB_TOME . '</i><br>';
+        $html .= '<i>' . $o_serie->NB_ALBUM . '</i><br>';
     }
 
   $html .= "<br>";
