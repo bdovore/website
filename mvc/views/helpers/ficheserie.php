@@ -75,47 +75,46 @@ class FicheSerie {
       $html .= '<h3>';
       $html .= '<a href="' . $this->getURLSerie($o_serie) . '" ';
       $html .= '   title="' . $o_serie->NOM_SERIE . '">';
-      $html .= $o_serie->NOM_SERIE . '</a></h3><br>';
-
+      $html .= $o_serie->NOM_SERIE . '</a></h3>';
+       // note/votes
+      if ($o_serie->NB_NOTE_SERIE > 0) {
+          $html .= '<div id=noteTome' . $o_serie->ID_SERIE . '> </div>';
+          $html .= "<script>";
+          $html .= "  $('#noteTome" . $o_serie->ID_SERIE . "').raty({score: " . $o_serie->NOTE_SERIE / 2 . ", readOnly: true});";
+          $html .= "</script>";
+      }
+      $html .= "<p class='fiche_album'>";
       // Statut
       if ($o_serie->LIB_FLG_FINI_SERIE) {
-          $html .= '<strong>Avancement : </strong>';
+          $html .= 'Avancement : ';
           $html .= '<i>' . $o_serie->LIB_FLG_FINI_SERIE . '</i><br>';
       }
 
       // genre
       if ($o_serie->NOM_GENRE) {
-          $html .= '<strong>Genre : </strong>';
+          $html .= 'Genre : ';
           $html .= '<i>' . $o_serie->NOM_GENRE . '</i><br>';
       }
 
       // Possédés
       if ($o_serie->NB_USER_ALBUM) {
-        $html .= '<strong>Dans ma collection : </strong>';
+        $html .= 'Dans ma collection : ';
         $html .= '<i>' . $o_serie->NB_USER_ALBUM . '</i><br>';
     }
     // Nb Tome
       if ($o_serie->NB_TOME) {
-        $html .= '<strong>Nombre de tome : </strong>';
+        $html .= 'Nombre de tome : ';
         $html .= '<i>' . $o_serie->NB_TOME . '</i><br>';
     }
       // Possédés
       if ($o_serie->NB_ALBUM) {
-        $html .= '<strong>Albums dans la base : </strong>';
+        $html .= 'Albums dans la base : ';
         $html .= '<i>' . $o_serie->NB_ALBUM . '</i><br>';
     }
 
-  $html .= "<br>";
+  $html .= "</p>";
 
-      // note/votes
-      if ($o_serie->NB_NOTE_SERIE > 0) {
-          $html .= '<div align="center" id=noteTome' . $o_serie->ID_SERIE . '> </div>';
-          $html .= "<script>";
-          $html .= "  $('#noteTome" . $o_SERIE->ID_SERIE . "').raty({score: " . $o_serie->NOTE_SERIE / 2 . ", readOnly: true});";
-          $html .= "</script>";
-      }
-
-      $html .= "</p>";
+     
 
       $html .= '</div>';
 
