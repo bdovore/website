@@ -62,7 +62,7 @@ class FicheSerie {
         return BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-' .clean_url($o_serie->NOM_SERIE);
     }
 
-    public function big($o_serie) {
+    public function big($o_serie,$sep=true) {
       if (is_array($o_serie)) {
         $o_serie = (object) $o_serie;
       }
