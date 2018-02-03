@@ -11,8 +11,8 @@ class FicheSerie {
         $id_link = $this->getURLSerie($o_serie);
 
         // couverture par defaut
-        if (!$o_serie->IMG_COUV)
-            $o_serie->IMG_COUV = "default.png";
+        if (!$o_serie->IMG_COUV_SERIE)
+            $o_serie->IMG_COUV_SERIE = "default.png";
 
         $x = getenv("HTTP_USER_AGENT");
 
@@ -26,17 +26,17 @@ class FicheSerie {
 
             switch ($class) {
                 case "couvBig": {
-                        $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
+                        $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
                         break;
                 }
 
                 case "couvMedium": {
-                        $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
+                        $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
                         break;
                 }
 
                 case "couvSmall": {
-                        $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
+                        $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
                         break;
                 }
                 case "serTitle": {
@@ -62,7 +62,7 @@ class FicheSerie {
         return BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-' .clean_url($o_serie->NOM_SERIE);
     }
 
-    public function big($o_serie) {
+    public function big($o_serie,$sep=true) {
       if (is_array($o_serie)) {
         $o_serie = (object) $o_serie;
       }
@@ -75,43 +75,46 @@ class FicheSerie {
       $html .= '<h3>';
       $html .= '<a href="' . $this->getURLSerie($o_serie) . '" ';
       $html .= '   title="' . $o_serie->NOM_SERIE . '">';
-      $html .= $o_serie->NOM_SERIE . '</a></h3><br>';
-
+      $html .= $o_serie->NOM_SERIE . '</a></h3>';
+       // note/votes
+      if ($o_serie->NB_NOTE_SERIE > 0) {
+          $html .= '<div id=noteTome' . $o_serie->ID_SERIE . '> </div>';
+          $html .= "<script>";
+          $html .= "  $('#noteTome" . $o_serie->ID_SERIE . "').raty({score: " . $o_serie->NOTE_SERIE / 2 . ", readOnly: true});";
+          $html .= "</script>";
+      }
+      $html .= "<p class='fiche_album'>";
       // Statut
       if ($o_serie->LIB_FLG_FINI_SERIE) {
-          $html .= '<strong>Avancement : </strong>';
+          $html .= 'Avancement : ';
           $html .= '<i>' . $o_serie->LIB_FLG_FINI_SERIE . '</i><br>';
       }
 
       // genre
       if ($o_serie->NOM_GENRE) {
-          $html .= '<strong>Genre : </strong>';
+          $html .= 'Genre : ';
           $html .= '<i>' . $o_serie->NOM_GENRE . '</i><br>';
       }
 
       // Possédés
+      if ($o_serie->NB_USER_ALBUM) {
+        $html .= 'Dans ma collection : ';
+        $html .= '<i>' . $o_serie->NB_USER_ALBUM . '</i><br>';
+    }
+    // Nb Tome
+      if ($o_serie->NB_TOME) {
+        $html .= 'Nombre de tome : ';
+        $html .= '<i>' . $o_serie->NB_TOME . '</i><br>';
+    }
+      // Possédés
       if ($o_serie->NB_ALBUM) {
-        $html .= '<strong>Dans ma collection : </strong>';
+        $html .= 'Albums dans la base : ';
         $html .= '<i>' . $o_serie->NB_ALBUM . '</i><br>';
     }
 
-      // Possédés
-      if ($o_serie->NB_ALBUM) {
-        $html .= '<strong>Albums dans la base : </strong>';
-        $html .= '<i>' . $o_serie->NB_TOME . '</i><br>';
-    }
+  $html .= "</p>";
 
-  $html .= "<br>";
-
-      // note/votes
-      if ($o_serie->NB_NOTE_SERIE > 0) {
-          $html .= '<div align="center" id=noteTome' . $o_serie->ID_SERIE . '> </div>';
-          $html .= "<script>";
-          $html .= "  $('#noteTome" . $o_SERIE->ID_SERIE . "').raty({score: " . $o_serie->NOTE_SERIE / 2 . ", readOnly: true});";
-          $html .= "</script>";
-      }
-
-      $html .= "</p>";
+     
 
       $html .= '</div>';
 

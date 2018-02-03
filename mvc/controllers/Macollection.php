@@ -285,7 +285,7 @@ class Macollection extends Bdo_Controller {
     public function mesSeries () {
         if (User::minAccesslevel(2)) {
             $user_id = intval($_SESSION["userConnect"]->user_id);
-            $this->loadModel('Userserie');
+            $this->loadModel('Useralbum');
 
             $page = getValInteger("page",1);
             $length = getValInteger("length",0);
@@ -307,36 +307,29 @@ class Macollection extends Bdo_Controller {
             $l_search = getVal("l_search","" );
 
             // Le sort est systématiquement par nom de série par ordre alphabétique croissant
-            $sort = 3;
-            $order = "ASC";
-            $a_order= "NOM_SERIE";
-            $orderby = " order by ".$a_order." ".$order;
             
-            $limit = " limit ".(($page - 1)*$length).", ".$length;
-
-            $where = " where u.user_id = ".$user_id;
-            $group = " group by id_serie, NBR_USER_ID_SERIE";
 
             if ($sel_type <> "Tous") {
-                $where .= " and g.ORIGINE = '".Db_Escape_String($sel_type) ."'";
+                $origin = Db_Escape_String($sel_type);
+            } else {
+                $origin = "";
             }
 
             if($l_search <> "") {
                 $searchvalue = Db_Escape_String($l_search);
-                $where .= " and ( s.nom like '%". $searchvalue ."%' ) ";
+            } else {
+                $searchvalue = "";
             }
 
-            $dbs_serie = $this->Userserie->load("c",$where.$group.$orderby.$limit);
-
-            $nbr = Db_CountRow($this->Userserie->select().$where.$group);
+            $dbs_serie = $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin);
+            $stat = $this->Useralbum->getStatistiques($user_id,"album");
+            $nbr = $stat["nbseries"];
 
             $this->view->set_var( array (
                 "dbs_serie" => $dbs_serie,
                 "page" => $page,
                 "length" => $length,
                 "nbr" => $nbr,
-                "sort" => $sort,
-                "order" => $order,
                 "searchvalue" => $l_search,
                 "sel_type" => $sel_type
                 ));

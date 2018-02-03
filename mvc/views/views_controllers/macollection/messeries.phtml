@@ -80,25 +80,27 @@
   <hr>
   <div class="cadre1">
     <table class="list_album">
-      <tr>
+     
         <?php
-          $i=0;
-          foreach ($view->dbs_serie->a_dataQuery as $serie) {
-            $i++;
+         
+          $tr = true;
+
+          foreach ($view->dbs_serie as $serie) {
+             if ($tr) echo "<tr>";
         ?>
             <td class="mw50">
               <?php echo $ficheSerie->big($serie); ?>
-              <hr class="expSep">
+            
             </td>
         <?php
-            if ($i >= 2) {
-              $i=0;
-              echo "</tr>
-                   <tr>";
-            }
+            if (!$tr) echo "</tr>";
+            
+            $tr = !$tr;
+            
           }
+            if (!$tr) echo "</tr>";
         ?>
-      </tr>
+      
     </table>
   </div>
   
