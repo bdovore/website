@@ -444,7 +444,7 @@ class Useralbum extends Bdo_Db_Line
         return Db_affected_rows();
     }
     
-    public function getUserSerie ($user_id, $page=1, $length=10, $search = "", $origin= "") {
+    public function getUserSerie ($user_id, $page=1, $length=10, $search = "", $origin= "",$liste) {
         $select = "
        SELECT
 
@@ -475,7 +475,7 @@ class Useralbum extends Bdo_Db_Line
                 max(img_couv) as IMG_COUV_SERIE,
                 avg(MOYENNE_NOTE_TOME) NOTE_SERIE,
                 sum(NB_NOTE_TOME) NB_NOTE_SERIE,
-USER_SERIE.NB_USER_ALBUM
+                USER_SERIE.NB_USER_ALBUM
 
                 FROM bd_serie 
                 INNER JOIN (select bd_tome.id_serie, count(*) NB_USER_ALBUM 
@@ -490,22 +490,25 @@ USER_SERIE.NB_USER_ALBUM
               LEFT JOIN bd_edition using (id_edition)
               LEFT JOIN note_tome on (bd_tome.ID_TOME =note_tome.ID_TOME)";
        $where = " WHERE 1 ";
-        if ($origin <> "") {
+       if ($origin <> "") {
                 $where .= " and bd_genre.ORIGINE = '".$origin ."'";
             }
 
-        if($search <> "") {
+       if($search <> "") {
             $where .= " and ( bd_serie.nom like '%". $search ."%' ) ";
         }
+       if ($liste <> "") {
+         $where .= " and `bd_serie`.`ID_SERIE` in (" . $liste . ") ";
+       }
         $group= "
            group by bd_serie.nom, bd_serie.ID_SERIE 
              LIMIT ".(($page - 1)*$length).", ".$length
         ;
-        $query = $select.$where.$group;
-        $resultat = Db_query($query);
-         $obj = Db_fetch_all_obj($resultat,"ID_SERIE");
+       $query = $select.$where.$group;
+       $resultat = Db_query($query);
+       $obj = Db_fetch_all_obj($resultat,"ID_SERIE");
 
-         return $obj;
+       return $obj;
     }
 
 }

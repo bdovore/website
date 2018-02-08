@@ -91,6 +91,28 @@ class Users_exclusions extends Bdo_Db_Line
             return $a_obj;
     }
 
+    public function getListSerieExcluSource ($user_id) {
+      /*
+       * Liste des séries avec au moins une exclusion pour un user donné
+       * rend en plus la source de l'exclusion : 
+       *   - serie pour toute la série
+       *   - album pour un (ou des) album(s).
+       */
+      $query = "select   users_exclusions.id_serie as ID_SERIE
+                        , case max(id_tome) when 0 then 'serie' else 'album' end as SOURCE
+                from users_exclusions 
+                where user_id = ".intval($user_id) ." group by id_serie";
+      $resultat = Db_query($query);
+      $a_obj = array();
+      while ($obj = Db_fetch_object($resultat)) {
+
+          $a_obj[] = $obj;
+
+      }
+      Db_free_result($resultat);
+      return $a_obj;
+    }
+        
     public function getListSerieToComplete ($user_id, $flg_achat=false) {
         /*
          * Liste des séries pour lesquels il y a au moins un album à completer

@@ -286,6 +286,28 @@ class Macollection extends Bdo_Controller {
         if (User::minAccesslevel(2)) {
             $user_id = intval($_SESSION["userConnect"]->user_id);
             $this->loadModel('Useralbum');
+            $this->loadModel("Users_exclusions");
+
+            // variable d'action pour l'annulation de la suppression de série à compléter
+            $action = getVal("action","none"); 
+            if ($action == "raz") {
+                $idSerieExclu = getValInteger("idSerieExclu",0);
+                $this->Users_exclusions->delSerieExclude($user_id,$idSerieExclu);
+            }
+
+            // Filtres
+            $flg_incomplete = getValInteger("flg_incomplete",0); // On filtre sur les séries incomplètes ?
+            $flg_achat = getValInteger("flg_achat",0);           // On considère les futurs achats comme achetés (pour considérer une série comme complète) ? 
+
+            // Récupération des séries comprenant des albums à compléter
+            $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id,$flg_achat);
+            $ll = count($listSerie);
+            // Pour simplifier les traitements plus loin, on mets le résultat dans un tableau d'ID_SERIE
+            $incomplets = array();
+            for ($i = 0; $i < $ll; $i++) $incomplets[] = $listSerie[$i]->ID_SERIE;
+
+            // Résupération des séries avec des exclusions
+            $listExclu = $this->Users_exclusions->getListSerieExcluSource($user_id);
 
             $page = getValInteger("page",1);
             $length = getValInteger("length",0);
@@ -306,9 +328,6 @@ class Macollection extends Bdo_Controller {
 
             $l_search = getVal("l_search","" );
 
-            // Le sort est systématiquement par nom de série par ordre alphabétique croissant
-            
-
             if ($sel_type <> "Tous") {
                 $origin = Db_Escape_String($sel_type);
             } else {
@@ -321,24 +340,30 @@ class Macollection extends Bdo_Controller {
                 $searchvalue = "";
             }
 
-            $dbs_serie = $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin);
+            // Récupération des séries avec filtre sur les incomplètes ou non
+            $dbs_serie = $flg_incomplete ? $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,implode(',',$incomplets))
+                                         : $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,'');
             $stat = $this->Useralbum->getStatistiques($user_id,"album");
             $nbr = $stat["nbseries"];
 
             $this->view->set_var( array (
                 "dbs_serie" => $dbs_serie,
+                "incomplets" => $incomplets,
+                "listExclu" => $listExclu,
                 "page" => $page,
                 "length" => $length,
                 "nbr" => $nbr,
                 "searchvalue" => $l_search,
-                "sel_type" => $sel_type
+                "sel_type" => $sel_type,
+                "flg_incomplete" => $flg_incomplete,
+                "flg_achat" => $flg_achat
                 ));
         }
         else {
             die("Vous devez vous authentifier pour accéder à cette page.");
         }
 
-        $this->view->set_var("PAGETITLE","Ma Collection de Séries sur Bdovore");
+        $this->view->set_var("PAGETITLE","Mes Séries sur Bdovore");
         $this->view->render();
     }
 
