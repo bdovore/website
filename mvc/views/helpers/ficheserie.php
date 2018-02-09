@@ -125,7 +125,7 @@ class FicheSerie {
         $html .= '<a href="'.BDO_URL.'macollection/seriecomplete?lstSerie=' . $o_serie->ID_SERIE . '" title="Gestion des albums manquants pour cette série">Voir les albums manquants</a><br>';
       } elseif ($exclu == 'serie') {
         // Rien n'est à acheter (manquant) car toute la série est exclue
-        $html .= '<i>La série est exclu de la liste "album manquant" </i>';
+        $html .= '<i>La série est exclue de la liste "albums manquants" </i>';
         $html .= '<a href="'.BDO_URL.'macollection/messeries?idSerieExclu=' . $o_serie->ID_SERIE . '&action=raz" title="Annulation de l\'exclusion de cette série">Annuler l\'exclusion</a><br>';
       } elseif ($exclu == 'album') {
         // Rien n'est à acheter (manquant) car les albums sont tous exclus (un par un)
