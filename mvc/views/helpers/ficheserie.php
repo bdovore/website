@@ -121,16 +121,17 @@ class FicheSerie {
       // Il faut tester sur false pour éviter la valeur 0, considérée aussi comme false...
       if ($incomplet !== false) {
         // Des albums sont à acheter (manquant)
-        $html .= 'Collection : ';
-        $html .= '<a href="'.BDO_URL.'macollection/seriecomplete?lstSerie=' . $o_serie->ID_SERIE . '" title="Gestion des albums manquants pour cette série">À Compléter</a><br>';
+      //  $html .= 'Collection : ';
+        $html .= '<a href="'.BDO_URL.'macollection/seriecomplete?lstSerie=' . $o_serie->ID_SERIE . '" title="Gestion des albums manquants pour cette série">Voir les albums manquants</a><br>';
       } elseif ($exclu == 'serie') {
         // Rien n'est à acheter (manquant) car toute la série est exclue
-        $html .= 'Collection : ';
-        $html .= '<a href="'.BDO_URL.'macollection/messeries?idSerieExclu=' . $o_serie->ID_SERIE . '&action=raz" title="Annulation de l\'exclusion de cette série">Série exclue : annuler</a><br>';
+        $html .= '<i>La série est exclu de la liste "album manquant" </i>';
+        $html .= '<a href="'.BDO_URL.'macollection/messeries?idSerieExclu=' . $o_serie->ID_SERIE . '&action=raz" title="Annulation de l\'exclusion de cette série">Annuler l\'exclusion</a><br>';
       } elseif ($exclu == 'album') {
         // Rien n'est à acheter (manquant) car les albums sont tous exclus (un par un)
-        $html .= 'Collection : ';
-        $html .= '<a href="'.BDO_URL.'macollection/messeries?idSerieExclu=' . $o_serie->ID_SERIE . '&action=raz" title="Gestion de l\'exclusion d\'albums pour cette série">Albums exclus : annuler</a><br>';
+        $html .= '<i>Des albums manquants ont été exclus de la liste </i><br>';
+         $html .= '<a href="'.BDO_URL.'macollection/seriecomplete?lstSerie=' . $o_serie->ID_SERIE . '" title="Gestion des albums manquants pour cette série">Voir les albums manquants</a> - ';
+        $html .= '<a href="'.BDO_URL.'macollection/messeries?idSerieExclu=' . $o_serie->ID_SERIE . '&action=raz" title="Gestion de l\'exclusion d\'albums pour cette série">Annuler l\'exclusion</a><br>';
       }
 
       $html .= "</p>";

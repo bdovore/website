@@ -300,7 +300,7 @@ class Macollection extends Bdo_Controller {
             $flg_achat = getValInteger("flg_achat",0);           // On considère les futurs achats comme achetés (pour considérer une série comme complète) ? 
 
             // Récupération des séries comprenant des albums à compléter
-            $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id,$flg_achat);
+            $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id,!$flg_achat);
             $ll = count($listSerie);
             // Pour simplifier les traitements plus loin, on mets le résultat dans un tableau d'ID_SERIE
             $incomplets = array();
