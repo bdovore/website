@@ -54,7 +54,9 @@
                     <option value="Mangas" <?php if ($view->sel_type  =="Mangas") echo "selected" ?>>Mangas</option>
                     <option value = "Comics" <?php if ($view->sel_type  =="Comics") echo "selected" ?> >Comics</option>
                   </select>
-        </div><br>
+                  <br>Que les séries à compléter : <input name="flg_incomplete" type="checkbox" id="flg_incomplete" value="1" <?php echo ($view->flg_incomplete ? "checked" : "");  ?> onchange="submit();">
+                      sans tenir compte des futurs achats : <input name="flg_achat" type="checkbox" id="flg_achat" value="1" <?php echo ($view->flg_achat ? "checked" : "");  ?> onchange="submit();"></p>
+                  </div><br>
 
         <div id="data_length" class="dataTables_length">
           Voir :
@@ -89,7 +91,14 @@
              if ($tr) echo "<tr>";
         ?>
             <td class="mw50">
-              <?php echo $ficheSerie->big($serie); ?>
+              <?php 
+                $incomplet = array_search($serie->ID_SERIE, $view->incomplets); 
+                $exclu = false; 
+                foreach ($view->listExclu as $i => $s) {
+                  if ($s->ID_SERIE == $serie->ID_SERIE) $exclu = $s->SOURCE;
+                }
+                echo $ficheSerie->big($serie,true,$incomplet,$exclu); 
+              ?>
             
             </td>
         <?php

@@ -62,7 +62,7 @@ class FicheSerie {
         return BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-' .clean_url($o_serie->NOM_SERIE);
     }
 
-    public function big($o_serie,$sep=true) {
+    public function big($o_serie,$sep=true,$incomplet=false,$exclu=false) {
       if (is_array($o_serie)) {
         $o_serie = (object) $o_serie;
       }
@@ -76,6 +76,7 @@ class FicheSerie {
       $html .= '<a href="' . $this->getURLSerie($o_serie) . '" ';
       $html .= '   title="' . $o_serie->NOM_SERIE . '">';
       $html .= $o_serie->NOM_SERIE . '</a></h3>';
+
        // note/votes
       if ($o_serie->NB_NOTE_SERIE > 0) {
           $html .= '<div id=noteTome' . $o_serie->ID_SERIE . '> </div>';
@@ -83,7 +84,9 @@ class FicheSerie {
           $html .= "  $('#noteTome" . $o_serie->ID_SERIE . "').raty({score: " . $o_serie->NOTE_SERIE / 2 . ", readOnly: true});";
           $html .= "</script>";
       }
+
       $html .= "<p class='fiche_album'>";
+      
       // Statut
       if ($o_serie->LIB_FLG_FINI_SERIE) {
           $html .= 'Avancement : ';
@@ -100,22 +103,37 @@ class FicheSerie {
       if ($o_serie->NB_USER_ALBUM) {
         $html .= 'Dans ma collection : ';
         $html .= '<i>' . $o_serie->NB_USER_ALBUM . '</i><br>';
-    }
-    // Nb Tome
+      }
+
+      // Nb Tome
       if ($o_serie->NB_TOME) {
         $html .= 'Nombre de tome : ';
         $html .= '<i>' . $o_serie->NB_TOME . '</i><br>';
-    }
-      // Possédés
+      }
+
+      // Connus
       if ($o_serie->NB_ALBUM) {
         $html .= 'Albums dans la base : ';
         $html .= '<i>' . $o_serie->NB_ALBUM . '</i><br>';
-    }
+      }
 
-  $html .= "</p>";
+      // Manquant ou Exclus
+      // Il faut tester sur false pour éviter la valeur 0, considérée aussi comme false...
+      if ($incomplet !== false) {
+        // Des albums sont à acheter (manquant)
+        $html .= 'Collection : ';
+        $html .= '<a href="'.BDO_URL.'macollection/seriecomplete?lstSerie=' . $o_serie->ID_SERIE . '" title="Gestion des albums manquants pour cette série">À Compléter</a><br>';
+      } elseif ($exclu == 'serie') {
+        // Rien n'est à acheter (manquant) car toute la série est exclue
+        $html .= 'Collection : ';
+        $html .= '<a href="'.BDO_URL.'macollection/messeries?idSerieExclu=' . $o_serie->ID_SERIE . '&action=raz" title="Annulation de l\'exclusion de cette série">Série exclue : annuler</a><br>';
+      } elseif ($exclu == 'album') {
+        // Rien n'est à acheter (manquant) car les albums sont tous exclus (un par un)
+        $html .= 'Collection : ';
+        $html .= '<a href="'.BDO_URL.'macollection/messeries?idSerieExclu=' . $o_serie->ID_SERIE . '&action=raz" title="Gestion de l\'exclusion d\'albums pour cette série">Albums exclus : annuler</a><br>';
+      }
 
-     
-
+      $html .= "</p>";
       $html .= '</div>';
 
       if ($sep) {
