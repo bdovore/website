@@ -689,6 +689,46 @@ function imgCouvFromForm($lid_tome, $lid_edition) {
         return $newfilename;
     }
 
+    
+     function imgCouvFromUrl2($url, $lid_tome, $lid_edition) {
+        /*
+         * Récupère une image de couvertue et la copie dans le répertoire fournit en paramètre
+         * Return : nom du fichier
+         * Variante de la fonction imgCouvFromUrl exploitant les fonctions php
+         */
+         if (empty($url)) {
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incompl&egrave;te. Vous allez &ecirc;tre redirig&eacute;.';
+            exit();
+        }
+         // Récupère l'image
+         $avatar_data = file_get_contents($url);
+         
+         $tmp_filename = tempnam(BDO_DIR_UPLOAD, uniqid(rand()) . '-');         
+         $save = file_put_contents($tmp_filename,$avatar_data);
+         $mime_type = mime_content_type($tmp_filename);
+         // Check la validité de l'image
+        if (!preg_match('#image.([a-z]+)#i', $mime_type, $file_data2)) {
+            $error = true;
+            echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du t&eacute;l&eacute;chargement de l\'image. Vous allez &ecirc;tre redirig&eacute;.';
+            exit();
+        }
+        $avatar_filetype = $file_data2[1];
+         // newfilemname
+        if (!($imgtype = check_image_type($avatar_filetype, $error))) {
+            exit;
+        }
+        $newfilename = "CV-" . sprintf("%06d", $lid_tome) . "-" . sprintf("%06d", $lid_edition) . $imgtype;
+
+        // si le fichier existe, on l'efface
+        if (file_exists(BDO_DIR_COUV . "$newfilename")) {
+            unlink(BDO_DIR_COUV . "$newfilename");
+        }
+
+        // copie le fichier temporaire dans le repertoire image
+        $send = copy($tmp_filename, BDO_DIR_COUV . "$newfilename");
+        unlink($tmp_filename);
+        return $newfilename; 
+     }
     function imgCouvFromUrl($url_ary, $lid_tome, $lid_edition) {
         /*
          * Récupère une image de couvertue et la copie dans le répertoire fournit en paramètre

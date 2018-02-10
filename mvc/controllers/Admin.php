@@ -162,7 +162,7 @@ class Admin extends Bdo_Controller {
                 if (is_file($_FILES["txtFileLoc"]["tmp_name"])) {// un fichier à uploader
                     $img_couv = imgCouvFromForm($tome_id, $edition_id);
                 } else if (preg_match('/^(https?:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal('txtFileURL'), $url_ary)) { // un fichier à télécharger
-                    $img_couv = imgCouvFromUrl($url_ary, $tome_id, $edition_id);
+                    $img_couv = imgCouvFromUrl2($url_ary[0], $tome_id, $edition_id);
                 } else {
                     $img_couv = '';
                 }
@@ -324,7 +324,7 @@ class Admin extends Bdo_Controller {
                 if (is_file($_FILES["txtFileLoc"]["tmp_name"])) { // un fichier à uploader
                     $img_couv = imgCouvFromForm($id_tome, $lid);
                 } else if (preg_match('/^(https?:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal('txtFileURL'), $url_ary)) { // un fichier à télécharger
-                    $img_couv = imgCouvFromUrl($url_ary, $id_tome, $lid);
+                    $img_couv = imgCouvFromUrl2($url_ary[0], $id_tome, $lid);
                 } else {
                     $img_couv = '';
                 }
@@ -700,7 +700,7 @@ class Admin extends Bdo_Controller {
                             echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplete. Vous allez etre redirige.';
                             exit();
                         }
-                        $img_couv = imgCouvFromUrl($url_ary, $lid_tome, $lid_edition);
+                        $img_couv = imgCouvFromUrl2($url_ary[0], $lid_tome, $lid_edition);
                     } else {
                         $img_couv = '';
                     }
