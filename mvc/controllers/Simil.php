@@ -61,6 +61,12 @@ class Simil extends Bdo_Controller
         //echo $ID_TOME;
         $this->Tome->load();
         $a_simil = $this->Tome->simil();
+        if (empty($a_simil))
+        {
+            $this->loadModel("Tome_simil");
+            $this->Tome_simil->load($this->Tome);
+            $a_simil = $this->Tome->simil();
+        }
         $this->view->set_var('json', json_encode($a_simil));
 
         $this->view->layout = "ajax";
