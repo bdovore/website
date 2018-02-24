@@ -44,7 +44,7 @@ class Simil extends Bdo_Controller
 
 
 
-        $this->view->set_var(array(
+       $this->view->set_var(array(
                 'ACTUAIR' => $this->Actus->actuAir(),
                 'LASTAJOUT' => $this->Actus->lastAjout()
         ));
