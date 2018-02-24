@@ -14,7 +14,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     </div>
     <table id="info">
         <tr>
-            <td class="album" colspan="2"><?php echo $ficheAlbum->urlAlbum($view->tome,$class="albTitle");?></td>
+            <td class="album" colspan="2"><?php echo $ficheAlbum->urlAlbum($view->tome,$class="albTitle", $is_edition = false, $sponsor=true,$gotocomment = false, $target="_blank");?></td>
         </tr>
         <tr>
             <td class="entete">Série :</td>

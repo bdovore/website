@@ -222,7 +222,7 @@ class FicheAlbum {
      * fournit l'url d'un lien vers la iframe album
      *
      */
-    public function urlAlbum($o_tome, $class = 'couvBig', $is_edition = false, $sponsor=true,$gotocomment = false)
+    public function urlAlbum($o_tome, $class = 'couvBig', $is_edition = false, $sponsor=true,$gotocomment = false, $target="")
     /*
      *  Fonction de construction d'une url d'un album
      *  Si la variable $is_edition = true, on ajoute l'id édition dans les liens
@@ -263,8 +263,8 @@ class FicheAlbum {
                 $titleHtml = $o_tome->TITRE_TOME;
             }
 
-            $html = '<a class="fancybox fancybox.iframe {width:600,height:600}"
-                href="' . BDO_URL . $id_link . '" title="' . $titleHtml . '">';
+            $html = '<a '. ( $target  ? '': 'class="fancybox fancybox.iframe {width:600,height:600}"').
+                'href="' . BDO_URL . $id_link . '" title="' . $titleHtml . '" '.( $target ? 'target="'. $target.'"' : '') .'>';
 
             switch ($class) {
                 case "couvBig": {

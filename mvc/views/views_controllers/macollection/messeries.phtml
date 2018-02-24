@@ -48,14 +48,14 @@
   <div class="dataTables_wrapper">
       <form id="f_collection" method="GET" action="" >
         <div id="filtre">
-          Type :  <select id='sel_type' name='sel_type' onChange='$("#f_collection").submit();'>
+            <b>Filtrer :</b> Type :  <select id='sel_type' name='sel_type' onChange='$("#f_collection").submit();'>
                     <option value="Tous" <?php if ($view->sel_type  =="Tous") echo "selected" ?> >Tous</option>
                     <option value="BD" <?php if ($view->sel_type  =="BD") echo "selected" ?>>BD</option>
                     <option value="Mangas" <?php if ($view->sel_type  =="Mangas") echo "selected" ?>>Mangas</option>
                     <option value = "Comics" <?php if ($view->sel_type  =="Comics") echo "selected" ?> >Comics</option>
                   </select>
-                  <br>Que les séries à compléter : <input name="flg_incomplete" type="checkbox" id="flg_incomplete" value="1" <?php echo ($view->flg_incomplete ? "checked" : "");  ?> onchange="submit();">
-                      sans tenir compte des futurs achats : <input name="flg_achat" type="checkbox" id="flg_achat" value="1" <?php echo ($view->flg_achat ? "checked" : "");  ?> onchange="submit();"></p>
+                  A compléter : <input name="flg_incomplete" type="checkbox" id="flg_incomplete" value="1" <?php echo ($view->flg_incomplete ? "checked" : "");  ?> onchange="submit();">
+                     <?php if ($view->flg_incomplete)  {?> hors futurs achats <input name="flg_achat" type="checkbox" id="flg_achat" value="1" <?php echo ($view->flg_achat ? "checked" : "");  ?> onchange="submit();"><?php } ?> </p>
                   </div><br>
 
         <div id="data_length" class="dataTables_length">
@@ -63,7 +63,7 @@
             <label>
               <select class="" id="length" name="length">
                 <option value="10" <?php if ($view->length == 10) { echo "selected"; } ?> >  10</option>
-                <option value="25" <?php if ($view->length == 25) { echo "selected"; } ?>>  25</option>
+                <option value="20" <?php if ($view->length == 20) { echo "selected"; } ?>>  20</option>
                 <option value="50" <?php if ($view->length == 50) { echo "selected"; } ?>>  50</option>
                 <option value="100" <?php if ($view->length == 100) { echo "selected"; } ?>> 100</option>
               </select>
