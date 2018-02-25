@@ -30,6 +30,21 @@ class FicheSerie {
                         break;
                 }
 
+                case "couvBigManque": {
+                  $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
+                  break;
+                }
+
+                case "couvBigComplete": {
+                  $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
+                  break;
+                }
+
+                case "couvBigExclue": {
+                  $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
+                  break;
+                }
+
                 case "couvMedium": {
                         $html .= '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="' . $class . '" title="' . $titleHtml . '"/></a>';
                         break;
@@ -68,7 +83,20 @@ class FicheSerie {
       }
 
       $html = '<div class="cadre1 fiche_big">
-                 <div style="float:left" class="mw50">' . $this->urlSerie($o_serie) . '</div>
+                 <div style="float:left" class="mw50">';
+      if ($incomplet !== false) {
+        // Des albums sont à acheter (manquant)
+        $html .= $this->urlSerie($o_serie,'couvBigManque');
+      } elseif ($exclu == 'serie') {
+        // Rien n'est à acheter (manquant) car toute la série est exclue
+        $html .= $this->urlSerie($o_serie,'couvBigExclue');
+      } elseif ($exclu == 'album') {
+        // Rien n'est à acheter (manquant) car les albums sont tous exclus (un par un)
+        $html .= $this->urlSerie($o_serie,'couvBigExclue');
+      } else {
+        $html .= $this->urlSerie($o_serie);
+      }
+      $html .= '</div>
                  <div class="mw50 couvleft">';
 
       // titre de la série
@@ -121,16 +149,13 @@ class FicheSerie {
       // Il faut tester sur false pour éviter la valeur 0, considérée aussi comme false...
       if ($incomplet !== false) {
         // Des albums sont à acheter (manquant)
-      //  $html .= 'Collection : ';
         $html .= '<a href="'.BDO_URL.'macollection/seriecomplete?lstSerie=' . $o_serie->ID_SERIE . '&flg_achat=1" title="Gestion des albums manquants pour cette série">Voir les albums manquants</a><br>';
       } elseif ($exclu == 'serie') {
         // Rien n'est à acheter (manquant) car toute la série est exclue
-        $html .= '<i>Série exclue des "albums manquants" </i>';
-        $html .= '<a href="'.BDO_URL.'macollection/messeries?idSerieExclu=' . $o_serie->ID_SERIE . '&action=raz" title="Annulation de l\'exclusion de cette série">Annuler l\'exclusion</a><br>';
+        $html .= '<i>Série exclue des "albums manquants" </i><br>';
       } elseif ($exclu == 'album') {
         // Rien n'est à acheter (manquant) car les albums sont tous exclus (un par un)
         $html .= '<i>Tous les albums manquants ont été exclus de la liste </i><br>';
-        $html .= '<a href="'.BDO_URL.'macollection/seriecomplete?lstSerie=' . $o_serie->ID_SERIE . '&flg_achat=1" title="Gestion des albums manquants pour cette série">Voir les albums manquants</a> - ';
       }
 
       $html .= "</p>";
