@@ -56,9 +56,11 @@ users_album INNER JOIN (
     WHERE id_edition IN (" . implode(',', $a_idEdition) . ")
     ) usersb USING (user_id)
 INNER JOIN bd_edition_stat ON bd_edition_stat.ID_EDITION=users_album.ID_EDITION
+INNER JOIN bd_tome on bd_edition_stat.id_tome = bd_tome.id_tome
 WHERE NOT(bd_edition_stat.ID_SERIE = ".$tome->ID_SERIE.")
 AND NOT(bd_edition_stat.NBR_USER_ID_SERIE = 0)
 AND bd_edition_stat.ID_GENRE NOT IN (" . implode(',', $a_idGenreExclu) . ")
+    AND bd_tome.flg_type = 0 and bd_tome.flg_int = 'N' 
 GROUP BY bd_edition_stat.ID_SERIE
 ORDER BY score DESC
 LIMIT 0,5
