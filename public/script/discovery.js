@@ -6,6 +6,7 @@
 var listAlbum = [];
 var listId = [];
 var nbcall = 0;
+var require_call = 5;
 function computeDiscovery(id_tome) {
     
     listId.push( id_tome+"");
@@ -14,18 +15,34 @@ function computeDiscovery(id_tome) {
 }
 
 function pushAlbum(data) {
+    // on ajuste le nb d'itération
+    var add_iteration = false;
+    var nbnew = 0;
+    for (var i=0;i < data.length;i++) {
+        if (listId.indexOf(data[i].ID_TOME) < 0 ) {
+            add_iteration = true;
+        } else {
+            nbnew++;
+        } 
+        
+    }
+    if (add_iteration && (listAlbum.length + nbnew) < 25) require_call ++; // il manque un ou plusieurs albums pour compléter : on fera un tour de plus
+   
+   // ajout des albums
     for (var i=0;i< data.length;i++) {
         if (listId.indexOf(data[i].ID_TOME) < 0 ) {
             // l'album n'est pas dans la liste : on l'ajoute
             p = Pos(listAlbum.push(data[i]));
-            
-            if (nbcall < listAlbum.length && listAlbum.length < 25) {
-                
+            if (listAlbum.length < 25) {
                 $("#disco_couv tr:eq("+(2 + p[0])+") td:eq("+ (2 + p[1])+")").append("<a href='"+ $.bdovore.URL+ "/Album?id_tome="+data[i].ID_TOME+ ($.browser.mobile ? "&mobile=T" : "") + "' title= '" + addslashes(data[i].TITRE_TOME) + "' class='fancybox fancybox.iframe {width:600,height:600}'>" + "<img src='https://www.bdovore.com/images/couv/"+data[i].IMG_COUV+"' class='couvBig'> </a>");
-                listId.push(data[i].ID_TOME);
+            } 
+            if (nbcall < require_call && listAlbum.length < 25) {
+                
+               listId.push(data[i].ID_TOME);
+                 nbcall++;
                 getListSimil(data[i].ID_TOME);
             }      
-         }
+         } 
     }
    // console.log(listAlbum);
 }
@@ -34,7 +51,7 @@ function getListSimil(id_tome) {
       $.getJSON(url_simil, function (data) {
             if (data.length > 0) {
                 pushAlbum( data);
-                nbcall++;
+               
             }});
         
  }
