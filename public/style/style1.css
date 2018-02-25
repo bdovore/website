@@ -796,6 +796,18 @@ img.couvBig {
     width: 120px;
 }
 
+img.couvBigManque {
+  border: 3px solid rgb(180, 89, 89);
+  max-height: 160px;
+  width: 120px;
+}
+
+img.couvBigExclue {
+  border: 3px solid green;
+  max-height: 160px;
+  width: 120px;
+}
+
 img.couvMedium {
     border: 1px solid #000;
     height: 140px;
