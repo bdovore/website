@@ -340,7 +340,7 @@ class Useralbum extends Bdo_Db_Line
 
         INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
 
-        INNER JOIN users_comment uc ON  uc.id_tome = en.id_tome AND uc.user_id = ua.user_id
+        LEFT JOIN users_comment uc ON  uc.id_tome = en.id_tome AND uc.user_id = ua.user_id
 
         INNER JOIN bd_tome t ON t.id_tome = en.id_tome
 
