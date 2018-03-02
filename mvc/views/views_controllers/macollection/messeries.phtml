@@ -85,10 +85,10 @@
      
         <?php
          
-          $tr = true;
+          $tr = 1;
 
           foreach ($view->dbs_serie as $serie) {
-             if ($tr) echo "<tr>";
+             if ($tr == 1) echo "<tr>";
         ?>
             <td class="mw50">
               <?php 
@@ -102,12 +102,13 @@
             
             </td>
         <?php
-            if (!$tr) echo "</tr>";
-            
-            $tr = !$tr;
-            
+            $tr++;
+            if ($tr > 3) {
+              echo "</tr>";
+              $tr = 1;
+            }
           }
-            if (!$tr) echo "</tr>";
+            if ($tr !== 1) echo "</tr>";
         ?>
       
     </table>
