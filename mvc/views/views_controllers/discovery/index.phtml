@@ -2,7 +2,7 @@
 $ficheAlbum = $view->getHelper('ficheAlbum');
 ?>
 
-<div class="cadre1">
+<div class="cadre1" style="overflow:auto">
      <p>Les Bdovore qui ont <?php echo $ficheAlbum->urlalbum($view->tome,$class='albTitle'); ?> <?php if ($view->tome->NOM_SERIE <> $view->tome->TITRE_TOME) { ?> (série  <?php echo $ficheAlbum->urlserie($view->tome); ?> )<?php } ?> dans leur collection, ont aussi :
                                             <br></p>
      <div class="scrollauto">
@@ -45,7 +45,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         
     </table>
      </div>
-     
+     <a href="#" onclick="addCircle();">Voir plus d'albums !</a>
 </div>
 <script type="text/javascript" src="<?php echo BDO_URL;?>script/discovery.js"></script>
 <script>

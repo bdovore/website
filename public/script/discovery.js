@@ -7,38 +7,79 @@ var listAlbum = [];
 var listId = [];
 var nbcall = 0;
 var require_call = 5;
+var nbmaxalbum = 0;
+var nbcircle = 2;
 function computeDiscovery(id_tome) {
-    
+    nbmaxalbum = f(2);
     listId.push( id_tome+"");
     getListSimil(id_tome);
 
 }
 
+function addCircle () {
+    // ajoute un cercle et ajoute les albums en plus dans les places libres
+    // on commence par agrandir le tableau
+    // on va ajouter déjà une colonne à droite et une à gauche, puis une ligne en haut et une ligne en bas
+    $("#disco_couv tr").prepend("<td></td>");
+    $("#disco_couv tr").append("<td></td>");
+    var row = "<td></td>";
+    nbcircle++;
+    for (var i = 1;i< 2*nbcircle+1;i++) {
+        row +=  row;
+    }
+    $("#disco_couv").prepend("<tr>"+row+"</tr>");
+    $("#disco_couv").append("<tr>"+row+"</tr>");
+    tmpList = [];
+    if (listAlbum.length > nbmaxalbum) { // on a chargé plus d'album que nécessaire la fois précédente
+        var nbprevious = listAlbum.length;
+        
+        for (var i=0;i < nbprevious - nbmaxalbum +1;i++){
+            tmpList.push(listAlbum.pop());
+            listId.pop(); // on enlève également de listId
+        }
+       nbmaxalbum = f(nbcircle);
+       require_call += (nbmaxalbum - tmpList.length - listAlbum.length)%5;
+     
+    } else {
+        
+       
+        require_call = 2*nbcircle + 1;
+        nbmaxalbum = f(nbcircle);
+    }
+    // on complète la liste avec des albums existants pour lesquels on ira chercher des similaires non calculés
+    // on part des 5 derniers ajouts pour lesquels il faudra aller chercher des albums similaires si besoin
+     for (var i=1;i < listAlbum.length - nbcall;i++){
+            tmpList.push(listAlbum[listAlbum.length-i]);
+      }
+    // nbcall = 0;
+     pushAlbum(tmpList);
+}
 function pushAlbum(data) {
     // on ajuste le nb d'itération
     var add_iteration = false;
     var nbnew = 0;
     for (var i=0;i < data.length;i++) {
-        if (listId.indexOf(data[i].ID_TOME) < 0 ) {
+        if (listId.indexOf(data[i].ID_TOME) > 0 ) {
             add_iteration = true;
         } else {
             nbnew++;
         } 
         
     }
-    if (add_iteration && (listAlbum.length + nbnew) < 25) require_call ++; // il manque un ou plusieurs albums pour compléter : on fera un tour de plus
+    if (add_iteration && (listAlbum.length + nbnew) < nbmaxalbum) require_call ++; // il manque un ou plusieurs albums pour compléter : on fera un tour de plus
    
    // ajout des albums
     for (var i=0;i< data.length;i++) {
         if (listId.indexOf(data[i].ID_TOME) < 0 ) {
             // l'album n'est pas dans la liste : on l'ajoute
             p = Pos(listAlbum.push(data[i]));
-            if (listAlbum.length < 25) {
-                $("#disco_couv tr:eq("+(2 + p[0])+") td:eq("+ (2 + p[1])+")").append("<a href='"+ $.bdovore.URL+ "/Album?id_tome="+data[i].ID_TOME+ ($.browser.mobile ? "&mobile=T" : "") + "' title= '" + addslashes(data[i].TITRE_TOME) + "' class='fancybox fancybox.iframe {width:600,height:600}'>" + "<img src='https://www.bdovore.com/images/couv/"+data[i].IMG_COUV+"' class='couvBig'> </a>");
+            listId.push(data[i].ID_TOME);
+            if (listAlbum.length < nbmaxalbum) {
+                $("#disco_couv tr:eq("+(nbcircle + p[0])+") td:eq("+ (nbcircle + p[1])+")").append("<a href='"+ $.bdovore.URL+ "/Album?id_tome="+data[i].ID_TOME+ ($.browser.mobile ? "&mobile=T" : "") + "' title= '" + addslashes(data[i].TITRE_TOME) + "' class='fancybox fancybox.iframe {width:600,height:600}'>" + "<img src='https://www.bdovore.com/images/couv/"+(data[i].IMG_COUV ? data[i].IMG_COUV : "default.png")+"' class='couvBig'> </a>");
             } 
-            if (nbcall < require_call && listAlbum.length < 25) {
+            if (nbcall < require_call && listAlbum.length < nbmaxalbum) {
                 
-               listId.push(data[i].ID_TOME);
+              
                  nbcall++;
                 getListSimil(data[i].ID_TOME);
             }      
