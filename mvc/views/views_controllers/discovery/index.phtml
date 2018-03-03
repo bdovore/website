@@ -3,7 +3,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 ?>
 
 <div class="cadre1" style="overflow:auto">
-     <p>Les Bdovore qui ont <?php echo $ficheAlbum->urlalbum($view->tome,$class='albTitle'); ?> <?php if ($view->tome->NOM_SERIE <> $view->tome->TITRE_TOME) { ?> (série  <?php echo $ficheAlbum->urlserie($view->tome); ?> )<?php } ?> dans leur collection, ont aussi :
+     <p>Si vous avez aimé <?php echo $ficheAlbum->urlalbum($view->tome,$class='albTitle'); ?> <?php if ($view->tome->NOM_SERIE <> $view->tome->TITRE_TOME) { ?> (série  <?php echo $ficheAlbum->urlserie($view->tome); ?> )<?php } ?> vous aimerez peut être aussi...
                                             <br></p>
      <div class="scrollauto">
     <table id="disco_couv" align="center" >
