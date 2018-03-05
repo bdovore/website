@@ -124,7 +124,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 <div class="conteneuralb">
 
             <div class="alb-img">
-                            <div id="couv"></div>
+                            <div id="couv"><img src="<?php echo ($view->tome->IMG_COUV ? BDO_URL_COUV.$view->tome->IMG_COUV : BDO_URL_COUV.'default.png' ); ?>" name="imgEdition" id="imgEdition" alt="couverture" border="1"></div>
 
                                 <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
                                 <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION;?></div>
@@ -195,53 +195,10 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                         <?php echo nl2br($view->tome->HISTOIRE_TOME);?>
                                         </font>
             <?php } ?>
-                                        <?php // test existence d'image Izneo
-
-                                        $file_headers = @get_headers("http://images.izneo.com/page/".$view->tome->EAN_EDITION."/300/1.jpg");
-
-                                        if($file_headers[0] != 'HTTP/1.0 404 Not Found' and $file_headers[0] != 'HTTP/1.1 404 Not Found') {
-                                        ?>
-                                         <script type="text/javascript">
-
-                                       /* $(window).load(function(){
-                                                            $("head").append($("<link/>").attr("rel", "stylesheet").attr("href", "./style/anythingslider.css"));
-                                                            var container = $("#couv");
-                                                            container.width(200);
-                                                            var wrapper = $("<div/>");
-                                                            container.append(wrapper);
-                                                            wrapper.hide();
-                                                            wrapper.width(240);
-                                                            var list = $("<ul/>");
-                                                            wrapper.append($("<a/>").attr("href", "http://player.izneo.com/read/<?php echo $view->tome->EAN_EDITION;?>-<?php echo IZNEO_ID; ?>.html").attr("target","_blank").append(list));list.append("<li><img src='<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : 'default.png';?>' width='180' border='1' name='imgEdition' id='imgEdition' alt='couverture'> ");list.append("<li><img src=\"https://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/1.jpg\" / width='180' /></li>");list.append("<li><img src=\"https://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/2.jpg\" / width='180' /></li>");list.append("<li><img src=\"https://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/3.jpg\" / width='180' /></li>");list.append("<li><img src=\"https://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/4.jpg\" / width='180' /></li>");list.append("<li><img src=\"https://images.izneo.com/page/<?php echo $view->tome->EAN_EDITION;?>/300/5.jpg\" / width='180' /></li>");
-                                                            wrapper.append("<br>");
-                                                            var launchSlider = function() {list.anythingSlider({resizeContents : false,
-                                                                                        buildNavigation : true,
-                                                                                        buildArrows         : false,
-                                                                                        aspectRatio : true,
-                                                                autoPlay     : false,
-                                                                hashTags     : false,
-                                                                playRtl      : false,
-                                                                toggleArrows        : true,
-                                                                width        : 200,
-                                                                buildStartStop      : false,
-                                                            });
-                                                                    };var i=0; list.find("img").load(function(){
-                                            i++;
-                                            if (i === 5) {
-                                                wrapper.show();
-                                                launchSlider();
-                                            }
-                                        })});*/
-                                        $("#couv").append("<li><img src='<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : 'default.png';?>'  border='1' name='imgEdition' id='imgEdition' alt='couverture'> ");
-                                        $("#couv").append($("<a/>").attr("href", "http://player.izneo.com/read/<?php echo $view->tome->EAN_EDITION;?>-<?php echo IZNEO_ID; ?>.html").attr("target","_blank").append("<span class='petite_police'>Preview avec Izneo</span>"));
-                                        </script>
-                                        <?php }
-                                        else { ?>
-                                       <script> $("#couv").append("<li><img src='<?php echo BDO_URL_COUV;?><?php echo ($view->tome->IMG_COUV) ? $view->tome->IMG_COUV : 'default.png';?>'  border='1' name='imgEdition' id='imgEdition' alt='couverture'> ");</script>
-                                        <?php } ?>
+                                      
                                        <br>
                                        <div id="simil">
-                                           <a href="<?php echo BDO_URL;?>discovery?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">== Voir des albums similaires ==</a>
+                                           <a href="<?php echo BDO_URL;?>discovery?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">== Vous aimerez aussi peut être... ==</a>
                                            <br></div>
                                         <br>
                                         <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
