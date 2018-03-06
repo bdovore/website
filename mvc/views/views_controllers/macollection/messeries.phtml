@@ -42,7 +42,10 @@
     if ($view->auteur == "") {
       echo     "<h3>Mes Séries</h3>";
       echo   "</div>";
-      echo   "<b>",$view->nbr," séries dans la collection.</b>";
+      echo   "<b>",$view->nbr," série(s)";
+      if ($view->sel_type !== "Tous")
+        echo   " de ",$view->sel_type;
+      echo   " dans la collection.</b>";
     }
     else {
       echo     "<h3>Mes Séries pour l'auteur : ",$view->pseudo,"</h3>"; 

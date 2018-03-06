@@ -417,7 +417,7 @@ class Macollection extends Bdo_Controller {
           // Récupération des séries avec filtre sur les incomplètes ou non
           $dbs_serie = $flg_incomplete ? $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,$auteur,implode(',',$incomplets))
                                        : $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,$auteur);
-          $stat = $this->Useralbum->getStatistiques($user_id,"album");
+          $stat = $this->Useralbum->getStatistiques($user_id,"album",$origin);
           $nbr = $stat["nbseries"];
 
           $this->view->set_var( array (

@@ -154,27 +154,21 @@ class Useralbum extends Bdo_Db_Line
             $query = "
 
             select
-
-            count(*) as countofalb,
-
-            count(distinct t.id_serie) as countofserie
-
+                    count(*) as countofalb,
+                    count(distinct t.id_serie) as countofserie
             from
-
                     users_album u
-
                     INNER JOIN bd_edition en ON en.id_edition = u.id_edition
-
                     INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-
+                    inner join bd_serie s using (id_serie)
+                    inner join bd_genre g on g.id_genre = s.id_genre
             where
-
                     u.user_id=" . $user_id . "
-
-                    and u.flg_achat='N'
-
+                and u.flg_achat='N'
             ";
 
+            if ($type !== "")
+              $query .= " and g.origine = '" . $type . "'" ;
 
 
             $resultat = Db_query($query);
