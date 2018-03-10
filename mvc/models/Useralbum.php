@@ -133,7 +133,20 @@ class Useralbum extends Bdo_Db_Line
         return $select.$from;
     }
 
-    public function getStatistiques($user_id,$stat="all") {
+    private function getReqAuteur($user_id,$champ) {
+      $req = "select t.".$champ." as auteur
+              from users_album u
+              inner join bd_edition e using (id_edition)
+              inner join bd_tome t using (id_tome)
+              inner join bd_genre g using (id_genre)
+              inner join bd_auteur a on (id_auteur = ".$champ.")
+              where ".$champ." <> 0
+                and u.user_id = " . $user_id ."
+                and pseudo not in ('<n&b>','<indéterminé>')";
+      return $req;
+    }
+
+    public function getStatistiques($user_id,$stat="all",$type="",$travail="") {
         // fonction qui renvoit les statistiques d'une collection
         // Charge les statistisques
 
@@ -141,27 +154,21 @@ class Useralbum extends Bdo_Db_Line
             $query = "
 
             select
-
-            count(*) as countofalb,
-
-            count(distinct t.id_serie) as countofserie
-
+                    count(*) as countofalb,
+                    count(distinct t.id_serie) as countofserie
             from
-
                     users_album u
-
                     INNER JOIN bd_edition en ON en.id_edition = u.id_edition
-
                     INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-
+                    inner join bd_serie s using (id_serie)
+                    inner join bd_genre g on g.id_genre = s.id_genre
             where
-
                     u.user_id=" . $user_id . "
-
-                    and u.flg_achat='N'
-
+                and u.flg_achat='N'
             ";
 
+            if ($type !== "")
+              $query .= " and g.origine = '" . $type . "'" ;
 
 
             $resultat = Db_query($query);
@@ -213,7 +220,7 @@ class Useralbum extends Bdo_Db_Line
 
 
         // coffrets
-    if ($stat == "all" or $stat == "coffret") {
+        if ($stat == "all" or $stat == "coffret") {
             $nbcoffrets  = Db_CountRow("
 
             select * from
@@ -233,13 +240,55 @@ class Useralbum extends Bdo_Db_Line
                     and flg_achat='N'
 
             ");
-    }
+        }
+        
+        // Auteurs
+        if ($stat == "all" or $stat == "auteur") {
+
+            if ($type == "")
+              $where = " ";
+            else
+              $where = "  and origine = '" . $type . "'";
+
+            $req  = "
+              select distinct auteur
+              from (";
+            switch ($travail) {
+              case 'Scénariste':
+                $req .=             $this->getReqAuteur($user_id,'id_scenar') . $where;
+                $req .= " union " . $this->getReqAuteur($user_id,'id_scenar_alt') . $where;
+                break;
+              case 'Dessinateur':
+                $req .=             $this->getReqAuteur($user_id,'id_dessin') . $where;
+                $req .= " union " . $this->getReqAuteur($user_id,'id_dessin_alt') . $where;
+                break;
+              case 'Coloriste':
+                $req .=             $this->getReqAuteur($user_id,'id_color') . $where;
+                $req .= " union " . $this->getReqAuteur($user_id,'id_color_alt') . $where;
+                break;
+     
+              default:
+                $req .=             $this->getReqAuteur($user_id,'id_scenar')     . $where;
+                $req .= " union " . $this->getReqAuteur($user_id,'id_scenar_alt') . $where;
+                $req .= " union " . $this->getReqAuteur($user_id,'id_dessin')     . $where;
+                $req .= " union " . $this->getReqAuteur($user_id,'id_dessin_alt') . $where;
+                $req .= " union " . $this->getReqAuteur($user_id,'id_color')      . $where;
+                $req .= " union " . $this->getReqAuteur($user_id,'id_color_alt')  . $where;
+                break;
+            }
+            $req  .= "
+              ) a 
+            ";
+            $nbauteurs  = Db_CountRow($req);
+        }
+        
         $a_result = array(
             "nbcoffrets" => $nbcoffrets,
             "nbintegrales" => $nbintegrales,
             "nbfuturs_achats" => $nbfuturs_achats,
             "nbtomes" => $nbtomes,
-            "nbseries" => $nbseries
+            "nbseries" => $nbseries,
+            "nbauteurs" => $nbauteurs
 
         );
 
@@ -444,71 +493,224 @@ class Useralbum extends Bdo_Db_Line
         return Db_affected_rows();
     }
     
-    public function getUserSerie ($user_id, $page=1, $length=10, $search = "", $origin= "",$liste) {
-        $select = "
-       SELECT
+    public function getUserSerie ($user_id, $page=1, $length=10, $search = "", $origin= "",$auteur = "", $liste = "") {
+      if ($auteur <> "")
+        $whereAut = "and (   id_scenar = ".$auteur." or id_scenar_alt = ".$auteur." 
+                          or id_dessin = ".$auteur." or id_dessin_alt = ".$auteur." 
+                          or id_color = ".$auteur." or id_color_alt = ".$auteur.")";
+      else
+        $whereAut = "";
+      $select = "
+        SELECT `bd_serie`.`ID_SERIE`
+             , `bd_serie`.`NOM` as `NOM_SERIE`
+             , `bd_serie`.`FLG_FINI` as `FLG_FINI_SERIE`
+             , CASE bd_serie.FLG_FINI WHEN 0 then 'Fini' when 1 then 'En cours' when 2 then 'One Shot' when 3 then 'Interrompue/Abandonn&eacute;e' ELSE '?' end LIB_FLG_FINI_SERIE
+             , CASE WHEN bd_serie.NB_TOME > 0 THEN bd_serie.NB_TOME ELSE max(bd_tome.NUM_TOME) END  as `NB_TOME`
+             , bd_serie.NB_TOME as NB_TOME_FINAL
+             , `bd_serie`.`TRI` as `TRI_SERIE`
+             , `bd_serie`.`HISTOIRE` as `HISTOIRE_SERIE`
+             , `bd_genre`.`ID_GENRE`
+             , `bd_genre`.`LIBELLE` as `NOM_GENRE`
+             , `bd_edition_stat`.`NBR_USER_ID_SERIE`
+             , count(distinct bd_tome.ID_TOME) as NB_ALBUM
+             , max(img_couv) as IMG_COUV_SERIE
+             , avg(MOYENNE_NOTE_TOME) NOTE_SERIE
+             , sum(NB_NOTE_TOME) NB_NOTE_SERIE
+             , USER_SERIE.NB_USER_ALBUM
+        FROM bd_serie 
+        INNER JOIN (select bd_tome.id_serie, count(*) NB_USER_ALBUM 
+                    from users_album 
+                    inner join bd_edition using (id_edition) 
+                    inner join bd_tome using (id_tome)
+                    where flg_achat = 'N'" .$whereAut."
+                      and users_album.user_id = ".$user_id ." group by id_serie) USER_SERIE on USER_SERIE.id_serie = bd_serie.id_serie
+        LEFT JOIN `bd_genre` USING(`ID_GENRE`)
+        LEFT JOIN (SELECT `ID_SERIE`,NBR_USER_ID_SERIE FROM `bd_edition_stat` group by id_serie) `bd_edition_stat` on(bd_serie.ID_SERIE = `bd_edition_stat`.`ID_SERIE`)
+        LEFT JOIN bd_tome on bd_tome.ID_SERIE = bd_serie.ID_SERIE
+        LEFT JOIN bd_edition using (id_edition)
+        LEFT JOIN note_tome on (bd_tome.ID_TOME =note_tome.ID_TOME)";
 
-                `bd_serie`.`ID_SERIE`  ,
+      $where = " WHERE 1 ";
+      if ($origin <> "") {
+        $where .= " and bd_genre.ORIGINE = '".$origin ."'";
+      }
 
-                `bd_serie`.`NOM` as `NOM_SERIE` ,
+      if($search <> "") {
+        $where .= " and ( bd_serie.nom like '%". $search ."%' ) ";
+      }
 
-                `bd_serie`.`FLG_FINI` as `FLG_FINI_SERIE`,
+      if ($liste <> "") {
+        $where .= " and `bd_serie`.`ID_SERIE` in (" . $liste . ") ";
+      }
 
-                CASE bd_serie.FLG_FINI WHEN 0 then 'Fini' when 1 then 'En cours' when 2 then 'One Shot' when 3 then 'Interrompue/Abandonn&eacute;e' ELSE '?' end LIB_FLG_FINI_SERIE,
+      $group= "
+         group by bd_serie.nom, bd_serie.ID_SERIE 
+           LIMIT ".(($page - 1)*$length).", ".$length
+      ;
 
-                CASE WHEN bd_serie.NB_TOME > 0 THEN bd_serie.NB_TOME ELSE max(bd_tome.NUM_TOME) END  as `NB_TOME` ,
-                bd_serie.NB_TOME as NB_TOME_FINAL,
+      $query = $select.$where.$group;
+      $resultat = Db_query($query);
+      $obj = Db_fetch_all_obj($resultat,"ID_SERIE");
 
-                `bd_serie`.`TRI` as `TRI_SERIE`,
+      return $obj;
+    }
 
-                `bd_serie`.`HISTOIRE` as `HISTOIRE_SERIE`,
+    public function getUserAuteur ($user_id, $page=1, $length=10, $search = "", $type = "",$travail="") {
+      $select = " 
+        select auteur
+            , pseudo
+            , nom
+            , prenom
+            , img_aut
+            , sum(gbd) as gbd
+            , sum(gcomics) as gcomics
+            , sum(gmangas) as gmangas
+            , count(distinct id_tome) as nbtomes
+            , sum(scenar) as scenar
+            , sum(dessin) as dessin
+            , sum(color) as color
+        from (
+            select t.id_scenar as auteur, pseudo, nom, prenom, img_aut, t.id_tome
+                , case g.origine when 'BD'     then 1 else 0 end gbd
+                , case g.origine when 'Mangas' then 1 else 0 end gmangas
+                , case g.origine when 'Comics' then 1 else 0 end gcomics
+                , 1 as scenar
+                , 0 as dessin
+                , 0 as color
+            from users_album u
+            inner join bd_edition e using (id_edition)
+            inner join bd_tome t using (id_tome)
+            inner join bd_auteur a on (id_auteur = id_scenar)
+            inner join bd_genre g using (id_genre)
+            where id_scenar <> 0
+              and u.user_id = " . $user_id . "
 
-                `bd_genre`.`ID_GENRE`,
+            union
+            
+            select t.id_scenar_alt as auteur, pseudo, nom, prenom, img_aut, t.id_tome
+                , case g.origine when 'BD'     then 1 else 0 end gbd
+                , case g.origine when 'Mangas' then 1 else 0 end gmangas
+                , case g.origine when 'Comics' then 1 else 0 end gcomics
+                , 1 as scenar
+                , 0 as dessin
+                , 0 as color
+            from users_album u
+            inner join bd_edition e using (id_edition)
+            inner join bd_tome t using (id_tome)
+            inner join bd_genre g using (id_genre)
+            inner join bd_auteur a on (id_auteur = id_scenar_alt)
+            where id_scenar_alt <> 0
+              and u.user_id = " . $user_id . "
+            
+            union
+            
+            select t.id_dessin as auteur, pseudo, nom, prenom, img_aut, t.id_tome
+                , case g.origine when 'BD'     then 1 else 0 end gbd
+                , case g.origine when 'Mangas' then 1 else 0 end gmangas
+                , case g.origine when 'Comics' then 1 else 0 end gcomics
+                , 0 as scenar
+                , 1 as dessin
+                , 0 as color
+            from users_album u
+            inner join bd_edition e using (id_edition)
+            inner join bd_tome t using (id_tome)
+            inner join bd_genre g using (id_genre)
+            inner join bd_auteur a on (id_auteur = id_dessin)
+            where id_dessin <> 0
+              and u.user_id = " . $user_id . "
+            
+            union
+            
+            select t.id_dessin_alt as auteur, pseudo, nom, prenom, img_aut, t.id_tome
+                , case g.origine when 'BD'     then 1 else 0 end gbd
+                , case g.origine when 'Mangas' then 1 else 0 end gmangas
+                , case g.origine when 'Comics' then 1 else 0 end gcomics
+                , 0 as scenar
+                , 1 as dessin
+                , 0 as color     
+            from users_album u
+            inner join bd_edition e using (id_edition)
+            inner join bd_tome t using (id_tome)
+            inner join bd_genre g using (id_genre)
+            inner join bd_auteur a on (id_auteur = id_dessin_alt)
+            where id_dessin_alt <> 0
+              and u.user_id = " . $user_id . "
+            
+            union
+            
+            select t.id_color as auteur, pseudo, nom, prenom, img_aut, t.id_tome
+                , case g.origine when 'BD'     then 1 else 0 end gbd
+                , case g.origine when 'Mangas' then 1 else 0 end gmangas
+                , case g.origine when 'Comics' then 1 else 0 end gcomics
+                , 0 as scenar
+                , 0 as dessin
+                , 1 as color
+            from users_album u
+            inner join bd_edition e using (id_edition)
+            inner join bd_tome t using (id_tome)
+            inner join bd_genre g using (id_genre)
+            inner join bd_auteur a on (id_auteur = id_color)
+            where id_color <> 0
+              and u.user_id = " . $user_id . "
+            
+            union
+            
+            select t.id_color_alt as auteur, pseudo, nom, prenom, img_aut, t.id_tome
+                , case g.origine when 'BD'     then 1 else 0 end gbd
+                , case g.origine when 'Mangas' then 1 else 0 end gmangas
+                , case g.origine when 'Comics' then 1 else 0 end gcomics
+                , 0 as scenar
+                , 0 as dessin
+                , 1 as color
+            from users_album u
+            inner join bd_edition e using (id_edition)
+            inner join bd_tome t using (id_tome)
+            inner join bd_genre g using (id_genre)
+            inner join bd_auteur a on (id_auteur = id_color_alt)
+            where id_color_alt <> 0
+              and u.user_id = " . $user_id . "
+        ) a
+      ";
+      
+      $where = " WHERE pseudo not in ('<n&b>','<indéterminé>') ";
 
-                `bd_genre`.`LIBELLE` as `NOM_GENRE`,
+      switch ($type) {
+        case "BD":
+          $where .= " and gbd > 0 ";
+          break;
+        case "Comics":
+          $where .= " and gcomics > 0 ";
+          break;
+        case "Mangas":
+          $where .= " and gmangas > 0 ";
+          break;
+      }
 
+      switch ($travail) {
+        case "Scénariste":
+          $where .= " and scenar > 0 ";
+          break;
+        case "Dessinateur":
+          $where .= " and dessin > 0 ";
+          break;
+        case "Coloriste":
+          $where .= " and color > 0 ";
+          break;
+      }
 
-                `bd_edition_stat`.`NBR_USER_ID_SERIE`,
+      if($search <> "")
+        $where .= " and ( pseudo like '%". $search ."%' or nom like '%". $search ."%' or prenom like '%". $search ."%' ) ";
+      
+      $order= "
+        group by auteur,pseudo,nom,prenom,img_aut
+        order by auteur
+        LIMIT ".(($page - 1)*$length).", ".$length
+      ;
+      $query = $select.$where.$order;
+      $resultat = Db_query($query);
+      $obj = Db_fetch_all_obj($resultat);
 
-
-                count(distinct bd_tome.ID_TOME) as NB_ALBUM,
-                max(img_couv) as IMG_COUV_SERIE,
-                avg(MOYENNE_NOTE_TOME) NOTE_SERIE,
-                sum(NB_NOTE_TOME) NB_NOTE_SERIE,
-                USER_SERIE.NB_USER_ALBUM
-
-                FROM bd_serie 
-                INNER JOIN (select bd_tome.id_serie, count(*) NB_USER_ALBUM 
-                            from users_album 
-                                inner join bd_edition using (id_edition) 
-                                inner join bd_tome using (id_tome)
-                             where flg_achat = 'N' and users_album.user_id = ".$user_id ." group by id_serie) USER_SERIE on USER_SERIE.id_serie = bd_serie.id_serie
-
-                LEFT JOIN `bd_genre` USING(`ID_GENRE`)
-                LEFT JOIN (SELECT `ID_SERIE`,NBR_USER_ID_SERIE FROM `bd_edition_stat` group by id_serie) `bd_edition_stat` on(bd_serie.ID_SERIE = `bd_edition_stat`.`ID_SERIE`)
-              LEFT JOIN bd_tome on bd_tome.ID_SERIE = bd_serie.ID_SERIE
-              LEFT JOIN bd_edition using (id_edition)
-              LEFT JOIN note_tome on (bd_tome.ID_TOME =note_tome.ID_TOME)";
-       $where = " WHERE 1 ";
-       if ($origin <> "") {
-                $where .= " and bd_genre.ORIGINE = '".$origin ."'";
-            }
-
-       if($search <> "") {
-            $where .= " and ( bd_serie.nom like '%". $search ."%' ) ";
-        }
-       if ($liste <> "") {
-         $where .= " and `bd_serie`.`ID_SERIE` in (" . $liste . ") ";
-       }
-        $group= "
-           group by bd_serie.nom, bd_serie.ID_SERIE 
-             LIMIT ".(($page - 1)*$length).", ".$length
-        ;
-       $query = $select.$where.$group;
-       $resultat = Db_query($query);
-       $obj = Db_fetch_all_obj($resultat,"ID_SERIE");
-
-       return $obj;
+      return $obj;
     }
 
 }

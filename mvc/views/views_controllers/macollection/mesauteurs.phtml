@@ -1,6 +1,6 @@
 <script src="<?php echo BDO_URL;?>jquery/jquery.cookie.js" type="text/javascript"></script>
 <script language ='javascript'>
-    var uri = "./messeries?";
+    var uri = "./mesauteurs?";
     q = param();
     for (k in q) {
         if (k.substring(0, 4) != "sort" && k.substring(0, 5) != "order") {
@@ -32,26 +32,15 @@
 
 
 <?php
-  $ficheSerie = $view->getHelper('ficheSerie');
+  $ficheAuteur = $view->getHelper('ficheAuteur');
   $page = $view->getHelper('pagination');
 ?>
 <div align="center" class="cadre1">
-<?php 
-    echo $page->menuCollection();
-    echo     "<div class='middle_title'>";
-    if ($view->auteur == "") {
-      echo     "<h3>Mes Séries</h3>";
-      echo   "</div>";
-      echo   "<b>",$view->nbr," série(s)";
-      if ($view->sel_type !== "Tous")
-        echo   " de ",$view->sel_type;
-      echo   " dans la collection.</b>";
-    }
-    else {
-      echo     "<h3>Mes Séries pour l'auteur : ",$view->pseudo,"</h3>"; 
-      echo   "</div>";
-    }
-  ?>
+  <?php echo $page->menuCollection(); ?>
+
+  <div class="middle_title"><h3 >Mes Auteurs</h3></div>
+
+  <b> <?php echo $view->nbr; ?> auteurs dans la collection. </b>
 
   <br>
   <input type="hidden" name="page" id="page" value="<?php echo $view->page; ?>" />
@@ -59,16 +48,20 @@
   <div class="dataTables_wrapper">
       <form id="f_collection" method="GET" action="" >
         <div id="filtre">
-            <b>Filtrer :</b> Type :  <select id='sel_type' name='sel_type' onChange='$("#f_collection").submit();'>
-                    <option value="Tous" <?php if ($view->sel_type  =="Tous") echo "selected" ?> >Tous</option>
-                    <option value="BD" <?php if ($view->sel_type  =="BD") echo "selected" ?>>BD</option>
-                    <option value="Mangas" <?php if ($view->sel_type  =="Mangas") echo "selected" ?>>Mangas</option>
-                    <option value = "Comics" <?php if ($view->sel_type  =="Comics") echo "selected" ?> >Comics</option>
-                  </select>
-                  A compléter : <input name="flg_incomplete" type="checkbox" id="flg_incomplete" value="1" <?php echo ($view->flg_incomplete ? "checked" : "");  ?> onchange="submit();">
-                     <?php if ($view->flg_incomplete)  {?> hors futurs achats <input name="flg_achat" type="checkbox" id="flg_achat" value="1" <?php echo ($view->flg_achat ? "checked" : "");  ?> onchange="submit();"><?php } ?> </p>
-                  </div><br>
-
+          Filtrer :
+          Type d'album :  <select id='sel_type' name='sel_type' onChange='$("#f_collection").submit();'>
+                            <option value="Tous"   <?php if ($view->sel_type  == "Tous")   echo "selected" ?>>Tous</option>
+                            <option value="BD"     <?php if ($view->sel_type  == "BD")     echo "selected" ?>>BD</option>
+                            <option value="Mangas" <?php if ($view->sel_type  == "Mangas") echo "selected" ?>>Mangas</option>
+                            <option value="Comics" <?php if ($view->sel_type  == "Comics") echo "selected" ?>>Comics</option>
+                          </select>
+          Type de travail : <select id='sel_trav' name='sel_trav' onChange='$("#f_collection").submit();'>
+                              <option value="Tous"        <?php if ($view->sel_trav  == "Tous")        echo "selected" ?>>Tous</option>
+                              <option value="Scénariste"  <?php if ($view->sel_trav  == "Scénariste")  echo "selected" ?>>Scénariste</option>
+                              <option value="Dessinateur" <?php if ($view->sel_trav  == "Dessinateur") echo "selected" ?>>Dessinateur</option>
+                              <option value="Coloriste"   <?php if ($view->sel_trav  == "Coloriste")   echo "selected" ?>>Coloriste</option>
+                            </select>
+        </div><br>
         <div id="data_length" class="dataTables_length">
           Voir :
             <label>
@@ -92,23 +85,19 @@
   </div>
   <hr>
   <div class="cadre1">
-    <table class="list_album">
+    <table class="list_album">  <!-- Pas de raison, pour le moment, d'utiliser un autre style que pour les albums. -->
      
         <?php
          
+          $tr = true;
           $tr = 1;
 
-          foreach ($view->dbs_serie as $serie) {
+          foreach ($view->dbs_auteur as $auteur) {
              if ($tr == 1) echo "<tr>";
         ?>
             <td class="mw50">
               <?php 
-                $incomplet = array_search($serie->ID_SERIE, $view->incomplets); 
-                $exclu = false; 
-                foreach ($view->listExclu as $i => $s) {
-                  if ($s->ID_SERIE == $serie->ID_SERIE) $exclu = $s->SOURCE;
-                }
-                echo $ficheSerie->big($serie,true,$incomplet,$exclu); 
+                echo $ficheAuteur->big($auteur); 
               ?>
             
             </td>
@@ -136,7 +125,7 @@
               $uri .= "&" . $a_uri[$key];
           }
       }
-      $url = BDO_URL . "macollection/messeries?" . $uri . "&";
+      $url = BDO_URL . "macollection/mesauteurs?" . $uri . "&";
 
       echo $page->paginate($url, "page=", $nbpage, $view->page);
     ?>

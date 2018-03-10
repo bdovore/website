@@ -86,13 +86,13 @@ class FicheSerie {
                  <div style="float:left" class="mw50">';
       if ($incomplet !== false) {
         // Des albums sont à acheter (manquant)
-        $html .= $this->urlSerie($o_serie,'couvBigManque');
+        $html .= $this->urlSerie($o_serie);
       } elseif ($exclu == 'serie') {
         // Rien n'est à acheter (manquant) car toute la série est exclue
-        $html .= $this->urlSerie($o_serie,'couvBigExclue');
+        $html .= $this->urlSerie($o_serie);
       } elseif ($exclu == 'album') {
         // Rien n'est à acheter (manquant) car les albums sont tous exclus (un par un)
-        $html .= $this->urlSerie($o_serie,'couvBigExclue');
+        $html .= $this->urlSerie($o_serie);
       } else {
         $html .= $this->urlSerie($o_serie);
       }

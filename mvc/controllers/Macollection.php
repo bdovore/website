@@ -282,158 +282,234 @@ class Macollection extends Bdo_Controller {
       $this->view->render();
     }
 
+    public function mesAuteurs () {
+      if (User::minAccesslevel(2)) {
+          $user_id = intval($_SESSION["userConnect"]->user_id);
+          $this->loadModel('Useralbum');
+
+          $page = getValInteger("page",1);
+          $length = getValInteger("length",0);
+
+          // Filtres
+          $sel_type = getVal("sel_type","Tous");
+          $sel_trav = getVal("sel_trav","Tous");
+
+          // FRED - Pour le moment, on utilise la meme longueur max
+          //        que pour la collection par album.
+          //        voir si cela fait du sens de dissocier ces 2 longueurs ?
+          //TODO mettre une longueur max. pour la recherche ?
+          if (!$length) {
+              if ($_COOKIE["l_etageres"] ) {
+                  // récupére la valeur dans un coockie
+                  $length = $_COOKIE["l_etageres"];
+              } else {
+                  $length = 10;
+              }
+          }
+          setcookie("l_etageres",$length,time()+2592000);
+
+          $l_search = getVal("l_search","" );
+
+          if ($sel_type <> "Tous") {
+              $origin = Db_Escape_String($sel_type);
+          } else {
+              $origin = "";
+          }
+
+          if ($sel_trav <> "Tous") {
+              $travail = Db_Escape_String($sel_trav);
+          } else {
+              $travail = "";
+          }
+
+          if($l_search <> "") {
+              $searchvalue = Db_Escape_String($l_search);
+          } else {
+              $searchvalue = "";
+          }
+
+          // Récupération des auteurs
+          $dbs_auteur = $this->Useralbum->getUserAuteur($user_id, $page, $length, $searchvalue, $origin, $travail);
+          $stat = $this->Useralbum->getStatistiques($user_id,"auteur",$origin,$travail);
+          $nbr = $stat["nbauteurs"];
+
+          $this->view->set_var( array (
+              "dbs_auteur" => $dbs_auteur,
+              "page" => $page,
+              "length" => $length,
+              "nbr" => $nbr,
+              "searchvalue" => $l_search,
+              "sel_type" => $sel_type,
+              "sel_trav" => $sel_trav
+              ));
+      }
+      else {
+          die("Vous devez vous authentifier pour accéder à cette page.");
+      }
+
+      $this->view->set_var("PAGETITLE","Mes Auteurs sur Bdovore");
+      $this->view->render();
+    }
+
     public function mesSeries () {
-        if (User::minAccesslevel(2)) {
-            $user_id = intval($_SESSION["userConnect"]->user_id);
-            $this->loadModel('Useralbum');
-            $this->loadModel("Users_exclusions");
+      if (User::minAccesslevel(2)) {
+          $user_id = intval($_SESSION["userConnect"]->user_id);
+          $this->loadModel('Useralbum');
+          $this->loadModel("Users_exclusions");
 
-            // variable d'action pour l'annulation de la suppression de série à compléter
-            $action = getVal("action","none"); 
-            if ($action == "raz") {
-                $idSerieExclu = getValInteger("idSerieExclu",0);
-                $this->Users_exclusions->delSerieExclude($user_id,$idSerieExclu);
-            }
+          // variable d'action pour l'annulation de la suppression de série à compléter
+          $action = getVal("action","none"); 
+          if ($action == "raz") {
+              $idSerieExclu = getValInteger("idSerieExclu",0);
+              $this->Users_exclusions->delSerieExclude($user_id,$idSerieExclu);
+          }
 
-            // Filtres
-            $flg_incomplete = getValInteger("flg_incomplete",0); // On filtre sur les séries incomplètes ?
-            $flg_achat = getValInteger("flg_achat",0);           // On considère les futurs achats comme achetés (pour considérer une série comme complète) ? 
+          // Filtres
+          $flg_incomplete = getValInteger("flg_incomplete",0); // On filtre sur les séries incomplètes ?
+          $flg_achat = getValInteger("flg_achat",0);           // On considère les futurs achats comme achetés (pour considérer une série comme complète) ? 
+          $auteur = getVal("auteur","");
+          if ($auteur <> "") {
+            $this->loadModel("Auteur");
+            $pseudo = getVal("pseudo", "");
+          }
 
-            // Récupération des séries comprenant des albums à compléter
-            $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id,!$flg_achat);
-            $ll = count($listSerie);
-            // Pour simplifier les traitements plus loin, on mets le résultat dans un tableau d'ID_SERIE
-            $incomplets = array();
-            for ($i = 0; $i < $ll; $i++) $incomplets[] = $listSerie[$i]->ID_SERIE;
+          // Récupération des séries comprenant des albums à compléter
+          $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id,!$flg_achat);
+          $ll = count($listSerie);
+          // Pour simplifier les traitements plus loin, on mets le résultat dans un tableau d'ID_SERIE
+          $incomplets = array();
+          for ($i = 0; $i < $ll; $i++) $incomplets[] = $listSerie[$i]->ID_SERIE;
 
-            // Résupération des séries avec des exclusions
-            $listExclu = $this->Users_exclusions->getListSerieExcluSource($user_id);
+          // Résupération des séries avec des exclusions
+          $listExclu = $this->Users_exclusions->getListSerieExcluSource($user_id);
 
-            $page = getValInteger("page",1);
-            $length = getValInteger("length",0);
-            $sel_type = getVal("sel_type","Tous");
-            // FRED - Pour le moment, on utilise la meme longueur max
-            //        que pour la collection par album.
-            //        voir si cela fait du sens de dissocier ces 2 longueurs ?
-            //TODO mettre une longueur max. pour la recherche ?
-            if (!$length) {
-                if ($_COOKIE["l_etageres"] ) {
-                    // récupére la valeur dans un coockie
-                    $length = $_COOKIE["l_etageres"];
-                } else {
-                    $length = 10;
-                }
-            }
-            setcookie("l_etageres",$length,time()+2592000);
+          $page = getValInteger("page",1);
+          $length = getValInteger("length",0);
+          $sel_type = getVal("sel_type","Tous");
+          // FRED - Pour le moment, on utilise la meme longueur max
+          //        que pour la collection par album.
+          //        voir si cela fait du sens de dissocier ces 2 longueurs ?
+          //TODO mettre une longueur max. pour la recherche ?
+          if (!$length) {
+              if ($_COOKIE["l_etageres"] ) {
+                  // récupére la valeur dans un coockie
+                  $length = $_COOKIE["l_etageres"];
+              } else {
+                  $length = 10;
+              }
+          }
+          setcookie("l_etageres",$length,time()+2592000);
 
-            $l_search = getVal("l_search","" );
+          $l_search = getVal("l_search","" );
 
-            if ($sel_type <> "Tous") {
-                $origin = Db_Escape_String($sel_type);
-            } else {
-                $origin = "";
-            }
+          if ($sel_type <> "Tous") {
+            $origin = Db_Escape_String($sel_type);
+          } else {
+              $origin = "";
+          }
 
-            if($l_search <> "") {
-                $searchvalue = Db_Escape_String($l_search);
-            } else {
-                $searchvalue = "";
-            }
+          if($l_search <> "") {
+              $searchvalue = Db_Escape_String($l_search);
+          } else {
+              $searchvalue = "";
+          }
 
-            // Récupération des séries avec filtre sur les incomplètes ou non
-            $dbs_serie = $flg_incomplete ? $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,implode(',',$incomplets))
-                                         : $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,'');
-            $stat = $this->Useralbum->getStatistiques($user_id,"album");
-            $nbr = $stat["nbseries"];
+          // Récupération des séries avec filtre sur les incomplètes ou non
+          $dbs_serie = $flg_incomplete ? $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,$auteur,implode(',',$incomplets))
+                                       : $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,$auteur);
+          $stat = $this->Useralbum->getStatistiques($user_id,"album",$origin);
+          $nbr = $stat["nbseries"];
 
-            $this->view->set_var( array (
-                "dbs_serie" => $dbs_serie,
-                "incomplets" => $incomplets,
-                "listExclu" => $listExclu,
-                "page" => $page,
-                "length" => $length,
-                "nbr" => $nbr,
-                "searchvalue" => $l_search,
-                "sel_type" => $sel_type,
-                "flg_incomplete" => $flg_incomplete,
-                "flg_achat" => $flg_achat
-                ));
-        }
-        else {
-            die("Vous devez vous authentifier pour accéder à cette page.");
-        }
+          $this->view->set_var( array (
+              "dbs_serie" => $dbs_serie,
+              "incomplets" => $incomplets,
+              "listExclu" => $listExclu,
+              "page" => $page,
+              "length" => $length,
+              "nbr" => $nbr,
+              "searchvalue" => $l_search,
+              "sel_type" => $sel_type,
+              "flg_incomplete" => $flg_incomplete,
+              "flg_achat" => $flg_achat,
+              "auteur" => $auteur,
+              "pseudo" => $pseudo
+              ));
+      }
+      else {
+          die("Vous devez vous authentifier pour accéder à cette page.");
+      }
 
-        $this->view->set_var("PAGETITLE","Mes Séries sur Bdovore");
-        $this->view->render();
+      $this->view->set_var("PAGETITLE","Mes Séries sur Bdovore");
+      $this->view->render();
     }
 
     public function futursAchats () {
-        if (User::minAccesslevel(2)) {
-            $user_id = intval($_SESSION["userConnect"]->user_id);
-            $this->loadModel('Useralbum');
+      if (User::minAccesslevel(2)) {
+          $user_id = intval($_SESSION["userConnect"]->user_id);
+          $this->loadModel('Useralbum');
 
-            $page = getValInteger("page",1);
-            $length = getValInteger("length",10);
-            $l_search = getVal("l_search","" );
+          $page = getValInteger("page",1);
+          $length = getValInteger("length",10);
+          $l_search = getVal("l_search","" );
 
-            //TODO remplacer les 3 lignes suivantes par getValInArray
-            $order = getVal("order","DESC");
+          //TODO remplacer les 3 lignes suivantes par getValInArray
+          $order = getVal("order","DESC");
 
-            if ( strcmp($order,"ASC") !== 0 )
-                $order = "DESC";
+          if ( strcmp($order,"ASC") !== 0 )
+              $order = "DESC";
 
-            // tableau pour gérer les order by
-            $a_order[0]= "IMG_COUV";
-            $a_order[1]= "TITRE_TOME $order, NUM_TOME";
-            $a_order[2]= "NOM_SERIE $order, NUM_TOME";
-            $a_order[3]= "NOM_EDITION";
-            $a_order[4]= "NOM_COLLECTION";
-            $a_order[5]= "scpseudo";
-            $a_order[6]= "depseudo";
-            $a_order[7]= "DATE_AJOUT";
-            $a_order[8]= "DTE_PARUTION";
+          // tableau pour gérer les order by
+          $a_order[0]= "IMG_COUV";
+          $a_order[1]= "TITRE_TOME $order, NUM_TOME";
+          $a_order[2]= "NOM_SERIE $order, NUM_TOME";
+          $a_order[3]= "NOM_EDITION";
+          $a_order[4]= "NOM_COLLECTION";
+          $a_order[5]= "scpseudo";
+          $a_order[6]= "depseudo";
+          $a_order[7]= "DATE_AJOUT";
+          $a_order[8]= "DTE_PARUTION";
 
-            // variable $sort donne la colonne pour le tri
-            // on s'assure que la variable est dans le bon intervale de valeur
-            $sort = getValInteger("sort",9);
-            $sort = max(min($sort,9),1);
-            //if ($sort <= 0) $sort = 1;//inutile grace a max(min()) juste au-dessus
+          // variable $sort donne la colonne pour le tri
+          // on s'assure que la variable est dans le bon intervale de valeur
+          $sort = getValInteger("sort",9);
+          $sort = max(min($sort,9),1);
+          //if ($sort <= 0) $sort = 1;//inutile grace a max(min()) juste au-dessus
 
-            $limit = " limit ".(($page - 1)*$length).", ".$length;
-            $orderby = " order by ".$a_order[$sort-1]." ".$order;
+          $limit = " limit ".(($page - 1)*$length).", ".$length;
+          $orderby = " order by ".$a_order[$sort-1]." ".$order;
 
-            $where = " where ua.user_id = ".$user_id ." and flg_achat = 'O' ";
+          $where = " where ua.user_id = ".$user_id ." and flg_achat = 'O' ";
 
 
-            if($l_search <> "") {
-                $searchvalue = Db_Escape_String($l_search);
-                $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
-            }
-           // echo  $this->Useralbum->select()." where ua.user_id = ".$user_id ." and flg_achat = 'N' ".$orderby. $limit;
-            $dbs_tome = $this->Useralbum->load("c",$where.$orderby. $limit);
+          if($l_search <> "") {
+              $searchvalue = Db_Escape_String($l_search);
+              $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
+          }
+          // echo  $this->Useralbum->select()." where ua.user_id = ".$user_id ." and flg_achat = 'N' ".$orderby. $limit;
+          $dbs_tome = $this->Useralbum->load("c",$where.$orderby. $limit);
 
-            $nbr = Db_CountRow($this->Useralbum->select().$where);
+          $nbr = Db_CountRow($this->Useralbum->select().$where);
 
-            $this->view->set_var( array (
-                "dbs_tome" => $dbs_tome,
-                "page" => $page,
-                "length" => $length,
-                "nbr" => $nbr,
-                "sort" => $sort,
-                "order" => $order,
-                "pret" => $pret,
-                "cadeau" => $cadeau,
-                "eo" => $eo,
-                "dedicace" => $dedicace,
-                "searchvalue" => $l_search
-                ));
-        }
-        else {
-            die("Vous devez vous authentifier pour accéder à cette page.");
-        }
+          $this->view->set_var( array (
+              "dbs_tome" => $dbs_tome,
+              "page" => $page,
+              "length" => $length,
+              "nbr" => $nbr,
+              "sort" => $sort,
+              "order" => $order,
+              "pret" => $pret,
+              "cadeau" => $cadeau,
+              "eo" => $eo,
+              "dedicace" => $dedicace,
+              "searchvalue" => $l_search
+              ));
+      }
+      else {
+          die("Vous devez vous authentifier pour accéder à cette page.");
+      }
 
-        $this->view->set_var("PAGETITLE","Mes Futurs Achats");
-        $this->view->render();
+      $this->view->set_var("PAGETITLE","Mes Futurs Achats");
+      $this->view->render();
     }
 
     public function deleteAlbum() {
