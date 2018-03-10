@@ -1390,7 +1390,9 @@ div.textmasked {
     #select_genre{
         display:none;
     }
-
+    #onglets > li:nth-child(10) {
+        display:none;
+    }
     #onglets > li:nth-child(9) {
         display:none;
     }
