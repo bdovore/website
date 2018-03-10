@@ -303,7 +303,7 @@ class Macollection extends Bdo_Controller {
                   // récupére la valeur dans un coockie
                   $length = $_COOKIE["l_etageres"];
               } else {
-                  $length = 10;
+                  $length = 12;
               }
           }
           setcookie("l_etageres",$length,time()+2592000);
@@ -395,7 +395,7 @@ class Macollection extends Bdo_Controller {
                   // récupére la valeur dans un coockie
                   $length = $_COOKIE["l_etageres"];
               } else {
-                  $length = 10;
+                  $length = 12;
               }
           }
           setcookie("l_etageres",$length,time()+2592000);
