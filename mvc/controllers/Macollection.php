@@ -299,9 +299,9 @@ class Macollection extends Bdo_Controller {
           //        voir si cela fait du sens de dissocier ces 2 longueurs ?
           //TODO mettre une longueur max. pour la recherche ?
           if (!$length) {
-              if ($_COOKIE["l_etageres"] ) {
+              if ($_COOKIE["l_etageres_auteur"] ) {
                   // récupére la valeur dans un coockie
-                  $length = $_COOKIE["l_etageres"];
+                  $length = $_COOKIE["l_etageres_auteur"];
               } else {
                   $length = 12;
               }
@@ -391,9 +391,9 @@ class Macollection extends Bdo_Controller {
           //        voir si cela fait du sens de dissocier ces 2 longueurs ?
           //TODO mettre une longueur max. pour la recherche ?
           if (!$length) {
-              if ($_COOKIE["l_etageres"] ) {
+              if ($_COOKIE["l_etageres_serie"] ) {
                   // récupére la valeur dans un coockie
-                  $length = $_COOKIE["l_etageres"];
+                  $length = $_COOKIE["l_etageres_serie"];
               } else {
                   $length = 12;
               }
