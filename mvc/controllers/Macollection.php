@@ -306,7 +306,7 @@ class Macollection extends Bdo_Controller {
                   $length = 12;
               }
           }
-          setcookie("l_etageres",$length,time()+2592000);
+          setcookie("l_etageres_auteur",$length,time()+2592000);
 
           $l_search = getVal("l_search","" );
 
@@ -398,7 +398,7 @@ class Macollection extends Bdo_Controller {
                   $length = 12;
               }
           }
-          setcookie("l_etageres",$length,time()+2592000);
+          setcookie("l_etageres_serie",$length,time()+2592000);
 
           $l_search = getVal("l_search","" );
 
