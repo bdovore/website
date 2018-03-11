@@ -175,8 +175,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                     <br>
                         <span class="petite_police">
                     ISBN-13 (EAN) : <?php echo $view->tome->EAN_EDITION;?> || ISBN-10 : <?php echo $view->tome->ISBN_EDITION;?> || ID-BDovore : <?php echo $view->tome->ID_TOME;?> </span>
-
-            <div class="action" id="action-menu">
+<div class="action" id="action-menu">
                 <div align="center">
                     <div id="actionCollection"></div>
 
@@ -197,6 +196,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             <?php } ?>
                                       
                                        <br>
+                                       <!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5aa565c61fcc82d7"></script> 
+                    <!-- Go to www.addthis.com/dashboard to customize your tools --> <div class="addthis_inline_share_toolbox"></div>
+                    <br>
                                        <div id="simil">
                                            <a href="<?php echo BDO_URL;?>discovery?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">== Vous aimerez aussi peut être... ==</a>
                                            <br></div>
@@ -214,6 +216,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 
         </div>
+    
 
       <div id="info_collection">
               <center><strong>Données privées</strong><br><span class="petite_police">(pour votre utilisation personnelle)</span></center>
@@ -291,8 +294,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                     <tr>
                         <td>
-                            Note:
-                                                        <div id="commentRaty"></div>
+                            <b><i>Note:</i></b>
+                                                        <span id="commentRaty"></span>
                                                         <script>$("#commentRaty").raty({ scoreName: 'note', half : true})</script>
 
                         </td>

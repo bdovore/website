@@ -113,7 +113,7 @@ if (isset($view->dbs_comment)) {
                                 <td style='vertical-align:top'>
 
                                     <strong><?php echo $ficheAlbum->urlalbum($tome, 'albTitle'); ?></strong>
-                                    <span id='noteTome<?php echo $tome->ID_TOME; ?>'> </span>
+                                    <br>   <span id='noteTome<?php echo $tome->ID_TOME; ?>'> </span>
                                         <?php if (User::minAccesslevel(1)) { ?>
                                     <a title="Passer ce commentaire en status privé" onclick="setCommentPrivate(<?php echo $tome->user_id;?>,<?php echo $tome->ID_TOME; ?>);"><img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif"></a>
                                         <?php } ?>
@@ -124,7 +124,7 @@ if (isset($view->dbs_comment)) {
                                 </td>
                         </table>
                     </div>
-                    <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE / 2; ?>, readOnly: true});</script>
+                  <?php if ($tome->NOTE > 0) { ?> <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE / 2; ?>, readOnly: true});</script><?php } ?>
 
     <?php
     }

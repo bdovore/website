@@ -299,14 +299,14 @@ class Macollection extends Bdo_Controller {
           //        voir si cela fait du sens de dissocier ces 2 longueurs ?
           //TODO mettre une longueur max. pour la recherche ?
           if (!$length) {
-              if ($_COOKIE["l_etageres"] ) {
+              if ($_COOKIE["l_etageres_auteur"] ) {
                   // récupére la valeur dans un coockie
-                  $length = $_COOKIE["l_etageres"];
+                  $length = $_COOKIE["l_etageres_auteur"];
               } else {
-                  $length = 10;
+                  $length = 12;
               }
           }
-          setcookie("l_etageres",$length,time()+2592000);
+          setcookie("l_etageres_auteur",$length,time()+2592000);
 
           $l_search = getVal("l_search","" );
 
@@ -391,14 +391,14 @@ class Macollection extends Bdo_Controller {
           //        voir si cela fait du sens de dissocier ces 2 longueurs ?
           //TODO mettre une longueur max. pour la recherche ?
           if (!$length) {
-              if ($_COOKIE["l_etageres"] ) {
+              if ($_COOKIE["l_etageres_serie"] ) {
                   // récupére la valeur dans un coockie
-                  $length = $_COOKIE["l_etageres"];
+                  $length = $_COOKIE["l_etageres_serie"];
               } else {
-                  $length = 10;
+                  $length = 12;
               }
           }
-          setcookie("l_etageres",$length,time()+2592000);
+          setcookie("l_etageres_serie",$length,time()+2592000);
 
           $l_search = getVal("l_search","" );
 

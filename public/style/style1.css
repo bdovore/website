@@ -828,7 +828,7 @@ div.top_content {
 }
 
 div.middle_title {
-    width: 100%;
+    
     background-color: rgba(143, 18, 4, 1);
     color: #FFFFFF;
     padding-left: 5px;
@@ -1390,7 +1390,9 @@ div.textmasked {
     #select_genre{
         display:none;
     }
-
+    #onglets > li:nth-child(10) {
+        display:none;
+    }
     #onglets > li:nth-child(9) {
         display:none;
     }

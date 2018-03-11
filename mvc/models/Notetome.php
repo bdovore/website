@@ -74,7 +74,7 @@ class Notetome extends Bdo_Db_Line
          */
 
         $query= "replace into note_tome (id_tome, MOYENNE_NOTE_TOME , NB_NOTE_TOME )
-                select id_tome,  sum(note)/count(*) moyenne, count(*) nb_note from users_comment where id_tome=".$id_tome;
+                select id_tome,  sum(note)/count(note) moyenne, count(note) nb_note from users_comment where id_tome=".$id_tome;
 
         $resultat = Db_query($query);
 
