@@ -124,7 +124,7 @@ if (isset($view->dbs_comment)) {
                                 </td>
                         </table>
                     </div>
-                    <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE / 2; ?>, readOnly: true});</script>
+                  <?php if ($tome->NOTE > 0) { ?> <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE / 2; ?>, readOnly: true});</script><?php } ?>
 
     <?php
     }

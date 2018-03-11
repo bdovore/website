@@ -76,7 +76,7 @@ function getComment(page,id_tome,user_id) {
             Posté par <a href='./guest?user="+item.user_id + "' target='parent'>"+ item.username + "</a> le "+ item.DTE_POST +"  <p>     \n\
              " + stripslashes(nl2br(item.COMMENT)) + "</p> </div>");
 
-            $('#noteTome'+ idcmt ).raty({score: item.NOTE/2.0 , readOnly: true});
+            if (item.NOTE > 0) $('#noteTome'+ idcmt ).raty({score: item.NOTE/2.0 , readOnly: true});
             }
            )
         }
