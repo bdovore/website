@@ -56,6 +56,7 @@ class AuteurBD extends Bdo_Controller {
 
         $this->view->set_var(array(
             "PAGETITLE" => "Tous les albums de ".$this->Auteur->PSEUDO,
+            "DESCRIPTION" =>  substr(strip_tags($this->Auteur->COMMENT),0,150),
             "auteur" =>  $this->Auteur,
             "dbs_tome" => $dbs_tome,
             "nb_total_album" => $this->Tome->getNbAlbumForAuteur($ID_AUTEUR),
