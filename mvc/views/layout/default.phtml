@@ -4,7 +4,7 @@ $jquery = $view->getHelper('jquery');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html<?php if (isset($view->opengraph)) echo ' xmlns:og="http://ogp.me/ns#"'; ?>>
 <head>
 <title><?php echo $view->PAGETITLE;?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -16,6 +16,19 @@ $jquery = $view->getHelper('jquery');
 <meta name="reply-to" content="" />
 <meta name="revisit-after" content="7 days" />
 <meta name="robots" content="all" />
+<?php if (isset($view->opengraph)) { ?>
+<!-- open graph -->
+<meta property="og:title" content="<?php echo $view->PAGETITLE;?>" />
+<meta property="og:type" content="<?php echo $view->opengraph["type"] ;?>" />
+<meta property="og:url" content="<?php echo BDO_URL.$_SERVER['REQUEST_URI']; ?>" />
+<meta property="og:image" content="<?php echo $view->opengraph["image"] ;?>" />
+    <?php if ($view->opengraph["type"] == "book") { ?>
+        <meta property="book:author" content="<?php echo $view->opengraph["author"] ;?>" />
+        <meta property="book:isbn" content="<?php echo $view->opengraph["isbn"] ;?>" />
+        <meta property="book:release_date" content="<?php echo $view->opengraph["release_date"] ;?>" />
+        <meta property="book:tag" content="<?php echo $view->opengraph["tag"] ;?>" />
+    <?php } ?>
+<?php } ?>
 <!-- Include media queries -->
 <meta name="viewport" content="width=device-width"/>
 <meta name="apple-mobile-web-app-capable" content="yes" />

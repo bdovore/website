@@ -86,6 +86,16 @@ class Album extends Bdo_Controller {
         $dbs_edition = $this->Edition->load(c, "where PROP_STATUS not in ('0','99','98') and bd_tome.id_tome =" . $ID_TOME ." ORDER BY DATE_PARUTION_EDITION");
 
         $this->view->set_var(array("dbs_edition" => $dbs_edition));
+        // opengraph info
+        $opengraph = array (
+          "type" => "book",
+          "image" => BDO_URL_COUV.$this->view->a_var["tome"]->IMG_COUV,
+        "author" => $this->view->a_var['tome']->scpseudo,
+         "isbn" => $this->view->a_var['tome']->EAN_EDITION,
+         "release_date" => $this->view->a_var['dateparution'],
+         "tag"=> $this->view->a_var['tome']->NOM_GENRE
+        );
+        $this->view->set_var("opengraph",$opengraph);
         // set frame
         $url_referer = parse_url($_SERVER["HTTP_REFERER"]);
         $domaine = $url_referer['host'];

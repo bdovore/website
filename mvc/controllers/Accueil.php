@@ -24,7 +24,10 @@ class Accueil extends Bdo_Controller
                 'ACTUAIR' => $this->Actus->actuAir(),
                 'LASTAJOUT' => $this->Actus->lastAjout()
         ));
-
+        $opengraph = array(
+            "type" => "website",
+            "image" => "https://www.bdovore.com/images/site/bdo_fond1.jpg"
+        );
         $this->view->set_var(
                 array(
                         'a_lastSorties' => $this->lastSorties(6),
@@ -34,6 +37,7 @@ class Accueil extends Bdo_Controller
                         'a_lastComics' => $this->lastCommentaires(3,"Comics"),
                         'a_futurSorties' => $this->futurSorties(6),
                         'nbTome' => $this->Tome->getNbTotalTome(),
+                    'opengraph' => $opengraph,
                         'PAGETITLE' => "BDOVORE.com - gestion de collection de BD, actualité BD et forums BD"
                 ));
 
