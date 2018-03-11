@@ -62,7 +62,11 @@ class AuteurBD extends Bdo_Controller {
             "nb_album" =>  $this->Tome->getNbAlbumForAuteur($ID_AUTEUR,$activite),
             "activite" => $activite,
             "page" => $page,
-            "lastAlbum" => $this->Tome->getLastAlbumForAuteur($ID_AUTEUR,10)
+            "lastAlbum" => $this->Tome->getLastAlbumForAuteur($ID_AUTEUR,10),
+            "opengraph" => array(
+                "type" => "webpage",
+                "image" => BDO_URL_IMAGE."auteur/".($this->Auteur->IMG_AUT ?$this->Auteur->IMG_AUT : "default_auteur.png" )
+            )
         ));
 
         $this->view->render();

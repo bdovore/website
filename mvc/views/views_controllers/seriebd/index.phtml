@@ -37,7 +37,7 @@ $pageinate = $view->getHelper('Pagination');
                 
             </div>
 
-            <div class="middle_title" style="height:26px;">
+            <div class="middle_title addthis">
                 <h3>Fiche Série
 
 <?php echo $view->serie->NOM_SERIE; ?> <?php if (User::minAccesslevel(1)) { ?><a class="fancybox fancybox.iframe {width:600,height:600}" href="admin/editserie?serie_id=<?php echo $view->serie->ID_SERIE; ?>"> <img src="<?php echo BDO_URL_IMAGE; ?>edit.gif" /></a> <?php } ?></h3></div>
