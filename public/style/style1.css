@@ -818,6 +818,9 @@ img.couvSmall {
     border: 1px solid #000;
     max-width:70px;
 }
+img.img-sponsor {
+    height:25px;
+}
 
 div.top_content {
     padding-top: 5px;
