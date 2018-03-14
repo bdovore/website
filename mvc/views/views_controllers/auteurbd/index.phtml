@@ -15,20 +15,16 @@ $pageinate = $view->getHelper('Pagination');
 
         <!-- cadre central de la page -->
         <div class="cadre1">
-            <div style="float: right;">
+              <div class="addthis_inline_share_toolbox" style="float: right;">
                 <!-- AddThis Button BEGIN -->
-                <script type="text/javascript">var addthis_pub = "zeas";
-    var addthis_brand = "BDovore";
-    var addthis_header_color = "#990000";
-    var addthis_header_background = "#DAC1B3";</script><a href="http://www.addthis.com/bookmark?v=20" onmouseover="return addthis_open(this, '', '[URL]', '[TITLE]')" onmouseout="addthis_close()" onclick="return addthis_sendto()"><img src="<?php echo BDO_URL_IMAGE; ?>site/lg-addthis-fr.gif" width="125" height="16" alt="Partager cette page" style="border:0"/></a>
+                <!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5aa565c61fcc82d7"></script> 
                 <noscript>
                 <span class="petite_police"><br />Javascript absent/désactivé dans votre navigateur : bouton inactif</span>
                 </noscript>
-                <script type="text/javascript" src="http://s7.addthis.com/js/200/addthis_widget.js"></script>
-                <!-- AddThis Button END -->
+                
             </div>
 
-            <div class="middle_title">
+            <div class="middle_title addthis">
                 <h3>Fiche Auteur
 
 <?php echo $view->auteur->PSEUDO; ?> <?php if (User::minAccesslevel(1)) { ?><a class="fancybox fancybox.iframe {width:600,height:600}" href="admin/editauteur?auteur_id=<?php echo $view->auteur->ID_AUTEUR; ?>"> <img src="<?php echo BDO_URL_IMAGE; ?>edit.gif" /></a> <?php } ?></h3></div>

@@ -836,6 +836,9 @@ div.middle_title {
 
 }
 
+div.addthis {
+    min-height: 26px;
+}
 .middle_title a {
     color: #FFFFFF;
 }

@@ -77,6 +77,7 @@ class Album extends Bdo_Controller {
             'dateparution' => notIssetOrEmpty($this->Tome) ? $this->Edition->DATE_PARUTION_EDITION : $this->Tome->DTE_PARUTION,
             'PAGETITLE' => "Album BD : " . ( notIssetOrEmpty($this->Tome) ? $this->Edition->TITRE_TOME : $this->Tome->TITRE_TOME),
             'connected' => (!empty($_SESSION['userConnect']->user_id)),
+            "DESCRIPTION" => strip_tags( notIssetOrEmpty($this->Tome) ? $this->Edition->HISTOIRE_TOME :  $this->Tome->HISTOIRE_TOME),
             "mobile" => $mobile
         ));
 
