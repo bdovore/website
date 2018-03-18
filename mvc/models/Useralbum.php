@@ -685,7 +685,7 @@ class Useralbum extends Bdo_Db_Line
       
       $order= "
         group by auteur,pseudo,nom,prenom,img_aut
-        order by auteur
+        order by pseudo
         LIMIT ".(($page - 1)*$length).", ".$length
       ;
       $query = $select.$where.$order;
