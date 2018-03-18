@@ -724,7 +724,7 @@ div.alb-img {
     float: left;
     max-width: 190px;
     padding-left: 10px;
-
+    margin-right: 10px;
 }
 
 div.contentalb {
@@ -817,6 +817,9 @@ img.couvMedium {
 img.couvSmall {
     border: 1px solid #000;
     max-width:70px;
+}
+img.img-sponsor {
+    height:25px;
 }
 
 div.top_content {

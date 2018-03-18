@@ -11,6 +11,13 @@ $page = $view->getHelper('pagination');
     <div class="middle_title"><h3>Collection de <?php echo $view->USERNAME;?></h3></div>
      <?php echo $page->menuGuest(encodeUserId($view->IDUSER)); ?>
       <br>
+      <div class="addthis_inline_share_toolbox" style="float: right;">
+                <!-- AddThis Button BEGIN -->
+                <!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5aa565c61fcc82d7"></script> 
+                <noscript>
+                <span class="petite_police"><br />Javascript absent/désactivé dans votre navigateur : bouton inactif</span>
+                </noscript>
+  </div>
     <div class="cadre1" style="float:left;">
 
     <h2>Carr&eacute; Magique de <?php echo $view->USERNAME;?></h2>
@@ -90,7 +97,7 @@ $page = $view->getHelper('pagination');
                         </p>
 
         </div>
-
+  
 
 
     <hr class="expSep"/>

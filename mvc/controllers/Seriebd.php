@@ -28,6 +28,7 @@ class SerieBD extends Bdo_Controller {
             'serie' => $this->Serie,
             'PAGETITLE' => "Série BD : " . $this->Serie->NOM_SERIE,
             "DESCRIPTION" => "Tout sur la série ".$this->Serie->NOM_SERIE . " ".$this->Serie->HISTOIRE, 
+            "KEYWORD" => $this->Serie->NOM_SERIE,
             'NUM_PAGE' => $page,
             "opengraph" => array ("type" => "website",
                      "image" => BDO_URL_COUV.$this->Serie->IMG_COUV_SERIE)

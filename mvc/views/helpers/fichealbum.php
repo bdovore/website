@@ -313,7 +313,7 @@ class FicheAlbum {
             $o_serie = (object) $o_serie;
         }
 
-        $html = '<a href="' . $this->getURLSerie($o_serie,$page) .'" title="' . $o_serie->NOM_SERIE . '"'.( $target ? 'target="'. $target.'"' : '') .'>
+        $html = '<a href="' . $this->getURLSerie($o_serie,$page) .'" title="' . $o_serie->NOM_SERIE . '"'.( $target ? ' target="'. $target.'"' : '') .'>
             ' . $o_serie->NOM_SERIE . '</a>';
 
         if (Bdo_Cfg::user()->minAccesslevel(1)) {
@@ -338,7 +338,7 @@ class FicheAlbum {
             $html = htmlspecialchars($o_auteur->PSEUDO);
         } else {
         $url =  $this->getURLAuteur($o_auteur);
-         $html = '<a href="' . $url.'" title="Tous les albums de ' . $o_auteur->PSEUDO . '"' .( $target ? 'target="'. $target.'"' : '')  .'>
+         $html = '<a href="' . $url.'" title="Tous les albums de ' . $o_auteur->PSEUDO . '"' .( $target ? ' target="'. $target.'"' : '')  .'>
              ' . $o_auteur->PSEUDO . '</a>';
 
          if (Bdo_Cfg::user()->minAccesslevel(1)) {

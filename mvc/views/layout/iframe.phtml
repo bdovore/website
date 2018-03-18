@@ -9,14 +9,25 @@ $jquery = $view->getHelper('jquery');
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="content-language" content="fr" />
 <meta name="description"
-    content="<?php echo $view->DESCRIPTION;?> BDovore - Le site des collectionneurs de BD. Gérer votre collection de bandes dessinées en ligne et gratuitement !" />
+    content="<?php echo htmlentities($view->DESCRIPTION);?> BDovore - Le site des collectionneurs de BD. Gérer votre collection de bandes dessinées en ligne et gratuitement !" />
 <meta name="keywords"
-    content="bd, bandes dessinées, bandes, dessinées, bande, dessinée, profiler, bdprofiler, comics, manga, collection, collections, bdvore, collectionneur, dedicace, auteurs, albums, editeurs, gratuit, base de données, <?php echo $view->PAGEKEYWORD;?>" />
+    content="<?php echo htmlentities($view->KEYWORD);?>, bd, bandes dessinées, bandes, dessinées, bande, dessinée, profiler, bdprofiler, comics, manga, collection, collections, bdvore, collectionneur, dedicace, auteurs, albums, editeurs, gratuit, base de données, <?php echo $view->PAGEKEYWORD;?>" />
 <meta name="author" content="Tomlameche/Latruffe/Zéas" />
-<meta name="identifier-url" content="http://www.bdovore.com" />
-<meta name="reply-to" content="" />
-<meta name="revisit-after" content="7 days" />
-<meta name="robots" content="all" />
+<meta name="category" content="BD, bande dessinee" /> 
+<meta name="robots" content="index, follow" />
+<?php if (isset($view->opengraph)) { ?>
+<!-- open graph -->
+<meta property="og:title" content="<?php echo $view->PAGETITLE;?>" />
+<meta property="og:type" content="<?php echo $view->opengraph["type"] ;?>" />
+<meta property="og:url" content="<?php echo BDO_URL.$_SERVER['REQUEST_URI']; ?>" />
+<meta property="og:image" content="<?php echo $view->opengraph["image"] ;?>" />
+    <?php if ($view->opengraph["type"] == "book") { ?>
+        <meta property="book:author" content="<?php echo $view->opengraph["author"] ;?>" />
+        <meta property="book:isbn" content="<?php echo $view->opengraph["isbn"] ;?>" />
+        <meta property="book:release_date" content="<?php echo $view->opengraph["release_date"] ;?>" />
+        <meta property="book:tag" content="<?php echo $view->opengraph["tag"] ;?>" />
+    <?php } ?>
+<?php } ?>
 
 
 <script src="<?php echo BDO_URL;?>jquery/jquery-1.10.2.min.js" type="text/javascript"></script>
