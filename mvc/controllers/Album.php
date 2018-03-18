@@ -69,15 +69,16 @@ class Album extends Bdo_Controller {
         }
 
         // Récupération de la liste des éditions d'un album
-
+        $o_tome = notIssetOrEmpty($this->Tome) ? $this->Edition : $this->Tome;
         $this->view->set_var(array(
-            'tome' => notIssetOrEmpty($this->Tome) ? $this->Edition : $this->Tome,
+            'tome' => $o_tome,
             //TODO rendre ça plus 'clean'. Pourquoi avoir deux noms différents ?
             //(pour les cas où on présente album *et* éditions sur une même vue ?
             'dateparution' => notIssetOrEmpty($this->Tome) ? $this->Edition->DATE_PARUTION_EDITION : $this->Tome->DTE_PARUTION,
-            'PAGETITLE' => "Album BD : " . ( notIssetOrEmpty($this->Tome) ? $this->Edition->TITRE_TOME : $this->Tome->TITRE_TOME),
+            'PAGETITLE' => "Album BD : " . $o_tome->TITRE_TOME,
+            "KEYWORD" => $o_tome->TITRE_TOME,
             'connected' => (!empty($_SESSION['userConnect']->user_id)),
-            "DESCRIPTION" => strip_tags( notIssetOrEmpty($this->Tome) ? $this->Edition->HISTOIRE_TOME :  $this->Tome->HISTOIRE_TOME),
+            "DESCRIPTION" => "Tout sur l'album BD " .$o_tome->TITRE_TOME . " "  . strip_tags( notIssetOrEmpty($this->Tome) ? $this->Edition->HISTOIRE_TOME :  $this->Tome->HISTOIRE_TOME),
             "mobile" => $mobile
         ));
 

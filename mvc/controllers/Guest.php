@@ -49,6 +49,7 @@ class Guest extends Bdo_Controller
             $this->view->set_var('a_carre',  $this->Useralbum->carre($user));
 
             // Selection des 4 derniers achats
+            $lastAchat = $this->Useralbum->lastAchat($user->user_id);
             $this->view->set_var('a_lastAchat', $this->Useralbum->lastAchat($user->user_id));
 
 
@@ -63,6 +64,7 @@ class Guest extends Bdo_Controller
                     array(
                             "PAGETITLE" => "Bdovore.com : visitez la collection de $user->username",
                             "IDUSER" => $user->user_id,
+                            'DESCRIPTION'=> "La collection de bandes-dessinées, comics et mangas de $user->username",
                             //"DTEARRIVEE" => $user_regdate,
                             //"NBPOSTS" => $user_posts,
                             "NBPROPS" => $user_prop_alb,
@@ -76,12 +78,14 @@ class Guest extends Bdo_Controller
                             "NBACHATS" => $stat["nbfuturs_achats"],
                             "URLBROWSER" => BDO_URL . 'guest/browser?user=' . $ori_user,
                             "USERID" => $ori_user,
-                            "URLCOLLEC" => "www.bdovore.com/guest?user=" . $ori_user
+                            "URLCOLLEC" => "www.bdovore.com/guest?user=" . $ori_user,
+                            "opengraph" => array (
+                                "type" => "website",
+                                "image" => BDO_URL_COUV.($lastAchat->a_dataQuery[0]->IMG_COUV)
+                            )
                     ));
 
-            if (issetNotEmpty($_GET["user"])) {
-                $this->view->set_var("ADDTHIS", "<img src='" . BDO_URL_IMAGE . "site/lg-addthis-fr.gif' width='125' height='16' alt='Partager cette page' style='border:0'/>");
-            }
+           
         }
         $this->view->render();
     }
@@ -152,6 +156,7 @@ class Guest extends Bdo_Controller
 
             $this->view->set_var( array (
                 "PAGETITLE" => "Bdovore.com : visitez la collection de $user->username",
+                'DESCRIPTION'=> "Tous les albums de bandes-dessinées, comics et mangas de la collection de $user->username",
                 "dbs_tome" => $dbs_tome,
                 "page" => $page,
                 "length" => $length,
@@ -164,7 +169,11 @@ class Guest extends Bdo_Controller
                 "dedicace" => $dedicace,
                 "searchvalue" => $searchvalue,
                 "IDUSER" => $user->user_id,
-                "USERNAME" => $user->username
+                "USERNAME" => $user->username,
+                 "opengraph" => array (
+                                "type" => "website"
+                               
+                            )
                     )
                   ) ;
         }
@@ -232,6 +241,7 @@ class Guest extends Bdo_Controller
 
             $this->view->set_var( array (
                 "PAGETITLE" => "Bdovore.com : visitez la collection de $user->username",
+                'DESCRIPTION'=> "Les bandes-dessinées, comics et mangas à offrir à  $user->username",
                 "dbs_tome" => $dbs_tome,
                 "page" => $page,
                 "length" => $length,
@@ -244,7 +254,11 @@ class Guest extends Bdo_Controller
                 "dedicace" => $dedicace,
                 "searchvalue" => $searchvalue,
                 "IDUSER" => $user->user_id,
-                "USERNAME" => $user->username
+                "USERNAME" => $user->username,
+                "opengraph" => array (
+                                "type" => "website"
+                               
+                            )
                     )
                   ) ;
         }
@@ -310,10 +324,15 @@ class Guest extends Bdo_Controller
 
             $this->view->set_var(array(
                "PAGETITLE" => "Bdovore.com : les avis BD de $user->username",
+                'DESCRIPTION'=> "Les avis bandes-dessinées, comics et mangas de $user->username",
                "dbs_comment" => $dbs_comment,
                "NUM_PAGE" => $page,
                "IDUSER" => $user->user_id,
-               "USERNAME" => $user->username
+               "USERNAME" => $user->username,
+                "opengraph" => array (
+                                "type" => "website"
+                               
+                            )
            ));
         }
 
