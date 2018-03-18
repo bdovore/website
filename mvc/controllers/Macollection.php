@@ -291,8 +291,8 @@ class Macollection extends Bdo_Controller {
           $length = getValInteger("length",0);
 
           // Filtres
-          $sel_type = getVal("sel_type","Tous");
-          $sel_trav = getVal("sel_trav","Tous");
+          $origin  = getVal("origin",array("BD","Comics","Mangas"));
+          $travail = getVal("travail",array("Scénariste","Dessinateur","Coloriste"));
 
           // FRED - Pour le moment, on utilise la meme longueur max
           //        que pour la collection par album.
@@ -309,18 +309,6 @@ class Macollection extends Bdo_Controller {
           setcookie("l_etageres_auteur",$length,time()+2592000);
 
           $l_search = getVal("l_search","" );
-
-          if ($sel_type <> "Tous") {
-              $origin = Db_Escape_String($sel_type);
-          } else {
-              $origin = "";
-          }
-
-          if ($sel_trav <> "Tous") {
-              $travail = Db_Escape_String($sel_trav);
-          } else {
-              $travail = "";
-          }
 
           if($l_search <> "") {
               $searchvalue = Db_Escape_String($l_search);
@@ -339,8 +327,8 @@ class Macollection extends Bdo_Controller {
               "length" => $length,
               "nbr" => $nbr,
               "searchvalue" => $l_search,
-              "sel_type" => $sel_type,
-              "sel_trav" => $sel_trav
+              "origin" => $origin,
+              "travail" => $travail
               ));
       }
       else {
