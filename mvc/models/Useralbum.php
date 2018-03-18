@@ -133,7 +133,7 @@ class Useralbum extends Bdo_Db_Line
         return $select.$from;
     }
 
-    private function getReqAuteur($user_id,$champ) {
+    private function getReqAuteur($user_id,$champ,$search="") {
       $req = "select t.".$champ." as auteur
               from users_album u
               inner join bd_edition e using (id_edition)
@@ -143,10 +143,13 @@ class Useralbum extends Bdo_Db_Line
               where ".$champ." <> 0
                 and u.user_id = " . $user_id ."
                 and pseudo not in ('<n&b>','<indéterminé>')";
-      return $req;
+      if($search <> "")
+        $req .= " and ( pseudo like '%". $search ."%' or nom like '%". $search ."%' or prenom like '%". $search ."%' ) ";
+      
+          return $req;
     }
 
-    public function getStatistiques($user_id,$stat="all",$origin="",$travail="") {
+    public function getStatistiques($user_id,$stat="all",$origin="",$travail="",$search="") {
         // fonction qui renvoit les statistiques d'une collection
         // Charge les statistisques
 
@@ -169,6 +172,12 @@ class Useralbum extends Bdo_Db_Line
 
             if ($origin !== "")
               $query .= " and g.origine = '" . $origin . "'" ;
+
+            // FRED : Pour les albums de Ma Collection, le nombre d'albums avec un critère de recherche (searchvalue) 
+            //        ne vient pas de cette fonction. Seule les séries passent par là.
+            //        Donc, pour le moment, on considère qu'un $search renseigné ne concerne que les séries...
+            if ($search)
+              $query .= " and ( s.nom like '%". $search ."%' ) ";
 
             $resultat = Db_query($query);
 
@@ -252,20 +261,20 @@ class Useralbum extends Bdo_Db_Line
           $req = "";
           if (in_array("Scénariste",$travail)) {
             $req .= ($req) ? " union " : "";
-            $req .=             $this->getReqAuteur($user_id,'id_scenar') . $where;
-            $req .= " union " . $this->getReqAuteur($user_id,'id_scenar_alt') . $where;
+            $req .=             $this->getReqAuteur($user_id,'id_scenar',$search) . $where;
+            $req .= " union " . $this->getReqAuteur($user_id,'id_scenar_alt',$search) . $where;
           }
             
           if (in_array("Dessinateur",$travail)) {
             $req .= ($req) ? " union " : "";
-            $req .=             $this->getReqAuteur($user_id,'id_dessin') . $where;
-            $req .= " union " . $this->getReqAuteur($user_id,'id_dessin_alt') . $where;
+            $req .=             $this->getReqAuteur($user_id,'id_dessin',$search) . $where;
+            $req .= " union " . $this->getReqAuteur($user_id,'id_dessin_alt',$search) . $where;
           }
           
           if (in_array("Coloriste",$travail)) {
             $req .= ($req) ? " union " : "";
-            $req .=             $this->getReqAuteur($user_id,'id_color') . $where;
-            $req .= " union " . $this->getReqAuteur($user_id,'id_color_alt') . $where;
+            $req .=             $this->getReqAuteur($user_id,'id_color',$search) . $where;
+            $req .= " union " . $this->getReqAuteur($user_id,'id_color_alt',$search) . $where;
           }
 
           $req  = "
@@ -273,6 +282,7 @@ class Useralbum extends Bdo_Db_Line
           from (" . $req . "
             ) a 
           ";
+
           $nbauteurs  = Db_CountRow($req);
         }
         
