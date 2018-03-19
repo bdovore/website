@@ -288,16 +288,8 @@ class Macollection extends Bdo_Controller {
           $this->loadModel('Useralbum');
 
           $page = getValInteger("page",1);
+
           $length = getValInteger("length",0);
-
-          // Filtres
-          $origin  = getVal("origin",array("BD","Comics","Mangas"));
-          $travail = getVal("travail",array("Scénariste","Dessinateur","Coloriste"));
-
-          // FRED - Pour le moment, on utilise la meme longueur max
-          //        que pour la collection par album.
-          //        voir si cela fait du sens de dissocier ces 2 longueurs ?
-          //TODO mettre une longueur max. pour la recherche ?
           if (!$length) {
               if ($_COOKIE["l_etageres_auteur"] ) {
                   // récupére la valeur dans un coockie
@@ -307,6 +299,26 @@ class Macollection extends Bdo_Controller {
               }
           }
           setcookie("l_etageres_auteur",$length,time()+2592000);
+
+          // Filtres
+          $origin  = getVal("origin","");
+          if (!$origin)
+            if ($_COOKIE["o_etageres_auteur"])
+              $origin = explode(',',$_COOKIE["o_etageres_auteur"]);
+            else
+              $origin  = array("BD","Comics","Mangas");
+          setcookie("o_etageres_auteur",implode(',',$origin),time()+2592000);
+                  
+          $travail = getVal("travail","");
+          if (!$travail)
+            if ($_COOKIE["t_etageres_auteur"])
+              $travail = explode(',',$_COOKIE["t_etageres_auteur"]);
+            else
+              $travail  = array("Scénariste","Dessinateur","Coloriste");
+          setcookie("t_etageres_auteur",implode(',',$travail),time()+2592000);
+
+
+          //TODO mettre une longueur max. pour la recherche ?
 
           $l_search = getVal("l_search","" );
 
@@ -375,9 +387,7 @@ class Macollection extends Bdo_Controller {
           $page = getValInteger("page",1);
           $length = getValInteger("length",0);
           $sel_type = getVal("sel_type","Tous");
-          // FRED - Pour le moment, on utilise la meme longueur max
-          //        que pour la collection par album.
-          //        voir si cela fait du sens de dissocier ces 2 longueurs ?
+
           //TODO mettre une longueur max. pour la recherche ?
           if (!$length) {
               if ($_COOKIE["l_etageres_serie"] ) {
