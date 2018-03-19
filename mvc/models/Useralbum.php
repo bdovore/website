@@ -149,7 +149,7 @@ class Useralbum extends Bdo_Db_Line
           return $req;
     }
 
-    public function getStatistiques($user_id,$stat="all",$origin="",$travail="",$search="") {
+    public function getStatistiques($user_id,$stat="all",$auteur="",$origin="",$travail="",$search="") {
         // fonction qui renvoit les statistiques d'une collection
         // Charge les statistisques
 
@@ -178,6 +178,11 @@ class Useralbum extends Bdo_Db_Line
             //        Donc, pour le moment, on considère qu'un $search renseigné ne concerne que les séries...
             if ($search)
               $query .= " and ( s.nom like '%". $search ."%' ) ";
+
+            if ($auteur <> "")
+              $query .= "and (   id_scenar = ".$auteur." or id_scenar_alt = ".$auteur." 
+                              or id_dessin = ".$auteur." or id_dessin_alt = ".$auteur." 
+                              or id_color = ".$auteur." or id_color_alt = ".$auteur.")";
 
             $resultat = Db_query($query);
 
