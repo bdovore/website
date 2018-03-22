@@ -2,13 +2,13 @@
 
 class FicheSerie {
 
-    public function urlSerie($o_serie, $class = 'couvBig')
+    public function urlSerie($o_serie, $user_id = 0, $class = 'couvBig')
     {
       if (is_array($o_serie)) {
             $o_serie = (object) $o_serie;
         }
 
-        $id_link = $this->getURLSerie($o_serie);
+        $id_link = $this->getURLSerie($o_serie,$user_id);
 
         // couverture par defaut
         if (!$o_serie->IMG_COUV_SERIE)
@@ -70,14 +70,27 @@ class FicheSerie {
         }
     }
 
-    public function getURLSerie($o_serie,$page=1) {
+    public function getURLSerie($o_serie,$user_id=0) {
       if (is_array($o_serie)) {
             $o_serie = (object) $o_serie;
-        }
-        return BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-' .clean_url($o_serie->NOM_SERIE);
+      }
+      $url = BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-' .clean_url($o_serie->NOM_SERIE);
+      if ($user_id) $url .= '&user_id=' . $user_id;
+      return $url;
     }
 
-    public function big($o_serie,$sep=true,$incomplet=false,$exclu=false) {
+    /* Fonction rendant le code HTML contenant une fiche série.
+        Destiné à un affichage avec une grande couverture dans une liste de séries.
+
+        Paramètres
+        - $o_serie   : Série à afficher
+        - $sep       : Séparateur après la série
+        - $user_id   : Utilisateur considéré
+        - $incomplet : True si la série n'est pas possédée complètement
+        - $exclu     : True si la série est exclue des séries à compléter
+        
+      */ 
+    public function big($o_serie,$sep=true,$user_id=0,$incomplet=false,$exclu=false) {
       if (is_array($o_serie)) {
         $o_serie = (object) $o_serie;
       }
@@ -86,22 +99,22 @@ class FicheSerie {
                  <div style="float:left" class="mw50">';
       if ($incomplet !== false) {
         // Des albums sont à acheter (manquant)
-        $html .= $this->urlSerie($o_serie);
+        $html .= $this->urlSerie($o_serie,$user_id);
       } elseif ($exclu == 'serie') {
         // Rien n'est à acheter (manquant) car toute la série est exclue
-        $html .= $this->urlSerie($o_serie);
+        $html .= $this->urlSerie($o_serie,$user_id);
       } elseif ($exclu == 'album') {
         // Rien n'est à acheter (manquant) car les albums sont tous exclus (un par un)
-        $html .= $this->urlSerie($o_serie);
+        $html .= $this->urlSerie($o_serie,$user_id);
       } else {
-        $html .= $this->urlSerie($o_serie);
+        $html .= $this->urlSerie($o_serie,$user_id);
       }
       $html .= '</div>
                  <div class="mw50 couvleft">';
 
       // titre de la série
       $html .= '<h3>';
-      $html .= '<a href="' . $this->getURLSerie($o_serie) . '" ';
+      $html .= '<a href="' . $this->getURLSerie($o_serie,$user_id) . '" ';
       $html .= '   title="' . $o_serie->NOM_SERIE . '">';
       $html .= $o_serie->NOM_SERIE . '</a></h3>';
 
