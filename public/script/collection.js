@@ -36,20 +36,63 @@ function addAlbum(id_tome, id_edition, flg_achat) {
 }
 
 function addSerie(id_serie, flg_achat) {
-    if (confirm("Toutes les éditions par défaut de la série seront ajoutées à votre collection. Etes vous sûr ?")) {
-        $("#addSerie" + id_serie).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
-         var url = $.bdovore.URL + "macollection/addserie?id_serie=" + id_serie  + "&flg_achat=" + flg_achat;
-         $.getJSON(url, function(data) {
-           if (data.length == 0) {
-               alert("Tous les albums de la série ont été ajoutés :)");
-               window.location.reload();
-           }
-           else {
-               alert("Une erreur est survenue. Veuillez contacter l'administrateur du site.");
-           }
-         });
-    }
+  if (confirm("Toutes les éditions par défaut de la série seront ajoutées à votre collection. Etes vous sûr ?")) {
+      $("#addSerie" + id_serie).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
+       var url = $.bdovore.URL + "macollection/addserie?id_serie=" + id_serie  + "&flg_achat=" + flg_achat;
+       $.getJSON(url, function(data) {
+         if (data.length == 0) {
+             alert("Tous les albums de la série ont été ajoutés :)");
+             window.location.reload();
+         }
+         else {
+             alert("Une erreur est survenue. Veuillez contacter l'administrateur du site.");
+         }
+       });
+  }
 }
+
+function excludeSerie(id_serie) {
+  if (confirm("Cette série sera considérée comme complète.")) {
+    $("#inExSerie" + id_serie).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
+    var url = $.bdovore.URL + "macollection/excludeserie?id_serie=" + id_serie;
+    $.getJSON(url)
+      .done(function(data) {
+          href   = 'javascript:includeSerie(' + id_serie + ')';
+          tittle = 'Annuler l\'exclusion de cette série';
+          html   = 'Annuler l\'exclusion de la série';
+          $("#inExSerie" + id_serie).attr('href',href);
+          $("#inExSerie" + id_serie).attr('tittle',tittle);
+          $("#inExSerie" + id_serie).html(html);
+      })
+      .fail(function( data, textStatus, error ) {
+        //var err = textStatus + ", " + error;
+        //console.log("excludeSerie : " + err);
+        alert("Une erreur est survenue. Veuillez contacter l'administrateur du site.");
+      });
+  }
+}
+
+function includeSerie(id_serie) {
+  if (confirm("Cette série ne sera plus exclue des séries incomplètes.")) {
+    $("#inExSerie" + id_serie).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
+    var url = $.bdovore.URL + "macollection/includeserie?id_serie=" + id_serie;
+    $.getJSON(url)
+      .done(function(data) {
+          href   = 'javascript:excludeSerie(' + id_serie + ')'; 
+          tittle = 'Exclure la série des séries à compléter';
+          html   = 'Exclure des albums à compléter';
+          $("#inExSerie" + id_serie).attr('href',href);
+          $("#inExSerie" + id_serie).attr('tittle',tittle);
+          $("#inExSerie" + id_serie).html(html);
+      })
+      .fail(function( data, textStatus, error ) {
+        //var err = textStatus + ", " + error;
+        //console.log("includeSerie : " + err);
+        alert("Une erreur est survenue. Veuillez contacter l'administrateur du site.");
+      });
+  }
+}
+
 function getInfoCollectionFromTome(id_tome, id_edition) {
     /*
      * Appel à getJson pour récupérer les infos de la collection d'un album et crée les infos si besoin

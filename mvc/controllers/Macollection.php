@@ -559,6 +559,42 @@ class Macollection extends Bdo_Controller {
         }
     }
 
+    public function excludeSerie() {
+      if (! empty($_SESSION['userConnect']->user_id)) {
+        $user_id = intval($_SESSION['userConnect']->user_id);
+        $id_serie = getValInteger("id_serie",0);
+        
+        $this->loadModel("Users_exclusions");
+
+        if ($id_serie <> 0) {
+          $this->Users_exclusions->addSerieExclude($user_id,$id_serie);
+          $this->view->set_var('json', json_encode($this->Users_exclusions->error));
+        } else {
+          $this->view->set_var('json', json_encode(array('CODE'=> 'ERR_SERIE', 'MSG' => "Id serie nécessaire")));
+        }
+     }
+     $this->view->layout = "ajax";
+     $this->view->render();
+    }
+
+    public function includeSerie() {
+      if (! empty($_SESSION['userConnect']->user_id)) {
+        $user_id = intval($_SESSION['userConnect']->user_id);
+        $id_serie = getValInteger("id_serie",0);
+        
+        $this->loadModel("Users_exclusions");
+
+        if ($id_serie <> 0) {
+          $this->Users_exclusions->delSerieExclude($user_id,$id_serie);
+          $this->view->set_var('json', json_encode($this->Users_exclusions->error));
+        } else {
+          $this->view->set_var('json', json_encode(array('CODE'=> 'ERR_SERIE', 'MSG' => "Id serie nécessaire")));
+        }
+      }
+      $this->view->layout = "ajax";
+      $this->view->render();
+    }
+
     public function serieComplete () {
         /*
          * Séries à compléter !

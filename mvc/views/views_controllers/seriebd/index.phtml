@@ -68,11 +68,36 @@ $pageinate = $view->getHelper('Pagination');
             <?php echo nl2br($view->serie->HISTOIRE_SERIE); ?>
             <?php } ?>
             </p>
-            <?php  if (! empty($_SESSION['userConnect']->user_id)) { ?>
-            <p>
-                <div id="addSerie<?php echo $view->serie->ID_SERIE; ?>" style="font-size:0.9em;"><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addSerie(<?php echo $view->serie->ID_SERIE; ?>,'N')" title="Ajouter tous les albums dans votre collection">Dans ma collection</a> - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addSerie(<?php echo $view->serie->ID_SERIE; ?>,'O')" title="Ajouter tous les albums en futur achat">Futur Achat</a></div>
-             </p>
-            <?php } ?></div>
+            <?php   if (! empty($_SESSION['userConnect']->user_id)) { ?>
+                      <div id="addSerie<?php echo $view->serie->ID_SERIE; ?>" style="font-size:0.9em;">
+                        <p>
+                          <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
+                              href="javascript:addSerie(<?php echo $view->serie->ID_SERIE; ?>,'N')" 
+                              title="Ajouter tous les albums dans votre collection">Dans ma collection
+                          </a> - 
+                          <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
+                              href="javascript:addSerie(<?php echo $view->serie->ID_SERIE; ?>,'O')" 
+                              title="Ajouter tous les albums en futur achat">Futur Achat
+                          </a>
+                        </p>
+                      </div>
+                      <div style="font-size:0.9em;">
+                          <p>
+                            <a id="inExSerie<?php echo $view->serie->ID_SERIE; ?>"
+                              <?php if ( $view->serieExclue ) { ?>
+                                 class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
+                                 href="javascript:includeSerie(<?php echo $view->serie->ID_SERIE; ?>)" 
+                                 title="Annuler l'exclusion de cette série">Annuler l'exclusion de la série
+                              <?php } else { ?>
+                                 class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
+                                 href="javascript:excludeSerie(<?php echo $view->serie->ID_SERIE; ?>)" 
+                                 title="Exclure la série des séries à compléter">Exclure des albums à compléter
+                              <?php } ?>
+                            </a>
+                          </p>
+                      </div>
+            <?php   } ?>
+            </div>
              
 <?php echo $view->SERNOTE; ?>
                    <div class="addthis_inline_share_toolbox" style="float: right;">
