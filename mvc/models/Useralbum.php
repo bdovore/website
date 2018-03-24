@@ -264,22 +264,24 @@ class Useralbum extends Bdo_Db_Line
             $where = " and g.origine in ('" . implode("','",$origin) . "')" ;
 
           $req = "";
-          if (in_array("Scénariste",$travail)) {
-            $req .= ($req) ? " union " : "";
-            $req .=             $this->getReqAuteur($user_id,'id_scenar',$search) . $where;
-            $req .= " union " . $this->getReqAuteur($user_id,'id_scenar_alt',$search) . $where;
-          }
-            
-          if (in_array("Dessinateur",$travail)) {
-            $req .= ($req) ? " union " : "";
-            $req .=             $this->getReqAuteur($user_id,'id_dessin',$search) . $where;
-            $req .= " union " . $this->getReqAuteur($user_id,'id_dessin_alt',$search) . $where;
-          }
-          
-          if (in_array("Coloriste",$travail)) {
-            $req .= ($req) ? " union " : "";
-            $req .=             $this->getReqAuteur($user_id,'id_color',$search) . $where;
-            $req .= " union " . $this->getReqAuteur($user_id,'id_color_alt',$search) . $where;
+          if (is_array($travail)) {
+            if (in_array("Scénariste",$travail)) {
+              $req .= ($req) ? " union " : "";
+              $req .=             $this->getReqAuteur($user_id,'id_scenar',$search) . $where;
+              $req .= " union " . $this->getReqAuteur($user_id,'id_scenar_alt',$search) . $where;
+            }
+
+            if (in_array("Dessinateur",$travail)) {
+              $req .= ($req) ? " union " : "";
+              $req .=             $this->getReqAuteur($user_id,'id_dessin',$search) . $where;
+              $req .= " union " . $this->getReqAuteur($user_id,'id_dessin_alt',$search) . $where;
+            }
+
+            if (in_array("Coloriste",$travail)) {
+              $req .= ($req) ? " union " : "";
+              $req .=             $this->getReqAuteur($user_id,'id_color',$search) . $where;
+              $req .= " union " . $this->getReqAuteur($user_id,'id_color_alt',$search) . $where;
+            }
           }
 
           $req  = "
