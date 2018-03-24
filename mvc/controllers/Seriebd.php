@@ -66,13 +66,17 @@ class SerieBD extends Bdo_Controller {
              $this->loadModel("Users_exclusions");
              $nbalbum = $this->Useralbum->isSerieInCollection($ID_SERIE,$_SESSION['userConnect']->user_id);
              $serieExclu = $this->Users_exclusions->getListSerieExcluSource($_SESSION['userConnect']->user_id,$ID_SERIE);
+             $dbs_tomeComplete  = $this->Tome->getListAlbumToComplete($_SESSION['userConnect']->user_id,$ID_SERIE );
+             $nbmanquant =  count($dbs_tomeComplete->a_dataQuery);
          } else {
              $nbalbum = 0;
              $serieExclu = false;
+             
          }
          $this->view->set_var(array(
            "nbAlbumCollec" =>  $nbalbum,
-             "serieExclue"
+             "serieExclue" => $serieExclu,
+             "nbManquant" => $nbmanquant
          ));
         $this->view->render();
     }

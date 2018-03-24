@@ -85,7 +85,9 @@ $pageinate = $view->getHelper('Pagination');
             <?php } else { ?>
                       <div style="font-size:0.9em;">
                           <p> <?php echo $view->nbAlbumCollec.($view->nbAlbumCollec > 1 ? " albums " : " album ")."dans la collection. <br>"; ?>
-                            <a id="inExSerie<?php echo $view->serie->ID_SERIE; ?>"
+                              <?php if ($view->nbManquant > 0 ) { 
+                                  echo  $view->nbManquant ." manquant(s) <br>"; ?>
+                              <a id="inExSerie<?php echo $view->serie->ID_SERIE; ?>"
                               <?php if ( $view->serieExclue ) { ?>
                                  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
                                  href="javascript:includeSerie(<?php echo $view->serie->ID_SERIE; ?>)" 
@@ -96,6 +98,13 @@ $pageinate = $view->getHelper('Pagination');
                                  title="Exclure la série des séries à compléter">Exclure des albums à compléter
                               <?php } ?>
                             </a>
+                              <?php
+                              } else {
+                                  echo "Série complète ! ";
+                              }
+                              
+                              ?>
+                            
                           </p>
                       </div>
             <?php  } } ?>
