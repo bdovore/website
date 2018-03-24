@@ -130,7 +130,7 @@ class FicheSerie {
       // Possédés
       if ($o_serie->NB_USER_ALBUM) {
         $html .= 'Dans ma collection : ';
-        $html .= '<i>' . $o_serie->NB_USER_ALBUM . '</i><br>';
+        $html .= '<a href="'.BDO_URL.'macollection/mesetageres?l_search=Série%3A'.  htmlspecialchars( $o_serie->NOM_SERIE) .'"><i>' . $o_serie->NB_USER_ALBUM . '</i></a><br>';
       }
 
       // Nb Tome

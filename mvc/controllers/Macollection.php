@@ -250,8 +250,20 @@ class Macollection extends Bdo_Controller {
           }
           if($l_search <> "") {
               $searchvalue = Db_Escape_String($l_search);
-              $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
-          }
+              $testvalue = explode(":",$searchvalue);
+              if ($testvalue[0] == "Auteur") {
+                   $searchvalue = $testvalue[1] ;
+                   $where .= " and (  sc.pseudo like  '". $searchvalue ."%' OR de.pseudo like  '". $searchvalue ."%'  OR dea.pseudo like  '". $searchvalue ."%' OR sca.pseudo like  '". $searchvalue ."%' OR co.pseudo like  '". $searchvalue ."%'  OR coa.pseudo like  '". $searchvalue ."%' ) ";
+             
+              } else if ($testvalue[0]  == "Série") {
+                  $searchvalue = $testvalue[1] ;
+                  $where .= " and (  s.nom like '". $searchvalue ."%' ) ";
+                  
+              } else {
+                $where .= " and ( bd_tome.titre like '%". $searchvalue ."%' OR s.nom like '%". $searchvalue ."%' OR er.nom like  '%". $searchvalue ."%' OR sc.pseudo like  '%". $searchvalue ."%' OR de.pseudo like  '%". $searchvalue ."%'  ) ";
+             
+              }
+               }
 
           // echo  $this->Useralbum->select()." where ua.user_id = ".$user_id ." and flg_achat = 'N' ".$orderby. $limit;
           $dbs_tome = $this->Useralbum->load("c",$where.$orderby. $limit);
