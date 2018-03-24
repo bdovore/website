@@ -69,6 +69,7 @@ $pageinate = $view->getHelper('Pagination');
             <?php } ?>
             </p>
             <?php   if (! empty($_SESSION['userConnect']->user_id)) { ?>
+            <?php if ($view->nbAlbumCollec == 0) { ?>
                       <div id="addSerie<?php echo $view->serie->ID_SERIE; ?>" style="font-size:0.9em;">
                         <p>
                           <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
@@ -81,8 +82,9 @@ $pageinate = $view->getHelper('Pagination');
                           </a>
                         </p>
                       </div>
+            <?php } else { ?>
                       <div style="font-size:0.9em;">
-                          <p>
+                          <p> <?php echo $view->nbAlbumCollec.($view->nbAlbumCollec > 1 ? " albums " : " album ")."dans la collection. <br>"; ?>
                             <a id="inExSerie<?php echo $view->serie->ID_SERIE; ?>"
                               <?php if ( $view->serieExclue ) { ?>
                                  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
@@ -96,7 +98,7 @@ $pageinate = $view->getHelper('Pagination');
                             </a>
                           </p>
                       </div>
-            <?php   } ?>
+            <?php  } } ?>
             </div>
              
 <?php echo $view->SERNOTE; ?>

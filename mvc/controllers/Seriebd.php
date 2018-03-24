@@ -51,7 +51,7 @@ class SerieBD extends Bdo_Controller {
                 'SERIESIMI' => $this->Serie->getSerieSameAuthor($ID_SERIE),
                 'LASTAJOUT' => ""
         ));
-
+        
         // liste des séries liées
         $this->loadModel("Groupeserie");
         $listSerieLiee = $this->Groupeserie->getSerieLiee( $ID_SERIE);
@@ -60,6 +60,20 @@ class SerieBD extends Bdo_Controller {
               
         ));
         
+         // l'utiliateur possède t-il des albums de la série ?
+         if (Bdo_Cfg::user()->minAccesslevel(2)) {
+             $this->loadModel("Useralbum");
+             $this->loadModel("Users_exclusions");
+             $nbalbum = $this->Useralbum->isSerieInCollection($ID_SERIE,$_SESSION['userConnect']->user_id);
+             $serieExclu = $this->Users_exclusions->getListSerieExcluSource($_SESSION['userConnect']->user_id,$ID_SERIE);
+         } else {
+             $nbalbum = 0;
+             $serieExclu = false;
+         }
+         $this->view->set_var(array(
+           "nbAlbumCollec" =>  $nbalbum,
+             "serieExclue"
+         ));
         $this->view->render();
     }
 

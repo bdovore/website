@@ -711,6 +711,19 @@ class Useralbum extends Bdo_Db_Line
 
       return $obj;
     }
-
+    
+    function isSerieInCollection ($id_serie, $user_id) {
+        // test si l'utilisateur possède au moins un album dans la collection et renvoi le nombre d'album
+        $query = "select count(*) as nb"
+                . " from users_album "
+                . " inner join bd_edition using (id_edition) "
+                . " INNER JOIN bd_tome using (id_tome) "
+                . " WHERE bd_tome.id_serie = ".intval($id_serie) 
+                . " AND flg_achat = 'N' AND"
+                . " users_album.user_id =  ". $user_id ;
+       $resultat = Db_query($query);
+        $obj = Db_fetch_all_obj($resultat);  
+        return ($obj[0]->nb);
+    }
 }
 ?>
