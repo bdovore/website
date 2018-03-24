@@ -60,11 +60,14 @@ else {
      * Réécriture spécifique pour les pages SerieBD : on veut du URL rewriting contenant le titre des séries pour meilleurs indexation google
      */
     // regex pour URLs du type serie-bd-id-...
-    if (preg_match('/^serie-bd[-]*(\d+)/', $request_uri, $match)) {
+    if (preg_match('/^serie-bd[-]*(\d+).*&.*=(\d+)/', $request_uri, $match)) {
         $request_uri = "seriebd";
         $_GET["id_serie"] = $match[1];
-    }
-    // regex pour URLs du type auteur-bd-id-...
+        $_GET["user_id"] = $match[2];
+    } else if (preg_match('/^serie-bd[-]*(\d+)/', $request_uri, $match)) {
+        $request_uri = "seriebd";
+        $_GET["id_serie"] = $match[1];
+    }    // regex pour URLs du type auteur-bd-id-...
     if (preg_match('/^auteur-bd[-]*(\d+)/', $request_uri, $match)) {
         $request_uri = "auteurbd";
         $_GET["id_auteur"] = $match[1];

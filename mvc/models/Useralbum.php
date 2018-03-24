@@ -133,7 +133,7 @@ class Useralbum extends Bdo_Db_Line
         return $select.$from;
     }
 
-    private function getReqAuteur($user_id,$champ) {
+    private function getReqAuteur($user_id,$champ,$search="") {
       $req = "select t.".$champ." as auteur
               from users_album u
               inner join bd_edition e using (id_edition)
@@ -143,10 +143,13 @@ class Useralbum extends Bdo_Db_Line
               where ".$champ." <> 0
                 and u.user_id = " . $user_id ."
                 and pseudo not in ('<n&b>','<indéterminé>')";
-      return $req;
+      if($search <> "")
+        $req .= " and ( pseudo like '%". $search ."%' or nom like '%". $search ."%' or prenom like '%". $search ."%' ) ";
+      
+          return $req;
     }
 
-    public function getStatistiques($user_id,$stat="all",$type="",$travail="") {
+    public function getStatistiques($user_id,$stat="all",$auteur="",$origin="",$travail="",$search="") {
         // fonction qui renvoit les statistiques d'une collection
         // Charge les statistisques
 
@@ -167,9 +170,19 @@ class Useralbum extends Bdo_Db_Line
                 and u.flg_achat='N'
             ";
 
-            if ($type !== "")
-              $query .= " and g.origine = '" . $type . "'" ;
+            if ($origin !== "")
+              $query .= " and g.origine = '" . $origin . "'" ;
 
+            // FRED : Pour les albums de Ma Collection, le nombre d'albums avec un critère de recherche (searchvalue) 
+            //        ne vient pas de cette fonction. Seule les séries passent par là.
+            //        Donc, pour le moment, on considère qu'un $search renseigné ne concerne que les séries...
+            if ($search)
+              $query .= " and ( s.nom like '%". $search ."%' ) ";
+
+            if ($auteur <> "")
+              $query .= "and (   id_scenar = ".$auteur." or id_scenar_alt = ".$auteur." 
+                              or id_dessin = ".$auteur." or id_dessin_alt = ".$auteur." 
+                              or id_color = ".$auteur." or id_color_alt = ".$auteur.")";
 
             $resultat = Db_query($query);
 
@@ -245,41 +258,37 @@ class Useralbum extends Bdo_Db_Line
         // Auteurs
         if ($stat == "all" or $stat == "auteur") {
 
-            if ($type == "")
-              $where = " ";
-            else
-              $where = "  and origine = '" . $type . "'";
+          if ($origin == "")
+            $where = " ";
+          else
+            $where = " and g.origine in ('" . implode("','",$origin) . "')" ;
 
-            $req  = "
-              select distinct auteur
-              from (";
-            switch ($travail) {
-              case 'Scénariste':
-                $req .=             $this->getReqAuteur($user_id,'id_scenar') . $where;
-                $req .= " union " . $this->getReqAuteur($user_id,'id_scenar_alt') . $where;
-                break;
-              case 'Dessinateur':
-                $req .=             $this->getReqAuteur($user_id,'id_dessin') . $where;
-                $req .= " union " . $this->getReqAuteur($user_id,'id_dessin_alt') . $where;
-                break;
-              case 'Coloriste':
-                $req .=             $this->getReqAuteur($user_id,'id_color') . $where;
-                $req .= " union " . $this->getReqAuteur($user_id,'id_color_alt') . $where;
-                break;
-     
-              default:
-                $req .=             $this->getReqAuteur($user_id,'id_scenar')     . $where;
-                $req .= " union " . $this->getReqAuteur($user_id,'id_scenar_alt') . $where;
-                $req .= " union " . $this->getReqAuteur($user_id,'id_dessin')     . $where;
-                $req .= " union " . $this->getReqAuteur($user_id,'id_dessin_alt') . $where;
-                $req .= " union " . $this->getReqAuteur($user_id,'id_color')      . $where;
-                $req .= " union " . $this->getReqAuteur($user_id,'id_color_alt')  . $where;
-                break;
-            }
-            $req  .= "
-              ) a 
-            ";
-            $nbauteurs  = Db_CountRow($req);
+          $req = "";
+          if (in_array("Scénariste",$travail)) {
+            $req .= ($req) ? " union " : "";
+            $req .=             $this->getReqAuteur($user_id,'id_scenar',$search) . $where;
+            $req .= " union " . $this->getReqAuteur($user_id,'id_scenar_alt',$search) . $where;
+          }
+            
+          if (in_array("Dessinateur",$travail)) {
+            $req .= ($req) ? " union " : "";
+            $req .=             $this->getReqAuteur($user_id,'id_dessin',$search) . $where;
+            $req .= " union " . $this->getReqAuteur($user_id,'id_dessin_alt',$search) . $where;
+          }
+          
+          if (in_array("Coloriste",$travail)) {
+            $req .= ($req) ? " union " : "";
+            $req .=             $this->getReqAuteur($user_id,'id_color',$search) . $where;
+            $req .= " union " . $this->getReqAuteur($user_id,'id_color_alt',$search) . $where;
+          }
+
+          $req  = "
+          select distinct auteur
+          from (" . $req . "
+            ) a 
+          ";
+
+          $nbauteurs  = Db_CountRow($req);
         }
         
         $a_result = array(
@@ -555,7 +564,7 @@ class Useralbum extends Bdo_Db_Line
       return $obj;
     }
 
-    public function getUserAuteur ($user_id, $page=1, $length=10, $search = "", $type = "",$travail="") {
+    public function getUserAuteur ($user_id, $page=1, $length=10, $search = "", $origin = "",$travail="") {
       $select = " 
         select auteur
             , pseudo
@@ -674,36 +683,24 @@ class Useralbum extends Bdo_Db_Line
       
       $where = " WHERE pseudo not in ('<n&b>','<indéterminé>') ";
 
-      switch ($type) {
-        case "BD":
-          $where .= " and gbd > 0 ";
-          break;
-        case "Comics":
-          $where .= " and gcomics > 0 ";
-          break;
-        case "Mangas":
-          $where .= " and gmangas > 0 ";
-          break;
-      }
+      $type = "";
+      if (in_array("BD",$origin))                                   $type .= " gbd > 0 "  ;
+      if (in_array("Comics",$origin)) { if ($type) $type .= " or "; $type .= " gcomics > 0 "; }
+      if (in_array("Mangas",$origin)) { if ($type) $type .= " or "; $type .= " gmangas > 0 "; }
+      $where .= " and (" .$type.") ";
 
-      switch ($travail) {
-        case "Scénariste":
-          $where .= " and scenar > 0 ";
-          break;
-        case "Dessinateur":
-          $where .= " and dessin > 0 ";
-          break;
-        case "Coloriste":
-          $where .= " and color > 0 ";
-          break;
-      }
+      $type = "";
+      if (in_array("Scénariste",$travail))                                $type .= " scenar > 0 "  ;
+      if (in_array("Dessinateur",$travail)) { if ($type) $type .= " or "; $type .= " dessin > 0 "; }
+      if (in_array("Coloriste",$travail))   { if ($type) $type .= " or "; $type .= " color > 0 "; }
+      $where .= " and (" .$type.") ";
 
       if($search <> "")
         $where .= " and ( pseudo like '%". $search ."%' or nom like '%". $search ."%' or prenom like '%". $search ."%' ) ";
       
       $order= "
         group by auteur,pseudo,nom,prenom,img_aut
-        order by auteur
+        order by pseudo
         LIMIT ".(($page - 1)*$length).", ".$length
       ;
       $query = $select.$where.$order;

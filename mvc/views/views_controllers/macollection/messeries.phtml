@@ -50,6 +50,7 @@
     else {
       echo     "<h3>Mes Séries pour l'auteur : ",$view->pseudo,"</h3>"; 
       echo   "</div>";
+      echo   "<b>",$view->nbr," série(s) dans ma collection.</b>";
     }
   ?>
 
@@ -108,7 +109,7 @@
                 foreach ($view->listExclu as $i => $s) {
                   if ($s->ID_SERIE == $serie->ID_SERIE) $exclu = $s->SOURCE;
                 }
-                echo $ficheSerie->big($serie,true,$incomplet,$exclu); 
+                echo $ficheSerie->big($serie,true,$user->user_id,$incomplet,$exclu); 
               ?>
             
             </td>

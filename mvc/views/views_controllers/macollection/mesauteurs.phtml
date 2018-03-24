@@ -29,6 +29,11 @@
         });
     });
 </script>
+<script>
+  $( function() {
+    $( "input[type=checkbox]" ).button();
+  } );
+</script>
 
 
 <?php
@@ -48,19 +53,24 @@
   <div class="dataTables_wrapper">
       <form id="f_collection" method="GET" action="" >
         <div id="filtre">
-          Filtrer :
-          Type d'album :  <select id='sel_type' name='sel_type' onChange='$("#f_collection").submit();'>
-                            <option value="Tous"   <?php if ($view->sel_type  == "Tous")   echo "selected" ?>>Tous</option>
-                            <option value="BD"     <?php if ($view->sel_type  == "BD")     echo "selected" ?>>BD</option>
-                            <option value="Mangas" <?php if ($view->sel_type  == "Mangas") echo "selected" ?>>Mangas</option>
-                            <option value="Comics" <?php if ($view->sel_type  == "Comics") echo "selected" ?>>Comics</option>
-                          </select>
-          Type de travail : <select id='sel_trav' name='sel_trav' onChange='$("#f_collection").submit();'>
-                              <option value="Tous"        <?php if ($view->sel_trav  == "Tous")        echo "selected" ?>>Tous</option>
-                              <option value="Scénariste"  <?php if ($view->sel_trav  == "Scénariste")  echo "selected" ?>>Scénariste</option>
-                              <option value="Dessinateur" <?php if ($view->sel_trav  == "Dessinateur") echo "selected" ?>>Dessinateur</option>
-                              <option value="Coloriste"   <?php if ($view->sel_trav  == "Coloriste")   echo "selected" ?>>Coloriste</option>
-                            </select>
+          <fieldset id="typeAlbum">
+            <legend>Type d'album</legend>
+              <label for="checkB">BD</label>
+              <input type="checkbox" name="origin[]" id="checkB" value="BD" onChange='$("#f_collection").submit();' <?php if (in_array("BD",$view->origin)) echo "checked" ?>>
+              <label for="checkM">Mangas</label>
+              <input type="checkbox" name="origin[]" id="checkM" value="Mangas" onChange='$("#f_collection").submit();' <?php if (in_array("Mangas",$view->origin)) echo "checked" ?>>
+              <label for="checkC">Comics</label>
+              <input type="checkbox" name="origin[]" id="checkC" value="Comics" onChange='$("#f_collection").submit();' <?php if (in_array("Comics",$view->origin)) echo "checked" ?>>
+          </fieldset>
+          <fieldset id="typeTravail">
+            <legend>Type de travail</legend>
+              <label for="checkS">Scénariste</label>
+              <input type="checkbox" name="travail[]" id="checkS" value="Scénariste" onChange='$("#f_collection").submit();' <?php if (in_array("Scénariste",$view->travail)) echo "checked" ?>>
+              <label for="checkD">dessinateur</label>
+              <input type="checkbox" name="travail[]" id="checkD" value="Dessinateur" onChange='$("#f_collection").submit();' <?php if (in_array("Dessinateur",$view->travail)) echo "checked" ?>>
+              <label for="checkO">Coloriste</label>
+              <input type="checkbox" name="travail[]" id="checkO" value="Coloriste" onChange='$("#f_collection").submit();' <?php if (in_array("Coloriste",$view->travail)) echo "checked" ?>>
+          </fieldset>
         </div><br>
         <div id="data_length" class="dataTables_length">
           Voir :

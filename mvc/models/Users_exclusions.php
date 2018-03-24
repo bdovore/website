@@ -91,27 +91,38 @@ class Users_exclusions extends Bdo_Db_Line
             return $a_obj;
     }
 
-    public function getListSerieExcluSource ($user_id) {
+    public function getListSerieExcluSource ($user_id, $id_serie = 0) {
       /*
        * Liste des séries avec au moins une exclusion pour un user donné
        * rend en plus la source de l'exclusion : 
        *   - serie pour toute la série
        *   - album pour un (ou des) album(s).
+       * 
+       * Si une série est passée en paramètre, la fonction rend true si 
+       * toute la série est exclue, false sinon
        */
-      $query = "select   users_exclusions.id_serie as ID_SERIE
+      $query  = "select   users_exclusions.id_serie as ID_SERIE
                         , case max(id_tome) when 0 then 'serie' else 'album' end as SOURCE
-                from users_exclusions 
-                where user_id = ".intval($user_id) ." group by id_serie";
+                 from users_exclusions 
+                 where user_id = ".intval($user_id);
+
+      // Si on ne demande qu'une série, pas de group by.
+      $query .= ($id_serie) ? "  and id_serie = ".intval($id_serie) : " group by id_serie";
+
       $resultat = Db_query($query);
-      $a_obj = array();
-      while ($obj = Db_fetch_object($resultat)) {
 
-          $a_obj[] = $obj;
-
+      if (!$id_serie) {
+        $a_obj = array();
+        while ($obj = Db_fetch_object($resultat)) {
+            $a_obj[] = $obj;
+        }
+      } else {
+        $obj = Db_fetch_object($resultat);
+        $a_obj = ($obj->SOURCE == 'serie');
       }
       Db_free_result($resultat);
       return $a_obj;
-    }
+  }
         
     public function getListSerieToComplete ($user_id, $flg_achat=false) {
         /*

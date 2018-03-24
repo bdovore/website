@@ -1436,3 +1436,12 @@ div.textmasked {
         font-size: 1.2em;
     }
 }
+
+/* Filtres Mes Auteurs */
+#typeAlbum {
+  float: left;
+  border: none;
+}
+#typeTravail {
+  border: none;
+}

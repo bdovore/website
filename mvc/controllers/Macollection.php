@@ -288,16 +288,8 @@ class Macollection extends Bdo_Controller {
           $this->loadModel('Useralbum');
 
           $page = getValInteger("page",1);
+
           $length = getValInteger("length",0);
-
-          // Filtres
-          $sel_type = getVal("sel_type","Tous");
-          $sel_trav = getVal("sel_trav","Tous");
-
-          // FRED - Pour le moment, on utilise la meme longueur max
-          //        que pour la collection par album.
-          //        voir si cela fait du sens de dissocier ces 2 longueurs ?
-          //TODO mettre une longueur max. pour la recherche ?
           if (!$length) {
               if ($_COOKIE["l_etageres_auteur"] ) {
                   // récupére la valeur dans un coockie
@@ -308,19 +300,27 @@ class Macollection extends Bdo_Controller {
           }
           setcookie("l_etageres_auteur",$length,time()+2592000);
 
+          // Filtres
+          $origin  = getVal("origin","");
+          if (!$origin)
+            if ($_COOKIE["o_etageres_auteur"])
+              $origin = explode(',',$_COOKIE["o_etageres_auteur"]);
+            else
+              $origin  = array("BD","Comics","Mangas");
+          setcookie("o_etageres_auteur",implode(',',$origin),time()+2592000);
+                  
+          $travail = getVal("travail","");
+          if (!$travail)
+            if ($_COOKIE["t_etageres_auteur"])
+              $travail = explode(',',$_COOKIE["t_etageres_auteur"]);
+            else
+              $travail  = array("Scénariste","Dessinateur","Coloriste");
+          setcookie("t_etageres_auteur",implode(',',$travail),time()+2592000);
+
+
+          //TODO mettre une longueur max. pour la recherche ?
+
           $l_search = getVal("l_search","" );
-
-          if ($sel_type <> "Tous") {
-              $origin = Db_Escape_String($sel_type);
-          } else {
-              $origin = "";
-          }
-
-          if ($sel_trav <> "Tous") {
-              $travail = Db_Escape_String($sel_trav);
-          } else {
-              $travail = "";
-          }
 
           if($l_search <> "") {
               $searchvalue = Db_Escape_String($l_search);
@@ -330,8 +330,9 @@ class Macollection extends Bdo_Controller {
 
           // Récupération des auteurs
           $dbs_auteur = $this->Useralbum->getUserAuteur($user_id, $page, $length, $searchvalue, $origin, $travail);
-          $stat = $this->Useralbum->getStatistiques($user_id,"auteur",$origin,$travail);
+          $stat = $this->Useralbum->getStatistiques($user_id,"auteur","",$origin,$travail,$searchvalue);
           $nbr = $stat["nbauteurs"];
+
 
           $this->view->set_var( array (
               "dbs_auteur" => $dbs_auteur,
@@ -339,8 +340,8 @@ class Macollection extends Bdo_Controller {
               "length" => $length,
               "nbr" => $nbr,
               "searchvalue" => $l_search,
-              "sel_type" => $sel_type,
-              "sel_trav" => $sel_trav
+              "origin" => $origin,
+              "travail" => $travail
               ));
       }
       else {
@@ -386,9 +387,7 @@ class Macollection extends Bdo_Controller {
           $page = getValInteger("page",1);
           $length = getValInteger("length",0);
           $sel_type = getVal("sel_type","Tous");
-          // FRED - Pour le moment, on utilise la meme longueur max
-          //        que pour la collection par album.
-          //        voir si cela fait du sens de dissocier ces 2 longueurs ?
+
           //TODO mettre une longueur max. pour la recherche ?
           if (!$length) {
               if ($_COOKIE["l_etageres_serie"] ) {
@@ -417,7 +416,7 @@ class Macollection extends Bdo_Controller {
           // Récupération des séries avec filtre sur les incomplètes ou non
           $dbs_serie = $flg_incomplete ? $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,$auteur,implode(',',$incomplets))
                                        : $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,$auteur);
-          $stat = $this->Useralbum->getStatistiques($user_id,"album",$origin);
+          $stat = $this->Useralbum->getStatistiques($user_id,"album",$auteur,$origin,"",$searchvalue);
           $nbr = $stat["nbseries"];
 
           $this->view->set_var( array (
@@ -558,6 +557,42 @@ class Macollection extends Bdo_Controller {
         else {
             die("Vous devez vous authentifier pour accéder à cette page.");
         }
+    }
+
+    public function excludeSerie() {
+      if (! empty($_SESSION['userConnect']->user_id)) {
+        $user_id = intval($_SESSION['userConnect']->user_id);
+        $id_serie = getValInteger("id_serie",0);
+        
+        $this->loadModel("Users_exclusions");
+
+        if ($id_serie <> 0) {
+          $this->Users_exclusions->addSerieExclude($user_id,$id_serie);
+          $this->view->set_var('json', json_encode($this->Users_exclusions->error));
+        } else {
+          $this->view->set_var('json', json_encode(array('CODE'=> 'ERR_SERIE', 'MSG' => "Id serie nécessaire")));
+        }
+     }
+     $this->view->layout = "ajax";
+     $this->view->render();
+    }
+
+    public function includeSerie() {
+      if (! empty($_SESSION['userConnect']->user_id)) {
+        $user_id = intval($_SESSION['userConnect']->user_id);
+        $id_serie = getValInteger("id_serie",0);
+        
+        $this->loadModel("Users_exclusions");
+
+        if ($id_serie <> 0) {
+          $this->Users_exclusions->delSerieExclude($user_id,$id_serie);
+          $this->view->set_var('json', json_encode($this->Users_exclusions->error));
+        } else {
+          $this->view->set_var('json', json_encode(array('CODE'=> 'ERR_SERIE', 'MSG' => "Id serie nécessaire")));
+        }
+      }
+      $this->view->layout = "ajax";
+      $this->view->render();
     }
 
     public function serieComplete () {

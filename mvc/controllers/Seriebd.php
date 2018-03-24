@@ -15,6 +15,7 @@ class SerieBD extends Bdo_Controller {
     public function Index () {
 
         $ID_SERIE = getValInteger('id_serie',1);
+        $USER_ID = getValInteger('user_id',0);
         $page = getValInteger('page',1);
 
         $this->loadModel('Serie');
@@ -44,6 +45,18 @@ class SerieBD extends Bdo_Controller {
                              ORDER BY bd_tome.FLG_INT DESC, bd_tome.FLG_TYPE, bd_tome.NUM_TOME, bd_tome.TITRE limit ".(($page-1)*20).",20");
         // selection des albums
         $this->view->set_var('dbs_tome', $dbs_tome);
+
+        // Les albums à acheter (ni achetés, ni exclus, ni futurs achats)
+        if ($USER_ID) {
+          $dbs_exclus = $this->Tome->getListAlbumToComplete($USER_ID, $ID_SERIE, false);
+          $this->view->set_var('dbs_exclus', $dbs_exclus);
+        }
+
+        // La série est-elle exclue ?
+        Bdo_Cfg::log('Seriebd.php - La série est-elle exclue ?');
+        $this->loadModel("Users_exclusions");
+        $serieExclue = $this->Users_exclusions->getListSerieExcluSource($USER_ID,$ID_SERIE);
+        $this->view->set_var('serieExclue', $serieExclue);
 
         // liste de série mêmes auteurs
         $this->loadModel("Serie");
