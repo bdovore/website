@@ -15,7 +15,6 @@ class SerieBD extends Bdo_Controller {
     public function Index () {
 
         $ID_SERIE = getValInteger('id_serie',1);
-        $USER_ID = getValInteger('user_id',0);
         $page = getValInteger('page',1);
 
         $this->loadModel('Serie');
@@ -46,25 +45,13 @@ class SerieBD extends Bdo_Controller {
         // selection des albums
         $this->view->set_var('dbs_tome', $dbs_tome);
 
-        // Les albums à acheter (ni achetés, ni exclus, ni futurs achats)
-        if ($USER_ID) {
-          $dbs_exclus = $this->Tome->getListAlbumToComplete($USER_ID, $ID_SERIE, false);
-          $this->view->set_var('dbs_exclus', $dbs_exclus);
-        }
-
-        // La série est-elle exclue ?
-        Bdo_Cfg::log('Seriebd.php - La série est-elle exclue ?');
-        $this->loadModel("Users_exclusions");
-        $serieExclue = $this->Users_exclusions->getListSerieExcluSource($USER_ID,$ID_SERIE);
-        $this->view->set_var('serieExclue', $serieExclue);
-
         // liste de série mêmes auteurs
         $this->loadModel("Serie");
         $this->view->set_var(array(
                 'SERIESIMI' => $this->Serie->getSerieSameAuthor($ID_SERIE),
                 'LASTAJOUT' => ""
         ));
-
+        
         // liste des séries liées
         $this->loadModel("Groupeserie");
         $listSerieLiee = $this->Groupeserie->getSerieLiee( $ID_SERIE);
@@ -73,6 +60,24 @@ class SerieBD extends Bdo_Controller {
               
         ));
         
+         // l'utiliateur possède t-il des albums de la série ?
+         if (Bdo_Cfg::user()->minAccesslevel(2)) {
+             $this->loadModel("Useralbum");
+             $this->loadModel("Users_exclusions");
+             $nbalbum = $this->Useralbum->isSerieInCollection($ID_SERIE,$_SESSION['userConnect']->user_id);
+             $serieExclu = $this->Users_exclusions->getListSerieExcluSource($_SESSION['userConnect']->user_id,$ID_SERIE);
+             $dbs_tomeComplete  = $this->Tome->getListAlbumToComplete($_SESSION['userConnect']->user_id,$ID_SERIE );
+             $nbmanquant =  count($dbs_tomeComplete->a_dataQuery);
+         } else {
+             $nbalbum = 0;
+             $serieExclu = false;
+             
+         }
+         $this->view->set_var(array(
+           "nbAlbumCollec" =>  $nbalbum,
+             "serieExclue" => $serieExclu,
+             "nbManquant" => $nbmanquant
+         ));
         $this->view->render();
     }
 

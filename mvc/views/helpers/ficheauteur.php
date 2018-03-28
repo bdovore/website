@@ -54,7 +54,7 @@ class FicheAuteur {
       $html .= '<h3>';
       $html .= '<a href="' . $this->getURLAuteur($o_auteur) . '" ';
       $html .= '   title="' . $o_serie->pseudo . '">';
-      $html .= $o_auteur->pseudo . '</a></h3>';
+      $html .= htmlspecialchars($o_auteur->pseudo) . '</a></h3>';
 
       $html .= "<p class='fiche_album'>";
       
@@ -79,7 +79,7 @@ class FicheAuteur {
 
       // Nombre d'albums
       $html .= "Albums dans la collection : ";
-      $html .= $o_auteur->nbtomes;
+      $html .= '<a href="'.BDO_URL.'macollection/mesetageres?l_search=Auteur%3A'.  htmlspecialchars( $o_auteur->pseudo).'">' .$o_auteur->nbtomes."</a>";
 
       $html .= "</p>";
       $html .= '</div>';
