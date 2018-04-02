@@ -279,6 +279,7 @@ table.browser {
     border: 0;
     overflow: hidden;
     text-align: left;
+    cursor: pointer;
 }
 
 table.main {
@@ -1163,7 +1164,7 @@ table.list_album tr {
 
 .couvleft {
     float:left;
-    margin-left: 5px;
+    margin-left: 5px !important;
 }
 
 .textleft {

@@ -34,15 +34,15 @@ foreach ($view->a_row as $row) {
     ?>
     <tr>
         <td class="bord_gauche">&nbsp;</td>
-        <td class="milieu" width="<?php echo $row['WSPACER'];?>"><img
+        <td class="milieu" width="10px"><img
             src="<?php echo BDO_URL_IMAGE;?>site/spacer.gif"
-            width=<?php echo $row['WSPACER'];?>
-            height=<?php echo $row['HSPACER'];?> /></td>
+            width='10px'
+            height='1px' /></td>
         <td>
             <?php
-    if ($row['ID_TOME']) {
-        unset($row['NOM_SERIE']);
-        echo $ficheAlbum->small($row);
+    if ($row->ID_TOME) {
+        unset($row->NOM_SERIE);
+        echo $ficheAlbum->big($row);
     }
     else
         echo $ficheAlbum->serie($row);
@@ -52,7 +52,23 @@ foreach ($view->a_row as $row) {
     </tr>
         <?php
 }
-?>
+?>  <?php
+    if ($view->TOTALROW) {
+        ?>
+    <tr>
+        <td class="milieu" align="center" colspan="3"><?php echo $view->TOTALROW;?>
+        </td>
+    </tr>
+        <?php
+    }
+    if ($view->URLPREVPAGE or $view->URLNEXTPAGE) {
+    ?>
+    <tr>
+    <td class="milieu" align="center" colspan="3"><?php echo $view->URLPREVPAGE;?> <?php echo $view->URLNEXTPAGE;?></td>
+    </tr>
+        <?php
+    }?>
+    
     <!-- END DataBlock -->
 </table>
 <script>

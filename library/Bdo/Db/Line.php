@@ -37,6 +37,8 @@ class Bdo_Db_Line
     public $error = array();
 
     public $orderSelect = '';
+    
+    public $calcFoundRow = false;
 
     // initialisation
     public function __construct ($table_name, $a_data = array())
@@ -90,7 +92,7 @@ class Bdo_Db_Line
             }
         }
 
-        $this->dbSelect = new Bdo_Db_Select($query);
+        $this->dbSelect = new Bdo_Db_Select($query, $this->calcFoundRow);
 
         // --------------=======================----------------
         $this->dbSelect->exec();

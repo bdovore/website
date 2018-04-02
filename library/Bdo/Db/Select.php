@@ -30,12 +30,13 @@ class Bdo_Db_Select
     public $a_dataQuery = array();
 
     public $entite = array();
+    public $calcFoundRow = false;
 
 
-    public function __construct($queryFull=null)
+    public function __construct($queryFull=null, $calcFoundRow= false)
     {
         $this->schema_name = Bdo_Cfg::schema()->schema_name;
-
+        $this->calcFoundRow = $calcFoundRow;
         //$this->init_option_query();
 
         if ($queryFull) $this->setQuery($queryFull);
@@ -317,6 +318,11 @@ class Bdo_Db_Select
 
         if ($this->queryFull) {
             $this->infoQuery($resultat);
+            if ($this->calcFoundRow) {
+                $resCount = Db_query('SELECT FOUND_ROWS() as nb');
+                $rowCount = Db_fetch_object($resCount);
+                $this->nbLineTotal = $rowCount->nb;
+            }
         }
         else {
             $resCount = Db_query('SELECT FOUND_ROWS() as nb');
@@ -330,7 +336,7 @@ class Bdo_Db_Select
                 $this->exec();
             }
         }
-
+        
         //Bdo_Cfg::schema() = null;
         return $this->a_dataQuery;
 
