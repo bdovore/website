@@ -31,7 +31,7 @@ class Collection extends Bdo_Db_Line
     public function select ()
     {
         return "
-        SELECT
+        SELECT SQL_CALC_FOUND_ROWS
         `bd_collection`.`ID_COLLECTION`,
         `bd_collection`.`NOM`,
         `bd_editeur`.`ID_EDITEUR`,

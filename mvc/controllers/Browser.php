@@ -14,7 +14,7 @@ class Browser extends Bdo_Controller
 
     public $pageNum = 0;
 
-    public $pagetitle = "BDovore.com - Bandes dessinées ";
+    public $pagetitle = "BDovore.com - Bandes dessinées - l'annuaire de toutes les bds par auteur, par série ou par éditeur. BD, Mangas, Comics";
 
     public $rb_browse = "ser";
 
@@ -93,27 +93,28 @@ class Browser extends Bdo_Controller
     public function Search ()
     {
         $query_where = "";
-        if (strlen($this->let) > 2) {
+        if (strlen($this->let) > 3) {
             $pre_filtre = '%';
         } else 
         {
             $pre_filtre = "";
         }
+          $query_where = " WHERE 1 ";
         if ($this->rb_browse == 'ser' || ! $this->rb_browse) {
-            $query_select = "SELECT SQL_CALC_FOUND_ROWS bd_serie.id_serie id, bd_serie.nom name,
-            bd_serie.FLG_FINI as FLG_FINI_SERIE FROM bd_serie WHERE 1 ";
+            $this->loadModel("Serie");
             if ($this->let) {
                 $query_where .= " AND nom like '" .$pre_filtre. PMA_sqlAddslashes($this->let, true) . "%' ";
             }
             if ($this->a_idGenre) {
                 $query_where .= " AND ID_GENRE IN (".implode(',',$this->a_idGenre). ")";
             }
-
-
             $query_order = " ORDER BY nom ASC ";
+            $this->Serie->calcFoundRow = true;
+            $this->Serie->selectType = "browse";
+            $dbsData = $this->Serie->load("c", $query_where. " GROUP BY ID_SERIE ". $query_order ." LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
         }
         elseif ($this->rb_browse == 'aut') {
-            $query_select = "SELECT SQL_CALC_FOUND_ROWS ID_AUTEUR id, PSEUDO name, COMMENT FROM bd_auteur WHERE 1 ";
+            $this->loadModel("Auteur");
             if ($this->let) {
                 $query_where .= " AND pseudo like '".$pre_filtre. PMA_sqlAddslashes($this->let, true) . "%'";
             }
@@ -129,12 +130,12 @@ class Browser extends Bdo_Controller
                                 )";
 
             }
-
-
             $query_order = " ORDER BY PSEUDO ASC ";
+             $this->Auteur->calcFoundRow = true;
+            $dbsData = $this->Auteur->load("c", $query_where. $query_order." LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
         }
         elseif ($this->rb_browse == 'edit') {
-            $query_select = "SELECT SQL_CALC_FOUND_ROWS ID_EDITEUR id, NOM name FROM bd_editeur WHERE 1";
+           $this->loadModel("Editeur");
             if ($this->let) {
                 $query_where .= " AND NOM like '".$pre_filtre. PMA_sqlAddslashes($this->let, true) . "%'";
             }
@@ -148,21 +149,15 @@ class Browser extends Bdo_Controller
 
             }
             $query_order = " ORDER BY NOM ASC ";
+             $this->Editeur->calcFoundRow = true;
+            $dbsData = $this->Editeur->load("c", $query_where. $query_order." LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
+      
         }
-
-        // echo $query_limit;
-        $query_limit = $query_select . $query_where . $query_order . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows);
-        $RecAuteur = Db_query($query_limit);
 
         $totalRows = getValInteger('totalRows',-1);
 
         if ($totalRows < 0) {
-            $all = Db_query("SELECT FOUND_ROWS() as nbr");
-            if ($row = Db_fetch_array($all)) {
-                $totalRows = $row['nbr'];
-            } else {
-                $totalRows = 0;
-            }
+            $totalRows = $dbsData->nbLineTotal;
         }
 
         $totalPages = ceil($totalRows / $this->maxRows) - 1;
@@ -220,7 +215,7 @@ class Browser extends Bdo_Controller
         $a_row = array();
         $img_edit = "edit.gif";
         if ($this->rb_browse != "ser") {
-            while ($row = Db_fetch_array($RecAuteur)) {
+            foreach($dbsData->a_dataQuery as $data) {
                 if ($this->rb_browse == "aut") {
                     // class pour le bouton d'édition en fonction de présence d'une bio ou non
                     if (strlen( $row["COMMENT"]) > 0 ) {
@@ -228,35 +223,43 @@ class Browser extends Bdo_Controller
                     }  else {
                         $img_edit = "edit.gif";
                     }
-                }
+                    $id = $data->ID_AUTEUR;
+                    $nom = $data->PSEUDO;
+                } else {
+                    $id = $data->ID_EDITEUR;
+                    $nom = $data->NOM;
+                } 
+                
                 $a_row[] = array(
                         "WSPACER" => "0px",
                         "HSPACER" => "0px",
                         "IMGNAVIG" => "aro_3_1.gif",
-                        "URLEVEL" => BDO_URL . "browser/xhr" . "?lev_id=" . $row['id'] . $queryString,
-                        "NAMELEVEL" => htmlspecialchars($row['name']),
+                        "URLEVEL" => BDO_URL . "browser/xhr" . "?lev_id=" . $id . $queryString,
+                        "NAMELEVEL" => htmlspecialchars($nom),
                         "ACTLEVEL" => "",
-                        "LEVSIGN" => "1L" . $row['id'],
-                        "URLEDIT" => (User::minAccesslevel(1)) ? "<a href='".$url_edit.$row['id']."'".' class="fancybox fancybox.iframe {width:700,height:600} " ><img src="' . BDO_URL_IMAGE . $img_edit.'" border=0></a>' : ""
+                        "LEVSIGN" => "1L" . $id,
+                        "URLEDIT" => (User::minAccesslevel(1)) ? "<a href='".$url_edit.$id."'".' class="fancybox fancybox.iframe {width:700,height:600} " ><img src="' . BDO_URL_IMAGE . $img_edit.'" border=0></a>' : ""
                 );
-                $this->keyword .= htmlspecialchars($row['name']) . ",";
-                // //$t->parse("DBlock", "DataBlock", true);
+                $this->keyword .= htmlspecialchars($nom) . ",";
+               
             }
         }
         else {
             // browse par série : seulement 2 niveaux
-            while ($row = Db_fetch_array($RecAuteur)) {
+            foreach($dbsData->a_dataQuery as $data) {
+                $id = $data->ID_SERIE;
+                    $nom = $data->NOM_SERIE;
                 $a_row[] = array(
                         "WSPACER" => "0px",
                         "HSPACER" => "0px",
                         "IMGNAVIG" => "aro_3_1.gif",
-                        "URLEVEL" => BDO_URL . "browser/xhr_level2" . "?lev_id=" . $row['id'] . $queryString,
-                        "NAMELEVEL" => htmlspecialchars(stripslashes($row['name'])),
+                        "URLEVEL" => BDO_URL . "browser/xhr_level2" . "?lev_id=" . $id . $queryString,
+                        "NAMELEVEL" => htmlspecialchars(stripslashes($nom)),
                         "ACTLEVEL" => "",
-                        "LEVSIGN" => "1L" . $row['id'],
-                   "URLEDIT" => (User::minAccesslevel(1)) ? "<a href='".$url_edit.$row['id']."'".' class="fancybox fancybox.iframe {width:700,height:600}" ><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>' : ""
+                        "LEVSIGN" => "1L" .$id,
+                   "URLEDIT" => (User::minAccesslevel(1)) ? "<a href='".$url_edit.$id."'".' class="fancybox fancybox.iframe {width:700,height:600}" ><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>' : ""
                 );
-                $this->keyword .= htmlspecialchars($row['name']) . ",";
+                $this->keyword .= htmlspecialchars($nom) . ",";
             }
         }
         $this->view->set_var(array(
@@ -301,16 +304,9 @@ class Browser extends Bdo_Controller
     public function Xhr ()
     {
         if ($this->rb_browse == 'aut') {
-
-            $query_niv2 = "
-            select SQL_CALC_FOUND_ROWS distinct
-                bd_serie.id_serie id,
-                bd_serie.nom name,
-               bd_serie.FLG_FINI as FLG_FINI_SERIE
-            from
-                bd_serie
-                INNER JOIN bd_tome USING(id_serie)
-            where
+            $this->loadModel("Serie");
+            $where = " WHERE
+            
                 (bd_tome.id_dessin = " . $this->lev_id . "
                 or bd_tome.id_scenar = " . $this->lev_id . "
                 or bd_tome.id_color = " . $this->lev_id . "
@@ -318,39 +314,40 @@ class Browser extends Bdo_Controller
                 or bd_tome.id_dessin_alt = " . $this->lev_id . "
                 or bd_tome.id_color_alt = " . $this->lev_id . ")
                 ".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
-            order by name ";
+            group by ID_SERIE order by NOM_SERIE  ";
+            $this->Serie->calcFoundRow = true;
+            $dbsData = $this->Serie->load("c",$where);
 
         }
         elseif ($this->rb_browse == 'edit') {
-
-            $query_niv2 = "
-            select SQL_CALC_FOUND_ROWS
-                id_collection id,
-                nom name
-            from
-                bd_collection
-            where
-                id_editeur =" . $this->lev_id . "
-            order by name
+             $this->loadModel("Collection"); 
+            $where = " WHERE bd_editeur.id_editeur =" . $this->lev_id . "             
+            order by `bd_collection`.`NOM`
             ";
+             $this->Collection->calcFoundRow = true;
+             $dbsData = $this->Collection->load("c",$where);
         }
-
-        $recLev2 = Db_query($query_niv2 . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
-
-        $resCount = Db_query('SELECT FOUND_ROWS() as nb');
-        $rowCount = Db_fetch_array($resCount);
-        $totalRows = $rowCount['nb'];
+      
+        $totalRows = $dbsData->nbLineTotal;
 
         $a_row = array();
-        while ($row_niv2 = Db_fetch_array($recLev2)) {
+        foreach ($dbsData->a_dataQuery as $row) {
+            if ($this->rb_browse == "aut") {
+                $id = $row->ID_SERIE;
+                $name = $row->NOM_SERIE;
+                        
+            } else {
+                $id = $row->ID_COLLECTION;
+                $name = $row->NOM;
+            }
             $a_row[] = array(
                     "WSPACER" => "16px",
                     "HSPACER" => "1px",
                     "IMGNAVIG" => "aro_3_1.gif",
-                    "URLEVEL" => "browser/xhr_level2" . "?rb_browse=" . $this->rb_browse . "&lev_id=" . $this->lev_id . "&lev2_id=" . $row_niv2['id'],
-                    "NAMELEVEL" => htmlspecialchars(stripslashes($row_niv2['name'])),
+                    "URLEVEL" => "browser/xhr_level2" . "?rb_browse=" . $this->rb_browse . "&lev_id=" . $this->lev_id . "&lev2_id=" . $id,
+                    "NAMELEVEL" => htmlspecialchars(stripslashes($name)),
                     "ACTLEVEL" => "",
-                    "LEVSIGN" => "1L" . $this->lev_id . "_2L" . $row_niv2['id'],
+                    "LEVSIGN" => "1L" . $this->lev_id . "_2L" . $id,
             );
         }
         $this->view->set_var("a_row", $a_row);
@@ -366,15 +363,7 @@ class Browser extends Bdo_Controller
             $totalrowhtml .= ' ( sur ' . $totalRows . ' lignes )';
 
             $totalPages = ceil($totalRows / $this->maxRows) - 1;
-
-
-
-
-
             if ($this->pageNum > 0) {
-
-
-
                 $jvs = '$.get("'.BDO_URL.'browser/xhr?rb_browse=' . $this->rb_browse . '&lev_id=' . $this->lev_id . '&pageNum=' . max(0, $this->pageNum - 1) . '",
 
                          function(data) {$("#onglet_div_xhr_1L' . $this->lev_id . '").html(data);});';
@@ -383,14 +372,11 @@ class Browser extends Bdo_Controller
                 $this->view->set_var("URLPREVPAGE", $url);
 
             }
-
-            else
+            else {
 
                 $this->view->set_var("URLPREVPAGE", '');
-
-
-
-            if ($this->pageNum < $totalPages) {
+            }
+             if ($this->pageNum < $totalPages) {
 
                 $jvs = '$.get("'.BDO_URL.'browser/xhr?rb_browse=' . $this->rb_browse . '&lev_id=' . $this->lev_id . '&pageNum=' . min($totalPages, $this->pageNum + 1) . '",
 
@@ -402,15 +388,16 @@ class Browser extends Bdo_Controller
 
             }
 
-            else
+            else {
 
-                $this->view->set_var("URLNEXTPAGE", '');
+             $this->view->set_var("URLNEXTPAGE", '');
 
 
             $this->view->set_var("URLSITE", BDO_URL);
             $this->view->set_var("URLSITEIMAGE", BDO_URL_IMAGE);
             $this->view->set_var("URLSITEFORUM", BDO_URL_FORUM);
             $this->view->set_var("TOTALROW", (empty($totalRows) ? 'Aucune ligne de résultat !' : $totalrowhtml));
+            }
         }
         else {
             $this->view->set_var("URLPREVPAGE", '');
@@ -427,195 +414,45 @@ class Browser extends Bdo_Controller
         // defintion des variables
         $a_serie = explode('#', $this->lev2_id);
         $this->lev2_id = $a_serie[0];
-
-        if ($this->rb_browse == 'ser') {
-
-            $query_album = "
-            select SQL_CALC_FOUND_ROWS
-            bd_tome.id_tome id,
-            bd_tome.ID_TOME,
-            (CASE
-                WHEN bd_tome.flg_int = 'O'
-                THEN 'Intégrale '
-                WHEN bd_tome.flg_type =1
-                THEN 'Coffret '
-                WHEN bd_serie.flg_fini =2
-                THEN 'One shot'
-                ELSE IFNULL( concat( 'Tome ', bd_tome.num_tome ) , 'HS' )
-                END
-                ) AS typeTome ,
-                bd_tome.titre as titre,
-                bd_tome.TITRE as TITRE_TOME,
-                bd_tome.NUM_TOME,
-                bd_serie.NOM as NOM_SERIE,
-               bd_serie.FLG_FINI as FLG_FINI_SERIE,
-                bd_edition.IMG_COUV,
-                bd_serie.ID_SERIE
-            from
-            bd_tome
-            INNER JOIN bd_serie USING(id_serie)
-            INNER JOIN bd_edition USING(ID_EDITION)
-            where
-            bd_tome.id_serie = $this->lev_id
-            order by num_tome, TITRE
-            ";
-
-            // URL album
-            $act_url = ' onclick="window.open(' . "'./membres/album?id_tome=%d','Album','width=550,height=600,scrollbars=1')" . ';return false;"';
-            $act_url = ' rel="shadowbox;player=iframe;height=600;width=580;"';
-            $url_alb = "#";
-            $url_alb = BDO_URL . 'membres/album.php?id_tome=%d';
-            // URL d'edition
-            $edit_lev3 = "<a href='" . $url_edit["ALBUM"] . "' target =_blank><img src='" . BDO_URL_IMAGE . "edit.gif' border=0 /></a>";
-        }
-        elseif ($this->rb_browse == 'aut') {
-
-            $query_album = "
-            select SQL_CALC_FOUND_ROWS
-                bd_tome.id_tome id,
-            bd_tome.ID_TOME,
-                    (CASE
-                WHEN bd_tome.flg_int = 'O'
-                THEN 'Intégrale '
-                WHEN bd_tome.flg_type =1
-                THEN 'Coffret '
-                WHEN bd_serie.flg_fini =2
-                THEN 'One shot'
-                ELSE IFNULL( concat( 'Tome ', bd_tome.num_tome ) , 'HS' )
-                END
-                ) AS typeTome ,
-                bd_tome.titre as titre,
-                bd_tome.TITRE as TITRE_TOME,
-                bd_tome.NUM_TOME,
-                bd_serie.NOM as NOM_SERIE,
-               bd_serie.FLG_FINI as FLG_FINI_SERIE,
-                bd_genre.LIBELLE as NOM_GENRE,
-                bd_edition.IMG_COUV
-            from
-                bd_tome
-                INNER JOIN bd_serie USING(id_serie)
-                INNER JOIN bd_edition USING(ID_EDITION)
-            INNER JOIN bd_genre ON bd_genre.ID_GENRE=bd_serie.ID_GENRE
-                    where
-                bd_tome.id_serie =" . intval($this->lev2_id) . "
-                        and (
-                    bd_tome.id_dessin = " . $this->lev_id . "
-                            or bd_tome.id_scenar = " . $this->lev_id . "
-                            or bd_tome.id_color = " . $this->lev_id . "
-                            or bd_tome.id_scenar_alt = " . $this->lev_id . "
-                            or bd_tome.id_dessin_alt = " . $this->lev_id . "
-                            or bd_tome.id_color_alt = " . $this->lev_id . "
-                            )
-                ".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
-
-                            order by num_tome, titre
-            ";
-
-            // URL album
-            $act_url = ' onclick="window.open(' . "'./membres/album?id_tome=%d','Album','width=550,height=600,scrollbars=1')" . ';return false;"';
-            $url_alb = "#";
-            // URL d'edition
-            $edit_lev3 = "<a href='" . $url_edit["ALBUM"] . "' target =_blank><img src='" . BDO_URL_IMAGE . "edit.gif' border=0 /></a>";
-        }
-        elseif ($this->rb_browse == 'edit') {
-
-            $query_album = "
-            select SQL_CALC_FOUND_ROWS distinct
-                bd_serie.id_serie id,
-                    bd_serie.ID_SERIE,
-                bd_serie.nom as titre,
-                    bd_serie.NOM as NOM_SERIE,
-               bd_serie.FLG_FINI as FLG_FINI_SERIE
-            from
-            bd_edition
-                INNER JOIN bd_tome USING(id_tome)
-                INNER JOIN bd_serie USING(id_serie)
+       if ($this->rb_browse == 'edit') {
+           $this->loadModel("Serie");
+            $where = "
             where
                 bd_edition.id_editeur=" . $this->lev_id . "
                 and bd_edition.id_collection=" . intval($this->lev2_id) . "
                 ".($this->a_idGenre ? " AND bd_serie.ID_GENRE IN (".implode(',',$this->a_idGenre). ")" : "")."
-
+            group by bd_serie.ID_SERIE
             order by bd_serie.nom
             ";
-
-            // URL affichage
-            $url_alb = "serie?id_serie=%d";
-            $act_url = "";
-            // URL d'edition
-            $edit_lev3 = "<a href='" . $url_edit["SERIE"] . "' target =_blank><img src='" . BDO_URL_IMAGE . "edit.gif' border=0></a>";
-        }
-        elseif ($this->rb_browse == 'genr') {
-
-            $query_album = "
-            select SQL_CALC_FOUND_ROWS
-                distinct
-                bd_serie.id_serie id,
-                    bd_serie.ID_SERIE,
-                bd_serie.nom as titre,
-                    bd_serie.NOM as NOM_SERIE,
-               bd_serie.FLG_FINI as FLG_FINI_SERIE
-            from
-                bd_serie
-            where
-                bd_serie.id_genre=" . $this->lev_id . "
-                and bd_serie.nom like '" . Db_Escape_String($this->lev2_id) . "%'
-            order by titre
-            ";
-            $url_alb = "serie?id_serie=%d";
-            $act_url = "";
-            // URL d'edition
-            $edit_lev3 = "<a href='" . $url_edit["SERIE"] . "' target =_blank><img src='" . BDO_URL_IMAGE . "edit.gif' border=0></a>";
-        }
-
-        if ($this->rb_browse != "ser") {
-            $recAlbum = Db_query($query_album . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
-
-            $resCount = Db_query('SELECT FOUND_ROWS() as nb');
-            $rowCount = Db_fetch_array($resCount);
-            $totalRows = $rowCount['nb'];
-
-            $a_row = array();
-            while ($rowAlbum = Db_fetch_array($recAlbum)) {
-                $a_row[] = array_merge($rowAlbum,array(
-                        "WSPACER" => "1px",
-                        "HSPACER" => "1px",
-                        "IMGNAVIG" => "spacer.gif",
-                        "URLEVEL" => sprintf($url_alb, $rowAlbum['id']),
-                        "NAMELEVEL" => $rowAlbum['typeTome'].': '.$rowAlbum['TITRE'],
-                        "ACTLEVEL" => sprintf($act_url, $rowAlbum['id']),
-                        "LEVSIGN" => "A" . $rowAlbum['id'],
-                ));
-            }
-            $this->view->set_var("a_row", $a_row);
-        }
+            $this->Serie->calcFoundRow = true;
+            $dbsData = $this->Serie->load("c",$where . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows) );
+          
+        }        
         else {
-            // browse par série : seulement 2 niveaux
+            // browse par série ou auteur : seulement 2 niveaux
             // aJOUT DE LA PREmière ligne Fiche Série
             $this->view->set_var(
                     array(
                             "FICHESERIE" => $this->lev_id,
                     ));
+            $this->loadModel("Tome");
+            $this->Tome->calcFoundRow = true;
+            $where = "
+            where
+            bd_tome.id_serie = ". ($this->rb_browse == "aut" ?$this->lev2_id : $this->lev_id)."
+            order by num_tome, TITRE
+            ";
+            $dbsData = $this->Tome->load("c",$where . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
+           
 
-            $recAlbum = Db_query($query_album . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
-
-            $resCount = Db_query('SELECT FOUND_ROWS() as nb');
-            $rowCount = Db_fetch_array($resCount);
-            $totalRows = $rowCount['nb'];
-
-            $a_row = array();
-            while ($rowAlbum = Db_fetch_array($recAlbum)) {
-                $a_row[] = array_merge($rowAlbum,array(
-                        "WSPACER" => "10px",
-                        "HSPACER" => "1px",
-                        "IMGNAVIG" => "spacer.gif",
-                        "URLEVEL" => sprintf($url_alb, $rowAlbum['id']),
-                        "NAMELEVEL" => $rowAlbum['typeTome'].': '.$rowAlbum['titre'],
-                        "ACTLEVEL" => sprintf($act_url, $rowAlbum['id']),
-                        "LEVSIGN" => "A" . $rowAlbum['id'],
-                ));
+           
+        }
+         $totalRows = $dbsData->nbLineTotal;
+         $a_row = array();
+            foreach($dbsData->a_dataQuery as $row) {
+                $a_row[] = $row;
             }
             $this->view->set_var("a_row", $a_row);
-        }
 
         if (! empty($totalRows) and ($totalRows <= $this->maxRows)) {
             $this->view->set_var("URLPREVPAGE", '');
@@ -662,7 +499,5 @@ class Browser extends Bdo_Controller
         $this->view->render();
     }
     
-    private function getRowFromData ($a_dataQuery) {
-        
-    }
+   
 }

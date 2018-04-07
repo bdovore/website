@@ -14,7 +14,7 @@ class Tome extends Bdo_Db_Line
 
     public $error = '';
     var $default_select = "
-        SELECT
+        SELECT SQL_CALC_FOUND_ROWS
             bd_tome.ID_TOME,
             bd_tome.TITRE as TITRE_TOME,
             bd_tome.NUM_TOME,

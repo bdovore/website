@@ -21,7 +21,7 @@ class Serie extends Bdo_Db_Line
 
     public $table_name = 'bd_serie';
 
-
+    public $selectType = "select"; // selectType : 2 valeurs possible "select" pour sélection d'une série, "browse" pour les requetes de recherche
 
     public $error = '';
 
@@ -58,169 +58,68 @@ class Serie extends Bdo_Db_Line
     public function select ()
 
     {
+        if ($this->selectType=="select") {
+            return "
+            SELECT SQL_CALC_FOUND_ROWS
 
-        return "
-        SELECT
+                    `bd_serie`.`ID_SERIE`  ,
+
+                    `bd_serie`.`NOM` as `NOM_SERIE` ,
+
+                    `bd_serie`.`FLG_FINI` as `FLG_FINI_SERIE`,
+
+                    CASE bd_serie.FLG_FINI WHEN 0 then 'Fini' when 1 then 'En cours' when 2 then 'One Shot' when 3 then 'Interrompue/Abandonn&eacute;e' ELSE '?' end LIB_FLG_FINI_SERIE,
+
+                    CASE WHEN bd_serie.NB_TOME > 0 THEN bd_serie.NB_TOME ELSE max(bd_tome.NUM_TOME) END  as `NB_TOME` ,
+                    bd_serie.NB_TOME as NB_TOME_FINAL,
+
+                    `bd_serie`.`TRI` as `TRI_SERIE`,
+
+                    `bd_serie`.`HISTOIRE` as `HISTOIRE_SERIE`,
+
+                    `bd_genre`.`ID_GENRE`,
+
+                    `bd_genre`.`LIBELLE` as `NOM_GENRE`,
+
+
+                    `bd_edition_stat`.`NBR_USER_ID_SERIE`,
+
+
+                    count(distinct bd_tome.ID_TOME) as NB_ALBUM,
+                    max(img_couv) as IMG_COUV_SERIE,
+                    avg(MOYENNE_NOTE_TOME) NOTE_SERIE,
+                    sum(NB_NOTE_TOME) NB_NOTE_SERIE
+
+                    FROM `" . $this->table_name . "`
+
+              LEFT JOIN `bd_genre` USING(`ID_GENRE`)
+              LEFT JOIN (SELECT `ID_SERIE`,NBR_USER_ID_SERIE FROM `bd_edition_stat` group by id_serie) `bd_edition_stat` USING(`ID_SERIE`)
+            LEFT JOIN bd_tome using (ID_SERIE)
+            LEFT JOIN bd_edition using (id_edition)
+            LEFT JOIN note_tome on (bd_tome.ID_TOME =note_tome.ID_TOME)
+            ";
+        } else {
+            return "  SELECT SQL_CALC_FOUND_ROWS
 
                 `bd_serie`.`ID_SERIE`  ,
 
-                `bd_serie`.`NOM` as `NOM_SERIE` ,
-
-                `bd_serie`.`FLG_FINI` as `FLG_FINI_SERIE`,
-
-                CASE bd_serie.FLG_FINI WHEN 0 then 'Fini' when 1 then 'En cours' when 2 then 'One Shot' when 3 then 'Interrompue/Abandonn&eacute;e' ELSE '?' end LIB_FLG_FINI_SERIE,
-
-                CASE WHEN bd_serie.NB_TOME > 0 THEN bd_serie.NB_TOME ELSE max(bd_tome.NUM_TOME) END  as `NB_TOME` ,
-                bd_serie.NB_TOME as NB_TOME_FINAL,
-
-                `bd_serie`.`TRI` as `TRI_SERIE`,
-
-                `bd_serie`.`HISTOIRE` as `HISTOIRE_SERIE`,
-
-                `bd_genre`.`ID_GENRE`,
-
-                `bd_genre`.`LIBELLE` as `NOM_GENRE`,
-
-
-                `bd_edition_stat`.`NBR_USER_ID_SERIE`,
-
-
-                count(distinct bd_tome.ID_TOME) as NB_ALBUM,
-                max(img_couv) as IMG_COUV_SERIE,
-                avg(MOYENNE_NOTE_TOME) NOTE_SERIE,
-                sum(NB_NOTE_TOME) NB_NOTE_SERIE
-
-                FROM `" . $this->table_name . "`
-
-          LEFT JOIN `bd_genre` USING(`ID_GENRE`)
-          LEFT JOIN (SELECT `ID_SERIE`,NBR_USER_ID_SERIE FROM `bd_edition_stat` group by id_serie) `bd_edition_stat` USING(`ID_SERIE`)
-        LEFT JOIN bd_tome using (ID_SERIE)
-        LEFT JOIN bd_edition using (id_edition)
-        LEFT JOIN note_tome on (bd_tome.ID_TOME =note_tome.ID_TOME)
-        ";
+                `bd_serie`.`NOM` as `NOM_SERIE` 
+                 FROM `" . $this->table_name . "`";
+        }
 
     }
 
 
 
-    public function search ($a_data = array())
-
-    {
-
-        // --------------------------------------------------------------------
-
-        // -------- Champs selectionnés par defaut --------
-
-        if (empty($a_data)) $a_data = $_POST;
-
-        if (! isset($a_data['validSubmitSearch'])) {
-
-            $a_data['ch_NOM'] = "checked";
-
-            $a_data['ch_NOTE'] = "checked";
-
-            $a_data['ch_FLG_FINI'] = "checked";
-
-            $a_data['ch_NB_TOME'] = "checked";
-
-            $a_data['ch_NB_NOTE'] = "checked";
-
-            $a_data['ch_TRI'] = "checked";
-
-            $a_data['ch_LIBELLE'] = "checked";
-
-
-
-        }
-
-
-
-        $dbSearch = new Bdo_Db_Search();
-
-
-
-        $dbSearch->select = "
-        SELECT
+    public function browseSerie ($filter) {
+        $this->select = "  SELECT SQL_CALC_FOUND_ROWS
 
                 `bd_serie`.`ID_SERIE`  ,
 
-                `bd_serie`.`NOM`  ,
-
-                `bd_serie`.`NOTE` ,
-
-                `bd_serie`.`FLG_FINI` ,
-
-                `bd_serie`.`NB_TOME` ,
-
-                `bd_serie`.`NB_NOTE` ,
-
-                `bd_serie`.`TRI` ,
-
-                `bd_serie`.`HISTOIRE`,
-
-                `bd_genre`.`ID_GENRE`,
-
-                `bd_genre`.`LIBELLE`
-        ";
-
-
-
-        // dans les tables
-
-        $dbSearch->from = "
-FROM " . $this->table_name . "
-        LEFT JOIN `bd_genre` USING(`ID_GENRE`)
-
-
-
-        ";
-
-
-
-        $dbSearch->where = "WHERE 1";
-
-
-
-        // dans l'ordre
-
-        if ($a_data['daff'] == "") $a_data['daff'] = "0";
-
-        if ($a_data['sens_tri'] == "") $a_data['sens_tri'] = "ASC";
-
-        if ($a_data['col_tri'] == "") $a_data['col_tri'] = $this->table_name . ".NOM";
-
-
-
-        $dbSearch->groupby = "";
-
-
-
-        // --------------=======================----------------
-
-        $dbSearch->infoQuery();
-
-        // --------------=======================----------------
-
-        $dbSearch->integreData($a_data);
-
-        // --------------=======================----------------
-
-        if (isset($_GET['export'])) {
-
-            $dbSearch->execNoLimit();
-
-        }
-
-        else {
-
-            $dbSearch->exec();
-
-        }
-
-
-
-        return $dbSearch;
-
+                `bd_serie`.`NOM` as `NOM_SERIE` 
+                FROM BD_SERIE ";
+        return $this->load("c", $filter);
+        
     }
 
     public function getSerieSameAuthor($p_serie) {

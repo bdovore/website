@@ -30,7 +30,7 @@ class Auteur extends Bdo_Db_Line
     public function select ()
     {
         return "
-        SELECT
+        SELECT SQL_CALC_FOUND_ROWS 
             `ID_AUTEUR` ,
             `PSEUDO` ,
             `PRENOM` ,
