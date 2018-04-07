@@ -121,10 +121,10 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     </script>
 
 
-<div class="conteneuralb">
+<div class="conteneuralb" itemprop="mainEntity" itemscope itemtype="http://schema.org/Book">
 
             <div class="alb-img">
-                            <div id="couv"><img src="<?php echo ($view->tome->IMG_COUV ? BDO_URL_COUV.$view->tome->IMG_COUV : BDO_URL_COUV.'default.png' ); ?>" name="imgEdition" id="imgEdition" alt="couverture" border="1"></div>
+                            <div id="couv"><img src="<?php echo ($view->tome->IMG_COUV ? BDO_URL_COUV.$view->tome->IMG_COUV : BDO_URL_COUV.'default.png' ); ?>" itemprop="image" name="imgEdition" id="imgEdition" alt="couverture" border="1"></div>
 
                                 <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
                                 <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION;?></div>
@@ -136,17 +136,25 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
         <div class="contentalb" id="alb-description">
 
-            <h3 align="center"><?php echo $ficheAlbum->getTitreTome($view->tome,$url=false);?>  <br>
+            <h3 align="center"><span itemprop="name"><?php echo $ficheAlbum->getTitreTome($view->tome,$url=false);?> </span> <br>
                             <?php echo $ficheAlbum->urlSerie($view->tome,"_parent");?>
 
                         </h3>
                 <p align="center">
-                                <font size="-1"><?php if ($view->tome->NB_NOTE_TOME > 0) { ?> <span id="noteTome<?php echo $view->tome->ID_TOME; ?>" style="vertical-align: -3px;"> </span> <script>$('#noteTome<?php echo $view->tome->ID_TOME; ?>').raty({score: <?php echo $view->tome->MOYENNE_NOTE_TOME/2.0; ?>, readOnly: true});</script> pour <?php echo $view->tome->NB_NOTE_TOME ?> notes. <?php ;} ?></font>
-                </p>
+                               <?php if ($view->tome->NB_NOTE_TOME > 0) { ?> 
+                                <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"> 
+                                    <font size="-1">
+                               <meta itemprop='ratingValue' content='<?php echo $view->tome->MOYENNE_NOTE_TOME / 2.0; ?>'  />
+                                     <span id="noteTome<?php echo $view->tome->ID_TOME; ?>" style="vertical-align: -3px;"> </span> 
+                                     pour <span itemprop="reviewCount"><?php echo $view->tome->NB_NOTE_TOME ?></span> notes. 
+                                <script>$('#noteTome<?php echo $view->tome->ID_TOME; ?>').raty({score: <?php echo $view->tome->MOYENNE_NOTE_TOME/2.0; ?>, readOnly: true});</script> 
+                                </font></div>  <?php ;} ?>
+                               
+                                </p>
             <?php echo $view->tome->NOM_GENRE;?>  -   <?php echo $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR, "PSEUDO" => $view->tome->scpseudo),$target="_parent"). ($view->tome->scapseudo == "Aucun" ? "" : " - ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR_ALT,"PSEUDO" => $view->tome->scapseudo),$target="_parent"));
                         if ($view->tome->scpseudo <> $view->tome->depseudo || $view->tome->deapseudo <> "Aucun" ) echo "/".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN, "PSEUDO" => $view->tome->depseudo),$target="_parent").($view->tome->deapseudo == "Aucun" ? "" : " - ". $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN_ALT, "PSEUDO" => $view->tome->deapseudo),$target="_parent")); ?>
                         <?php if ($view->tome->copseudo <> $view->tome->depseudo and $view->tome->copseudo <> "Aucun" and $view->tome->copseudo <> "<indéterminé>") echo "<br>Couleur : ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" =>$view->tome->ID_COLOR,"PSEUDO" => $view->tome->copseudo),$target="_parent"); ?>
-                    <br> <b>Edition </b> <font size="-1">
+                    <br> <b>Edition </b><font size="-1">
                             <?php if (count($view->dbs_edition->a_dataQuery) == 1) {
                                                 if ($view->dateparution) {
                                                     $dateparution = new DateTime($view->dateparution);
@@ -155,7 +163,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                                 else {
                                                     $txt_dte = "";
                                                 }
-                                                echo $view->tome->NOM_EDITEUR.$txt_dte ;
+                                                echo ' <span itemprop="publisher">'.$view->tome->NOM_EDITEUR.'</span>'.$txt_dte ;
                                                 $edition_selected = $view->tome->ID_EDITION;
                                         }
                                         else {
@@ -174,7 +182,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                 } ?></font>
                     <br>
                         <span class="petite_police">
-                    ISBN-13 (EAN) : <?php echo $view->tome->EAN_EDITION;?> || ISBN-10 : <?php echo $view->tome->ISBN_EDITION;?> || ID-BDovore : <?php echo $view->tome->ID_TOME;?> </span>
+                            ISBN-13 (EAN) : <span itemprop="gtin13"> <?php echo $view->tome->EAN_EDITION;?></span> || ISBN-10 : <span itemprop="isbn"><?php echo $view->tome->ISBN_EDITION;?></span> || ID-BDovore : <?php echo $view->tome->ID_TOME;?> </span>
 <div class="action" id="action-menu">
                 <div align="center">
                     <div id="actionCollection"></div>

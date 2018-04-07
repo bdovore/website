@@ -338,7 +338,7 @@ class FicheAlbum {
             $html = htmlspecialchars($o_auteur->PSEUDO);
         } else {
         $url =  $this->getURLAuteur($o_auteur);
-         $html = '<a href="' . $url.'" title="Tous les albums de ' . $o_auteur->PSEUDO . '"' .( $target ? ' target="'. $target.'"' : '')  .'>
+         $html = '<a itemprop="author" href="' . $url.'" title="Tous les albums de ' . $o_auteur->PSEUDO . '"' .( $target ? ' target="'. $target.'"' : '')  .'>
              ' . $o_auteur->PSEUDO . '</a>';
 
          if (Bdo_Cfg::user()->minAccesslevel(1)) {
