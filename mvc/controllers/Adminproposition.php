@@ -717,7 +717,7 @@ private function getDateBeforeValid() {
                     ");
 
                 if ($this->User_album_prop->ID_PROPOSAL > $id) {
-                    $next_url = BDO_URL . "adminproposition/editProposition?ID=" . $this->User_album_prop->ID_PROPOSAL;
+                    $next_url = BDO_URL . "adminproposition/editPropositionAjout?ID=" . $this->User_album_prop->ID_PROPOSAL;
                 } else {
                     $next_url = BDO_URL . "admin/editAlbum?alb_id=" . $lid_tome;
                 }
