@@ -151,7 +151,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                 </font></div>  <?php ;} ?>
                                
                                 </p>
-            <?php echo $view->tome->NOM_GENRE;?>  -   <?php echo $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR, "PSEUDO" => $view->tome->scpseudo),$target="_parent"). ($view->tome->scapseudo == "Aucun" ? "" : " - ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR_ALT,"PSEUDO" => $view->tome->scapseudo),$target="_parent"));
+                                <span itemprop="genre"><?php echo $view->tome->NOM_GENRE;?></span>  -   <?php echo $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR, "PSEUDO" => $view->tome->scpseudo),$target="_parent"). ($view->tome->scapseudo == "Aucun" ? "" : " - ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR_ALT,"PSEUDO" => $view->tome->scapseudo),$target="_parent"));
                         if ($view->tome->scpseudo <> $view->tome->depseudo || $view->tome->deapseudo <> "Aucun" ) echo "/".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN, "PSEUDO" => $view->tome->depseudo),$target="_parent").($view->tome->deapseudo == "Aucun" ? "" : " - ". $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN_ALT, "PSEUDO" => $view->tome->deapseudo),$target="_parent")); ?>
                         <?php if ($view->tome->copseudo <> $view->tome->depseudo and $view->tome->copseudo <> "Aucun" and $view->tome->copseudo <> "<indéterminé>") echo "<br>Couleur : ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" =>$view->tome->ID_COLOR,"PSEUDO" => $view->tome->copseudo),$target="_parent"); ?>
                     <br> <b>Edition </b><font size="-1">

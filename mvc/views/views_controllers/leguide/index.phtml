@@ -103,7 +103,7 @@ if (isset($view->dbs_comment)) {
     foreach ($view->dbs_comment->a_dataQuery as $tome) {
         ?>
 
-                    <div class='cadre1' itemprop="review" itemscope itemtype="http://schema.org/Review">
+                    <div class='cadre1'itemscope itemtype="http://schema.org/Book" >
                         <table>
                             <tr><td style='vertical-align:top'>
                     <?php echo $ficheAlbum->urlalbum($tome, 'couvBig'); ?>
@@ -113,6 +113,7 @@ if (isset($view->dbs_comment)) {
                                 <td style='vertical-align:top'>
 
                                     <strong><?php echo $ficheAlbum->urlalbum($tome, 'albTitle'); ?></strong>
+                                    <div itemprop="review" itemscope itemtype="http://schema.org/Review">
                                     <br><div itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" >
                                             <meta itemprop='ratingValue' content='<?php echo $tome->NOTE / 2; ?>' />   
                                             <meta itemprop="worstRating" content = "1">
@@ -126,7 +127,9 @@ if (isset($view->dbs_comment)) {
                                      S&eacute;rie : <?php echo $ficheAlbum->urlSerie($tome); ?> <br>
                                      Publié par <span itemprop='author'><a href='./guest?user=<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a></span> le <meta itemprop='datePublished' content='<?php echo $tome->DTE_POST; ?>' /><?php echo $tome->DTE_POST; ?></p>
                                     <p>  <span itemprop='description'><?php echo (stripslashes(nl2br($tome->COMMENT))); ?></span>
-                                </td>
+                                    </div>
+                                 </td>                     
+                        </tr>
                         </table>
                     </div>
                   <?php if ($tome->NOTE > 0) { ?> <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE / 2; ?>, readOnly: true});</script><?php } ?>
