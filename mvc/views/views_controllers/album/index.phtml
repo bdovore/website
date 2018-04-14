@@ -57,9 +57,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 }
 }
         //-->
-                $( document ).ready(function() {
-                  getComment(page=1, id_tome=<?php echo $view->tome->ID_TOME;?> );
-                });
+//                $( document ).ready(function() {
+//                  getComment(page=1, id_tome=<?php echo $view->tome->ID_TOME;?> );
+//                });
 
 
 
@@ -125,220 +125,211 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
             <div class="alb-img">
                             <div id="couv"><img src="<?php echo ($view->tome->IMG_COUV ? BDO_URL_COUV.$view->tome->IMG_COUV : BDO_URL_COUV.'default.png' ); ?>" itemprop="image" name="imgEdition" id="imgEdition" alt="couverture" border="1"></div>
-
-                                <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
-                                <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION;?></div>
-                                <div id="sponsor" align="center"><?php echo $ficheAlbum->getSponsor($view->tome, $img=true, $all=true); ?></div>
-
-
-
+                            <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
+                            <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION;?></div>
+                            <div id="sponsor" align="center"><?php echo $ficheAlbum->getSponsor($view->tome, $img=true, $all=true); ?></div>
             </div>
 
         <div class="contentalb" id="alb-description">
-
             <h3 align="center"><?php echo $ficheAlbum->getTitreTome($view->tome,$url=false);?> <br>
-                            <?php echo $ficheAlbum->urlSerie($view->tome,"_parent");?>
+                            <?php echo $ficheAlbum->urlSerie($view->tome,"_parent");?></h3>
+            <p align="center">
+            <?php if ($view->tome->NB_NOTE_TOME > 0) { ?> 
+             <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"> 
+                 <font size="-1">
+            <meta itemprop='ratingValue' content='<?php echo $view->tome->MOYENNE_NOTE_TOME / 2.0; ?>'  />
+                  <span id="noteTome<?php echo $view->tome->ID_TOME; ?>" style="vertical-align: -3px;"> </span> 
+                  pour <span itemprop="reviewCount"><?php echo $view->tome->NB_NOTE_TOME ?></span> notes. 
+             <script>$('#noteTome<?php echo $view->tome->ID_TOME; ?>').raty({score: <?php echo $view->tome->MOYENNE_NOTE_TOME/2.0; ?>, readOnly: true});</script> 
+             </font></div>  <?php ;} ?>
 
-                        </h3>
-                <p align="center">
-                               <?php if ($view->tome->NB_NOTE_TOME > 0) { ?> 
-                                <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"> 
-                                    <font size="-1">
-                               <meta itemprop='ratingValue' content='<?php echo $view->tome->MOYENNE_NOTE_TOME / 2.0; ?>'  />
-                                     <span id="noteTome<?php echo $view->tome->ID_TOME; ?>" style="vertical-align: -3px;"> </span> 
-                                     pour <span itemprop="reviewCount"><?php echo $view->tome->NB_NOTE_TOME ?></span> notes. 
-                                <script>$('#noteTome<?php echo $view->tome->ID_TOME; ?>').raty({score: <?php echo $view->tome->MOYENNE_NOTE_TOME/2.0; ?>, readOnly: true});</script> 
-                                </font></div>  <?php ;} ?>
-                               
-                                </p>
-                                <span itemprop="genre"><?php echo $view->tome->NOM_GENRE;?></span>  -   <?php echo $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR, "PSEUDO" => $view->tome->scpseudo),$target="_parent"). ($view->tome->scapseudo == "Aucun" ? "" : " - ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR_ALT,"PSEUDO" => $view->tome->scapseudo),$target="_parent"));
-                        if ($view->tome->scpseudo <> $view->tome->depseudo || $view->tome->deapseudo <> "Aucun" ) echo "/".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN, "PSEUDO" => $view->tome->depseudo),$target="_parent").($view->tome->deapseudo == "Aucun" ? "" : " - ". $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN_ALT, "PSEUDO" => $view->tome->deapseudo),$target="_parent")); ?>
-                        <?php if ($view->tome->copseudo <> $view->tome->depseudo and $view->tome->copseudo <> "Aucun" and $view->tome->copseudo <> "<indéterminé>") echo "<br>Couleur : ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" =>$view->tome->ID_COLOR,"PSEUDO" => $view->tome->copseudo),$target="_parent"); ?>
-                    <br> <b>Edition </b><font size="-1">
+             </p>
+             <span itemprop="genre"><?php echo $view->tome->NOM_GENRE;?></span>  -   <?php echo $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR, "PSEUDO" => $view->tome->scpseudo),$target="_parent"). ($view->tome->scapseudo == "Aucun" ? "" : " - ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR_ALT,"PSEUDO" => $view->tome->scapseudo),$target="_parent"));
+            if ($view->tome->scpseudo <> $view->tome->depseudo || $view->tome->deapseudo <> "Aucun" ) echo "/".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN, "PSEUDO" => $view->tome->depseudo),$target="_parent").($view->tome->deapseudo == "Aucun" ? "" : " - ". $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN_ALT, "PSEUDO" => $view->tome->deapseudo),$target="_parent")); ?>
+            <?php if ($view->tome->copseudo <> $view->tome->depseudo and $view->tome->copseudo <> "Aucun" and $view->tome->copseudo <> "<indéterminé>") echo "<br>Couleur : ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" =>$view->tome->ID_COLOR,"PSEUDO" => $view->tome->copseudo),$target="_parent"); ?>
+            <br> <b>Edition </b><font size="-1">
                             <?php if (count($view->dbs_edition->a_dataQuery) == 1) {
-                                                if ($view->dateparution) {
-                                                    $dateparution = new DateTime($view->dateparution);
-                                                    $txt_dte = " - ".$dateparution->format("d/m/Y");
-                                                }
-                                                else {
-                                                    $txt_dte = "";
-                                                }
-                                                echo ' <span itemprop="publisher">'.$view->tome->NOM_EDITEUR.'</span>'.$txt_dte ;
-                                                $edition_selected = $view->tome->ID_EDITION;
-                                        }
-                                        else {
-                                            echo '<select name="select" onchange="changeEdition()" id="sel_edition">';
-                                            $edition_selected = $view->tome->USER_EDITON ? $view->tome->USER_EDITON : $view->tome->ID_EDITION;
-                                            foreach ($view->dbs_edition->a_dataQuery as $edition){
-                                                // on ajoute les options
-                                                echo '<option value="'.$edition->ID_EDITION .'"'.($edition->ID_EDITION == $edition_selected ? 'selected=""' : '') .'>'.$edition->NOM_EDITION .'</option>';
-                                            }
-                                            echo "</select>";
-                                        }
-                                        ?>
-                            <?php
+                                    if ($view->dateparution) {
+                                        $dateparution = new DateTime($view->dateparution);
+                                        $txt_dte = " - ".$dateparution->format("d/m/Y");
+                                    }
+                                    else {
+                                        $txt_dte = "";
+                                    }
+                                    echo ' <span itemprop="publisher">'.$view->tome->NOM_EDITEUR.'</span>'.$txt_dte ;
+                                    $edition_selected = $view->tome->ID_EDITION;
+                                }
+                                else {
+                                    echo '<select name="select" onchange="changeEdition()" id="sel_edition">';
+                                    $edition_selected = $view->tome->USER_EDITON ? $view->tome->USER_EDITON : $view->tome->ID_EDITION;
+                                    foreach ($view->dbs_edition->a_dataQuery as $edition){
+                                        // on ajoute les options
+                                        echo '<option value="'.$edition->ID_EDITION .'"'.($edition->ID_EDITION == $edition_selected ? 'selected=""' : '') .'>'.$edition->NOM_EDITION .'</option>';
+                                    }
+                                    echo "</select>";
+                                }
                             if (isset($view->tome->NOM_COLLECTION)) {
                                 echo $view->tome->NOM_COLLECTION == "<N/A>" ? "" : "<br> Collection ".$view->tome->NOM_COLLECTION;
                                 } ?></font>
-                    <br>
-                        <span class="petite_police">
-                            ISBN-13 (EAN) : <span itemprop="isbn"> <?php echo $view->tome->EAN_EDITION;?></span> || ISBN-10 : <span itemprop="isbn"><?php echo $view->tome->ISBN_EDITION;?></span> || ID-BDovore : <?php echo $view->tome->ID_TOME;?> </span>
-<div class="action" id="action-menu">
-                <div align="center">
-                    <div id="actionCollection"></div>
-
-                </div>
-
-                        </div>
-
+                <br>
+                <span class="petite_police">
+                            ISBN-13 (EAN) : <span itemprop="isbn"> <?php echo $view->tome->EAN_EDITION;?></span> || ISBN-10 : <span itemprop="isbn"><?php echo $view->tome->ISBN_EDITION;?></span> || ID-BDovore : <?php echo $view->tome->ID_TOME;?> 
+                </span>
+                <div class="action" id="action-menu">
+                    <div align="center">
+                        <div id="actionCollection"></div>
+                    </div>
+                 </div>
     </div>
 
-<hr class="expSep">
-        <div class="synopsis">
+    <hr class="expSep">
+    <div class="synopsis">
             <?php if ($view->tome->HISTOIRE_TOME <> "") { ?>
                 <strong>Synopsis :</strong>
 
-                                 <font size="-1">
-                                        <?php echo nl2br($view->tome->HISTOIRE_TOME);?>
-                                        </font>
-            <?php } ?>
-                                      
-                                       <br>
-                                       <!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5aa565c61fcc82d7"></script> 
-                    <!-- Go to www.addthis.com/dashboard to customize your tools --> <div class="addthis_inline_share_toolbox"></div>
-                    <br>
-                                       <div id="simil">
-                                           <a href="<?php echo BDO_URL;?>discovery?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">== Vous aimerez aussi peut être... ==</a>
-                                           <br></div>
-                                        <br>
-                                        <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
-
-                                            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><i>Une erreur sur cette fiche ou votre édition est différente ? Vous pouvez
-                                                    <a href="<?php echo BDO_URL; ?>Proposition?id_edition=<?php echo $edition_selected; ?>" >
-                                <b>proposer une correction</b>
-                                        </a></i> ou  <i>
-                                                    <a href="<?php echo BDO_URL; ?>Proposition?type=EDITION&id_tome=<?php echo $view->tome->ID_TOME; ?>">
-                                <b>proposer l'ajout d'une autre édition</b>
-                                        </a></i></p></div>
-
-
-
+            <font size="-1"><?php echo nl2br($view->tome->HISTOIRE_TOME);?> </font>
+                  
+            <?php } ?><br>
+        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5aa565c61fcc82d7"></script> 
+         <div class="addthis_inline_share_toolbox"></div>
+        <br>
+        <div id="simil">
+            <a href="<?php echo BDO_URL;?>discovery?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">== Vous aimerez aussi peut être... ==</a>
+            <br>
         </div>
+        <br>
+        <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+            <p>
+                <span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span><i>Une erreur sur cette fiche ou votre édition est différente ? Vous pouvez
+                    <a href="<?php echo BDO_URL; ?>Proposition?id_edition=<?php echo $edition_selected; ?>" >
+                    <b>proposer une correction</b>
+                </a></i> ou 
+                     <i><a href="<?php echo BDO_URL; ?>Proposition?type=EDITION&id_tome=<?php echo $view->tome->ID_TOME; ?>">
+                <b>proposer l'ajout d'une autre édition</b></a></i>
+            </p>
+        </div>
+    </div>
     
 <hr class="expSep">
-      <div id="info_collection">
-              <center><strong>Données privées</strong><br><span class="petite_police">(pour votre utilisation personnelle)</span></center>
-                <hr style="align: center; width: 50%;">
-                                <input type="hidden" id="user_edition" value="<?php echo $view->tome->ID_EDITION; ?>" />
-                <table>
-                                     <tr>
-                                        <td>
-                                         Futur achat : <input name="cb_achat" id="cb_achat" value="O" type="checkbox" onclick="setDteAchat();">
-                    Date d'achat : <span class="petite_police">(dd/mm/aaaa)</span>  <input name="date_achat" id="date_achat" value="" size="10" maxlength="10" type="text">
-
-
-                    Prix/cote :<input class="numbersOnly" name="prix" id="prix" value="" size="4" maxlength="8" type="text">
-                                    </td>
-                                </tr>
-                                    <tr>
-                                        <td>
-
-                    E.O :   <input name="cb_tete" id="cb_tete" value="O" type="checkbox" >
-                                        Dédicace : <input name="cb_dedicace" id="cb_dedicace" value="O" type="checkbox" >
-                                         Cadeau :<input name="cb_cadeau" id="cb_cadeau" value="checkbox" type="checkbox" >
-                                         Lu :<input name="cb_lu" id="cb_lu" value="checkbox" type="checkbox" >
-                    </td>
-                                    </tr>
-
-                                <tr>
-                                    <td>
-
-                                                Prêt :
-
-                                        <input name="cb_pret" id="cb_pret" value="checkbox" type="checkbox">
-
-                                                Dernier emprunteur :
-
-                                        <input name="nom_pret" id="nom_pret" value="" size="15" maxlength="100" type="text" >
-
-
-                                                        Email :
-
-
-                                        <input name="email_pret" id="email_pret" value="" size="15" maxlength="100" type="text">
-                                    </td>
-                                </tr>
-                                    <tr>
-                                    <td>
-
-                    Remarque personnelle (état, mémo, ...) :
-                                        <textarea name="remarque" id="remarque" class="champ_commentaire"></textarea>
-                                    </td>
-                                    </tr>
-                                </table>
-                                <div id="save_collection"><input type="button" value="Enregistrer les modifications" onclick="saveCollection();"/></div>
-
-                            </div>
+<div id="info_collection">
+    <center><strong>Données privées</strong><br><span class="petite_police">(pour votre utilisation personnelle)</span></center>
+    <hr style="align: center; width: 50%;">
+    <input type="hidden" id="user_edition" value="<?php echo $view->tome->ID_EDITION; ?>" />
+    <table>
+        <tr>
+            <td>
+                Futur achat : <input name="cb_achat" id="cb_achat" value="O" type="checkbox" onclick="setDteAchat();">
+                Date d'achat : <span class="petite_police">(dd/mm/aaaa)</span>  <input name="date_achat" id="date_achat" value="" size="10" maxlength="10" type="text">
+                Prix/cote :<input class="numbersOnly" name="prix" id="prix" value="" size="4" maxlength="8" type="text">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                E.O :   <input name="cb_tete" id="cb_tete" value="O" type="checkbox" >
+                Dédicace : <input name="cb_dedicace" id="cb_dedicace" value="O" type="checkbox" >
+                Cadeau :<input name="cb_cadeau" id="cb_cadeau" value="checkbox" type="checkbox" >
+                Lu :<input name="cb_lu" id="cb_lu" value="checkbox" type="checkbox" >
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Prêt :
+                <input name="cb_pret" id="cb_pret" value="checkbox" type="checkbox">
+                Dernier emprunteur :
+                <input name="nom_pret" id="nom_pret" value="" size="15" maxlength="100" type="text" >
+                Email :
+                <input name="email_pret" id="email_pret" value="" size="15" maxlength="100" type="text">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Remarque personnelle (état, mémo, ...) :
+                <textarea name="remarque" id="remarque" class="champ_commentaire"></textarea>
+            </td>
+        </tr>
+    </table>
+    <div id="save_collection"><input type="button" value="Enregistrer les modifications" onclick="saveCollection();"/></div>
+</div>
 
 <hr class="expSep">
-        <div class="comment" id="comment">
-                <font color="#990000" face="Arial, Helvetica, sans-serif" size="-1">
-                        <strong>Commentaires des membres :</strong> <a onclick="viewComment();">
+<div class="comment" id="comment">
+    <font color="#990000" face="Arial, Helvetica, sans-serif" size="-1">
+    <strong>Commentaires des membres :</strong> <a onclick="viewComment();">
 
-                            (vous pouvez également donner un avis de lecture)
+        (vous pouvez également donner un avis de lecture)
 
-                    </a>
-                </font>
-                 <div id="writecomment">
+    </a>
+    </font>
+    <div id="writecomment">
 
-                    <table width="100%" border="0" align="center">
-                <tr>
-                    <td width="70%">
+        <table width="100%" border="0" align="center">
+            <tr>
+                <td width="70%">
 
-                            <strong>Notez et donnez votre avis de lecture pour <font color="#990000"><?php echo $view->tome->TITRE_TOME;?> </font></strong>
+                    <strong>Notez et donnez votre avis de lecture pour <font color="#990000"><?php echo $view->tome->TITRE_TOME; ?> </font></strong>
 
-                    </td>
-                </tr>
+                </td>
+            </tr>
 
-                    <tr>
-                        <td>
-                            <b><i>Note:</i></b>
-                                                        <span id="commentRaty"></span>
-                                                        <script>$("#commentRaty").raty({ scoreName: 'note', half : true})</script>
+            <tr>
+                <td>
+                    <b><i>Note:</i></b>
+                    <span id="commentRaty"></span>
+                    <script>$("#commentRaty").raty({ scoreName: 'note', half : true})</script>
 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Avis de lecture * :
-                                                 <textarea id="t_comment" class="champ_commentaire"></textarea></td>
-                    </tr>
-
-
-                    <tr>
-                        <td>
-
-                                <input name="id_tome" type="hidden" id="id_tome" value="<?php echo $view->tome->ID_TOME ?>" />
-                                <input type="submit" name="Submit" value="Enregistrer note/avis" onclick="myComment();"/>
-                            <em>
-                                                            <br><font size="-1">
-                                        * : Avis de lecture qui apparaîtra pour tous les visiteurs sur le site
-                                        <br />
-                                    </font>
-                                </em>
-                        </td>
-                    </tr>
-            </table>
+                </td>
+            </tr>
+            <tr>
+                <td>Avis de lecture * :
+                    <textarea id="t_comment" class="champ_commentaire"></textarea></td>
+            </tr>
 
 
-                </div>
-                <br>
+            <tr>
+                <td>
 
-                <div id="listcomment">
+                    <input name="id_tome" type="hidden" id="id_tome" value="<?php echo $view->tome->ID_TOME ?>" />
+                    <input type="submit" name="Submit" value="Enregistrer note/avis" onclick="myComment();"/>
+                    <em>
+                        <br><font size="-1">
+                        * : Avis de lecture qui apparaîtra pour tous les visiteurs sur le site
+                        <br />
+                        </font>
+                    </em>
+                </td>
+            </tr>
+        </table>
 
-                </div>
+
+    </div>
+    <br>
+
+    <div id="listcomment">
+            <?php $i=0; foreach ($view->dbs_comment->a_dataQuery as $comment) { 
+                $i++;
+                $id_cmt = $view->tome->ID_TOME."_".$i;
+                ?>
+            <div class='listcomment' itemprop='review' itemscope itemtype='http://schema.org/Review'> 
+                <div itemprop='reviewRating' itemscope itemtype='http://schema.org/Rating'>
+                    <meta itemprop='worstRating' content = '1'/>
+                    <meta itemprop='ratingValue' content='<?php echo round($comment->NOTE/2.0, 1); ?>' />
+                    <span id='noteTome<?php echo $id_cmt ;?>'></span><meta itemprop='bestRating' content = '5'/>
+                </div> 
+                Posté par <span itemprop='author'><a href='./guest?user=<?php echo $comment->user_id; ?>' target='parent'><?php echo $comment->username; ?></a></span> le <meta itemprop='datePublished' content='<?php echo $comment->DTE_POST?>'><?php echo $comment->DTE_POST?>  
+                <p>
+                 <span itemprop='description'> <?php echo stripslashes(nl2br($comment->COMMENT)); ?></span></p> 
+                <?php if ($comment->NOTE > 0) { ?>
+                <script>$('#noteTome<?php echo $id_cmt ;?>').raty({score: <?php echo $comment->NOTE; ?>/2.0 , readOnly: true});</script>
+                <?php } ?>
+            </div>
+            <?php } 
+            if ($i == 0) { ?>
+                    <i>Aucun commentaire pour cet album actuellement. <a onclick='viewComment();'>Soyez le premier !</a></i>
+            <?php } ?>
+    </div>
 
 
-        </div>
+</div>
 </div>
 <script language="javascript">
    $("#writecomment").hide();
