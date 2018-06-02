@@ -1266,9 +1266,12 @@ div.textmasked {
     }
 
     #search {
-        width : 80% !important;
+        width : 75% !important;
+        margin-left:0px !important;
     }
-
+    #img_loupe {
+        display:none;
+    }
     #content {
         width: 100% !important;
         margin: auto !important;
