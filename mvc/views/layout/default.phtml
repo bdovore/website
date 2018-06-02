@@ -342,8 +342,8 @@ title="Pour les admins !">Admin</a></li> <?php } ?>
                 id="formsearch" name="formsearch" target="_self">
                 
 <div class="ui-widget">
-    <a class="facebook-social" target="_blank" href="https://fr-fr.facebook.com/bdovore/" title="Suivez-nous sur Facebook" style="opacity: 1;"><img src="<?php echo BDO_URL_IMAGE;?>site/facebook.png"></a>
-                     <a class="aide-header" href="<?php echo BDO_URL; ?>tutoriel" title="Besoin d'aide ? Suivez le guide"><img src="<?php echo BDO_URL_IMAGE;?>site/help.png"></a>
+    <a class="facebook-social" id="facebookheader" target="_blank" href="https://fr-fr.facebook.com/bdovore/" title="Suivez-nous sur Facebook" style="opacity: 1;"><img src="<?php echo BDO_URL_IMAGE;?>site/facebook.png"></a>
+                     <a class="aide-header" id="aideheader" href="<?php echo BDO_URL; ?>tutoriel" title="Besoin d'aide ? Suivez le guide"><img src="<?php echo BDO_URL_IMAGE;?>site/help.png"></a>
                
                      <input name="search" type="text" id="search"
                     onblur="if (!this.value) this.value='Rechercher album, série, auteur...';"
@@ -378,7 +378,9 @@ title="Pour les admins !">Admin</a></li> <?php } ?>
 
 
     <div id="footer" class="shadow fond">
-
+        <div id="social">Contacts, informations diverses via le forum ou via <a class="facebook-social" id="facebookfooter" target="_blank" href="https://fr-fr.facebook.com/bdovore/" title="Suivez-nous sur Facebook" style="opacity: 1;"><img src="<?php echo BDO_URL_IMAGE;?>site/facebook.png"></a>
+                     <a class="aide-header" id="aidefooter" href="<?php echo BDO_URL; ?>tutoriel" title="Besoin d'aide ? Suivez le guide"><img src="<?php echo BDO_URL_IMAGE;?>site/help.png"></a>
+               </div>
         <div id="titre_avertissement">Avertissement</div>
         <div id="texte_avertissement">Les images pr&eacute;sentes sur ce site sont la
             propri&eacute;t&eacute; de leurs auteurs et &eacute;diteurs respectifs et sont soumises &agrave;
