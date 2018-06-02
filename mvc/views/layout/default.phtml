@@ -340,11 +340,16 @@ title="Pour les admins !">Admin</a></li> <?php } ?>
             <br />
             <form action="<?php echo BDO_URL;?>browser" method="post"
                 id="formsearch" name="formsearch" target="_self">
+                
 <div class="ui-widget">
-                <input name="search" type="text" id="search"
+    <a class="facebook-social" target="_blank" href="https://fr-fr.facebook.com/bdovore/" title="Suivez-nous sur Facebook" style="opacity: 1;"><img src="<?php echo BDO_URL_IMAGE;?>site/facebook.png"></a>
+                     <a class="aide-header" href="<?php echo BDO_URL; ?>tutoriel" title="Besoin d'aide ? Suivez le guide"><img src="<?php echo BDO_URL_IMAGE;?>site/help.png"></a>
+               
+                     <input name="search" type="text" id="search"
                     onblur="if (!this.value) this.value='Rechercher album, série, auteur...';"
                     onfocus="if (this.value=='Rechercher album, série, auteur...') this.value='';" size="40"
-                    maxlength="60" value="Rechercher album, série, auteur..." /><img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif">
+                    maxlength="60" value="Rechercher album, série, auteur..." />
+                <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif">
 </div>
             </form>
         </div>
