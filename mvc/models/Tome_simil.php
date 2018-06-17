@@ -44,9 +44,11 @@ class Tome_simil
         $a_idTomeSimil = array();
         // on fait une estimation sur le top 100 des utilisateurs qui ont l'album dans leur collection
         // etape 1 : on récupère 100 utilisateurs max au hasard
-        $query_user = "SELECT distinct user_id
-                FROM users_album
-                WHERE id_edition IN (" . implode(',', $a_idEdition) . ")  limit 100";
+        $query_user = "SELECT distinct ua.user_id 
+                FROM users_album ua
+                inner join bd_edition ed using (id_edition)
+                left join users_comment uc on uc.id_tome = ed.id_tome AND uc.user_id = ua.user_id
+                WHERE id_edition IN (" . implode(',', $a_idEdition) . ") order by uc.note desc limit 100";
         $resultat = Db_query($query_user);
         $a_User = array();
         while ($obj = Db_fetch_object($resultat)) {
