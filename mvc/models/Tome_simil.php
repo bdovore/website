@@ -42,29 +42,39 @@ class Tome_simil
         }
 
         $a_idTomeSimil = array();
-
-
-        if ($a_idEdition AND !in_array($tome->ID_GENRE, $a_idGenreExclu)) {
+        // on fait une estimation sur le top 100 des utilisateurs qui ont l'album dans leur collection
+        // etape 1 : on récupère 100 utilisateurs max au hasard
+        $query_user = "SELECT distinct user_id
+                FROM users_album
+                WHERE id_edition IN (" . implode(',', $a_idEdition) . ")  limit 100";
+        $resultat = Db_query($query_user);
+        $a_User = array();
+        while ($obj = Db_fetch_object($resultat)) {
+            $a_User[] = $obj->user_id;
+        }
+        if (count($a_User) == 100) {
+            $coefficient =  $tome->NBR_USER_ID_SERIE / 100.0;
+        } else {
+            $coefficient = 1;
+        }
+        if ($a_idEdition AND !in_array($tome->ID_GENRE, $a_idGenreExclu) AND count($a_User) > 0) {
             $requete = "
-SELECT
-    MIN(bd_edition_stat.ID_TOME) as ID_TOME,
-    (count(DISTINCT(users_album.user_id)) / (".$tome->NBR_USER_ID_SERIE." + MAX(bd_edition_stat.NBR_USER_ID_SERIE) - count(DISTINCT(users_album.user_id)))) as score
-FROM
-users_album INNER JOIN (
-    SELECT DISTINCT user_id
-    FROM users_album
-    WHERE id_edition IN (" . implode(',', $a_idEdition) . ")
-    ) usersb USING (user_id)
-INNER JOIN bd_edition_stat ON bd_edition_stat.ID_EDITION=users_album.ID_EDITION
-INNER JOIN bd_tome on bd_edition_stat.id_tome = bd_tome.id_tome
-WHERE NOT(bd_edition_stat.ID_SERIE = ".$tome->ID_SERIE.")
-AND NOT(bd_edition_stat.NBR_USER_ID_SERIE = 0)
-AND bd_edition_stat.ID_GENRE NOT IN (" . implode(',', $a_idGenreExclu) . ")
-    AND bd_tome.flg_type = 0 and bd_tome.flg_int = 'N' 
-GROUP BY bd_edition_stat.ID_SERIE
-ORDER BY score DESC
-LIMIT 0,5
-";
+            SELECT
+                MIN(bd_edition_stat.ID_TOME) as ID_TOME,
+                (".$coefficient ."*count(DISTINCT(users_album.user_id)) / (".$tome->NBR_USER_ID_SERIE." + MAX(bd_edition_stat.NBR_USER_ID_SERIE) - (".$coefficient ."*count(DISTINCT(users_album.user_id))))) as score
+            FROM
+            users_album
+            INNER JOIN bd_edition_stat ON bd_edition_stat.ID_EDITION=users_album.ID_EDITION
+            INNER JOIN bd_tome on bd_edition_stat.id_tome = bd_tome.id_tome
+            WHERE NOT(bd_edition_stat.ID_SERIE = ".$tome->ID_SERIE.")
+            AND NOT(bd_edition_stat.NBR_USER_ID_SERIE = 0)
+            AND bd_edition_stat.ID_GENRE NOT IN (" . implode(',', $a_idGenreExclu) . ")
+                AND bd_tome.flg_type = 0 and bd_tome.flg_int = 'N'  
+            AND users_album.user_id in (". implode(',', $a_User).")
+            GROUP BY bd_edition_stat.ID_SERIE
+            ORDER BY score DESC
+            LIMIT 0,5
+            ";
             $resultat = Db_query($requete);
             if (0 == Db_CountRow($resultat)) {
                 $requete = "
@@ -85,8 +95,8 @@ LIMIT 0,5
 
                 // mise a jour apres recherche ...meme vide
                 Db_query(
-                        "INSERT INTO bd_tome_simil (ID_TOME, ID_TOME_SIMIL, SCORE_TOME_SIMIL)
-                    VALUES (" . $tome->ID_TOME . ",'" . $obj->ID_TOME . "','" . $obj->score . "')
+                        "INSERT INTO bd_tome_simil (ID_TOME, ID_TOME_SIMIL, SCORE_TOME_SIMIL,TSMP_TOME_SIMIL )
+                    VALUES (" . $tome->ID_TOME . ",'" . $obj->ID_TOME . "','" . $obj->score . "', now())
                     ON DUPLICATE KEY UPDATE
                     SCORE_TOME_SIMIL='" . $obj->score . "',
                     TSMP_TOME_SIMIL=NOW()");
@@ -100,5 +110,15 @@ LIMIT 0,5
                             ORDER BY score DESC LIMIT 0,5");
         }
         return $a_idTomeSimil;
+    }
+    public function lastUpdateForIdTome($id_tome) {
+        $query = "select max(TSMP_TOME_SIMIL) TSMP from bd_tome_simil where id_tome= ".intVal($id_tome);
+        $resultat = Db_query($query);
+        if ($obj = Db_fetch_object($resultat)) {
+            $tsmp = $obj->TSMP;
+        } else {
+            $tsmp = 0;
+        }
+        return $tsmp;
     }
 }
