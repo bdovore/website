@@ -109,6 +109,11 @@ class Album extends Bdo_Controller {
         if ($frame == "iframe") {
             $this->view->layout = "iframe";
         }
+        // ajout des commentaires : remplacement du mode précédent en ajax
+         $this->loadModel('Comment');         
+          $where = "WHERE c.id_tome = " .$o_tome->ID_TOME ." and c.comment <> '' order by dte_post desc ";
+          $dbs_comment = $this->Comment->load("c",$where);
+          $this->view->set_var("dbs_comment",$dbs_comment);
         $this->view->set_var("frame",$frame);
         $this->view->render();
     }

@@ -2,6 +2,49 @@
 $ficheAlbum = $view->getHelper('ficheAlbum');
 ?>
 <div class="colleft">
+    <!-- Debut de la partie de droite -->
+    <div class="col2">
+        <!-- Column 2 start -->
+        <div id="actu" class="right fond">
+        <div class="middle_title">
+            <h3>Actualité</h3>
+        </div>
+            
+            <div class="right">
+        <?php 
+         $genre ="";
+        foreach ($view->ACTUAIR as $actu) { 
+            if ($actu->ORIGINE_GENRE <> $genre) {
+                echo "<div class='middle_content'>".$actu->ORIGINE_GENRE ."</div>";
+            }
+            echo $ficheAlbum->urlAlbum($actu,$class="couvMedium",$sponsor=FALSE)." ";
+            $genre = $actu->ORIGINE_GENRE;
+      } ?>
+            </div>
+        </div>
+        <div  id="newsfacebook"class="right fond">
+         <div class="middle_title">
+             <h3><a href="https://www.facebook.com/bdovore" target="_blank">News Facebook</a> </h3></div>
+                
+            </div>
+         <div id="lastajout" class="right fond">
+    <div class="middle_title">
+    <h3><a href="<?php echo BDO_URL;?>leguide?rb_mode=6&rb_list=album&submitGuide=Envoyer">Derniers ajouts</a>
+    <a href="<?php echo BDO_URL;?>rss">
+    <img src="<?php echo BDO_URL_IMAGE;?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" />
+    </a></h3>
+    </div>
+        <div class="cadre1" style="margin:3px 3px 3px 3px ;">
+            <?php 
+           
+            foreach ($view->LASTAJOUT as $ajout) {
+                echo $ficheAlbum->urlAlbum($ajout,$class="albTitle")."<br />";
+            }?>
+        </div>
+        
+         </div>
+        <!-- Column 2 end -->
+    </div>
     <div class="col1wrap">
         <div class="col1 fond">
             <!-- Column 1 start -->
@@ -61,12 +104,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                             href="<?php echo BDO_URL; ?>browser?a_idGenre[]=37">des
 
                             BD</a>.</li>
-                </ul><br /> <a href="<?php echo BDO_URL; ?>tutoriel" style="font-weight: bold;">D&eacute;couvrez
-
-                    BDovore !</a> <span align="right">Bdovore sur mobile : <a href='<?php echo BDO_PROTOCOL; ?>://phone.bdovore.com'>phone.bdovore.com</a> ou l'application Android sur <a href='https://play.google.com/store/apps/details?id=com.bdovore.phone.android&hl=fr_FR'>Google Play</a></span>
+                </ul><br /> <a href="<?php echo BDO_URL; ?>tutoriel" style="font-weight: bold;">Besoin d'une visite guidée ? Suivez le tutoriel BDovore !</a> <br>
+                <a href='https://play.google.com/store/apps/details?id=com.bdovore.phone.android&hl=fr_FR'><img alt='Disponible sur Google Play' width="120px" src='https://play.google.com/intl/en_us/badges/images/generic/fr_badge_web_generic.png'/></a>
 
             </div>
-
+           
             <div style="padding:5px;">
                 <h2>Dernières Critiques</h2></div>
 
@@ -177,43 +219,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             <!-- Column 1 end -->
         </div>
     </div>
-    <!-- Debut de la partie de droite -->
-    <div class="col2">
-        <!-- Column 2 start -->
-        <div id="actu" class="right fond">
-        <div class="middle_title">
-            <h3>Actualité</h3>
-        </div>
-            
-            <div class="right">
-        <?php 
-         $genre ="";
-        foreach ($view->ACTUAIR as $actu) { 
-            if ($actu->ORIGINE_GENRE <> $genre) {
-                echo "<div class='middle_content'>".$actu->ORIGINE_GENRE ."</div>";
-            }
-            echo $ficheAlbum->urlAlbum($actu,$class="couvMedium",$sponsor=FALSE)." ";
-            $genre = $actu->ORIGINE_GENRE;
-      } ?>
-            </div>
-        </div>
-         <div id="last" class="right fond">
-    <div class="middle_title">
-    <h3><a href="<?php echo BDO_URL;?>leguide?rb_mode=6&rb_list=album&submitGuide=Envoyer">Derniers ajouts</a>
-    <a href="<?php echo BDO_URL;?>rss">
-    <img src="<?php echo BDO_URL_IMAGE;?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" />
-    </a></h3>
-    </div>
-        <div class="cadre1" style="margin:3px 3px 3px 3px ;">
-            <?php 
-           
-            foreach ($view->LASTAJOUT as $ajout) {
-                echo $ficheAlbum->urlAlbum($ajout,$class="albTitle")."<br />";
-            }?>
-        </div>
-        
-         </div>
-        <!-- Column 2 end -->
-    </div>
+    
 </div>
-<!-- Fin de la partie de droite -->
+<script>
+    var fwidth = 220;
+    if ($(window).width() < 667) {
+        fwidth= Math.min($(window).width() - 10,500);
+    }
+    $("#newsfacebook").append('<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fbdovore%2F&tabs=timeline&width='+fwidth + '&height=500&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false&appId=167515296514" width="100%" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>');
+    </script>
+    

@@ -103,7 +103,7 @@ if (isset($view->dbs_comment)) {
     foreach ($view->dbs_comment->a_dataQuery as $tome) {
         ?>
 
-                    <div class='cadre1'>
+                    <div class='cadre1'itemscope itemtype="http://schema.org/Book" >
                         <table>
                             <tr><td style='vertical-align:top'>
                     <?php echo $ficheAlbum->urlalbum($tome, 'couvBig'); ?>
@@ -113,15 +113,23 @@ if (isset($view->dbs_comment)) {
                                 <td style='vertical-align:top'>
 
                                     <strong><?php echo $ficheAlbum->urlalbum($tome, 'albTitle'); ?></strong>
-                                    <br>   <span id='noteTome<?php echo $tome->ID_TOME; ?>'> </span>
+                                    <div itemprop="review" itemscope itemtype="http://schema.org/Review">
+                                    <br><div itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" >
+                                            <meta itemprop='ratingValue' content='<?php echo $tome->NOTE / 2; ?>' />   
+                                            <meta itemprop="worstRating" content = "1">
+                                            <meta itemprop="bestRating" content = "5">
+                                            <span id='noteTome<?php echo $tome->ID_TOME; ?>'> </span>
+                                    </div>
                                         <?php if (User::minAccesslevel(1)) { ?>
                                     <a title="Passer ce commentaire en status privé" onclick="setCommentPrivate(<?php echo $tome->user_id;?>,<?php echo $tome->ID_TOME; ?>);"><img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif"></a>
                                         <?php } ?>
                                     <p class="fiche_album">
                                      S&eacute;rie : <?php echo $ficheAlbum->urlSerie($tome); ?> <br>
-                                    Publié par <a href='./guest?user=<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a> le <?php echo $tome->DTE_POST; ?></p>
-                                    <p> <?php echo (stripslashes(nl2br($tome->COMMENT))); ?>
-                                </td>
+                                     Publié par <span itemprop='author'><a href='./guest?user=<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a></span> le <meta itemprop='datePublished' content='<?php echo $tome->DTE_POST; ?>' /><?php echo $tome->DTE_POST; ?></p>
+                                    <p>  <span itemprop='description'><?php echo (stripslashes(nl2br($tome->COMMENT))); ?></span>
+                                    </div>
+                                 </td>                     
+                        </tr>
                         </table>
                     </div>
                   <?php if ($tome->NOTE > 0) { ?> <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE / 2; ?>, readOnly: true});</script><?php } ?>
@@ -166,6 +174,11 @@ if ($view->NUM_PAGE < 20)
       } ?>
             </div>
         </div>
+               <div  id="newsfacebook"class="right fond">
+         <div class="middle_title">
+             <h3><a href="https://www.facebook.com/bdovore" target="_blank">News Facebook</a> </h3></div>
+                <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fbdovore%2F&tabs=timeline&width=220&height=500&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false&appId=167515296514" width="100%" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+            </div>
          <div id="last" class="right fond">
     <div class="middle_title">
     <h3><a href="<?php echo BDO_URL;?>leguide?rb_mode=6&rb_list=album&submitGuide=Envoyer">Derniers ajouts</a>

@@ -27,8 +27,8 @@ class Simil extends Bdo_Controller
 
         $a_simil = $this->Tome->simil();
 
-        //if (empty($a_simil) and (604800 < (time() - TimestampDate($a_simil[0]->TSMP_TOME_SIMIL))))
-        if (empty($a_simil))
+        if (empty($a_simil) OR (604800 < (time() - TimestampDate($a_simil[0]->TSMP_TOME_SIMIL))))
+        //if (empty($a_simil))
         {
             $this->loadModel("Tome_simil");
             $this->Tome_simil->load($this->Tome);
@@ -55,15 +55,17 @@ class Simil extends Bdo_Controller
     public function getTopSimil() {
         $ID_TOME = getValInteger('ID_TOME', 1);
         $this->loadModel("Tome");
+         $this->loadModel("Tome_simil");
         $this->Tome->set_dataPaste(array(
                 "ID_TOME" => $ID_TOME
         ));
         //echo $ID_TOME;
         $this->Tome->load();
         $a_simil = $this->Tome->simil();
-        if (empty($a_simil))
+        $tsmp = $this->Tome_simil->lastUpdateForIdTome($ID_TOME);        
+        if (empty($a_simil) OR (604800 < (time() - TimestampDate($tsmp))))
         {
-            $this->loadModel("Tome_simil");
+           
             $this->Tome_simil->load($this->Tome);
             $a_simil = $this->Tome->simil();
         }

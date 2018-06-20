@@ -16,7 +16,7 @@ class FicheAlbum {
             if ($url) {
                 $html .=  "<strong>".$this->urlAlbum($o_tome, 'albTitle')."</strong>" ;
             } else {
-                $html .=  $o_tome->TITRE_TOME;
+                $html .=  "<span itemprop='name'>".$o_tome->TITRE_TOME.'</span>';
             }
 
         }
@@ -93,7 +93,7 @@ class FicheAlbum {
         }
 
         $html = '
-            <div class="cadre1 fiche_big">
+            <div class="cadre1 fiche_big" itemscope itemtype="http://schema.org/Book">
             <div style="float:left" class="mw50">
             ' . $this->urlAlbum($o_tome, 'couvBig') . '
             </div>
@@ -120,7 +120,7 @@ class FicheAlbum {
         // genre
         if ($o_tome->NOM_GENRE) {
             $html .= 'Genre : ';
-            $html .= '<i>' . $o_tome->NOM_GENRE . '</i><br>';
+            $html .= '<i><span itemprop="genre"> ' . $o_tome->NOM_GENRE . '</span></i><br>';
         }
         if ($o_tome->scpseudo) {
             $html .= 'Auteur(s) : ';
@@ -132,7 +132,7 @@ class FicheAlbum {
         // editeur
         if ($o_tome->NOM_EDITEUR) {
             $html .= 'Editeur : ';
-            $html .= '<i>' . $o_tome->NOM_EDITEUR . '</i>';
+            $html .= '<i><span itemprop="publisher">' . $o_tome->NOM_EDITEUR . '</span></i>';
             if (($o_tome->NOM_COLLECTION) and ($o_tome->NOM_COLLECTION != '<N/A>')) {
                 $html .= ' -  <i>' . $o_tome->NOM_COLLECTION . '</i>';
             }
@@ -268,32 +268,32 @@ class FicheAlbum {
 
             switch ($class) {
                 case "couvBig": {
-                        $html .= '<img src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
+                        $html .= '<img itemprop="image" src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
                         $html .= '</a>' . ($o_tome->NOM_EDITEUR ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
                         if ($sponsor) $html .= "<div align=center>". $this->getSponsor($o_tome,true)."</div>";
                         break;
                 }
 
                 case "couvMedium": {
-                        $html .= '<img src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
+                        $html .= '<img itemprop="image" src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
                         $html .= '</a>' . ($o_tome->NOM_EDITEUR ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
                         break;
                 }
 
                 case "couvSmall": {
-                        $html .= '<img src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
+                        $html .= '<img itemprop="image" src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
                         $html .= '</a>';
                         break;
                 }
                 case "albTitle": {
-                        $html .= $o_tome->TITRE_TOME . '</a>';
+                        $html .= '<span itemprop="name">'.$o_tome->TITRE_TOME . '</span></a>';
                         if (Bdo_Cfg::user()->minAccesslevel(1)) {
                             $html .= '&nbsp;&nbsp;<a href="' .BDO_URL. 'admin/editalbum?alb_id=' .$o_tome->ID_TOME. '" target="_blank"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
                         }
                         break;
                 }
                 default: {
-                        $html .= '<img src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" title="' . $titleHtml . '"/>';
+                        $html .= '<img itemprop="image" src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" title="' . $titleHtml . '"/>';
                         $html .= '</a>' . ($o_tome->NOM_EDITEUR ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
                         break;
                 }
@@ -338,7 +338,7 @@ class FicheAlbum {
             $html = htmlspecialchars($o_auteur->PSEUDO);
         } else {
         $url =  $this->getURLAuteur($o_auteur);
-         $html = '<a href="' . $url.'" title="Tous les albums de ' . $o_auteur->PSEUDO . '"' .( $target ? ' target="'. $target.'"' : '')  .'>
+         $html = '<a itemprop="author" href="' . $url.'" title="Tous les albums de ' . $o_auteur->PSEUDO . '"' .( $target ? ' target="'. $target.'"' : '')  .'>
              ' . $o_auteur->PSEUDO . '</a>';
 
          if (Bdo_Cfg::user()->minAccesslevel(1)) {

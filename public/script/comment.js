@@ -72,9 +72,9 @@ function getComment(page,id_tome,user_id) {
         var idcmt = "";
         $.each(data,function (i, item) {
             idcmt = item.ID_TOME + "_" + i;
-            $("#listcomment").append("<div class='listcomment'> <span id='noteTome"+idcmt + "'></span>  \n\
-            Posté par <a href='./guest?user="+item.user_id + "' target='parent'>"+ item.username + "</a> le "+ item.DTE_POST +"  <p>     \n\
-             " + stripslashes(nl2br(item.COMMENT)) + "</p> </div>");
+            $("#listcomment").append("<div class='listcomment' itemprop='review' itemscope itemtype='http://schema.org/Review'> <div itemprop='reviewRating' itemscope itemtype='http://schema.org/Rating'><meta itemprop='worstRating' content = '1'/><meta itemprop='ratingValue' content='"+Math.round(item.NOTE/2.0)+ "' /><span id='noteTome"+idcmt + "'></span><meta itemprop='bestRating' content = '5'/></div>  \n\
+            Posté par <span itemprop='author'><a href='./guest?user="+item.user_id + "' target='parent'>"+ item.username + "</a></span> le <meta itemprop='datePublished' content='"+ item.DTE_POST +"'>"+ item.DTE_POST +"  <p>     \n\
+             <span itemprop='description'>" + stripslashes(nl2br(item.COMMENT)) + "</span></p> </div>");
 
             if (item.NOTE > 0) $('#noteTome'+ idcmt ).raty({score: item.NOTE/2.0 , readOnly: true});
             }

@@ -5,6 +5,12 @@
     <tr>
         <td class="milieu" align="center">
                 <?php echo $view->TOTALROW;?>
+            <?php if (count($view->a_row) ==0) { ?>
+            <p>Vous ne trouvez pas votre album dans la base ? <br>
+                Vous pouvez faire une proposition d'ajout ici :  <a href="<?php echo BDO_URL; ?>Proposition" class="fancybox fancybox.iframe {width:700,height:600}"> Proposer l'ajout d'un album</a>
+
+            </p>
+          <?php  } ?>
             </td>
     </tr>
     <tr>
@@ -29,11 +35,12 @@
                 Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
                 Block_None_Div("onglet_div_plus_<?php echo $row['LEVSIGN'];?>");
                 Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>");
-$.get("<?php echo $row['URLEVEL'];?># <?php echo $row['LEVSIGN'];?>", function(data) {
- $("#onglet_div_xhr_<?php echo $row['LEVSIGN'];?>").html(data);
-});
-'>
-<span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-arrowthick-2-n-s"></span><?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'];?></div>
+                $.get("<?php echo $row['URLEVEL'];?># <?php echo $row['LEVSIGN'];?>", function(data) {
+                 $("#onglet_div_xhr_<?php echo $row['LEVSIGN'];?>").html(data);
+                });
+                '>
+            <span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-arrowthick-2-n-s"></span><?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'];?>
+        </div>
             <div class="ui-state-active" id='onglet_div_moins_<?php echo $row['LEVSIGN'];?>'
                 style='display: none'
                 onMouseOver='this.className="ui-state-hover"'

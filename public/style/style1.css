@@ -1198,11 +1198,12 @@ div.textmasked {
   
 
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1200px) and (min-width:768px) {
     .colleft {
         float: left;
         width: 200%;
-        margin-left: 0px !important;
+        margin-left:0px !important;
+       
         position: relative;
         right: 100%;
         min-height: 600px;
@@ -1211,6 +1212,7 @@ div.textmasked {
         /*overflow: hidden;*/
         padding: 5px;
         border-radius: 5px;
+         margin-right: 200px !important;
         margin: 0px 25px 0px 0px !important;
     }
     #logo {
@@ -1219,9 +1221,10 @@ div.textmasked {
     .col2 {
         display:none;
     }
+    
 }
 
-@media screen and (max-width: 920px), screen and (max-device-width: 667px) {
+@media screen and (max-width: 920px), screen and (max-device-width: 768px) {
     body {
         margin-top:1em !important;
     }
@@ -1251,9 +1254,18 @@ div.textmasked {
     }
 
     .col2 {
+        
+        float: left !important;
+        width: 50% !important;
+        position: relative !important;
+        left: 50% !important;
+       padding: 5px !important;
+        border-radius: 5px !important;
+        margin: auto !important;
+    }
+    #lastajout {
         display:none;
     }
-
     #message_accueil {
         display:none;
     }
@@ -1267,8 +1279,16 @@ div.textmasked {
 
     #search {
         width : 80% !important;
+        margin-left:0px !important;
     }
-
+    #img_loupe {
+        display:none;
+    }
+   
+    
+    #aideheader  {
+        display:none;
+    }
     #content {
         width: 100% !important;
         margin: auto !important;
