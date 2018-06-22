@@ -41,6 +41,7 @@ class Export extends Bdo_Controller {
                     case 0:
                     case 1:
                     case 3:
+                    case 4:
                         // Determine le flag achat
                         $where = " WHERE ua.user_id = ".$_SESSION["userConnect"]->user_id;
                         if ($contenu == 0) {
@@ -49,6 +50,9 @@ class Export extends Bdo_Controller {
                         } else if ($contenu == 1) {
                             $nomFichier = "Achats futurs au " . strftime("%d-%m-%Y");
                             $where .= " and flg_achat = 'O' ";
+                        } else if ($contenu == 4) {
+                            $nomFichier = "Albums lus au " . strftime("%d-%m-%Y");
+                            $where .= " and flg_lu = 'O' ";
                         } else {
                             $nomFichier = "Collection et Achats futurs au " . strftime("%d-%m-%Y");
 
