@@ -20,7 +20,7 @@ class Export extends Bdo_Controller {
 
                 // met à jour la sélection
                 $codesel = "";
-                for ($i = 0; $i <= 19; $i++) {
+                for ($i = 0; $i <= 20; $i++) {
                     if (in_array($i, $sel_field)) {
                         $codesel .="1";
                     } else {
@@ -82,8 +82,9 @@ class Export extends Bdo_Controller {
                             16 => 'Prix',
                             17 => 'Cadeau',
                             18 => 'Edition originale',
-                            19 => 'EAN',);
-                        $largeur = array(15,15,5,10,15,15,15,15,15,15,15,15,5,20,5,10,15,10,5,5);
+                            19 => 'EAN',
+                            20 => 'Lu',);
+                        $largeur = array(15,15,5,10,15,15,15,15,15,15,15,15,5,20,5,10,15,10,5,5,5);
                         //$entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution', 'Date d\'ajout', 'Note', 'Remarque', 'Pret', 'Emprunteur', 'Date d\'achat', 'Prix', 'Cadeau', 'Edition originale');
                         //$largeur = array(20, 20, 5, 10, 15, 15, 15, 15, 15, 15, 15, 5, 20, 5, 10, 15, 10, 5, 5);
                         $nbpages = 100;
@@ -497,7 +498,7 @@ class Export extends Bdo_Controller {
                 $codesel = $user->PREF_EXPORT;
 
                 // Prérempli les cases à cocher
-                for ($i = 0; $i <= 19; $i++) {
+                for ($i = 0; $i <= 20; $i++) {
                     if (substr($codesel, $i, 1) == "1") {
                         $this->view->set_var("SELFIELD" . $i, 'checked');
                     }
@@ -533,15 +534,34 @@ class Export extends Bdo_Controller {
     private function getRowsFromData ($sel_field, $a_dataQuery,$contenu) {
          //Ecrit le contenu
                         $dataArray = array();
-
+/*                          0 => 'Serie',
+                            1 => 'Titre',
+                            2 => 'Tome',
+                            3 => 'ISBN',
+                            4 => 'Genre',
+                            5 => 'Scenariste',
+                            6 => 'Dessinateur',
+                            7 => 'Editeur',
+                            8 => 'Collection',
+                            9 => 'Date parution',
+                            10 => 'Date d\'ajout',
+                            11 => 'Note',
+                            12 => 'Remarque',
+                            13 => 'Pret',
+                            14 => 'Emprunteur',
+                            15 => 'Date d\'achat',
+                            16 => 'Prix',
+                            17 => 'Cadeau',
+                            18 => 'Edition originale',
+                            19 => 'EAN',
+                            20 => 'Lu',*/
                         //TODO n'exporter que ce qui a été demandé
                         foreach ($a_dataQuery as $tome ) {
                             $a_line = array();
                             if (in_array("0", $sel_field)) $a_line[] = $tome->NOM_SERIE;
                             if (in_array("1", $sel_field))$a_line[] = $tome->TITRE_TOME;
                             if (in_array("2", $sel_field)) $a_line[] = $tome->NUM_TOME;
-                            if (in_array("3", $sel_field)) $a_line[] = $tome->ISBN_EDITION;
-                            if (in_array("19", $sel_field)) $a_line[] = $tome->EAN_EDITION;
+                            if (in_array("3", $sel_field)) $a_line[] = $tome->ISBN_EDITION;                            
                             if (in_array("4", $sel_field)) $a_line[] = $tome->NOM_GENRE;
                             if (in_array("5", $sel_field)) $a_line[] = $tome->scpseudo;
                             if (in_array("6", $sel_field)) $a_line[] = $tome->depseudo;
@@ -559,7 +579,10 @@ class Export extends Bdo_Controller {
                                 if (in_array("16", $sel_field))$a_line[] = $tome->cote;
                                 if (in_array("17", $sel_field))$a_line[] = $tome->FLG_CADEAU;
                                 if (in_array("18", $sel_field))$a_line[] = $tome->FLG_TETE;
+                               
                             }
+                            if (in_array("19", $sel_field)) $a_line[] = $tome->EAN_EDITION;
+                             if (in_array("20", $sel_field))$a_line[] = $tome->FLG_LU;
 
                             $dataArray[] = $a_line;
                         }
