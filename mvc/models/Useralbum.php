@@ -22,8 +22,7 @@ class Useralbum extends Bdo_Db_Line
     public $error = '';
 
     // initialisation
-    public function __construct ($id = null)
-    {
+    public function __construct ($id = null) {
         if (is_array($id)) {
             $a_data = $id; // par défaut : construire avec un tableau associatif id_edition, user_id
         }
@@ -35,76 +34,77 @@ class Useralbum extends Bdo_Db_Line
         }
         parent::__construct($this->table_name, $a_data);
     }
+
     public function setWithUserComment ($b) {
         $this->withUserComment = $b;
     }
-    public function select ()
-    {
+
+    public function select () {
         $select = "
-        SELECT
-                bd_tome.ID_TOME,
-                en.IMG_COUV,
-                bd_tome.TITRE as TITRE_TOME,
-                s.nom as NOM_SERIE,
-                bd_tome.NUM_TOME,
-                concat_ws(' ',er.nom, year(en.DTE_PARUTION)) as NOM_EDITION,
-                er.nom as NOM_EDITEUR,
-                c.nom as NOM_COLLECTION,
-                sc.pseudo as scpseudo,
-                de.pseudo as depseudo,
-                 ua.date_ajout as DATE_AJOUT,
-                ua.user_id as USER_ID,
-                ua.flg_pret as FLG_PRET,
-                ua.nom_pret as NOM_PRET,
-                ua.email_pret as EMAIL_PRET,
-                ua.flg_dedicace as FLG_DEDICACE,
-                ua.flg_tete as FLG_TETE,
-                ua.comment,
+                  SELECT
+                          bd_tome.ID_TOME,
+                          en.IMG_COUV,
+                          bd_tome.TITRE as TITRE_TOME,
+                          s.nom as NOM_SERIE,
+                          bd_tome.NUM_TOME,
+                          concat_ws(' ',er.nom, year(en.DTE_PARUTION)) as NOM_EDITION,
+                          er.nom as NOM_EDITEUR,
+                          c.nom as NOM_COLLECTION,
+                          sc.pseudo as scpseudo,
+                          de.pseudo as depseudo,
+                          ua.date_ajout as DATE_AJOUT,
+                          ua.user_id as USER_ID,
+                          ua.flg_pret as FLG_PRET,
+                          ua.nom_pret as NOM_PRET,
+                          ua.email_pret as EMAIL_PRET,
+                          ua.flg_dedicace as FLG_DEDICACE,
+                          ua.flg_tete as FLG_TETE,
+                          ua.comment,
 
-                ua.flg_achat as FLG_ACHAT,
-                IFNULL(ua.date_achat, ua.date_ajout) as DATE_ACHAT,
-                ua.cote,
-                ua.flg_cadeau as FLG_CADEAU,
-                ua.FLG_LU as FLG_LU,
-
-
-            bd_tome.PRIX_BDNET,
-            bd_tome.FLG_INT as FLG_INT_TOME,
-            bd_tome.FLG_TYPE as FLG_TYPE_TOME,
-            bd_tome.HISTOIRE as HISTOIRE_TOME,
-
-                s.ID_SERIE,
-
-                s.FLG_FINI,
-            g.ID_GENRE,
-            g.libelle as NOM_GENRE,
-
-            en.ID_EDITION,
-            en.DTE_PARUTION,
-            en.ean as EAN_EDITION,
-            en.isbn as ISBN_EDITION,
-
-                c.ID_COLLECTION,
+                          ua.flg_achat as FLG_ACHAT,
+                          IFNULL(ua.date_achat, ua.date_ajout) as DATE_ACHAT,
+                          ua.cote,
+                          ua.flg_cadeau as FLG_CADEAU,
+                          ua.FLG_LU as FLG_LU,
 
 
-            er.ID_EDITEUR,
+                      bd_tome.PRIX_BDNET,
+                      bd_tome.FLG_INT as FLG_INT_TOME,
+                      bd_tome.FLG_TYPE as FLG_TYPE_TOME,
+                      bd_tome.HISTOIRE as HISTOIRE_TOME,
+
+                          s.ID_SERIE,
+
+                          s.FLG_FINI,
+                      g.ID_GENRE,
+                      g.libelle as NOM_GENRE,
+
+                      en.ID_EDITION,
+                      en.DTE_PARUTION,
+                      en.ean as EAN_EDITION,
+                      en.isbn as ISBN_EDITION,
+
+                          c.ID_COLLECTION,
 
 
-            bd_tome.ID_SCENAR,
+                      er.ID_EDITEUR,
 
-            bd_tome.ID_DESSIN,
 
-            bd_tome.ID_COLOR,
-            co.pseudo as copseudo,
-            bd_tome.ID_SCENAR_ALT,
-            sca.pseudo as scapseudo,
-            bd_tome.ID_DESSIN_ALT,
-            dea.pseudo as deapseudo,
-            bd_tome.ID_COLOR_ALT,
-            coa.pseudo as coapseudo,
-                DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%Y') as annee_achat,
+                      bd_tome.ID_SCENAR,
 
-                DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%m') as mois_achat";
+                      bd_tome.ID_DESSIN,
+
+                      bd_tome.ID_COLOR,
+                      co.pseudo as copseudo,
+                      bd_tome.ID_SCENAR_ALT,
+                      sca.pseudo as scapseudo,
+                      bd_tome.ID_DESSIN_ALT,
+                      dea.pseudo as deapseudo,
+                      bd_tome.ID_COLOR_ALT,
+                      coa.pseudo as coapseudo,
+                          DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%Y') as annee_achat,
+
+                          DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%m') as mois_achat";
 
         $from = "
                 FROM users_album ua
@@ -143,8 +143,11 @@ class Useralbum extends Bdo_Db_Line
               where ".$champ." <> 0
                 and u.user_id = " . $user_id ."
                 and pseudo not in ('<n&b>','<indéterminé>')";
-      if($search <> "")
-        $req .= " and ( pseudo like '%". $search ."%' or nom like '%". $search ."%' or prenom like '%". $search ."%' ) ";
+      if ($search) {
+        $search = ($search[0] == '^') ? substr($search,1) : '%' . $search;
+        $search = (substr($search,-1) == '$') ? substr($search,0,-1) : $search . '%'; 
+        $req .= " and ( pseudo like '". $search ."' or nom like '". $search ."' or prenom like '". $search ."' ) ";
+      }
       
           return $req;
     }
@@ -176,8 +179,11 @@ class Useralbum extends Bdo_Db_Line
             // FRED : Pour les albums de Ma Collection, le nombre d'albums avec un critère de recherche (searchvalue) 
             //        ne vient pas de cette fonction. Seule les séries passent par là.
             //        Donc, pour le moment, on considère qu'un $search renseigné ne concerne que les séries...
-            if ($search)
-              $query .= " and ( s.nom like '%". $search ."%' ) ";
+            if($search) {
+              $search = ($search[0] == '^') ? substr($search,1) : '%' . $search;
+              $search = (substr($search,-1) == '$') ? substr($search,0,-1) : $search . '%'; 
+              $query .= " and ( s.nom like '". $search ."' ) ";
+            }
 
             if ($auteur <> "")
               $query .= "and (   id_scenar = ".$auteur." or id_scenar_alt = ".$auteur." 
@@ -307,16 +313,11 @@ class Useralbum extends Bdo_Db_Line
 
     }
 
-     public function lastAchat ($user_id, $limit = 5)
-
-    {
+    public function lastAchat ($user_id, $limit = 5) {
          $where = " where
-
             ua.user_id=" . $user_id . "
-
             and ua.flg_achat='N'
                  order by IFNULL(ua.date_achat,ua.date_ajout) desc
-
             limit 0,".$limit;
 
          return $this->load("c", $where);
@@ -324,9 +325,7 @@ class Useralbum extends Bdo_Db_Line
 
     }
 
-    public function lastFuturAchat ($user_id, $limit = 5)
-
-    {
+    public function lastFuturAchat ($user_id, $limit = 5) {
          $where = " where
 
             ua.user_id=" . $user_id . "
@@ -385,69 +384,38 @@ class Useralbum extends Bdo_Db_Line
         if ($user->CARRE_TYPE == 0) {
 
             $query = "
-
-    SELECT
-
-        t.ID_TOME,
-
-        t.TITRE as TITRE_TOME,
-
-        en.IMG_COUV
-
-    FROM
-
-        users_album ua
-
-        INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
-
-        LEFT JOIN users_comment uc ON  uc.id_tome = en.id_tome AND uc.user_id = ua.user_id
-
-        INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-
-    WHERE
-
-        ua.user_id=" . $user->user_id . "
-
-        and ua.flg_achat='N'
-
-    ORDER BY uc.note desc
-
-    LIMIT 0,9";
-
+              SELECT
+                  t.ID_TOME,
+                  t.TITRE as TITRE_TOME,
+                  en.IMG_COUV
+              FROM
+                  users_album ua
+                  INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
+                  LEFT JOIN users_comment uc ON  uc.id_tome = en.id_tome AND uc.user_id = ua.user_id
+                  INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+              WHERE
+                  ua.user_id=" . $user->user_id . "
+                  and ua.flg_achat='N'
+              ORDER BY uc.note desc
+              LIMIT 0,9";
         }
 
         // Selections du carre magique
-
         else {
-
             $query = "
-
-    select
-
-        t.ID_TOME,
-
-        t.TITRE as TITRE_TOME,
-
-        en.IMG_COUV
-
-    from
-
-        users_list_carre ulc
-
-        INNER JOIN bd_tome t ON t.id_tome = ulc.id_tome
-
-        INNER JOIN bd_edition en ON en.id_edition = t.id_edition
-
-    where
-
-        ulc.user_id=" . $user->user_id . "
-
-    ORDER BY ulc.rang
-
-    limit 0,9
-
-    ";
-
+              select
+                  t.ID_TOME,
+                  t.TITRE as TITRE_TOME,
+                  en.IMG_COUV
+              from
+                  users_list_carre ulc
+                  INNER JOIN bd_tome t ON t.id_tome = ulc.id_tome
+                  INNER JOIN bd_edition en ON en.id_edition = t.id_edition
+              where
+                  ulc.user_id=" . $user->user_id . "
+              ORDER BY ulc.rang
+              limit 0,9
+              ";
         }
         $resultat = Db_query($query);
 
@@ -459,7 +427,7 @@ class Useralbum extends Bdo_Db_Line
          * Suppresio d'id tome dans users_album
          */
         Db_query("DELETE users_album.* FROM users_album INNER JOIN bd_edition USING(id_edition)
-    WHERE bd_edition.`id_tome`=" . intval($id_tome));
+                  WHERE bd_edition.`id_tome`=" . intval($id_tome));
 
         return Db_affected_rows();
 
@@ -470,7 +438,7 @@ class Useralbum extends Bdo_Db_Line
          * Suppresion d'id tome : on transfert les édition existantes d'un album vers une éditoin par défaut, si l'album n'est pas déjà référencé
          */
         Db_query("UPDATE IGNORE users_album INNER JOIN bd_edition using(id_edition)
-    SET id_edition = ". intval($id_edition)." WHERE  bd_edition.id_tome = ". intval($id_tome));
+                  SET id_edition = ". intval($id_edition)." WHERE  bd_edition.id_tome = ". intval($id_tome));
 
         return Db_affected_rows();
 
@@ -481,7 +449,7 @@ class Useralbum extends Bdo_Db_Line
          * Suppresion d'id tome : on transfert les édition existantes d'un album vers une éditoin par défaut, si l'album n'est pas déjà référencé
          */
         Db_query("UPDATE IGNORE users_album
-    SET id_edition = ". intval($dest_id)." WHERE  id_edition = ". intval($source_id));
+                  SET id_edition = ". intval($dest_id)." WHERE  id_edition = ". intval($source_id));
 
         return Db_affected_rows();
 
@@ -546,8 +514,10 @@ class Useralbum extends Bdo_Db_Line
         $where .= " and bd_genre.ORIGINE = '".$origin ."'";
       }
 
-      if($search <> "") {
-        $where .= " and ( bd_serie.nom like '%". $search ."%' ) ";
+      if($search) {
+        $search = ($search[0] == '^') ? substr($search,1) : '%' . $search;
+        $search = (substr($search,-1) == '$') ? substr($search,0,-1) : $search . '%'; 
+        $where .= " and ( bd_serie.nom like '". $search ."' ) ";
       }
 
       if ($liste <> "") {
@@ -683,7 +653,7 @@ class Useralbum extends Bdo_Db_Line
         ) a
       ";
       
-      $where = " WHERE pseudo not in ('<n&b>','<indéterminé>') ";
+      $where = " WHERE left(pseudo,1) REGEXP '[[:alnum:]]' ";
 
       $type = "";
       if (in_array("BD",$origin))                                   $type .= " gbd > 0 "  ;
@@ -697,8 +667,11 @@ class Useralbum extends Bdo_Db_Line
       if (in_array("Coloriste",$travail))   { if ($type) $type .= " or "; $type .= " color > 0 "; }
       $where .= " and (" .$type.") ";
 
-      if($search <> "")
-        $where .= " and ( pseudo like '%". $search ."%' or nom like '%". $search ."%' or prenom like '%". $search ."%' ) ";
+      if($search) {
+        $search = ($search[0] == '^') ? substr($search,1) : '%' . $search;
+        $search = (substr($search,-1) == '$') ? substr($search,0,-1) : $search . '%'; 
+        $where .= " and ( pseudo like '". $search ."' or nom like '". $search ."' or prenom like '". $search ."' ) ";
+      }
       
       $order= "
         group by auteur,pseudo,nom,prenom,img_aut
