@@ -58,23 +58,24 @@ class FicheAuteur {
 
       $html .= "<p class='fiche_album'>";
       
-      // Nom
-      if ($o_auteur->nom) {
-          $html .= 'Nom : ';
-          $html .= '<i>' . $o_auteur->nom . '</i><br>';
-      }
-
-      // Prénom
+      // Nom = Nom[, prénom]|Pseudo
+      if ($o_auteur->nom) $nom = $o_auteur->nom;
       if ($o_auteur->prenom) {
-          $html .= 'Prénom : ';
-          $html .= '<i>' . $o_auteur->prenom . '</i><br>';
+        if ($nom) $nom .= ", ";
+        $nom .= $o_auteur->prenom;
       }
+      // Pour systématiser le champ nom afin d'y mettre le lien vers la fiche Auteur,
+      // En absence d'information, on y met le pseudo.
+      if (!$nom) $nom = $o_auteur->pseudo;
+      $url =  BDO_URL . 'auteur-bd-' . $o_auteur->auteur . '-' .clean_url($o_auteur->pseudo);
+
+      $html .= 'Nom : <a href="' .$url. '"><i>' . $nom . '</i></a><br>';
 
       // Activité
       $html .= "Activité : ";
-      if ($o_auteur->scenar) $html .= '<img src="' . BDO_URL_IMAGE.'site/picto-scenario.png" width="15px" alt="scenariste" title="Scénariste"/> ';
-      if ($o_auteur->dessin) $html .= '<img src="' . BDO_URL_IMAGE.'site/picto-dessin.png" width="15px" alt="dessinateur" title="Dessinateur"/> ';
-      if ($o_auteur->color) $html .= '<img src="' . BDO_URL_IMAGE.'site/picto-color.png" width="15px" alt="colorriste" title="Coloriste"/> ';
+      if ($o_auteur->scenar) $html .= '<span title="Scénariste" class="fas fa-file-signature"></span> ';
+      if ($o_auteur->dessin) $html .= '<span title="Dessinateur" class="fas fa-pencil-alt"></span> ';
+      if ($o_auteur->color) $html .= ' <span title="Coloriste" class="fas fa-palette"></span> ';
       $html .= '<br>';
 
       // Nombre d'albums

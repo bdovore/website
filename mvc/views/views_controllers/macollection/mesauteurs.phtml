@@ -54,22 +54,22 @@
       <form id="f_collection" method="GET" action="" >
         <div id="filtre">
           <fieldset id="typeAlbum">
-            <legend>Type d'album</legend>
-              <label for="checkB">BD</label>
+            <legend>Albums</legend>
               <input type="checkbox" name="origin[]" id="checkB" value="BD" onChange='$("#f_collection").submit();' <?php if (in_array("BD",$view->origin)) echo "checked" ?>>
-              <label for="checkM">Mangas</label>
+              <label for="checkB">BD</label>
               <input type="checkbox" name="origin[]" id="checkM" value="Mangas" onChange='$("#f_collection").submit();' <?php if (in_array("Mangas",$view->origin)) echo "checked" ?>>
-              <label for="checkC">Comics</label>
+              <label for="checkM">Mangas</label>
               <input type="checkbox" name="origin[]" id="checkC" value="Comics" onChange='$("#f_collection").submit();' <?php if (in_array("Comics",$view->origin)) echo "checked" ?>>
+              <label for="checkC">Comics</label>
           </fieldset>
           <fieldset id="typeTravail">
-            <legend>Type de travail</legend>
-              <label for="checkS">Scénariste</label>
+            <legend>Auteurs</legend>
               <input type="checkbox" name="travail[]" id="checkS" value="Scénariste" onChange='$("#f_collection").submit();' <?php if (in_array("Scénariste",$view->travail)) echo "checked" ?>>
-              <label for="checkD">dessinateur</label>
+              <label for="checkS"><span title="Scénariste" class="fas fa-file-signature"></span></label>
               <input type="checkbox" name="travail[]" id="checkD" value="Dessinateur" onChange='$("#f_collection").submit();' <?php if (in_array("Dessinateur",$view->travail)) echo "checked" ?>>
-              <label for="checkO">Coloriste</label>
+              <label for="checkD"><span title="Dessinateur" class="fas fa-pencil-alt"></span></label>
               <input type="checkbox" name="travail[]" id="checkO" value="Coloriste" onChange='$("#f_collection").submit();' <?php if (in_array("Coloriste",$view->travail)) echo "checked" ?>>
+              <label for="checkO"><span title="Coloriste" class="fas fa-palette"></span></label>
           </fieldset>
         </div><br>
         <div id="data_length" class="dataTables_length">

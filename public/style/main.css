@@ -614,3 +614,51 @@ iframe.tom {
 .aide-header img {
     margin-bottom:-5px;
 }
+
+.fas {
+  color:#333;
+}
+
+#typeAlbum input,
+#typeTravail input {
+  position: absolute;
+  left: -9999px;
+}
+
+#typeAlbum label {
+  font-size: 90%;
+}
+
+#typeTravail label {
+  font-size: 110%;
+  width: 3em;
+}
+
+#typeAlbum label, 
+#typeTravail label {
+  position: relative;
+  color: black;
+  margin-top: -.3em;
+  margin-left: -.2em;
+  padding-left: .2em;
+  border: 3px solid #fff;
+  border-radius: 100px;
+  background-color: #a0a0a0 !important; 
+  background-image: none;
+  box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color .2s, box-shadow .2s;
+}
+
+#typeAlbum label:hover,
+#typeAlbum  input:focus + label,
+#typeTravail label:hover, 
+#typeTravail input:focus + label {
+  box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+}
+
+#typeAlbum input:checked + label,
+#typeTravail input:checked + label {
+  background-color: #509b80 !important;
+}
