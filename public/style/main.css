@@ -615,50 +615,45 @@ iframe.tom {
     margin-bottom:-5px;
 }
 
-.fas {
-  color:#333;
-}
-
-#typeAlbum input,
-#typeTravail input {
+.newButton input {
   position: absolute;
   left: -9999px;
 }
 
-#typeAlbum label {
-  font-size: 90%;
-}
-
-#typeTravail label {
+#typeTravail.newButton label {
   font-size: 110%;
   width: 3em;
 }
 
-#typeAlbum label, 
-#typeTravail label {
+#select_origine .newButton {
+  margin-top: .5em;
+}
+
+.newButton label {
   position: relative;
   color: black;
   margin-top: -.3em;
   margin-left: -.2em;
+  margin-right: .5em !important;
   padding-left: .2em;
   border: 3px solid #fff;
   border-radius: 100px;
   background-color: #a0a0a0 !important; 
   background-image: none;
-  box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+  box-shadow: 0 0 20px rgba(0, 0, 0, .3);
   cursor: pointer;
   user-select: none;
   transition: background-color .2s, box-shadow .2s;
+  font-size: 90%;
 }
 
-#typeAlbum label:hover,
-#typeAlbum  input:focus + label,
-#typeTravail label:hover, 
-#typeTravail input:focus + label {
+.newButton label:hover, 
+.newButton input:focus + label {
   box-shadow: 0 0 20px rgba(0, 0, 0, .6);
 }
 
-#typeAlbum input:checked + label,
-#typeTravail input:checked + label {
-  background-color: #509b80 !important;
+.newButton input:checked + label {
+  /* Mes plus mieux bien belles couleurs que Cinoche n'aime pas : "background-color: #509b80;"  :P :D */
+  background-color: #855a28 !important;
+  color: #2d161b !important;
 }

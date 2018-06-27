@@ -53,7 +53,7 @@
   <div class="dataTables_wrapper">
       <form id="f_collection" method="GET" action="" >
         <div id="filtre">
-          <fieldset id="typeAlbum">
+          <fieldset id="typeAlbum" class="newButton">
             <legend>Albums</legend>
               <input type="checkbox" name="origin[]" id="checkB" value="BD" onChange='$("#f_collection").submit();' <?php if (in_array("BD",$view->origin)) echo "checked" ?>>
               <label for="checkB">BD</label>
@@ -62,7 +62,7 @@
               <input type="checkbox" name="origin[]" id="checkC" value="Comics" onChange='$("#f_collection").submit();' <?php if (in_array("Comics",$view->origin)) echo "checked" ?>>
               <label for="checkC">Comics</label>
           </fieldset>
-          <fieldset id="typeTravail">
+          <fieldset id="typeTravail" class="newButton">
             <legend>Auteurs</legend>
               <input type="checkbox" name="travail[]" id="checkS" value="Scénariste" onChange='$("#f_collection").submit();' <?php if (in_array("Scénariste",$view->travail)) echo "checked" ?>>
               <label for="checkS"><span title="Scénariste" class="fas fa-file-signature"></span></label>
