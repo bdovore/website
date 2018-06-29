@@ -614,3 +614,46 @@ iframe.tom {
 .aide-header img {
     margin-bottom:-5px;
 }
+
+.newButton input {
+  position: absolute;
+  left: -9999px;
+}
+
+#typeTravail.newButton label {
+  font-size: 110%;
+  width: 3em;
+}
+
+#select_origine .newButton {
+  margin-top: .5em;
+}
+
+.newButton label {
+  position: relative;
+  color: black;
+  margin-top: -.3em;
+  margin-left: -.2em;
+  margin-right: .5em !important;
+  padding-left: .2em;
+  border: 3px solid #fff;
+  border-radius: 100px;
+  background-color: #a0a0a0 !important; 
+  background-image: none;
+  box-shadow: 0 0 20px rgba(0, 0, 0, .3);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color .2s, box-shadow .2s;
+  font-size: 90%;
+}
+
+.newButton label:hover, 
+.newButton input:focus + label {
+  box-shadow: 0 0 20px rgba(0, 0, 0, .6);
+}
+
+.newButton input:checked + label {
+  /* Mes plus mieux bien belles couleurs que Cinoche n'aime pas : "background-color: #509b80;"  :P :D */
+  background-color: #855a28 !important;
+  color: #2d161b !important;
+}
