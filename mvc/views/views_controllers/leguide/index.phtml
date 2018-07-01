@@ -11,12 +11,12 @@
       <form id="form1" name="form1" method="get">
         <div id="select_origine">
           <div class="newButton">
-            <label for="o1">BD</label>
             <input type="radio" name="origine" id="o1" value="1" <?php if ($view->origine == 1) echo "checked"; ?> onclick="$('#form1').submit();">  
-            <label for="o2">Mangas</label> 
+            <label for="o1">BD</label>
             <input type="radio" name="origine" id="o2" value="2" <?php if ($view->origine == 2) echo "checked"; ?> onclick="$('#form1').submit();">  
-            <label for="o3">Comics</label>  
+            <label for="o2">Mangas</label> 
             <input type="radio" name="origine" id="o3" value="3" <?php if ($view->origine == 3) echo "checked"; ?> onclick="$('#form1').submit();">
+            <label for="o3">Comics</label>  
           </div>
           <div id="select_genre">
             <br />
@@ -34,21 +34,21 @@
 
         <div  id="rb_mode">
           <div class="newButton">
-            <label for="rb_mode2">Avis</label>
             <input id="rb_mode2" name="rb_mode" value="3" <?php echo $view->a_chGuide[2]["checked"]; ?> onclick="$('#form1').submit();" type="radio">
-            <label for="rb_mode3">Nouveautés</label>
+            <label for="rb_mode2">Avis</label>
             <input id="rb_mode3" name="rb_mode" value="4" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[3]["checked"]; ?> type="radio">
-            <label for="rb_mode6">Tendances</label>
+            <label for="rb_mode3">Nouveautés</label>
             <input id="rb_mode6" name="rb_mode" value="7" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[6]["checked"]; ?> type="radio">
-            <label for="rb_mode4">A paraitre</label>
+            <label for="rb_mode6">Tendances</label>
             <input id="rb_mode4" name="rb_mode" value="5" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[4]["checked"]; ?> type="radio">
+            <label for="rb_mode4">A paraitre</label>
 
-            <label for="rb_mode5">Ajouts</label>
             <input id="rb_mode5" name="rb_mode" value="6" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[5]["checked"]; ?> type="radio">
-            <label for="rb_mode0">Top Bdovore</label>
+            <label for="rb_mode5">Ajouts</label>
             <input id="rb_mode0" name="rb_mode" value="1" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[0]["checked"]; ?> type="radio">
-            <label for="rb_mode1">Incontournables</label>
+            <label for="rb_mode0">Top Bdovore</label>
             <input id="rb_mode1" name="rb_mode" value="2" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[1]["checked"]; ?>  type="radio">
+            <label for="rb_mode1">Incontournables</label>
           </div>
         </div>
       </form>
