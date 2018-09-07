@@ -2,7 +2,6 @@
     <h1>BDoBrowser</h1>
 
 
-
     <script type="text/javascript">
         function go()
         {
@@ -34,42 +33,43 @@
 
     </script>
     <form id="browser" name="browser" method="get" onsubmit='return false;'>
-        <div id="select_genre">Genre : <select data-placeholder="Choisir un ou plusieurs genres..."
-            name="a_idGenre[]" id="a_idGenre" style="width: 350px;"
-            multiple="multiple" size="10">
-                                <?php
+        <div id="select_genre" align=center>
+          Genre : <select data-placeholder="Choisir un ou plusieurs genres..."
+                          name="a_idGenre[]" id="a_idGenre" style="width: 350px;"
+                          multiple="multiple" size="10">
+                    <?php
 
-        foreach ($view->dbs_genre->a_dataQuery as $genre) {
-            $selected = (isset($_GET['a_idGenre']) and in_array($genre->ID_GENRE, $_GET['a_idGenre'])) ? 'selected' : '';
-            echo '<option value="' . $genre->ID_GENRE . '" ' . $selected . '>' . $genre->LIBELLE . '</option>';
-        }
-        ?>
-</select>
+                      foreach ($view->dbs_genre->a_dataQuery as $genre) {
+                        $selected = (isset($_GET['a_idGenre']) and in_array($genre->ID_GENRE, $_GET['a_idGenre'])) ? 'selected' : '';
+                        echo '<option value="' . $genre->ID_GENRE . '" ' . $selected . '>' . $genre->LIBELLE . '</option>';
+                      }
+                    ?>
+                  </select>
+
+          <script type="text/javascript">
 
 
-        <script type="text/javascript">
-
-
-$(document).ready(function() {
-    $("#a_idGenre").chosen({max_selected_options: 10});
-
-    });
-</script>
+            $(document).ready(function() {
+                $("#a_idGenre").chosen({max_selected_options: 10});
+            });
+          </script>
         <br /><br /></div>
-        <div id="chbrowses" align=center>
-          <?php
-            $i = 0;
-            echo '<div class="newButton">';
-            foreach ($view->a_searchType as $type => $lib) {
-                $checked = ($view->TYPBROWSE == $type) ? "checked" : "";
-                echo  '<input onClick="this.form.rb_browse.value=this.value;go()" type="radio" id="chbrowse' . $i . '" name="chbrowse" value="' . $type . '" '.$checked.'/>'
-                     .'<label for="chbrowse' . $i . '">' . $lib . '</label>';
-                $i ++;
-            }
-            echo '</div>';
-          ?>
+        <div class="nbGalerie">
+          <div class="nbConteneur">
+            <div class="newButton">
+              <?php
+                $i = 0;
+                foreach ($view->a_searchType as $type => $lib) {
+                  $checked = ($view->TYPBROWSE == $type) ? "checked" : "";
+                  echo  '<input onClick="this.form.rb_browse.value=this.value;go()" type="radio" id="chbrowse' . $i . '" name="chbrowse" value="' . $type . '" '.$checked.'/>'
+                       .'<label for="chbrowse' . $i . '">' . $lib . '</label>';
+                  $i ++;
+                }
+              ?>
+            </div>
+          </div>
           <br />
-          contenant : <input type="text" id="searchtext" placeholder="( 3 caractères minimum )"
+          contenant : <input type="text" id="searchtext" placeholder="(3 caractères minimum)"
                         onKeyUp='chrono=setTimeout("go()", 1000);'
                         onKeyDown="clearTimeout(chrono)" autocomplete="off" name="let"
                         value="<?php echo $view->VALUELET;?>" /><input type=hidden id="rb_browse" name="rb_browse"
