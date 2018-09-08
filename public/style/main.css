@@ -615,36 +615,67 @@ iframe.tom {
     margin-bottom:-5px;
 }
 
+/* 
+ * Classes pour les boutons de sélections
+ * Il faudrait voir si cela ne devrait pas être remplacé par l'utilisation
+ * de jQuery-UI mais je ne maitrise pas suffisament pour être sûr de ne pas
+ * casser autre chose si j'y touche...
+ */
+.nbGalerie {
+  text-align: center; /* Pour IE uniquement */
+  width: 100%;  
+}
+
+.nbConteneur {
+  display: table;
+  margin: 0px auto;
+}
+
+ .newButton {
+  line-height: 0.75;
+}
+  
+.newButton .fas {
+  line-height: inherit;
+}
+  
+#select_origine .newButton {
+  margin-top: .5em;
+}
+
 .newButton input {
   position: absolute;
   left: -9999px;
 }
 
-#typeTravail.newButton label {
-  font-size: 110%;
-  width: 3em;
-}
-
-#select_origine .newButton {
-  margin-top: .5em;
-}
-
 .newButton label {
   position: relative;
-  color: black;
-  margin-top: -.3em;
+  display: block;
+  float: left;
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px 1px #333333;
+  margin-top: .1em;
   margin-left: -.2em;
   margin-right: .3em !important;
-  padding-left: .2em;
+  padding: .5em;
+  min-width: 2.5em;
   border: 3px solid #fff;
   border-radius: 100px;
-  background-color: #a0a0a0 !important; 
+  background-color: #ba9d9d !important;
   background-image: none;
   box-shadow: 0 0 20px rgba(0, 0, 0, .3);
   cursor: pointer;
   user-select: none;
   transition: background-color .2s, box-shadow .2s;
   font-size: 90%;
+}
+
+/* Pour le bouton ne contenant qu'un caractère graphique, on fixe
+ * une taille minimum
+*/
+#typeTravail.newButton label {
+  width: 3em;
 }
 
 .newButton label:hover, 
@@ -654,6 +685,7 @@ iframe.tom {
 
 .newButton input:checked + label {
   /* Mes plus mieux bien belles couleurs que Cinoche n'aime pas : "background-color: #509b80;"  :P :D */
+  /* background-color: #855a28 !important; 
+  color: #2d161b !important; */
   background-color: #855a28 !important;
-  color: #2d161b !important;
 }

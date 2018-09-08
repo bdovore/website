@@ -313,7 +313,8 @@ class Macollection extends Bdo_Controller {
           setcookie("l_etageres_auteur",$length,time()+2592000);
 
           // Filtres
-          $origin  = getVal("origin","");
+          // origin contient le type de livres voulu : BD, Comics et/ou Mangas
+          $origin = getVal("origin","");
           if (!$origin)
             if ($_COOKIE["o_etageres_auteur"])
               $origin = explode(',',$_COOKIE["o_etageres_auteur"]);
@@ -321,6 +322,7 @@ class Macollection extends Bdo_Controller {
               $origin  = array("BD","Comics","Mangas");
           setcookie("o_etageres_auteur",implode(',',$origin),time()+2592000);
                   
+          // travail contient le type d'auteur voulu : Scénariste, Dessinateurs et/ou Coloristes
           $travail = getVal("travail","");
           if (!$travail)
             if ($_COOKIE["t_etageres_auteur"])
@@ -329,15 +331,13 @@ class Macollection extends Bdo_Controller {
               $travail  = array("Scénariste","Dessinateur","Coloriste");
           setcookie("t_etageres_auteur",implode(',',$travail),time()+2592000);
 
-
           //TODO mettre une longueur max. pour la recherche ?
 
           $l_search = getVal("l_search","" );
-
           if($l_search <> "") {
-              $searchvalue = Db_Escape_String($l_search);
+            $searchvalue = Db_Escape_String($l_search);
           } else {
-              $searchvalue = "";
+            $searchvalue = "";
           }
 
           // Récupération des auteurs
@@ -995,7 +995,7 @@ class Macollection extends Bdo_Controller {
         $this->view->render();
     }
 
-     public function statistiques () {
+    public function statistiques () {
         // statistiques sur la collection : on appelle les graphes jpgrap
          if (User::minAccesslevel(2)) {
             $user_id = intval($_SESSION["userConnect"]->user_id);
@@ -1006,7 +1006,7 @@ class Macollection extends Bdo_Controller {
              $this->view->set_var("PAGETITLE","Statistiques de ma collection");
             $this->view->render();
          }
-     }
+    }
 
 
 }

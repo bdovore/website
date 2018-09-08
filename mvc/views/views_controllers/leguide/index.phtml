@@ -8,31 +8,35 @@
       <div class="middle_title">
         <h3>Le Guide BD</h3>
       </div>
+      <br />
       <form id="form1" name="form1" method="get">
-        <div id="select_origine">
-          <div class="newButton">
-            <input type="radio" name="origine" id="o1" value="1" <?php if ($view->origine == 1) echo "checked"; ?> onclick="$('#form1').submit();">  
-            <label for="o1">BD</label>
-            <input type="radio" name="origine" id="o2" value="2" <?php if ($view->origine == 2) echo "checked"; ?> onclick="$('#form1').submit();">  
-            <label for="o2">Mangas</label> 
-            <input type="radio" name="origine" id="o3" value="3" <?php if ($view->origine == 3) echo "checked"; ?> onclick="$('#form1').submit();">
-            <label for="o3">Comics</label>  
+        <div class="nbGalerie">
+          <div class="nbConteneur">
+            <div class="newButton">
+              <input type="radio" name="origine" id="o1" value="1" <?php if ($view->origine == 1) echo "checked"; ?> onclick="$('#form1').submit();">  
+              <label for="o1">BD</label>
+              <input type="radio" name="origine" id="o2" value="2" <?php if ($view->origine == 2) echo "checked"; ?> onclick="$('#form1').submit();">  
+              <label for="o2">Mangas</label> 
+              <input type="radio" name="origine" id="o3" value="3" <?php if ($view->origine == 3) echo "checked"; ?> onclick="$('#form1').submit();">
+              <label for="o3">Comics</label>  
+            </div>
           </div>
-          <div id="select_genre">
-            <br />
-            <select data-placeholder="Choisir un ou plusieurs genres..." name="a_idGenre[]" id="a_idGenre" style="width:350px;" multiple="multiple" size="10">
-            <?php
-              foreach ($view->dbs_genre->a_dataQuery as $genre) {
-                  $selected = (isset($_GET['a_idGenre']) and (in_array($genre->ID_GENRE, $_GET['a_idGenre']))) ? 'selected' : '';
-                  echo '<option value="' . $genre->ID_GENRE . '" ' . $selected . '>' . $genre->LIBELLE . '</option>';
-              }
-            ?>
-            </select>  <input type="submit" name="submitGuide" value="Ok">
-          </div>
+          
+            <div id="select_genre">
+              <br />
+              <select data-placeholder="Choisir un ou plusieurs genres..." name="a_idGenre[]" id="a_idGenre" style="width:350px;" multiple="multiple" size="10">
+              <?php
+                foreach ($view->dbs_genre->a_dataQuery as $genre) {
+                    $selected = (isset($_GET['a_idGenre']) and (in_array($genre->ID_GENRE, $_GET['a_idGenre']))) ? 'selected' : '';
+                    echo '<option value="' . $genre->ID_GENRE . '" ' . $selected . '>' . $genre->LIBELLE . '</option>';
+                }
+              ?>
+              </select>  <input type="submit" name="submitGuide" value="Ok">
+            </div>
         </div>
         <br />
 
-        <div  id="rb_mode">
+        <div  class="nbConteneur">
           <div class="newButton">
             <input id="rb_mode2" name="rb_mode" value="3" <?php echo $view->a_chGuide[2]["checked"]; ?> onclick="$('#form1').submit();" type="radio">
             <label for="rb_mode2">Avis</label>
