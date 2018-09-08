@@ -222,7 +222,7 @@ class FicheAlbum {
      * fournit l'url d'un lien vers la iframe album
      *
      */
-    public function urlAlbum($o_tome, $class = 'couvBig', $is_edition = false, $sponsor=true,$gotocomment = false, $target="")
+    public function urlAlbum($o_tome, $class = 'couvBig', $is_edition = false, $sponsor=true,$gotocomment = false, $target="", $title="")
     /*
      *  Fonction de construction d'une url d'un album
      *  Si la variable $is_edition = true, on ajoute l'id édition dans les liens
@@ -249,7 +249,7 @@ class FicheAlbum {
         if (strpos($x, 'MSIE 7.0') || strpos($x, 'MSIE 6.0')) {
             return '#" onclick="window.open(' . "'" . BDO_URL . $id_link . "','Album','width=600,height=700,scrollbars=1')" . ';return false;';
         } else {
-            // titre html
+            // titre html                        
             if ($o_tome->NOM_SERIE AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME))) {
                 $titleHtml = $o_tome->NOM_SERIE;
 
@@ -262,7 +262,7 @@ class FicheAlbum {
             } else {
                 $titleHtml = $o_tome->TITRE_TOME;
             }
-
+           
             $html = '<a '. ( $target  ? '': 'class="fancybox fancybox.iframe {width:600,height:600}"').
                 'href="' . BDO_URL . $id_link . '" title="' . $titleHtml . '" '.( $target ? 'target="'. $target.'"' : '') .'>';
 
@@ -291,6 +291,11 @@ class FicheAlbum {
                             $html .= '&nbsp;&nbsp;<a href="' .BDO_URL. 'admin/editalbum?alb_id=' .$o_tome->ID_TOME. '" target="_blank"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
                         }
                         break;
+                }
+                case "link": {
+                     $html .= ($title ? $title : $o_tome->TITRE_TOME).'</a>';
+                      break;
+                    
                 }
                 default: {
                         $html .= '<img itemprop="image" src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" title="' . $titleHtml . '"/>';
@@ -424,6 +429,11 @@ class FicheAlbum {
     }
 
     public function getFicheWithComment($tome) {
+        if (strlen($tome->COMMENT) < 100) {
+            $comment = $tome->COMMENT;
+        } else {
+            $comment = substr($tome->COMMENT,0,100)."...". $this->urlalbum($tome,'link',$is_edition = false, $sponsor = true,  $gotocomment= true, "", $title='lire la suite');
+        }
          $html = "<div class='cadre1'>
                 <table>
             <tr class='listAlbum'>
@@ -433,8 +443,10 @@ class FicheAlbum {
                 <span id='noteTome".$tome->ID_TOME."'> </span>
                 <p class='fiche_album'>
                 S&eacute;rie : ".$this->urlSerie($tome)." <br>
-                Publié par <a href='./guest?user=$tome->user_id'>$tome->username</a> le $tome->DTE_POST
-           </p>
+                Publié par <a href='./guest?user=$tome->user_id'>$tome->username</a> le $tome->DTE_POST 
+                    
+                </p>
+                $comment 
             </td>
             </table>
              </div>
