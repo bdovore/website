@@ -1399,19 +1399,19 @@ div.textmasked {
     }
 
     label[for=rb_mode4] {
-        display:none;
+        display:none !important;
     }
 
     label[for=rb_mode0] {
-        display:none;
+        display:none !important;
     }
 
     label[for=rb_mode1] {
-        display:none;
+        display:none !important;
     }
 
     label[for=rb_mode5] {
-        display:none;
+        display:none !important;
     }
 
     #select_genre{
