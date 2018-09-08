@@ -28,13 +28,17 @@ class Accueil extends Bdo_Controller
             "type" => "website",
             "image" => "https://www.bdovore.com/images/site/bdo_fond1.jpg"
         );
+        $this->loadModel("Comment");
+        $dbs = $this->Comment->load("c"," WHERE c.comment <> ''  order by DTE_POST desc limit 0, 6");
+
         $this->view->set_var(
                 array(
                         'a_lastSorties' => $this->lastSorties(6),
                         'a_lastNews' => $this->lastNews(4),
-                        'a_lastBD' => $this->lastCommentaires(3),
+                       /* 'a_lastBD' => $this->lastCommentaires(3),
                         'a_lastManga' => $this->lastCommentaires(3,"Mangas"),
-                        'a_lastComics' => $this->lastCommentaires(3,"Comics"),
+                        'a_lastComics' => $this->lastCommentaires(3,"Comics"),*/
+                        'a_lastComment' => $dbs->a_dataQuery,
                         'a_futurSorties' => $this->futurSorties(6),
                         'nbTome' => $this->Tome->getNbTotalTome(),
                     'opengraph' => $opengraph,
