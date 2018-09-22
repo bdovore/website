@@ -1,6 +1,6 @@
 <?php
-$ficheAlbum = $view->getHelper('ficheAlbum');
-$pageinate = $view->getHelper('Pagination');
+  $ficheAlbum = $view->getHelper('ficheAlbum');
+  $pageinate = $view->getHelper('Pagination');
 ?>
 
 <SCRIPT language="Javascript">
@@ -18,58 +18,72 @@ $pageinate = $view->getHelper('Pagination');
 //-->
 </SCRIPT>
 <div class="colleft">
-<div class="col1wrap">
-                <div class="col1 fond">
+  <!-- Debut de la partie de gauche -->
+  <div class="col1wrap">
+    <!-- Column 1 start -->
+    <div class="col1 fond">
 
+      <!-- cadre détails de la série -->
+      <div class="cadre1">
 
-
-        <!-- Column 1 start -->
-
-
-        <!-- cadre central de la page -->
-        <div class="cadre1">
-            
-
-            <div class="middle_title addthis">
-                <h3>Fiche Série
-
-<?php echo $view->serie->NOM_SERIE; ?> <?php if (User::minAccesslevel(1)) { ?><a class="fancybox fancybox.iframe {width:600,height:600}" href="admin/editserie?serie_id=<?php echo $view->serie->ID_SERIE; ?>"> <img src="<?php echo BDO_URL_IMAGE; ?>edit.gif" /></a> <?php } ?></h3></div>
-            <br />
-          
-          <img src="<?php echo BDO_URL_COUV.$view->serie->IMG_COUV_SERIE; ?>" class="couvBig" style="float:left; margin:6px;">
-                   
-               
-                   <?php if ($view->serie->NB_NOTE_SERIE > 0) { ?> <span id="note_serie"></span>
-                   <script>$("#note_serie").raty({score: <?php echo $view->serie->NOTE_SERIE/2.0; ?>, readOnly: true});</script> <?php } ?>
-                    <div ><font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
-            <strong>Genre : </strong>
-            </font>
-<?php echo $view->serie->NOM_GENRE; ?>
-            <br />
-            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
-            <strong>Nombre de tome: </strong>
-            </font>
-<?php echo $view->serie->NB_TOME; ?>
-            <br />
-            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
-            <strong>Albums dans la base: </strong>
-            </font>
-<?php echo $view->serie->NB_ALBUM; ?>
-            <br />
-            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
-            <strong>Avancement : </strong>
-            </font>
-<?php echo $view->serie->LIB_FLG_FINI_SERIE; ?>
-            <br />
-            <?php if ($view->serie->HISTOIRE_SERIE) { ?>
-            <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
-            <strong>Synopsis : </strong>
-            </font>
-            <?php echo nl2br($view->serie->HISTOIRE_SERIE); ?>
+        <div class="middle_title addthis">
+          <h3>
+            Série <?php echo $view->serie->NOM_SERIE; ?> 
+            <?php if (User::minAccesslevel(1)) { ?>
+                    <a class="fancybox fancybox.iframe {width:600,height:600}" 
+                        href="admin/editserie?serie_id=<?php echo $view->serie->ID_SERIE; ?>"
+                        > <img src="<?php echo BDO_URL_IMAGE; ?>edit.gif" />
+                    </a> 
             <?php } ?>
-            </p>
-            <?php   if (! empty($_SESSION['userConnect']->user_id)) { ?>
-            <?php if ($view->nbAlbumCollec == 0) { ?>
+          </h3>
+        </div>
+        <br />
+        
+        <img src="<?php echo BDO_URL_COUV.$view->serie->IMG_COUV_SERIE; ?>" class="couvBig" style="float:left; margin:6px;" />
+              
+        <div >
+          <?php if ($view->serie->NB_NOTE_SERIE > 0) { ?> 
+                  <span id="note_serie"></span>
+                  <script>$("#note_serie").raty({score: <?php echo $view->serie->NOTE_SERIE/2.0; ?>, readOnly: true});</script> 
+          <?php } ?>
+          <br />
+          <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+            <strong>Genre : </strong>
+          </font>
+          <?php echo $view->serie->NOM_GENRE; ?>
+          <br />
+          <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+            <strong>Nombre de tome: </strong>
+          </font>
+          <?php echo $view->serie->NB_TOME; ?>
+          <br />
+          <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+            <strong>Albums dans la base: </strong>
+          </font>
+          <?php echo $view->serie->NB_ALBUM; ?>
+          <br />
+          <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+            <strong>Avancement : </strong>
+          </font>
+          <?php echo $view->serie->LIB_FLG_FINI_SERIE; ?>
+          <br />
+          <?php if ($view->serie->HISTOIRE_SERIE) { ?>
+                  <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+                    <strong>Synopsis : </strong>
+                  </font>
+                  <?php echo nl2br($view->serie->HISTOIRE_SERIE); ?>
+          <?php } ?>
+
+          <?php if ($view->auteur) { ?>
+                  <br />
+                  Albums filtrés pour <strong><font color='#990000'>"<?php echo $view->pseudo; ?>"</font></strong> :
+                  <a id="aFiltreA" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
+                     href="<?php echo $ficheAlbum->getURLSerie($view->serie); ?>" 
+                     title="Supprimer le filtre">Annuler
+                  </a>
+          <?php } else { ?>
+            <?php if (! empty($_SESSION['userConnect']->user_id)) { ?>
+              <?php if ($view->nbAlbumCollec == 0) { ?>
                       <div id="addSerie<?php echo $view->serie->ID_SERIE; ?>" style="font-size:0.9em;">
                         <p>
                           <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
@@ -82,111 +96,118 @@ $pageinate = $view->getHelper('Pagination');
                           </a>
                         </p>
                       </div>
-            <?php } else { ?>
-                      <div style="font-size:0.9em;">
+              <?php } else { ?>
+                        <div style="font-size:0.9em;">
                           <p> <?php echo $view->nbAlbumCollec.($view->nbAlbumCollec > 1 ? " albums " : " album ")."dans la collection. <br>"; ?>
                               <?php if ($view->nbManquant > 0 ) { 
-                                  echo  $view->nbManquant ." manquant(s) <br>"; ?>
-                              <a id="inExSerie<?php echo $view->serie->ID_SERIE; ?>"
-                              <?php if ( $view->serieExclue ) { ?>
-                                 class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
-                                 href="javascript:includeSerie(<?php echo $view->serie->ID_SERIE; ?>)" 
-                                 title="Annuler l'exclusion de cette série">Annuler l'exclusion de la série
-                              <?php } else { ?>
-                                 class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
-                                 href="javascript:excludeSerie(<?php echo $view->serie->ID_SERIE; ?>)" 
-                                 title="Exclure la série des séries à compléter">Exclure des albums à compléter
-                              <?php } ?>
-                            </a>
-                              <?php
-                              } else {
-                                  echo "Série complète ! ";
-                              }
-                              
+                                      echo  $view->nbManquant ." manquant(s) <br>"; ?>
+                                      <a id="inExSerie<?php echo $view->serie->ID_SERIE; ?>"
+                                        <?php if ( $view->serieExclue ) { ?>
+                                                class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
+                                                href="javascript:includeSerie(<?php echo $view->serie->ID_SERIE; ?>)" 
+                                                title="Annuler l'exclusion de cette série">Annuler l'exclusion de la série
+                                        <?php } else { ?>
+                                                class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
+                                                href="javascript:excludeSerie(<?php echo $view->serie->ID_SERIE; ?>)" 
+                                                title="Exclure la série des séries à compléter">Exclure des albums à compléter
+                                        <?php } ?>
+                                      </a>
+                              <?php } else {
+                                      echo "Série complète ! ";
+                                    }
                               ?>
-                            
                           </p>
-                      </div>
-            <?php  } } ?>
-            </div>
-             
-<?php echo $view->SERNOTE; ?>
-                   <div class="addthis_inline_share_toolbox" style="float: right;">
-                <!-- AddThis Button BEGIN -->
-                <!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5aa565c61fcc82d7"></script> 
-               
-            </div>
-                <br />
-<hr class="expSep" />
-                <!-- END CommentBlock -->
-                <?php if (count($view->dbs_SerieLie ) > 0) { ?>
-                        Séries liées : <?php $sep= ""; 
-                        foreach ($view->dbs_SerieLie as $serieLie) { 
-                        echo $sep.$ficheAlbum->urlSerie($serieLie)."&nbsp; ";
-                        $sep = "|";} ?>
-                <?php } ?>
-              <br>
+                        </div>
+              <?php } ?>
+            <?php } ?>
+          <?php } ?>
         </div>
 
 
-            <div class="cadre1"><div class="middle_title">
- <h3>Albums </h3> </div>
-                <!-- BEGIN AlbBlock -->
-                <table class="list_album">
-<?php
-$tr = true;
-foreach ($view->dbs_tome->a_dataQuery as $tome) {
-    if ($tr)
-        echo "<tr>";
+        <?php echo $view->SERNOTE; ?>
+        <div class="addthis_inline_share_toolbox" style="float: right;">
+          <!-- AddThis Button BEGIN -->
+          <!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5aa565c61fcc82d7"></script> 
+        </div>
+        <br />
+        <hr class="expSep" />
+        <!-- END CommentBlock -->
+        <?php if (count($view->dbs_SerieLie ) > 0) { ?>
+                Séries liées : <?php $sep= ""; 
+                foreach ($view->dbs_SerieLie as $serieLie) { 
+                  echo $sep.$ficheAlbum->urlSerie($serieLie)."&nbsp; ";
+                  $sep = "|";
+                } ?>
+        <?php } ?>
+        <br>
+      </div>
 
-    echo "<td class='mw50'>" . $ficheAlbum->big($tome,$sep=true,$getUrlSerie=false) . "</td>";
+      <!-- cadre liste d'albums -->
+      <div class="cadre1">
+        <div class="middle_title">
+          <h3>Albums</h3> 
+        </div>
+        <!-- BEGIN AlbBlock -->
+        <table class="list_album">
+          <?php
+            $tr = true;
+            foreach ($view->dbs_tome->a_dataQuery as $tome) {
+              if ($tr)
+                echo "<tr>";
+      
+              // Si false, l'album n'est pas exclu...
+              $exclu = array_search($tome->ID_TOME,$view->tomesExclus) === false ? false : true;
+              echo "<td class='mw50'>" . $ficheAlbum->big($tome,$sep=true,$getUrlSerie=false,$exclu) . "</td>";
 
-    if (!$tr) {
-        echo "</tr>";
-    }
-    $tr = !$tr;
-    ?>
+              if (!$tr) {
+                echo "</tr>";
+              }
 
+              $tr = !$tr;
+            }
+            if (!$tr)
+              echo "</tr>";
+          ?>
+        </table>
 
-
-                    <?php
-                    }
-                    if (!$tr)
-                        echo "</tr>";
-                    ?></table>
-
-                <div align="center"> </div>
-
-                <div align="center">
-<?php
-if ($view->serie->NB_ALBUM > 20) {
-    $max_page = ceil($view->serie->NB_ALBUM / 20);
-    if ($max_page > 1) {
-        echo($pageinate->paginate($ficheAlbum->getURLSerie($view->serie ),"?page=",$max_page,$view->NUM_PAGE,$adj=3));
-    }
-   }
-?> </div>
-                <div align="center"></div>
-                <div align="center"> </div>
-            </div>
-       <!-- Column 1 end -->
-                    </div>
-</div>
-                    <!-- Debut de la partie de droite -->
-<div class="col2">
-    <div id="actu" class="right fond">
-            <div class="middle_title">
-
-    <h3>Même auteur...</h3>
-
-    </div>      <!-- Column 2 start -->
-                <?php
-                    //echo count($view->SERIESIMI);
-                    foreach ($view->SERIESIMI as $o_serie)
-                   {
-                      echo $ficheAlbum->serie($o_serie);
-                    } ?>
+        <div align="center">
+          <?php
+            // A cause du filtre sur le nom de l'auteur, il peut y avoir moins d'albums affichés que d'albums dans la base.
+            // et si on n'est pas sur la première page, il faut pouvoir revenir même si la page en cours n'est pas pleine...
+            if (($view->serie->NB_ALBUM > 20 && $view->dbs_tome->nbLineResult == 20) || $this->NUM_PAGE > 1) {
+              $max_page = ceil($view->serie->NB_ALBUM / 20);
+              if ($max_page > 1) {
+                $url = $ficheAlbum->getURLSerie($view->serie);
+                if ($view->auteur) {
+                  $url = $url . "?auteur=" . $view->auteur . "&pseudo=" . $view->pseudo; 
+                  echo($pageinate->paginate($url,"&page=",$max_page,$view->NUM_PAGE,$adj=3));
+                } else {
+                  echo($pageinate->paginate($url,"?page=",$max_page,$view->NUM_PAGE,$adj=3));
+                }
+              }
+            }
+          ?> 
+        </div>
+      </div>
     </div>
-                <!-- Column 2 end -->
-</div>
+    <!-- Column 1 end -->
+  </div>
+
+  <!-- Debut de la partie de droite -->
+  <!-- Column 2 start -->
+  <div class="col2">
+    <div id="actu" class="right fond">
+      <div class="middle_title">
+        <h3>Même auteur...</h3>
+      </div>      
+      
+      <?php
+        //echo count($view->SERIESIMI);
+        foreach ($view->SERIESIMI as $o_serie) {
+          echo $ficheAlbum->serie($o_serie);
+        } 
+      ?>
+    </div>
+  </div>
+  <!-- Column 2 end -->
 </div>
