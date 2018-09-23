@@ -72,20 +72,15 @@ class FicheSerie {
 
     public function getURLSerie($o_serie,$page=1) {
       if (is_array($o_serie)) {
-        $o_serie = (object) $o_serie;
-      }
-      $url = BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-' .clean_url($o_serie->NOM_SERIE);
-      if ($this->auteur != "")
-        $url = $url . '?auteur=' . $this->auteur[0] . '&pseudo=' . $this->auteur[1];
-      return $url;
+            $o_serie = (object) $o_serie;
+        }
+        return BDO_URL . 'serie-bd-' . $o_serie->ID_SERIE . '-' .clean_url($o_serie->NOM_SERIE);
     }
 
-    public function big($o_serie,$o_auteur,$sep=true,$incomplet=false,$exclu=false) {
+    public function big($o_serie,$sep=true,$incomplet=false,$exclu=false) {
       if (is_array($o_serie)) {
         $o_serie = (object) $o_serie;
       }
-
-      $this->auteur = $o_auteur;
 
       $html = '<div class="cadre1 fiche_big">
                  <div style="float:left" class="mw50">';

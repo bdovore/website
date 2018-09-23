@@ -142,7 +142,7 @@ class Useralbum extends Bdo_Db_Line
               inner join bd_auteur a on (id_auteur = ".$champ.")
               where ".$champ." <> 0
                 and u.user_id = " . $user_id ."
-                and pseudo not in ('<n&b>','<indéterminé>','Collectif')";
+                and pseudo not in ('<n&b>','<indéterminé>')";
       if ($search) {
         $search = ($search[0] == '^') ? substr($search,1) : '%' . $search;
         $search = (substr($search,-1) == '$') ? substr($search,0,-1) : $search . '%'; 
@@ -653,7 +653,7 @@ class Useralbum extends Bdo_Db_Line
         ) a
       ";
       
-      $where = " WHERE left(pseudo,1) REGEXP '[[:alnum:]]' and pseudo <> 'Collectif'";
+      $where = " WHERE left(pseudo,1) REGEXP '[[:alnum:]]' ";
 
       $type = "";
       if (in_array("BD",$origin))                                   $type .= " gbd > 0 "  ;

@@ -662,8 +662,7 @@ iframe.tom {
   min-width: 2.5em;
   border: 3px solid #fff;
   border-radius: 100px;
-  /*background-color: #ba9d9d !important;*/
-  background-color: rgb(71,28,28) !important;
+  background-color: #ba9d9d !important;
   background-image: none;
   box-shadow: 0 0 20px rgba(0, 0, 0, .3);
   cursor: pointer;
@@ -687,7 +686,6 @@ iframe.tom {
 .newButton input:checked + label {
   /* Mes plus mieux bien belles couleurs que Cinoche n'aime pas : "background-color: #509b80;"  :P :D */
   /* background-color: #855a28 !important; 
-  color: #2d161b !important; 
-  background-color: #855a28 !important; */
-  background-color: rgb(108,48,48) !important;
+  color: #2d161b !important; */
+  background-color: #855a28 !important;
 }
