@@ -109,8 +109,7 @@
                 foreach ($view->listExclu as $i => $s) {
                   if ($s->ID_SERIE == $serie->ID_SERIE) $exclu = $s->SOURCE;
                 }
-                $auteur = $view->auteur == "" ? "" : [$view->auteur,$view->pseudo];
-                echo $ficheSerie->big($serie,$auteur,true,$incomplet,$exclu); 
+                echo $ficheSerie->big($serie,true,$incomplet,$exclu); 
               ?>
             
             </td>
