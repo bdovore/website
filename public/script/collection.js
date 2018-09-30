@@ -117,6 +117,138 @@ function getInfoCollectionFromTome(id_tome, id_edition) {
 
         }
 
+  }
+
+  );
+}
+
+// Bouton "Supprimer" sur un album
+function deleteEdition(id_serie, id_tome, id_edition, exclu) {
+  if (confirm("Supprimer l'édition de votre collection ?")) {
+      $("#addAlbum" + id_edition).html("<img src='./script/ajax-loader.gif'>");
+      var url = "./macollection/deleteAlbum?id_edition=" + id_edition;
+
+      $.getJSON(url, function(data) {
+          if (data.length == 0) {
+              $("#addAlbum" + id_edition).html("Album supprimé de votre collection !");
+              $("#info_collection").hide();
+              getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu);
+          }
+          else {
+              alert(data);
+          }
+      });
+  }
+}
+
+// Bouton Ignorer sur un album
+function excludeAlbum(id_serie, id_tome, id_edition, exclu) {
+  if (confirm("Cet album sera retiré des albums manquants.")) {
+    $("#inExAlbum" + id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
+    var url = $.bdovore.URL + "macollection/excludealbum?id_serie=" + id_serie + "&id_tome=" + id_tome;
+    $.getJSON(url)
+      .done(function(data) {
+          getInfoCollectionFromTome(id_serie, id_tome, id_edition, !exclu);
+      })
+      .fail(function( data, textStatus, error ) {
+        //var err = textStatus + ", " + error;
+        //console.log("excludeSerie : " + err);
+        alert("Une erreur est survenue. Veuillez contacter l'administrateur du site.");
+      });
+  }
+}
+
+// Bouton "Ne plus ignorer" sur un album
+function includeAlbum(id_serie, id_tome, id_edition, exclu) {
+  if (confirm("Cet album ne sera plus exclus des albums manquants.")) {
+    $("#inExAlbum" + id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
+    var url = $.bdovore.URL + "macollection/includealbum?id_serie=" + id_serie + "&id_tome=" + id_tome;
+    $.getJSON(url)
+      .done(function(data) {
+          getInfoCollectionFromTome(id_serie, id_tome, id_edition, !exclu);
+      })
+      .fail(function( data, textStatus, error ) {
+        var err = textStatus + ", " + error;
+        //console.log("excludeSerie : " + err);
+        alert("Une erreur est survenue (" + err + "). " +
+              "Veuillez contacter l'administrateur du site.");
+      });
+  }
+}
+
+function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu = false) {
+  /*
+   * Appel à getJson pour récupérer les infos de la collection d'un album et crée les infos si besoin
+   * 
+   * exclu : Permet de gérer l'exclusion de l'album
+   * valeurs :
+   *     true  : L'album fait partie de la liste des exclusion de l'utilisateur   => Prendre en compte
+   *     false : Il n'en fait pas partie                                          => Achat / Futur / Ignorer
+   * 
+   */
+  $("#infoCollection" + id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
+  var url = $.bdovore.URL + "getjson?data=Useralbum&id_tome=" + id_tome;
+  $.getJSON(url, function(data) {
+    if (typeof data[0] == 'undefined') {
+      // l'album n'est pas dans la collection
+      $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
+      if (!exclu) {
+        $madiv = $madiv
+               +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
+               +       'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')" '
+               +       'title="Ajouter cet album dans votre collection">'
+               +   'Collection</a>'
+               + ' '
+               +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
+               +        'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'O\')" '
+               +        'title="A acheter prochainement">'
+               +   'Futur Achat</a>';
+            if (data.nbAlbumSerie > 0)
+                $madiv += ' '
+               +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
+               +        'href="javascript:excludeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
+               +        'title="Ignorer cet album">'
+               +   'Ignorer</a>';
+        }
+      else {
+            // C'est un album ignoré
+            $madiv = $madiv
+                   +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
+                   +        'href="javascript:includeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
+                   +        'title="Ne plus ignorer cet album">'
+                   +   'Ne plus ignorer</a>';
+
+          
+        }
+        $madiv = $madiv
+                 + '</div>';
+    } else {
+      // l'album est dans la collection
+      // on récupère sa date d'ajout dans la collection
+      $dte = data[0].DATE_AJOUT.substring(8,10) + "/" +   data[0].DATE_AJOUT.substring(5,7) + "/" +  data[0].DATE_AJOUT.substring(0,4);
+      if (data[0].FLG_ACHAT === "O") {
+        // C'est un achat futur
+        $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
+               + '  Achat futur depuis le ' + $dte + '<br>'
+               + '  <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"'
+               + '     onclick="addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')"'
+               + '     title="Ajouter cet album dans votre collection">Acheter' 
+               + '  </a>'
+               + '  <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"'
+               + '     title="Supprimer l\' édition de ma collection"'
+               + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">Supprimer'
+               + '  </a>'
+               + '</div>';
+      } else {
+        // on l'a réellement
+        $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
+               + '  Acheté le ' + $dte + '<br>'
+               + '  <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"'
+               + '     title="Supprimer l\' édition de ma collection"'
+               + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">Supprimer'
+               + '  </a>'
+               + '</div>';
+      }
     }
 
     );

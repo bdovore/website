@@ -285,16 +285,33 @@ class GetJSON extends Bdo_Controller {
         $id_tome = getValInteger("id_tome",0);
         $id_edition = getValInteger("id_edition",0);
         $this->loadModel("Useralbum");
+        
         if (Bdo_Cfg::user()->minAccesslevel(2)) {
             if ($id_edition) {
                 // selection par edition
                 $this->Useralbum->load("c"," WHERE ua.user_id = ".intval($_SESSION['userConnect']->user_id). " AND ua.id_edition = ".$id_edition);
-
-            } else {
+                $this->loadModel("Edition");
+                $this->Edition->set_dataPaste(array(
+                    "ID_EDITION" => $id_edition
+                ));
+                $this->Edition->load();
+                $id_serie = $this->Edition->ID_SERIE;
+                } 
+                else {
                 // selection par id_tome
                 $this->Useralbum->load("c"," WHERE ua.user_id = ".intval($_SESSION['userConnect']->user_id). " AND bd_tome.id_tome = ".$id_tome);
+               $this->loadModel("Tome");
+                $this->Tome->set_dataPaste(array(
+                        "ID_TOME" => $id_tome
+                    ));
+                $this->Tome->load();
+                $id_serie = $this->Tome->ID_SERIE;
             }
-              $this->view->set_var('json', json_encode($this->Useralbum->dbSelect->a_dataQuery));
+            $nbserie = $this->Useralbum->isSerieInCollection($id_serie,intval($_SESSION['userConnect']->user_id));
+            $infoalbum = $this->Useralbum->dbSelect->a_dataQuery;
+            $infoalbum["nbAlbumSerie"] = $nbserie;
+            $this->view->set_var('json', json_encode($infoalbum));
+              
 
         }
 
