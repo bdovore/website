@@ -177,7 +177,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 </span>
                 <div class="action" id="action-menu">
                     <div align="center">
-                        <div id="actionCollection"></div>
+                        <div id="infoCollection<?php echo $view->tome->ID_TOME; ?>"></div>
                     </div>
                  </div>
     </div>
@@ -353,18 +353,18 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                // l'album n'est pas dans la collection : on ajoute les boutons
                 $("#info_collection").hide();
                 // Affichage des boutons
-                 var madiv = '<div id="addAlbum<?php echo $view->tome->ID_EDITION; ?>" style="font-size:0.9em;"><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(<?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>,\'N\')" title="Ajouter cet album dans votre collection">Collection</a> - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(<?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>,\'O\')" title="A acheter prochainement">Futur Achat</a></div>';
-               $("#actionCollection").html(madiv);
+               /*  var madiv = '<div id="addAlbum<?php echo $view->tome->ID_EDITION; ?>" style="font-size:0.9em;"><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(<?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>,false, \'N\')" title="Ajouter cet album dans votre collection">Collection</a> - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(<?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>,false, \'O\')" title="A acheter prochainement">Futur Achat</a></div>';
+               $("#actionCollection").html(madiv);*/
 
            }
            else {
                $("#info_collection").show();
                 var dte = data[0].DATE_AJOUT.substring(8,10) + "/" +   data[0].DATE_AJOUT.substring(5,7) + "/" +  data[0].DATE_AJOUT.substring(0,4);
-                if (data[0].FLG_ACHAT === "O") {
-                    $("#actionCollection" ).html('<div id="addAlbum' + <?php echo $view->tome->ID_EDITION; ?> + '" style="font-size:0.9em;">futur achat depuis le ' +dte + '<br><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="#" onclick="addAlbum(' + <?php echo $view->tome->ID_TOME; ?> + ', ' + <?php echo $view->tome->ID_EDITION; ?> + ',\'N\');$(\'#cb_achat\').attr(\'checked\', false);" title="Ajouter cet album dans votre collection">Dans ma collection</a>  - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(' + <?php echo $view->tome->ID_EDITION; ?> + ')">Supprimer</a></div>');
+               /* if (data[0].FLG_ACHAT === "O") {
+                    $("#actionCollection" ).html('<div id="addAlbum' + <?php echo $view->tome->ID_EDITION; ?> + '" style="font-size:0.9em;">futur achat depuis le ' +dte + '<br><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="#" onclick="addAlbum(' + <?php echo $view->tome->ID_TOME; ?> + ', ' + <?php echo $view->tome->ID_EDITION; ?> + ',false\'N\');$(\'#cb_achat\').attr(\'checked\', false);" title="Ajouter cet album dans votre collection">Dans ma collection</a>  - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(' + <?php echo $view->tome->ID_EDITION; ?> + ')">Supprimer</a></div>');
                 } else {
                     $("#actionCollection").html('<div id="addAlbum' + <?php echo $view->tome->ID_EDITION; ?> + '" style="font-size:0.9em;">ajouté à votre collection le ' + dte + ' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(' + <?php echo $view->tome->ID_EDITION; ?> + ')">Supprimer</a></div>');
-                }
+                }*/
               // $("#actionCollection").html('<div id="addAlbum<?php echo $view->tome->ID_EDITION; ?>" style="font-size:0.9em;">ajouté à votre collection le '+data[0].DATE_ACHAT.substring(0,10) +' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(<?php echo $view->tome->ID_EDITION; ?>)">Supprimer</a></div>');
 
                // on renseigne chaque champs du formulaire
@@ -401,6 +401,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     );
     }
     getInfoCollection ();
+    getInfoCollectionFromTome(<?php echo $view->tome->ID_SERIE; ?>, <?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>, exclu = false)
    <?php } ?>
          $('.numbersOnly').keyup(function () {
                        this.value = this.value.replace(/[^0-9\.]/g,'');
