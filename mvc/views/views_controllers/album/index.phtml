@@ -349,11 +349,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
           $("#actionCollection").html("<img src='"+$.bdovore.URL+ "script/ajax-loader.gif'>");
      var url = $.bdovore.URL+"getjson?data=Useralbum&id_edition=<?php echo $view->tome->ID_EDITION?>";
       $.getJSON(url, function (data) {
-          if (data.length == 0) {
+          if (typeof data[0] == 'undefined') {
                // l'album n'est pas dans la collection : on ajoute les boutons
                 $("#info_collection").hide();
                 // Affichage des boutons
-                 var madiv = '<div id="addAlbum<?php echo $view->tome->ID_EDITION; ?>" style="font-size:0.9em;"><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(<?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>,\'N\')" title="Ajouter cet album dans votre collection">Dans ma collection</a> - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(<?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>,\'O\')" title="A acheter prochainement">Futur Achat</a></div>';
+                 var madiv = '<div id="addAlbum<?php echo $view->tome->ID_EDITION; ?>" style="font-size:0.9em;"><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(<?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>,\'N\')" title="Ajouter cet album dans votre collection">Collection</a> - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(<?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>,\'O\')" title="A acheter prochainement">Futur Achat</a></div>';
                $("#actionCollection").html(madiv);
 
            }

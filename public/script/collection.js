@@ -229,7 +229,7 @@ function getInfoCollectionFromEdition(id_tome, id_edition) {
     $("#infoCollection" + id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
     var url = $.bdovore.URL + "getjson?data=Useralbum&id_edition=" + id_edition;
     $.getJSON(url, function(data) {
-        if (data.length == 0) {
+        if (typeof data[0] == 'undefined') {
             // l'album n'est pas dans la collection : on ajoute les boutons
             var madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;"><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(' + id_tome + ', ' + id_edition + ',\'N\')" title="Ajouter cet album dans votre collection">Dans ma collection</a> - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(' + id_tome + ', ' + id_edition + ',\'O\')" title="A acheter prochainement">Futur Achat</a></div>';
             $("#infoCollection" + id_tome).html(madiv);
