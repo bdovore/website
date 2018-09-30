@@ -189,35 +189,39 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu = false)
   $("#infoCollection" + id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
   var url = $.bdovore.URL + "getjson?data=Useralbum&id_tome=" + id_tome;
   $.getJSON(url, function(data) {
-    if (data.length == 0) {
+    if (typeof data[0] == 'undefined') {
       // l'album n'est pas dans la collection
       $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
-      if (!exclu) 
+      if (!exclu) {
         $madiv = $madiv
                +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
                +       'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')" '
                +       'title="Ajouter cet album dans votre collection">'
-               +   'Acheter</a>'
+               +   'Collection</a>'
                + ' '
                +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
                +        'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'O\')" '
                +        'title="A acheter prochainement">'
-               +   'Futur Achat</a>'
-               + ' '
+               +   'Futur Achat</a>';
+            if (data.nbAlbumSerie > 0)
+                $madiv += ' '
                +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
                +        'href="javascript:excludeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
                +        'title="Ignorer cet album">'
                +   'Ignorer</a>';
-      else 
-        // C'est un album ignoré
-        $madiv = $madiv
-               +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
-               +        'href="javascript:includeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
-               +        'title="Ne plus ignorer cet album">'
-               +   'Ne plus ignorer</a>';
+        }
+      else {
+            // C'est un album ignoré
+            $madiv = $madiv
+                   +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
+                   +        'href="javascript:includeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
+                   +        'title="Ne plus ignorer cet album">'
+                   +   'Ne plus ignorer</a>';
 
-      $madiv = $madiv
-             + '</div>';
+          
+        }
+        $madiv = $madiv
+                 + '</div>';
     } else {
       // l'album est dans la collection
       // on récupère sa date d'ajout dans la collection
