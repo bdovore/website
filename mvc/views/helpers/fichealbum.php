@@ -87,7 +87,7 @@ class FicheAlbum {
         return $html;
     }
 
-    public function big($o_tome, $sep = true, $getUrlSerie = true) {
+    public function big($o_tome, $sep = true, $getUrlSerie = true, $exclu = false) {
         if (is_array($o_tome)) {
             $o_tome = (object) $o_tome;
         }
@@ -150,7 +150,7 @@ class FicheAlbum {
 
         if (Bdo_Cfg::user()->minAccesslevel(2)) {
             // ajout des liens d'ajout dans la collection
-            $html .= '<br>' . $this->linkCollection($o_tome);
+            $html .= $this->linkCollection($o_tome,$exclu);
         }
 
         $html .= '</div>';
@@ -354,7 +354,7 @@ class FicheAlbum {
         return $html;
     }
 
-    public function linkCollection($o_tome) {
+    public function linkCollection($o_tome, $exclu = false) {
         // fonction pour ajouter les liens d'ajouts dans la collection
         $html = "";
 
@@ -378,7 +378,7 @@ class FicheAlbum {
 //
 //            $html.= "</div>";
             $id_source = "infoCollection" . $o_tome->ID_TOME;
-            $html= "<div id='".$id_source."'></div><script>getInfoCollectionFromTome(".$o_tome->ID_TOME.",".$o_tome->ID_EDITION.")</script>";
+            $html= "<div id='".$id_source."'></div><script>getInfoCollectionFromTome(".$o_tome->ID_SERIE.",".$o_tome->ID_TOME.",".$o_tome->ID_EDITION.",".$exclu.")</script>";
 
         } else {
             $html = "<i>Connectez vous pour ajouter cet album dans votre collection !</i>";

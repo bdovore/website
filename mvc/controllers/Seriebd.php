@@ -16,6 +16,8 @@ class SerieBD extends Bdo_Controller {
 
         $ID_SERIE = getValInteger('id_serie',1);
         $page = getValInteger('page',1);
+        $auteur = getVal('auteur','');
+        $pseudo = getVal('pseudo');
 
         $this->loadModel('Serie');
 
@@ -38,10 +40,15 @@ class SerieBD extends Bdo_Controller {
         // liste d'albums
         $this->loadModel("Tome");
 
-        $dbs_tome = $this->Tome->load('c', "
-                            WHERE bd_tome.id_serie=
-                            ".$ID_SERIE."
-                             ORDER BY bd_tome.FLG_INT DESC, bd_tome.FLG_TYPE, bd_tome.NUM_TOME, bd_tome.TITRE limit ".(($page-1)*20).",20");
+        $where =            "WHERE bd_tome.id_serie=".$ID_SERIE;
+        if ($auteur) {
+          $where = $where . "  and (   bd_tome.id_scenar = " . $auteur . " OR bd_tome.id_scenar_alt = " . $auteur .
+                            "       OR bd_tome.id_dessin = " . $auteur . " OR bd_tome.id_dessin_alt = " . $auteur .
+                            "       OR bd_tome.id_color  = " . $auteur . " OR bd_tome.id_color_alt  = " . $auteur .
+                            "      )";
+        }          
+        $where = $where .   " ORDER BY bd_tome.FLG_INT DESC, bd_tome.FLG_TYPE, bd_tome.NUM_TOME, bd_tome.TITRE limit ".(($page-1)*20).",20";
+        $dbs_tome = $this->Tome->load('c', $where);
         // selection des albums
         $this->view->set_var('dbs_tome', $dbs_tome);
 
@@ -55,29 +62,32 @@ class SerieBD extends Bdo_Controller {
         // liste des séries liées
         $this->loadModel("Groupeserie");
         $listSerieLiee = $this->Groupeserie->getSerieLiee( $ID_SERIE);
-         $this->view->set_var(array(
+        $this->view->set_var(array(
                 'dbs_SerieLie' =>  $listSerieLiee
-              
         ));
         
-         // l'utiliateur possède t-il des albums de la série ?
-         if (Bdo_Cfg::user()->minAccesslevel(2)) {
+        // l'utiliateur possède t-il des albums de la série ?
+        if (Bdo_Cfg::user()->minAccesslevel(2)) {
              $this->loadModel("Useralbum");
              $this->loadModel("Users_exclusions");
              $nbalbum = $this->Useralbum->isSerieInCollection($ID_SERIE,$_SESSION['userConnect']->user_id);
              $serieExclu = $this->Users_exclusions->getListSerieExcluSource($_SESSION['userConnect']->user_id,$ID_SERIE);
+             $tomesExclus = $this->Users_exclusions->getListTomesExclus($_SESSION['userConnect']->user_id,$ID_SERIE);
              $dbs_tomeComplete  = $this->Tome->getListAlbumToComplete($_SESSION['userConnect']->user_id,$ID_SERIE );
              $nbmanquant =  count($dbs_tomeComplete->a_dataQuery);
-         } else {
+        } else {
              $nbalbum = 0;
              $serieExclu = false;
-             
-         }
-         $this->view->set_var(array(
-           "nbAlbumCollec" =>  $nbalbum,
-             "serieExclue" => $serieExclu,
-             "nbManquant" => $nbmanquant
-         ));
+        }
+
+        $this->view->set_var(array(
+          "nbAlbumCollec" =>  $nbalbum,
+          "serieExclue" => $serieExclu,
+          "tomesExclus" => $tomesExclus,
+          "nbManquant" => $nbmanquant,
+          "auteur" => $auteur,
+          "pseudo" => $pseudo
+        ));
         $this->view->render();
     }
 
