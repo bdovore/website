@@ -172,7 +172,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu = false)
                +        'title="A acheter prochainement">'
                +   'Futur Achat</a>';
             if (data.nbAlbumSerie > 0)
-                $madiv += ' '
+                $madiv += ' ' + ($.browser.mobile ? '<br>' : '')
                +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
                +        'href="javascript:excludeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
                +        'title="Ignorer cet album">'
