@@ -110,10 +110,21 @@ class Album extends Bdo_Controller {
             $this->view->layout = "iframe";
         }
         // ajout des commentaires : remplacement du mode précédent en ajax
-         $this->loadModel('Comment');         
-          $where = "WHERE c.id_tome = " .$o_tome->ID_TOME ." and c.comment <> '' order by dte_post desc ";
-          $dbs_comment = $this->Comment->load("c",$where);
-          $this->view->set_var("dbs_comment",$dbs_comment);
+        $this->loadModel('Comment');         
+        $where = "WHERE c.id_tome = " .$o_tome->ID_TOME ." and c.comment <> '' order by dte_post desc ";
+        $dbs_comment = $this->Comment->load("c",$where);
+        $this->view->set_var("dbs_comment",$dbs_comment);
+        // est ce un tome exclu ?
+        $exclu = "false";
+        if (Bdo_Cfg::user()->minAccesslevel(2)) {
+            $this->loadModel("Users_exclusions");
+            $this->Users_exclusions->load("c", "WHERE id_tome = ".$o_tome->ID_TOME . " AND user_id = ".intval($_SESSION['userConnect']->user_id));
+            if ($this->Users_exclusions->dbSelect->nbLineResult > 0) {
+                $exclu = "true";
+            } 
+         }
+         $this->view->set_var("tomeexclu",$exclu);
+        // rendering
         $this->view->set_var("frame",$frame);
         $this->view->render();
     }

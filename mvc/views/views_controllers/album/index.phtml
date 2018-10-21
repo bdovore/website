@@ -402,7 +402,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     );
     }
     getInfoCollection ();
-    getInfoCollectionFromTome(<?php echo $view->tome->ID_SERIE; ?>, <?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>, exclu = false)
+    getInfoCollectionFromTome(<?php echo $view->tome->ID_SERIE; ?>, <?php echo $view->tome->ID_TOME; ?>, <?php echo $view->tome->ID_EDITION; ?>, exclu = <?php echo $view->tomeexclu; ?>)
    <?php } ?>
          $('.numbersOnly').keyup(function () {
                        this.value = this.value.replace(/[^0-9\.]/g,'');

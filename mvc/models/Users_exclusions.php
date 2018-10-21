@@ -19,12 +19,10 @@ class Users_exclusions extends Bdo_Db_Line {
     }
 
     public function select () {
-        return "SELECT users_exclusions.ID_TOME, BD_TOME.TITRE as TITRE_TOME,
-                       users_exclusions.ID_SERIE, BD_SERIE.NOM as NOM_SERIE
+        return "SELECT users_exclusions.ID_TOME, bd_tome.TITRE as TITRE_TOME,
+                       users_exclusions.ID_SERIE, bd_serie.NOM as NOM_SERIE
                 FROM users_exclusions inner join bd_tome using (id_tome)
-                inner join bd_serie on users_exclusions.id_serie = bd_serie.id_serie" 
-             . " `" . $this->table_name . "`
-               ";
+                inner join bd_serie on users_exclusions.id_serie = bd_serie.id_serie" ;
     }
 
     public function getListSerieExclu ($user_id) {

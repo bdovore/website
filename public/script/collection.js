@@ -144,7 +144,7 @@ function includeAlbum(id_serie, id_tome, id_edition, exclu) {
   }
 }
 
-function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu = false) {
+function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu) {
   /*
    * Appel à getJson pour récupérer les infos de la collection d'un album et crée les infos si besoin
    * 
@@ -154,6 +154,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu = false)
    *     false : Il n'en fait pas partie                                          => Achat / Futur / Ignorer
    * 
    */
+  var exclu = exclu || false;
   $("#infoCollection" + id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
   var url = $.bdovore.URL + "getjson?data=Useralbum&id_tome=" + id_tome;
   $.getJSON(url, function(data) {
