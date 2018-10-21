@@ -156,7 +156,11 @@
                 echo "<tr>";
       
               // Si false, l'album n'est pas exclu...
-              $exclu = array_search($tome->ID_TOME,$view->tomesExclus) === false ? false : true;
+              if (Bdo_Cfg::user()->minAccesslevel(2)) {
+                $exclu = array_search($tome->ID_TOME,$view->tomesExclus) === false ? false : true;
+              } else {
+                  $exclu = false;
+              }
               echo "<td class='mw50'>" . $ficheAlbum->big($tome,$sep=true,$getUrlSerie=false,$exclu) . "</td>";
 
               if (!$tr) {

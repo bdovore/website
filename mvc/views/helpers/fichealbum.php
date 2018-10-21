@@ -378,7 +378,7 @@ class FicheAlbum {
 //
 //            $html.= "</div>";
             $id_source = "infoCollection" . $o_tome->ID_TOME;
-            $html= "<div id='".$id_source."'></div><script>getInfoCollectionFromTome(".$o_tome->ID_SERIE.",".$o_tome->ID_TOME.",".$o_tome->ID_EDITION.",".$exclu.")</script>";
+            $html= "<div id='".$id_source."'></div><script>getInfoCollectionFromTome(".$o_tome->ID_SERIE.",".$o_tome->ID_TOME.",".$o_tome->ID_EDITION.",".($exclu ? "true" : "false").")</script>";
 
         } else {
             $html = "<i>Connectez vous pour ajouter cet album dans votre collection !</i>";
