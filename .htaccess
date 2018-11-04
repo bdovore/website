@@ -1,0 +1,19 @@
+#SetEnv PHP_VER 5_3
+
+# On suit les liens symboliques
+Options +FollowSymlinks
+
+#page erreur personnalisee
+Options -Indexes
+#ErrorDocument 403 /homez.95/bdovore/www/public/erreur.php?error=403
+#ErrorDocument 404 /homez.95/bdovore/www/public/erreur.php?error=404
+ErrorDocument 403 /erreur.php?error=403
+ErrorDocument 404 /erreur.php?error=404
+
+# Activation du mod rewrite d'Apache
+RewriteEngine On
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://beta.bdovore.com/$1 [R,L]
+RewriteCond %{HTTP_HOST} ^bdovore\.com$
+RewriteRule (.*) https://beta.bdovore.com/$1 [R=301,L]
+RewriteRule !\.(js|ico|gif|jpg|png|css|html|htm|xml|wsdl|pdf|svg) index.php [NC,L]

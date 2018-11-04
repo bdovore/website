@@ -22,3 +22,4 @@ Collection au*
 !/mvc/views/views_controllers/cache/
 /public/tmp/
 /vendor/
+/public/robots.txt

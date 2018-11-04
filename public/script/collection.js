@@ -211,7 +211,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu) {
       } else {
         // on l'a réellement
         $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
-               + '  Acheté le ' + $dte + '<br>'
+               + '  Ajouté le ' + $dte + '<br>'
                + '  <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"'
                + '     title="Supprimer l\' édition de ma collection"'
                + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">Supprimer'
