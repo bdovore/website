@@ -19,7 +19,7 @@ class Admin extends Bdo_Controller {
             $this->view->set_var($this->User_album_prop->getAllStat());
 
             $this->loadModel("Edition");
-            $dbs_tome = $this->Edition->load("c", " ORDER BY bd_edition.VALID_DTE desc limit 0,100");
+            $dbs_tome = $this->Edition->load("c", " WHERE bd_edition.VALID_DTE > DATE_ADD(CURRENT_DATE(), INTERVAL -1 YEAR) ORDER BY bd_edition.VALID_DTE desc limit 0,100");
             $this->view->set_var("dbs_tome", $dbs_tome);
             $this->view->set_var("PAGETITLE", "Administration Bdovore - Accueil");
             $this->view->render();
