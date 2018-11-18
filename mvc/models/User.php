@@ -55,7 +55,9 @@ class User extends Bdo_Db_Line
                 `VAL_COF` ,
                 `VAL_COF_TYPE` ,
                 `ROWSERIE` ,
-                `PREF_EXPORT`
+                `PREF_EXPORT` , 
+                API_TOKEN,
+                DATE_TOKEN
         FROM `" . $this->table_name . "`
  ";
     }
@@ -234,7 +236,16 @@ FROM " . $this->table_name . "
             }
 
         }
-
+        // connexion réalisé par appel d'API avec un token
+        else if (isset($_GET["API_TOKEN"])) {
+            if ($this->verifyToken($_GET["API_TOKEN"])) {
+                $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
+            } else {
+                header("HTTP/1.1 401 Unauthorized");
+            }
+            
+            
+        }
         if ($this->error) {
             $this->guest();
         }
@@ -248,12 +259,13 @@ FROM " . $this->table_name . "
     public function addNbConnect ()
     {
         $a_data = array(
+                "user_id" => $this->user_id,
                 "nb_connect" => ($this->nb_connect + 1),
                 "last_connect" => date("Y-m-d H:i:s")
         );
 
         $this->set_dataPaste($a_data);
-        $this->insert();
+        $this->update();
     }
 
     public function guest ()
@@ -412,130 +424,186 @@ FROM " . $this->table_name . "
     public function countUserBy($type, $id) {
 
 
-    $query = '';
-    switch ($type) {
-        case "edition" :
-            {
-                $query = "
-            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-            FROM
-                users_album ua
-            WHERE
-                ua.id_edition=" . intval($id) . "
-            ";
-                break;
-            }
-        case "tome" :
-            {
-                $query = "
-            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-            FROM
-                users_album ua
-                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-            WHERE
-                en.id_tome=" . intval($id) . "
-            ";
-                break;
-            }
-        case "collection" :
-            {
-                $query = "
-            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-            FROM
-                users_album ua
-                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-            WHERE
-                en.id_collection=" . intval($id) . "
-            ";
-                break;
-            }
-        case "editeur" :
-            {
-                $query = "
-            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-            FROM
-                users_album ua
-                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-                INNER JOIN bd_collection c ON en.id_collection = c.id_collection
+        $query = '';
+        switch ($type) {
+            case "edition" :
+                {
+                    $query = "
+                SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+                FROM
+                    users_album ua
+                WHERE
+                    ua.id_edition=" . intval($id) . "
+                ";
+                    break;
+                }
+            case "tome" :
+                {
+                    $query = "
+                SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+                FROM
+                    users_album ua
+                    INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+                WHERE
+                    en.id_tome=" . intval($id) . "
+                ";
+                    break;
+                }
+            case "collection" :
+                {
+                    $query = "
+                SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+                FROM
+                    users_album ua
+                    INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+                WHERE
+                    en.id_collection=" . intval($id) . "
+                ";
+                    break;
+                }
+            case "editeur" :
+                {
+                    $query = "
+                SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+                FROM
+                    users_album ua
+                    INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+                    INNER JOIN bd_collection c ON en.id_collection = c.id_collection
 
-            WHERE
-                c.id_editeur=" . intval($id) . "
-            ";
-                break;
-            }
-        case "serie" :
-            {
-                $query = "
-            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-            FROM
-                users_album ua
-                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-                INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-            WHERE
-                t.id_serie=" . intval($id) . "
-            ";
-                break;
-            }
-        case "genre" :
-            {
-                $query = "
-            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-            FROM
-                users_album ua
-                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-                INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-                INNER JOIN bd_serie s ON t.id_serie = s.id_serie
-            WHERE
-                s.id_genre=" . intval($id) . "
-            ";
-                break;
-            }
-        case "auteur" :
-            {
-                $query = "
-            SELECT COUNT(DISTINCT(ua.user_id)) as nbr
-            FROM
-                users_album ua
-                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
-                INNER JOIN bd_tome t ON t.id_tome = en.id_tome
-            WHERE
-                t.id_scenar = " . intval($id) . "
-                or t.id_dessin = " . intval($id) . "
-                or t.id_scenar_alt = " . intval($id) . "
-                or t.id_dessin_alt = " . intval($id) . "
-                or t.id_color = " . intval($id) . "
-                or t.id_color_alt = " . intval($id) . "
-            ";
-                break;
-            }
-        case "tomeComment" :
-            {
-                $query = "
-            SELECT COUNT(DISTINCT(uc.user_id)) as nbr
-            FROM
-                users_comment uc
-            WHERE
-                uc.id_tome=" . intval($id) . "
-            ";
-                break;
-            }
-        case "serieComment" :
-            {
-                $query = "
-            SELECT COUNT(DISTINCT(sc.user_id)) as nbr
-            FROM
-                serie_comment sc
-            WHERE
-                sc.id_serie=" . intval($id) . "
-            ";
-                break;
-            }
+                WHERE
+                    c.id_editeur=" . intval($id) . "
+                ";
+                    break;
+                }
+            case "serie" :
+                {
+                    $query = "
+                SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+                FROM
+                    users_album ua
+                    INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+                    INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+                WHERE
+                    t.id_serie=" . intval($id) . "
+                ";
+                    break;
+                }
+            case "genre" :
+                {
+                    $query = "
+                SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+                FROM
+                    users_album ua
+                    INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+                    INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+                    INNER JOIN bd_serie s ON t.id_serie = s.id_serie
+                WHERE
+                    s.id_genre=" . intval($id) . "
+                ";
+                    break;
+                }
+            case "auteur" :
+                {
+                    $query = "
+                SELECT COUNT(DISTINCT(ua.user_id)) as nbr
+                FROM
+                    users_album ua
+                    INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+                    INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+                WHERE
+                    t.id_scenar = " . intval($id) . "
+                    or t.id_dessin = " . intval($id) . "
+                    or t.id_scenar_alt = " . intval($id) . "
+                    or t.id_dessin_alt = " . intval($id) . "
+                    or t.id_color = " . intval($id) . "
+                    or t.id_color_alt = " . intval($id) . "
+                ";
+                    break;
+                }
+            case "tomeComment" :
+                {
+                    $query = "
+                SELECT COUNT(DISTINCT(uc.user_id)) as nbr
+                FROM
+                    users_comment uc
+                WHERE
+                    uc.id_tome=" . intval($id) . "
+                ";
+                    break;
+                }
+            case "serieComment" :
+                {
+                    $query = "
+                SELECT COUNT(DISTINCT(sc.user_id)) as nbr
+                FROM
+                    serie_comment sc
+                WHERE
+                    sc.id_serie=" . intval($id) . "
+                ";
+                    break;
+                }
+        }
+        if (! empty ( $query )) {
+                    $result = Db_query( $query );
+            $o = Db_fetch_object($result);
+            return $o->nbr;
+        }
+        return false;
     }
-    if (! empty ( $query )) {
-                $result = Db_query( $query );
-        $o = Db_fetch_object($result);
-        return $o->nbr;
+
+    public function getToken($username, $password) {
+         $this->load('c', "WHERE username ='" . Db_Escape_String($username) . "'");
+         $error = "";
+        if (1 == $this->dbSelect->nbLineResult) {
+
+            $mdp_user = md5($password);
+
+            if ($mdp_user and ($this->password == md5($password))) {
+                if ($this->level < 98) {
+
+                   $this->API_TOKEN = uniqid($prefix=$this->user_id."-");
+                   $this->DATE_TOKEN =date('Y-m-d H:i:s');
+                   $a_data = array(
+                       "user_id" => $this->user_id,
+                        "API_TOKEN" => uniqid($prefix=$this->user_id."-") ,
+                        "DATE_TOKEN" =>  date('Y-m-d H:i:s')
+                    );
+
+                    $this->set_dataPaste($a_data);
+                   $this->update();
+                }
+                else {
+                    $error = 'Compte bloqué';
+                }
+            }
+            else {
+                $error = 'Identifiant ou Mot de passe de connexion invalide';
+            }
+        }
+        else {
+            $error = 'Identifiant ou Mot de passe de connexion invalide';
+        }
+        
+        return (array("Token" => $this->API_TOKEN, "Error" => $error));
     }
-    return false;
-}
+    
+    public function verifyToken ($token) {
+        $tab = explode("-", $token, 2);
+        $user_id = $tab[0];
+        $this->load('c', "WHERE user_id =" . Db_Escape_String($user_id) . "");
+         if (1 == $this->dbSelect->nbLineResult) {
+             if ($token == $this->API_TOKEN) {
+                 if ($this->DATE_TOKEN ) {
+                     // todo : rendre le token temporaire
+                     return ($user_id);
+                 } else {
+                     $this->error = "Token périmé";
+                 }
+             } else {
+                 $this->error = "Token invalide";
+             }
+         } else {
+              $this->error = "Utilisateur inconnu";
+         }
+    }
 }

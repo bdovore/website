@@ -35,4 +35,16 @@ class Auth extends Bdo_Controller
     {
         $auth = new Bdo_Auth_Twitter();
     }
+    
+    public function Gettoken () {
+        $username = $_POST['user_login'];
+        $password = $_POST['user_password'];
+        $this->loadModel("User");
+        $token = $this->User->getToken($username,$password );
+        
+        if ( $token["Error"]) header("HTTP/1.1 401 Unauthorized");
+         $this->view->set_var('json', json_encode($token));
+         $this->view->layout = "ajax";
+        $this->view->render();
+    }
 }
