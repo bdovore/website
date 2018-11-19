@@ -84,6 +84,7 @@ class GetJSON extends Bdo_Controller {
         $ID_TOME = getValInteger('id_tome', 0);
         $id_edition = getValInteger('id_edition', 0);
         $isbn = getVal('ISBN', '');
+        $id_serie = getValInteger("id_serie",0);
         $ean = getVal('EAN', '');
         $mode = getValInteger("mode", 0);
         if ($id_edition or $isbn <> '' or $ean <> '' ) {
@@ -121,8 +122,16 @@ class GetJSON extends Bdo_Controller {
             $this->view->set_var('json', json_encode($this->Tome->dbSelect->a_dataQuery));
         } else {
             $term = getVal("term", "");
+            $id_serie = getVal("id_serie",0);
+            $where = "";
+            if ($id_serie) {
+                $where = " WHERE s.id_serie = $id_serie"; 
+            } else {
+                $where = " WHERE bd_tome.TITRE like '" . Db_Escape_String($term) . "%' limit 0,10";
+            }
+            
             $this->loadModel('Tome');
-            $this->Tome->load("c", " WHERE bd_tome.TITRE like '" . Db_Escape_String($term) . "%' limit 0,10");
+            $this->Tome->load("c", $where);
 
             if ($mode == 0) {
                 foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
