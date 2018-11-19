@@ -290,7 +290,7 @@ class Macollection extends Bdo_Controller {
           die("Vous devez vous authentifier pour accéder à cette page.");
       }
 
-      $this->view->set_var("PAGETITLE","Ma Collection de sur Bdovore");
+      $this->view->set_var("PAGETITLE","Ma Collection sur Bdovore");
       $this->view->render();
     }
 

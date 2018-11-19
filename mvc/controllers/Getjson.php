@@ -284,32 +284,54 @@ class GetJSON extends Bdo_Controller {
     private function Useralbum(){
         $id_tome = getValInteger("id_tome",0);
         $id_edition = getValInteger("id_edition",0);
+        $mode = getValInteger("mode",0);
+        $flg_achat = getVal("flg_achat","N");
+        $length = getValInteger("length",10);
+        $page = getValInteger("page",1);
+        $id_serie = getValInteger("id_serie",0);
         $this->loadModel("Useralbum");
         
+        if ($length > 100) $length = 100;
         if (Bdo_Cfg::user()->minAccesslevel(2)) {
-            if ($id_edition) {
-                // selection par edition
-                $this->Useralbum->load("c"," WHERE ua.user_id = ".intval($_SESSION['userConnect']->user_id). " AND ua.id_edition = ".$id_edition);
-                $this->loadModel("Edition");
-                $this->Edition->set_dataPaste(array(
-                    "ID_EDITION" => $id_edition
-                ));
-                $this->Edition->load();
-                $id_serie = $this->Edition->ID_SERIE;
-                } 
-                else {
-                // selection par id_tome
-                $this->Useralbum->load("c"," WHERE ua.user_id = ".intval($_SESSION['userConnect']->user_id). " AND bd_tome.id_tome = ".$id_tome);
-               $this->loadModel("Tome");
-                $this->Tome->set_dataPaste(array(
-                        "ID_TOME" => $id_tome
-                    ));
-                $this->Tome->load();
-                $id_serie = $this->Tome->ID_SERIE;
+            if ($mode ) {
+                $limit = " limit ".(($page - 1)*$length).", ".$length;
+                $where = " where ua.user_id = ".intval($_SESSION['userConnect']->user_id)." and flg_achat = '". Db_Escape_String($flg_achat)."' ";
+                if ($id_serie)  $where.= " AND s.id_serie = ".$id_serie;
+                $orderby = " ORDER BY NOM_SERIE";
+                $dbs_album = $this->Useralbum->load("c",$where.$orderby. $limit);
+                $infoalbum["data"] = $dbs_album->a_dataQuery;
+                $nbr = Db_CountRow($this->Useralbum->select().$where);
+                
+                $infoalbum["nbTotal"] = $nbr;
             }
-            $nbserie = $this->Useralbum->isSerieInCollection($id_serie,intval($_SESSION['userConnect']->user_id));
-            $infoalbum = $this->Useralbum->dbSelect->a_dataQuery;
-            $infoalbum["nbAlbumSerie"] = $nbserie;
+            else {
+                
+
+                if ($id_edition) {
+                    // selection par edition
+                    $this->Useralbum->load("c"," WHERE ua.user_id = ".intval($_SESSION['userConnect']->user_id). " AND ua.id_edition = ".$id_edition);
+                    $this->loadModel("Edition");
+                    $this->Edition->set_dataPaste(array(
+                        "ID_EDITION" => $id_edition
+                    ));
+                    $this->Edition->load();
+                    $id_serie = $this->Edition->ID_SERIE;
+                    } 
+                    else {
+                    // selection par id_tome
+                    $this->Useralbum->load("c"," WHERE ua.user_id = ".intval($_SESSION['userConnect']->user_id). " AND bd_tome.id_tome = ".$id_tome);
+                   $this->loadModel("Tome");
+                    $this->Tome->set_dataPaste(array(
+                            "ID_TOME" => $id_tome
+                        ));
+                    $this->Tome->load();
+                    $id_serie = $this->Tome->ID_SERIE;
+                }
+            
+                $nbserie = $this->Useralbum->isSerieInCollection($id_serie,intval($_SESSION['userConnect']->user_id));
+                $infoalbum = $this->Useralbum->dbSelect->a_dataQuery;
+                $infoalbum["nbAlbumSerie"] = $nbserie;
+            }
             $this->view->set_var('json', json_encode($infoalbum));
               
 
