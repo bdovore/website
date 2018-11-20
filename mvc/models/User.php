@@ -561,11 +561,11 @@ FROM " . $this->table_name . "
             if ($mdp_user and ($this->password == md5($password))) {
                 if ($this->level < 98) {
 
-                   $this->API_TOKEN = uniqid($prefix=$this->user_id."-");
+                   $API_TOKEN = uniqid($prefix=$this->user_id."-");
                    $this->DATE_TOKEN =date('Y-m-d H:i:s');
                    $a_data = array(
                        "user_id" => $this->user_id,
-                        "API_TOKEN" => uniqid($prefix=$this->user_id."-") ,
+                        "API_TOKEN" => md5($API_TOKEN) ,
                         "DATE_TOKEN" =>  date('Y-m-d H:i:s')
                     );
 
@@ -584,7 +584,7 @@ FROM " . $this->table_name . "
             $error = 'Identifiant ou Mot de passe de connexion invalide';
         }
         
-        return (array("Token" => $this->API_TOKEN, "Error" => $error));
+        return (array("Token" => $API_TOKEN, "Error" => $error));
     }
     
     public function verifyToken ($token) {
@@ -592,7 +592,7 @@ FROM " . $this->table_name . "
         $user_id = $tab[0];
         $this->load('c', "WHERE user_id =" . Db_Escape_String($user_id) . "");
          if (1 == $this->dbSelect->nbLineResult) {
-             if ($token == $this->API_TOKEN) {
+             if (md5($token) == $this->API_TOKEN) {
                  if ($this->DATE_TOKEN ) {
                      // todo : rendre le token temporaire
                      return ($user_id);

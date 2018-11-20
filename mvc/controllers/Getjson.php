@@ -42,6 +42,9 @@ class GetJSON extends Bdo_Controller {
             case "Useralbum" :
                 $this->Useralbum();
                 break;
+            case 'Userserie': 
+                $this->Userserie();
+                break;
             default :
                 break;
         }
@@ -350,6 +353,29 @@ class GetJSON extends Bdo_Controller {
         $this->view->render();
 
 
+    }
+    
+    private function Userserie () {
+        $length = getValInteger("length",10);
+        $page = getValInteger("page",1);
+        $term = getVal("term",""); // filtre de recherche 
+        $origin = getVal("origin",""); // manga / comics / BD
+        
+        if (Bdo_Cfg::user()->minAccesslevel(2)) {
+            $this->loadModel("Useralbum");
+            $this->loadModel("Users_exclusions");
+            $user_id = intval($_SESSION['userConnect']->user_id);
+            $dbs_serie = $this->Useralbum->getUserSerie($user_id, $page, $length,$term,$origin,$auteur);
+           // $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id,!$flg_achat);
+            $stat = $this->Useralbum->getStatistiques($user_id,"album","",$origin,"",$term);
+             $nbr = $stat["nbseries"];
+            $this->view->set_var('json', json_encode(array (
+                "nbserie" => $nbr,
+                "data" => $dbs_serie
+            )));
+        }
+         $this->view->layout = "ajax";
+        $this->view->render();
     }
 
 }
