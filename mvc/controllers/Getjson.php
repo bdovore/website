@@ -45,6 +45,9 @@ class GetJSON extends Bdo_Controller {
             case 'Userserie': 
                 $this->Userserie();
                 break;
+            case 'Useractu' :
+                $this->Useractu();
+                break;
             default :
                 break;
         }
@@ -373,6 +376,27 @@ class GetJSON extends Bdo_Controller {
                 "nbserie" => $nbr,
                 "data" => $dbs_serie
             )));
+        }
+        $this->view->layout = "ajax";
+        $this->view->render();
+    }
+    
+    private function Useractu() {
+        if (User::minAccesslevel(2)) {
+            $this->loadModel("Tome");
+            $nb_mois = getValInteger("nb_mois",1);
+            $page = getValInteger("page",1);
+            $mode = getValInteger("mode",1);
+            // creation du filtre par défaut sur les série
+            // mode : 1 => serie, 2 => auteur favoris, 3 => coffrets
+            $dbs_tome = $this->Tome->getUserActualite($mode, $nb_mois,$page);
+
+            $this->view->set_var('json', json_encode(array(
+                "data" => $dbs_tome->a_dataQuery,
+                "page" => $page,
+                "nb_mois" => $nb_mois,
+                "mode" => $mode
+                )));
         }
          $this->view->layout = "ajax";
         $this->view->render();
