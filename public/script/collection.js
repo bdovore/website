@@ -156,7 +156,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu) {
    */
   var exclu = exclu || false;
   $("#infoCollection" + id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
-  var url = $.bdovore.URL + "getjson?data=Useralbum&id_tome=" + id_tome;
+  var url = $.bdovore.URL + "getjson?data=Useralbum&id_edition=" + id_edition;
   $.getJSON(url, function(data) {
     if (typeof data[0] == 'undefined') {
       // l'album n'est pas dans la collection
