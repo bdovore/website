@@ -369,12 +369,16 @@ class GetJSON extends Bdo_Controller {
             $this->loadModel("Users_exclusions");
             $user_id = intval($_SESSION['userConnect']->user_id);
             $dbs_serie = $this->Useralbum->getUserSerie($user_id, $page, $length,$term,$origin,$auteur);
+            $a_obj = array();
+            foreach ($dbs_serie as $serie) {
+                $a_obj[] = $serie;
+            }
            // $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id,!$flg_achat);
             $stat = $this->Useralbum->getStatistiques($user_id,"album","",$origin,"",$term);
              $nbr = $stat["nbseries"];
             $this->view->set_var('json', json_encode(array (
                 "nbserie" => $nbr,
-                "data" => $dbs_serie
+                "data" => $a_obj 
             )));
         }
         $this->view->layout = "ajax";
