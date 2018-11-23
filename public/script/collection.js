@@ -158,7 +158,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu) {
   $("#infoCollection" + id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
   var url = $.bdovore.URL + "getjson?data=Useralbum&id_edition=" + id_edition;
   $.getJSON(url, function(data) {
-    if (typeof data[0] == 'undefined') {
+    if (typeof data.data[0] == 'undefined') {
       // l'album n'est pas dans la collection
       $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
       if (!exclu) {
@@ -194,8 +194,8 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu) {
     } else {
       // l'album est dans la collection
       // on récupère sa date d'ajout dans la collection
-      $dte = data[0].DATE_AJOUT.substring(8,10) + "/" +   data[0].DATE_AJOUT.substring(5,7) + "/" +  data[0].DATE_AJOUT.substring(0,4);
-      if (data[0].FLG_ACHAT === "O") {
+      $dte = data.data[0].DATE_AJOUT.substring(8,10) + "/" +   data.data[0].DATE_AJOUT.substring(5,7) + "/" +  data.data[0].DATE_AJOUT.substring(0,4);
+      if (data.data[0].FLG_ACHAT === "O") {
         // C'est un achat futur
         $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
                + '  Achat futur depuis le ' + $dte + '<br>'
@@ -230,7 +230,7 @@ function getInfoCollectionFromEdition(id_tome, id_edition) {
     $("#infoCollection" + id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
     var url = $.bdovore.URL + "getjson?data=Useralbum&id_edition=" + id_edition;
     $.getJSON(url, function(data) {
-        if (typeof data[0] == 'undefined') {
+        if (typeof data.data[0] == 'undefined') {
             // l'album n'est pas dans la collection : on ajoute les boutons
             var madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;"><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(' + id_tome + ', ' + id_edition + ',\'N\')" title="Ajouter cet album dans votre collection">Dans ma collection</a> - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(' + id_tome + ', ' + id_edition + ',\'O\')" title="A acheter prochainement">Futur Achat</a></div>';
             $("#infoCollection" + id_tome).html(madiv);
@@ -238,8 +238,8 @@ function getInfoCollectionFromEdition(id_tome, id_edition) {
         }
         else {
             // on récupère la date d'ajout de l'album dans la collection
-           var dte = data[0].DATE_AJOUT.substring(8,10) + "/" +   data[0].DATE_AJOUT.substring(5,7) + "/" +  data[0].DATE_AJOUT.substring(0,4);
-            if (data[0].FLG_ACHAT === "O") {
+           var dte = data.data[0].DATE_AJOUT.substring(8,10) + "/" +   data.data[0].DATE_AJOUT.substring(5,7) + "/" +  data.data[0].DATE_AJOUT.substring(0,4);
+            if (data.data[0].FLG_ACHAT === "O") {
                 $("#infoCollection" + id_tome).html('<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">ajouté à vos futurs achats le ' +dte + '<br><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(' + id_tome + ', ' + id_edition + ',\'N\')" title="Ajouter cet album dans votre collection">Dans ma collection</a> - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(' + id_edition + ')">Supprimer</a></div>');
             } else {
                 $("#infoCollection" + id_tome).html('<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">ajouté à votre collection le ' + dte + ' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(' + id_edition + ')">Supprimer</a></div>');

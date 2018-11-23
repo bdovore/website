@@ -329,7 +329,7 @@ class GetJSON extends Bdo_Controller {
                     $this->Edition->set_dataPaste(array(
                         "ID_EDITION" => $id_edition
                     ));
-                    $this->Edition->load();
+                    $dbs_album = $this->Edition->load();
                     $id_serie = $this->Edition->ID_SERIE;
                     } 
                     else {
@@ -339,12 +339,12 @@ class GetJSON extends Bdo_Controller {
                     $this->Tome->set_dataPaste(array(
                             "ID_TOME" => $id_tome
                         ));
-                    $this->Tome->load();
+                    $dbs_album = $this->Tome->load();
                     $id_serie = $this->Tome->ID_SERIE;
-                }
+                    }
             
                 $nbserie = $this->Useralbum->isSerieInCollection($id_serie,intval($_SESSION['userConnect']->user_id));
-                $infoalbum = $this->Useralbum->dbSelect->a_dataQuery;
+                $infoalbum["data"] = $this->Useralbum->dbSelect->a_dataQuery;
                 $infoalbum["nbAlbumSerie"] = $nbserie;
             }
             $this->view->set_var('json', json_encode($infoalbum));
