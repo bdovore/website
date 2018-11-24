@@ -693,7 +693,7 @@ iframe.tom {
 }
 
 .button-collection {
-    font-size: 1.5em;
-    background: none;
-    color: #006600;
+    font-size: 1.5em !important;
+    background: none !important;
+    color: #006600 !important;
 }
