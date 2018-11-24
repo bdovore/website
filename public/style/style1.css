@@ -1466,3 +1466,8 @@ div.textmasked {
 #typeTravail {
   border: none;
 }
+.button-collection {
+    font-size: 1.5em;
+    background: none;
+    color: #006600;
+}
