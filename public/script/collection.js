@@ -163,26 +163,26 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu) {
       $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
       if (!exclu) {
         $madiv = $madiv
-               +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
+               +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only button-collection"  '
                +       'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')" '
                +       'title="Ajouter cet album dans votre collection">'
-               +   'Collection</a>'
+               +   '&nbsp;&#10004;&nbsp;</a>'
                + ' '
-               +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
+               +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only button-collection"  '
                +        'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'O\')" '
                +        'title="A acheter prochainement">'
-               +   'Futur Achat</a>';
+               +   '&nbsp;&#128717;&nbsp;</a>';
             if (data.nbAlbumSerie > 0)
                 $madiv += ' ' + ($.browser.mobile ? '<br><br>' : '')
-               +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
+               +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only button-collection"  '
                +        'href="javascript:excludeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
                +        'title="Ignorer cet album">'
-               +   'Ignorer</a>';
+               +   '&nbsp;&#9940;&nbsp;</a>';
         }
       else {
             // C'est un album ignoré
             $madiv = $madiv
-                   +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
+                   +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only button-collection" '
                    +        'href="javascript:includeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
                    +        'title="Ne plus ignorer cet album">'
                    +   'Ne plus ignorer</a>';
@@ -199,22 +199,22 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu) {
         // C'est un achat futur
         $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
                + '  Achat futur depuis le ' + $dte + '<br>'
-               + '  <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"'
+               + '  <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only button-collection"  '
                + '     onclick="addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')"'
-               + '     title="Ajouter cet album dans votre collection">Acheter' 
+               + '     title="Ajouter cet album dans votre collection">&nbsp;&#10004;&nbsp;' 
                + '  </a>'
-               + '  <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"'
+               + '  <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only button-collection" '
                + '     title="Supprimer l\' édition de ma collection"'
-               + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">Supprimer'
+               + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">&nbsp;&#128465;&nbsp;'
                + '  </a>'
                + '</div>';
       } else {
         // on l'a réellement
         $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
                + '  Ajouté le ' + $dte + '<br>'
-               + '  <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"'
+               + '  <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only button-collection" '
                + '     title="Supprimer l\' édition de ma collection"'
-               + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">Supprimer'
+               + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">&nbsp;&#128465;&nbsp;'
                + '  </a>'
                + '</div>';
       }
