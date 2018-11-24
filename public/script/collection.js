@@ -171,7 +171,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu) {
                +        'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'O\')" '
                +        'title="A acheter prochainement"></a>';
             if (data.nbAlbumSerie > 0)
-                $madiv += ' ' + ($.browser.mobile ? '<br><br>' : '')
+                $madiv += ' ' 
                +   '<a class="far fa-eye-slash fa-border fa-2x button-collection"  '
                +        'href="javascript:excludeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
                +        'title="Ignorer cet album"></a>';
