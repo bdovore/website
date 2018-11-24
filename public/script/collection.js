@@ -163,26 +163,25 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu) {
       $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
       if (!exclu) {
         $madiv = $madiv
-               +   '<a class="fas fa-check fa-border fa-3x button-collection"  '
+               +   '<a class="fas fa-check fa-border fa-2x button-collection"  '
                +       'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')" '
                +       'title="Ajouter cet album dans votre collection"></a>'
                + ' '
-               +   '<a class="fas fa-gift fa-border fa-3x button-collection"  '
+               +   '<a class="fas fa-gift fa-border fa-2x button-collection"  '
                +        'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'O\')" '
                +        'title="A acheter prochainement"></a>';
             if (data.nbAlbumSerie > 0)
                 $madiv += ' ' + ($.browser.mobile ? '<br><br>' : '')
-               +   '<a class="far fa-eye-slash fa-border fa-3x button-collection"  '
+               +   '<a class="far fa-eye-slash fa-border fa-2x button-collection"  '
                +        'href="javascript:excludeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
                +        'title="Ignorer cet album"></a>';
         }
       else {
             // C'est un album ignoré
             $madiv = $madiv
-                   +   '<a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" '
+                   +   '<a class="far fa-eye-slash fa-border fa-2x button-collection collection-select" '
                    +        'href="javascript:includeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
-                   +        'title="Ne plus ignorer cet album">'
-                   +   'Ne plus ignorer</a>';
+                   +        'title="Ne plus ignorer cet album"></a>';
 
           
         }
@@ -195,18 +194,18 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu) {
       if (data.data[0].FLG_ACHAT === "O") {
         // C'est un achat futur
         $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
-               + '  <a class="fas fa-check fa-border fa-3x button-collection"  '
+               + '  <a class="fas fa-check fa-border fa-2x button-collection"  '
                + '     onclick="addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')"'
                + '     title="Ajouter cet album dans votre collection">' 
                + '  </a>'
-               + '  <a class="fas fa-gift fa-border fa-3x button-collection collection-select" '
+               + '  <a class="fas fa-gift fa-border fa-2x button-collection collection-select" '
                + '     title="Achat futur depuis le ' + $dte + '. Supprimer ?"'
                + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')"></a>'
                + '</div>';
       } else {
         // on l'a réellement
         $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
-               + '  <a class="fas fa-check fa-border fa-3x button-collection collection-select" '
+               + '  <a class="fas fa-check fa-border fa-2x button-collection collection-select" '
                + '     title="Ajouté le ' + $dte + '.Supprimer l\' édition de ma collection ?"'
                + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">'
                + '  </a>'
