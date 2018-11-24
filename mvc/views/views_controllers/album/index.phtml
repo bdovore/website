@@ -350,7 +350,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
           $("#actionCollection").html("<img src='"+$.bdovore.URL+ "script/ajax-loader.gif'>");
      var url = $.bdovore.URL+"getjson?data=Useralbum&id_edition=<?php echo $view->tome->ID_EDITION?>";
       $.getJSON(url, function (data) {
-          if (typeof data[0] == 'undefined') {
+          if (typeof data.data[0] == 'undefined') {
                // l'album n'est pas dans la collection : on ajoute les boutons
                 $("#info_collection").hide();
                 // Affichage des boutons
@@ -360,7 +360,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
            }
            else {
                $("#info_collection").show();
-                var dte = data[0].DATE_AJOUT.substring(8,10) + "/" +   data[0].DATE_AJOUT.substring(5,7) + "/" +  data[0].DATE_AJOUT.substring(0,4);
+                var dte = data.data[0].DATE_AJOUT.substring(8,10) + "/" +   data.data[0].DATE_AJOUT.substring(5,7) + "/" +  data.data[0].DATE_AJOUT.substring(0,4);
                /* if (data[0].FLG_ACHAT === "O") {
                     $("#actionCollection" ).html('<div id="addAlbum' + <?php echo $view->tome->ID_EDITION; ?> + '" style="font-size:0.9em;">futur achat depuis le ' +dte + '<br><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="#" onclick="addAlbum(' + <?php echo $view->tome->ID_TOME; ?> + ', ' + <?php echo $view->tome->ID_EDITION; ?> + ',false\'N\');$(\'#cb_achat\').attr(\'checked\', false);" title="Ajouter cet album dans votre collection">Dans ma collection</a>  - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(' + <?php echo $view->tome->ID_EDITION; ?> + ')">Supprimer</a></div>');
                 } else {
@@ -369,32 +369,32 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
               // $("#actionCollection").html('<div id="addAlbum<?php echo $view->tome->ID_EDITION; ?>" style="font-size:0.9em;">ajouté à votre collection le '+data[0].DATE_ACHAT.substring(0,10) +' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(<?php echo $view->tome->ID_EDITION; ?>)">Supprimer</a></div>');
 
                // on renseigne chaque champs du formulaire
-               if (data[0].FLG_ACHAT == 'O') {
+               if (data.data[0].FLG_ACHAT == 'O') {
                    $('#cb_achat').attr('checked', true);
                } else {
-                   $("#date_achat").val(data[0].DATE_ACHAT.substring(8,10)+ '/' + data[0].DATE_ACHAT.substring(5,7)+ '/' + data[0].DATE_ACHAT.substring(0,4));
+                   $("#date_achat").val(data.data[0].DATE_ACHAT.substring(8,10)+ '/' + data.data[0].DATE_ACHAT.substring(5,7)+ '/' + data.data[0].DATE_ACHAT.substring(0,4));
                }
-                if (data[0].FLG_PRET == 'O') {
+                if (data.data[0].FLG_PRET == 'O') {
                    $('#cb_pret').attr('checked', true);
                }
-               if (data[0].FLG_LU == 'O') {
+               if (data.data[0].FLG_LU == 'O') {
                    $('#cb_lu').attr('checked', true);
                }
-               $("#prix").val(data[0].cote);
+               $("#prix").val(data.data[0].cote);
 
-                if (data[0].FLG_TETE == 'O') {
+                if (data.data[0].FLG_TETE == 'O') {
                    $('#cb_tete').attr('checked', true);
                }
-               if (data[0].FLG_DEDICACE == 'O') {
+               if (data.data[0].FLG_DEDICACE == 'O') {
                    $('#cb_dedicace').attr('checked', true);
                }
-               if (data[0].FLG_CADEAU == 'O') {
+               if (data.data[0].FLG_CADEAU == 'O') {
                    $('#cb_cadeau').attr('checked', true);
                }
-               $("#nom_pret").val(data[0].NOM_PRET);
-               $("#email_pret").val(data[0].EMAIL_PRET);
-               $("#remarque").val(data[0].comment);
-                $("#user_edition").val(data[0].ID_EDITION);
+               $("#nom_pret").val(data.data[0].NOM_PRET);
+               $("#email_pret").val(data.data[0].EMAIL_PRET);
+               $("#remarque").val(data.data[0].comment);
+                $("#user_edition").val(data.data[0].ID_EDITION);
            }
 
         }
