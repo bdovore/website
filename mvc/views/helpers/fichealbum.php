@@ -440,7 +440,7 @@ class FicheAlbum {
                 <td style='vertical-align:top'>".$this->urlalbum($tome,'couvBig')."</td>
             <td style='vertical-align:top'>
                 <strong>".$this->urlalbum($tome,'albTitle',$is_edition = false, $sponsor = true,  $gotocomment= true)."</strong><br>
-                <span id='noteTome".$tome->ID_TOME."'> </span>
+                <span id='noteTome".$tome->ID_TOME."_".$tome->user_id."'> </span>
                 <p class='fiche_album'>
                 S&eacute;rie : ".$this->urlSerie($tome)." <br>
                 Publié par <a href='./guest?user=$tome->user_id'>$tome->username</a> le $tome->DTE_POST 
@@ -450,7 +450,7 @@ class FicheAlbum {
             </td>
             </table>
              </div>
-             <script>$('#noteTome$tome->ID_TOME').raty({score: ".($tome->NOTE/2).", readOnly: true});</script>";
+             <script>$('#noteTome".$tome->ID_TOME."_".$tome->user_id."').raty({score: ".($tome->NOTE/2).", readOnly: true});</script>";
          return $html;
     }
 }

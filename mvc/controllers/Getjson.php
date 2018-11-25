@@ -48,6 +48,8 @@ class GetJSON extends Bdo_Controller {
             case 'Useractu' :
                 $this->Useractu();
                 break;
+            case "Albummanquant" : 
+                $this->Albummanquant();
             default :
                 break;
         }
@@ -403,6 +405,36 @@ class GetJSON extends Bdo_Controller {
                 )));
         }
          $this->view->layout = "ajax";
+        $this->view->render();
+    }
+    
+    private function Albummanquant () {
+        // liste les albums manquants pour une série si id_serie renseigné, renvoie les séries à compléter sinon
+         if (User::minAccesslevel(2)) {
+             $id_serie = getValInteger("id_serie",0);
+             $user_id = intval($_SESSION['userConnect']->user_id);
+             if ($id_serie) {
+                  $this->loadModel("Useralbum");
+                  $this->loadModel("Tome");
+                  $nbalbum = $this->Useralbum->isSerieInCollection($id_serie,$_SESSION['userConnect']->user_id);
+                  $dbs_tomeComplete  = $this->Tome->getListAlbumToComplete($_SESSION['userConnect']->user_id,$id_serie , 0);
+                  $nbmanquant =  count($dbs_tomeComplete->a_dataQuery);
+                  $this->view->set_var('json', json_encode(array(
+                     "nbalbum" => $nbalbum,
+                     "nbmanquant"=> $nbmanquant,
+                     "data" => $dbs_tomeComplete->a_dataQuery
+                      
+                  )));
+             } else {
+                 // récupérer la liste des séries à compléter
+                 $this->loadModel("Users_exclusions"); 
+                 $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id, 0);
+                 $this->view->set_var('json', json_encode(array(
+                     "data" => $listSerie)));
+             }
+             
+         }
+          $this->view->layout = "ajax";
         $this->view->render();
     }
 
