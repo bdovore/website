@@ -130,7 +130,7 @@ if (isset($view->dbs_comment)) {
                                             <meta itemprop='ratingValue' content='<?php echo $tome->NOTE / 2; ?>' />   
                                             <meta itemprop="worstRating" content = "1">
                                             <meta itemprop="bestRating" content = "5">
-                                            <span id='noteTome<?php echo $tome->ID_TOME; ?>'> </span>
+                                            <span id='noteTome<?php echo $tome->ID_TOME."_".$tome->user_id; ?>'> </span>
                                     </div>
                                         <?php if (User::minAccesslevel(1)) { ?>
                                     <a title="Passer ce commentaire en status privé" onclick="setCommentPrivate(<?php echo $tome->user_id;?>,<?php echo $tome->ID_TOME; ?>);"><img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif"></a>
@@ -144,7 +144,7 @@ if (isset($view->dbs_comment)) {
                         </tr>
                         </table>
                     </div>
-                  <?php if ($tome->NOTE > 0) { ?> <script>$('#noteTome<?php echo $tome->ID_TOME; ?>').raty({score: <?php echo $tome->NOTE / 2; ?>, readOnly: true});</script><?php } ?>
+                  <?php if ($tome->NOTE > 0) { ?> <script>$('#noteTome<?php echo $tome->ID_TOME."_".$tome->user_id; ?>').raty({score: <?php echo $tome->NOTE / 2; ?>, readOnly: true});</script><?php } ?>
 
     <?php
     }
