@@ -417,7 +417,7 @@ class GetJSON extends Bdo_Controller {
                   $this->loadModel("Useralbum");
                   $this->loadModel("Tome");
                   $nbalbum = $this->Useralbum->isSerieInCollection($id_serie,$_SESSION['userConnect']->user_id);
-                  $dbs_tomeComplete  = $this->Tome->getListAlbumToComplete($_SESSION['userConnect']->user_id,$id_serie , 0);
+                  $dbs_tomeComplete  = $this->Tome->getListAlbumToComplete($_SESSION['userConnect']->user_id,$id_serie , 1);
                   $nbmanquant =  count($dbs_tomeComplete->a_dataQuery);
                   $this->view->set_var('json', json_encode(array(
                      "nbalbum" => $nbalbum,
