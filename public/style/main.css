@@ -693,14 +693,14 @@ iframe.tom {
 }
 
 .button-collection {
-    font-size: 2em ;
-    background: #EEEEEE ;
-    color: #888888 ;
-   
+    font-size: 1.5em ;
+    background: white ;
+    color: #c2b7b7;
+   border: 0.02em solid;
 }
 .button-collection:hover {
     background: #BBBBBB ;
 }
 .collection-select {
-    color: #006600 !important;
+    color: #990000 !important;
 }
