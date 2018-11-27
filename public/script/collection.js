@@ -169,7 +169,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly
       $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
       if (!exclu) {
         $madiv = $madiv
-               +   '<a class="fas fa-plus fa-border button-collection"  '
+               +   '<a class="fas fa-check fa-border button-collection"  '
                +       'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')" '
                +       'title="Ajouter cet album dans votre collection"></a>'
                + ' '
@@ -201,7 +201,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly
         // C'est un achat futur
         $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
                 + 'Achat futur depuis le ' + $dte + "<br>"
-               + '  <a class="fas fa-plus fa-border button-collection"  '
+               + '  <a class="fas fa-check fa-border button-collection"  '
                + '     onclick="addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')"'
                + '     title="Ajouter cet album dans votre collection">' 
                + '  </a>'
