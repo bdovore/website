@@ -200,7 +200,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly
       if (data.data[0].FLG_ACHAT === "O") {
         // C'est un achat futur
         $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
-                + 'Achat futur depuis le ' + $dte + "<br>"
+                + '&#9825; Achat futur depuis le ' + $dte + "<br>"
                + '  <a class="fas fa-check fa-border button-collection"  '
                + '     onclick="addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')"'
                + '     title="Ajouter cet album dans votre collection">' 
