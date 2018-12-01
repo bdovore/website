@@ -78,7 +78,7 @@ class FicheAlbum {
 
         // nom de la serie
         if ($o_tome->NOM_SERIE AND ($o_tome->TITRE_TOME AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME)) AND $getUrlSerie)) {
-            $html .= '<tr><td>Série : </td><td>' . $this->urlSerie($o_tome) . '</td></tr>';
+            $html .= '<tr><td>Série </td><td>' . $this->urlSerie($o_tome) . '</td></tr>';
         }
 
         $html .= '</table>';
@@ -114,16 +114,16 @@ class FicheAlbum {
         // nom de la serie
         $html.="<p class='fiche_album'>";
         if ($o_tome->NOM_SERIE AND ($o_tome->TITRE_TOME AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME)) AND $getUrlSerie)) {
-            $html .= 'Série : ' . $this->urlSerie($o_tome) . '<br>';
+            $html .= 'Série ' . $this->urlSerie($o_tome) . '<br>';
         }
 
         // genre
         if ($o_tome->NOM_GENRE) {
-            $html .= 'Genre : ';
+            //$html .= 'Genre : ';
             $html .= '<i><span itemprop="genre"> ' . $o_tome->NOM_GENRE . '</span></i><br>';
         }
         if ($o_tome->scpseudo) {
-            $html .= 'Auteur(s) : ';
+           // $html .= 'Auteur(s) : ';
             $url_scenar = $this->urlAuteur(array("ID_AUTEUR" => $o_tome->ID_SCENAR, "PSEUDO" =>$o_tome->scpseudo ));
             $url_dessin = $this->urlAuteur(array("ID_AUTEUR" => $o_tome->ID_DESSIN, "PSEUDO" =>$o_tome->depseudo ));
             $html .= '<i>' . $url_scenar . ($o_tome->ID_SCENAR == $o_tome->ID_DESSIN ? '' : " / " . $url_dessin ) . '</i><br>';
@@ -131,20 +131,21 @@ class FicheAlbum {
 
         // editeur
         if ($o_tome->NOM_EDITEUR) {
-            $html .= 'Editeur : ';
+            $html .= 'Edition ';
             $html .= '<i><span itemprop="publisher">' . $o_tome->NOM_EDITEUR . '</span></i>';
             if (($o_tome->NOM_COLLECTION) and ($o_tome->NOM_COLLECTION != '<N/A>')) {
                 $html .= ' -  <i>' . $o_tome->NOM_COLLECTION . '</i>';
+            }
+            if ($o_tome->DATE_PARUTION_EDITION) {
+           // $html .= 'Date parution : ';
+            $html .= '<i> ('.$this->dateParution($o_tome->DATE_PARUTION_EDITION). ')</i>';
             }
             $html .= "<br>";
         }
 
         // collection editeur
         // date de parution
-        if ($o_tome->DATE_PARUTION_EDITION) {
-            $html .= 'Date parution : ';
-            $html .= $this->dateParution($o_tome->DATE_PARUTION_EDITION);
-        }
+        
 
         $html .= "</p>";
 
