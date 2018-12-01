@@ -205,7 +205,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly
                + '     onclick="addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')"'
                + '     title="Ajouter cet album dans votre collection">' 
                + '  </a>'
-               + '  <a class="fas fa-trash-alt fa-border button-collection" '
+               + '  <a class="far fa-trash-alt fa-border button-collection" '
                + '     title="Supprimer ?"'
                + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')"></a>'
                + '</div>';
@@ -213,7 +213,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly
         // on l'a réellement
         $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
                 + '<span style="font-size:1.5em">&#10003;</span> Ajouté le ' + $dte + ' '
-               + '  <a class="fas fa-trash-alt fa-border button-collection" '
+               + '  <a class="far fa-trash-alt fa-border button-collection" '
                + '     title="Supprimer l\' édition de ma collection ?"'
                + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">'
                + '  </a>'
