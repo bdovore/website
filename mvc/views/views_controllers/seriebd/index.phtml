@@ -67,12 +67,7 @@
           </font>
           <?php echo $view->serie->LIB_FLG_FINI_SERIE; ?>
           <br />
-          <?php if ($view->serie->HISTOIRE_SERIE) { ?>
-                  <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
-                    <strong>Synopsis : </strong>
-                  </font>
-                  <?php echo nl2br($view->serie->HISTOIRE_SERIE); ?>
-          <?php } ?>
+        
 
           <?php if ($view->auteur) { ?>
                   <br />
@@ -89,8 +84,8 @@
                           <a class="fas fa-check fa-border button-collection" 
                               href="javascript:addSerie(<?php echo $view->serie->ID_SERIE; ?>,'N')" 
                               title="Ajouter tous les albums dans votre collection">
-                          </a> - 
-                          <a class="fas fa-cart-plus fa-border button-collection" 
+                          </a>  
+                          <a class="far fa-heart fa-border button-collection" 
                               href="javascript:addSerie(<?php echo $view->serie->ID_SERIE; ?>,'O')" 
                               title="Ajouter tous les albums en futur achat">
                           </a>
@@ -122,7 +117,13 @@
             <?php } ?>
           <?php } ?>
         </div>
-
+  <?php if ($view->serie->HISTOIRE_SERIE) { ?>
+         <hr class="expSep" />
+                  <font color="#990000" size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+                    <strong>Synopsis : </strong>
+                  </font>
+                  <?php echo nl2br($view->serie->HISTOIRE_SERIE); ?>
+          <?php } ?>
 
         <?php echo $view->SERNOTE; ?>
         <div class="addthis_inline_share_toolbox" style="float: right;">

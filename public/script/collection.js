@@ -173,7 +173,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly
                +       'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')" '
                +       'title="Ajouter cet album dans votre collection"></a>'
                + ' '
-               +   '<a class="fas fa-cart-plus fa-border button-collection"  '
+               +   '<a class="far fa-heart fa-border button-collection"  '
                +        'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'O\')" '
                +        'title="A acheter prochainement"></a>';
             if (data.nbAlbumSerie > 0)
