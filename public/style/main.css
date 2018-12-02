@@ -691,12 +691,21 @@ iframe.tom {
   background-color: #855a28 !important; */
   background-color: rgb(108,48,48) !important;
 }
+.for-big-screen {
+    font-size: 0.75em !important;
+}
+.button-simple {
+    float: left;
+    width: 40px;
+    text-align:center;
+}
 
 .button-collection {
     font-size: 1.5em ;
     background: white ;
     color: #786f6f;
    border: 0.02em solid;
+   margin-bottom: -3px;
 }
 .button-collection:hover {
     background: #BBBBBB ;

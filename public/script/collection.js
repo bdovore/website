@@ -169,18 +169,22 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly
       $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
       if (!exclu) {
         $madiv = $madiv
-               +   '<a class="fas fa-check fa-border button-collection"  '
+               +   '<div class="button-simple"><a   '
                +       'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')" '
-               +       'title="Ajouter cet album dans votre collection"></a>'
+               +       'title="Ajouter cet album dans votre collection">'
+               +        '<span class="fas fa-check fa-border button-collection"></span>'
+               +        '<span class="for-big-screen">J\'ai</span></a></div>'
                + ' '
-               +   '<a class="far fa-heart fa-border button-collection"  '
+               +   '<div class="button-simple"><a   '
                +        'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'O\')" '
-               +        'title="A acheter prochainement"></a>';
+               +        'title="A acheter prochainement"><span class="far fa-heart fa-border button-collection"></span>'
+               +         '<span class="for-big-screen">Je veux</span></a></div>';
             if (data.nbAlbumSerie > 0)
                 $madiv += ' ' 
-               +   '<a class="fas fa-ban fa-border button-collection"  '
+               +   '<div class="button-simple"><a '
                +        'href="javascript:excludeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
-               +        'title="Ignorer cet album"></a>';
+               +        'title="Ignorer cet album"><span class="fas fa-ban fa-border button-collection" ></span>'
+               +          '<span class="for-big-screen">Ignorer</span></a></div>';
         }
       else {
             // C'est un album ignoré
@@ -201,13 +205,13 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly
         // C'est un achat futur
         $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
                 + '&#9825; Achat futur depuis le ' + $dte + "<br>"
-               + '  <a class="fas fa-check fa-border button-collection"  '
+               + ' <div class="button-simple"> <a   '
                + '     onclick="addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')"'
                + '     title="Ajouter cet album dans votre collection">' 
-               + '  </a>'
-               + '  <a class="far fa-trash-alt fa-border button-collection" '
-               + '     title="Supprimer ?"'
-               + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')"></a>'
+               + '  <span class="fas fa-check fa-border button-collection"></span><span class="for-big-screen">J\'ai</span></div>'
+                + ' <div class="button-simple">'
+               + '  <a  title="Supprimer ?"  onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">'
+               + '   <span class="far fa-trash-alt fa-border button-collection"></span><span class="for-big-screen">Supprimer</span></div>'
                + '</div>';
       } else {
         // on l'a réellement
