@@ -12,7 +12,7 @@ $jquery = $view->getHelper('jquery');
 <meta name="description" content="<?php echo htmlentities($view->DESCRIPTION);?> BDovore - Le site des collectionneurs de BD. G&eacute;rer votre collection de bandes dessin&eacute;es en ligne et gratuitement !" />
 <meta name="keywords" content="<?php echo htmlentities($view->KEYWORD);?> bd, bandes dessin&eacute;es, bandes, dessin&eacute;es, bande, dessin&eacute;e, profiler, bdprofiler, comics, manga, collection, collections, bdvore, collectionneur, dedicace, auteurs, albums, editeurs, gratuit, base de donn&eacute;es, <?php echo $view->PAGEKEYWORD;?>" />
 <meta name="author" content="Tomlameche/Latruffe/Z&eacute;as" />
-
+<meta name="google-play-app" content="app-id=com.PaulOlivier.bdovore">
 <meta name="category" content="BD, bande dessinee" />   
 <meta name="robots" content="index, follow" />
 <?php if (isset($view->opengraph)) { ?>
@@ -85,6 +85,8 @@ $jquery = $view->getHelper('jquery');
     type="text/css" />
 <script src="<?php echo BDO_URL;?>script/comment.js" type="text/javascript"></script>
 <script src="<?php echo BDO_URL;?>jquery/jquery.cookie.js" type="text/javascript"></script>
+<link rel="stylesheet" href="<?php echo BDO_URL;?>jquery/jquery.smartbanner.css" type="text/css" media="screen">
+<script src="<?php echo BDO_URL;?>jquery/jquery.smartbanner.js"></script>
 <script src="<?php echo BDO_URL;?>script/detectmobilebrowser.js" type="text/javascript"></script>
 <?php
 if (User::minAccesslevel(2)) {
@@ -122,6 +124,10 @@ if (!$.browser.mobile) {
             } 
             
         });
+        $.smartbanner({
+            title: 'Bdovore',
+            author: 'Paul-Olivier'
+          });
     });
  }
 
