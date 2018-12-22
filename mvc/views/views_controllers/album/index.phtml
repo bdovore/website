@@ -173,7 +173,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                 } ?></font>
                 <br>
                 <span class="petite_police">
-                            EAN : <span itemprop="isbn"> <?php echo $view->tome->EAN_EDITION;?></span> || ISBN : <span itemprop="isbn"><?php echo $view->tome->ISBN_EDITION;?></span> || ID-BDovore : <?php echo $view->tome->ID_TOME;?> 
+                         <?php if ($view->tome->EAN_EDITION) {?>   EAN : <span itemprop="isbn"> <?php echo $view->tome->EAN_EDITION;?> </span>| <?php } ?>
+                         <?php if ($view->tome->ISBN_EDITION AND !$view->tome->EAN_EDITION) {?> ISBN : <span itemprop="isbn"><?php echo $view->tome->ISBN_EDITION;?> </span>| <?php } ?> ID-BDovore : <?php echo $view->tome->ID_TOME;?> 
                 </span>
                 <br>
                 <div class="action" id="action-menu">

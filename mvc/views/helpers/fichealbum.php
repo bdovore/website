@@ -9,9 +9,9 @@ class FicheAlbum {
                 $html .= '<i>Intégrale - </i> ';
             }
 
-            if ($o_tome->NUM_TOME AND preg_match("/n°".$o_tome->NUM_TOME."\b/i",$o_tome->TITRE_TOME) !== 1) {
+           /* if ($o_tome->NUM_TOME AND preg_match("/n°".$o_tome->NUM_TOME."\b/i",$o_tome->TITRE_TOME) !== 1) {
                 $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
-            }
+            }*/
 
             if ($url) {
                 $html .=  "<strong>".$this->urlAlbum($o_tome, 'albTitle')."</strong>" ;
@@ -114,7 +114,7 @@ class FicheAlbum {
         // nom de la serie
         $html.="<p class='fiche_album'>";
         if ($o_tome->NOM_SERIE AND ($o_tome->TITRE_TOME AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME)) AND $getUrlSerie)) {
-            $html .= 'Série ' . $this->urlSerie($o_tome) . '<br>';
+            $html .=  $this->urlSerie($o_tome) .'<br>';
         }
 
         // genre
@@ -320,7 +320,7 @@ class FicheAlbum {
         }
 
         $html = '<a href="' . $this->getURLSerie($o_serie,$page) .'" title="' . $o_serie->NOM_SERIE . '"'.( $target ? ' target="'. $target.'"' : '') .'>
-            ' . $o_serie->NOM_SERIE . '</a>';
+            ' . $o_serie->NOM_SERIE . ($o_serie->NUM_TOME ? " #".$o_serie->NUM_TOME : "" ) . '</a>';
 
         if (Bdo_Cfg::user()->minAccesslevel(1)) {
             $html .= '&nbsp;&nbsp;<a class="fancybox fancybox.iframe {width:600,height:600}" href="' .BDO_URL .'admin/editserie?serie_id=' . $o_serie->ID_SERIE . '"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
@@ -443,7 +443,7 @@ class FicheAlbum {
                 <strong>".$this->urlalbum($tome,'albTitle',$is_edition = false, $sponsor = true,  $gotocomment= true)."</strong><br>
                 <span id='noteTome".$tome->ID_TOME."_".$tome->user_id."'> </span>
                 <p class='fiche_album'>
-                S&eacute;rie : ".$this->urlSerie($tome)." <br>
+                ".(($tome->NOM_SERIE AND ($tome->TITRE_TOME AND (strtolower($tome->NOM_SERIE) != strtolower($tome->TITRE_TOME)) )) ? $this->urlSerie($tome) : "")." <br>
                 Publié par <a href='./guest?user=$tome->user_id'>$tome->username</a> le $tome->DTE_POST 
                     
                 </p>

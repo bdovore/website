@@ -450,26 +450,27 @@ class Tome extends Bdo_Db_Line
         // retourne le nombre d'album pour un auteur, et eventuellement pour l'activité donnée
         switch ($activite) {
             case 0:
-                $where = "WHERE bd_tome.id_scenar = ".intval($id_auteur). " OR bd_tome.id_scenar_alt  = ".intval($id_auteur). " OR bd_tome.id_dessin = ".intval($id_auteur).
+                $where = " WHERE bd_tome.id_scenar = ".intval($id_auteur). " OR bd_tome.id_scenar_alt  = ".intval($id_auteur). " OR bd_tome.id_dessin = ".intval($id_auteur).
                  " OR bd_tome.id_dessin_alt = ".intval($id_auteur) . " OR bd_tome.id_color = ".intval($id_auteur). " OR bd_tome.id_color_alt = ".intval($id_auteur);
                 break;
             case 1:
                 // scenariste
-                $where = "WHERE bd_tome.id_scenar = ".intval($id_auteur). " OR bd_tome.id_scenar_alt  = ".intval($id_auteur);
+                $where = " WHERE bd_tome.id_scenar = ".intval($id_auteur). " OR bd_tome.id_scenar_alt  = ".intval($id_auteur);
                 break;
 
             case 2 :
                 // dessinateur
-                $where = "WHERE  bd_tome.id_dessin = ".intval($id_auteur)." OR bd_tome.id_dessin_alt = ".intval($id_auteur) ;
+                $where = " WHERE  bd_tome.id_dessin = ".intval($id_auteur)." OR bd_tome.id_dessin_alt = ".intval($id_auteur) ;
 
                 break;
 
             case 3 :
                 // coloriste
-                $where = "WHERE bd_tome.id_color = ".intval($id_auteur). " OR bd_tome.id_color_alt = ".intval($id_auteur);
+                $where = " WHERE bd_tome.id_color = ".intval($id_auteur). " OR bd_tome.id_color_alt = ".intval($id_auteur);
                 break;
         }
-         $nb = Db_CountRow($this->select().$where );
+        $query = "select count(*) from bd_tome ".$where; 
+         $nb = Db_CountRow($query );
 
          return $nb;
     }

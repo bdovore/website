@@ -64,6 +64,7 @@ class Comment extends Bdo_Db_Line
                c.`DTE_POST` ,
                u.`username` ,
                bd_tome.titre as TITRE_TOME,
+               bd_tome.NUM_TOME,
                bd_edition.IMG_COUV,
                 s.ID_SERIE,
             s.nom as NOM_SERIE
