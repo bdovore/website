@@ -9,9 +9,9 @@ class FicheAlbum {
                 $html .= '<i>Intégrale - </i> ';
             }
 
-           /* if ($o_tome->NUM_TOME AND preg_match("/n°".$o_tome->NUM_TOME."\b/i",$o_tome->TITRE_TOME) !== 1) {
+           if ($o_tome->NUM_TOME AND preg_match("/n°".$o_tome->NUM_TOME."\b/i",$o_tome->TITRE_TOME) !== 1) {
                 $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
-            }*/
+            }
 
             if ($url) {
                 $html .=  "<strong>".$this->urlAlbum($o_tome, 'albTitle')."</strong>" ;
