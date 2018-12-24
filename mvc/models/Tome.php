@@ -35,6 +35,7 @@ class Tome extends Bdo_Db_Line
 
             g.ID_GENRE,
             g.libelle as NOM_GENRE,
+            g.ORIGINE,
 
             en.ID_EDITION,
             en.IMG_COUV,

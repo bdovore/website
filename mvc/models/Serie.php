@@ -80,6 +80,7 @@ class Serie extends Bdo_Db_Line
                     `bd_genre`.`ID_GENRE`,
 
                     `bd_genre`.`LIBELLE` as `NOM_GENRE`,
+                    `bd_genre`.`ORIGINE`, 
 
 
                     `bd_edition_stat`.`NBR_USER_ID_SERIE`,

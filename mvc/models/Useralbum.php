@@ -160,8 +160,9 @@ class Useralbum extends Bdo_Db_Line
             $query = "
 
             select
-                    count(*) as countofalb,
-                    count(distinct t.id_serie) as countofserie
+                    count(*) as countofedition,
+                    count(distinct t.id_serie) as countofserie,
+                    count(distinct t.id_tome) as countofalb
             from
                     users_album u
                     INNER JOIN bd_edition en ON en.id_edition = u.id_edition
@@ -195,6 +196,8 @@ class Useralbum extends Bdo_Db_Line
             $obj = Db_fetch_object($resultat);
 
             $nbtomes = $obj->countofalb;
+            
+            $nbeditidion = $obj->countofedition;
 
             $nbseries = $obj->countofserie;
 
@@ -303,6 +306,7 @@ class Useralbum extends Bdo_Db_Line
             "nbcoffrets" => $nbcoffrets,
             "nbintegrales" => $nbintegrales,
             "nbfuturs_achats" => $nbfuturs_achats,
+            "nbeditions" => $nbeditidion,
             "nbtomes" => $nbtomes,
             "nbseries" => $nbseries,
             "nbauteurs" => $nbauteurs
