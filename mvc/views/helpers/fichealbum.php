@@ -320,7 +320,7 @@ class FicheAlbum {
         }
 
         $html = '<a href="' . $this->getURLSerie($o_serie,$page) .'" title="' . $o_serie->NOM_SERIE . '"'.( $target ? ' target="'. $target.'"' : '') .'>
-            ' . $o_serie->NOM_SERIE . ($o_serie->NUM_TOME ? " #".$o_serie->NUM_TOME : "" ) . '</a>';
+            ' . $o_serie->NOM_SERIE . ($o_serie->NUM_TOME ? " n°".$o_serie->NUM_TOME : "" ) . '</a>';
 
         if (Bdo_Cfg::user()->minAccesslevel(1)) {
             $html .= '&nbsp;&nbsp;<a class="fancybox fancybox.iframe {width:600,height:600}" href="' .BDO_URL .'admin/editserie?serie_id=' . $o_serie->ID_SERIE . '"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';

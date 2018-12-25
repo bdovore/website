@@ -22,7 +22,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     ?>
     <tr>
     <td class="milieu" colspan="3">
-    <?php echo $ficheAlbum->serie($view->a_row[0]);?>
+    <?php 
+    unset($view->a_row[0]->NUM_TOME);
+    echo $ficheAlbum->serie($view->a_row[0]);?>
     </td>
     </tr>
         <?php
@@ -44,8 +46,10 @@ foreach ($view->a_row as $row) {
         unset($row->NOM_SERIE);
         echo $ficheAlbum->big($row);
     }
-    else
+    else {
+        unset($row->NUM_TOME);   
         echo $ficheAlbum->serie($row);
+        }
     ?>
 
         </td>
