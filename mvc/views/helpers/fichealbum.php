@@ -2,7 +2,7 @@
 
 class FicheAlbum {
 
-    public function getTitreTome ($o_tome,$url=true) {
+    public function getTitreTome ($o_tome,$url=true, $comment = false) {
         $html = "";
         if ($o_tome->TITRE_TOME) {
             if ($o_tome->FLG_INT_TOME == "O" and stripos(strtolower($o_tome->TITRE_TOME),"intégrale") === false) {
@@ -14,7 +14,7 @@ class FicheAlbum {
             }
 
             if ($url) {
-                $html .=  "<strong>".$this->urlAlbum($o_tome, 'albTitle')."</strong>" ;
+                $html .=  "<strong>".$this->urlAlbum($o_tome, 'albTitle', $is_edition = false, $sponsor=true,$gotocomment = $comment)."</strong>" ;
             } else {
                 $html .=  "<span itemprop='name'>".$o_tome->TITRE_TOME.'</span>';
             }
@@ -320,7 +320,7 @@ class FicheAlbum {
         }
 
         $html = '<a href="' . $this->getURLSerie($o_serie,$page) .'" title="' . $o_serie->NOM_SERIE . '"'.( $target ? ' target="'. $target.'"' : '') .'>
-            ' . $o_serie->NOM_SERIE . ($o_serie->NUM_TOME ? " n°".$o_serie->NUM_TOME : "" ) . '</a>';
+            ' . $o_serie->NOM_SERIE . '</a>';
 
         if (Bdo_Cfg::user()->minAccesslevel(1)) {
             $html .= '&nbsp;&nbsp;<a class="fancybox fancybox.iframe {width:600,height:600}" href="' .BDO_URL .'admin/editserie?serie_id=' . $o_serie->ID_SERIE . '"><img src="' . BDO_URL_IMAGE . 'edit.gif" border=0></a>';
@@ -440,7 +440,7 @@ class FicheAlbum {
             <tr class='listAlbum'>
                 <td style='vertical-align:top'>".$this->urlalbum($tome,'couvBig')."</td>
             <td style='vertical-align:top'>
-                <strong>".$this->urlalbum($tome,'albTitle',$is_edition = false, $sponsor = true,  $gotocomment= true)."</strong><br>
+                ".$this->getTitreTome($tome, true, true)."<br>
                 <span id='noteTome".$tome->ID_TOME."_".$tome->user_id."'> </span>
                 <p class='fiche_album'>
                 ".(($tome->NOM_SERIE AND ($tome->TITRE_TOME AND (strtolower($tome->NOM_SERIE) != strtolower($tome->TITRE_TOME)) )) ? $this->urlSerie($tome) : "")." <br>
