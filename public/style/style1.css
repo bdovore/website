@@ -1391,7 +1391,7 @@ div.textmasked {
     }
 }
 
-@media handheld and (max-width: 680px), handheld and (max-device-width: 667px) {
+@media screen and (max-width: 680px), screen and (max-device-width: 667px) {
     body {
         /*overflow:hidden !important;*/
         width:100%;
