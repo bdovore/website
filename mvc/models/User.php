@@ -365,15 +365,15 @@ FROM " . $this->table_name . "
         $username = Db_Escape_String($username);
         $email = Db_Escape_String($email);
 
-        $verif = "SELECT count(*) AS nb FROM phpbb_users WHERE username='" . $username . "'";
+        $verif = "SELECT count(*) AS nb FROM bb3_users WHERE username='" . $username . "'";
         $result = Db_query($verif,$connexion);
         $o = Db_fetch_object($result);
         if ($o->nb == 0) {
-            $query = "SELECT MAX(user_id) AS total FROM phpbb_users";
+            $query = "SELECT MAX(user_id) AS total FROM bb3_users";
             $result = Db_query($query,$connexion);
             $o = Db_fetch_object($result);
             $id = $o->total + 1;
-            $query = "INSERT INTO phpbb_users (
+            $query = "INSERT INTO bb3_users (
                     user_id , username,user_password, user_email, user_regdate ) VALUES (
                     $id, '" . $username . "', '" . md5($password) . "', '" . $email . "'," . time() . "
                     )";

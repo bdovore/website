@@ -19,7 +19,7 @@ class Bdo_Security {
         return self::$instance;
     }
 
-    public function is_mail($mail)
+    public static function is_mail($mail)
     {
         $Syntaxe='#^[\w.\+-]+@[\w.-]+\.[a-zA-Z]{2,5}$#';
         if(preg_match($Syntaxe,$mail))

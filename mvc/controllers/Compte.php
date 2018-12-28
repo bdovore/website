@@ -170,6 +170,7 @@ class Compte extends Bdo_Controller {
     }
 
     public function Inscription() {
+        $mobile = getVal("mobile",""); // check if mobile device detected
         //initialisation des variables de couleur
         $color["NewUser"] = "#000000";
         $color["NewPass1"] = "#000000";
@@ -257,7 +258,7 @@ class Compte extends Bdo_Controller {
                         $user->setForumAccount($default_username, $defaut_pass1, $defaut_email);
 
                         $texte = "Inscription r&eacute;ussie sur le site <u>ainsi que sur le forum</u> (meme identifiants de connexion).
-                        <br />Vous pouvez fermer cette fenêtre et vous connecter avec votre identifiant et mot de passe !";
+                        <br />Vous pouvez fermer cette fenêtre ou <a href='". BDO_URL."' target='_parent'>cliquer ici</a> pour vous connecter avec votre identifiant et mot de passe !";
                         //echo GetMetaTag(15, $texte, (BDO_URL . "compte"));
                         echo $texte;
                         exit();
@@ -287,7 +288,17 @@ class Compte extends Bdo_Controller {
             "COLORNEWPASS2" => $color["Newpass2"],
             "COLORNEWEMAIL" => $color["NewEmail"],
             "ERRORTEXT" => $errortext));
-        $this->view->layout = "iframe";
+        // set frame
+        $frame = "iframe";
+       /* $url_referer = parse_url($_SERVER["HTTP_REFERER"]);
+        $domaine = $url_referer['host'];
+        $url_host =  parse_url(BDO_URL);
+        if ($domaine != $url_host['host']) {
+            $frame = "default";
+        }
+        if ($mobile == "T") $frame = "default";*/
+        
+        $this->view->layout = "$frame";
         $this->view->render();
     }
 
