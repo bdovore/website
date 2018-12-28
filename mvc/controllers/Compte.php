@@ -255,9 +255,9 @@ class Compte extends Bdo_Controller {
 
                     if (notIssetOrEmpty($user->error)) {
                         //ajout dans le forum si besoin
-                        $user->setForumAccount($default_username, $defaut_pass1, $defaut_email);
+                       // $user->setForumAccount($default_username, $defaut_pass1, $defaut_email);
 
-                        $texte = "Inscription r&eacute;ussie sur le site <u>ainsi que sur le forum</u> (meme identifiants de connexion).
+                        $texte = "Inscription r&eacute;ussie sur le site.
                         <br />Vous pouvez fermer cette fenêtre ou <a href='". BDO_URL."' target='_parent'>cliquer ici</a> pour vous connecter avec votre identifiant et mot de passe !";
                         //echo GetMetaTag(15, $texte, (BDO_URL . "compte"));
                         echo $texte;
