@@ -441,9 +441,9 @@ class FicheAlbum {
                 <td style='vertical-align:top'>".$this->urlalbum($tome,'couvBig')."</td>
             <td style='vertical-align:top'>
                 ".$this->getTitreTome($tome, true, true)."<br>
+                     ".(($tome->NOM_SERIE AND ($tome->TITRE_TOME AND (strtolower($tome->NOM_SERIE) != strtolower($tome->TITRE_TOME)) )) ? $this->urlSerie($tome) : "")." <br>
                 <span id='noteTome".$tome->ID_TOME."_".$tome->user_id."'> </span>
-                <p class='fiche_album'>
-                ".(($tome->NOM_SERIE AND ($tome->TITRE_TOME AND (strtolower($tome->NOM_SERIE) != strtolower($tome->TITRE_TOME)) )) ? $this->urlSerie($tome) : "")." <br>
+                <p class='fiche_album'>               
                 Publié par <a href='./guest?user=$tome->user_id'>$tome->username</a> le $tome->DTE_POST 
                     
                 </p>
