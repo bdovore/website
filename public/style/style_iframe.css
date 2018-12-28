@@ -1143,23 +1143,10 @@ table.list_album tr {
    max-width:50%;
 }
 @media screen and (max-width: 920px), screen and (max-device-width: 768px) {
-    body {
-        font-size: 1.8em;
-        line-height:1.9em;
-    }
-    h2 {
-   
-    font-size: 2em;
     
-    }
     #create_account {
         font-size: 2.1em;
         line-height:2.2em;
     }
-    input {
-        font-size: 1.2em;
-        font-style: normal;
-        height: auto;
-        width: auto;
-    }
+  
 }
