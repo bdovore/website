@@ -71,7 +71,7 @@ class Guest extends Bdo_Controller
                             "NBCORRECTIONS" => $user_prop_corr,
                             "USERNAME" => $user->username,
                             "DTEARRIVEE" => strftime('%d-%m-%Y', $user_regdate),
-                            "NBALBUMS" => $stat["nbtomes"],
+                            "NBALBUMS" => $stat["nbeditidion"],
                             "NBINTEGRALES" => $stat["nbintegrales"],
                             "NBCOFFRETS" => $stat["nbcoffrets"],
                             "NBSERIES" => $stat["nbseries"],
