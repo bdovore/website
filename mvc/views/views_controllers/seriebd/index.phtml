@@ -144,35 +144,54 @@
       </div>
 
       <!-- cadre liste d'albums -->
-      <div class="cadre1">
-        <div class="middle_title">
-          <h3>Albums</h3> 
-        </div>
-        <!-- BEGIN AlbBlock -->
-        <table class="list_album">
-          <?php
-            $tr = true;
-            foreach ($view->dbs_tome->a_dataQuery as $tome) {
-              if ($tr)
-                echo "<tr>";
+       <div class="cadre1">
+      <?php 
+      $last_list = ""; // ordre : albums, intégrales, coffrets
+      $close_table = "";
+      foreach ($view->dbs_tome->a_dataQuery as $tome) {
+          if ($tome->FLG_INT_TOME == "O") {
+              $current = "Intégrales";
+          } else if ($tome->FLG_TYPE_TOME == 1) {
+              $current = "Coffrets";
+          } else {
+              $current = "Albums";
+          }
+          
+          if ($current <> $last_list) {
+              $last_list = $current;
+              $tr = true; 
+              echo $close_table; ?>
+           <hr class="expSep">
+            <div class="middle_title">
+              <h3><?php echo $current;?></h3> 
+            </div>
+            <!-- BEGIN AlbBlock -->
+            <table class="list_album">
+          <?php 
+            $close_table = "</table>";
+          }
+          if ($tr) echo "<tr>";
       
-              // Si false, l'album n'est pas exclu...
-              if (Bdo_Cfg::user()->minAccesslevel(2)) {
-                $exclu = array_search($tome->ID_TOME,$view->tomesExclus) === false ? false : true;
-              } else {
-                  $exclu = false;
-              }
-              echo "<td class='mw50'>" . $ficheAlbum->big($tome,$sep=true,$getUrlSerie=false,$exclu) . "</td>";
+        // Si false, l'album n'est pas exclu...
+        if (Bdo_Cfg::user()->minAccesslevel(2)) {
+          $exclu = array_search($tome->ID_TOME,$view->tomesExclus) === false ? false : true;
+        } else {
+            $exclu = false;
+        }
+        echo "<td class='mw50'>" . $ficheAlbum->big($tome,$sep=true,$getUrlSerie=false,$exclu) . "</td>";
 
-              if (!$tr) {
-                echo "</tr>";
-              }
+        if (!$tr) {
+          echo "</tr>";
+        }
 
-              $tr = !$tr;
-            }
-            if (!$tr)
+        $tr = !$tr;
+            
+            
+      }
+      if (!$tr)
               echo "</tr>";
-          ?>
+      ?>
+      
         </table>
 
         <div align="center">

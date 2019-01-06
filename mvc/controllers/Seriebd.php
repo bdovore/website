@@ -47,7 +47,7 @@ class SerieBD extends Bdo_Controller {
                             "       OR bd_tome.id_color  = " . $auteur . " OR bd_tome.id_color_alt  = " . $auteur .
                             "      )";
         }          
-        $where = $where .   " ORDER BY bd_tome.FLG_INT DESC, bd_tome.FLG_TYPE, bd_tome.NUM_TOME, bd_tome.TITRE limit ".(($page-1)*20).",20";
+        $where = $where .   " ORDER BY bd_tome.FLG_INT ASC, bd_tome.FLG_TYPE, bd_tome.NUM_TOME, bd_tome.TITRE limit ".(($page-1)*20).",20";
         $dbs_tome = $this->Tome->load('c', $where);
         // selection des albums
         $this->view->set_var('dbs_tome', $dbs_tome);
