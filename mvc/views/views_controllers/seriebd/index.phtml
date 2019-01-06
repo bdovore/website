@@ -148,6 +148,7 @@
       <?php 
       $last_list = ""; // ordre : albums, intégrales, coffrets
       $close_table = "";
+      $tr = true;
       foreach ($view->dbs_tome->a_dataQuery as $tome) {
           if ($tome->FLG_INT_TOME == "O") {
               $current = "Intégrales";
@@ -159,6 +160,9 @@
           
           if ($current <> $last_list) {
               $last_list = $current;
+              if (!$tr) {
+                echo "</tr>";
+              }
               $tr = true; 
               echo $close_table; ?>
            <hr class="expSep">
