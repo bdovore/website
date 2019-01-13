@@ -180,6 +180,8 @@ FROM " . $this->table_name . "
                             // connexion automatique "se souvenir de moi"
                             if (isset($_POST['chkvisit'])) {
                                 setcookie("pass", $this->password, time() + 31104000, "/");
+                            } else {
+                                setcookie("pass", $this->password, time() + 3600, "/"); // on mémorise pour 1h
                             }
                             // on retourne à la page d'origine de la connexion
                              header('Location: '.$_SERVER['HTTP_REFERER']);
