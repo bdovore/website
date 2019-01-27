@@ -58,7 +58,7 @@ class GetJSON extends Bdo_Controller {
     private function Auteur() {
         $id_auteur = getValInteger("id_auteur", 0);
         $term = getVal("term", "");
-        $mode = getValInteger("mode", 0);
+        $mode = getValInteger("mode", 0);        
         /*
          * Mode : 0 pour autocomplete, 1 pour l'ensemble des données
          */
@@ -306,6 +306,7 @@ class GetJSON extends Bdo_Controller {
         $length = getValInteger("length",10);
         $page = getValInteger("page",1);
         $id_serie = getValInteger("id_serie",0);
+        $flg_pret = getVal("flg_pret","");
         $this->loadModel("Useralbum");
         
         if ($length > 100) $length = 100;
@@ -314,6 +315,9 @@ class GetJSON extends Bdo_Controller {
                 $limit = " limit ".(($page - 1)*$length).", ".$length;
                 $where = " where ua.user_id = ".intval($_SESSION['userConnect']->user_id)." and flg_achat = '". Db_Escape_String($flg_achat)."' ";
                 if ($id_serie)  $where.= " AND s.id_serie = ".$id_serie;
+                if ($flg_pret) {
+                    $where.= " AND flg_pret = '".Db_Escape_String($flg_pret)."'";
+                }
                 $orderby = " ORDER BY NOM_SERIE";
                 $dbs_album = $this->Useralbum->load("c",$where.$orderby. $limit);
                 $infoalbum["data"] = $dbs_album->a_dataQuery;
