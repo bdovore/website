@@ -394,7 +394,7 @@ class FicheAlbum {
         if ($o_tome->ISBN_EDITION) {
             $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . $o_tome->ISBN_EDITION . "/bdovorecom-21/";
         } else if ($o_tome->EAN_EDITION) {
-            $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=" . $o_tome->EAN_EDITION . "&mode=books-fr";
+            $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . EAN_to_ISBN($o_tome->EAN_EDITION) . "/bdovorecom-21/";
         } else {
             $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=" . htmlentities ($o_tome->TITRE_TOME,$flag=ENT_QUOTES) . "&mode=books-fr";
         }
