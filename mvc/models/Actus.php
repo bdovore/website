@@ -166,7 +166,7 @@ class Actus
         INNER JOIN bd_serie s ON t.id_serie=s.id_serie
         INNER JOIN bd_genre g ON s.id_genre=g.id_genre
     WHERE
-        ua.date_ajout >= DATE_SUB(NOW(),INTERVAL 1 MONTH)
+        ua.date_ajout >= DATE_SUB(NOW(),INTERVAL 2 MONTH)
         and en.dte_parution >= DATE_SUB(NOW(),INTERVAL 4 MONTH) AND
                 en.dte_parution <= NOW()
         ";
