@@ -433,7 +433,7 @@ class GetJSON extends Bdo_Controller {
              } else {
                  // récupérer la liste des séries à compléter
                  $this->loadModel("Users_exclusions"); 
-                 $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id, 0);
+                 $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id, $flg_achat);
                  $this->view->set_var('json', json_encode(array(
                      "data" => $listSerie)));
              }
