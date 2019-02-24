@@ -691,6 +691,7 @@ div.cadre1 {
     padding: 5px;
     border-bottom: 1px dashed #bbbbbb;
     text-align : left;
+    margin-right: 5px;
     height:95%;
 }
 
@@ -1198,6 +1199,13 @@ div.textmasked {
   
 
 }
+#newsfacebook {
+    float:right;
+}
+#accordion {
+    //float:inherit;
+}
+
 @media screen and (max-width: 1200px) and (min-width:768px) {
     .colleft {
         float: left;
@@ -1456,6 +1464,13 @@ div.textmasked {
     table.browse {
         font-size: 1.2em;
     }
+    #newsfacebook {
+        float:none;
+    }
+    #titlefacebook {
+        display:none;
+    }
+    
 }
 
 /* Filtres Mes Auteurs */

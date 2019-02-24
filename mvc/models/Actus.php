@@ -174,7 +174,7 @@ class Actus
         $order_air = "
     GROUP BY t.id_tome
     ORDER BY nb DESC, IFNULL(ua.date_achat,ua.date_ajout) DESC
-    LIMIT 0,2";
+    ";
 
       
         $a_actu= array();
@@ -185,17 +185,21 @@ class Actus
             // actu
             $requete = $select_topactu . $filter . " " . $order_actu;
             $resultat = Db_query($requete);
+            $nb = 0;
             if ($obj = Db_fetch_object($resultat)) {
                  $a_actu[] = $obj;
                  $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";
+                 $nb++;
             }
              if ($obj = Db_fetch_object($resultat)) {
                   $a_actu[] = $obj;
                  $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";
+                 $nb++;
             }
 
             // air du temps
-            $requete = $select_topair . $filter . $order_air;
+            $limit = "LIMIT 0,".(4-$nb);
+            $requete = $select_topair . $filter.$limit . $order_air;
             $resultat = Db_query($requete);
             if ($obj = Db_fetch_object($resultat)) {
                  $a_actu[] = $obj;

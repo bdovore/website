@@ -1,177 +1,158 @@
 <?php
 $ficheAlbum = $view->getHelper('ficheAlbum');
 ?>
-<div class="colleft">
-    <!-- Debut de la partie de droite -->
-    <div class="col2">
-        <!-- Column 2 start -->
-        <div id="actu" class="right fond">
-        <div class="middle_title">
-            <h3>Actualité</h3>
-        </div>
-            
-            <div class="right">
-        <?php 
-         $genre ="";
-        foreach ($view->ACTUAIR as $actu) { 
-            if ($actu->ORIGINE_GENRE <> $genre) {
-                echo "<div class='middle_content'>".$actu->ORIGINE_GENRE ."</div>";
-            }
-            echo $ficheAlbum->urlAlbum($actu,$class="couvMedium",$sponsor=FALSE)." ";
-            $genre = $actu->ORIGINE_GENRE;
-      } ?>
-            </div>
-        </div>
-        <div  id="newsfacebook"class="right fond">
-         <div class="middle_title">
-             <h3><a href="https://www.facebook.com/bdovore" target="_blank">News Facebook</a> </h3></div>
-                
-            </div>
-         <div id="lastajout" class="right fond">
-    <div class="middle_title">
-    <h3><a href="<?php echo BDO_URL;?>leguide?rb_mode=6&rb_list=album&submitGuide=Envoyer">Derniers ajouts</a>
-    <a href="<?php echo BDO_URL;?>rss">
-    <img src="<?php echo BDO_URL_IMAGE;?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" />
-    </a></h3>
+<div id="actu" style="padding:5px;" class="cadre1">
+    <div class="cadre1">
+        <h1>BDovore, gestion de collection BD comics et mangas pour les dévoreurs de BD </h1>
+        <p align="center">
+       G&eacute;rez votre <b>collection de bandes dessin&eacute;es</b> en ligne via une
+
+        gargantuesque base de données de plus de <strong><?php echo number_format(intVal($view->nbTome),0,',', ' ' ); ?></strong> <a
+
+            href="<?php echo BDO_URL; ?>leguide"><b>BDs</b></a>,  <a
+
+            href="<?php echo BDO_URL; ?>leguide?origine=2"><b>Mangas</b></a> et
+
+        <a
+
+            href="<?php echo BDO_URL; ?>leguide?origine=3"><b>Comics</b></a>.
+           <!-- Téléchargez la toute dernière version de l'application native Android !  <a href='https://play.google.com/store/apps/details?id=com.PaulOlivier.bdovore&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Disponible sur Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/fr_badge_web_generic.png'style="vertical-align: middle;" width="140px"/></a>
+
+            <br> <a href="https://fr-fr.facebook.com/bdovore" target="_blank"> Suivez l'actualité BD sur Facebbok !</a><br>
+            !-->
+            <br>
+         Besoin d'une visite guidée ?<a href="<?php echo BDO_URL; ?>tutoriel" style="font-weight: bold;"> Suivez le tutoriel BDovore !</a> <br>
+        </p>
     </div>
-        <div class="cadre1" style="margin:3px 3px 3px 3px ;">
-            <?php 
-           
-            foreach ($view->LASTAJOUT as $ajout) {
-                echo $ficheAlbum->urlAlbum($ajout,$class="albTitle")."<br />";
-            }?>
+            <!-- Column 2 start -->
+ <hr class="expSep" />
+    
+    <div class="cadre1">
+        <div class="middle_title"><h3><a href="./leguide">Dernières Critiques</a></h3></div>
+        <table class="list_album">
+              <?php
+              $tr = true;
+              foreach ($view->a_lastComment as $lastComment) {
+                  if ($tr)
+                      echo "<tr>";
+                  echo "<td class='mw50'>" . $ficheAlbum->getFicheWithComment($lastComment) . "</td>";
+
+                  if (!$tr) {
+                      echo "</tr>";
+                  }
+                  $tr = !$tr;
+              }
+              ?>
+          </table>
+    </div>
+
+    <hr class="expSep" />
+    <div class="cadre1">
+        <div class="middle_title">
+            <h3><a href="./leguide?origine=1&rb_mode=7">Albums BD Mangas Comics tendances</a></h3>
         </div>
         
-         </div>
-        <!-- Column 2 end -->
+            <div style='margin:0 auto; max-width:900px;'>
+                <?php 
+                 $genre ="";
+                 $close="";
+                 $i = 0;
+
+                 echo "<div style='float:left; padding:1px;margin:0 auto;max-width:265px;'>";
+                foreach ($view->ACTUAIR as $actu) { 
+                     $i++;               
+
+                    echo "<div style='float:left;padding:2px;height:191px;'>".$ficheAlbum->urlAlbum($actu,$class="couvBig",$sponsor=FALSE)."</div>";
+                     if ($i==4) {                    
+                        echo "</div>";
+                        $i=0;
+                         echo "<div style='float:left; padding:1px;margin:0 auto;max-width:275px;'>";
+                    }
+                    //$genre = $actu->ORIGINE_GENRE;
+
+              } 
+              echo $close;
+              ?>
+            </div>
+       
     </div>
-    <div class="col1wrap">
-        <div class="col1 fond">
-            <!-- Column 1 start -->
+    <hr class="expSep" />
+    <div class="cadre1">
+        <div class="middle_title"><h3><a href="./leguide?rb_mode=4&rb_list=album&submitGuide=Envoyer">Derni&egrave;res sorties</a> <a href="<?php echo BDO_URL; ?>rss/dernieres_sorties"> <img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" /></a></h3></div>
+          <table class="list_album">
+            <?php
+            $tr = true;
+            foreach ($view->a_lastSorties as $lastSorties) {
+                if ($tr)
+                    echo "<tr>";
+                echo "<td class='mw50'>" . $ficheAlbum->big($lastSorties, $sep = true, $getUrlSerie = true) . "</td>";
 
-            <!-- cadre central de la page -->
+                if (!$tr) {
+                    echo "</tr>";
+                }
+                $tr = !$tr;
+            }
+            ?>
+        </table>
+        <hr class="expSep" />
+        <div class="fright"><a href="./leguide?rb_mode=4&rb_list=album&submitGuide=Envoyer">Toutes les dernières sorties</a></div>
+        <hr class="expSep" />
+    </div>
+    <hr class="expSep" />
 
-            <div class="cadre1" id="message_accueil">
+    <div class="cadre1">
+        <div class="middle_title"><h3><a href="./leguide?rb_mode=5&rb_list=album&submitGuide=Envoyer">Sorties &agrave; venir</a> <a href="<?php echo BDO_URL; ?>rss/sorties_a_venir"> <img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" /></a></h3></div>
+        <table class="list_album">
+            <?php
+            $tr = true;
+            foreach ($view->a_futurSorties as $futurSorties) {
+                if ($tr)
+                    echo "<tr>";
+                echo "<td class='mw50'>" . $ficheAlbum->big($futurSorties, $sep = true, $getUrlSerie = true) . "</td>";
 
-                <h1>BDovore, gestion de collection BD comics et mangas pour les dévoreurs de BD </h1>
-
-                G&eacute;rez votre <b>collection de bandes dessin&eacute;es</b> en ligne via une
-
-                gargantuesque base de données de plus de <strong><?php echo $view->nbTome; ?></strong> <a
-
-                    href="<?php echo BDO_URL; ?>leguide"><b>BDs</b></a>,  <a
-
-                    href="<?php echo BDO_URL; ?>leguide?origine=2"><b>Mangas</b></a> et
-
-                <a
-
-                    href="<?php echo BDO_URL; ?>leguide?origine=3"><b>Comics</b></a>. <br>
-                    Téléchargez la toute dernière version de l'application native Android !  <a href='https://play.google.com/store/apps/details?id=com.PaulOlivier.bdovore&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Disponible sur Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/fr_badge_web_generic.png'style="vertical-align: middle;" width="140px"/></a>
- 
-                    <br> <a href="https://fr-fr.facebook.com/bdovore" target="_blank"> Suivez l'actualité BD sur Facebbok !</a><br>
-                 <a href="<?php echo BDO_URL; ?>tutoriel" style="font-weight: bold;">Besoin d'une visite guidée ? Suivez le tutoriel BDovore !</a> <br>
-               
+                if (!$tr) {
+                    echo "</tr>";
+                }
+                $tr = !$tr;
+            }
+            ?>
+        </table>
+        <hr class="expSep" />
+        <div class="fright"><a href="./leguide?rb_mode=5&rb_list=album&submitGuide=Envoyer">Toutes les futures sorties</a></div>
+        <hr class="expSep" />
+    </div>
+    <hr class="expSep" />
+     <?php echo $view->LASTNEWS; ?>   
+    <hr class="expSep" />
+    <div class="cadre1">
+        <div id="lastajout" class="right fond">
+            <div class="middle_title">
+                <h3><a href="<?php echo BDO_URL;?>leguide?rb_mode=6&rb_list=album&submitGuide=Envoyer">Derniers ajouts</a>
+                    <a href="<?php echo BDO_URL;?>rss">
+                    <img src="<?php echo BDO_URL_IMAGE;?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" />
+                    </a>
+                </h3>
             </div>
-           
-            <div style="padding:5px;">
-                <div class="middle_title"><h3><a href="./leguide">Dernières Critiques</a></h3></div>
+            <div class="cadre1" style="margin:3px 3px 3px 3px ;">
+                <?php 
 
-              <table class="list_album">
-                    <?php
-                    $tr = true;
-                    foreach ($view->a_lastComment as $lastComment) {
-                        if ($tr)
-                            echo "<tr>";
-                        echo "<td class='mw50'>" . $ficheAlbum->getFicheWithComment($lastComment) . "</td>";
-
-                        if (!$tr) {
-                            echo "</tr>";
-                        }
-                        $tr = !$tr;
-                    }
-                    ?>
-                </table>
-
-
-            <hr class="expSep" />
-            <div class="cadre1">
-
-
-                <div class="middle_title"><h3><a href="./leguide?rb_mode=4&rb_list=album&submitGuide=Envoyer">Derni&egrave;res sorties</a> <a href="<?php echo BDO_URL; ?>rss/dernieres_sorties"> <img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" /></a></h3></div>
-
-
-                <table class="list_album">
-                    <?php
-                    $tr = true;
-                    foreach ($view->a_lastSorties as $lastSorties) {
-                        if ($tr)
-                            echo "<tr>";
-                        echo "<td class='mw50'>" . $ficheAlbum->big($lastSorties, $sep = true, $getUrlSerie = true) . "</td>";
-
-                        if (!$tr) {
-                            echo "</tr>";
-                        }
-                        $tr = !$tr;
-                    }
-                    ?>
-                </table>
-                <hr class="expSep" />
-                <div class="fright"><a href="./leguide?rb_mode=4&rb_list=album&submitGuide=Envoyer">Toutes les dernières sorties</a></div>
-                <hr class="expSep" />
+                foreach ($view->LASTAJOUT as $ajout) {
+                    echo $ficheAlbum->urlAlbum($ajout,$class="albTitle")."<br />";
+                }?>
             </div>
-            <hr class="expSep" />
-
-            <div class="cadre1">
-                <div class="middle_title"><h3><a href="./leguide?rb_mode=5&rb_list=album&submitGuide=Envoyer">Sorties &agrave; venir</a> <a href="<?php echo BDO_URL; ?>rss/sorties_a_venir"> <img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" /></a></h3></div>
-                <table class="list_album">
-                    <?php
-                    $tr = true;
-                    foreach ($view->a_futurSorties as $futurSorties) {
-                        if ($tr)
-                            echo "<tr>";
-                        echo "<td class='mw50'>" . $ficheAlbum->big($futurSorties, $sep = true, $getUrlSerie = true) . "</td>";
-
-                        if (!$tr) {
-                            echo "</tr>";
-                        }
-                        $tr = !$tr;
-                    }
-                    ?>
-                </table>
-                <hr class="expSep" />
-                <div class="fright"><a href="./leguide?rb_mode=5&rb_list=album&submitGuide=Envoyer">Toutes les futures sorties</a></div>
-                <hr class="expSep" />
-            </div>
-            <hr class="expSep" />
-
-
-
-
-
-
-
-
-
-
-
-            <hr class="expSep" />
-
-
-
-
-
-            <?php echo $view->LASTNEWS; ?>
-
-            <!-- Column 1 end -->
         </div>
     </div>
+     <hr class="expSep" />
+ </div>
+         
     
-</div>
 <script>
-    var fwidth = 220;
-    if ($(window).width() < 667) {
-        fwidth= Math.min($(window).width() - 10,500);
-    }
-    $("#newsfacebook").append('<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fbdovore%2F&tabs=timeline&width='+fwidth + '&height=500&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false&appId=167515296514" width="100%" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>');
-    </script>
+   $( document ).ready(function() { 
+       var fwidth = 650; //$("#newsfacebook").width();
+       var fheight = $("#news_du_site").height();
+        
+        $("#newsfacebook").append('<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fbdovore%2F&tabs=timeline&width='+fwidth + '&height='+ fheight+'&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false&appId=167515296514" width="100%" height="800" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>');
+    });
+       
+</script>
     
