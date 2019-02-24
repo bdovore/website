@@ -417,7 +417,7 @@ class GetJSON extends Bdo_Controller {
          if (User::minAccesslevel(2)) {
              $id_serie = getValInteger("id_serie",0);
              $user_id = intval($_SESSION['userConnect']->user_id);
-             $flg_achat = getValInteger(includeAchat,1);
+             $flg_achat = getValInteger("includeAchat",1);
              if ($id_serie) {
                   $this->loadModel("Useralbum");
                   $this->loadModel("Tome");
