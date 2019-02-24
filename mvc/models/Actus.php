@@ -199,7 +199,7 @@ class Actus
 
             // air du temps
             $limit = "LIMIT 0,".(4-$nb);
-            $requete = $select_topair . $filter.$limit . $order_air;
+            $requete = $select_topair . $filter." " . $order_air.$limit;
             $resultat = Db_query($requete);
             if ($obj = Db_fetch_object($resultat)) {
                  $a_actu[] = $obj;
