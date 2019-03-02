@@ -5,59 +5,54 @@
 
         passionnés de Bandes Dessinées. L'idée était de fournir gratuitement aux
 
-        internautes une solution pour gérer leur collection de BD en ligne. Depuis, le site est en continuelle évolution.
+        internautes une solution pour <b>gérer leur collection de BD, comics et mangas en ligne</b>. Depuis, le site est en continuelle évolution et est administré par l'<b>association à but non lucratif Bdovore</b>.
     </p>
     <p>
-        <h3>Aujourd'hui, BDovore c'est&nbsp;:</h3>
+        <h3>BDovore c'est&nbsp;:</h3>
     </p>
-    <ul>
+    <ul style="margin:auto;list-style-type:disc;padding:1,5em;">
         <li>
-            Une <b>base de donnée</b> de <?php echo $view->NBALB;?> volumes, tenue à jour
+            - Une <b>base de donnée</b> de <b><?php echo number_format(intVal($view->NBALB),"0",","," ");?></b> volumes BD, comics et mangas, tenue à jour
             en permanence, notée et commentée par les membres
             (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur la base de données</a>).
-            <br />
-            <br />
+            
         </li>
         <li>
-            La possibilité de <b>gérer simplement sa propre collection de
+           - La possibilité de <b>gérer simplement sa propre collection de
             BD en ligne</b>, en utilisant toute l'information disponible dans la base de donnée
-            commune (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur la gestion de collection</a>).
-            <br />
-            <br />
+            commune (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur la gestion de votre collection</a>).
+           
         </li>
         <li>
-            Le suivi de ses <b>prêts</b>, de ses <b>futurs achats</b>
+           - Le suivi de ses <b>prêts</b>, de ses <b>futurs achats</b>
             (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info</a>).
-            <br />
-            <br />
+           
         </li>
         <li>
-            Consulter les <strong>statistiques</strong> propres à sa collection mais
+           - Consulter les <strong>statistiques</strong> propres à sa collection mais
             aussi celles de la communauté dans son ensemble (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur les stats</a>).
-            <br />
-            <br />
+           
         </li>
         <li>
-            La possibilité de <b>mettre en ligne sa collection</b> de bandes
+           - La possibilité de <b>mettre en ligne sa collection</b> de bandes
             dessinées, à la manière d'un "BDprofiler"
             (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur la mise en ligne</a>).
-            <br />
-            <br />
+           
         </li>
         <li>
-            La possibilité de suivre au plus près <b>les sorties et
+           - La possibilité de suivre au plus près <b>les sorties et
             l'actualité du monde de la bande dessinée</b>
             (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur l'actualité</a>).
-            <br />
-            <br />
+           
         </li>
         <li>
-            Un <a href="<?php echo BDO_URL_FORUM;?>index">forum</a> pour discuter de tout ce qui touche à la BD mais
+           - Un <a href="<?php echo BDO_URL_FORUM;?>index">forum</a> pour discuter de tout ce qui touche à la BD mais
             pas seulement
         </li>
     </ul>
     <p>
         Et le tout <font color="#990000" size="-1"><strong>GRATUITEMENT</strong> et <strong>SANS PUBLICITÉ !</strong></font>
+        =>   <a href="<?php echo BDO_URL;?>tutoriel?page=1">Pour le début de la visite guidée cliquez ici !</a>
     </p>
     <p>
         Vous voulez utiliser le site, participer au projet et vous joindre à la
@@ -66,13 +61,47 @@
     <p>
         Encore des questions sur BDovore ? Rendez-vous sur le <a href="<?php echo BDO_URL_FORUM;?>index">forum</a> !
     </p>
-    <p align="right">
-        <a href="<?php echo BDO_URL;?>tutoriel?page=1">Pour le début de la visite guidée</a>
-    </p>
-    <p>
-        <span class="texte">
+     <hr class="expSep" />
+      
+    
+    <h2>Bdovore en quelques chiffres</h2>
+    <div style='float:left; padding:5px;margin:0 auto;max-width:365px;'>
+        <p>
+            <font color="#990000" size="-1">
+                <strong>Base de donn&eacute;es BD</strong>
+            </font>
+        </p>
+        <p><ul>
+            <li>Nombre d'albums dans la base : <a href="browser"><?php echo number_format(intVal($view->NBALB),"0",","," ");?></a></li>
+            <li>
+                Nombre de séries : <a href="browser"><?php echo number_format(intVal($view->NBSERIE),"0",","," ");?></a></li>
+            <li>
+            Albums en attente d'ajout actuellement : <a href="proposition/listpropal?type=AJOUT"><?php echo $view->NBAJOUT;?></a>
+            </li>
+            <li>Albums en attente de correction actuellement : <a href="proposition/listpropal?type=CORRECTION"><?php echo $view->NBCORRECT;?></a>
+            </li><li>
+                 </ul>
+        </p>
+    </div>
+    <div style='float:left; padding:5px;margin:0 auto;max-width:365px;'>
+        <p>
+            <font color="#990000" size="-1">
+                <b>La vie du site</b>
+            </font>
+        </p>
+        <p>
+            Nombre de Bdovores : <?php echo number_format(intVal($view->NBUSER),"0",","," ");?>
             <br />
-        </span>
+            Nombre d'albums dans les collections : <?php echo number_format(intVal($view->NBCOLLEC),"0",","," ");?>
+            <br />
+             Nombre de notes d'albums : <a href="leguide?origine=1&rb_mode=1&rb_list=album"><?php echo number_format(intVal($view->NBNOTEALBUM),"0",","," ");?></a>
+            <br />
+            Nombre de commentaires d'albums : <a href="leguide"><?php echo number_format(intVal($view->NBCOMMENTALBUM),"0",","," ");?></a>
+            <br />
+        </p>
+    </div>
+    
+       <hr class="expSep" />
     <h2>Qui c'est qui fait tout ça ? </h2>
         <p>
         <font color="#990000" size="+1"><b>Ils travaillent en cuisine...</b></font>
@@ -91,12 +120,7 @@
             site. Vous pouvez leur reporter bugs ou commentaires sur le site.</i>
     </p>
     <p>
-         - <a
-            href="mailto:chninkel@bdovore.com"
-            title="Cliquez pour envoyer un email à chninkel_chez_bdovore.com"><b>Chninkel</b></a>
-        : Aidant depuis longtemps les autres membres sur le <a
-            href="<?php echo BDO_URL_FORUM;?>index">forum</a>, le voici qui met son
-        grain de sel dans la soupe du code. <br /> - <a href=""
+         - <a href=""
             title="Désolé, nous ne pouvons divulguer l'adresse de l'association des BDOvores anonymes. Latruffe est en cure de désyntoxication suite à une trop forte accoutumance à la BD et au site..."><b>Latruffe</b></a>
         : Co-créateur du site avec Tomlamèche et qui cuisine encore de temps
         en temps. Il est aussi le trésorier de l'association... <br /> - <a href=""
@@ -104,22 +128,7 @@
         : Co-créateur du site avec Latruffe et actuel président de l'association. Vous pouvez aussi le retrouver sur son <a
             href="http://lameche.zique.free.fr"
             title="Ouvre directement le lien dans la page courante">site musical</a>.
-        <br />
-                - <a href="mailto:zeas@bdovore.com"
-            title="Cliquez pour envoyer un email à zeas_chez_bdovore.com"><b>Zéas</b></a>
-        : Grand passionné de BD mais aussi de beaucoup d'autres choses, il a participé très activement pendant plusieurs années et repasse régulièrement voir si tout va bien. <br />
-                - <a href="mailto:feyd@bdovore.com"
-            title="Cliquez pour envoyer un email à feyd_chez_bdovore.com"><b>Feyd</b></a>
-        : C'est lui qui était en charge de la décoration au tout début du site. Il est aussi
-        dessinateur, colorise des <a
-            href="<?php echo BDO_URL;?>serie/voir/9362">BD</a> (parfois
-        sous le mystérieux pseudonyme "Jean-Marie Jourdane") et a un blog par
-        <a href="http://narcolepsy.fr/blog/">là</a>. <br /> - <a
-            href="mailto:thanaos@bdovore.com"
-            title="Cliquez pour envoyer un email à thanaos_chez_bdovore.com"><b>Thanaos</b></a>
-        : Lui c'est un troll. il bouffe du code au boulot et il continu pour
-        nous. Le BDoBrowser, le BDo'Phone, mais aussi tout les bugs sur le
-        site, cherchez pas c'est lui ! <br />
+        <br />        
     </p>
     <p>
         <font color="#990000" size="-1"><b>Les cuistots font la cuisine et le
@@ -156,40 +165,7 @@
         - <a href="mailto:cinoche@bdovore.com"
              title="Cliquez pour envoyer un email à cinoche_chez_bdovore.com"><b>Cinoche</b></a> : 
              Le petit dernier du groupe. Il a grandi avec les comics mais sans oublier toutes les autres BDs. Il alimente les fiches des auteurs et elles sont très nombreuses. Il va aussi revoir la rubrique « Présentation » quant à l’actualisation des copies d’écrans.
-    </p> <p>
-        <i> Les anciens cuistots, mais qui peuvent repasser à l'improviste </i> <bR>
-        - <a href="mailto:cactus20100@bdovore.com"
-            title="Cliquez pour envoyer un email à cactus20100_chez_bdovore.com"><b>Cactus20100</b></a>
-        : Le roi de la mayonnaise. Notre asiatique de service est dans la
-        place. Contactez-le pour tout ce qui est manga, manhwa et tout le
-        tralala... Il est aussi initié en cuisine européenne... <br /> - <a
-            href="mailto:isabelle@bdovore.com"
-            title="Cliquez pour envoyer un email à isabelle_chez_bdovore.com"><b>Miaou</b></a>
-        : La bibliothécaire de l'espace. BD européenne, comics, manga...,
-        Miaou voyage en lecture et vous ramène les ingrédients pour des plats
-        aux saveurs des sept coins du monde. <br />  - <a href="mailto:brodieman@bdovore.com"
-            title="Cliquez pour envoyer un email à brodieman_chez_bdovore.com"><b>Brodieman</b></a>
-        : Son domaine de prédilection, c'est la bouffe américaine, mais il ne
-        rechigne pas pour autant à gouter aux autres cuisines. Contactez le
-        pour tout ce qui est comics. <br /> - <a
-            href="mailto:yadana@bdovore.com"
-            title="Cliquez pour envoyer un email à yadana_chez_bdovore.com"><b>Yadana</b></a>
-        : Yadana est incollable en cuisine asiatique mais ne se fait pas prier
-        devant un bon hamburger. Elle officie aussi sur le site <a
-            href="http://www.shadowsdreamers.net">The shadows dreamers</a>. <br />
-         - <a
-            href="#" onclick="mailto('MulleT');return false;"><b>MulleT</b></a> :
-        Sur le retour après un moment d'absence studieuse, c'est celui qui
-        laisse des cheveux dans la soupe. Il lit un peu de tout. Contactez-le
-        pour ça (peu actif en ce moment). <br /> - <b>Corto</b> : L'antiquaire
-        de la bd, jamais rassasié, il ajoutera même les bédés auxquels vous
-        n'auriez pas pensé. A coté de lui, on parait petit et notre collection
-        aussi (peu actif en ce moment). <br /> - <b>Myo</b> : Plus trop active
-        depuis quelques temps, on espère la revoir sous peu. Discrète mais
-        sûre, elle est experte pour tout ce qui est asiatique et sait savament
-        mélanger cuisine européenne et sauces japonaises (peu active en ce
-        moment).
-    </p>
+    </p> 
     <p>
         <font color="#990000" size="-1"><b>Les clients râlent quand ce n'est
                 pas assez salé</b></font>
@@ -209,50 +185,7 @@
         !!!
     </p>
     <br />
-        <h2>Bdovore en quelques chiffres</h2>
-        <h3>(Cliquez sur les chiffres pour avoir plus de détails)</h3>
-        <p>
-            <font color="#990000" size="-1">
-                <strong>Base de donn&eacute;es BD</strong>
-            </font>
-        </p>
-        <p>
-            Nombre d'albums dans la base : <a href="browser"><?php echo $view->NBALB;?></a>
-            <br />
-            Nombre de séries : <a href="browser"><?php echo $view->NBSERIE;?></a>
-            <br />
-            Nombre d'albums en attente d'ajout actuellement : <a href="proposition/listpropal?type=AJOUT"><?php echo $view->NBAJOUT;?></a>
-            <br />
-            Nombre d'albums en attente de correction actuellement : <a href="proposition/listpropal?type=CORRECTION"><?php echo $view->NBCORRECT;?></a>
-            <br />
-            Nombre d'éditions d'album en attente d'ajout actuellement : <a href="proposition/listpropal?type=EDITION"><?php echo $view->NBEDITION;?></a>
-        </p>
-        <p>
-            <font color="#990000" size="-1">
-                <b>Les utilisateurs</b>
-            </font>
-        </p>
-        <p>
-            Nombre de Bdovores : <a href="users.annu"><?php echo $view->NBUSER;?></a>
-            <br />
-            Nombre d'albums dans les collections : <a href="users.annu"><?php echo $view->NBCOLLEC;?></a>
-            <br />
-            Nombre de visites de Bdovores : <?php echo $view->NBVISITE;?>
-            <br />
-        </p>
-        <p>
-            <font color="#990000" size="-1">
-                <b>La vie du site</b>
-            </font>
-        </p>
-        <p>
-            Nombre de notes d'albums : <a href="leguide?origine=1&rb_mode=1&rb_list=album"><?php echo $view->NBNOTEALBUM;?></a>
-            <br />
-            Nombre de commentaires d'albums : <a href="leguide"><?php echo $view->NBCOMMENTALBUM;?></a>
-            <br />
-
-        </p>
-    </p>
+        
 
 </div>
 
