@@ -217,6 +217,21 @@ class Users_exclusions extends Bdo_Db_Line {
 
       return Db_affected_rows();
     }
+    
+    public function isExclu($user_id, $id_tome, $id_serie) {
+        if ($id_tome) {
+            $query = "SELECT count(*) nb FROM users_exclusions WHERE user_id  = ".intval($user_id)."
+                      AND ((id_tome = 0 AND id_serie = ".intval($id_serie).")
+                      OR id_tome  = ".intval($id_tome).")";
+        } else {
+            // test sur la série uniquement
+             $query = "SELECT count(*) nb FROM users_exclusions WHERE user_id  = ".intval($user_id)."
+                      AND id_tome = 0 AND id_serie = ".intval($id_serie);
+        }
+        $resultat = Db_query($query);
+        $obj = Db_fetch_object($resultat);
+        return ($obj->nb);
+    }
 
   }
 ?>

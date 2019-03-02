@@ -337,21 +337,25 @@ class GetJSON extends Bdo_Controller {
                     ));
                     $dbs_album = $this->Edition->load();
                     $id_serie = $this->Edition->ID_SERIE;
-                    } 
-                    else {
+                    $id_tome = $this->Edition->ID_TOME;
+                 } 
+                 else {
                     // selection par id_tome
                     $this->Useralbum->load("c"," WHERE ua.user_id = ".intval($_SESSION['userConnect']->user_id). " AND bd_tome.id_tome = ".$id_tome);
-                   $this->loadModel("Tome");
+                    $this->loadModel("Tome");
                     $this->Tome->set_dataPaste(array(
                             "ID_TOME" => $id_tome
                         ));
                     $dbs_album = $this->Tome->load();
                     $id_serie = $this->Tome->ID_SERIE;
-                    }
-            
+                 }
+                $this->loadModel("Users_exclusions");
+                // on check si l'album ou la série est exclue
+                $exclu = $this->Users_exclusions->isExclu(intval($_SESSION['userConnect']->user_id), $id_tome, $id_serie);
                 $nbserie = $this->Useralbum->isSerieInCollection($id_serie,intval($_SESSION['userConnect']->user_id));
                 $infoalbum["data"] = $this->Useralbum->dbSelect->a_dataQuery;
                 $infoalbum["nbAlbumSerie"] = $nbserie;
+                $infoalbum["exclu"] = (count($this->Useralbum->dbSelect->a_dataQuery) > 0 ? 0 : $exclu);
             }
             $this->view->set_var('json', json_encode($infoalbum));
               

@@ -500,6 +500,7 @@ class Useralbum extends Bdo_Db_Line
              , avg(MOYENNE_NOTE_TOME) NOTE_SERIE
              , sum(NB_NOTE_TOME) NB_NOTE_SERIE
              , USER_SERIE.NB_USER_ALBUM
+             ,COUNT(USER_EXCLU.id_serie) > 0 IS_EXCLU
         FROM bd_serie 
         INNER JOIN (select bd_tome.id_serie, count(*) NB_USER_ALBUM 
                     from users_album 
@@ -509,9 +510,11 @@ class Useralbum extends Bdo_Db_Line
                       and users_album.user_id = ".$user_id ." group by id_serie) USER_SERIE on USER_SERIE.id_serie = bd_serie.id_serie
         LEFT JOIN `bd_genre` USING(`ID_GENRE`)
         LEFT JOIN (SELECT `ID_SERIE`,NBR_USER_ID_SERIE FROM `bd_edition_stat` group by id_serie) `bd_edition_stat` on(bd_serie.ID_SERIE = `bd_edition_stat`.`ID_SERIE`)
+        LEFT JOIN (select id_serie from users_exclusions where user_id = ". $user_id." and id_tome = 0) USER_EXCLU on ( USER_EXCLU.id_serie = bd_serie.ID_SERIE)
         LEFT JOIN bd_tome on bd_tome.ID_SERIE = bd_serie.ID_SERIE
         LEFT JOIN bd_edition using (id_edition)
-        LEFT JOIN note_tome on (bd_tome.ID_TOME =note_tome.ID_TOME)";
+        LEFT JOIN note_tome on (bd_tome.ID_TOME =note_tome.ID_TOME)
+        ";
 
       $where = " WHERE 1 ";
       if ($origin <> "") {
