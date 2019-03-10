@@ -307,6 +307,7 @@ class GetJSON extends Bdo_Controller {
         $page = getValInteger("page",1);
         $id_serie = getValInteger("id_serie",0);
         $flg_pret = getVal("flg_pret","");
+        $flg_exclu  = getVal("flg_exclu","N");
         $this->loadModel("Useralbum");
         
         if ($length > 100) $length = 100;
@@ -322,7 +323,18 @@ class GetJSON extends Bdo_Controller {
                 $dbs_album = $this->Useralbum->load("c",$where.$orderby. $limit);
                 $infoalbum["data"] = $dbs_album->a_dataQuery;
                 $nbr = Db_CountRow($this->Useralbum->select().$where);
+                if ($flg_exclu == "O") {
+                    $this->loadModel("Users_exclusions");
+                    $where = " where users_exclusions.user_id = ".intval($_SESSION['userConnect']->user_id);
+                    if ($id_serie) { 
+                        $where.= " AND bd_serie.id_serie = ".$id_serie;
+                        
+                    }
+                    $orderby = " ORDER BY NOM_SERIE";
+                    $dbs_exclu = $this->Users_exclusions->load("c",$where.$orderby);
+                    $infoalbum["exclu"] = $dbs_exclu->a_dataQuery;
                 
+                }
                 $infoalbum["nbTotal"] = $nbr;
             }
             else {
