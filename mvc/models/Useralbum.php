@@ -493,8 +493,7 @@ class Useralbum extends Bdo_Db_Line
              , `bd_serie`.`TRI` as `TRI_SERIE`
              , `bd_serie`.`HISTOIRE` as `HISTOIRE_SERIE`
              , `bd_genre`.`ID_GENRE`
-             , `bd_genre`.`LIBELLE` as `NOM_GENRE`
-             , `bd_edition_stat`.`NBR_USER_ID_SERIE`
+             , `bd_genre`.`LIBELLE` as `NOM_GENRE`             
              , count(distinct bd_tome.ID_TOME) as NB_ALBUM
              , max(img_couv) as IMG_COUV_SERIE
              , avg(MOYENNE_NOTE_TOME) NOTE_SERIE
@@ -509,8 +508,7 @@ class Useralbum extends Bdo_Db_Line
                     where flg_achat = 'N'" .$whereAut."
                       and users_album.user_id = ".$user_id ." group by id_serie) USER_SERIE on USER_SERIE.id_serie = bd_serie.id_serie
         LEFT JOIN `bd_genre` USING(`ID_GENRE`)
-        LEFT JOIN (SELECT `ID_SERIE`,NBR_USER_ID_SERIE FROM `bd_edition_stat` group by id_serie) `bd_edition_stat` on(bd_serie.ID_SERIE = `bd_edition_stat`.`ID_SERIE`)
-        LEFT JOIN (select id_serie from users_exclusions where user_id = ". $user_id." and id_tome = 0) USER_EXCLU on ( USER_EXCLU.id_serie = bd_serie.ID_SERIE)
+       LEFT JOIN (select id_serie from users_exclusions where user_id = ". $user_id." and id_tome = 0) USER_EXCLU on ( USER_EXCLU.id_serie = bd_serie.ID_SERIE)
         LEFT JOIN bd_tome on bd_tome.ID_SERIE = bd_serie.ID_SERIE
         LEFT JOIN bd_edition using (id_edition)
         LEFT JOIN note_tome on (bd_tome.ID_TOME =note_tome.ID_TOME)
