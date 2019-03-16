@@ -39,20 +39,20 @@
         <div  class="nbConteneur">
           <div class="newButton">
             <input id="rb_mode2" name="rb_mode" value="3" <?php echo $view->a_chGuide[2]["checked"]; ?>  type="radio">
-            <label for="rb_mode2"><a href="<?php echo BDO_URL; ?>leguide/avis" style="color:white;">Avis</a></label>
-            <input id="rb_mode3" name="rb_mode" value="4" <?php echo $view->a_chGuide[3]["checked"]; ?> type="radio">
-            <label for="rb_mode3"><a href="<?php echo BDO_URL; ?>leguide/sorties_bd" style="color:white;">Nouveautés</a></label>
-            <input id="rb_mode6" name="rb_mode" value="7" <?php echo $view->a_chGuide[6]["checked"]; ?> type="radio">
-            <label for="rb_mode6"><a href="<?php echo BDO_URL; ?>leguide/actualites_bd" style="color:white;">Tendances</a></label>
-            <input id="rb_mode4" name="rb_mode" value="5" <?php echo $view->a_chGuide[4]["checked"]; ?> type="radio">
-            <label for="rb_mode4"><a href="<?php echo BDO_URL; ?>leguide/prochaines_sorties_bd" style="color:white;">A paraitre</a></label>
+            <label for="rb_mode2"><a href="<?php echo BDO_URL; ?>leguide/avis">Avis</a></label>
+            <input id="rb_mode3" name="rb_mode" value="4" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[3]["checked"]; ?> type="radio">
+            <label for="rb_mode3">Nouveautés</label>
+            <input id="rb_mode6" name="rb_mode" value="7" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[6]["checked"]; ?> type="radio">
+            <label for="rb_mode6">Tendances</label>
+            <input id="rb_mode4" name="rb_mode" value="5" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[4]["checked"]; ?> type="radio">
+            <label for="rb_mode4">A paraitre</label>
 
-            <input id="rb_mode5" name="rb_mode" value="6" <?php echo $view->a_chGuide[5]["checked"]; ?> type="radio">
-            <label for="rb_mode5"><a href="<?php echo BDO_URL; ?>leguide/ajouts" style="color:white;">Ajouts</a></label>
-            <input id="rb_mode0" name="rb_mode" value="1" <?php echo $view->a_chGuide[0]["checked"]; ?> type="radio">
-            <label for="rb_mode0"><a href="<?php echo BDO_URL; ?>leguide/top_bd" style="color:white;">Top Bdovore</a></label>
-            <input id="rb_mode1" name="rb_mode" value="2" <?php echo $view->a_chGuide[1]["checked"]; ?>  type="radio">
-            <label for="rb_mode1"><a href="<?php echo BDO_URL; ?>leguide/incontournables" style="color:white;">Incontournables</a></label>
+            <input id="rb_mode5" name="rb_mode" value="6" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[5]["checked"]; ?> type="radio">
+            <label for="rb_mode5">Ajouts</label>
+            <input id="rb_mode0" name="rb_mode" value="1" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[0]["checked"]; ?> type="radio">
+            <label for="rb_mode0">Top Bdovore</label>
+            <input id="rb_mode1" name="rb_mode" value="2" onclick="$('#form1').submit();" <?php echo $view->a_chGuide[1]["checked"]; ?>  type="radio">
+            <label for="rb_mode1">Incontournables</label>
           </div>
         </div>
       </form>
@@ -158,9 +158,9 @@ $a_qstring = $_GET;
 unset($a_qstring["page"]);
 $qstring = http_build_query($a_qstring);
 if ($view->NUM_PAGE > 1)
-    echo "<a href='".$_SERVER['PATH_INFO'] ."?" . $qstring . "&page=" . ($view->NUM_PAGE - 1) . "'>Précédent &nbsp;</a>";
+    echo "<a href='./leguide?" . $qstring . "&page=" . ($view->NUM_PAGE - 1) . "'>Précédent &nbsp;</a>";
 if ($view->NUM_PAGE < 20)
-    echo "<a href='".$_SERVER['PATH_INFO']."?" . $qstring . "&page=" . ($view->NUM_PAGE + 1) . "'>&nbsp;Suivant</a>";
+    echo "<a href='./leguide?" . $qstring . "&page=" . ($view->NUM_PAGE + 1) . "'>&nbsp;Suivant</a>";
 ?>
             </div>
             <!-- Column 1 end -->

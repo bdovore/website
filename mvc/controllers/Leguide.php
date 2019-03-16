@@ -11,11 +11,46 @@ class Leguide extends Bdo_Controller
 
     /**
      */
-    public function Index ()
+    public function Index () {
+        
+            header('Status: 301 Moved Permanently', false, 301);
+            header('Location: '.BDO_URL."leguide/avis");
+
+    }
+    
+    public function Avis () {
+        $this->Render();
+    }
+    
+    public function Sorties_bd () {
+        $this->Render(4);
+    }
+    
+    public function Actualites_bd () {
+        $this->Render(7);
+    }
+    
+    public function Prochaines_sorties_bd () {
+        $this->Render(5);
+    }
+    
+     public function Ajouts () {
+        $this->Render(6);
+    }
+    
+    public function Top_bd () {
+        $this->Render(1);
+    }
+    
+    public function Incontournables () {
+        $this->Render(2);
+    }
+    
+            
+    private function Render ($mode = 3)
     {
         // liste des genres
         $origine = getVal("origine",1);
-
         $this->loadModel('Genre');
         switch ($origine) :
             case 1 :
@@ -47,39 +82,39 @@ class Leguide extends Bdo_Controller
                 array(
                         'mode' => 1,
                         "checked" => "",
-                        "title" => "Top des votes"
+                        "title" => "Top des Meilleurs Albums BD, Mangas, Comics"
                 ),
                 array(
                         'mode' => 2,
                         "checked" => "",
-                        "title" => "Les plus r&eacute;pandus"
+                        "title" => "Les Séries BD, Comics, Mangas Incontournables"
                 ),
                 array(
                         'mode' => 3,
                         "checked" => "",
-                        "title" => "Derni&egrave;rs avis de lecture"
+                        "title" => "Tous les Avis BD, Comics, Mangas"
 
                 ),
                 array(
                         'mode' => 4,
                         "checked" => "",
-                        "title" => "Derni&egrave;res parutions"
+                        "title" => "Derni&egrave;res Parutions BD, Comics, Mangas"
                 ),
                 array(
                         'mode' => 5,
                         "checked" => "",
-                        "title" => "À paraitre"
+                        "title" => "BD, Comics, Mangas À paraitre"
                 ),
                 array(
                         'mode' => 6,
                         "checked" => "",
-                        "title" => "Derniers ajouts"
+                        "title" => "Derniers ajouts sur Bdovore"
 
                 ),
              array(
                         'mode' => 7,
                         "checked" => "",
-                        "title" => "Tendances BD"
+                        "title" => "Actualités BD, Comics, Mangas"
 
                 ),
                /* array(
@@ -95,19 +130,19 @@ class Leguide extends Bdo_Controller
         if (! isset($_GET['rb_mode'])) $_GET['rb_mode'] = 3;
 
         foreach ($a_chGuide as $key => $chGuide) {
-            if ($_GET['rb_mode'] == $chGuide['mode']) $a_chGuide[$key]['checked'] = 'checked';
+            if ($mode == $chGuide['mode']) {
+                $a_chGuide[$key]['checked'] = 'checked';
+                $title.= $a_chGuide[$key]["title"];
+            }
         }
 
-        // checkbox de type de rendu
-        if (! isset($_GET['rb_list'])) $_GET['rb_list'] = 'album';
+        
 
-        switch ($_GET['rb_mode']) {
+        switch ($mode) {
 
             case 1: // top des votes
                 {
-                    $title .= "le top des votes";
-                    // force le type de liste
-                    $_GET['rb_list'] = 'album';
+                               
 
                     $this->loadModel('Tome');
                     $dbs_tome = $this->Tome->load('c', "
@@ -126,9 +161,7 @@ class Leguide extends Bdo_Controller
 
             case 2: // Les plus repandus
                 {
-                    $title .= "les plus répandus";
-                    $_GET['rb_list'] = 'serie';
-
+                   
                     $this->loadModel('Serie');
 
                     $dbs_serie = $this->Serie->load('c', "
@@ -146,9 +179,7 @@ class Leguide extends Bdo_Controller
 
             case 3: // derniers commentaires
                 {
-                    $title .= "les derniers avis";
-                    $_GET['rb_list'] = 'album';
-
+                   
                     $this->loadModel('Comment');
 
                     $dbs_comment = $this->Comment->load('c', "
@@ -163,9 +194,7 @@ class Leguide extends Bdo_Controller
 
             case 4: // Dernieres parutions
                 {
-                    $title .= "les dernières parutions";
-                    $_GET['rb_list'] = 'album';
-
+                   
                     $this->loadModel('Edition');
 
                     $dbs_tome = $this->Edition->load('c', "
@@ -181,9 +210,7 @@ class Leguide extends Bdo_Controller
 
             case 5: // A paraitre
                 {
-                    $title .= "les albums à paraitre";
-                    $_GET['rb_list'] = 'album';
-
+                   
                     $this->loadModel('Edition');
 
                     $dbs_tome = $this->Edition->load('c', "
@@ -199,9 +226,7 @@ class Leguide extends Bdo_Controller
 
             case 6: // Derniers ajouts
                 {
-                    $title .= "derniers ajouts dans la base";
-                   $_GET['rb_list'] = 'album';
-                        $this->loadModel('Tome');
+                       $this->loadModel('Tome');
 
                         //this doesn't use the cache in bd_edition_stat (seems light though)
                         $where = " WHERE";
@@ -230,9 +255,7 @@ class Leguide extends Bdo_Controller
 
             case 7: // Derniers commentaires
                 {
-                    $title .= "les albums tendances";
-                    $_GET['rb_list'] = 'album';
-
+                   
                     $this->loadModel('Edition');
 
                     $dbs_tome = $this->Edition->load('c', "
@@ -246,17 +269,11 @@ class Leguide extends Bdo_Controller
                 }
         }
 
-        $this->view->set_var('PAGETITLE', $title);
-
-        // checkbox de type de rendu
-        $a_checkboxType['album'] = ($_GET['rb_list'] == 'album') ? 'checked' : '';
-        $a_checkboxType['serie'] = ($_GET['rb_list'] == 'serie') ? 'checked' : '';
-
-        $this->view->set_var('a_chGuide', $a_chGuide);
-        $this->view->set_var('a_checkboxType', $a_checkboxType);
+        $this->view->set_var('PAGETITLE', $title);        
+        $this->view->set_var('a_chGuide', $a_chGuide);       
 
         $this->loadModel('Actus');
-
+        $this->view->addPhtmlFile("leguide/index","BODY");
         $this->view->set_var(array(
                 'ACTUAIR' => $this->Actus->actuAir(),
                 'LASTAJOUT' => $this->Actus->lastAjout(),

@@ -29,7 +29,7 @@ class SerieBD extends Bdo_Controller {
         $this->view->set_var(array(
             'serie' => $this->Serie,
             'PAGETITLE' => "Série BD : " . $this->Serie->NOM_SERIE,
-            "DESCRIPTION" => "Tout sur la série ".$this->Serie->NOM_SERIE . " ".$this->Serie->HISTOIRE, 
+            "DESCRIPTION" => "Tout sur la série ".$this->Serie->NOM_SERIE . " ".$this->Serie->HISTOIRE_SERIE, 
             "KEYWORD" => $this->Serie->NOM_SERIE,
             'NUM_PAGE' => $page,
             "opengraph" => array ("type" => "website",
