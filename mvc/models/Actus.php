@@ -146,7 +146,7 @@ class Actus
                 en.dte_parution <= NOW()
     ";
 
-        $order_actu = " ORDER BY score desc, en.dte_parution DESC LIMIT 0,5";
+        $order_actu = " ORDER BY score desc, en.dte_parution DESC LIMIT 0,6";
 
         // requete select de base pour dans l'air
         $select_topair = "
@@ -195,7 +195,7 @@ class Actus
             
 
             // air du temps
-            $limit = "LIMIT 0,".(10-$nb);
+            $limit = "LIMIT 0,".(12-$nb);
             $requete = $select_topair . $filter." " . $order_air.$limit;
             $resultat = Db_query($requete);
             while ($obj = Db_fetch_object($resultat)) {
