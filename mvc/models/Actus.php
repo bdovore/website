@@ -187,27 +187,21 @@ class Actus
             $requete = $select_topactu . $filter . " " . $order_actu;
             $resultat = Db_query($requete);
             $nb = 0;
-            if ($obj = Db_fetch_object($resultat)) {
+            while ($obj = Db_fetch_object($resultat)) {
                  $a_actu[] = $obj;
                  $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";
                  $nb++;
             }
-             if ($obj = Db_fetch_object($resultat)) {
-                  $a_actu[] = $obj;
-                 $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";
-                 $nb++;
-            }
+            
 
             // air du temps
             $limit = "LIMIT 0,".(10-$nb);
             $requete = $select_topair . $filter." " . $order_air.$limit;
             $resultat = Db_query($requete);
-            if ($obj = Db_fetch_object($resultat)) {
+            while ($obj = Db_fetch_object($resultat)) {
                  $a_actu[] = $obj;
             }
-            if ($obj = Db_fetch_object($resultat)) {
-                 $a_actu[] = $obj;
-            }
+           
            
        // }
 
