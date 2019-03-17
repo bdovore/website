@@ -146,7 +146,7 @@ class Actus
                 en.dte_parution <= NOW()
     ";
 
-        $order_actu = " ORDER BY score desc, en.dte_parution DESC LIMIT 0,2";
+        $order_actu = " ORDER BY score desc, en.dte_parution DESC LIMIT 0,5";
 
         // requete select de base pour dans l'air
         $select_topair = "
@@ -178,9 +178,10 @@ class Actus
 
       
         $a_actu= array();
-        foreach ($a_genre as $genre) {
+        $filter = "";
+        //foreach ($a_genre as $genre) {
            
-            $filter = " and g.origine = '" . $genre . "' ";
+          //  $filter = " and g.origine = '" . $genre . "' ";
 
             // actu
             $requete = $select_topactu . $filter . " " . $order_actu;
@@ -198,7 +199,7 @@ class Actus
             }
 
             // air du temps
-            $limit = "LIMIT 0,".(4-$nb);
+            $limit = "LIMIT 0,".(10-$nb);
             $requete = $select_topair . $filter." " . $order_air.$limit;
             $resultat = Db_query($requete);
             if ($obj = Db_fetch_object($resultat)) {
@@ -208,7 +209,7 @@ class Actus
                  $a_actu[] = $obj;
             }
            
-        }
+       // }
 
        
 

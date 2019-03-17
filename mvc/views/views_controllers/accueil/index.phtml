@@ -9,13 +9,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
         gargantuesque base de données de plus de <strong><?php echo number_format(intVal($view->nbTome),0,',', ' ' ); ?></strong> <a
 
-            href="<?php echo BDO_URL; ?>leguide"><b>BDs</b></a>,  <a
+            href="<?php echo BDO_URL; ?>leguide/actualites_bd"><b>BDs</b></a>,  <a
 
-            href="<?php echo BDO_URL; ?>leguide?origine=2"><b>Mangas</b></a> et
+            href="<?php echo BDO_URL; ?>leguide/actualites_bd?origine=2"><b>Mangas</b></a> et
 
         <a
 
-            href="<?php echo BDO_URL; ?>leguide?origine=3"><b>Comics</b></a>.
+            href="<?php echo BDO_URL; ?>leguide/actualites_bd?origine=3"><b>Comics</b></a>.
            <!-- Téléchargez la toute dernière version de l'application native Android !  <a href='https://play.google.com/store/apps/details?id=com.PaulOlivier.bdovore&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Disponible sur Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/fr_badge_web_generic.png'style="vertical-align: middle;" width="140px"/></a>
 
             <br> <a href="https://fr-fr.facebook.com/bdovore" target="_blank"> Suivez l'actualité BD sur Facebbok !</a><br>
@@ -28,7 +28,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
  <hr class="expSep" />
     
     <div class="cadre1">
-        <div class="middle_title"><h3><a href="./leguide">Dernières Critiques</a></h3></div>
+        <div class="middle_title"><h3><a href="./leguide/avis">Dernières Critiques</a></h3></div>
         <table class="list_album">
               <?php
               $tr = true;
@@ -49,7 +49,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     <hr class="expSep" />
     <div class="cadre1">
         <div class="middle_title">
-            <h3><a href="./leguide?origine=1&rb_mode=7">Albums BD Mangas Comics tendances</a></h3>
+            <h3><a href="./leguide/actualites_bd">Albums BD Mangas Comics tendances</a></h3>
         </div>
         
             <div style='margin:0 auto; max-width:900px;'>
@@ -78,7 +78,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     </div>
     <hr class="expSep" />
     <div class="cadre1">
-        <div class="middle_title"><h3><a href="./leguide?rb_mode=4&rb_list=album&submitGuide=Envoyer">Derni&egrave;res sorties</a> <a href="<?php echo BDO_URL; ?>rss/dernieres_sorties"> <img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" /></a></h3></div>
+        <div class="middle_title"><h3><a href="./leguide/sorties_bd">Derni&egrave;res sorties</a> <a href="<?php echo BDO_URL; ?>rss/dernieres_sorties"> <img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" /></a></h3></div>
           <table class="list_album">
             <?php
             $tr = true;
@@ -95,13 +95,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             ?>
         </table>
         <hr class="expSep" />
-        <div class="fright"><a href="./leguide?rb_mode=4&rb_list=album&submitGuide=Envoyer">Toutes les dernières sorties</a></div>
+        <div class="fright"><a href="./leguide/sorties_bd">Toutes les dernières sorties</a></div>
         <hr class="expSep" />
     </div>
     <hr class="expSep" />
 
     <div class="cadre1">
-        <div class="middle_title"><h3><a href="./leguide?rb_mode=5&rb_list=album&submitGuide=Envoyer">Sorties &agrave; venir</a> <a href="<?php echo BDO_URL; ?>rss/sorties_a_venir"> <img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" /></a></h3></div>
+        <div class="middle_title"><h3><a href="./leguide/prochaines_sorties_bd">Sorties &agrave; venir</a> <a href="<?php echo BDO_URL; ?>rss/sorties_a_venir"> <img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" /></a></h3></div>
         <table class="list_album">
             <?php
             $tr = true;
@@ -118,7 +118,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             ?>
         </table>
         <hr class="expSep" />
-        <div class="fright"><a href="./leguide?rb_mode=5&rb_list=album&submitGuide=Envoyer">Toutes les futures sorties</a></div>
+        <div class="fright"><a href="./leguide/prochaines_sorties_bd">Toutes les futures sorties</a></div>
         <hr class="expSep" />
     </div>
     <hr class="expSep" />
@@ -127,7 +127,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     <div class="cadre1">
         <div id="lastajout" class="right fond">
             <div class="middle_title">
-                <h3><a href="<?php echo BDO_URL;?>leguide?rb_mode=6&rb_list=album&submitGuide=Envoyer">Derniers ajouts</a>
+                <h3><a href="<?php echo BDO_URL;?>leguide/ajouts">Derniers ajouts</a>
                     <a href="<?php echo BDO_URL;?>rss">
                     <img src="<?php echo BDO_URL_IMAGE;?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" />
                     </a>
