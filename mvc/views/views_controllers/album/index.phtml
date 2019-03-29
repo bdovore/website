@@ -68,8 +68,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                 <?php  if ($view->connected) { ?>
 
-                $("#writecomment").show(100);
-                offset = $("#writecomment").offset().top;
+                $(".writecomment").show(100);
+                offset = $(".writecomment").offset().top;
                 $('html, body').animate({scrollTop: offset}, 'slow');
                 <?php }
                  else {
@@ -262,32 +262,26 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
     </a>
     </font>
-    <div id="writecomment">
+    <div >
 
         <table width="100%" border="0" align="center">
-            <tr>
-                <td width="70%">
-
-                    <strong>Notez et donnez votre avis de lecture pour <font color="#990000"><?php echo $view->tome->TITRE_TOME; ?> </font></strong>
-
-                </td>
-            </tr>
+            
 
             <tr>
                 <td>
-                    <b><i>Note:</i></b>
-                    <span id="commentRaty"></span>
+                    <b><i>Ma Note:</i></b>
+                    <span id="commentRaty" onclick="viewComment()"></span>
                     <script>$("#commentRaty").raty({ scoreName: 'note', half : true})</script>
 
                 </td>
             </tr>
-            <tr>
+            <tr class="writecomment">
                 <td>Avis de lecture * :
                     <textarea id="t_comment" class="champ_commentaire"></textarea></td>
             </tr>
 
 
-            <tr>
+            <tr class="writecomment">
                 <td>
 
                     <input name="id_tome" type="hidden" id="id_tome" value="<?php echo $view->tome->ID_TOME ?>" />
@@ -334,7 +328,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 </div>
 </div>
 <script language="javascript">
-   $("#writecomment").hide();
+   $(".writecomment").hide();
    $("#info_collection").hide();
    <?php if (User::minAccesslevel(2)) { ?>
       // récupération de l'éventuelle commentaire du membre
@@ -343,7 +337,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         if (data.length > 0) {
             $("#commentRaty").raty({ scoreName: 'note', half : true, score : data[0].NOTE / 2});
             $("#t_comment").val(data[0].COMMENT);
-            $("#writecomment").show();
+            $(".writecomment").show();
         }
         });
 
