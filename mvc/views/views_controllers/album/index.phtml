@@ -69,8 +69,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 <?php  if ($view->connected) { ?>
 
                 $(".writecomment").show(100);
-                offset = $(".writecomment").offset().top;
-                $('html, body').animate({scrollTop: offset}, 'slow');
+               // offset = $(".writecomment").offset().top;
+                //$('html, body').animate({scrollTop: offset}, 'slow');
                 <?php }
                  else {
                                             echo "alert('Vous devez vous authentifier pour écrire un avis de lecture !');";
