@@ -179,11 +179,9 @@ if ($view->NUM_PAGE < 20)
         <?php 
          $genre ="";
         foreach ($view->ACTUAIR as $actu) { 
-            if ($actu->ORIGINE_GENRE <> $genre) {
-                echo "<div class='middle_content'>".$actu->ORIGINE_GENRE ."</div>";
-            }
+            
             echo $ficheAlbum->urlAlbum($actu,$class="couvMedium",$sponsor=FALSE)." ";
-            $genre = $actu->ORIGINE_GENRE;
+           
       } ?>
             </div>
         </div>
