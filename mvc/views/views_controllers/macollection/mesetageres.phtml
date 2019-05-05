@@ -53,6 +53,7 @@
                 url+= "&flg_tete="+($("#cb_tete_"+changeEdition[i]).is(':checked') ? "O" : "N");
                 url+= "&flg_cadeau="+ ($("#cb_cadeau_"+changeEdition[i]).is(':checked') ? "O" : "N");
                 url+= "&flg_lu="+ ($("#cb_lu_"+changeEdition[i]).is(':checked') ? "O" : "N");
+                url+= "&flg_num="+ ($("#cb_num_"+changeEdition[i]).is(':checked') ? "O" : "N");
                 url+= "&date_achat="+$("#date_achat_"+changeEdition[i]).val();
                 url+= "&email_pret="+$("#email_pret_"+changeEdition[i]).val();
                 url+= "&nom_pret="+$("#nom_pret_"+changeEdition[i]).val();
@@ -162,6 +163,7 @@ $page = $view->getHelper('pagination');
                 Cadeau :<input id="cb_cadeau" name="cb_cadeau" type="checkbox" value="O" onChange='$("#f_collection").submit();' <?php if ($view->cadeau == "O") echo "checked"; ?>/>
                 Prêt :<input id="cb_pret" name="cb_pret" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->pret == "O") echo "checked"; ?>/>
                 Non lu :<input id="cb_lu" name="cb_lu" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->non_lu == "O") echo "checked"; ?>/>
+                Edition numérique :<input id="cb_num" name="cb_num" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->num == "O") echo "checked"; ?>/>
             </div><br>
             <div id="data_length" class="dataTables_length">
                 Voir :
@@ -227,6 +229,7 @@ $page = $view->getHelper('pagination');
                                 <option value="13">  Commentaire </option>
                                 <option value="14">Dernier emprunteur</option>
                                 <option value="15">Email</option>
+                                <option value="16">Edition numérique</option>
 
 
                             </select>
@@ -264,6 +267,7 @@ $page = $view->getHelper('pagination');
                     <th class="sorting" name="col16">Commentaire</th>
                     <th class="sorting" name="col17">Emprunteur</th>
                     <th class="sorting" name="col18">Email</th>
+                    <th class="sorting" name="col19">Edition numérique</th>
 
                 </tr>
             </thead>
@@ -298,6 +302,7 @@ $page = $view->getHelper('pagination');
                         <td  name="col16"><textarea name="remarque" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" id="remarque_<?php echo $album->ID_EDITION; ?>" class="champ_commentaire"><?php echo $album->comment; ?></textarea> </td>
                         <td  name="col17"> <input name="nom_pret" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" id="nom_pret_<?php echo $album->ID_EDITION; ?>" value="<?php echo $album->NOM_PRET; ?>" size="15" maxlength="100" type="text" > </td>
                         <td  name="col18"> <input name="email_pret" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" id="email_pret_<?php echo $album->ID_EDITION; ?>" value="<?php echo $album->EMAIL_PRET; ?>" size="15" maxlength="100" type="text"> </td>
+                        <td  name="col19"> <input name="cb_num" onchange="addChange(<?php echo $album->ID_EDITION; ?>);" id="cb_num_<?php echo $album->ID_EDITION; ?>" value="checkbox" type="checkbox" <?php if ($album->FLG_NUM == 'O') echo "checked"; ?>> </td>
 
                     </tr>
     <?php

@@ -66,6 +66,7 @@ class Useralbum extends Bdo_Db_Line
                           ua.cote,
                           ua.flg_cadeau as FLG_CADEAU,
                           ua.FLG_LU as FLG_LU,
+                          ua.FLG_NUM,
 
 
                       bd_tome.PRIX_BDNET,

@@ -101,6 +101,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 url+= "&flg_tete="+($("#cb_tete").is(':checked') ? "O" : "N");
                 url+= "&flg_cadeau="+ ($("#cb_cadeau").is(':checked') ? "O" : "N");
                 url+= "&flg_lu="+ ($("#cb_lu").is(':checked') ? "O" : "N");
+                 url+= "&flg_num="+ ($("#cb_num").is(':checked') ? "O" : "N");
                 url+= "&date_achat="+$("#date_achat").val();
                 url+= "&email_pret="+$("#email_pret").val();
                 url+= "&nom_pret="+$("#nom_pret").val();
@@ -231,6 +232,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 Dédicace : <input name="cb_dedicace" id="cb_dedicace" value="O" type="checkbox" >
                 Cadeau :<input name="cb_cadeau" id="cb_cadeau" value="checkbox" type="checkbox" >
                 Lu :<input name="cb_lu" id="cb_lu" value="checkbox" type="checkbox" >
+                Ed. numérique :<input name="cb_num" id="cb_num" value="checkbox" type="checkbox" >
             </td>
         </tr>
         <tr>
@@ -409,6 +411,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                }
                if (data.data[0].FLG_CADEAU == 'O') {
                    $('#cb_cadeau').attr('checked', true);
+               }
+               if (data.data[0].FLG_NUM == 'O') {
+                   $('#cb_num').attr('checked', true);
                }
                $("#nom_pret").val(data.data[0].NOM_PRET);
                $("#email_pret").val(data.data[0].EMAIL_PRET);

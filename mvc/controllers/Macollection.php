@@ -79,6 +79,7 @@ class Macollection extends Bdo_Controller {
             $user_id = intval($_SESSION['userConnect']->user_id);
             $id_edition = getValInteger("id_edition",0);
             $flg_achat = getVal('flg_achat','N');
+            $flg_num = getVal('flg_num','N');
 
             $flg_pret = getVal('flg_pret','N');
             $email_pret = getVal('email_pret','');
@@ -122,6 +123,7 @@ class Macollection extends Bdo_Controller {
                             'flg_dedicace' => $flg_dedicace,
                             'flg_tete' => $flg_tete,
                             'comment' => $comment,
+                           'FLG_NUM' => $flg_num,
 
                             'flg_achat' => $flg_achat,
                             'date_achat' => $date_achat,
@@ -226,6 +228,7 @@ class Macollection extends Bdo_Controller {
           $a_order[15]= "comment";
           $a_order[16]= "NOM_PRET";
           $a_order[17]= "EMAIL_PRET";
+          $a_order[18]= "FLG_NUM";
 
           $pret = getVal("cb_pret","N");
 
@@ -233,6 +236,7 @@ class Macollection extends Bdo_Controller {
           $eo = getVal("cb_tete","N");
           $dedicace = getVal("cb_dedicace","N");
           $non_lu = getVal("cb_lu","N");
+          $num = getVal("cb_num","N");
 
           $limit = " limit ".(($page - 1)*$length).", ".$length;
           $orderby = " order by ".$a_order[$sort-1]." ".$order;
@@ -244,6 +248,7 @@ class Macollection extends Bdo_Controller {
           if ($eo == "O") $where .= " and flg_tete = 'O' ";
           if ($dedicace== "O") $where .= " and flg_dedicace = 'O' ";
           if ($non_lu== "O") $where .= " and FLG_LU <> 'O' ";
+          if ($num== "O") $where .= " and FLG_NUM = 'O' ";
 
           if ($sel_type <> "Tous") {
               $where .= " and g.ORIGINE = '".Db_Escape_String($sel_type) ."'";
@@ -283,7 +288,8 @@ class Macollection extends Bdo_Controller {
               "non_lu" => $non_lu,
               "dedicace" => $dedicace,
               "searchvalue" => $l_search,
-               "sel_type" => $sel_type
+               "sel_type" => $sel_type,
+              "num" => $num
               ));
       }
       else {
