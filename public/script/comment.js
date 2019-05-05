@@ -91,7 +91,6 @@ function writeComment(id_tome,note,comment) {
     url += "&note="+note;
     url += "&comment="+encodeURIComponent(comment);
     $.getJSON(url, function(data){
-
         if (data.length == 0) {
             alert("Commentaire / note enregistré !");
         }
@@ -108,7 +107,7 @@ function isValidEmailAddress(emailAddress) {
 
 function setCommentPrivate(user_id, id_tome){
     if (confirm("Supprimer le commentaire et le passer en commentaire privé ?")) {
-        var url = "./AlbumComment/setCommentPrivate?user_id="+user_id+"&id_tome="+id_tome;
+        var url = $.bdovore.URL+ "AlbumComment/setCommentPrivate?user_id="+user_id+"&id_tome="+id_tome;
         $.getJSON(url, function(data){
 
             if (data.length == 0) {
@@ -119,4 +118,93 @@ function setCommentPrivate(user_id, id_tome){
             }
         });
     }
+}
+
+function getSocialInfo(user_id, id_tome ) {
+    var url = $.bdovore.URL+ "AlbumComment/getLikeForComment?user_id="+user_id+"&id_tome="+id_tome;
+    $("#social-"+user_id +"-"+ id_tome + " > ul").hide();
+    $("#writecmt-"+user_id+"-"+id_tome).hide();
+    $.getJSON(url, function(data){
+       
+        if (data.nbLike > 0) {
+            $("#social-"+user_id +"-"+ id_tome + " > ul:nth-child(1) > li:nth-child(1)").html(data.nbLike + " J'aime");
+            $("#social-"+user_id +"-"+ id_tome + " > ul:nth-child(1) > li:nth-child(2)").html("");
+            $("#social-"+user_id +"-"+ id_tome + " > ul").show();
+           
+           
+        } else {
+             $("#social-"+user_id +"-"+ id_tome + " > ul:nth-child(1) > li:nth-child(1)").html("");
+        }
+        if (data.nbCmt > 0) {
+            $("#social-"+user_id +"-"+ id_tome + " > ul:nth-child(1) > li:nth-child(2)").html( "<a onclick='getCommentToReview("+ user_id + ","+ id_tome +")'>"+ data.nbCmt + " Commentaires</a>");
+             $("#social-"+user_id +"-"+ id_tome + " > ul").show();
+        }
+        if (data.userLike > 0) {
+               $("#like-"+user_id+"-"+id_tome).removeClass("far");
+               $("#like-"+user_id+"-"+id_tome).addClass("fas");
+               //$("#like-"+user_id+"-"+id_tome).removeClass("fas");
+           } else {
+               $("#like-"+user_id+"-"+id_tome).removeClass("fas");
+               $("#like-"+user_id+"-"+id_tome).addClass("far");
+           }
+    });
+
+    
+}
+
+function likeComment (user_id, id_tome) {
+    var url = $.bdovore.URL+"AlbumComment/likeComment?user_id="+user_id+"&id_tome="+id_tome;
+    $.getJSON(url, function(data){
+        if (data.error_connect) {
+                   alert("Vous devez vous connecter pour aimer un commentaire.")
+               }
+        getSocialInfo(user_id, id_tome );
+    });
+    
+}
+
+function addCommentToReview (user_id, id_tome) {
+    var cmt = $("#txt-"+user_id+"-"+id_tome).val();
+    if (cmt.length > 0) {
+        var url = $.bdovore.URL+"AlbumComment/addCommentToReview?";
+    url += "id_tome="+id_tome;
+    url += "&user_id="+user_id;
+    url += "&comment="+encodeURIComponent(cmt);
+    $.getJSON(url, function(data){
+           if (data.length == 0) {
+               alert("Commentaire enregistré !");
+                getSocialInfo(user_id, id_tome );
+                getCommentToReview (user_id, id_tome);
+           } else {
+               if (data.error_connect) {
+                   alert("Vous devez vous connecter pour ajouter un commentaire.")
+               }
+           }
+           $("#txt-" + user_id + "-" + id_tome).toggle();
+          
+       });
+   } 
+    
+}
+
+function getCommentToReview (user_id, id_tome) {
+    $("#lst-cmt-"+user_id+"-"+id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
+     var url = $.bdovore.URL+"AlbumComment/getCommentToReview?";
+    url += "id_tome="+id_tome;
+    url += "&user_id="+user_id;
+     $.getJSON(url, function(data){
+           if (data.length == 0) {
+               
+           } else {
+               var div = "";
+               $.each(data,function (i, item) {
+                    idcmt = item.ID_TOME + "_" + i;
+                    div += "<div class='listcomment'> \n\
+                    <p class='fiche_album'><span itemprop='author'><a href='./guest?user="+item.USER_ID + "' target='parent'>"+ item.USERNAME + "</a></span> " + item.date_comment +"</p>  <p>     \n\
+                     <span>" + stripslashes(nl2br(item.comment)) + "</span></p> </div>";               
+                });
+                 $("#lst-cmt-"+user_id+"-"+id_tome).html(div);
+                  $("#lst-cmt-"+user_id+"-"+id_tome).toggle();
+        }
+       });
 }

@@ -122,7 +122,7 @@ if (isset($view->dbs_comment)) {
 
 
                                 </td>
-                                <td style='vertical-align:top'>
+                                <td style='vertical-align:top;width:100%'>
 
                                     <?php echo $ficheAlbum->getTitreTome($tome, true, true); ?><br>
                                      <?php if ((($tome->NOM_SERIE AND ($tome->TITRE_TOME AND (strtolower($tome->NOM_SERIE) != strtolower($tome->TITRE_TOME)) )))) echo $ficheAlbum->urlSerie($tome); ?>
@@ -141,6 +141,31 @@ if (isset($view->dbs_comment)) {
                                      Publié par <span itemprop='author'><a href='./guest?user=<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a></span> le <meta itemprop='datePublished' content='<?php echo $tome->DTE_POST; ?>' /><?php echo $tome->DTE_POST; ?></p>
                                     <p>  <span itemprop='description'><?php echo (stripslashes(nl2br($tome->COMMENT))); ?></span>
                                     </div>
+                                    <div class="cadre1" id="social-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>">
+                                            <ul class="social" style="list-style: none;/*! position: relative; *//*! left: 50%; *//*! margin-right: 3px; */font-size: 0.8em;float: right;">
+                                                <li style="float: left;/*! margin-left: 5px; *//*! padding-left: 5px; */"> 1 j'aime</li>
+                                                <li style="float: left;margin-left: 5px;padding-left: 5px;">2 commentaires</li>
+                                            </ul>  
+                                        <hr class="expSep">
+                                      </div> 
+                                        <div class="social">
+                                                <a><i class="far fa-thumbs-up" id="like-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>" onClick="likeComment(<?php echo $tome->user_id; ?>, <?php echo $tome->ID_TOME ?>);"> J'aime</i></a> - 
+                                                <a><i class="far fa-comment-alt" id="add-cmt-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>" onclick='$("#writecmt-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>").toggle();'> Commenter</i></a>
+                                        </div>
+                                        <hr class="expSep">
+                                          <div class="cmt-social" style="width: 95%;float: right;padding-right:10px;" id="writecmt-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>" >
+                                                  <textarea id="txt-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>"  class="champ_commentaire"></textarea>
+                                                  <input type="button" value="Ok" style="float:right;" onclick="addCommentToReview(<?php echo $tome->user_id.",".$tome->ID_TOME; ?>);">
+
+                                          </div>
+                                        <hr class="expSep">
+                                        <div class="cmt-social" style="width:90%;float:right;" id="lst-cmt-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>">
+                                            
+                                        </div>
+                                        <hr class="expSep">
+                                    <script>getSocialInfo(<?php echo $tome->user_id; ?>, <?php echo $tome->ID_TOME ?>);
+                                            $("#lst-cmt-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>").hide();
+                                    </script>
                                  </td>                     
                         </tr>
                         </table>

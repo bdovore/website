@@ -94,8 +94,8 @@ class AlbumComment extends Bdo_Controller {
 
             $this->Comment->load(c," WHERE c.user_id = ".$user_id . " and c.id_tome = ".$id_tome);
             $comment = $this->Comment->COMMENT;
-            $this->Comment->set_dataPaste(array("USER_ID" => $user_id, "ID_TOME" => $id_tome));
-            $this->Comment->delete();
+            $this->Comment->add_dataPaste("COMMENT","");
+            $this->Comment->update();
 
             $this->loadModel("Useralbum");
             $this->Useralbum->load(c," WHERE ua.user_id = ".$user_id . " and bd_tome.ID_TOME = ".$id_tome);
@@ -111,6 +111,88 @@ class AlbumComment extends Bdo_Controller {
             $this->view->render();
         }
     }
+    
+    public function likeComment () {
+         $id_tome = getValInteger('id_tome',0);
+         $user_id_source = decodeUserId(getValInteger("user_id",0));
+        /* pour "liker" une critique sur un album */
+         if (! empty($_SESSION['userConnect']->user_id)) {
+             $this->loadModel("Social");
+             // on check si un like existe déjà, dans ce cas on l'enlève, et dans le cas contraire ou l'ajoute
+             if ($id_tome AND $user_id_source) {
+                $dbSocial = $this->Social->getLikeForUser($_SESSION['userConnect']->user_id, $id_tome, $user_id_source);
+                
+                if ($dbSocial->nbLineResult > 0) {
+                    // dislike
+                    $this->Social->deleteLike($_SESSION['userConnect']->user_id,$id_tome, $user_id_source );
+                } else {
+                    $this->Social->set_dataPaste(array(
+                        "TYPE_ACTION" => "L",
+                        "USER_ID" => $_SESSION['userConnect']->user_id,
+                        "SOURCE_ID_TOME" => $id_tome,
+                        "SOURCE_USER" => $user_id_source
+                        ));
+                    $this->Social->update();                            
+                } 
+                $this->view->set_var('json', json_encode($this->Social->error));
+               
+             }
+         }else {
+            $this->view->set_var('json', json_encode(array("error_connect" => "not connected")));
+        }     
+         $this->view->layout = "ajax";
+         $this->view->render();
+    }
+    
+    public function getLikeForComment () {
+        $id_tome = getValInteger('id_tome',0);
+        $user_id_source = decodeUserId(getValInteger("user_id",0));
+        $this->loadModel("Social");
+        $nb = $this->Social->getNbLikeForComment($id_tome, $user_id_source);
+        
+        $this->loadModel("Socialreview");
+        $nbcmt = $this->Socialreview->getNbCommentForSource($id_tome."-".$user_id_source);
+        $nb_user = 0;
+        if (! empty($_SESSION['userConnect']->user_id)) {
+            $dbSocial = $this->Social->getLikeForUser($_SESSION['userConnect']->user_id, $id_tome, $user_id_source);
+            $nb_user = $dbSocial->nbLineResult;
+        }
+        $obj = array("nbLike" => $nb, "userLike" => $nb_user, "nbCmt" => $nbcmt);
+        $this->view->set_var('json', json_encode($obj));
+        $this->view->layout = "ajax";
+        $this->view->render();
+    }
 
+    public function addCommentToReview () {
+        $id_tome = getValInteger('id_tome',0);
+        $user_id_source = decodeUserId(getValInteger("user_id",0));
+        $cmt = getVal("comment","");
+        if (! empty($_SESSION['userConnect']->user_id)) {
+             $this->loadModel("Socialreview");
+             $this->Socialreview->set_dataPaste(array(
+                 "source" => $id_tome."-".$user_id_source,
+                 "user_id" => $_SESSION['userConnect']->user_id,
+                 "date_comment" => date('d/m/Y H:i:s'),
+                 "comment" =>  $cmt
+             ));
+             $this->Socialreview->update();
+             $this->view->set_var('json', json_encode($this->Socialreview->error));
+             
+        } else {
+            $this->view->set_var('json', json_encode(array("error_connect" => "not connected")));
+        }
+        $this->view->layout = "ajax";
+        $this->view->render();
+     }
+     
+     public function getCommentToReview () {
+        $id_tome = getValInteger('id_tome',0);
+        $user_id_source = decodeUserId(getValInteger("user_id",0));
+        $this->loadModel("Socialreview");
+        $this->Socialreview->load("c", " WHERE source = '".$id_tome."-".$user_id_source ."' order by date_comment ASC");
+        $this->view->set_var('json', json_encode($this->Socialreview->dbSelect->a_dataQuery));
+        $this->view->layout = "ajax";
+        $this->view->render();
+     }
 }
 ?>

@@ -305,7 +305,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 $i++;
                 $id_cmt = $view->tome->ID_TOME."_".$i;
                 ?>
-            <div class='listcomment' itemprop='review' itemscope itemtype='http://schema.org/Review'> 
+            <div class='listcomment' itemprop='review' itemscope itemtype='http://schema.org/Review' id="cmt-<?php echo $comment->user_id."-".$comment->ID_TOME; ?>"> 
                 <div itemprop='reviewRating' itemscope itemtype='http://schema.org/Rating'>
                     <meta itemprop='worstRating' content = '1'/>
                     <meta itemprop='ratingValue' content='<?php echo round($comment->NOTE/2.0, 1); ?>' />
@@ -318,6 +318,30 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 <script>$('#noteTome<?php echo $id_cmt ;?>').raty({score: <?php echo $comment->NOTE; ?>/2.0 , readOnly: true});</script>
                 <?php } ?>
             </div>
+              
+                <div class="cadre1" id="social-<?php echo $comment->user_id."-".$comment->ID_TOME; ?>">
+                        <ul class="social" style="list-style: none;/*! position: relative; *//*! left: 50%; *//*! margin-right: 3px; */font-size: 0.8em;float: right;">
+                            <li style="float: left;/*! margin-left: 5px; *//*! padding-left: 5px; */"> 1 j'aime</li>
+                            <li style="float: left;margin-left: 5px;padding-left: 5px;">2 commentaires</li>
+                        </ul>
+                        <div class="social">
+                            <a><i class="far fa-thumbs-up" id="like-<?php echo $comment->user_id."-".$comment->ID_TOME; ?>" onClick="likeComment(<?php echo $comment->user_id; ?>, <?php echo $comment->ID_TOME ?>);"> J'aime</i></a> - 
+                            <a><i class="far fa-comment-alt" id="add-cmt-<?php echo $comment->user_id."-".$comment->ID_TOME; ?>" onclick='$("#writecmt-<?php echo $comment->user_id."-".$comment->ID_TOME; ?>").toggle();'> Commenter</i></a>
+                        </div>
+                        <hr class="expSep">
+                          <div class="cmt-social" style="width: 95%;float: right;padding-right:10px;" id="writecmt-<?php echo $comment->user_id."-".$comment->ID_TOME; ?>" >
+                                  <textarea id="txt-<?php echo $comment->user_id."-".$comment->ID_TOME; ?>"  class="champ_commentaire"></textarea>
+                                  <input type="button" value="Ok" style="float:right;" onclick="addCommentToReview(<?php echo $comment->user_id.",".$comment->ID_TOME; ?>);">
+                          
+                          </div>
+                         <hr class="expSep">
+                                        <div class="cmt-social" style="width:90%;float:right;" id="lst-cmt-<?php echo $comment->user_id."-".$comment->ID_TOME; ?>">
+                                            
+                                        </div>
+                           <hr class="expSep">
+                  </div> 
+        <script>getSocialInfo(<?php echo $comment->user_id; ?>, <?php echo $comment->ID_TOME ?>);
+        $("#lst-cmt-<?php echo $comment->user_id."-".$comment->ID_TOME; ?>").hide();</script>
             <?php } 
             if ($i == 0) { ?>
                     <i>Aucun commentaire pour cet album actuellement. <a onclick='viewComment();'>Soyez le premier !</a></i>
