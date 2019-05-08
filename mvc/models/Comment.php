@@ -86,7 +86,11 @@ class Comment extends Bdo_Db_Line
         return Db_affected_rows();
     }
 
-
+    public function setCommentNull ($user_id, $id_tome) {
+        $query = "update users_comment set COMMENT = '' where user_id = ".intVal($user_id)." and id_tome = ".intVal($id_tome);
+        Db_query($query);
+        return Db_affected_rows();
+    }
 
 
 }

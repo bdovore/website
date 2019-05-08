@@ -92,10 +92,10 @@ class AlbumComment extends Bdo_Controller {
             $user_id = decodeUserId(getValInteger("user_id"));
             $this->loadModel('Comment');
 
-            $this->Comment->load(c," WHERE c.user_id = ".$user_id . " and c.id_tome = ".$id_tome);
+            $this->Comment->load(c," WHERE c.user_id = ".$user_id . " and c.ID_TOME = ".$id_tome);
             $comment = $this->Comment->COMMENT;
-            $this->Comment->add_dataPaste("COMMENT","");
-            $this->Comment->update();
+            $this->Comment->setCommentNull( $user_id, $id_tome );
+            
 
             $this->loadModel("Useralbum");
             $this->Useralbum->load(c," WHERE ua.user_id = ".$user_id . " and bd_tome.ID_TOME = ".$id_tome);
