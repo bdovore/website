@@ -376,10 +376,23 @@ FROM " . $this->table_name . "
             $o = Db_fetch_object($result);
             $id = $o->total + 1;
             $query = "INSERT INTO bb3_users (
-                    user_id , username,user_password, user_email, user_regdate ) VALUES (
-                    $id, '" . $username . "', '" . md5($password) . "', '" . $email . "'," . time() . "
+                    user_id , username,username_clean, user_password, user_email, user_regdate, group_id, user_style, user_options, user_allow_viewemail ) VALUES (
+                    $id, '" . $username . "', '" . $username . "', '" . md5($password) . "', '" . $email . "'," . time() . ", 545, 2, 230207,0
                     )";
             $result = Db_query($query,$connexion);
+            if ($result) {
+                 $query = "INSERT INTO `forumbb2`.`bb3_user_group` (
+                        `group_id` ,
+                        `user_id` ,
+                        `group_leader` ,
+                        `user_pending`
+                        )
+                        VALUES (
+                        '545', $id, '0', '0'
+                        )";
+                 $result = Db_query($query,$connexion);
+                 
+            }
         }
     }
 
