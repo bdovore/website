@@ -381,7 +381,7 @@ FROM " . $this->table_name . "
                     )";
             $result = Db_query($query,$connexion);
             if ($result) {
-                 $query = "INSERT INTO `forumbb2`.`bb3_user_group` (
+                 $query = "INSERT INTO `bb3_user_group` (
                         `group_id` ,
                         `user_id` ,
                         `group_leader` ,
