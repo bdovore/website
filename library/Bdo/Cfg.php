@@ -85,7 +85,7 @@ class Bdo_Cfg
 
             $msg = 'Alerte serveur MySQL ' . CFG_DB_HOST . ' - connexion impossible - ' . date('Y-m-d H:i') . print_r($_SERVER, true);
 
-            mail($to, CFG_NAME . ' : ALERTE CONNEXION MySQL - ' . CFG_DB_HOST, $msg, $headers);
+            //mail($to, CFG_NAME . ' : ALERTE CONNEXION MySQL - ' . CFG_DB_HOST, $msg, $headers);
 
             Bdo_Cfg::quit('cfg : connection database error.');
         }
