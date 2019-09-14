@@ -62,7 +62,7 @@ class Guest extends Bdo_Controller
             // envoie les variables a la vue
             $this->view->set_var(
                     array(
-                            "PAGETITLE" => "Bdovore.com : visitez la collection de $user->username",
+                            "PAGETITLE" => "Bdtheque : visitez la collection de $user->username",
                             "IDUSER" => $user->user_id,
                             'DESCRIPTION'=> "La collection de bandes-dessinées, comics et mangas de $user->username",
                             //"DTEARRIVEE" => $user_regdate,

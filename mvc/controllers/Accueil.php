@@ -42,7 +42,7 @@ class Accueil extends Bdo_Controller
                         'a_futurSorties' => $this->futurSorties(6),
                         'nbTome' => $this->Tome->getNbTotalTome(),
                     'opengraph' => $opengraph,
-                        'PAGETITLE' => "BDOVORE.com - gestion de collection de BD, actualité BD et forums BD"
+                        'PAGETITLE' => "BDOVORE.com - gestion de collection de BD, Manga et Comics"
                 ));
 
         $this->view->addPhtmlFile('news', 'LASTNEWS', true);

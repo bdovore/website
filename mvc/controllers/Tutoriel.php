@@ -20,7 +20,7 @@ class Tutoriel extends Bdo_Controller
             $this->view->layout = "ajax";
         }
         $this->view->set_var(array(
-            "PAGETITLE" => "Bdovore : le tutoriel",
+            "PAGETITLE" => "Votre Bdtheque sur Bdovore : le tutoriel ",
             'NBALB' => $this->Statistique->a_tableStatus['bd_tome']->Rows,
             'NBSERIE' => $this->Statistique->a_tableStatus['bd_serie']->Rows
             ));
