@@ -1,7 +1,28 @@
-<div class="cadre1">
+<div class="cadre1" style="min-height:500px;">
+    <?php if ($view->validInscription) { ?>
+        <h2>Inscription réussie !</h2>
+        Votre inscription a bien été enregistrée sur le site. <br>
+        Vous pouvez vous connecter avec votre login et mot de passe en cliquant sur <a onclick="$('#loginBox').show();">le menu connexion</a> ou  en renseignant vos informations ci-dessous
+       <form id="loginForm" method="post" action="<?php echo BDO_URL;?>">
+                        <fieldset id="loginBody">
+                            <fieldset>
+                                <label for="user_login">Pseudo</label>
+                                <input type="text" name="user_login" id="user_login" />
+                            </fieldset>
+                            <fieldset>
+                                <label for="user_password">Mot de passe</label>
+                                <input type="password" name="user_password" id="user_password" />
+                            </fieldset>
+                            <input type="submit" id="submitLoginConnect" name="submitLoginConnect" value="Se connecter" />
+                            <label for="chkvisit">Rester connecter</label><input type="checkbox" style="width:auto;margin-top: 12px;" id="chkvisit" name="chkvisit" />
+                        </fieldset>
+                        </form>
+    <?php } 
+    else { ?>
 <h2>Créez votre compte Bdovore</h2>
-</div>
+
 <div class="cadre1" id="create_account" style = "text-align:center">
+     <font color="#990000" size="3" face="Arial, Helvetica, sans-serif"><?php echo $view->ERRORTEXT;?></font>
             <form name="form1" method="post" action="?act=post">
                 <font color="<?php echo $view->COLORNEWUSER;?>">Nom de l'utilisateur</font><br/>
                      <input type="Text" name="NewUser" value="<?php echo $view->USERNAME;?>"><br />
@@ -17,18 +38,17 @@
                       <input type="submit" name="Validation" value="Soumettre">
                       <br />
                    
-                            <font>
+                           
+                  
+                
+            </form>
+       
+        
+         <font>
                                 *L'indication d'une adresse que vous <u>consultez régulièrement</u> est <u>indispensable</u> pour un fonctionnement correct du site
                                 et notamment afin de garantir une <u>bonne communication</u> entre l'équipe du site et vous.<br>                                
                                 Votre adresse ne sera transmise à aucun tiers et ne sera l'objet d'aucune publicité.
-                            </font>
-                  
-                <div style="margin-top: 10px;">
-                    Vous pouvez également indiquer votre localisation géographique sur la
-                    <a href="http://www.mappemonde.net/carte/BDovore/Monde.html" style="color: #990000; font-weight: bold;" onclick="window.open(this.href); return false;" title="Ouvre la mappe-BDO-monde dans une nouvelle fenêtre ou un nouvel onglet">
-                        mappe-BDO-monde
-                    </a> et découvrir la répartition de la communauté BDOvore dans le monde.
-                </div>
-            </form>
-        <font color="#990000" size="3" face="Arial, Helvetica, sans-serif"><?php echo $view->ERRORTEXT;?></font>
+             </font>
+</div>
+<?php } ?>
 </div>

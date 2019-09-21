@@ -183,8 +183,14 @@ FROM " . $this->table_name . "
                             } else {
                                 setcookie("pass", $this->password, time() + 3600, "/"); // on mémorise pour 1h
                             }
+                            $test = strpos($_SERVER['HTTP_REFERER'],"inscription?act=post" );
                             // on retourne à la page d'origine de la connexion
-                             header('Location: '.$_SERVER['HTTP_REFERER']);
+                            if (strpos($_SERVER['HTTP_REFERER'],"inscription?act=post" ) ) { 
+                                header('Location: '.BDO_URL);
+                            } else {
+                                header('Location: '.$_SERVER['HTTP_REFERER']);
+                                
+                            }
                         }
                         else {
                             $this->error = 'Compte bloqué';

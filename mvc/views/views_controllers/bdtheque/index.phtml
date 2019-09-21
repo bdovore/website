@@ -1,0 +1,45 @@
+<div class="cadre1">
+    <h1>Votre BDtheque en ligne avec Bdovore</h1>
+    Bdovore vous permet de gérer votre collection de BD en ligne gratuitement, suivre <strong>l'actualité BD</strong>, partager <strong>vos envies de BD</strong>, suivre vos <strong>statisques</strong>...<br>
+    Et comme Bdovore est une association à but non lucratif, c'est un site gratuit et sans publicité : votre collection et vos données ne seront jamais utilisées, revendues ou partagées avec des tiers.  <br>
+   
+    Vous voulez en savoir plus avant de vous lancer ? Suivez le guide : <a href="<?php echo BDO_URL;?>tutoriel">tutoriel de la bdtheque</a>
+    <br>Vous avez déjà un compte ? <strong><a onclick="$('#loginBox').show();">identifiez-vous ici ! </a></strong>
+   
+<img src="<?php echo BDO_URL_IMAGE; ?>CaptureCollection.png" style="max-width:45%;float:right;" />
+    <div class="cadre1 mw50" id="create_account" style = "text-align:center">
+     <h2>Créez votre compte Bdovore</h2>
+     Vous n'avez pas de compte ? <br>
+    Créez votre compte gratuitement pour ajouter des BD à votre collection<br>   
+            <form name="form1" method="post" action="<?php echo BDO_URL?>compte/inscription?act=post">
+                <font color="<?php echo $view->COLORNEWUSER;?>">Nom de l'utilisateur</font><br/>
+                     <input type="Text" name="NewUser" value="<?php echo $view->USERNAME;?>"><br />
+                    <font color="<?php echo $view->COLORNEWPASS1;?>">Mot de passe</font><br />
+                  <input type="Password" name="NewPass1" value="<?php echo $view->PASSWORD1;?>"><br />
+                  <font color="<?php echo $view->COLORNEWPASS2;?>">Mot de passe (confirmation)</font><br />
+                     <input type="password" name="Newpass2" value="<?php echo $view->PASSWORD2;?>">
+                    <br />
+                            <font color="<?php echo $view->COLORNEWEMAIL;?>">Adresse E-mail *</font><br />
+                       <input type="Text" name="NewEmail" value="<?php echo $view->EMAIL;?>">
+                    <br />
+                     <br />
+                      <input type="submit" name="Validation" value="Soumettre">
+                      <br />
+                   
+                            <font>
+                                *L'indication d'une adresse que vous <u>consultez régulièrement</u> est <u>indispensable</u> pour un fonctionnement correct du site
+                                et notamment afin de garantir une <u>bonne communication</u> entre l'équipe du site et vous.<br>                                
+                                Votre adresse ne sera transmise à aucun tiers et ne sera l'objet d'aucune publicité.
+                            </font>
+                  
+                
+            </form>
+  
+    
+    
+    
+    </div>
+   
+        
+  
+</div>

@@ -256,16 +256,11 @@ class Compte extends Bdo_Controller {
                     if (notIssetOrEmpty($user->error)) {
                         //ajout dans le forum si besoin
                        $user->setForumAccount($default_username, $defaut_pass1, $defaut_email);
-
-                        $texte = "Inscription r&eacute;ussie sur le site.
-                        <br />Vous pouvez fermer cette fenêtre ou <a href='". BDO_URL."' target='_parent'>cliquer ici</a> pour vous connecter avec votre identifiant et mot de passe !";
-                        //echo GetMetaTag(15, $texte, (BDO_URL . "compte"));
-                        echo $texte;
-                        exit();
+                        $this->view->set_var(array("validInscription" => 1));
+                       
                     } else
                     {
-                        var_dump($user->error);
-                        exit();
+                        $this->set_var(array("ERROR" => $user->error));
                     }
                     $errornum = 7;
                 }
@@ -298,7 +293,7 @@ class Compte extends Bdo_Controller {
         }
         if ($mobile == "T") $frame = "default";*/
         
-        $this->view->layout = "$frame";
+        //$this->view->layout = "$frame";
         $this->view->render();
     }
 
