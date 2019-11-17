@@ -383,7 +383,7 @@ FROM " . $this->table_name . "
             $id = $o->total + 1;
             $query = "INSERT INTO bb3_users (
                     user_id , username,username_clean, user_password, user_email, user_regdate, group_id, user_style, user_options, user_allow_viewemail ) VALUES (
-                    $id, '" . $username . "', '" . $username . "', '" . md5($password) . "', '" . $email . "'," . time() . ", 545, 2, 230207,0
+                    $id, '" . $username . "', lower('" . $username . "'), '" . md5($password) . "', '" . $email . "'," . time() . ", 545, 2, 230207,0
                     )";
             $result = Db_query($query,$connexion);
             if ($result) {
