@@ -25,14 +25,18 @@ else {
                     <form id="loginForm" method="post" action="<?php echo BDO_URL;?>">
                         <fieldset id="loginBody">
                             <fieldset>
-                                <label for="user_login">Pseudo</label>
-                                <input type="text" name="user_login" id="user_login" />
+                                <div class="input-container">
+                                 <i class="fa fa-user icon"></i>
+                                <input type="text" name="user_login" id="user_login" placeholder="login"/>
+                                </div>
                             </fieldset>
                             <fieldset>
-                                <label for="user_password">Mot de passe</label>
-                                <input type="password" name="user_password" id="user_password" />
+                                <div class="input-container">
+                                 <i class="fa fa-key icon"></i>
+                                <input type="password" name="user_password" id="user_password" placeholder="Mot de passe" />
+                                </div>
                             </fieldset>
-                            <input type="submit" id="submitLoginConnect" name="submitLoginConnect" value="Se connecter" />
+                            <input  type="submit" id="submitLoginConnect" name="submitLoginConnect" value="Se connecter" />
                             <label for="chkvisit">Rester connecter</label><input type="checkbox" style="width:auto;margin-top: 12px;" id="chkvisit" name="chkvisit" />
                         </fieldset>
                         <span><a href="<?php echo BDO_URL;?>compte/inscription?" >Vous n'êtes pas inscrit ?</a></span>

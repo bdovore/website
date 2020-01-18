@@ -6,12 +6,16 @@
        <form id="loginForm" method="post" action="<?php echo BDO_URL;?>">
                         <fieldset id="loginBody">
                             <fieldset>
-                                <label for="user_login">Pseudo</label>
-                                <input type="text" name="user_login" id="user_login" />
+                                <div class="input-container">
+                                 <i class="fa fa-user icon"></i>
+                                <input type="text" name="user_login" id="user_login" placeholder="login"/>
+                                </div>
                             </fieldset>
                             <fieldset>
-                                <label for="user_password">Mot de passe</label>
-                                <input type="password" name="user_password" id="user_password" />
+                                <div class="input-container">
+                                 <i class="fa fa-key icon"></i>
+                                <input type="password" name="user_password" id="user_password" placeholder="Mot de passe" />
+                                </div>
                             </fieldset>
                             <input type="submit" id="submitLoginConnect" name="submitLoginConnect" value="Se connecter" />
                             <label for="chkvisit">Rester connecter</label><input type="checkbox" style="width:auto;margin-top: 12px;" id="chkvisit" name="chkvisit" />
@@ -24,18 +28,24 @@
 <div class="cadre1" id="create_account" style = "text-align:center">
      <font color="#990000" size="3" face="Arial, Helvetica, sans-serif"><?php echo $view->ERRORTEXT;?></font>
             <form name="form1" method="post" action="?act=post">
-                <font color="<?php echo $view->COLORNEWUSER;?>">Nom de l'utilisateur</font><br/>
-                     <input type="Text" name="NewUser" value="<?php echo $view->USERNAME;?>"><br />
-                    <font color="<?php echo $view->COLORNEWPASS1;?>">Mot de passe</font><br />
-                  <input type="Password" name="NewPass1" value="<?php echo $view->PASSWORD1;?>"><br />
-                  <font color="<?php echo $view->COLORNEWPASS2;?>">Mot de passe (confirmation)</font><br />
-                     <input type="password" name="Newpass2" value="<?php echo $view->PASSWORD2;?>">
-                    <br />
-                            <font color="<?php echo $view->COLORNEWEMAIL;?>">Adresse E-mail *</font><br />
-                       <input type="Text" name="NewEmail" value="<?php echo $view->EMAIL;?>">
-                    <br />
-                     <br />
-                      <input type="submit" name="Validation" value="Soumettre">
+               <div class="input-container">
+                     <i class="fa fa-user icon"></i>
+                     <input type="Text" name="NewUser" value="<?php echo $view->USERNAME;?>" placeholder="Nom d'utilisateur" required  class="input-field">
+               </div>
+                <div class="input-container">
+                     <i class="fa fa-envelope icon"></i>
+                     <input type="email" name="NewEmail" value="<?php echo $view->EMAIL;?>" placeholder="Adresse email" required class="input-field">
+                </div>
+                <div class="input-container">
+                     <i class="fa fa-key icon"></i>
+                    <input type="Password" name="NewPass1" value="<?php echo $view->PASSWORD1;?>" placeholder="Mot de passe" required class="input-field"><br />
+                </div>
+                 <div class="input-container">
+                    <i class="fa fa-key icon"></i>
+                  <input type="password" name="Newpass2" value="<?php echo $view->PASSWORD2;?>" placeholder="Confirmation du mot de passe" required class="input-field">
+                    
+                 </div>  <br />
+                      <input type="submit" name="Validation" value="Soumettre" class="btn">
                       <br />
                    
                            

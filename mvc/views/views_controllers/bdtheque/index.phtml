@@ -8,22 +8,29 @@
    
 <img src="<?php echo BDO_URL_IMAGE; ?>CaptureCollection.png" style="max-width:45%;float:right;" />
     <div class="cadre1 mw50" id="create_account" style = "text-align:center">
-     <h2>Créez votre compte Bdovore</h2>
+        <br><br><h2>Créez votre compte Bdovore</h2>
      Vous n'avez pas de compte ? <br>
-    Créez votre compte gratuitement pour ajouter des BD à votre collection<br>   
+     Créez votre compte gratuitement pour ajouter des BD à votre collection<br><br>   
             <form name="form1" method="post" action="<?php echo BDO_URL?>compte/inscription?act=post">
-                <font color="<?php echo $view->COLORNEWUSER;?>">Nom de l'utilisateur</font><br/>
-                     <input type="Text" name="NewUser" value="<?php echo $view->USERNAME;?>"><br />
-                    <font color="<?php echo $view->COLORNEWPASS1;?>">Mot de passe</font><br />
-                  <input type="Password" name="NewPass1" value="<?php echo $view->PASSWORD1;?>"><br />
-                  <font color="<?php echo $view->COLORNEWPASS2;?>">Mot de passe (confirmation)</font><br />
-                     <input type="password" name="Newpass2" value="<?php echo $view->PASSWORD2;?>">
-                    <br />
-                            <font color="<?php echo $view->COLORNEWEMAIL;?>">Adresse E-mail *</font><br />
-                       <input type="Text" name="NewEmail" value="<?php echo $view->EMAIL;?>">
-                    <br />
-                     <br />
-                      <input type="submit" name="Validation" value="Soumettre">
+                <div class="input-container">
+                     <i class="fa fa-user icon"></i>
+                     <input type="Text" name="NewUser" value="<?php echo $view->USERNAME;?>" placeholder="Nom d'utilisateur" required  class="input-field">
+               </div>
+                <div class="input-container">
+                     <i class="fa fa-envelope icon"></i>
+                     <input type="email" name="NewEmail" value="<?php echo $view->EMAIL;?>" placeholder="Adresse email" required class="input-field">
+                </div>
+                <div class="input-container">
+                     <i class="fa fa-key icon"></i>
+                    <input type="Password" name="NewPass1" value="<?php echo $view->PASSWORD1;?>" placeholder="Mot de passe" required class="input-field"><br />
+                </div>
+                 <div class="input-container">
+                    <i class="fa fa-key icon"></i>
+                  <input type="password" name="Newpass2" value="<?php echo $view->PASSWORD2;?>" placeholder="Confirmation du mot de passe" required class="input-field">
+                    
+                 </div>  <br />
+                      <input type="submit" name="Validation" value="Soumettre" class="btn">
+                      <br />
                       <br />
                    
                             <font>
