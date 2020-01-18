@@ -58,7 +58,11 @@ function regextexte ($texte)
  */
 function Checkmail ($email)
 {
-    return (ereg('^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+' . '@' . '[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.' . '[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$', $email));
+    $ret = 1;
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $ret = 0;
+      }
+    return ($ret);
 }
 
 /**

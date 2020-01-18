@@ -373,7 +373,7 @@ FROM " . $this->table_name . "
         $username = Db_Escape_String($username);
         $email = Db_Escape_String($email);
 
-        $verif = "SELECT count(*) AS nb FROM bb3_users WHERE username='" . $username . "'";
+        $verif = "SELECT count(*) AS nb FROM bb3_users WHERE username_clean=lower('" . $username . "')";
         $result = Db_query($verif,$connexion);
         $o = Db_fetch_object($result);
         if ($o->nb == 0) {
