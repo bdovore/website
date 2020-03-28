@@ -15,7 +15,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 <form name ="selSerie" action="" method="get">
 
 <div class="genBlock">
-<p>Rechercher les albums manquants dans :</p>
+    <table width="100%">
+        <tr>
+            <td class="mw50"><p>Rechercher les albums manquants dans :</p>
 <p><select name="lstSerie" size="1" id="lstSerie" onChange="submit();">
         <?php foreach ($view->listSerie as $serie) {
             echo "<option value='".$serie->ID_SERIE."'".($serie->ID_SERIE == $view->id_serie ? "selected" : "" ) .">".$serie->NOM_SERIE."</option>";
@@ -25,9 +27,17 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 
     </select><br>Inclure les futurs achats : <input name="flg_achat" type="checkbox" id="flg_achat" value="1" <?php echo ($view->flg_achat ? "checked" : "");  ?> onchange="submit();"></p>
-<p><a href="<?php echo BDO_URL."macollection/seriecomplete?lstSerie=$view->id_serie&action=exclude" ?>">Exclure cette série de mes albums à compléter</a></p>
+    </td>
+    <td class="mw50">   
+                        <h3>Action</h3>
+                        <p><a href="<?php echo BDO_URL."macollection/seriecomplete?lstSerie=$view->id_serie&action=exclude" ?>">Exclure cette série de mes albums à compléter</a></p>
 <p><a href="<?php echo BDO_URL."macollection/seriecomplete?idSerieExclu=$view->id_serie&action=raz" ?>">Annuler les exclusions pour cette série</a></p>
-</div>
+    </td>
+        </tr>
+        
+    </table>
+
+    </div>
 <hr class="genSep"/>
 </form>
 
@@ -52,6 +62,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
  </form>
 
+                       
 <hr class="genSep"/>
 
 <form action="" method="get">
