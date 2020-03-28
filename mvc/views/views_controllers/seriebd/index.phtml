@@ -140,7 +140,24 @@
                   $sep = "|";
                 } ?>
         <?php } ?>
-        <br>
+        <div align="center">
+          <?php
+            // A cause du filtre sur le nom de l'auteur, il peut y avoir moins d'albums affichés que d'albums dans la base.
+            // et si on n'est pas sur la première page, il faut pouvoir revenir même si la page en cours n'est pas pleine...
+            if (($view->serie->NB_ALBUM > 20 && $view->dbs_tome->nbLineResult == 20) || $this->NUM_PAGE > 1) {
+              $max_page = ceil($view->serie->NB_ALBUM / 20);
+              if ($max_page > 1) {
+                $url = $ficheAlbum->getURLSerie($view->serie);
+                if ($view->auteur) {
+                  $url = $url . "?auteur=" . $view->auteur . "&pseudo=" . $view->pseudo; 
+                  echo($pageinate->paginate($url,"&page=",$max_page,$view->NUM_PAGE,$adj=3));
+                } else {
+                  echo($pageinate->paginate($url,"?page=",$max_page,$view->NUM_PAGE,$adj=3));
+                }
+              }
+            }
+          ?> 
+        </div>
       </div>
 
       <!-- cadre liste d'albums -->
