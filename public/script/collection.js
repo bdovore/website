@@ -93,8 +93,8 @@ function addAlbum(id_serie, id_tome, id_edition, exclu, flg_achat) {
 // Bouton "Supprimer" sur un album
 function deleteEdition(id_serie, id_tome, id_edition, exclu) {
   if (confirm("Supprimer l'édition de votre collection ?")) {
-      $("#addAlbum" + id_edition).html("<img src='./script/ajax-loader.gif'>");
-      var url = "./macollection/deleteAlbum?id_edition=" + id_edition;
+      $("#addAlbum" + id_edition).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
+      var url = $.bdovore.URL + "macollection/deleteAlbum?id_edition=" + id_edition;
 
       $.getJSON(url, function(data) {
           if (data.length == 0) {
