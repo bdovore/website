@@ -278,7 +278,13 @@ class GetJSON extends Bdo_Controller {
             $this->Serie->set_dataPaste(array("ID_SERIE" => $id_serie));
             $this->Serie->load();
         } else if ($term <> "") {
-            $this->Serie->load("c", " WHERE bd_serie.nom like '" . Db_Escape_String($term) . "%' group by id_serie");
+            if ($mode == 2) {
+                 $this->Serie->load('c'," WHERE  MATCH (NOM) AGAINST ( '.$term.' IN NATURAL LANGUAGE MODE)  GROUP BY ID_SERIE ORDER BY (LOG(NBR_USER_ID_SERIE +2) + IF('".$term."' = NOM, 1000, MATCH (NOM) AGAINST ( '".$term."' IN NATURAL LANGUAGE MODE))) desc, NOM LIMIT 0,30");
+                 
+            } else {
+                $this->Serie->load("c", " WHERE bd_serie.nom like '" . Db_Escape_String($term) . "%' group by id_serie");
+
+            }
         }
 
         if ($mode == 0) {
