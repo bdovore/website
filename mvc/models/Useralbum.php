@@ -105,7 +105,9 @@ class Useralbum extends Bdo_Db_Line
                       coa.pseudo as coapseudo,
                           DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%Y') as annee_achat,
 
-                          DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%m') as mois_achat";
+                          DATE_FORMAT(IFNULL(ua.date_achat, ua.date_ajout),'%m') as mois_achat,
+                          note_tome.NB_NOTE_TOME,
+            note_tome.MOYENNE_NOTE_TOME";
 
         $from = "
                 FROM users_album ua
@@ -116,7 +118,7 @@ class Useralbum extends Bdo_Db_Line
 
                 LEFT JOIN bd_collection c ON en.id_collection = c.id_collection
                 LEFT JOIN bd_editeur er ON c.id_editeur = er.id_editeur
-
+                LEFT JOIN note_tome ON bd_tome.ID_TOME = note_tome.ID_TOME
                 LEFT JOIN bd_auteur sc ON bd_tome.id_scenar = sc.id_auteur
                 LEFT JOIN bd_auteur de ON bd_tome.id_dessin = de.id_auteur
                 LEFT JOIN bd_auteur co ON bd_tome.id_color = co.id_auteur
