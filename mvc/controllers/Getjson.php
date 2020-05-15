@@ -50,6 +50,8 @@ class GetJSON extends Bdo_Controller {
                 break;
             case "Albummanquant" : 
                 $this->Albummanquant();
+            case "Actu":
+                $this->Actu();
             default :
                 break;
         }
@@ -440,7 +442,8 @@ class GetJSON extends Bdo_Controller {
              $id_serie = getValInteger("id_serie",0);
              $user_id = intval($_SESSION['userConnect']->user_id);
              $flg_achat = getValInteger("includeAchat",1);
-             if ($id_serie) {
+             $mode = getVal("mode","");
+             if ($id_serie OR $mode == "all") {
                   $this->loadModel("Useralbum");
                   $this->loadModel("Tome");
                   $nbalbum = $this->Useralbum->isSerieInCollection($id_serie,$_SESSION['userConnect']->user_id);
@@ -452,17 +455,49 @@ class GetJSON extends Bdo_Controller {
                      "data" => $dbs_tomeComplete->a_dataQuery
                       
                   )));
-             } else {
+             } else  {
                  // récupérer la liste des séries à compléter
                  $this->loadModel("Users_exclusions"); 
                  $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id, $flg_achat);
                  $this->view->set_var('json', json_encode(array(
                      "data" => $listSerie)));
-             }
+             } 
              
          }
           $this->view->layout = "ajax";
         $this->view->render();
+    }
+    
+    private function Actu() {
+         $this->loadModel('Actus');
+         $filter_origine = getVal("origine","BD");
+         $page = getValInteger("page", 1);
+         $length = getValInteger("length", 10);
+         $limit = " limit ".(($page - 1)*$length).", ".$length; 
+        
+         // tendances
+         $this->loadModel('Edition');
+
+        $dbs_tome = $this->Edition->load('c', "
+            WHERE bd_edition.`DTE_PARUTION`> date_add(now(),INTERVAL - 6 MONTH)
+                     and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
+                ORDER BY `NBR_USER_ID` DESC ".$limit);
+
+        $this->view->set_var('json', json_encode($dbs_tome->a_dataQuery));
+         $this->view->layout = "ajax";
+           $this->view->render();
+         
+    }
+    
+    private function Edition () {
+        $id_tome = getValInteger("id_tome",0);
+        $this->loadModel('Edition');
+
+        $dbs_edition = $this->Edition->load(c, "where PROP_STATUS not in ('0','99','98') and bd_tome.id_tome =" . $id_tome ." ORDER BY DATE_PARUTION_EDITION");
+          $this->view->set_var('json', json_encode($dbs_edition->a_dataQuery));
+         $this->view->layout = "ajax";
+           $this->view->render();
+         
     }
 
 }
