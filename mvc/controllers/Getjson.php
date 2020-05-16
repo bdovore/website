@@ -50,8 +50,10 @@ class GetJSON extends Bdo_Controller {
                 break;
             case "Albummanquant" : 
                 $this->Albummanquant();
+                break;
             case "Actu":
                 $this->Actu();
+                break;
             default :
                 break;
         }
