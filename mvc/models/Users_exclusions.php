@@ -86,9 +86,10 @@ class Users_exclusions extends Bdo_Db_Line {
             $q_achat = "";
         }
         $query = "
-            SELECT DISTINCT
+            SELECT 
                     user_serie.id_serie as ID_SERIE,
-                    user_serie.nom as NOM_SERIE
+                    user_serie.nom as NOM_SERIE, 
+                    count(*) nb_album
             FROM
                     (
                             SELECT DISTINCT
@@ -126,6 +127,7 @@ class Users_exclusions extends Bdo_Db_Line {
                                     WHERE uet.user_id = ".intval($user_id)."
                                     AND t.id_tome=uet.id_tome
                             )
+            GROUP BY user_serie.id_serie, user_serie.nom
             ORDER BY user_serie.nom
             ";
         $resultat = Db_query($query);
