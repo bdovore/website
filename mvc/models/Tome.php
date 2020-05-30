@@ -332,10 +332,61 @@ class Tome extends Bdo_Db_Line
 
     }
 
-    public function getListAlbumToComplete($user_id, $id_serie=0, $flg_achat= true) {
+    public function getCountAlbumToComplete ($user_id) {
+         $user_id = intval($user_id);
+         $query = " , (
+        SELECT DISTINCT
+            s.*
+        FROM
+            users_album ua
+            INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+            INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+            INNER JOIN bd_serie s ON t.ID_SERIE=s.ID_SERIE
+        WHERE
+            ua.user_id = ".$user_id." AND
+           ua.flg_achat = 'N' 
+            AND NOT EXISTS (
+                        SELECT NULL FROM users_exclusions ues
+                        WHERE s.id_serie=ues.id_serie
+                        AND ues.id_tome = 0
+                        AND ues.user_id = ".$user_id."
+                    )
+        ) s_lim WHERE
+                s.id_serie = s_lim.id_serie AND
+            NOT EXISTS (
+                    SELECT NULL
+                    FROM users_album ua
+                    INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
+                    WHERE
+                    ua.user_id = ".$user_id."
+                    AND bd_tome.id_tome=en.id_tome
+                    AND ua.flg_achat = 'N'
+            )
+            AND NOT EXISTS (
+                    SELECT NULL
+                    FROM users_exclusions uet
+                    WHERE uet.user_id = ".$user_id."
+                    AND bd_tome.id_tome=uet.id_tome
+            )";
+         
+         $qcount = "select count(*) $this->defaut_from $query";
+         $nb = Db_CountRow($qcount);
+         return $nb;
+    }
+    
+    public function getListAlbumToComplete($user_id, $id_serie=0, $flg_achat= true, $page=1, $length=0, $order= "") {
 
         $user_id = intval($user_id);
         $id_serie = intval($id_serie);
+        $limit = "";
+        
+        if ($order == ""){
+            $order = "order by bd_tome.NUM_TOME desc, en.DTE_PARUTION desc";
+        } 
+        if ($length ) {
+            // pagination
+            $limit = " limit ".(($page - 1)*$length).", ".$length;
+        }
         if (!$flg_achat) {
             $q_achat = " AND ua.flg_achat = 'N'";
         } 
@@ -377,7 +428,7 @@ class Tome extends Bdo_Db_Line
                     WHERE uet.user_id = ".$user_id."
                     AND bd_tome.id_tome=uet.id_tome
             )
-            order by s.tri, s.NOM, bd_tome.NUM_TOME, en.DTE_PARUTION";
+            $order $limit";
         } else {
             $query = " WHERE s.id_serie = '".$id_serie."'
             AND
@@ -395,7 +446,7 @@ class Tome extends Bdo_Db_Line
                     WHERE uet.user_id = ".$user_id."
                     AND bd_tome.id_tome=uet.id_tome
             )
-            order by bd_tome.NUM_TOME desc, en.DTE_PARUTION desc";
+             $order $limit";
         }
 
         return $this->load("c",$query);

@@ -444,13 +444,26 @@ class GetJSON extends Bdo_Controller {
              $id_serie = getValInteger("id_serie",0);
              $user_id = intval($_SESSION['userConnect']->user_id);
              $flg_achat = getValInteger("includeAchat",1);
+             $length = getValInteger("length",0);
+             $page = getValInteger("page",1);
              $mode = getVal("mode","");
              if ($id_serie OR $mode == "all") {
                   $this->loadModel("Useralbum");
                   $this->loadModel("Tome");
+                  if ($id_serie == 0) {
+                      $order = "ORDER BY en.DTE_PARUTION desc";
+                  } else {
+                      $order = "";
+                  }
                   $nbalbum = $this->Useralbum->isSerieInCollection($id_serie,$_SESSION['userConnect']->user_id);
-                  $dbs_tomeComplete  = $this->Tome->getListAlbumToComplete($_SESSION['userConnect']->user_id,$id_serie , !$flg_achat);
-                  $nbmanquant =  count($dbs_tomeComplete->a_dataQuery);
+                  $dbs_tomeComplete  = $this->Tome->getListAlbumToComplete($_SESSION['userConnect']->user_id,$id_serie , !$flg_achat, $page, $length , $order);
+                  if ($id_serie) {
+                      $nbmanquant =  count($dbs_tomeComplete->a_dataQuery); 
+                    
+                  } else {
+                      $nbmanquant = $this->Tome->getCountAlbumToComplete($user_id);
+                  }
+                  
                   $this->view->set_var('json', json_encode(array(
                      "nbalbum" => $nbalbum,
                      "nbmanquant"=> $nbmanquant,
