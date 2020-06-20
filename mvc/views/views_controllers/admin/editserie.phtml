@@ -90,8 +90,8 @@ function valider(){
                     <a href="<?php echo $view->URLMASSCOUV; ?>"><li>Controler les couvertures de cette série</li></a>
                 </ul>
                 </p>
-
-                <div class="b"><?php echo $view->NBALBUMS; ?> albums dans la s&eacute;rie :</div>
+ <div class="b"></div>
+                <div class="b"><?php echo $view->NBALBUMS; ?> albums dans la s&eacute;rie :  <a href="<?php echo $view->URLAJOUTALB; ?>" target="_parent"> + Ajouter un album</a>  </div>
                 <!-- BEGIN AlbBlock -->
                 <?php if (issetNotEmpty($view->dbs_tome)) {
                     foreach ($view->dbs_tome->a_dataQuery as $tome) { ?>
