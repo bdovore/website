@@ -135,13 +135,18 @@ class GetJSON extends Bdo_Controller {
         } else {
             $term = getVal("term", "");
             $id_serie = getVal("id_serie",0);
+            $id_auteur = getValInteger("id_auteur", 0);
             $where = "";
             if ($id_serie) {
                 $where = " WHERE s.id_serie = $id_serie"; 
-            } else {
+            } else  if ($id_auteur) {
+                $where = " WHERE (bd_tome.ID_SCENAR = $id_auteur OR bd_tome.ID_COLOR = $id_auteur OR bd_tome.ID_DESSIN = $id_auteur OR "
+                        . " bd_tome.ID_SCENAR_ALT = $id_auteur OR bd_tome.ID_COLOR_ALT = $id_auteur OR bd_tome.ID_DESSIN_ALT = $id_auteur )";
+            }  
+            else {
                 $where = " WHERE bd_tome.TITRE like '" . Db_Escape_String($term) . "%' limit 0,10";
             }
-            
+           
             $this->loadModel('Tome');
             $this->Tome->load("c", $where);
 
