@@ -89,7 +89,9 @@ class Users_exclusions extends Bdo_Db_Line {
             SELECT 
                     user_serie.id_serie as ID_SERIE,
                     user_serie.nom as NOM_SERIE, 
-                    count(*) nb_album
+                    count(*) nb_album,
+                  max(img_couv) as IMG_COUV_SERIE 
+                    
             FROM
                     (
                             SELECT DISTINCT

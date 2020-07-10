@@ -479,7 +479,7 @@ class Useralbum extends Bdo_Db_Line
         return Db_affected_rows();
     }
     
-    public function getUserSerie ($user_id, $page=1, $length=10, $search = "", $origin= "",$auteur = "", $liste = "") {
+    public function getUserSerie ($user_id, $page=1, $length=10, $search = "", $origin= "",$auteur = "", $liste = "", $complet="") {
       if ($auteur <> "")
         $whereAut = "and (   id_scenar = ".$auteur." or id_scenar_alt = ".$auteur." 
                           or id_dessin = ".$auteur." or id_dessin_alt = ".$auteur." 
@@ -533,11 +533,18 @@ class Useralbum extends Bdo_Db_Line
       }
 
       $group= "
-         group by bd_serie.nom, bd_serie.ID_SERIE 
-           LIMIT ".(($page - 1)*$length).", ".$length
+         group by bd_serie.nom, bd_serie.ID_SERIE "
+           
       ;
-
-      $query = $select.$where.$group;
+      $limit = "LIMIT ".(($page - 1)*$length).", ".$length;
+      if ($complet == "N") {
+          $having = " HAVING NB_USER_ALBUM < NB_ALBUM  ";
+      } else if ($complet == "O") {
+           $having = " HAVING NB_USER_ALBUM >= NB_ALBUM  ";
+      } else {
+          $having = "";
+      }
+      $query = $select.$where.$group.$having.$limit;
       $resultat = Db_query($query);
       $obj = Db_fetch_all_obj($resultat,"ID_SERIE");
 

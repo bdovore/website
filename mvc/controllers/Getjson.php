@@ -323,6 +323,10 @@ class GetJSON extends Bdo_Controller {
         $id_serie = getValInteger("id_serie",0);
         $flg_pret = getVal("flg_pret","");
         $flg_exclu  = getVal("flg_exclu","N");
+        $flg_num = getVal("flg_num", "");
+        $flg_lu = getVal("flg_lu", "");
+        $flg_cadeau = getVal("flg_cadeau", "");
+        $term = getVal("term", "");
         $this->loadModel("Useralbum");
         
         if ($length > 100) $length = 100;
@@ -333,6 +337,18 @@ class GetJSON extends Bdo_Controller {
                 if ($id_serie)  $where.= " AND s.id_serie = ".$id_serie;
                 if ($flg_pret) {
                     $where.= " AND flg_pret = '".Db_Escape_String($flg_pret)."'";
+                }
+                if ($flg_num) {
+                    $where.= " AND FLG_NUM = '".Db_Escape_String($flg_num)."'";
+                }
+                if ($flg_lu) {
+                    $where.= " AND FLG_LU = '".Db_Escape_String($flg_lu)."'";
+                }
+                if ($flg_cadeau) {
+                    $where.= " AND flg_cadeau = '".Db_Escape_String($flg_cadeau)."'";
+                }
+                if ($term) {
+                    $where .= " AND s.NOM like '%".Db_Escape_String($term)."%'";
                 }
                 $orderby = " ORDER BY NOM_SERIE";
                 $dbs_album = $this->Useralbum->load("c",$where.$orderby. $limit);
@@ -400,12 +416,13 @@ class GetJSON extends Bdo_Controller {
         $page = getValInteger("page",1);
         $term = getVal("term",""); // filtre de recherche 
         $origin = getVal("origin",""); // manga / comics / BD
+        $complet = getVal("complet","");
         
         if (Bdo_Cfg::user()->minAccesslevel(2)) {
             $this->loadModel("Useralbum");
             $this->loadModel("Users_exclusions");
             $user_id = intval($_SESSION['userConnect']->user_id);
-            $dbs_serie = $this->Useralbum->getUserSerie($user_id, $page, $length,$term,$origin,$auteur);
+            $dbs_serie = $this->Useralbum->getUserSerie($user_id, $page, $length,$term,$origin,$auteur, $liste, $complet);
             $a_obj = array();
             foreach ($dbs_serie as $serie) {
                 $a_obj[] = $serie;
