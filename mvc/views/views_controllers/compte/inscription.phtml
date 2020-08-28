@@ -2,6 +2,9 @@
     <?php if ($view->validInscription) { ?>
         <h2>Inscription réussie !</h2>
         Votre inscription a bien été enregistrée sur le site. <br>
+        <?php if ($view->source == "ios") { ?>
+        Vous pouvez fermer cet écran et vous connecter à l'application avec votre nom d'utilisateur et votre mot de passe. Merci !
+        <?php } else { ?>
         Vous pouvez vous connecter avec votre login et mot de passe en cliquant sur <a onclick="$('#loginBox').show();">le menu connexion</a> ou  en renseignant vos informations ci-dessous
        <form id="loginForm" method="post" action="<?php echo BDO_URL;?>">
                         <fieldset id="loginBody">
@@ -21,13 +24,13 @@
                             <label for="chkvisit">Rester connecter</label><input type="checkbox" style="width:auto;margin-top: 12px;" id="chkvisit" name="chkvisit" />
                         </fieldset>
                         </form>
-    <?php } 
+    <?php }} 
     else { ?>
 <h2>Créez votre compte Bdovore</h2>
 
 <div class="cadre1" id="create_account" style = "text-align:center">
      <font color="#990000" size="3" face="Arial, Helvetica, sans-serif"><?php echo $view->ERRORTEXT;?></font>
-            <form name="form1" method="post" action="?act=post">
+            <form name="form1" method="post" action="?act=post&source=<?php echo $view->source;?>">
                <div class="input-container">
                      <i class="fa fa-user icon"></i>
                      <input type="Text" name="NewUser" value="<?php echo $view->USERNAME;?>" placeholder="Nom d'utilisateur" required  class="input-field">

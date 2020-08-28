@@ -171,6 +171,7 @@ class Compte extends Bdo_Controller {
 
     public function Inscription() {
         $mobile = getVal("mobile",""); // check if mobile device detected
+        $source = getVal("source","");
         //initialisation des variables de couleur
         $color["NewUser"] = "#000000";
         $color["NewPass1"] = "#000000";
@@ -282,7 +283,8 @@ class Compte extends Bdo_Controller {
             "COLORNEWPASS1" => $color["NewPass1"],
             "COLORNEWPASS2" => $color["Newpass2"],
             "COLORNEWEMAIL" => $color["NewEmail"],
-            "ERRORTEXT" => $errortext));
+            "ERRORTEXT" => $errortext,
+            "source" => $source));
         // set frame
         $frame = "iframe";
        /* $url_referer = parse_url($_SERVER["HTTP_REFERER"]);
