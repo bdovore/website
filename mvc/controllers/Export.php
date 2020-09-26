@@ -93,7 +93,7 @@ class Export extends Bdo_Controller {
                     case 2:
                         $this->loadModel("Tome");
 
-                        $dbs_tome = $this->Tome->getListAlbumToComplete($_SESSION["userConnect"]->user_id);
+                        $dbs_tome = $this->Tome->getListAlbumToComplete($_SESSION["userConnect"]->user_id, 0, true, 1, 0, " ORDER BY s.NOM, bd_tome.NUM_TOME ");
                         $entete = array(0 => 'Serie',
                             1 => 'Titre',
                             2 => 'Tome',
