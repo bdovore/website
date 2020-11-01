@@ -105,7 +105,7 @@ function CheckChars ($login)
  */
 function AuthorisedLogin ($login)
 {
-    return ! (eregi("^((root)|(bin)|(daemon)|(moderator)|(modérateur)|(adm)|(administrator)|(administrateur)|(lp)|(sync)|(shutdown)|(halt)|(mail)|(news)" . "|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)" . "|(www)|(cvs)|(shell)|(ftp)|(irc)|(debian)|(ns)|(download))$", $login));
+    return ! (preg_match("/^((root)|(bin)|(daemon)|(moderator)|(modérateur)|(adm)|(administrator)|(administrateur)|(lp)|(sync)|(shutdown)|(halt)|(mail)|(news)" . "|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)" . "|(www)|(cvs)|(shell)|(ftp)|(irc)|(debian)|(ns)|(download))$/i", $login));
 }
 
 /**

@@ -5,6 +5,16 @@
  * layne_weathers Exp $
  */
 include_once ("conf.inc.php");
+function subArraysToString($ar, $sep = ', ') {
+        $str = '';
+        foreach ($ar as $val) {
+            $str .= implode($sep, $val);
+            $str .= $sep; // add separator between sub-arrays
+        }
+        $str = rtrim($str, $sep); // remove last separator
+        return $str;
+    }
+    
 class DB_Sql {
 
     /* public: connection parameters */
@@ -14,7 +24,7 @@ class DB_Sql {
     var $Password = BDO_DB_PWD;
 
     /* public: configuration parameters */
-    var $Auto_Free = 0; // Set to 1 for automatic mysql_free_result()
+    var $Auto_Free = 0; // Set to 1 for automatic mysqli_free_result()
     var $Debug = 0; // Set to 1 for debugging messages.
     var $Halt_On_Error = "yes"; // "yes" (halt with message), "no" (ignore errors
                                 // quietly), "report" (ignore errror, but spit a
@@ -68,19 +78,16 @@ class DB_Sql {
         if (0 == $this->Link_ID) {
 
             if (! $this->PConnect) {
-                $this->Link_ID = mysql_connect ( $Host, $User, $Password ) or die ( "Connexion à la base impossible. Revenez plus tard..." );
+                $this->Link_ID = mysqli_connect ( $Host, $User, $Password, $Database ) or die ( "Connexion à la base impossible. Revenez plus tard..." );
             } else {
-                $this->Link_ID = mysql_pconnect ( $Host, $User, $Password );
+                $this->Link_ID = mysqli_pconnect ( $Host, $User, $Password, $Database );
             }
             if (! $this->Link_ID) {
                 $this->halt ( "connect($Host, $User, \$Password) failed." );
                 return 0;
             }
 
-            if (! @mysql_select_db ( $Database, $this->Link_ID )) {
-                $this->halt ( "cannot use database " . $Database );
-                return 0;
-            }
+           
         }
 
         return $this->Link_ID;
@@ -88,7 +95,7 @@ class DB_Sql {
 
     /* public: discard the query result */
     function free() {
-        @mysql_free_result ( $this->Query_ID );
+        @mysqli_free_result ( $this->Query_ID );
         $this->Query_ID = 0;
     }
 
@@ -115,10 +122,10 @@ class DB_Sql {
         if ($this->Debug)
             printf ( "Debug: query = %s<br>\n", $Query_String );
 
-        $this->Query_ID = @mysql_query ( $Query_String, $this->Link_ID );
+        $this->Query_ID = @mysqli_query ($this->Link_ID, $Query_String );
         $this->Row = 0;
-        $this->Errno = mysql_errno ();
-        $this->Error = mysql_error ();
+        $this->Errno = mysqli_errno ();
+        $this->Error = mysqli_error ();
         if (! $this->Query_ID) {
             $this->halt ( "Invalid SQL: " . $Query_String );
         }
@@ -134,10 +141,10 @@ class DB_Sql {
             return 0;
         }
 
-        $this->Record = @mysql_fetch_array ( $this->Query_ID );
+        $this->Record = @mysqli_fetch_array ( $this->Query_ID );
         $this->Row += 1;
-        $this->Errno = mysql_errno ();
-        $this->Error = mysql_error ();
+        $this->Errno = mysqli_errno ();
+        $this->Error = mysqli_error ();
 
         $stat = is_array ( $this->Record );
         if (! $stat && $this->Auto_Free) {
@@ -148,7 +155,7 @@ class DB_Sql {
 
     /* public: position in result set */
     function seek($pos = 0) {
-        $status = @mysql_data_seek ( $this->Query_ID, $pos );
+        $status = @mysqli_data_seek ( $this->Query_ID, $pos );
         if ($status)
             $this->Row = $pos;
         else {
@@ -158,7 +165,7 @@ class DB_Sql {
              * half assed attempt to save the day, but do not consider this
              * documented or even desireable behaviour.
              */
-            @mysql_data_seek ( $this->Query_ID, $this->num_rows () );
+            @mysqli_data_seek ( $this->Query_ID, $this->num_rows () );
             $this->Row = $this->num_rows ();
             return 0;
         }
@@ -208,13 +215,13 @@ class DB_Sql {
 
     /* public: evaluate the result (size, width) */
     function affected_rows() {
-        return @mysql_affected_rows ( $this->Link_ID );
+        return @mysqli_affected_rows ( $this->Link_ID );
     }
     function num_rows() {
-        return @mysql_num_rows ( $this->Query_ID );
+        return @mysqli_num_rows ( $this->Query_ID );
     }
     function num_fields() {
-        return @mysql_num_fields ( $this->Query_ID );
+        return @mysqli_num_fields ( $this->Query_ID );
     }
 
     /* public: shorthand notation */
@@ -303,7 +310,7 @@ class DB_Sql {
         // result
         if ($table) {
             $this->connect ();
-            $id = @mysql_list_fields ( $this->Database, $table );
+            $id = @mysqli_list_fields ( $this->Database, $table );
             if (! $id) {
                 $this->halt ( "Metadata query failed." );
                 return false;
@@ -316,33 +323,33 @@ class DB_Sql {
             }
         }
 
-        $count = @mysql_num_fields ( $id );
+        $count = @mysqli_num_fields ( $id );
 
         // made this IF due to performance (one if is faster than $count if's)
         if (! $full) {
             for($i = 0; $i < $count; $i ++) {
-                $res [$i] ["table"] = @mysql_field_table ( $id, $i );
-                $res [$i] ["name"] = @mysql_field_name ( $id, $i );
-                $res [$i] ["type"] = @mysql_field_type ( $id, $i );
-                $res [$i] ["len"] = @mysql_field_len ( $id, $i );
-                $res [$i] ["flags"] = @mysql_field_flags ( $id, $i );
+                $res [$i] ["table"] = @mysqli_field_table ( $id, $i );
+                $res [$i] ["name"] = @mysqli_field_name ( $id, $i );
+                $res [$i] ["type"] = @mysqli_field_type ( $id, $i );
+                $res [$i] ["len"] = @mysqli_field_len ( $id, $i );
+                $res [$i] ["flags"] = @mysqli_field_flags ( $id, $i );
             }
         } else { // full
             $res ["num_fields"] = $count;
 
             for($i = 0; $i < $count; $i ++) {
-                $res [$i] ["table"] = @mysql_field_table ( $id, $i );
-                $res [$i] ["name"] = @mysql_field_name ( $id, $i );
-                $res [$i] ["type"] = @mysql_field_type ( $id, $i );
-                $res [$i] ["len"] = @mysql_field_len ( $id, $i );
-                $res [$i] ["flags"] = @mysql_field_flags ( $id, $i );
+                $res [$i] ["table"] = @mysqli_field_table ( $id, $i );
+                $res [$i] ["name"] = @mysqli_field_name ( $id, $i );
+                $res [$i] ["type"] = @mysqli_field_type ( $id, $i );
+                $res [$i] ["len"] = @mysqli_field_len ( $id, $i );
+                $res [$i] ["flags"] = @mysqli_field_flags ( $id, $i );
                 $res ["meta"] [$res [$i] ["name"]] = $i;
             }
         }
 
         // free the result only if we were called on a table
         if ($table) {
-            @mysql_free_result ( $id );
+            @mysqli_free_result ( $id );
         }
         return $res;
     }
@@ -350,23 +357,23 @@ class DB_Sql {
     /* public: find available table names */
     function table_names() {
         $this->connect ();
-        $h = @mysql_query ( "show tables", $this->Link_ID );
+        $h = @mysqli_query ( "show tables", $this->Link_ID );
         $i = 0;
-        while ( $info = @mysql_fetch_row ( $h ) ) {
+        while ( $info = @mysqli_fetch_row ( $h ) ) {
             $return [$i] ["table_name"] = $info [0];
             $return [$i] ["tablespace_name"] = $this->Database;
             $return [$i] ["database"] = $this->Database;
             $i ++;
         }
 
-        @mysql_free_result ( $h );
+        @mysqli_free_result ( $h );
         return $return;
     }
 
     /* private: error handling */
     function halt($msg) {
-        $this->Error = @mysql_error ( $this->Link_ID );
-        $this->Errno = @mysql_errno ( $this->Link_ID );
+        $this->Error = @mysqli_error ( $this->Link_ID );
+        $this->Errno = @mysqli_errno ( $this->Link_ID );
 
         if ($this->locked) {
             $this->unlock ();
@@ -382,31 +389,17 @@ class DB_Sql {
     }
     function haltmsg($msg) {
         $msg .= "\n\n// _SERVER ----------------";
-        foreach ( $_SERVER as $key => $val )
-            $msg .= "\n[" . $key . "]=" . $val;
-
-        if (! empty ( $_POST )) {
-            $msg .= "\n\n// _POST ----------------";
-            foreach ( $_POST as $key => $val )
-                $msg .= "\n[" . $key . "]=" . $val;
-        }
-
-        if (! empty ( $_GET )) {
-            $msg .= "\n\n// _GET ----------------";
-            foreach ( $_GET as $key => $val )
-                $msg .= "\n[" . $key . "]=" . $val;
-        }
-
-        mail ( "laurent.mignot@gmail.com", "BDo Query bug", $msg, 'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/plain; charset=UTF-8' . "\r\n" );
-
-        printf ( "</td></tr></table><b>Database error:</b> %s<br>\n", $msg );
-        printf ( "<b>MySQL Error</b>: %s (%s)<br>\n", $this->Errno, $this->Error );
+        
     }
     function escape($txt) {
         if (! $this->connect ()) {
             return 0; /* we already complained in connect() about that. */
         }
         ;
-        return mysql_real_escape_string ( $txt );
+        return mysqli_real_escape_string ($this->Link_ID, $txt );
     }
+    
+   
 }
+
+ 

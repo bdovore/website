@@ -35,6 +35,13 @@ class Bdo_View
 
     public $layout = "default";
 
+    public $BOYDONLOAD = null;
+    
+    public $KEYWORD= null;
+    
+    public $PAGEKEYWORD = null ;
+    
+    public $DESCRIPTION = null;
     // initialisation
     public function __construct ()
     {

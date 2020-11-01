@@ -242,7 +242,7 @@ class FicheAlbum {
         if ($gotocomment) 
             $id_link .="#comment";
         // couverture par defaut
-        if (!$o_tome->IMG_COUV)
+        if (!issetNotEmpty($o_tome->IMG_COUV))
             $o_tome->IMG_COUV = "default.png";
 
         $x = getenv("HTTP_USER_AGENT");
@@ -250,16 +250,22 @@ class FicheAlbum {
         if (strpos($x, 'MSIE 7.0') || strpos($x, 'MSIE 6.0')) {
             return '#" onclick="window.open(' . "'" . BDO_URL . $id_link . "','Album','width=600,height=700,scrollbars=1')" . ';return false;';
         } else {
-            // titre html                        
-            if ($o_tome->NOM_SERIE AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME))) {
-                $titleHtml = $o_tome->NOM_SERIE;
+            // titre html    
+            
+            if (isset($o_tome->NOM_SERIE)) {
+                    if (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME)) {
+                         $titleHtml = $o_tome->NOM_SERIE;
 
-                if ($o_tome->NUM_TOME AND stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
-                //if ($o_tome->NUM_TOME) {
-                    $titleHtml .= ' - ' . 'tome ' . $o_tome->NUM_TOME;
-                }
+                        if ($o_tome->NUM_TOME AND stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
+                        //if ($o_tome->NUM_TOME) {
+                            $titleHtml .= ' - ' . 'tome ' . $o_tome->NUM_TOME;
+                        }
 
-                $titleHtml .= ' - ' . $o_tome->TITRE_TOME;
+                        $titleHtml .= ' - ' . $o_tome->TITRE_TOME;
+                    } else {
+                        $titleHtml = $o_tome->TITRE_TOME;
+                    }
+               
             } else {
                 $titleHtml = $o_tome->TITRE_TOME;
             }
@@ -270,7 +276,7 @@ class FicheAlbum {
             switch ($class) {
                 case "couvBig": {
                         $html .= '<img itemprop="image" src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
-                        $html .= '</a>' . ($o_tome->NOM_EDITEUR ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
+                        $html .= '</a>' . (isset($o_tome->NOM_EDITEUR) ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
                         if ($sponsor) $html .= "<div align=center>". $this->getSponsor($o_tome,true)."</div>";
                         break;
                 }
@@ -391,9 +397,9 @@ class FicheAlbum {
     public function getSponsor($o_tome, $img=true, $all=false) {
         $html = "<a title='Achetez sur Amazon !' href='";
         // amazon
-        if ($o_tome->ISBN_EDITION) {
+        if (issetNotEmpty($o_tome->ISBN_EDITION)) {
             $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . $o_tome->ISBN_EDITION . "/bdovorecom-21/";
-        } else if ($o_tome->EAN_EDITION) {
+        } else if (issetNotEmpty($o_tome->EAN_EDITION)) {
             $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . EAN_to_ISBN($o_tome->EAN_EDITION) . "/bdovorecom-21/";
         } else {
             $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=" . htmlentities ($o_tome->TITRE_TOME,$flag=ENT_QUOTES) . "&mode=books-fr";
@@ -404,7 +410,7 @@ class FicheAlbum {
             $html .= "' target='_blank'>Commandez sur Amazon</a>";
         }
         // bdfugue
-        if ($o_tome->EAN_EDITION and $all) {
+        if (issetNotEmpty($o_tome->EAN_EDITION) and $all) {
             $html .= "&nbsp;<a title='Achetez sur BDfugue !' target='_blank' href='" . BDO_PROTOCOL . "://www.bdfugue.com/a/?ref=295&ean=" . $o_tome->EAN_EDITION ."'><img src='" . BDO_URL_IMAGE . "bdfugue.png' height='22px' width='85px' class='img-sponsor'></a>";
         } 
         return $html;
