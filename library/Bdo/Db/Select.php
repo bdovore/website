@@ -35,7 +35,7 @@ class Bdo_Db_Select
 
     public function __construct($queryFull=null, $calcFoundRow= false)
     {
-        $this->schema_name = Bdo_Cfg::schema()->schema_name;
+       // $this->schema_name = Bdo_Cfg::schema()->schema_name;
         $this->calcFoundRow = $calcFoundRow;
         //$this->init_option_query();
 

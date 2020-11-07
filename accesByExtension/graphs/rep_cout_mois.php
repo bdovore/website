@@ -99,6 +99,13 @@ while ($DB->next_record())
 
     // Pr�pare le graph
     $depense[$mois] += $prix_retenu;
+    // set year
+    if (!isset($cadeau[$mois])) {
+        $cadeau[$mois] = 0;
+    }
+     if (!isset($nbalbums[$mois])) {
+        $nbalbums[$mois] = 0;
+    }  
     // Compte si cadeau
     if ($DB->f("flg_cadeau") == 'O')
     $cadeau[$mois]++;
@@ -115,8 +122,8 @@ for ($compteur = 1;$compteur <= 12; $compteur++)
     {
         $datay[$i] = $depense[$compteur];
     }else{
-        $datay[$i] = $nbalbums[$compteur];
-        $datay2[$i] = $cadeau[$compteur];
+       $datay[$i] = isset($nbalbums[$compteur]) ? $nbalbums[$compteur] : 0 ;
+        $datay2[$i] = isset($cadeau[$compteur]) ? $cadeau[$compteur] : 0 ;
     }
     $lbl[$i] = $short_month[$compteur-1];
     //echo $lbl[$i].":".$datay[$i]." - ".$datay2[$i]."<br>";

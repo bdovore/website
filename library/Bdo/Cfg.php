@@ -63,7 +63,7 @@ class Bdo_Cfg
     {
         Bdo_Cfg::getInstance();
 
-        if (self::$instance->connexion) Db_close();
+        if (isset(self::$instance->connexion)) Db_close();
 
         self::$instance->a_connect_vars = array(
                 'login' => BDO_DB_USER,

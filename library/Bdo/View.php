@@ -7,7 +7,7 @@ class Bdo_View
 
     protected $type = '';
 
-    public $title = CFG_NAME;
+    public $title = "";
 
     public $titlePage = '';
 
@@ -45,7 +45,7 @@ class Bdo_View
     // initialisation
     public function __construct ()
     {
-        $this->title .= (CFG_READONLY ? ' (' . LANG_READONLY . ')' : '');
+        $this->title .= "";
     }
 
     public function setType ($type)

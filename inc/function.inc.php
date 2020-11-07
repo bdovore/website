@@ -1140,7 +1140,7 @@ function clean_url($texte) {
     $texte = preg_replace('#([-]+)#','-',$texte);
 
     //Suppression du premier caractère si c'est un tiret
-    if($texte{0} == '-')
+    if($texte[0] == '-')
         $texte = substr($texte,1);
 
     //Suppression du dernier caractère si c'est un tiret

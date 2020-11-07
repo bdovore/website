@@ -75,7 +75,7 @@ class DB_Sql {
             $Password = $this->Password;
 
             /* establish connection, select database */
-        if (0 == $this->Link_ID) {
+        if (! $this->Link_ID) {
 
             if (! $this->PConnect) {
                 $this->Link_ID = mysqli_connect ( $Host, $User, $Password, $Database ) or die ( "Connexion à la base impossible. Revenez plus tard..." );
@@ -124,8 +124,8 @@ class DB_Sql {
 
         $this->Query_ID = @mysqli_query ($this->Link_ID, $Query_String );
         $this->Row = 0;
-        $this->Errno = mysqli_errno ();
-        $this->Error = mysqli_error ();
+        $this->Errno = mysqli_errno ($this->Link_ID);
+        $this->Error = mysqli_error ($this->Link_ID);
         if (! $this->Query_ID) {
             $this->halt ( "Invalid SQL: " . $Query_String );
         }
@@ -143,8 +143,8 @@ class DB_Sql {
 
         $this->Record = @mysqli_fetch_array ( $this->Query_ID );
         $this->Row += 1;
-        $this->Errno = mysqli_errno ();
-        $this->Error = mysqli_error ();
+        $this->Errno = mysqli_errno ($this->Link_ID);
+        $this->Error = mysqli_error ($this->Link_ID);
 
         $stat = is_array ( $this->Record );
         if (! $stat && $this->Auto_Free) {
