@@ -4,14 +4,20 @@ class FicheAlbum {
 
     public function getTitreTome ($o_tome,$url=true, $comment = false) {
         $html = "";
-        if ($o_tome->TITRE_TOME) {
-            if ($o_tome->FLG_INT_TOME == "O" and stripos(strtolower($o_tome->TITRE_TOME),"intégrale") === false) {
+        if (issetNotEmpty($o_tome->TITRE_TOME)) {
+            $int = issetNotEmpty($o_tome->FLG_INT_TOME) ? $o_tome->FLG_INT_TOME : "";
+            if ($int == "O" and stripos(strtolower($o_tome->TITRE_TOME),"intégrale") === false) {
                 $html .= '<i>Intégrale - </i> ';
             }
 
-           if ($o_tome->NUM_TOME AND preg_match("/n°".$o_tome->NUM_TOME."\b/i",$o_tome->TITRE_TOME) !== 1) {
-                $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
-            }
+           if (issetNotEmpty($o_tome->NUM_TOME)) {
+               if (preg_match("/n°".$o_tome->NUM_TOME."\b/i",$o_tome->TITRE_TOME) !== 1) {
+                   $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
+                   
+               }
+           }
+                
+            
 
             if ($url) {
                 $html .=  "<strong>".$this->urlAlbum($o_tome, 'albTitle', $is_edition = false, $sponsor=true,$gotocomment = $comment)."</strong>" ;
@@ -130,13 +136,13 @@ class FicheAlbum {
         }
 
         // editeur
-        if ($o_tome->NOM_EDITEUR) {
+        if (issetNotEmpty($o_tome->NOM_EDITEUR)) {
             $html .= 'Edition ';
             $html .= '<i><span itemprop="publisher">' . $o_tome->NOM_EDITEUR . '</span></i>';
             if (($o_tome->NOM_COLLECTION) and ($o_tome->NOM_COLLECTION != '<N/A>')) {
                 $html .= ' -  <i>' . $o_tome->NOM_COLLECTION . '</i>';
             }
-            if ($o_tome->DATE_PARUTION_EDITION) {
+            if (issetNotEmpty($o_tome->DATE_PARUTION_EDITION)) {
            // $html .= 'Date parution : ';
             $html .= '<i> ('.$this->dateParution($o_tome->DATE_PARUTION_EDITION). ')</i>';
             }
@@ -256,9 +262,12 @@ class FicheAlbum {
                     if (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME)) {
                          $titleHtml = $o_tome->NOM_SERIE;
 
-                        if ($o_tome->NUM_TOME AND stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
+                        if (issetNotEmpty($o_tome->NUM_TOME)) {
+                            if (stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
+                                 $titleHtml .= ' - ' . 'tome ' . $o_tome->NUM_TOME;
+                            }
                         //if ($o_tome->NUM_TOME) {
-                            $titleHtml .= ' - ' . 'tome ' . $o_tome->NUM_TOME;
+                           
                         }
 
                         $titleHtml .= ' - ' . $o_tome->TITRE_TOME;
@@ -283,7 +292,7 @@ class FicheAlbum {
 
                 case "couvMedium": {
                         $html .= '<img itemprop="image" src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
-                        $html .= '</a>' . ($o_tome->NOM_EDITEUR ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
+                        $html .= '</a>' . (issetNotEmpty($o_tome->NOM_EDITEUR) ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
                         break;
                 }
 
@@ -306,7 +315,7 @@ class FicheAlbum {
                 }
                 default: {
                         $html .= '<img itemprop="image" src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" title="' . $titleHtml . '"/>';
-                        $html .= '</a>' . ($o_tome->NOM_EDITEUR ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
+                        $html .= '</a>' . (issetNotEmpty($o_tome->NOM_EDITEUR) ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
                         break;
                 }
             }

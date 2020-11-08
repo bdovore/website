@@ -99,7 +99,7 @@ class Macollection extends Bdo_Controller {
 
             if ($id_edition <> 0) {
                 //echo $this->Useralbum->select();
-                $this->Useralbum->load(c," WHERE ua.user_id = ".$user_id . " and ua.id_edition = ".$id_edition);
+                $this->Useralbum->load("c"," WHERE ua.user_id = ".$user_id . " and ua.id_edition = ".$id_edition);
 
                 if (isset($this->Useralbum->DATE_AJOUT) and $this->Useralbum->FLG_ACHAT=='N' ) {
                     $date_ajout = $this->Useralbum->DATE_AJOUT; // si l'album a déja été ajouté dans la collection on en change pas la date

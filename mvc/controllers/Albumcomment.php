@@ -40,7 +40,7 @@ class AlbumComment extends Bdo_Controller {
         $where .= " order by dte_post desc ";
         $where .= " limit ". (($page-1)*20).",20";
       // echo ($this->Comment->select().$where);
-        $this->Comment->load(c,$where);
+        $this->Comment->load("c",$where);
         $this->view->set_var('json', json_encode($this->Comment->dbSelect->a_dataQuery));
         $this->view->layout = "ajax";
         $this->view->render();
@@ -60,7 +60,7 @@ class AlbumComment extends Bdo_Controller {
             $note = getValInteger("note",0);
             $this->loadModel('Comment');
 
-            $this->Comment->load(c," WHERE c.user_id = ".$user_id . " and c.id_tome = ".$id_tome);
+            $this->Comment->load("c"," WHERE c.user_id = ".$user_id . " and c.id_tome = ".$id_tome);
 
             $this->Comment->set_dataPaste(
                 array(
@@ -92,13 +92,13 @@ class AlbumComment extends Bdo_Controller {
             $user_id = decodeUserId(getValInteger("user_id"));
             $this->loadModel('Comment');
 
-            $this->Comment->load(c," WHERE c.user_id = ".$user_id . " and c.ID_TOME = ".$id_tome);
+            $this->Comment->load("c"," WHERE c.user_id = ".$user_id . " and c.ID_TOME = ".$id_tome);
             $comment = $this->Comment->COMMENT;
             $this->Comment->setCommentNull( $user_id, $id_tome );
             
 
             $this->loadModel("Useralbum");
-            $this->Useralbum->load(c," WHERE ua.user_id = ".$user_id . " and bd_tome.ID_TOME = ".$id_tome);
+            $this->Useralbum->load("c"," WHERE ua.user_id = ".$user_id . " and bd_tome.ID_TOME = ".$id_tome);
             $id_edition = $this->Useralbum->ID_EDITION;
             $comment .= " ".$this->Useralbum->comment;
 

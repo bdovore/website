@@ -90,11 +90,11 @@ function Db_query ($requete,$connexion=false)
 
         if (!($resultat = $connexion->query($requete)))
         {
-            if (CFG_RETURN_QUERY_ERROR)
-            {
-                Bdo_Cfg::log('Requete en erreur -> '.$requete);
-                Bdo_Cfg::log("Message d'erreur : %s\n".$connexion->error);
-            }
+//            if (CFG_RETURN_QUERY_ERROR)
+//            {
+//                Bdo_Cfg::log('Requete en erreur -> '.$requete);
+//                Bdo_Cfg::log("Message d'erreur : %s\n".$connexion->error);
+//            }
         }
 
         if (DEBUG)

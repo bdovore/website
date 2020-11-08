@@ -497,7 +497,7 @@ class Admin extends Bdo_Controller {
                     if (User::minAccesslevel(1)) {
                         // Efface les éditions et les couvertures correspondantes
                         $this->loadModel("Edition");
-                        $dbs_edition = $this->Edition->load(c, "where bd_tome.id_tome =" . $idtome);
+                        $dbs_edition = $this->Edition->load("c", "where bd_tome.id_tome =" . $idtome);
                         foreach ($dbs_edition->a_dataQuery as $edition) {
                             if ($edition->IMG_COUV != '') {
                                 $filename = $edition->IMG_COUV;
@@ -848,7 +848,7 @@ class Admin extends Bdo_Controller {
 
                 // Affiche les informations relatives aux différentes éditions
                 $this->loadModel("Edition");
-                $dbs_edition = $this->Edition->load(c, "where bd_tome.id_tome =" . $this->Tome->ID_TOME ." ORDER BY DATE_PARUTION_EDITION");
+                $dbs_edition = $this->Edition->load("c", "where bd_tome.id_tome =" . $this->Tome->ID_TOME ." ORDER BY DATE_PARUTION_EDITION");
 
 
 
@@ -2651,7 +2651,7 @@ class Admin extends Bdo_Controller {
 
                 // Affiche les informations relatives aux différentes éditions sauf celle par defaut
                 $this->loadModel('Edition');
-                $dbs_edition = $this->Edition->load(c, "where PROP_STATUS not in ('0','99','98') and bd_tome.id_tome =" . $alb_id);
+                $dbs_edition = $this->Edition->load("c", "where PROP_STATUS not in ('0','99','98') and bd_tome.id_tome =" . $alb_id);
 
 
 

@@ -85,7 +85,7 @@ class Album extends Bdo_Controller {
 
         $this->loadModel('Edition');
 
-        $dbs_edition = $this->Edition->load(c, "where PROP_STATUS not in ('0','99','98') and bd_tome.id_tome =" . $ID_TOME ." ORDER BY DATE_PARUTION_EDITION");
+        $dbs_edition = $this->Edition->load("c", "where PROP_STATUS not in ('0','99','98') and bd_tome.id_tome =" . $ID_TOME ." ORDER BY DATE_PARUTION_EDITION");
 
         $this->view->set_var(array("dbs_edition" => $dbs_edition));
         // opengraph info
@@ -162,7 +162,7 @@ class Album extends Bdo_Controller {
             if ($filter) {
                 $this->loadModel('Edition');
 
-                $this->Edition->load(c, "WHERE  " . $filter);
+                $this->Edition->load("c", "WHERE  " . $filter);
 
 
                 $this->view->set_var('json', json_encode($this->Edition->dbSelect->a_dataQuery));

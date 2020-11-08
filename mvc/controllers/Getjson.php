@@ -115,7 +115,7 @@ class GetJSON extends Bdo_Controller {
             if ($filter) {
                 $this->loadModel('Edition');
 
-                $this->Edition->load(c, "WHERE  " . $filter);
+                $this->Edition->load("c", "WHERE  " . $filter);
 
                 $this->view->set_var('json', json_encode($this->Edition->dbSelect->a_dataQuery));
             } else {
@@ -530,7 +530,7 @@ class GetJSON extends Bdo_Controller {
         $id_tome = getValInteger("id_tome",0);
         $this->loadModel('Edition');
 
-        $dbs_edition = $this->Edition->load(c, "where PROP_STATUS not in ('0','99','98') and bd_tome.id_tome =" . $id_tome ." ORDER BY DATE_PARUTION_EDITION");
+        $dbs_edition = $this->Edition->load("c", "where PROP_STATUS not in ('0','99','98') and bd_tome.id_tome =" . $id_tome ." ORDER BY DATE_PARUTION_EDITION");
           $this->view->set_var('json', json_encode($dbs_edition->a_dataQuery));
          $this->view->layout = "ajax";
            $this->view->render();

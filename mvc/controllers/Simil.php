@@ -63,7 +63,7 @@ class Simil extends Bdo_Controller
         $this->Tome->load();
         $a_simil = $this->Tome->simil();
         $tsmp = $this->Tome_simil->lastUpdateForIdTome($ID_TOME);        
-        if (empty($a_simil) OR (604800 < (time() - TimestampDate($tsmp))))
+        if (empty($a_simil) OR (604800 < (time() - strtotime($tsmp))))
         {
            
             $this->Tome_simil->load($this->Tome);
