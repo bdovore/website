@@ -327,6 +327,7 @@ class GetJSON extends Bdo_Controller {
         $flg_lu = getVal("flg_lu", "");
         $flg_cadeau = getVal("flg_cadeau", "");
         $term = getVal("term", "");
+        $sort = getVal("sort","default");
         $this->loadModel("Useralbum");
         
         if ($length > 100) $length = 100;
@@ -350,7 +351,12 @@ class GetJSON extends Bdo_Controller {
                 if ($term) {
                     $where .= " AND s.NOM like '%".Db_Escape_String($term)."%'";
                 }
-                $orderby = " ORDER BY NOM_SERIE";
+                if ($sort == "date") {
+                    $orderby = " ORDER BY DATE_AJOUT DESC";
+                } else {
+                    $orderby = " ORDER BY NOM_SERIE";
+                }
+                
                 $dbs_album = $this->Useralbum->load("c",$where.$orderby. $limit);
                 $infoalbum["data"] = $dbs_album->a_dataQuery;
                 $nbr = Db_CountRow($this->Useralbum->select().$where);
