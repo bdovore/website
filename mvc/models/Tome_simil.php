@@ -91,7 +91,7 @@ class Tome_simil
                 $resultat = Db_query($requete);
             }
                   //echo_pre($requete);
-
+            
 
             while ($obj = Db_fetch_object($resultat)) {
 
@@ -108,8 +108,7 @@ class Tome_simil
 
             Db_query("DELETE FROM bd_tome_simil WHERE ID_TOME=" . $tome->ID_TOME . "
                     AND ID_TOME_SIMIL NOT IN
-                    ( SELECT ID_TOME_SIMIL FROM bd_tome_simil WHERE ID_TOME=" . $tome->ID_TOME . "
-                            ORDER BY score DESC LIMIT 0,5");
+                    ( ".implode(",", $a_idTomeSimil) ." )");
         }
         return $a_idTomeSimil;
     }
