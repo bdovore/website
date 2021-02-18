@@ -75,7 +75,7 @@ class Tome_simil
             AND users_album.user_id in (". implode(',', $a_User).")
             GROUP BY bd_edition_stat.ID_SERIE
             ORDER BY score DESC
-            LIMIT 0,5
+            LIMIT 0,6
             ";
             $resultat = Db_query($requete);
             if (0 == Db_CountRow($resultat)) {
@@ -86,7 +86,7 @@ class Tome_simil
                 AND NOT(bd_edition_stat.ID_SERIE = ".$tome->ID_SERIE.")
                 AND NOT(bd_edition_stat.NBR_USER_ID_SERIE = 0)
                 GROUP BY bd_edition_stat.ID_SERIE
-                ORDER BY bd_edition_stat.NBR_USER_ID_SERIE DESC LIMIT 0,5";
+                ORDER BY bd_edition_stat.NBR_USER_ID_SERIE DESC LIMIT 0,6";
                 // les plus rependus dans le genre
                 $resultat = Db_query($requete);
             }
