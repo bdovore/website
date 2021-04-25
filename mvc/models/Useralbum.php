@@ -79,7 +79,7 @@ class Useralbum extends Bdo_Db_Line
                           s.FLG_FINI,
                       g.ID_GENRE,
                       g.libelle as NOM_GENRE,
-
+                      g.ORIGINE, 
                       en.ID_EDITION,
                       en.DTE_PARUTION,
                       en.ean as EAN_EDITION,
