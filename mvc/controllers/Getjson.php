@@ -328,6 +328,7 @@ class GetJSON extends Bdo_Controller {
         $flg_cadeau = getVal("flg_cadeau", "");
         $term = getVal("term", "");
         $sort = getVal("sort","default");
+        $origin = getVal("origin",""); // manga / comics / BD
         $this->loadModel("Useralbum");
         
         if ($length > 100) $length = 100;
@@ -336,6 +337,10 @@ class GetJSON extends Bdo_Controller {
                 $limit = " limit ".(($page - 1)*$length).", ".$length;
                 $where = " where ua.user_id = ".intval($_SESSION['userConnect']->user_id)." and flg_achat = '". Db_Escape_String($flg_achat)."' ";
                 if ($id_serie)  $where.= " AND s.id_serie = ".$id_serie;
+                
+                if ($origin != "") {
+                    $where.= " AND g.ORIGINE = '".Db_Escape_String($origin)."'";
+                }
                 if ($flg_pret) {
                     $where.= " AND flg_pret = '".Db_Escape_String($flg_pret)."'";
                 }

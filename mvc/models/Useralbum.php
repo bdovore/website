@@ -502,7 +502,8 @@ class Useralbum extends Bdo_Db_Line
              , avg(MOYENNE_NOTE_TOME) NOTE_SERIE
              , sum(NB_NOTE_TOME) NB_NOTE_SERIE
              , USER_SERIE.NB_USER_ALBUM
-             ,COUNT(USER_EXCLU.id_serie) > 0 IS_EXCLU
+             , COUNT(USER_EXCLU.id_serie) > 0 IS_EXCLU
+             , bd_genre.ORIGINE
         FROM bd_serie 
         INNER JOIN (select bd_tome.id_serie, count(*) NB_USER_ALBUM 
                     from users_album 
