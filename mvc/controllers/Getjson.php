@@ -54,6 +54,9 @@ class GetJSON extends Bdo_Controller {
             case "Actu":
                 $this->Actu();
                 break;
+            case "Userstat":
+                $this->Userstat();
+                break;
             default :
                 break;
         }
@@ -546,6 +549,22 @@ class GetJSON extends Bdo_Controller {
          $this->view->layout = "ajax";
            $this->view->render();
          
+    }
+    
+    private function Userstat () {
+        
+        $orig= getVal("origine","");
+        if (User::minAccesslevel(2)) {
+            $user_id = intval($_SESSION['userConnect']->user_id);
+        
+            $this->loadModel("Useralbum");
+        
+            $stat = $this->Useralbum->getStatistiques($user_id, $stat="album", $auteur="",$origin=$orig);
+            $this->view->set_var('json',json_encode($stat));
+        }
+       
+        $this->view->layout = "ajax";
+        $this->view->render();
     }
 
 }
