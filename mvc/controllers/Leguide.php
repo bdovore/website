@@ -262,7 +262,7 @@ class Leguide extends Bdo_Controller
                         WHERE bd_tome.id_edition = bd_edition.id_edition AND bd_edition.`DTE_PARUTION`> date_add(now(),INTERVAL -6 MONTH)
                             ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
                                  and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
-                            ORDER BY `NBR_USER_ID`*15/(DATEDIFF(now(),DTE_PARUTION)) DESC ".$limit);
+                            ORDER BY (15.0*bd_edition_stat.NBR_USER_ID_EDITION /(DATEDIFF(now(),DTE_PARUTION) +1)) DESC ".$limit);
 
                     $this->view->set_var('dbs_tome', $dbs_tome);
                     break;
