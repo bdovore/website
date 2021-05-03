@@ -532,7 +532,7 @@ class GetJSON extends Bdo_Controller {
         $dbs_tome = $this->Edition->load('c', "
             WHERE bd_edition.`DTE_PARUTION`> date_add(now(),INTERVAL - 6 MONTH)
                      and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
-                ORDER BY `NBR_USER_ID` DESC ".$limit);
+                ORDER BY (15.0*bd_edition_stat.NBR_USER_ID_EDITION /(DATEDIFF(now(),DTE_PARUTION) +1))  DESC ".$limit);
 
         $this->view->set_var('json', json_encode($dbs_tome->a_dataQuery));
          $this->view->layout = "ajax";
