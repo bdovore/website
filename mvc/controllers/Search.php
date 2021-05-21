@@ -39,29 +39,36 @@ class Search extends Bdo_Controller
                 $arr[] = (object) array(
                         'label' => $obj->TITRE_TOME,
                         'category' => "Albums",
-                        'ID_TOME' => $obj->ID_TOME
+                    "ID_TOME" => $obj->ID_TOME,
+                        'ID_EDITION' => $obj->ID_EDITION
                 );
             }
+            // si isbn ou ean possible
+            if (preg_match("/[0-9X]{5,10}.+/",$term )) {
+                $this->loadModel("Edition");
+                 $this->Edition->load('c'," WHERE (bd_edition.ean like '". $term ."%' ) ORDER BY TITRE LIMIT 0,10");
 
-            $this->Tome->load('c'," WHERE (en.ean like '". $term ."%' ) ORDER BY TITRE LIMIT 0,10");
+                foreach ($this->Edition->dbSelect->a_dataQuery as $obj) {
+                    $arr[] = (object) array(
+                            'label' => $obj->TITRE_TOME,
+                            'category' => "Albums",
+                        "ID_TOME" => $obj->ID_TOME,
+                            'ID_EDITION' => $obj->ID_EDITION
+                    );
+                }
 
-            foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
-                $arr[] = (object) array(
-                        'label' => $obj->TITRE_TOME,
-                        'category' => "Albums",
-                        'ID_TOME' => $obj->ID_TOME
-                );
+                $this->Edition->load('c'," WHERE (bd_edition.isbn like '". $term ."%' ) ORDER BY TITRE LIMIT 0,10");
+
+                foreach ($this->Edition->dbSelect->a_dataQuery as $obj) {
+                    $arr[] = (object) array(
+                            'label' => $obj->TITRE_TOME,
+                            'category' => "Albums",
+                            "ID_TOME" => $obj->ID_TOME,
+                            'ID_EDITION' => $obj->ID_EDITION
+                    );
+                }
             }
-
-            $this->Tome->load('c'," WHERE (en.isbn like '". $term ."%' ) ORDER BY TITRE LIMIT 0,10");
-
-            foreach ($this->Tome->dbSelect->a_dataQuery as $obj) {
-                $arr[] = (object) array(
-                        'label' => $obj->TITRE_TOME,
-                        'category' => "Albums",
-                        'ID_TOME' => $obj->ID_TOME
-                );
-            }
+           
 
             $this->loadModel ("Auteur");
             $this->Auteur->load('c'," WHERE (PSEUDO LIKE '". $term ."%') OR (CONCAT(PRENOM, ' ', NOM) LIKE '". $term ."%')  ORDER BY PSEUDO LIMIT 0,10");

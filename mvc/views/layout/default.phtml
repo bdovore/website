@@ -233,14 +233,14 @@ $(document).ready(function() {
                                 {
                                     type: 'iframe',
                                     autoSize : false,
-                                    href : "<?php echo BDO_URL;?>Album?id_tome="+ui.item.ID_TOME,
+                                    href : "<?php echo BDO_URL;?>Album?id_edition="+ui.item.ID_EDITION+"&id_tome=" + ui.item.ID_TOME,
                                     title : ui.item.label,
                                     width:600,
                                     height:600
                                 });
                     } 
                     else {
-                         window.location.href = "<?php echo BDO_URL;?>Album?id_tome="+encodeURIComponent(ui.item.ID_TOME) + "&mobile=T";
+                         window.location.href = "<?php echo BDO_URL;?>Album?id_edition="+encodeURIComponent(ui.item.ID_EDITION) + "&id_tome=" + encodeURIComponent(ui.item.ID_TOME) + "&mobile=T";
                     }
                 }
                         if (ui.item.category=='Bdovore') {
