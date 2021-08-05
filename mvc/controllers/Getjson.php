@@ -338,7 +338,7 @@ class GetJSON extends Bdo_Controller {
         $origin = getVal("origin",""); // manga / comics / BD
         $this->loadModel("Useralbum");
         
-        //if ($length > 500) $length = 500;
+        if ($length > 30000) $length = 30000;
         if (Bdo_Cfg::user()->minAccesslevel(2)) {
             if ($mode ) {
                 $limit = " limit ".(($page - 1)*$length).", ".$length;
