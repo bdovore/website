@@ -16,6 +16,10 @@ class GetJSON extends Bdo_Controller {
         Bdo_Cfg::setVar('debug',false);
 
         $data = getVal("data", "");
+        $compress = getVal("compress", 1);
+        if ($compress )  {
+            ob_start("ob_gzhandler");
+        }
         switch ($data) {
             case "Auteur" :
                 $this->Auteur();
@@ -334,7 +338,7 @@ class GetJSON extends Bdo_Controller {
         $origin = getVal("origin",""); // manga / comics / BD
         $this->loadModel("Useralbum");
         
-        if ($length > 100) $length = 100;
+        //if ($length > 500) $length = 500;
         if (Bdo_Cfg::user()->minAccesslevel(2)) {
             if ($mode ) {
                 $limit = " limit ".(($page - 1)*$length).", ".$length;
