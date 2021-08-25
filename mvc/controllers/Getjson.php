@@ -61,6 +61,15 @@ class GetJSON extends Bdo_Controller {
             case "Userstat":
                 $this->Userstat();
                 break;
+            case "isExclu":
+                $this->isExclu();
+                break;
+            case "ListExclusion":
+                $this->listExclusion();
+                break;
+            case "ListTomesExclus": 
+                $this->listTomesExclus();
+                break;
             default :
                 break;
         }
@@ -567,6 +576,48 @@ class GetJSON extends Bdo_Controller {
             $this->view->set_var('json',json_encode($stat));
         }
        
+        $this->view->layout = "ajax";
+        $this->view->render();
+    }
+    
+    public function isExclu () {
+        $id_tome = getValInteger("id_tome");
+        $id_serie = getValInteger("id_serie");
+        if (User::minAccesslevel(2)) {
+            $user_id = intval($_SESSION['userConnect']->user_id);
+        
+            $this->loadModel("Users_exclusions");
+        
+            $stat = $this->Users_exclusions->isExclu($user_id, $id_tome, $id_serie);
+            $this->view->set_var('json',json_encode($stat));
+        }
+         $this->view->layout = "ajax";
+        $this->view->render();
+    }
+    
+    public function listExclusion () {
+         if (User::minAccesslevel(2)) {
+            $user_id = intval($_SESSION['userConnect']->user_id);
+        
+            $this->loadModel("Users_exclusions");
+        
+            $stat = $this->Users_exclusions->getListSerieExcluSource($user_id);
+            $this->view->set_var('json',json_encode($stat));
+        }
+        $this->view->layout = "ajax";
+        $this->view->render();
+    }
+    
+    public function listTomesExclus () {
+        $id_serie = getValInteger("id_serie");
+        if (User::minAccesslevel(2)) {
+            $user_id = intval($_SESSION['userConnect']->user_id);
+        
+            $this->loadModel("Users_exclusions");
+        
+            $stat = $this->Users_exclusions->getListTomesExclus($user_id, $id_serie);
+            $this->view->set_var('json',json_encode($stat));
+        }
         $this->view->layout = "ajax";
         $this->view->render();
     }
