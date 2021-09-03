@@ -90,18 +90,26 @@ class Users_exclusions extends Bdo_Db_Line {
                     user_serie.id_serie as ID_SERIE,
                     user_serie.nom as NOM_SERIE, 
                     count(*) nb_album,
-                  max(img_couv) as IMG_COUV_SERIE 
+                  max(img_couv) as IMG_COUV_SERIE,
+                  user_serie.ID_GENRE,
+                  user_serie.NOM_GENRE,
+                  user_serie.ORIGINE
                     
             FROM
                     (
                             SELECT DISTINCT
                                     s.id_serie,
-                                    s.nom
+                                    s.nom,
+                                    `bd_genre`.`ID_GENRE`,
+
+                    `bd_genre`.`LIBELLE` as `NOM_GENRE`,
+                    `bd_genre`.`ORIGINE`
                             FROM
                                     users_album ua
                                     INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
                                     INNER JOIN bd_tome t ON t.id_tome = en.id_tome
                                     INNER JOIN bd_serie s ON t.ID_SERIE=s.ID_SERIE
+                                    INNER JOIN bd_genre ON s.ID_GENRE = bd_genre.ID_GENRE
                             WHERE
                                     ua.user_id = ".intval($user_id)."
                                     AND flg_achat = 'N' 
@@ -112,8 +120,10 @@ class Users_exclusions extends Bdo_Db_Line {
                                                             AND ues.user_id = ".intval($user_id)."
                                                     )
                             ) user_serie
+                    
                     INNER JOIN bd_tome t ON t.ID_SERIE=user_serie.ID_SERIE
                     INNER JOIN bd_edition en ON t.ID_EDITION=en.ID_EDITION
+                    
             WHERE
                             NOT EXISTS (
                                     SELECT NULL
