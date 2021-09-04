@@ -622,6 +622,10 @@ class Admin extends Bdo_Controller {
                 // on vérifie d'abord la date
                 $txtDateParution = completeDate(postVal('txtDateParution'));
                 $flgDteParution = postVal('FLAG_DTE_PARUTION');
+                if (!postVal("txtTitre")) {
+                    echo "Erreur : il semble que vous ayez oublié le titre :D";
+                    exit();
+                }
                 if (!validateDate($txtDateParution) AND $flgDteParution <> "1") {
                     echo "Erreur : la date fournie est invalide et risque de générer un album fantôme :D";
                     exit();
