@@ -374,7 +374,7 @@ class Tome extends Bdo_Db_Line
          return $nb;
     }
     
-    public function getListAlbumToComplete($user_id, $id_serie=0, $flg_achat= true, $page=1, $length=0, $order= "") {
+    public function getListAlbumToComplete($user_id, $id_serie=0, $flg_achat= true, $page=1, $length=0, $order= "", $from = 0) {
 
         $user_id = intval($user_id);
         $id_serie = intval($id_serie);
@@ -385,7 +385,7 @@ class Tome extends Bdo_Db_Line
         } 
         if ($length ) {
             // pagination
-            $limit = " limit ".(($page - 1)*$length).", ".$length;
+            $limit = " limit ".($from + ($page - 1)*$length).", ".$length;
         }
         if (!$flg_achat) {
             $q_achat = " AND ua.flg_achat = 'N'";

@@ -348,12 +348,13 @@ class GetJSON extends Bdo_Controller {
         $term = getVal("term", "");
         $sort = getVal("sort","default");
         $origin = getVal("origin",""); // manga / comics / BD
+        $from = getValInteger("from",0);
         $this->loadModel("Useralbum");
         
         if ($length > 30000) $length = 30000;
         if (Bdo_Cfg::user()->minAccesslevel(2)) {
             if ($mode ) {
-                $limit = " limit ".(($page - 1)*$length).", ".$length;
+                $limit = " limit ".($from+($page - 1)*$length).", ".$length;
                 $where = " where ua.user_id = ".intval($_SESSION['userConnect']->user_id)." and flg_achat = '". Db_Escape_String($flg_achat)."' ";
                 if ($id_serie)  $where.= " AND s.id_serie = ".$id_serie;
                 
@@ -444,6 +445,7 @@ class GetJSON extends Bdo_Controller {
     private function Userserie () {
         $length = getValInteger("length",10);
         $page = getValInteger("page",1);
+        $from = getValInteger("from",0);
         $term = getVal("term",""); // filtre de recherche 
         $origin = getVal("origin",""); // manga / comics / BD
         $complet = getVal("complet","");
@@ -452,7 +454,7 @@ class GetJSON extends Bdo_Controller {
             $this->loadModel("Useralbum");
             $this->loadModel("Users_exclusions");
             $user_id = intval($_SESSION['userConnect']->user_id);
-            $dbs_serie = $this->Useralbum->getUserSerie($user_id, $page, $length,$term,$origin,$auteur, $liste, $complet);
+            $dbs_serie = $this->Useralbum->getUserSerie($user_id, $page, $length,$term,$origin,$auteur, $liste, $complet, $from);
             $a_obj = array();
             foreach ($dbs_serie as $serie) {
                 $a_obj[] = $serie;
@@ -498,6 +500,7 @@ class GetJSON extends Bdo_Controller {
              $flg_achat = getValInteger("includeAchat",1);
              $length = getValInteger("length",0);
              $page = getValInteger("page",1);
+             $from = getValInteger("from",0);
              $mode = getVal("mode","");
              if ($id_serie OR $mode == "all") {
                   $this->loadModel("Useralbum");

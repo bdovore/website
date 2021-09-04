@@ -479,7 +479,7 @@ class Useralbum extends Bdo_Db_Line
         return Db_affected_rows();
     }
     
-    public function getUserSerie ($user_id, $page=1, $length=10, $search = "", $origin= "",$auteur = "", $liste = "", $complet="") {
+    public function getUserSerie ($user_id, $page=1, $length=10, $search = "", $origin= "",$auteur = "", $liste = "", $complet="", $from=0) {
       if ($auteur <> "")
         $whereAut = "and (   id_scenar = ".$auteur." or id_scenar_alt = ".$auteur." 
                           or id_dessin = ".$auteur." or id_dessin_alt = ".$auteur." 
@@ -537,7 +537,7 @@ class Useralbum extends Bdo_Db_Line
          group by bd_serie.nom, bd_serie.ID_SERIE "
            
       ;
-      $limit = "LIMIT ".(($page - 1)*$length).", ".$length;
+      $limit = "LIMIT ".($from + ($page - 1)*$length).", ".$length;
       if ($complet == "N") {
           $having = " HAVING NB_USER_ALBUM < NB_ALBUM  ";
       } else if ($complet == "O") {
