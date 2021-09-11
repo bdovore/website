@@ -467,7 +467,7 @@ function main_words ($text)
  */
 function is_not_relevant ($text)
 {
-    return eregi("^le$|^la$|^les$|^un$|^une$|^de$|^des$|^au$|^aux$|^a$|^et$|^mais$|^ou$|^est$|^et$|^or$|^ni$|^car$|^qui$|^que$|^quoi$|^dont$|^ne$|^pas$|^coffret$|^nouvelle$|^edition$", $text);
+    return preg_match("/^le$|^la$|^les$|^un$|^une$|^de$|^des$|^au$|^aux$|^a$|^et$|^mais$|^ou$|^est$|^et$|^or$|^ni$|^car$|^qui$|^que$|^quoi$|^dont$|^ne$|^pas$|^coffret$|^nouvelle$|^edition$/i", $text);
 }
 
 /**
@@ -481,7 +481,7 @@ function is_not_relevant ($text)
  */
 function clean_article ($text)
 {
-    return eregi_replace("le |la |les |un |une |des |au |aux |a |et |mais |ou |est |et |or |ni |car |l'", "", $text);
+    return preg_replace("/le |la |les |un |une |des |au |aux |a |et |mais |ou |est |et |or |ni |car |l'/i", "", $text);
 }
 
 /**
@@ -495,7 +495,7 @@ function clean_article ($text)
  */
 function clean_apostrophes ($text)
 {
-    return eregi_replace("l'|d'|n'|\(|\)", "", $text);
+    return preg_replace("/l'|d'|n'|\(|\)/i", "", $text);
 }
 
 /**
