@@ -69,6 +69,7 @@ class Macollection extends Bdo_Controller {
 
     public function majCollection () {
         $id_tome = getValInteger('id_edition',0);
+        $apiversion = getVal("api_version",1);
         /* Fonction pour ajouter / mettre à jour un album dans la collection
          *
          * seul le user connecté peut mettre à jour
@@ -134,9 +135,17 @@ class Macollection extends Bdo_Controller {
                     )
 
                 );
-
+               
+                $last = $this->majLastUpdate($user_id);
                 $this->Useralbum->update();
-                $this->view->set_var('json', json_encode($this->Useralbum->error));
+                if ($apiversion == 2 ) {
+                    $this->view->set_var('json', json_encode(array("error" => $this->Useralbum->error, "timestamp" => $last) ));
+                } else {
+                    $this->view->set_var('json', json_encode( $this->Useralbum->error));
+                }
+                
+                
+                
             }
             else {
                 $this->view->set_var('json', json_encode(array('CODE'=> 'ERR_EDITION', 'MSG' => "Id edition nécessaire")));
@@ -153,6 +162,7 @@ class Macollection extends Bdo_Controller {
          * On met l'édition par défaut pour tous les albums de la série
          * Possible de passer toute ue série en futur achat via flg_achat
          */
+         $apiversion = getVal("api_version",1);
          if (! empty($_SESSION['userConnect']->user_id)) {
             $user_id = intval($_SESSION['userConnect']->user_id);
             $id_serie = getValInteger("id_serie",0);
@@ -161,7 +171,13 @@ class Macollection extends Bdo_Controller {
             $this->loadModel('Useralbum');
             if ($id_serie <> 0) {
                 $this->Useralbum->addSerieForUser($id_serie, $user_id, $flg_achat);
-                $this->view->set_var('json', json_encode($this->Useralbum->error));
+                 $last = $this->majLastUpdate($user_id);
+                 
+                if ($apiversion == 2 ) {
+                    $this->view->set_var('json', json_encode(array("error" => $this->Useralbum->error, "timestamp" => $last) ));
+                } else {
+                    $this->view->set_var('json', json_encode( $this->Useralbum->error));
+                }
             } else {
                 $this->view->set_var('json', json_encode(array('CODE'=> 'ERR_SERIE', 'MSG' => "Id serie nécessaire")));
 
@@ -172,6 +188,19 @@ class Macollection extends Bdo_Controller {
          $this->view->layout = "ajax";
          $this->view->render();
         
+    }
+    
+    private function majLastUpdate ($user_id) {
+         // Mise à jour du timestamp
+        $last =  date("Y-m-d H:i:s");;
+        $this->loadModel("User");
+        $this->User->set_dataPaste(array("user_id" => $user_id ));
+        $this->User->load();
+        $this->User->set_dataPaste(array("user_id" =>$user_id,
+               "LAST_UPDATE" => $last ));
+         $this->User->update();
+         
+         return($last);
     }
 
     public function mesEtageres () {
@@ -535,6 +564,7 @@ class Macollection extends Bdo_Controller {
          * s'execute en mode ajax
          *
          */
+         $apiversion = getVal("api_version",1);
         if (User::minAccesslevel(2)) {
             $id_edition = getValInteger("id_edition",0);
             $this->loadModel("Useralbum");
@@ -545,7 +575,12 @@ class Macollection extends Bdo_Controller {
             ));
             //$this->Useralbum->load();
             $this->Useralbum->delete();
-            $this->view->set_var('json', json_encode($this->Useralbum->error));
+            $last = $this->majLastUpdate($user_id);
+             if ($apiversion == 2 ) {
+                    $this->view->set_var('json', json_encode(array("error" => $this->Useralbum->error, "timestamp" => $last) ));
+                } else {
+                    $this->view->set_var('json', json_encode( $this->Useralbum->error));
+                }
             $this->view->layout = "ajax";
             $this->view->render();
         }
@@ -604,6 +639,7 @@ class Macollection extends Bdo_Controller {
 
         if ($id_serie <> 0) {
           $this->Users_exclusions->delSerieExclude($user_id,$id_serie);
+          
           $this->view->set_var('json', json_encode($this->Users_exclusions->error));
         } else {
           $this->view->set_var('json', json_encode(array('CODE'=> 'ERR_SERIE', 'MSG' => "Id serie nécessaire")));

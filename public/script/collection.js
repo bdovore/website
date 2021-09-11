@@ -12,9 +12,9 @@
 function addSerie(id_serie, flg_achat) {
   if (confirm("Toutes les éditions par défaut de la série seront ajoutées à votre collection. Etes vous sûr ?")) {
       $("#addSerie" + id_serie).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
-       var url = $.bdovore.URL + "macollection/addserie?id_serie=" + id_serie  + "&flg_achat=" + flg_achat;
+       var url = $.bdovore.URL + "macollection/addserie?api_version=2&id_serie=" + id_serie  + "&flg_achat=" + flg_achat;
        $.getJSON(url, function(data) {
-         if (data.length == 0) {
+         if (data.error == "") {
              alert("Tous les albums de la série ont été ajoutés :)");
              window.location.reload();
          }
@@ -70,11 +70,11 @@ function includeSerie(id_serie) {
 // Boutons "Acheter" et "Futur achat" sur un album
 function addAlbum(id_serie, id_tome, id_edition, exclu, flg_achat) {
   $("#addAlbum" + id_edition).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
-  var url = $.bdovore.URL + "macollection/majcollection?id_edition=" + id_edition + "&id_tome=" + id_tome + "&flg_achat=" + flg_achat;
+  var url = $.bdovore.URL + "macollection/majcollection?api_version=2&id_edition=" + id_edition + "&id_tome=" + id_tome + "&flg_achat=" + flg_achat;
 
   $.getJSON(url, function(data) {
 
-      if (data.length == 0) {
+      if (data.error == "") {
           $("#info_collection").show();
           if (flg_achat == "O") {
               $("#cb_achat").attr('checked', true);
@@ -94,10 +94,10 @@ function addAlbum(id_serie, id_tome, id_edition, exclu, flg_achat) {
 function deleteEdition(id_serie, id_tome, id_edition, exclu) {
   if (confirm("Supprimer l'édition de votre collection ?")) {
       $("#addAlbum" + id_edition).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
-      var url = $.bdovore.URL + "macollection/deleteAlbum?id_edition=" + id_edition;
+      var url = $.bdovore.URL + "macollection/deleteAlbum?api_version=2&id_edition=" + id_edition;
 
       $.getJSON(url, function(data) {
-          if (data.length == 0) {
+          if (data.error == "") {
               $("#addAlbum" + id_edition).html("Album supprimé de votre collection !");
               $("#info_collection").hide();
               getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu);

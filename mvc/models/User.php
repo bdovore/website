@@ -57,7 +57,8 @@ class User extends Bdo_Db_Line
                 `ROWSERIE` ,
                 `PREF_EXPORT` , 
                 API_TOKEN,
-                DATE_TOKEN
+                DATE_TOKEN,
+                LAST_UPDATE
         FROM `" . $this->table_name . "`
  ";
     }
@@ -605,7 +606,7 @@ FROM " . $this->table_name . "
             $error = 'Identifiant ou Mot de passe de connexion invalide';
         }
         
-        return (array("Token" => $API_TOKEN, "Error" => $error));
+        return (array("Token" => $API_TOKEN, "Timestamp" => $this->LAST_UPDATE, "Error" => $error));
     }
     
     public function verifyToken ($token) {
