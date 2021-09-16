@@ -564,6 +564,7 @@ class Macollection extends Bdo_Controller {
          * s'execute en mode ajax
          *
          */
+        $user_id = intval($_SESSION["userConnect"]->user_id);
          $apiversion = getVal("api_version",1);
         if (User::minAccesslevel(2)) {
             $id_edition = getValInteger("id_edition",0);
