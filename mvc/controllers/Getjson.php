@@ -568,7 +568,7 @@ class GetJSON extends Bdo_Controller {
            $dbs_tome = $this->Edition->load('c', "
                WHERE ". $filterdate ."
                         and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
-                   ORDER BY DTE_PARUTION  DESC ".$limit);
+                   ORDER BY DTE_PARUTION  ". ($nbmois > 0 ) ? " DESC " : " ".$limit);
 
         }
         
