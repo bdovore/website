@@ -541,21 +541,40 @@ class GetJSON extends Bdo_Controller {
     private function Actu() {
          $this->loadModel('Actus');
          $filter_origine = getVal("origine","BD");
+         $mode = getValInteger("mode", 1);
+         $nbmois = getValInteger("period", 2);
          $page = getValInteger("page", 1);
          $length = getValInteger("length", 10);
          $limit = " limit ".(($page - 1)*$length).", ".$length; 
         
-         // tendances
-         $this->loadModel('Edition');
+          $this->loadModel('Edition');
+         if ($mode == 1) {
+             
+         
+            // tendances
+           $dbs_tome = $this->Edition->load('c', "
+               WHERE bd_edition.`DTE_PARUTION`> date_add(now(),INTERVAL - 6 MONTH)
+                        and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
+                   ORDER BY (15.0*bd_edition_stat.NBR_USER_ID_EDITION /(DATEDIFF(now(),DTE_PARUTION) +1))  DESC ".$limit);
 
-        $dbs_tome = $this->Edition->load('c', "
-            WHERE bd_edition.`DTE_PARUTION`> date_add(now(),INTERVAL - 6 MONTH)
-                     and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
-                ORDER BY (15.0*bd_edition_stat.NBR_USER_ID_EDITION /(DATEDIFF(now(),DTE_PARUTION) +1))  DESC ".$limit);
+        
+        } else {
+            // parutions 
+           if ($nbmois > 0) {
+               $filterdate = "bd_edition.`DTE_PARUTION`> date_add(now(),INTERVAL - ". $nbmois ." MONTH) AND bd_edition.`DTE_PARUTION` < now() ";
+           } else {
+               $filterdate = "bd_edition.`DTE_PARUTION`< date_add(now(),INTERVAL  ". abs($nbmois) ." MONTH) AND bd_edition.`DTE_PARUTION` > now() ";
+           }
+           $dbs_tome = $this->Edition->load('c', "
+               WHERE ". $filterdate ."
+                        and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
+                   ORDER BY DTE_PARUTION  DESC ".$limit);
 
+        }
+        
         $this->view->set_var('json', json_encode($dbs_tome->a_dataQuery));
-         $this->view->layout = "ajax";
-           $this->view->render();
+        $this->view->layout = "ajax";
+        $this->view->render();
          
     }
     
