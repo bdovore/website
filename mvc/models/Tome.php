@@ -319,13 +319,23 @@ class Tome extends Bdo_Db_Line
         if ($nb_mois > 0 ) { // cas des parutions passées
             $query .= "AND en.dte_parution >= DATE_SUB(NOW(), INTERVAL ". $nb_mois." MONTH) "
                     . "AND en.dte_parution <= NOW()";
+        } else if ($nb_mois == 0) {
+             $query .= "AND en.dte_parution >= DATE_SUB(NOW(), INTERVAL 6 MONTH) ";
+            
         } else {
             // à paraitre
             $query .= "AND en.dte_parution >= NOW()";
         }
-        $query .= " ORDER BY en.dte_parution";
-
-        $query .= " limit ".(($page-1)*20).", 20";
+        
+        if ($nb_mois <> 0) {
+             $query .= " ORDER BY en.dte_parution";
+            $query .= " limit ".(($page-1)*20).", 20";
+            
+        } else {
+             $query .= " ORDER BY en.dte_parution DESC";
+            $query .= " limit ".(($page-1)*100).", 100";
+        }
+       
 
         //echo $this->select().$query;
         return $this->load("c",$query);
