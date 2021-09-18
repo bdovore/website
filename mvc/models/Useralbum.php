@@ -491,7 +491,7 @@ class Useralbum extends Bdo_Db_Line
              , `bd_serie`.`NOM` as `NOM_SERIE`
              , `bd_serie`.`FLG_FINI` as `FLG_FINI_SERIE`
              , CASE bd_serie.FLG_FINI WHEN 0 then 'Fini' when 1 then 'En cours' when 2 then 'One Shot' when 3 then 'Interrompue' ELSE '?' end LIB_FLG_FINI_SERIE
-             , CASE WHEN bd_serie.NB_TOME > 0 THEN bd_serie.NB_TOME ELSE max(bd_tome.NUM_TOME) END  as `NB_TOME`
+             , CASE WHEN bd_serie.NB_TOME > 0 THEN bd_serie.NB_TOME ELSE count(distinct bd_tome.NUM_TOME) END  as `NB_TOME`
              , bd_serie.NB_TOME as NB_TOME_FINAL
              , `bd_serie`.`TRI` as `TRI_SERIE`
              , `bd_serie`.`HISTOIRE` as `HISTOIRE_SERIE`
