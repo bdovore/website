@@ -710,7 +710,7 @@ class Admin extends Bdo_Controller {
                     }
                     if (postVal("chkResize") == "checked" && $img_couv != '') {
                         //Redimensionnement
-                        $max_size = 180;
+                        $max_size = 360;
                         $imageproperties = getimagesize(BDO_DIR_COUV . $img_couv);
                         if ($imageproperties != false) {
                             $imagetype = $imageproperties[2];
@@ -2311,7 +2311,7 @@ class Admin extends Bdo_Controller {
         } else {
             $newfilename = $url_img;
 
-            $max_size = 180;
+            $max_size = 360;
 
             //if ($_SERVER["SERVER_NAME"] != 'localhost')
             $imageproperties = getimagesize($imagedir . $newfilename);
