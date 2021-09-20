@@ -596,7 +596,7 @@ private function getDateBeforeValid() {
                     //Redimensionnement
                     //*****************
 
-                    $max_size = 180;
+                    $max_size = 360;
                     $imageproperties = getimagesize(BDO_DIR_COUV . $newfilename);
                     if ($imageproperties != false) {
                         $imagetype = $imageproperties[2];
@@ -1233,7 +1233,7 @@ private function getDateBeforeValid() {
                 //Redimensionnement
                 //*****************
 
-                $max_size = 180;
+                $max_size = 360;
                 $imageproperties = getimagesize(BDO_DIR_COUV . "$newfilename");
                 if ($imageproperties != false) {
                     $imagetype = $imageproperties[2];
