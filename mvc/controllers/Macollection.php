@@ -495,7 +495,7 @@ class Macollection extends Bdo_Controller {
           $this->loadModel('Useralbum');
 
           $page = getValInteger("page",1);
-          $length = getValInteger("length",10);
+          $length = getValInteger("length",0);
           $l_search = getVal("l_search","" );
           
            //TODO mettre une longueur max. pour la recherche ?
