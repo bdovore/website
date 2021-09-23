@@ -497,6 +497,17 @@ class Macollection extends Bdo_Controller {
           $page = getValInteger("page",1);
           $length = getValInteger("length",10);
           $l_search = getVal("l_search","" );
+          
+           //TODO mettre une longueur max. pour la recherche ?
+          if (!$length) {
+              if ($_COOKIE["l_etageres_achat"] ) {
+                  // récupére la valeur dans un coockie
+                  $length = $_COOKIE["l_etageres_achat"];
+              } else {
+                  $length = 10;
+              }
+          }
+          setcookie("l_etageres_achat",$length,time()+2592000);
 
           //TODO remplacer les 3 lignes suivantes par getValInArray
           $order = getVal("order","DESC");
