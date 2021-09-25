@@ -378,14 +378,14 @@ class Compte extends Bdo_Controller {
 
                 //Prépare l'email à envoyer
                 $textemail = "Bonjour,\n\n";
-                $textemail .= "Suite à votre demande, voici le(s) compte(s) www.bdovore.com associé(s) à votre adresse email.\n";
+                $textemail .= "Suite à votre demande, voici le(s) compte(s) www.bdovore.com associé(s) à votre adresse email:\n\n";
                
                 $textemail .= "$listLogin\n\n";
                 $textemail .= "Si vous avez oublié votre mot de passe pour un compte, utilisez la fonction Mot de passe oublié avec votre login.\n";
                 $textemail .= "Amicalement\n";
 
 
-                mail($user_email,"Votre nouveau mot de passe",$textemail);
+                mail($user_email,"Votre pseudo Bdovore",$textemail);
                 //echo $textemail;
                 echo  "Votre pseudo a &eacute;t&eacute; envoy&eacute;. Vous pouvez fermer cette fenêtre.";
                 exit();
