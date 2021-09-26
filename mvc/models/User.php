@@ -58,7 +58,8 @@ class User extends Bdo_Db_Line
                 `PREF_EXPORT` , 
                 API_TOKEN,
                 DATE_TOKEN,
-                LAST_UPDATE
+                LAST_UPDATE,
+                EXPLICIT_CONTENT
         FROM `" . $this->table_name . "`
  ";
     }

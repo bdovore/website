@@ -51,6 +51,7 @@ class Compte extends Bdo_Controller {
                        "email" => postVal("txtemail"),
                         "birthday" => postVal("txtanniv"),
                         "OPEN_COLLEC" => postVal("lstOpenCollec"),
+                        "EXPLICIT_CONTENT" => postVal("lstAdultContent"),
                         "ABT_NEWS" => (postVal("txtNewsletter") == "checked" ? "1" : "0")  ,
                         "location" => postVal("txtlocation"),
                         "CARRE_TYPE" => postVal("lstCarre")));
@@ -160,7 +161,9 @@ class Compte extends Bdo_Controller {
                     "OPTIONDISPLAYSERIE" => GetOptionValue($other_options, $this->User->rowserie),
                     "IS_NEWSLETTER" => ($this->User->ABT_NEWS == 1 ? 'Checked' : ''),
                     "PICTURE" => $pathimage,
-                    "OPTIONCARRE" => GetOptionValue($carre_options, $this->User->CARRE_TYPE)));
+                    "OPTIONCARRE" => GetOptionValue($carre_options, $this->User->CARRE_TYPE),
+                     "ADULTYESISSELECTED" => ($this->User->EXPLICIT_CONTENT ? 'Selected' : ''),
+                    "ADULTNOISSELECTED" => ($this->User->EXPLCIT_CONTENT ? '' : 'Selected')));
 
                 $this->view->set_var("PAGETITLE", "BDOVORE.com : Mon profil");
                 $this->view->layout = "iframe";

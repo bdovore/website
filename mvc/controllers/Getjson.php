@@ -70,6 +70,9 @@ class GetJSON extends Bdo_Controller {
             case "ListTomesExclus": 
                 $this->listTomesExclus();
                 break;
+            case "Userpref": 
+                $this->Userpref();
+                break;
             default :
                 break;
         }
@@ -646,7 +649,25 @@ class GetJSON extends Bdo_Controller {
         $this->view->layout = "ajax";
         $this->view->render();
     }
+    
+    private function Userpref() {
+        if (User::minAccesslevel(2)) {
+            $user_id = intval($_SESSION['userConnect']->user_id);
+            $this->loadModel("User");
+            $this->User->set_dataPaste(array("user_id" =>$user_id ));
+            $user = $this->User->load();
+            
+            $a_result = array(
+            "OpenCollec" => $this->User->OPEN_COLLEC == 'Y',
+            "ExplicitContent" => $this->User->EXPLICIT_CONTENT == "1"
 
+            );
+          
+             $this->view->set_var('json',json_encode($a_result));
+        }
+        $this->view->layout = "ajax";
+        $this->view->render();
+    }
 }
 
 ?>

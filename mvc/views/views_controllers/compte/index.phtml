@@ -42,15 +42,27 @@
                     votre collection via l'adresse suivante : <br /><a href="<?php echo $view->URLCOLLEC; ?>" target="_parent"><?php echo $view->URLCOLLEC; ?></a></td>
             </tr>
             <tr>
-                <td align="right">Selection du carr&eacute; magique :</td>
+                <td align="center">Selection du carr&eacute; magique :</td>
                 <td><select name="lstCarre" size="1"><?php echo $view->OPTIONCARRE; ?>
                     </select></td>
             </tr>
             <tr>
+                <td  align="center">Afficher le contenu explicite (*):</td>
+                <td><select name="lstAdultContent" size="1">
+                        <option value="1" <?php echo $view->ADULTYESISSELECTED; ?>>Oui</option>
+                        <option value="0" <?php echo $view->ADULTNOISSELECTED; ?>>Non</option>
+                    </select>
+                    </td>
+            </tr>
+            <tr>
+                <td colspan="2">(*) BDovore recence tous les types de BD, Comics et Mangas ; par défaut les couvertures des contenus "pour adulte" ne sont pas affichées sur le site et application mobile
+                </td>
+            </tr>
+           <!-- <tr>
                 <td align="right">Je souhaite recevoir la newsletter de BDovore :</td>
                 <td><input type="checkbox" name="txtNewsletter" value="checked" <?php echo $view->IS_NEWSLETTER; ?>></td>
             </tr>
-
+-->
         </table>
         <br>
 
