@@ -162,8 +162,8 @@ class Compte extends Bdo_Controller {
                     "IS_NEWSLETTER" => ($this->User->ABT_NEWS == 1 ? 'Checked' : ''),
                     "PICTURE" => $pathimage,
                     "OPTIONCARRE" => GetOptionValue($carre_options, $this->User->CARRE_TYPE),
-                     "ADULTYESISSELECTED" => ($this->User->EXPLICIT_CONTENT ? 'Selected' : ''),
-                    "ADULTNOISSELECTED" => ($this->User->EXPLCIT_CONTENT ? '' : 'Selected')));
+                     "ADULTYESISSELECTED" => ($this->User->EXPLICIT_CONTENT == "1" ? 'Selected' : ''),
+                    "ADULTNOISSELECTED" => ($this->User->EXPLICIT_CONTENT == "0" ? 'Selected' : '')));
 
                 $this->view->set_var("PAGETITLE", "BDOVORE.com : Mon profil");
                 $this->view->layout = "iframe";
