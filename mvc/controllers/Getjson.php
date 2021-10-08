@@ -110,7 +110,50 @@ class GetJSON extends Bdo_Controller {
         $this->view->layout = "ajax";
         $this->view->render();
     }
-
+    
+    private function filterTerms ($term) {
+        if (strpos($term, 'hentai')) {
+            $term = "";
+        }
+        if (strpos($term, 'sex')) {
+            $term = "";
+        }
+        if (strpos($term, 'porn')) {
+            $term = "";
+        }
+        if (strpos($term, 'ero')) {
+            $term = "";
+        }
+        if (strpos($term, 'gore')) {
+            $term = "";
+        }
+        if (strpos($term, 'xxx')) {
+            $term = "";
+        }
+        if (strpos($term, 'violence')) {
+            $term = "";
+        }
+        if (strpos($term, 'hardcore')) {
+            $term = "";
+        }
+        if (strpos($term, 'bitch')) {
+            $term = "";
+        }
+        if (strpos($term, 'hardcore')) {
+            $term = "";
+        }
+        if (strpos($term, 'slut')) {
+            $term = "";
+        }
+        if (strpos($term, 'yaoi')) {
+            $term = "";
+        }
+        if (strpos($term, 'ecchi')) {
+            $term = "";
+        }
+        
+        return $term;
+    }
     private function Album() {
         $ID_TOME = getValInteger('id_tome', 0);
         $id_edition = getValInteger('id_edition', 0);
@@ -118,6 +161,12 @@ class GetJSON extends Bdo_Controller {
         $id_serie = getValInteger("id_serie",0);
         $ean = getVal('EAN', '');
         $mode = getValInteger("mode", 0);
+        $addfilter = "";
+            if ($_SESSION['userConnect']->user_id == 28039) {
+                $addfilter .= " AND g.ID_GENRE in (6, 8, 9, 10, 28, 51) ";
+                $term = $this->filterTerms($term);
+                    
+            }
         if ($id_edition or $isbn <> '' or $ean <> '' ) {
             //selection par isbn ou ean
 
@@ -156,15 +205,18 @@ class GetJSON extends Bdo_Controller {
             $id_serie = getVal("id_serie",0);
             $id_auteur = getValInteger("id_auteur", 0);
             $where = "";
+            
             if ($id_serie) {
-                $where = " WHERE s.id_serie = $id_serie"; 
+                $where = " WHERE s.id_serie = $id_serie "; 
             } else  if ($id_auteur) {
                 $where = " WHERE (bd_tome.ID_SCENAR = $id_auteur OR bd_tome.ID_COLOR = $id_auteur OR bd_tome.ID_DESSIN = $id_auteur OR "
                         . " bd_tome.ID_SCENAR_ALT = $id_auteur OR bd_tome.ID_COLOR_ALT = $id_auteur OR bd_tome.ID_DESSIN_ALT = $id_auteur )";
             }  
             else {
-                $where = " WHERE bd_tome.TITRE like '" . Db_Escape_String($term) . "%' limit 0,10";
+                $where = " WHERE bd_tome.TITRE like '" . Db_Escape_String($term) . "%' ". $addfilter ." limit 0,10";
             }
+            
+            
            
             $this->loadModel('Tome');
             $this->Tome->load("c", $where);
@@ -306,14 +358,21 @@ class GetJSON extends Bdo_Controller {
             $this->Serie->set_dataPaste(array("ID_SERIE" => $id_serie));
             $this->Serie->load();
         } else if ($term <> "") {
+            $addfilter = "";
+            if ($_SESSION['userConnect']->user_id == 28039) {
+                $addfilter .= " AND bd_genre.ID_GENRE in (6, 8, 9, 10, 28, 51) ";
+                 $term = $this->filterTerms($term);
+                
+                
+            }
             if ($mode == 2) {
                 $termc = str_replace("'", " ", $term);
-                 $this->Serie->load('c'," WHERE  MATCH (NOM) AGAINST ( '.$termc.' IN NATURAL LANGUAGE MODE)  GROUP BY ID_SERIE ORDER BY (LOG(NBR_USER_ID_SERIE +2) + IF('".$termc."' = NOM, 1000, MATCH (NOM) AGAINST ( '".$termc."' IN NATURAL LANGUAGE MODE))) desc, NOM LIMIT 0,30");
+                $this->Serie->load('c'," WHERE  MATCH (NOM) AGAINST ( '.$termc.' IN NATURAL LANGUAGE MODE)  ".$addfilter ." GROUP BY ID_SERIE ORDER BY (LOG(NBR_USER_ID_SERIE +2) + IF('".$termc."' = NOM, 1000, MATCH (NOM) AGAINST ( '".$termc."' IN NATURAL LANGUAGE MODE))) desc, NOM LIMIT 0,30");
                  
             } 
             if ($mode != 2 || count($this->Serie->dbSelect->a_dataQuery) == 0)
             {
-                $this->Serie->load("c", " WHERE bd_serie.nom like '" . Db_Escape_String($term) . "%' group by id_serie");
+                $this->Serie->load("c", " WHERE bd_serie.nom like '" . Db_Escape_String($term) . "%' ".$addfilter ." group by id_serie");
 
             }
         }
