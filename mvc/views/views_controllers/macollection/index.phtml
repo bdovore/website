@@ -1,3 +1,7 @@
+
+<?php if ( $_SERVER["CONTENT_TYPE"] == "application/json" ) { 
+    echo $view->json;
+} else { ?>
 <script>
 $(document).ready(function() {
     $(".fancybox2")
@@ -166,4 +170,4 @@ $(document).ready(function() {
 
 </div>
 
-
+<?php } ?>

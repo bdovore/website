@@ -39,7 +39,27 @@ class Macollection extends Bdo_Controller {
             $user_prop_alb =  $prop_stat["user_prop_alb"];
             $user_prop_corr = $prop_stat["user_prop_corr"];
 
-            $this->view->set_var( array (
+           
+        }
+        else {
+            die("Vous devez vous authentifier pour accéder à cette page.");
+        }
+        
+        $content = $_SERVER["CONTENT_TYPE"];
+        if ($content == "application/json") {
+            $this->view->layout = "ajax";
+             $this->view->set_var( 'json', json_encode(array (
+                "stat" => $this->Useralbum->getStatistiques($user_id),
+                "user_prop_alb" => $user_prop_alb ,
+                "user_prop_corr" => $user_prop_corr,
+                "a_carre" => $this->Useralbum->carre($this->getUserInfo()),
+                "user_id" => $user_id,
+                "carre_type" => $user->CARRE_TYPE,
+                "open_collec" => $user->OPEN_COLLEC
+                )));
+            $this->view->render();
+        } else {
+             $this->view->set_var( array (
                 "stat" => $this->Useralbum->getStatistiques($user_id),
                 "user_prop_alb" => $user_prop_alb ,
                 "user_prop_corr" => $user_prop_corr,
@@ -48,13 +68,9 @@ class Macollection extends Bdo_Controller {
                 "carre_type" => $user->CARRE_TYPE,
                 "open_collec" => $user->OPEN_COLLEC
                 ));
+            $this->view->set_var("PAGETITLE","Ma Collection de sur Bdovore");
+            $this->view->render();
         }
-        else {
-            die("Vous devez vous authentifier pour accéder à cette page.");
-        }
-
-        $this->view->set_var("PAGETITLE","Ma Collection de sur Bdovore");
-        $this->view->render();
     }
 
     private function getUserInfo() {

@@ -659,7 +659,7 @@ class GetJSON extends Bdo_Controller {
         
             $this->loadModel("Useralbum");
         
-            $stat = $this->Useralbum->getStatistiques($user_id, $stat="album", $auteur="",$origin=$orig);
+            $stat = $this->Useralbum->getStatistiques($user_id, $stat="all", $auteur="",$origin=$orig);
             $this->view->set_var('json',json_encode($stat));
         }
        
