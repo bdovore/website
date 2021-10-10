@@ -106,7 +106,8 @@ class User_album_prop extends Bdo_Db_Line
                     users.USERNAME,
                     users.EMAIL,
                     users_alb_prop.COMMENTAIRE,
-                    users_alb_prop.PROP_DTE
+                    users_alb_prop.PROP_DTE,
+                    users_alb_prop.FLG_EXPLICIT
     FROM
         users_alb_prop
                 INNER JOIN users using(user_id)
@@ -175,8 +176,8 @@ class User_album_prop extends Bdo_Db_Line
                     `CORR_COMMENT`,
                     `CORR_STATUT`,
                     users.USERNAME,
-                    users.EMAIL
-
+                    users.EMAIL,
+                    FLG_EXPLICIT
                     FROM " . $this->table_name . " INNER JOIN users using(user_id)
 
                 ";

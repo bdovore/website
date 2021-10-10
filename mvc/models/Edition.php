@@ -57,8 +57,8 @@ class Edition extends Bdo_Db_Line
             g.ID_GENRE,
             g.libelle as NOM_GENRE,
 
-            bd_edition.ID_EDITION,
-            bd_edition.IMG_COUV,
+            bd_edition.ID_EDITION, ".
+       ( Bdo_Cfg::getVar("explicit") ? "bd_edition.IMG_COUV," : " IF (bd_edition.FLG_EXPLICIT, CONCAT('?source=',bd_edition.IMG_COUV), bd_edition.IMG_COUV) as IMG_COUV,  ") ."
             bd_edition.ean as EAN_EDITION,
             bd_edition.isbn as ISBN_EDITION,
                 bd_edition.DTE_PARUTION as DATE_PARUTION_EDITION,
@@ -70,7 +70,7 @@ class Edition extends Bdo_Db_Line
 
             er.ID_EDITEUR,
             er.nom as NOM_EDITEUR,
-                concat_ws(' ',er.nom, year(bd_edition.DTE_PARUTION)) as NOM_EDITION,
+            concat_ws(' ',er.nom, year(bd_edition.DTE_PARUTION)) as NOM_EDITION,
             bd_tome.ID_SCENAR,
             sc.pseudo as scpseudo,
             bd_tome.ID_DESSIN,
@@ -83,14 +83,15 @@ class Edition extends Bdo_Db_Line
             dea.pseudo as deapseudo,
             bd_tome.ID_COLOR_ALT,
             coa.pseudo as coapseudo,
-                bd_edition.USER_ID,
-                bd_edition.PROP_DTE,
-                bd_edition.PROP_STATUS,
-                bd_edition.VALIDATOR,
-                bd_edition.VALID_DTE,
-                us.username USERNAME,
-                us.email EMAIL,
-                valid_user.username VALIDATOR_USERNAME";
+            bd_edition.USER_ID,
+            bd_edition.PROP_DTE,
+            bd_edition.PROP_STATUS,
+            bd_edition.VALIDATOR,
+            bd_edition.VALID_DTE,
+            us.username USERNAME,
+            us.email EMAIL,
+            valid_user.username VALIDATOR_USERNAME,
+            bd_edition.FLG_EXPLICIT";
         $from = "
             FROM bd_edition
             INNER JOIN bd_tome ON bd_tome.id_tome = bd_edition.id_tome

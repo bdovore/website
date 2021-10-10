@@ -86,8 +86,8 @@ class Serie extends Bdo_Db_Line
                     `bd_edition_stat`.`NBR_USER_ID_SERIE`,
 
 
-                    count(distinct bd_tome.ID_TOME) as NB_ALBUM,
-                    max(img_couv) as IMG_COUV_SERIE,
+                    count(distinct bd_tome.ID_TOME) as NB_ALBUM, ".
+                   (Bdo_Cfg::getVar('explicit') ? "max(img_couv)" : " max(IF (bd_edition.FLG_EXPLICIT, CONCAT('?source=',bd_edition.IMG_COUV), bd_edition.IMG_COUV)) " )  ." as IMG_COUV_SERIE,
                     avg(MOYENNE_NOTE_TOME) NOTE_SERIE,
                     sum(NB_NOTE_TOME) NB_NOTE_SERIE
 

@@ -317,6 +317,7 @@ private function getDateBeforeValid() {
                 "URLUTILVALID" => BDO_URL . "adminproposition/mergeProposition?ID=" . $this->User_album_prop->ID_PROPOSAL,
                 "URLCOMMENTCORR" => BDO_URL . "adminproposition/commentProposition?ID=" . $this->User_album_prop->ID_PROPOSAL,
                 "URLDELETE" => BDO_URL . "adminproposition/deleteProposition?src=fiche&ID=" . $this->User_album_prop->ID_PROPOSAL,
+                "EXPLICIT_CHECKED" => ($this->User_album_prop->FLG_EXPLICIT  ? "checked" : "" )
             ));
 
             // Exemple d'email en cas de suppression
@@ -431,7 +432,7 @@ private function getDateBeforeValid() {
 
             // On vérifie s'il s'agit d'une mise à jour simple ou d'une validation
             $check = postVal("chkUpdate", "N");
-
+            $explicit = postVal("chkExplicite") == "checked" ? 1 : 0 ;
             if ($check == "O") {
                 // simple mise à jour des données de la proposition
                 $this->User_album_prop->set_dataPaste(array(
@@ -464,7 +465,8 @@ private function getDateBeforeValid() {
                     "EAN" => postVal("txtEAN"),
                     "DTE_PARUTION" => postVal("txtDateParution"),
                     "FLG_TT" => ((postVal("chkTT") == "checkbox") ? "O" : "N"),
-                    "DESCRIB_EDITION" => postVal("txtCommentEdition")
+                    "DESCRIB_EDITION" => postVal("txtCommentEdition"),
+                    "FLG_EXPLICIT" => $explicit
                 ));
                 $this->User_album_prop->update();
                 if (issetNotEmpty($this->User_album_prop->error)) {
@@ -534,7 +536,8 @@ private function getDateBeforeValid() {
                     "ISBN" => postVal('txtISBN'),
                     "COMMENT" => postVal('txtCommentEdition'),
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
-                    "VALID_DTE" => date('d/m/Y H:i:s')
+                    "VALID_DTE" => date('d/m/Y H:i:s'),
+                    "FLG_EXPLICIT" => (postVal("chkExplicit") == "checked" ? 1 : 0)
                 ));
                 $this->Edition->update();
                 if (issetNotEmpty($this->Edition->error)) {

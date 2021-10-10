@@ -51,6 +51,7 @@ $user->autoLogin();
 Bdo_Error::add($user->error);
 
 Bdo_Cfg::setVar('user',$user);
+Bdo_Cfg::setVar('explicit', $user->EXPLICIT_CONTENT);
 if (Bdo_Cfg::debug()) Bdo_Debug::execTime("apres charg user");
 
 // ---------------------------------------------------------------

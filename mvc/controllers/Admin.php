@@ -10,7 +10,14 @@ class Admin extends Bdo_Controller {
 
     /**
      */
-
+    function __construct() {
+       parent::__construct();
+       if (User::minAccesslevel(1)) {
+           
+            Bdo_Cfg::setVar('explicit', 1);
+           
+       }
+    }
     public function Index() {
 
         if (User::minAccesslevel(1)) {
@@ -154,7 +161,7 @@ class Admin extends Bdo_Controller {
             $this->loadModel("Edition");
             $this->loadModel("Tome");
             $this->view->set_var(array("PAGETITLE" => "Administration des Editions"));
-
+            $explicit = postVal("chkExplicite") == "checked" ? 1 : 0 ;
             // Mettre à jour les informations
             if ($act == "update") {
                 $tome_id = postValInteger("txtTomeId");
@@ -171,7 +178,7 @@ class Admin extends Bdo_Controller {
                     $txtDateParution = completeDate(postVal('txtDateParution'));
                 else
                     $txtDateParution = '';
-
+               
                 $this->Edition->set_dataPaste(array(
                     "ID_EDITION" => $edition_id,
                     'DTE_PARUTION' => $txtDateParution,
@@ -183,7 +190,8 @@ class Admin extends Bdo_Controller {
                     'COMMENT' => postVal("txtComment"),
                     "FLG_TT" => ((postVal('chkTT') == "checkbox") ? "O" : "N"),
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
-                    "VALID_DTE" => date('d/m/Y H:i:s')
+                    "VALID_DTE" => date('d/m/Y H:i:s'),
+                    "FLG_EXPLICIT" => $explicit
                 ));
 
 
@@ -264,6 +272,7 @@ class Admin extends Bdo_Controller {
 // AFFICHE UN FORMULAIRE VIDE
             elseif ($act == "new") {
                 // determine si une référence d'album a été passée
+                 
                 if (getVal("alb_id", "") <> "") {
                     $alb_id = getValInteger(alb_id);
                     $this->Tome->set_dataPaste(array("ID_TOME" => $alb_id));
@@ -310,7 +319,8 @@ class Admin extends Bdo_Controller {
                     'COMMENT' => postVal("txtComment"),
                     "FLG_TT" => ((postVal('chkTT') == "checkbox") ? "O" : "N"),
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
-                    "VALID_DTE" => date('d/m/Y H:i:s')
+                    "VALID_DTE" => date('d/m/Y H:i:s'),
+                    "FLG_EXPLICIT" => $explicit
                 ));
                 $this->Edition->update();
                 if (issetNotEmpty($this->Edition->error)) {
@@ -415,7 +425,8 @@ class Admin extends Bdo_Controller {
                     "URLEDITEDIT" => BDO_URL . "admin/editediteur?editeur_id=" . $this->Edition->ID_EDITEUR,
                     "URLEDITCOLL" => BDO_URL . "admin/editcollection?collec_id=" . $this->Edition->ID_COLLECTION,
                     "ACTIONNAME" => "Valider les Modifications",
-                    "URLACTION" => BDO_URL . "admin/editedition?act=update"
+                    "URLACTION" => BDO_URL . "admin/editedition?act=update",
+                    "EXPLICIT_CHECKED" => $this->Edition->FLG_EXPLICIT ? "checked" : ""
                 ));
                 if ($this->Edition->DTE_PARUTION == "0000-00-00") {
                     $this->view->set_var("PARUTION_0", "to_be_corrected");
@@ -566,7 +577,14 @@ class Admin extends Bdo_Controller {
 
                 $id_serie = getValInteger("id_serie");
                 $this->Tome->load("c", " WHERE bd_tome.id_serie =" . $id_serie . " ORDER BY bd_tome.num_tome DESC LIMIT 1");
-
+                
+                // on met me flag explicit automaitquement si la série est dnas un genre erotique
+                $listExplicit = array(17, 79, 55,53);
+                if (in_array ($this->Tome->ID_GENRE , $listExplicit)) {
+                    $explicit = "checked";
+                } else {
+                    $explicit = "";
+                }
 
                 $this->view->set_var(array(
                     "CHAMPFORMSTYLE" => $champ_form_style,
@@ -609,7 +627,8 @@ class Admin extends Bdo_Controller {
                     "URLEDITEDIT" => BDO_URL . "admin/editediteur?editeur_id=" . $this->Tome->ID_EDITEUR,
                     "URLEDITCOLL" => BDO_URL . "admin/editcollection?collec_id=" . $this->Tome->ID_COLLECTION,
                     "URLEDITCOLLALT" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
-                    "URLACTION" => BDO_URL . "admin/editalbum?act=append"
+                    "URLACTION" => BDO_URL . "admin/editalbum?act=append",
+                    "EXPLICIT_CHECKED" => $explicit
                 ));
 
                 $this->view->render();
@@ -622,6 +641,7 @@ class Admin extends Bdo_Controller {
                 // on vérifie d'abord la date
                 $txtDateParution = completeDate(postVal('txtDateParution'));
                 $flgDteParution = postVal('FLAG_DTE_PARUTION');
+                $explicit = postVal("chkExplicite") == "checked" ? 1 : 0 ;
                 if (!postVal("txtTitre")) {
                     echo "Erreur : il semble que vous ayez oublié le titre :D";
                     exit();
@@ -673,7 +693,8 @@ class Admin extends Bdo_Controller {
                     "FLG_TT" => ((postVal('chkTT') == "checkbox") ? "O" : "N"),
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
                     "ID_TOME" => $lid_tome,
-                    "VALID_DTE" => date('d/m/Y H:i:s')
+                    "VALID_DTE" => date('d/m/Y H:i:s'),
+                    "FLG_EXPLICIT" => $explicit
                 ));
                 $this->Edition->update();
                 if (issetNotEmpty($this->Edition->error)) {

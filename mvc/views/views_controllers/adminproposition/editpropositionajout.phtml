@@ -375,6 +375,12 @@ function verifAddExisting(myIdTome,myAction) {
                                 <input type="checkbox" name="chkDelete" value="checked" />
                             </td>
                         </tr>
+                        <tr>
+                            <td class="label">
+                                Contenu explicite :
+                                <input type="checkbox" name="chkExplicite" value="checked" <?php echo $view->EXPLICIT_CHECKED; ?>/>
+                            </td>
+                        </tr>
                     </table>
             </form>
                     <table class="cadre_texte-admin">
