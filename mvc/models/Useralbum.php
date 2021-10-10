@@ -394,7 +394,8 @@ class Useralbum extends Bdo_Db_Line
               SELECT
                   t.ID_TOME,
                   t.TITRE as TITRE_TOME,
-                  en.IMG_COUV
+                  en.IMG_COUV,
+                  en.ID_EDITION
               FROM
                   users_album ua
                   INNER JOIN bd_edition en ON en.id_edition = ua.id_edition
@@ -413,7 +414,8 @@ class Useralbum extends Bdo_Db_Line
               select
                   t.ID_TOME,
                   t.TITRE as TITRE_TOME,
-                  en.IMG_COUV
+                  en.IMG_COUV,
+                  t.ID_EDITION
               from
                   users_list_carre ulc
                   INNER JOIN bd_tome t ON t.id_tome = ulc.id_tome
