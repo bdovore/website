@@ -579,7 +579,7 @@ class Admin extends Bdo_Controller {
                 $this->Tome->load("c", " WHERE bd_tome.id_serie =" . $id_serie . " ORDER BY bd_tome.num_tome DESC LIMIT 1");
                 
                 // on met me flag explicit automaitquement si la série est dnas un genre erotique
-                $listExplicit = array(17, 79, 55,53);
+                $listExplicit = array(17, 79, 55);
                 if (in_array ($this->Tome->ID_GENRE , $listExplicit)) {
                     $explicit = "checked";
                 } else {
