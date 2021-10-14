@@ -42,8 +42,8 @@ class Useralbum extends Bdo_Db_Line
     public function select () {
         $select = "
                   SELECT
-                          bd_tome.ID_TOME,
-                          en.IMG_COUV,
+                          bd_tome.ID_TOME, ".
+                          ( Bdo_Cfg::getVar("explicit") ? "en.IMG_COUV," : " IF (en.FLG_EXPLICIT, CONCAT('?source=',en.IMG_COUV), en.IMG_COUV) as IMG_COUV,  ") ."
                           bd_tome.TITRE as TITRE_TOME,
                           s.nom as NOM_SERIE,
                           bd_tome.NUM_TOME,
@@ -393,8 +393,8 @@ class Useralbum extends Bdo_Db_Line
             $query = "
               SELECT
                   t.ID_TOME,
-                  t.TITRE as TITRE_TOME,
-                  en.IMG_COUV,
+                  t.TITRE as TITRE_TOME,".
+                 ( Bdo_Cfg::getVar("explicit") ? "en.IMG_COUV," : " IF (en.FLG_EXPLICIT, CONCAT('?source=',en.IMG_COUV), en.IMG_COUV) as IMG_COUV,  ") ."
                   en.ID_EDITION
               FROM
                   users_album ua
@@ -413,8 +413,8 @@ class Useralbum extends Bdo_Db_Line
             $query = "
               select
                   t.ID_TOME,
-                  t.TITRE as TITRE_TOME,
-                  en.IMG_COUV,
+                  t.TITRE as TITRE_TOME,".
+                  ( Bdo_Cfg::getVar("explicit") ? "en.IMG_COUV," : " IF (en.FLG_EXPLICIT, CONCAT('?source=',en.IMG_COUV), en.IMG_COUV) as IMG_COUV,  ") ."
                   t.ID_EDITION
               from
                   users_list_carre ulc
@@ -499,8 +499,8 @@ class Useralbum extends Bdo_Db_Line
              , `bd_serie`.`HISTOIRE` as `HISTOIRE_SERIE`
              , `bd_genre`.`ID_GENRE`
              , `bd_genre`.`LIBELLE` as `NOM_GENRE`             
-             , count(distinct bd_tome.ID_TOME) as NB_ALBUM
-             , max(img_couv) as IMG_COUV_SERIE
+             , count(distinct bd_tome.ID_TOME) as NB_ALBUM ,".
+             (Bdo_Cfg::getVar('explicit') ? "max(img_couv)" : " max(IF (bd_edition.FLG_EXPLICIT, CONCAT('?source=',bd_edition.IMG_COUV), bd_edition.IMG_COUV)) " )  ." as IMG_COUV_SERIE
              , avg(MOYENNE_NOTE_TOME) NOTE_SERIE
              , sum(NB_NOTE_TOME) NB_NOTE_SERIE
              , USER_SERIE.NB_USER_ALBUM
