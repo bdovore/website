@@ -73,6 +73,9 @@ class GetJSON extends Bdo_Controller {
             case "Userpref": 
                 $this->Userpref();
                 break;
+            case "CollectionStat":
+                $this->CollectionStat();
+                break;
             default :
                 break;
         }
@@ -724,6 +727,33 @@ class GetJSON extends Bdo_Controller {
           
              $this->view->set_var('json',json_encode($a_result));
         }
+        $this->view->layout = "ajax";
+        $this->view->render();
+    }
+    
+    private function CollectionStat () {
+        // by  = type de comptage genre, auteur, éditeur...
+        $by = getVal("by","genre");
+         if (User::minAccesslevel(2)) {
+            $user_id = intval($_SESSION['userConnect']->user_id);
+            $this->loadModel("Useralbum");
+            
+            switch ($by) {
+                case "editeur" :
+                     $stat = $this->Useralbum->getStatByEditeur($user_id);
+                    break;
+                case "auteur": 
+                     $stat = $this->Useralbum->getAuteurFavoris($user_id);
+                    break;
+                case "genre":
+                default: 
+                     $stat = $this->Useralbum->getStatByGenre($user_id);
+                    
+            }
+           
+            
+            $this->view->set_var('json',json_encode($stat));
+         }
         $this->view->layout = "ajax";
         $this->view->render();
     }

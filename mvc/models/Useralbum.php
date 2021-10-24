@@ -716,5 +716,92 @@ class Useralbum extends Bdo_Db_Line
         $obj = Db_fetch_all_obj($resultat);  
         return ($obj[0]->nb);
     }
+    
+    function getStatByGenre ($user_id) {
+        $query = "
+            SELECT
+                g.ID_GENRE,
+                g.libelle,
+                count(en.id_edition) as nbtome
+            FROM
+                users_album u
+                INNER JOIN bd_edition en ON en.id_edition = u.id_edition
+                INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+                INNER JOIN bd_serie s ON t.id_serie = s.id_serie
+                INNER JOIN bd_genre g ON s.id_genre = g.id_genre
+            WHERE
+                t.flg_type = 0
+                AND u.flg_achat = 'N'
+                AND u.user_id =".intval($user_id)."
+            GROUP BY g.libelle, g.Id_GENRE
+            ORDER BY nbtome DESC";
+        $resultat = Db_query($query);
+        $obj = Db_fetch_all_obj($resultat);
+
+      return $obj;
+    }
+    
+    function getStatByEditeur ($user_id) {
+        $query = "
+        SELECT
+            er.id_editeur,
+            er.nom,
+            count(en.id_edition) as nbtome
+        FROM
+            users_album u
+            INNER JOIN bd_edition en ON en.id_edition = u.id_edition
+            INNER JOIN bd_editeur er ON er.id_editeur = en.id_editeur
+            INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+        WHERE
+            t.flg_type = 0
+            AND u.flg_achat = 'N'
+            AND u.user_id =" . intval($user_id) . "
+        GROUP BY er.nom, er.id_editeur
+        ORDER BY nbtome DESC
+        ";
+        $resultat = Db_query($query);
+        $obj = Db_fetch_all_obj($resultat);
+
+      return $obj;
+    }
+    
+    function getAuteurFavoris ($user_id) {
+        $query = "SELECT id_auteur, pseudo, sum(score) as score
+            FROM (
+                SELECT
+                    s.id_auteur,
+                    s.pseudo,
+                    sum(IF(id_scenar = id_dessin, 1.5, 1)) as score
+                FROM
+                    users_album u
+                    INNER JOIN bd_edition en ON en.id_edition = u.id_edition
+                    INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+                    INNER JOIN bd_auteur s ON t.id_scenar = s.id_auteur
+                    WHERE
+                    flg_achat = 'N' AND
+                    u.user_id = ". intval($user_id)." 
+                GROUP BY id_auteur, s.pseudo
+               UNION 
+                SELECT
+                    s.id_auteur,
+                    s.pseudo,
+                    count(*) as score
+                FROM
+                    users_album u
+                    INNER JOIN bd_edition en ON en.id_edition = u.id_edition
+                    INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+                    INNER JOIN bd_auteur s ON t.id_dessin = s.id_auteur
+                WHERE
+                    flg_achat = 'N' AND
+                    u.user_id = ". intval($user_id)." AND id_scenar <> id_dessin
+                    GROUP BY id_auteur, s.pseudo) scoreaut
+            GROUP BY id_auteur, pseudo
+            ORDER BY score desc
+            ";
+        $resultat = Db_query($query);
+        $obj = Db_fetch_all_obj($resultat);
+
+      return $obj;
+    }
 }
 ?>
