@@ -3,7 +3,47 @@
     $page = $view->getHelper('pagination');
 
 
-?><div align="center" class="cadre1">
+?>
+<style>
+   div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 120px;
+    min-height: 28px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+
+</style>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="<?php echo BDO_URL; ?>/script/bdochart.js"></script>
+<script>
+    
+    
+    $(document).ready(function() {
+        d3.json($.bdovore.URL + "getjson?data=CollectionStat&by=genre").then( data => {
+            hbarchart("chart-genre",{top: 30, right: 30, bottom: 90, left: 120}, data.slice(0,20), d => d.libelle , d => d.nbtome, "Collection par Genre (top 20)");
+        });
+        d3.json($.bdovore.URL + "getjson?data=CollectionStat&by=editeur").then( data => {
+            hbarchart("chart-editeur",{top: 30, right: 30, bottom: 90, left: 120}, data.slice(0,20), d => d.nom, d => d.nbtome, "Collection par éditeur (top 20)" );
+        });
+        
+        d3.json($.bdovore.URL + "getjson?data=CollectionStat&by=auteur").then( data => {
+            hbarchart("chart-auteur",{top: 30, right: 30, bottom: 90, left: 120}, data.slice(0,20), d => d.pseudo, d => d.score, "Collection par auteur (top 20 par score)" );
+        });
+        
+         d3.json($.bdovore.URL + "getjson?data=CollectionStat&by=note").then( data => {
+            hbarchart("chart-notes",{top: 30, right: 30, bottom: 90, left: 120}, data, d => d.note, d => d.nbnotes, "Collection par notes" );
+        });
+             
+         });
+</script>
+<div align="center" class="cadre1">
    <?php echo $page->menuCollection(); ?>
     <h1>Statistiques de la collection</h1>
 
@@ -23,15 +63,13 @@
 
                         Nombre d'achats pr&eacute;vus : <?php echo $view->stat["nbfuturs_achats"];?>
         </p>
+        <br>
+        <div id="chart-genre"></div>
+        <div id="chart-editeur"></div>
+        <div id="chart-auteur"></div>
+        <div id="chart-notes"></div>
 
-
-        <img src="<?php echo BDO_URL; ?>graphs/rep_genres.php" >
-        <br>
-        <img src="<?php echo BDO_URL; ?>graphs/rep_editeurs.php" >
-        <br>
-        <img src="<?php echo BDO_URL; ?>graphs/rep_auteurs.php" >
-        <br>
-        <img src="<?php echo BDO_URL; ?>graphs/rep_notes.php" >
-                <br>
+       
+       
 
 </div>

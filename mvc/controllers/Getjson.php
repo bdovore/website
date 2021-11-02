@@ -745,6 +745,9 @@ class GetJSON extends Bdo_Controller {
                 case "auteur": 
                      $stat = $this->Useralbum->getAuteurFavoris($user_id);
                     break;
+                case "note":
+                    $stat = $this->Useralbum->getStatByNotes($user_id);
+                    break;
                 case "genre":
                 default: 
                      $stat = $this->Useralbum->getStatByGenre($user_id);

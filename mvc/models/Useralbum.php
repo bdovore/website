@@ -765,6 +765,20 @@ class Useralbum extends Bdo_Db_Line
       return $obj;
     }
     
+    function getStatByNotes ($user_id) {
+        $query = "
+        SELECT note, count(*) as nbnotes FROM users_comment
+        WHERE user_id =". intval($user_id) ." AND note IS NOT NULL
+        GROUP BY note
+        ORDER BY note
+        ";
+        $resultat = Db_query($query);
+        $obj = Db_fetch_all_obj($resultat);
+
+      return $obj;
+        
+    }
+    
     function getAuteurFavoris ($user_id) {
         $query = "SELECT id_auteur, pseudo, sum(score) as score
             FROM (
