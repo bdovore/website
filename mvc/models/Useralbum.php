@@ -773,9 +773,20 @@ class Useralbum extends Bdo_Db_Line
         ORDER BY note
         ";
         $resultat = Db_query($query);
-        $obj = Db_fetch_all_obj($resultat);
+        $stat = array();
+        $obj = Db_fetch_object($resultat);
+        for ($i = 1; $i <= 10 ; $i++) {
+          if ($obj->note == $i) {
+              $stat[] = $obj;
+              $obj = Db_fetch_object($resultat);
+          }  else {
+              $stat[] = array("note" => $i, "nbnotes" => 0);
+              
+          }
+        }
+        
 
-      return $obj;
+      return $stat;
         
     }
     
