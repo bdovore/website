@@ -38,7 +38,7 @@
         });
         
          d3.json($.bdovore.URL + "getjson?data=CollectionStat&by=note").then( data => {
-            hbarchart("chart-notes",{top: 30, right: 30, bottom: 90, left: 120}, data, d => d.note, d => d.nbnotes, "Collection par notes" );
+            vbarchart("chart-notes",{top: 60, right: 30, bottom: 90, left: 30}, data, d => d.note, d => d.nbnotes, "Collection par notes" );
         });
              
          });
