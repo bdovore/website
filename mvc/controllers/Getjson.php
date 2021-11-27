@@ -94,7 +94,7 @@ class GetJSON extends Bdo_Controller {
             $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $id_auteur));
             $this->Auteur->load();
         } else if ($term <> "") {
-            $where = " WHERE PSEUDO like '%" . Db_Escape_String($term) . "%'";
+            $where = " WHERE PSEUDO like '%" . Db_Escape_String($term) . "%' ORDER BY PSEUDO";
             $this->Auteur->load("c", $where);
         }
         if ($mode == 0) {
@@ -255,7 +255,7 @@ class GetJSON extends Bdo_Controller {
             $this->Genre->set_dataPaste(array("ID_GENRE" => $id_genre));
             $this->Genre->load();
         } else {
-            $where = " WHERE LIBELLE like '%" . Db_Escape_String($term) . "%'";
+            $where = " WHERE LIBELLE like '%" . Db_Escape_String($term) . "%' ORDER BY LIBELLE";
             $this->Genre->load("c", $where);
         }
         if ($mode == 0) {
@@ -287,7 +287,7 @@ class GetJSON extends Bdo_Controller {
             $this->Editeur->set_dataPaste(array("ID_EDITEUR" => $id_editeur));
             $this->Editeur->load();
         } else if ($term <> "") {
-            $where = " WHERE NOM like '%" . Db_Escape_String($term) . "%'";
+            $where = " WHERE NOM like '%" . Db_Escape_String($term) . "%' ORDER BY NOM";
 
             $this->Editeur->load("c", $where);
         }
@@ -326,7 +326,7 @@ class GetJSON extends Bdo_Controller {
              */
             $where = " WHERE bd_collection.ID_EDITEUR =" . $id_editeur . " ";
             if ($term <> "")
-                $where .= " AND bd_collection.NOM like '%" . Db_Escape_String($term) . "%'";
+                $where .= " AND bd_collection.NOM like '%" . Db_Escape_String($term) . "%' ORDER BY bd_collection.NOM ";
 
             $this->Collection->load("c", $where);
         } else if ($term <> "") {
