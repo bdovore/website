@@ -97,7 +97,7 @@ $jquery = $view->getHelper('jquery');
           daysHidden: 15,   // days to hide banner after close button is clicked (defaults to 15)
           daysReminder: 90, // days to hide banner after "VIEW" button is clicked (defaults to 90)
           appStoreLanguage: 'us', // language code for the App Store (defaults to user's browser language)
-          title: '[NOUVEAU] l''App Bdovore',
+          title: '[NOUVEAU] App Bdovore',
           author: 'Bdovore',
           button: 'VOIR',
           store: {
@@ -293,7 +293,8 @@ $(document).ready(function() {
 <!-- Multiselect chosen widget -->
 <script type="text/javascript" src="<?php echo BDO_URL;?>jquery/chosen/chosen/chosen.jquery.js"></script>
 <!-- coockiechoice -->
-<script src="<?php echo BDO_URL; ?>script/cookiechoices.js"></script><script>document.addEventListener('DOMContentLoaded', function(event){cookieChoices.showCookieConsentBar('Ce site utilise des cookies pour vous offrir le meilleur service. En poursuivant votre navigation, vous acceptez l’utilisation des cookies.', 'J’accepte', 'En savoir plus', '<?php echo BDO_URL;?>/mentionslegales/');});</script>
+<script src="<?php echo BDO_URL; ?>script/cookiechoices.js"></script>
+<script>document.addEventListener('DOMContentLoaded', function(event){cookieChoices.showCookieConsentBar('Ce site utilise des cookies pour vous offrir le meilleur service. En poursuivant votre navigation, vous acceptez l’utilisation des cookies.', 'J’accepte', 'En savoir plus', '<?php echo BDO_URL;?>/mentionslegales/');});</script>
 <link type="text/css" rel="stylesheet" href="<?php echo BDO_URL;?>jquery/chosen/chosen/chosen.css" />
 <?php
 if ($view->a_cssFile){
@@ -309,6 +310,7 @@ echo "\n".'<link type="text/css" rel="stylesheet" href="'.BDO_URL.$cssFile.'" />
 <script>
   var _paq = window._paq = window._paq || [];
   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['requireCookieConsent']);
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {

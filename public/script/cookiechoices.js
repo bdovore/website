@@ -155,6 +155,7 @@
       // Set the cookie expiry to one year after today.
       var expiryDate = new Date();
       expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+      _paq.push(['rememberCookieConsentGiven']);
       document.cookie = cookieName + '=y; path=/; expires=' + expiryDate.toGMTString();
     }
 
