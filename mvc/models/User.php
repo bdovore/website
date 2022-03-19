@@ -371,14 +371,38 @@ FROM " . $this->table_name . "
             return;
         }
 
-
+        
         $username = Db_Escape_String($username);
         $email = Db_Escape_String($email);
-
+       
+        // on vérifit que le compte n'existe pas déjà
         $verif = "SELECT count(*) AS nb FROM bb3_users WHERE username_clean=lower('" . $username . "')";
         $result = Db_query($verif,$connexion);
         $o = Db_fetch_object($result);
         if ($o->nb == 0) {
+            // le compte n'existe pas : 2022 on va appeler une api custom du forum pour la création
+            $url = BDO_URL_FORUM."bdovoreUser.php";
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, array("username"=>$username, "email" => $email, "password" => $password));
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);   
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);         
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_MAXREDIRS, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+            $response = curl_exec($ch);
+            // Check the return value of curl_exec(), too
+            if ($response === false) {
+                $error = curl_error($ch);
+                $erno = curl_errno($ch);
+                return $error;
+                //throw new Exception(curl_error($ch), curl_errno($ch));
+            }
+                    /*
             $query = "SELECT MAX(user_id) AS total FROM bb3_users";
             $result = Db_query($query,$connexion);
             $o = Db_fetch_object($result);
@@ -400,7 +424,7 @@ FROM " . $this->table_name . "
                         )";
                  $result = Db_query($query,$connexion);
                  
-            }
+            }*/
         }
     }
 
