@@ -510,6 +510,80 @@ class Tome extends Bdo_Db_Line
 
         return $this->load("c",$query);
     }
+    
+     public function getNbAlbumToComplete($user_id, $id_serie=0, $flg_achat= true) {
+
+        $user_id = intval($user_id);
+        $id_serie = intval($id_serie);
+        $limit = "";
+        
+       
+        if (!$flg_achat) {
+            $q_achat = " AND ua.flg_achat = 'N'";
+        } 
+        else {
+            $q_achat = "";
+        }
+        if ($id_serie == 0) {
+            $query = " , (
+            SELECT DISTINCT
+                s.*
+            FROM
+                users_album ua
+                INNER JOIN bd_edition en ON en.id_edition=ua.id_edition
+                INNER JOIN bd_tome t ON t.id_tome = en.id_tome
+                INNER JOIN bd_serie s ON t.ID_SERIE=s.ID_SERIE
+            WHERE
+                ua.user_id = ".$user_id." AND
+               ua.flg_achat = 'N' 
+                AND NOT EXISTS (
+                            SELECT NULL FROM users_exclusions ues
+                            WHERE s.id_serie=ues.id_serie
+                            AND ues.id_tome = 0
+                            AND ues.user_id = ".$user_id."
+                        )
+            ) s_lim WHERE
+                    s.id_serie = s_lim.id_serie AND
+                NOT EXISTS (
+                        SELECT NULL
+                        FROM users_album ua
+                        INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
+                        WHERE
+                        ua.user_id = ".$user_id."
+                        AND bd_tome.id_tome=en.id_tome
+                        ".$q_achat ."
+                )
+                AND NOT EXISTS (
+                        SELECT NULL
+                        FROM users_exclusions uet
+                        WHERE uet.user_id = ".$user_id."
+                        AND bd_tome.id_tome=uet.id_tome
+                )
+                ";
+        } else {
+            $query = " WHERE s.id_serie = '".$id_serie."'
+            AND
+            NOT EXISTS (
+                    SELECT NULL
+                    FROM users_album ua
+                    INNER JOIN bd_edition en ON ua.id_edition=en.id_edition
+                    WHERE
+                    ua.user_id = ".$user_id."
+                    AND bd_tome.id_tome=en.id_tome ".$q_achat ."
+            )
+            AND NOT EXISTS (
+                    SELECT NULL
+                    FROM users_exclusions uet
+                    WHERE uet.user_id = ".$user_id."
+                    AND bd_tome.id_tome=uet.id_tome
+            )
+             ";
+        }
+        
+         $qcount = "select count(*) $this->defaut_from $query";
+         $nb = Db_CountRow($qcount);
+         return $nb;
+    }
 
     public function updateGenreForSerie($id_serie, $id_genre) {
         /*
