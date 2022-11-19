@@ -33,7 +33,9 @@ class Proposition extends Bdo_Controller {
                     die("Erreur lors de l'insertion, contactez l'équipe !");
                 }
                 else {
-                    die("Votre demande est bien enregistrée !");
+                    $this->view->addAlertPage("Votre demande est bien enregistrée !");
+                    $this->view->addPhtmlFile('alert', 'BODY');
+                    
                 }
             }
             else {
@@ -194,52 +196,17 @@ class Proposition extends Bdo_Controller {
                 echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplète. Vous allez être redirigé.';
                 exit();
             }
-            $base_get = '/' . $url_ary[4];
-            $port = ( !empty($url_ary[3]) ) ? $url_ary[3] : 80;
-            // Connection au serveur hébergeant l'image
-            if ( !($fsock = @fsockopen($url_ary[2], $port, $errno, $errstr)) )
-            {
-                $error = true;
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image inacessible. Vous allez être redirigé.';
-                exit();
-            }
-
-            // Récupère l'image
-            @fputs($fsock, "GET $base_get HTTP/1.1\r\n");
-            @fputs($fsock, "HOST: " . $url_ary[2] . "\r\n");
-            @fputs($fsock, "Connection: close\r\n\r\n");
-
-            unset($avatar_data);
-            while( !@feof($fsock) )
-            {
-                $avatar_data .= @fread($fsock, 102400);
-            }
-            @fclose($fsock);
-
-            // Check la validité de l'image
-            if (!preg_match('#Content-Length\: ([0-9]+)[^ /][\s]+#i', $avatar_data, $file_data1) || !preg_match('#Content-Type\: image/[x\-]*([a-z]+)[\s]+#i', $avatar_data, $file_data2))
-            {
-                $error = true;
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du téléchargement de l\'image. Vous allez être redirigé.';
-                exit();
-            }
-
-            $avatar_filesize = $file_data1[1];
-            // règle n°1 de l'upload: ne pas faire confiance au type MIME du header HTTP
-            //$avatar_filetype = $file_data2[1];
-
-            $avatar_data = substr($avatar_data, strlen($avatar_data) - $avatar_filesize, $avatar_filesize);
+            $myurl = postVal("txtFileURL");
 
             $tmp_filename = tempnam(BDO_DIR_UPLOAD, uniqid(rand()) . '-');
 
-            $fptr = @fopen($tmp_filename, 'wb');
-            $bytes_written = @fwrite($fptr, $avatar_data, $avatar_filesize);
-            @fclose($fptr);
-
-            if ( $bytes_written != $avatar_filesize )
-            {
-                @unlink($tmp_filename);
-                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors de l\'écriture de l\'image en local. Vous allez être redirigé.';
+            $content = file_get_contents($myurl);
+            $save = file_put_contents($tmp_filename,$content);
+            $mime_type = mime_content_type($tmp_filename);
+             // Check la validité de l'image
+            if (!preg_match('#image.([a-z]+)#i', $mime_type, $file_data2)) {
+                $error = true;
+                echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Erreur lors du t&eacute;l&eacute;chargement de l\'image. Vous allez &ecirc;tre redirig&eacute;.';
                 exit();
             }
 
