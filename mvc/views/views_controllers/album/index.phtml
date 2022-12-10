@@ -127,7 +127,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             <div class="alb-img">
                             <div id="couv"><img src="<?php echo ($view->tome->IMG_COUV ? BDO_URL_COUV.$view->tome->IMG_COUV : BDO_URL_COUV.'default.png' ); ?>" itemprop="image" name="imgEdition" id="imgEdition" alt="couverture" border="1"></div>
                             <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
-                            <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION;?></div>
+                            <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION ;?></div>
                             <div id="sponsor" align="center"><?php echo $ficheAlbum->getSponsor($view->tome, $img=true, $all=true); ?></div>
             </div>
 
@@ -173,7 +173,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                 echo $view->tome->NOM_COLLECTION == "<N/A>" ? "" : "<br> Collection ".$view->tome->NOM_COLLECTION;
                                 } ?></font>
                 <br>
-                <span class="petite_police">
+                <?php echo ($view->tome->FLG_TYPE_TOME == 1) ? "Coffret<br>" : "" ;?>
+                <span class="petite_police"> 
                          <?php if ($view->tome->EAN_EDITION) {?>   EAN : <span itemprop="isbn"> <?php echo $view->tome->EAN_EDITION;?> </span>| <?php } ?>
                          <?php if ($view->tome->ISBN_EDITION AND !$view->tome->EAN_EDITION) {?> ISBN : <span itemprop="isbn"><?php echo $view->tome->ISBN_EDITION;?> </span>| <?php } ?> ID-BDovore : <?php echo $view->tome->ID_TOME;?> 
                 </span>
