@@ -423,9 +423,22 @@ class FicheAlbum {
                 $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=" . htmlentities ($o_tome->TITRE_TOME,$flag=ENT_QUOTES) . "&mode=books-fr";
             }
             if ($img) {
-                $html .= "' target='_blank'><img src='" . BDO_URL_IMAGE . "amazon blanc.jpg' class='img-sponsor' height='22px' width='85px'></a>";
+                $html .= "' target='_blank'><img src='" . BDO_URL_IMAGE . "amazon blanc.jpg' class='img-sponsor' height='25px' width='85px'></a>";
             } else {
                 $html .= "' target='_blank'>Commandez sur Amazon</a>";
+            }
+             // Recyclivre
+            $variable = "&utm_source=affiliation&utm_medium=affilae&utm_campaign=Bdovore#ae132" ;
+            $html .= "&nbsp;<a title='Achetez sur Recyclivre !' href='https://www.recyclivre.com/search?";
+            if (issetNotEmpty($o_tome->EAN_EDITION)) {
+                $html .= "q=" . $o_tome->EAN_EDITION;
+            } else {
+                $html .=  "filter%5Btaxon%5D=1151&q=" . htmlentities ($o_tome->TITRE_TOME,$flag=ENT_QUOTES) ;
+            }
+            if ($img) {
+                $html .= $variable."' target='_blank'><img src='" . BDO_URL_IMAGE . "site/recyclivre.png' class='img-sponsor' height='30px' width='85px'></a>";
+            } else {
+                $html .= "' target='_blank'>Commandez sur Recylivre</a>";
             }
         }   
        
