@@ -170,7 +170,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                                     echo "</select>";
                                 }
                             if (isset($view->tome->NOM_COLLECTION)) {
-                                echo $view->tome->NOM_COLLECTION == "<N/A>" ? "" : "<br> Collection ".$view->tome->NOM_COLLECTION;
+                                echo $view->tome->NOM_COLLECTION == "<N/A>" ? "" : "<br> Collection <a href=\"".$ficheAlbum->getURLCollection($view->tome)."\" target='_parent'>" .$view->tome->NOM_COLLECTION."</a>";
                                 } ?></font>
                 <br>
                 <?php echo ($view->tome->FLG_TYPE_TOME == 1) ? "Coffret<br>" : "" ;?>

@@ -69,7 +69,11 @@ else {
         $request_uri = "auteurbd";
         $_GET["id_auteur"] = $match[1];
     }
-
+    // regex pour URLs du type collection-edition-id-...
+    if (preg_match('/^collection-edition[-]*(\d+)/', $request_uri, $match)) {
+        $request_uri = "collectionbd";
+        $_GET["id_collection"] = $match[1];
+    }
     if ($request_uri) {
         $params = explode('/', $request_uri);
     }

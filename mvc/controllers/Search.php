@@ -80,6 +80,23 @@ class Search extends Bdo_Controller
                         'category' => "Auteurs"
                 );
             }
+            
+             $this->loadModel ("Collection");
+            $this->Collection->load('c'," WHERE (bd_collection.NOM LIKE '". $term ."%') OR (bd_editeur.NOM LIKE '". $term ."%')  ORDER BY bd_editeur.NOM, bd_collection.NOM LIMIT 0,10");
+
+            foreach ($this->Collection->dbSelect->a_dataQuery as $obj) {
+                if ($obj->NOM_COLLECTION == "<N/A>") {
+                    $label = $obj->NOM_EDITEUR;
+                } else {
+                    $label = $obj->NOM_EDITEUR."-".$obj->NOM_COLLECTION;
+                }
+                 
+                $arr[] = (object) array(
+                        'label' => $label,
+                    "ID_COLLECTION" => $obj->ID_COLLECTION,
+                        'category' => "Collections"
+                );
+            }
         }
 
         $this->loadModel("User");

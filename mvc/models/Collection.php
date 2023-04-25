@@ -35,7 +35,8 @@ class Collection extends Bdo_Db_Line
         `bd_collection`.`ID_COLLECTION`,
         `bd_collection`.`NOM`,
         `bd_editeur`.`ID_EDITEUR`,
-        `bd_editeur`.`NOM` as NOM_EDITEUR
+        `bd_editeur`.`NOM` as NOM_EDITEUR,
+        `bd_collection`.`NOM` as NOM_COLLECTION
 
         FROM `" . $this->table_name . "`
         LEFT JOIN `bd_editeur` USING(`ID_EDITEUR`)

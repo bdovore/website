@@ -351,6 +351,19 @@ class FicheAlbum {
          $url =  BDO_URL . 'auteur-bd-' . $o_auteur->ID_AUTEUR . '-' .clean_url($o_auteur->PSEUDO);
          return $url;
     }
+    
+      public function getURLCollection($o_collection) {
+         if (is_array($o_collection)) {
+            $o_collection = (object) $o_collection;
+        }
+        if ($o_collection->NOM_COLLECTION == "<N/A>") {
+            $str_collection = $o_collection->NOM_EDITEUR;
+        } else {
+            $str_collection = $o_collection->NOM_EDITEUR."-".$o_collection->NOM_COLLECTION;
+        }
+         $url =  BDO_URL . 'collection-edition-' . $o_collection->ID_COLLECTION . '-' .clean_url($str_collection);
+         return $url;
+    }
     public function urlAuteur($o_auteur,$target="") {
         if (is_array($o_auteur)) {
             $o_auteur = (object) $o_auteur;

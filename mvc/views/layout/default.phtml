@@ -227,6 +227,9 @@ $(document).ready(function() {
                 if (ui.item.category=='Auteurs') {
                     window.location.href = "<?php echo BDO_URL;?>auteur-bd-"+encodeURIComponent(ui.item.ID_AUTEUR)+"-"+string_to_slug(ui.item.label);
                 }
+                if (ui.item.category=='Collections') {
+                    window.location.href = "<?php echo BDO_URL;?>collection-edition-"+encodeURIComponent(ui.item.ID_COLLECTION )+"-"+string_to_slug(ui.item.label);
+                }
                 if (ui.item.category=='Albums') {
                     if (!$.browser.mobile) {
                         $.fancybox.open(

@@ -24,3 +24,4 @@ Collection au*
 /vendor/
 /public/robots.txt
 /nbproject/private/
+.DS_Store
