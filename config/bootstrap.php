@@ -24,6 +24,18 @@ mb_regex_encoding("UTF-8");
 set_include_path ( '.' . PATH_SEPARATOR . BDO_DIR.'library'.DS . PATH_SEPARATOR . BDO_DIR . PATH_SEPARATOR .
 get_include_path () );
 
+// ---------------------------------------------------------------
+// declaration de la langue
+if (isset($_GET['lang']) and ($_GET['lang'] != $_SESSION['ID_LANG']) and in_array($_GET['lang'], array('_FR'))) {
+    $_SESSION['ID_LANG'] = $_GET['lang'];
+}
+else if (! isset($_SESSION['ID_LANG']) or empty($_SESSION['ID_LANG'])) {
+    $_SESSION['ID_LANG'] = '_FR';
+}
+if (!in_array($_SESSION['ID_LANG'], array('_FR','_EN'))) {
+    $_SESSION['ID_LANG'] = '_FR';
+
+}
 
 // ---------------------------------------------------------------
 // connexion base
@@ -51,21 +63,10 @@ $user->autoLogin();
 Bdo_Error::add($user->error);
 
 Bdo_Cfg::setVar('user',$user);
-Bdo_Cfg::setVar('explicit', $user->EXPLICIT_CONTENT);
+Bdo_Cfg::setVar('explicit', isset($user->EXPLICIT_CONTENT) ? $user->EXPLICIT_CONTENT : 0) ;
 if (Bdo_Cfg::debug()) Bdo_Debug::execTime("apres charg user");
 
-// ---------------------------------------------------------------
-// declaration de la langue
-if (isset($_GET['lang']) and ($_GET['lang'] != $_SESSION['ID_LANG']) and in_array($_GET['lang'], array('_FR'))) {
-    $_SESSION['ID_LANG'] = $_GET['lang'];
-}
-else if (! isset($_SESSION['ID_LANG']) or empty($_SESSION['ID_LANG'])) {
-    $_SESSION['ID_LANG'] = '_FR';
-}
-if (!in_array($_SESSION['ID_LANG'], array('_FR','_EN'))) {
-    $_SESSION['ID_LANG'] = '_FR';
 
-}
 
 include_once (BDO_DIR . "language".DS.$_SESSION['ID_LANG'].".inc.php");
 

@@ -119,7 +119,7 @@ class FicheAlbum {
 
         // nom de la serie
         $html.="<p class='fiche_album'>";
-        if ($o_tome->NOM_SERIE AND ($o_tome->TITRE_TOME AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME)) AND $getUrlSerie)) {
+        if (isset($o_tome->NOM_SERIE) AND ($o_tome->TITRE_TOME AND (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME)) AND $getUrlSerie)) {
             $html .=  $this->urlSerie($o_tome) .'<br>';
         }
 
@@ -182,7 +182,7 @@ class FicheAlbum {
         $html = '
             <div class="cadre1 fiche_big">
             <div style="float:left" class="mw50">
-            ' . ($o_serie->IMG_COUV_SERIE ? '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="'.$couv.'" style="float:left;margin=2px">' : "") . '
+            ' . (isset($o_serie->IMG_COUV_SERIE) ? '<img src="' . BDO_URL_COUV . $o_serie->IMG_COUV_SERIE . '" class="'.$couv.'" style="float:left;margin=2px">' : "") . '
             </div>
             <div style="float:left;margin-left: 5px;" class="mw50">';
 
@@ -190,7 +190,7 @@ class FicheAlbum {
 
 
         $html .= "<strong>".$this->urlSerie($o_serie)."</strong><br>";
-        if ($o_serie->NB_NOTE_SERIE > 0 and $size == "big") {
+        if (isset($o_serie->NB_NOTE_SERIE)  and $size == "big") {
              $html .= '<div align="center" id=noteSerie' . $o_serie->ID_SERIE . '> </div>';
             $html .= "<script>$('#noteSerie" . $o_serie->ID_SERIE . "').raty({score: " . $o_serie->NOTE_SERIE/2.0 . ", readOnly: true});</script>";
 
@@ -204,7 +204,7 @@ class FicheAlbum {
         }
 
         //avancement 0: Finie, 1: En cours, 2: One-shot, 3:Interrompue
-        if (!is_null($o_serie->FLG_FINI_SERIE)) {
+        if (issetNotEmpty($o_serie->FLG_FINI_SERIE)) {
             $a_avancement = array(
                 0 => 'Finie',
                 1 => 'En cours',

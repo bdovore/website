@@ -182,10 +182,11 @@ if (isset($view->dbs_comment)) {
 $a_qstring = $_GET;
 unset($a_qstring["page"]);
 $qstring = http_build_query($a_qstring);
+$Path_Info = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : (isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : '');
 if ($view->NUM_PAGE > 1)
-    echo "<a href='".$_SERVER['PATH_INFO'] ."?" . $qstring . "&page=" . ($view->NUM_PAGE - 1) . "'>Précédent &nbsp;</a>";
+    echo "<a href='".$Path_Info ."?" . $qstring . "&page=" . ($view->NUM_PAGE - 1) . "'>Précédent &nbsp;</a>";
 if ($view->NUM_PAGE < 20)
-    echo "<a href='".$_SERVER['PATH_INFO']."?" . $qstring . "&page=" . ($view->NUM_PAGE + 1) . "'>&nbsp;Suivant</a>";
+    echo "<a href='".$Path_Info."?" . $qstring . "&page=" . ($view->NUM_PAGE + 1) . "'>&nbsp;Suivant</a>";
 ?>
             </div>
             <!-- Column 1 end -->

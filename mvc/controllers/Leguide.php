@@ -184,7 +184,7 @@ class Leguide extends Bdo_Controller
 
                     $dbs_comment = $this->Comment->load('c', "
                       WHERE   c.comment <> ''
-                      ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
+                      ".(isset($_GET['a_idGenre']) ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
                         and g.origine = '".$filter_origine ."'
                         ORDER BY c.`DTE_POST` DESC ".$limit);
 
@@ -199,7 +199,7 @@ class Leguide extends Bdo_Controller
 
                     $dbs_tome = $this->Edition->load('c', "
                         WHERE bd_edition.`DTE_PARUTION`<= NOW() and bd_edition.`DTE_PARUTION` >= DATE_ADD(NOW(), INTERVAL -1 YEAR)
-                        ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
+                        ".(isset($_GET['a_idGenre']) ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
                                  and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
                     ORDER BY bd_edition.`DTE_PARUTION` DESC ".$limit);
 
@@ -215,7 +215,7 @@ class Leguide extends Bdo_Controller
 
                     $dbs_tome = $this->Edition->load('c', "
                         WHERE bd_edition.`DTE_PARUTION`>'".date('Y-m-d')."'
-                            ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
+                            ".(isset($_GET['a_idGenre']) ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
                                  and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
                             ORDER BY bd_edition.`DTE_PARUTION` ASC ".$limit);
 
@@ -231,7 +231,7 @@ class Leguide extends Bdo_Controller
                         //this doesn't use the cache in bd_edition_stat (seems light though)
                         $where = " WHERE";
 
-                        if ($_GET['a_idGenre']) {
+                        if (isset($_GET['a_idGenre'])) {
                             $where .= " g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])) . ") AND";
                         }
 
@@ -260,7 +260,7 @@ class Leguide extends Bdo_Controller
 
                     $dbs_tome = $this->Edition->load('c', "
                         WHERE bd_tome.id_edition = bd_edition.id_edition AND bd_edition.`DTE_PARUTION`> date_add(now(),INTERVAL -6 MONTH)
-                            ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
+                            ".(isset($_GET['a_idGenre']) ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
                                  and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
                             ORDER BY (15.0*bd_edition_stat.NBR_USER_ID_EDITION /(DATEDIFF(now(),DTE_PARUTION) +1)) DESC ".$limit);
 

@@ -259,10 +259,12 @@ FROM " . $this->table_name . "
         if ($this->error) {
             $this->guest();
         }
-
-        foreach ((array) $_SESSION['userConnect'] as $var => $value) {
-            $this->$var = $value;
+        if (array_key_exists("userConnect",$_SESSION)) {
+             foreach ((array) $_SESSION['userConnect'] as $var => $value) {
+                $this->$var = $value;
+            }
         }
+       
         return $this;
     }
 

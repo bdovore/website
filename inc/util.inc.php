@@ -440,14 +440,16 @@ function postVal ($nomvar, $default = '')
 
     // Si les Magic Quotes sont activées, retirer les "\" en trop avant de passer à la moulinette
     // NB: les Magic Quotes n'existent plus pour PHP >= 5.4.0
-    if (get_magic_quotes_gpc()) {
+    // PHP 8 : on supprime toute les référence à magic_quote
+    /*if (get_magic_quotes_gpc()) {
         if (is_array($val))
             return array_map('stripslashes',$val);//NB: non-recursif --> suppose que $_POST['nom'] est un array simple
         else
             return stripslashes($val);
     } else {
         return $val;
-    }
+    }*/
+    return $val;
 }
 
 function postValInteger ($nomvar, $default = 0)
