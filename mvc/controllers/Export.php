@@ -15,7 +15,7 @@ class Export extends Bdo_Controller {
            // echo is_array($sel_field);
             $memsel = postVal("memsel","");
             $contenu = postValInteger("contenu",0);
-            $info = postValInteger("info",0);
+            $info = postValInteger("info",1);
             if ($act == "export") {
 
                 // met à jour la sélection
@@ -340,7 +340,7 @@ class Export extends Bdo_Controller {
                     case 3:
                         // Export en PDF
 
-                        require_once(BDO_DIR . "vendor/mpdf/mpdf/mpdf.php");
+                        require_once(BDO_DIR . "vendor/mpdf/mpdf/src/Mpdf.php");
                         ob_implicit_flush(true);
                         $opt_status[0][0] = 0;
                         $opt_status[0][1] = 'Finie';
@@ -357,7 +357,7 @@ class Export extends Bdo_Controller {
                         $filename = $_SESSION["userConnect"]->user_id . "-" . sha1(uniqid(mt_rand(), true)) . ".pdf";
                         $this->removeOldFiles($pdfdir, $_SESSION["userConnect"]->user_id, 7200);
 
-                        $p = new mPDF('','A4');
+                        $p = new Mpdf\Mpdf();
                         $max_num_lines = 10;
 
                         /* open new PDF file; insert a file name to create the PDF on disk */
@@ -515,6 +515,7 @@ class Export extends Bdo_Controller {
                     "CONTENU1" => ($contenu == 1) ? 'checked' : '',
                     "CONTENU2" => ($contenu == 2) ? 'checked' : '',
                     "CONTENU3" => ($contenu == 3) ? 'checked' : '',
+                    "CONTENU4" => ($contenu == 4) ? 'checked' : '',
                 ));
 
                 // assigne la barre de login
