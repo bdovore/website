@@ -53,7 +53,7 @@ class FicheAuteur {
       // Nom de l'auteur (pseudo)
       $html .= '<h3>';
       $html .= '<a href="' . $this->getURLAuteur($o_auteur) . '" ';
-      $html .= '   title="' . $o_serie->pseudo . '">';
+      $html .= '   title="' . $o_auteur->pseudo . '">';
       $html .= htmlspecialchars($o_auteur->pseudo) . '</a></h3>';
 
       $html .= "<p class='fiche_album'>";
@@ -66,7 +66,7 @@ class FicheAuteur {
       }
       // Pour systématiser le champ nom afin d'y mettre le lien vers la fiche Auteur,
       // En absence d'information, on y met le pseudo.
-      if (!$nom) $nom = $o_auteur->pseudo;
+      if (!isset($nom)) $nom = $o_auteur->pseudo;
       $url =  BDO_URL . 'auteur-bd-' . $o_auteur->auteur . '-' .clean_url($o_auteur->pseudo);
 
       $html .= 'Nom : <a href="' .$url. '"><i>' . $nom . '</i></a><br>';

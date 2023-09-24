@@ -328,6 +328,7 @@ function protectAttack ($GLOBALVAR)
 
 function stripSlUtf8 ($data)
 {
+    /*
     if (get_magic_quotes_gpc()) {
         if (is_array($data)) {
             foreach ($data as $key => $val) {
@@ -338,7 +339,7 @@ function stripSlUtf8 ($data)
             $data = stripslashes($data);
             if (is_utf8($data)) $data = utf8_decode($data);
         }
-    }
+    }*/
 
     return $data;
 }

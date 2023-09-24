@@ -1,15 +1,16 @@
 <?php
 
 
-require_once (BDO_DIR."vendor/jpgraph/jpgraph/lib/jpgraph/src/jpgraph.php");
-require_once  (BDO_DIR."vendor/jpgraph/jpgraph/lib/jpgraph/src/jpgraph_bar.php");
+require_once (BDO_DIR."vendor/jpgraph-4.4.2/src/jpgraph.php");
+require_once  (BDO_DIR."vendor/jpgraph-4.4.2/src/jpgraph_bar.php");
 
 minAccessLevel(2);
 
 // Variables g�n�rales
 $nb = 20;
-if ($first=='') {$first = 0;}
-if ($info =='') $info=0;
+$first = isset($_GET["fisrt"]) ? $_GET["fisrt"] : 0 ;
+$info = isset($_GET["info"]) ? $_GET["info"] : 0 ;
+
 
 // R�cup�re les valeurs par d�faut
 $query = "SELECT val_alb, val_cof, val_int, val_cof_type FROM users WHERE user_id=" . $DB->escape( $_SESSION["userConnect"]->user_id);
@@ -43,6 +44,15 @@ FROM
 WHERE
     u.flg_achat = 'N'
     AND u.user_id = " . $DB->escape($_SESSION["userConnect"]->user_id);
+
+$tot_prix = array( 0 => 0,
+                               1 => 0,
+                                2 => 0 );
+ $tot_count = array(0 => 0,
+                               1 => 0,
+                                2 => 0 );
+ $depense = array();
+ $nbalbums = array();
 
 $DB->query ($query);
 
@@ -95,7 +105,11 @@ while ($DB->next_record())
     if ($max_date < $annee) $max_date = $annee;
 
     // Pr�pare le graph
-    $depense[$annee] += $prix_retenu;
+    if (isset($depense[$annee])) {
+        $depense[$annee] += $prix_retenu;
+    } else {
+        $depense[$annee] = $prix_retenu;
+    }
     // set year
     if (!isset($cadeau[$annee])) {
         $cadeau[$annee] = 0;

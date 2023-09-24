@@ -45,7 +45,7 @@ class Macollection extends Bdo_Controller {
             die("Vous devez vous authentifier pour accéder à cette page.");
         }
         
-        $content = $_SERVER["CONTENT_TYPE"];
+        $content = isset($_SERVER["CONTENT_TYPE"]) ? $_SERVER["CONTENT_TYPE"] : "";
         if ($content == "application/json") {
             $this->view->layout = "ajax";
              $this->view->set_var( 'json', json_encode(array (
@@ -434,8 +434,9 @@ class Macollection extends Bdo_Controller {
           $auteur = getVal("auteur","");
           if ($auteur <> "") {
             $this->loadModel("Auteur");
-            $pseudo = getVal("pseudo", "");
+            
           }
+          $pseudo = getVal("pseudo", "");
 
           // Récupération des séries comprenant des albums à compléter
           $listSerie = $this->Users_exclusions->getListSerieToComplete($user_id,!$flg_achat);
@@ -453,7 +454,7 @@ class Macollection extends Bdo_Controller {
 
           //TODO mettre une longueur max. pour la recherche ?
           if (!$length) {
-              if ($_COOKIE["l_etageres_serie"] ) {
+              if (isset($_COOKIE["l_etageres_serie"]) ) {
                   // récupére la valeur dans un coockie
                   $length = $_COOKIE["l_etageres_serie"];
               } else {
@@ -516,7 +517,7 @@ class Macollection extends Bdo_Controller {
           
            //TODO mettre une longueur max. pour la recherche ?
           if (!$length) {
-              if ($_COOKIE["l_etageres_achat"] ) {
+              if (isset($_COOKIE["l_etageres_achat"]) ) {
                   // récupére la valeur dans un coockie
                   $length = $_COOKIE["l_etageres_achat"];
               } else {
@@ -570,10 +571,6 @@ class Macollection extends Bdo_Controller {
               "nbr" => $nbr,
               "sort" => $sort,
               "order" => $order,
-              "pret" => $pret,
-              "cadeau" => $cadeau,
-              "eo" => $eo,
-              "dedicace" => $dedicace,
               "searchvalue" => $l_search
               ));
       }
@@ -796,9 +793,11 @@ class Macollection extends Bdo_Controller {
             $mois = getVal("mois",'');
             $info = getVal("info",'');
 
-            if ($annee=='') $annee=date("Y");
-            if ($mois=='') $mois=date("n");
-            if ($info=='') $info=1;
+            if ($annee=='') {
+                $annee=date("Y");        
+            }
+            if ($mois=='') {$mois=date("n");}
+            if ($info=='') {$info=1;}
 
 
             // Valeurs d'option
@@ -819,6 +818,7 @@ class Macollection extends Bdo_Controller {
             $defval[0] = $this->User->VAL_ALB;
             $defval[1] = $this->User->VAL_INT;
             $defval[2] = $this->User->VAL_COF;
+           
             $defcoffret = $this->User->VAL_COF_TYPE;
 
             // Récupère la collection
@@ -827,7 +827,15 @@ class Macollection extends Bdo_Controller {
 
 
             $a_album = array();
-            $count = 0;
+            $tot_prix = array( 0 => 0,
+                               1 => 0,
+                                2 => 0 );
+            $tot_count = array(0 => 0,
+                               1 => 0,
+                                2 => 0 );
+            $prixretenu = array();
+            $depense = array();
+            $nbalbums = array();     
             foreach ($dbs_album->a_dataQuery as $album)
             {
                 /*
@@ -835,12 +843,14 @@ class Macollection extends Bdo_Controller {
                  * Probablement jouable en une requête SQL mais pas si évident : il faut tenir compte des règles de valorisation
                  *
                  */
-                    if ($album->FLG_INT_TOME == 'O')
+                    if ($album->FLG_INT_TOME == 'O') {
                         $type = 1;
+                        
+                    }
                     else
-                        $type = 0;
+                    { $type = 0;}
 
-                    if ($album->FLG_TYPE_TOME == 1) $type = 2;
+                    if ($album->FLG_TYPE_TOME == 1) {$type = 2;}
 
                     // Vérifie si l'album est coté par l'utilisateur
                     if (($album->cote != '') & (($album->FLG_TYPE_TOME == 0) | ($defcoffret == 1)))
@@ -879,8 +889,17 @@ class Macollection extends Bdo_Controller {
 
                     // stocke les mini et les maxi
                     $year =$album->annee_achat;
-                    $depense[$year] += $prix_retenu;
-                    $nbalbums[$year]++;
+                    if (isset($depense[$year])) {
+                        $depense[$year] += $prix_retenu;
+                    } else {
+                        $depense[$year] = $prix_retenu;
+                    }
+                    
+                    if (isset($nbalbums[$year])) {
+                        $nbalbums[$year]++;
+                    } else {
+                         $nbalbums[$year] =  1;
+                    }
 
                     // stocke le détail par mois
                     $month = $album->mois_achat;

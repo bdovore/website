@@ -46,7 +46,7 @@ class DB_Sql {
 
     /* private: link and query handles */
     var $Link_ID = 0;
-    var $Query_ID = 0;
+    var $Query_ID = NULL;
     var $locked = false; // set to true while we have a lock
 
     /* public: constructor */
@@ -96,7 +96,7 @@ class DB_Sql {
     /* public: discard the query result */
     function free() {
         @mysqli_free_result ( $this->Query_ID );
-        $this->Query_ID = 0;
+        $this->Query_ID = NULL;
     }
 
     /* public: perform a query */
@@ -115,7 +115,8 @@ class DB_Sql {
         ;
 
         // New query, discard previous result.
-        if ($this->Query_ID) {
+        if (isset($this->Query_ID) and gettype($this->Query_ID) != "boolean") {
+            //print(gettype($this->Query_ID));
             $this->free ();
         }
 

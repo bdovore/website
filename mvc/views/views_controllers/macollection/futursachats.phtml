@@ -154,14 +154,18 @@
                     $nbpage = ceil($view->nbr / $view->length);
                     $uri = "";
                     $a_uri = explode("?",$_SERVER['REQUEST_URI']);
-                    $a_uri = explode("&", $a_uri [1]);
-                    foreach($a_uri as $key => $value) {
+                    if (count($a_uri) > 1) {
+                        
+                    
+                        $a_uri = explode("&", $a_uri [1]);
+                        foreach($a_uri as $key => $value) {
 
-                        if (substr($a_uri[$key],0,4) <> "page" and $a_uri[$key] <> "") {
-                            $uri .= "&".$a_uri[$key];
+                            if (substr($a_uri[$key],0,4) <> "page" and $a_uri[$key] <> "") {
+                                $uri .= "&".$a_uri[$key];
+                            }
+
                         }
-
-                    }
+                      }
                     //$url = BDO_URL."macollection/mesetageres?length=".$view->length."&order=".$view->order."&sort=".$view->sort."&";
                     $url = BDO_URL."macollection/futursachats?".$uri."&";
 

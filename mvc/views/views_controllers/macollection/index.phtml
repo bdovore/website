@@ -1,5 +1,7 @@
 
-<?php if ( $_SERVER["CONTENT_TYPE"] == "application/json" ) { 
+<?php 
+$content = isset($_SERVER["CONTENT_TYPE"]) ? $_SERVER["CONTENT_TYPE"] : "";
+if ( $content == "application/json" ) { 
     echo $view->json;
 } else { ?>
 <script>

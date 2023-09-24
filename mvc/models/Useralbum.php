@@ -158,7 +158,13 @@ class Useralbum extends Bdo_Db_Line
     public function getStatistiques($user_id,$stat="all",$auteur="",$origin="",$travail="",$search="") {
         // fonction qui renvoit les statistiques d'une collection
         // Charge les statistisques
-
+        $nbcoffrets = 0;
+        $nbintegrales = 0;
+        $nbfuturs_achats = 0;
+        $nbeditidion = 0;
+        $nbtomes = 0;
+        $nbseries = 0;
+        $nbauteurs = 0;
         if ($stat == "all" or $stat=="album") {
             $query = "
 

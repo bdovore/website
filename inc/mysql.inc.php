@@ -175,7 +175,7 @@ function Db_Escape_String ($chaine,$connexion=false)
 function Db_CountRow ($resul_or_query=false,$connexion=false)
 {
 
-    $nbr=0;
+    $nbr= 0;
 
 //  if (!is_a($resul_or_query,'mysqli_result',false) php 5.3.9
     if (!($resul_or_query instanceof mysqli_result)
@@ -196,7 +196,7 @@ function Db_CountRow ($resul_or_query=false,$connexion=false)
 
         $list_count = $connexion->query ($query_count);
         $obj_count = Db_fetch_object($list_count);
-        $nbr = $obj_count->NBR;
+        $nbr = $obj_count ? $obj_count->NBR : 0 ;
         Db_free_result ($list_count);
     }
     else if($resul_or_query)
@@ -254,7 +254,7 @@ function Db_fetch_all_obj ($resultat, $columnKey = '',$multiValByKey=false)
     while ($obj = Db_fetch_object($resultat)) {
         if (empty($columnKey)) $a_obj[] = $obj;
         else{
-            if ($multiVal){
+            if ($multiValByKey){
                 $a_obj[$obj->$columnKey][] = $obj;
             }
             else {

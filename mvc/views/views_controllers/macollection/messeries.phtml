@@ -109,7 +109,7 @@
                 foreach ($view->listExclu as $i => $s) {
                   if ($s->ID_SERIE == $serie->ID_SERIE) $exclu = $s->SOURCE;
                 }
-                $auteur = $view->auteur == "" ? "" : [$view->auteur,$view->pseudo];
+                $auteur = ($view->auteur == "") ? "" : [$view->auteur,$view->pseudo];
                 echo $ficheSerie->big($serie,$auteur,true,$incomplet,$exclu); 
               ?>
             
@@ -132,12 +132,15 @@
       $nbpage = ceil($view->nbr / $view->length);
       $uri = "";
       $a_uri = explode("?", $_SERVER['REQUEST_URI']);
-      $a_uri = explode("&", $a_uri [1]);
-      foreach ($a_uri as $key => $value) {
-          if (substr($a_uri[$key], 0, 4) <> "page" and $a_uri[$key] <> "") {
-              $uri .= "&" . $a_uri[$key];
-          }
+      if (count($a_uri) > 1) {
+         $a_uri = explode("&", $a_uri [1]);
+        foreach ($a_uri as $key => $value) {
+            if (substr($a_uri[$key], 0, 4) <> "page" and $a_uri[$key] <> "") {
+                $uri .= "&" . $a_uri[$key];
+            }
+        }
       }
+      
       $url = BDO_URL . "macollection/messeries?" . $uri . "&";
 
       echo $page->paginate($url, "page=", $nbpage, $view->page);

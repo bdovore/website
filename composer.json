@@ -9,7 +9,7 @@
     "require": {
         "freearhey/wikidata": "dev-master",
    
-        "jpgraph/jpgraph": ">=3.5",
+        "jpgraph/jpgraph": ">=4.4",
         "mpdf/mpdf" : ">=6.0",
         "phpoffice/phpexcel":">= 1.7.8"
     }

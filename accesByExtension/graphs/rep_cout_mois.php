@@ -1,15 +1,16 @@
 <?php
 
 
-require_once (BDO_DIR."vendor/jpgraph/jpgraph/lib/jpgraph/src/jpgraph.php");
-require_once  (BDO_DIR."vendor/jpgraph/jpgraph/lib/jpgraph/src/jpgraph_bar.php");;
+require_once (BDO_DIR."vendor/jpgraph-4.4.2/src/jpgraph.php");
+require_once  (BDO_DIR."vendor/jpgraph-4.4.2/src/jpgraph_bar.php");
 
 minAccessLevel(2);
 
 // Variables g�n�rales
 $nb = 20;
-if ($first=='') {$first = 0;}
-if ($info =='') $info=0;
+
+$first = isset($_GET["fisrt"]) ? $_GET["fisrt"] : 0 ;
+$info = isset($_GET["info"]) ? $_GET["info"] : 0 ;
 
 // Tableau label
 $short_month = array("Jan","Fev","Mar","Avr","Mai","Jui","Jui","Aou","Sep","Oct","Nov","Dec");
@@ -50,6 +51,14 @@ WHERE
 AND DATE_FORMAT(IFNULL(u.date_achat, u.date_ajout),'%Y') ='".$DB->escape($annee)."'";
 
 $DB->query ($query);
+$tot_prix = array( 0 => 0,
+                               1 => 0,
+                                2 => 0 );
+ $tot_count = array(0 => 0,
+                               1 => 0,
+                                2 => 0 );
+ $depense = array();
+ $nbalbums = array();
 
 while ($DB->next_record())
 {
@@ -98,7 +107,7 @@ while ($DB->next_record())
     $mois = intval($DB->f("date_mois"));
 
     // Pr�pare le graph
-    $depense[$mois] += $prix_retenu;
+    $depense[$mois] = isset($depense[$mois]) ? $depense[$mois] + $prix_retenu : $prix_retenu;
     // set year
     if (!isset($cadeau[$mois])) {
         $cadeau[$mois] = 0;
