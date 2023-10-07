@@ -282,6 +282,7 @@ class Macollection extends Bdo_Controller {
           $dedicace = getVal("cb_dedicace","N");
           $non_lu = getVal("cb_lu","N");
           $num = getVal("cb_num","N");
+          $coffret = getVal("cb_coffret","N");
 
           $limit = " limit ".(($page - 1)*$length).", ".$length;
           $orderby = " order by ".$a_order[$sort-1]." ".$order;
@@ -294,6 +295,7 @@ class Macollection extends Bdo_Controller {
           if ($dedicace== "O") $where .= " and flg_dedicace = 'O' ";
           if ($non_lu== "O") $where .= " and FLG_LU <> 'O' ";
           if ($num== "O") $where .= " and FLG_NUM = 'O' ";
+          if ($coffret == "O") $where .= " and FLG_TYPE = 1";
 
           if ($sel_type <> "Tous") {
               $where .= " and g.ORIGINE = '".Db_Escape_String($sel_type) ."'";
@@ -334,7 +336,8 @@ class Macollection extends Bdo_Controller {
               "dedicace" => $dedicace,
               "searchvalue" => $l_search,
                "sel_type" => $sel_type,
-              "num" => $num
+              "num" => $num,
+              "coffret" => $coffret
               ));
       }
       else {

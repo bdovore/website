@@ -164,6 +164,7 @@ $page = $view->getHelper('pagination');
                 Prêt :<input id="cb_pret" name="cb_pret" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->pret == "O") echo "checked"; ?>/>
                 Non lu :<input id="cb_lu" name="cb_lu" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->non_lu == "O") echo "checked"; ?>/>
                 Edition numérique :<input id="cb_num" name="cb_num" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->num == "O") echo "checked"; ?>/>
+                Coffret : <input id="cb_num" name="cb_coffret" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->coffret == "O") echo "checked"; ?>/>
             </div><br>
             <div id="data_length" class="dataTables_length">
                 Voir :
