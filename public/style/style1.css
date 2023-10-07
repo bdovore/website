@@ -216,7 +216,7 @@ textarea {
     left: 0;
     right: 0;
     bottom: 0;
-    opacity: 0.9;
+    /*opacity: 0.9; */
     -moz-box-shadow: 4px 4px 10px #888;
     -webkit-box-shadow: 4px 4px 8px #888;
     box-shadow:4px 4px 6px #888;
@@ -1203,7 +1203,7 @@ div.textmasked {
     float:right;
 }
 #accordion {
-    //float:inherit;
+    /* float:inherit;*/
 }
 
 @media screen and (max-width: 1200px) and (min-width:768px) {
