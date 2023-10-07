@@ -207,6 +207,7 @@ class GetJSON extends Bdo_Controller {
             $term = getVal("term", "");
             $id_serie = getVal("id_serie",0);
             $id_auteur = getValInteger("id_auteur", 0);
+            $id_collection = getValInteger("id_collection", 0);
             $where = "";
             
             if ($id_serie) {
@@ -214,7 +215,9 @@ class GetJSON extends Bdo_Controller {
             } else  if ($id_auteur) {
                 $where = " WHERE (bd_tome.ID_SCENAR = $id_auteur OR bd_tome.ID_COLOR = $id_auteur OR bd_tome.ID_DESSIN = $id_auteur OR "
                         . " bd_tome.ID_SCENAR_ALT = $id_auteur OR bd_tome.ID_COLOR_ALT = $id_auteur OR bd_tome.ID_DESSIN_ALT = $id_auteur )";
-            }  
+            } else if ($id_collection) {
+                $where = " WHERE (c.id_collection = $id_collection) " ;
+            } 
             else {
                 $where = " WHERE bd_tome.TITRE like '" . Db_Escape_String($term) . "%' ". $addfilter ." limit 0,10";
             }
