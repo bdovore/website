@@ -63,7 +63,8 @@ class Bdo_Onglet
 
     function setWidth ($val)
     {
-        $valx = $val + 0;
+        
+        $valx = intval($val) + 0;
         if ($val === $valx) {
             $this->width = $val . 'px';
         }

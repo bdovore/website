@@ -157,10 +157,9 @@ class Compte extends Bdo_Controller {
                     "YESISSELECTED" => ($this->User->OPEN_COLLEC == 'Y' ? 'Selected' : ''),
                     "NOISSELECTED" => ($this->User->OPEN_COLLEC == 'N' ? 'Selected' : ''),
                     "URLCOLLEC" => BDO_URL . 'guest?user=' . encodeUserId($profile_user_id),
-                    "OPTIONDISPLAY" => GetOptionValue($my_options, $this->User->row_display),
-                    "OPTIONDISPLAYSERIE" => GetOptionValue($other_options, $this->User->rowserie),
+                    
                     "IS_NEWSLETTER" => ($this->User->ABT_NEWS == 1 ? 'Checked' : ''),
-                    "PICTURE" => $pathimage,
+                  
                     "OPTIONCARRE" => GetOptionValue($carre_options, $this->User->CARRE_TYPE),
                      "ADULTYESISSELECTED" => ($this->User->EXPLICIT_CONTENT == "1" ? 'Selected' : ''),
                     "ADULTNOISSELECTED" => ($this->User->EXPLICIT_CONTENT == "0" ? 'Selected' : '')));
@@ -203,13 +202,19 @@ class Compte extends Bdo_Controller {
         $act = getVal("act");
         if ($act == "post") {//Détermine le nombre de champs vides
             $champvide = 0;
-            reset($_POST);
-            while (list ($key, $val) = each($_POST)) {
-                if ($val == "") {
-                    $champvide++;
-                    $color[$key] = "#FF0000";
-                }
+            if (!issetNotEmpty($defaut_pass1)) {
+                $champvide++;
             }
+            if (!issetNotEmpty($defaut_pass2)) {
+                $champvide++;
+            }
+            if (!issetNotEmpty($defaut_email)) {
+                $champvide++;
+            }
+            if (!issetNotEmpty($default_username)) {
+                $champvide++;
+            }
+            
 
             if ($champvide != 0) {
                 $errornum = 1;
@@ -279,8 +284,8 @@ class Compte extends Bdo_Controller {
             ("USERNAME" => $default_username,
             "PASSWORD1" => $defaut_pass1,
             "PASSWORD2" => $defaut_pass2,
-            "NOM" => $default_nom,
-            "PRENOM" => $default_prenom,
+        //    "NOM" => $default_nom,
+          //  "PRENOM" => $default_prenom,
             "EMAIL" => $defaut_email,
             "COLORNEWUSER" => $color["NewUser"],
             "COLORNEWPASS1" => $color["NewPass1"],

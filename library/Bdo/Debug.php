@@ -15,7 +15,7 @@ class Bdo_Debug {
 
         public $CEinfoVar = array();
 
-
+        public $countQuery = 0;
         private static $instance;
 
 
@@ -197,7 +197,7 @@ class Bdo_Debug {
         {
             Bdo_Debug::getInstance();
             $included_files = get_included_files();
-
+            $txt = "";
             $mem = memory_get_usage();
 
             $debugIncludeFile_div = new Bdo_Onglet('debugIncludeFile',count($included_files)." fichiers inclus / ".affFormatByteDown($mem,3,2)." de mémoire utilisée",'cfgonglet');

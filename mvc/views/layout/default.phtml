@@ -20,7 +20,8 @@ $jquery = $view->getHelper('jquery');
 <meta property="og:title" content="<?php echo $view->PAGETITLE;?>" />
 <meta property="og:type" content="<?php echo $view->opengraph["type"] ;?>" />
 <meta property="og:url" content="<?php echo BDO_URL.$_SERVER['REQUEST_URI']; ?>" />
-<meta property="og:image" content="<?php echo $view->opengraph["image"] ;?>" />
+<?php if (isset($view->opengraph["image"])) { ?>
+<meta property="og:image" content="<?php echo $view->opengraph["image"] ;?>" /> <?php } ?>
     <?php if ($view->opengraph["type"] == "book") { ?>
         <meta property="book:author" content="<?php echo $view->opengraph["author"] ;?>" />
         <meta property="book:isbn" content="<?php echo $view->opengraph["isbn"] ;?>" />

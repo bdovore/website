@@ -1,5 +1,5 @@
 <div class="cadre1" style="min-height:500px;">
-    <?php if ($view->validInscription) { ?>
+    <?php if (issetNotEmpty($view->validInscription)) { ?>
         <h2>Inscription réussie !</h2>
         Votre inscription a bien été enregistrée sur le site. <br>
         <?php if ($view->source == "ios") { ?>
