@@ -149,7 +149,7 @@ class Leguide extends Bdo_Controller
 
                         WHERE note_tome.NB_NOTE_TOME> 5
 
-                        ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
+                        ".(isset($_GET['a_idGenre']) ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
                              and g.ORIGINE = '".$filter_origine ."'
                         ORDER BY (note_tome.MOYENNE_NOTE_TOME*log(note_tome.NB_NOTE_TOME)) DESC ".$limit);
 
@@ -167,7 +167,7 @@ class Leguide extends Bdo_Controller
                     $dbs_serie = $this->Serie->load('c', "
 
                         WHERE `bd_edition_stat`.`NBR_USER_ID_SERIE` > 100
-                        ".($_GET['a_idGenre'] ? "AND bd_genre.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
+                        ".(isset($_GET['a_idGenre']) ? "AND bd_genre.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
                         and bd_genre.origine = '".$filter_origine ."'
                      GROUP BY ID_SERIE   ORDER BY `bd_edition_stat`.`NBR_USER_ID_SERIE` DESC ".$limit);
 
