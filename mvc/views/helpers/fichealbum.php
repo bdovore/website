@@ -93,7 +93,7 @@ class FicheAlbum {
         return $html;
     }
 
-    public function big($o_tome, $sep = true, $getUrlSerie = true, $exclu = false) {
+    public function big($o_tome, $sep = true, $getUrlSerie = true, $exclu = false, $is_edition = false) {
         if (is_array($o_tome)) {
             $o_tome = (object) $o_tome;
         }
@@ -101,7 +101,7 @@ class FicheAlbum {
         $html = '
             <div class="cadre1 fiche_big" itemscope itemtype="http://schema.org/Book">
             <div style="float:left" class="mw50">
-            ' . $this->urlAlbum($o_tome, 'couvBig') . '
+            ' . $this->urlAlbum($o_tome, 'couvBig', $is_edition = $is_edition) . '
             </div>
             <div class="mw50 couvleft">';
 

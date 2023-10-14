@@ -74,7 +74,7 @@ foreach ($view->dbs_tome->a_dataQuery as $tome) {
     if ($tr)
         echo "<tr>";
 
-    echo "<td class='mw50'>" . $ficheAlbum->big($tome,$sep=true,$getUrlSerie=true) . "</td>";
+    echo "<td class='mw50'>" . $ficheAlbum->big($tome,$sep=true,$getUrlSerie=true, $is_edition = true) . "</td>";
 
     if (!$tr) {
         echo "</tr>";

@@ -235,11 +235,26 @@ FROM bd_edition en
 
         return Db_affected_rows();
        }
-
+      
     public function replaceIdEditeur($source_id, $dest_id) {
         // Focntion qui remplace un editeur par un autre dans toutes les éditions
          Db_query("UPDATE bd_edition SET id_editeur = " . intval($dest_id) . " where id_editeur = " . intval($source_id));
 
         return Db_affected_rows();
+    }
+    
+    public function getAlbumForCollection($id_collection, $limit = "") {
+        // filtre et renvoie la liste des albums d'un auteur en tant que scénariste
+        $order = " order by NOM_SERIE, NUM_TOME";
+        return $this->load("c"," WHERE c.id_collection = ".intval($id_collection). " ".$order." ".$limit);
+
+    }
+    
+    public function getLastAlbumForCollection($id_collection, $nb=5) {
+        // retourne les $nb derniers ajout dans la bae pour l'auteur
+       $where = " WHERE c.id_collection = ".intval($id_collection);
+
+       $order = " ORDER BY bd_tome.ID_TOME desc";
+       return $this->load("c",$where.$order." limit 0,".intval($nb));
     }
 }
