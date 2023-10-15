@@ -100,7 +100,7 @@ LEFT JOIN `bd_editeur` USING(`ID_EDITEUR`)
          */
         $query = "SELECT count(distinct(bd_tome.ID_TOME)) as numofalb
     FROM bd_tome
-    INNER JOIN bd_edition ON bd_tome.ID_EDITION=bd_edition.ID_EDITION
+    INNER JOIN bd_edition ON bd_tome.ID_TOME=bd_edition.ID_TOME
     WHERE bd_edition.id_collection=" . intval($id_collection);
         $resultat = Db_query($query);
         $obj = Db_fetch_object($resultat);
