@@ -105,7 +105,7 @@ class Bdo_Debug {
                         break;
                     }
                 case "string" : $html .=  "<br />".$txt_tab."= \"".$val."\" (".gettype($val).")"; break;
-                default : $html .=  "<br />".$txt_tab."= ".htmlentities($val,ENT_QUOTES)." (".gettype($val).")"; break;
+                default : $html .=  "<br />".$txt_tab."= ". (is_null($val) ? "" : htmlentities($val,ENT_QUOTES) )." (".gettype($val).")"; break;
             }
             return $html;
         }

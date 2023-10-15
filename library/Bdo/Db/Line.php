@@ -573,11 +573,11 @@ class Bdo_Db_Line
                     $whereUkQuery = implode(' AND ', $a_conditionUk);
                     // compte le nombre de ligne avec la même valeur transmise
                     // pour la uk en dehors de la pk
-
+                     
                     if (0 < Db_CountRow("
                 SELECT * FROM `" . $this->schema_name . "`.`" . $this->table_name . "`
-                WHERE " . $whereUkQuery . "
-                AND " . $this->wherePkQueryNot)) {
+                WHERE " . $whereUkQuery . issetNotEmpty($this->wherePkQueryNot) ? "
+                AND " . $this->wherePkQueryNot : "")) {
                         $error_uk = "[";
                         foreach ($a_cons_column as $column_name) {
                             $error_uk .= " " . $this->a_column[$column_name]->TITRE_CHAMP . " ";

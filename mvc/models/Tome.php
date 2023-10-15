@@ -355,7 +355,7 @@ class Tome extends Bdo_Db_Line
             WHERE
                 (bd_tome.flg_int ='O' OR bd_tome.flg_type = 1)
 
-                AND ua.id_edition is null
+                
                 AND NOT EXISTS (
                         SELECT NULL
                         FROM users_exclusions uet

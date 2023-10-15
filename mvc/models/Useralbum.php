@@ -300,15 +300,18 @@ class Useralbum extends Bdo_Db_Line
               $req .=             $this->getReqAuteur($user_id,'id_color',$search) . $where;
               $req .= " union " . $this->getReqAuteur($user_id,'id_color_alt',$search) . $where;
             }
-          }
-
-          $req  = "
+            $req  = "
           select distinct auteur
           from (" . $req . "
             ) a 
           ";
-
+          
           $nbauteurs  = Db_CountRow($req);
+          } else {
+              $nbauteurs = 0;
+          }
+
+          
         }
         
         $a_result = array(

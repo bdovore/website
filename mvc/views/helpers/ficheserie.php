@@ -1,5 +1,5 @@
 <?php
-
+#[AllowDynamicProperties]
 class FicheSerie {
 
     public function urlSerie($o_serie, $class = 'couvBig')

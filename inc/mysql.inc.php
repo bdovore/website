@@ -193,7 +193,7 @@ function Db_CountRow ($resul_or_query=false,$connexion=false)
         $query_count = "SELECT COUNT(1) AS NBR ".(stristr($resul_or_query,"FROM"));
         else
         $query_count = "SELECT COUNT(1) AS NBR FROM (".$resul_or_query.") e";
-
+        
         $list_count = $connexion->query ($query_count);
         $obj_count = Db_fetch_object($list_count);
         $nbr = $obj_count ? $obj_count->NBR : 0 ;
@@ -201,7 +201,7 @@ function Db_CountRow ($resul_or_query=false,$connexion=false)
     }
     else if($resul_or_query)
     {
-        $nbr = $resul_or_query->num_rows;
+        $nbr = isset($resul_or_query->num_rows) ? intval($resul_or_query->num_rows) : 0;
     }
     return $nbr;
 }

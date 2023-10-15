@@ -84,6 +84,9 @@ class SerieBD extends Bdo_Controller {
         } else {
              $nbalbum = 0;
              $serieExclu = false;
+             $tomesExclus = null;
+             $nbmanquant = null;
+             
         }
 
         $this->view->set_var(array(
