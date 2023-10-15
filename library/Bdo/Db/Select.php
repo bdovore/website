@@ -1,5 +1,5 @@
 <?php
-
+#[AllowDynamicProperties]
 class Bdo_Db_Select
 {
     public $queryFull = null;

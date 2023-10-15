@@ -1,5 +1,5 @@
 <?php
-
+#[AllowDynamicProperties]
 class Bdo_Db_Search extends Bdo_Db_Select
 {
     public $a_filtreSearch=array();

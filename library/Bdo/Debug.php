@@ -5,7 +5,7 @@
  * @author laurent
  *
  */
-
+#[AllowDynamicProperties]
 class Bdo_Debug {
         public $a_exec_time = array();
 

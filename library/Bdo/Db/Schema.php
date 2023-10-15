@@ -5,6 +5,7 @@
  * @author laurent
  *
  */
+#[AllowDynamicProperties]
 class Bdo_Db_Schema {
 
     /**

@@ -5,6 +5,7 @@
  * @author laurent
  *
  */
+#[AllowDynamicProperties]
 class Bdo_Db_Line
 {
 
@@ -501,9 +502,9 @@ class Bdo_Db_Line
 
     public function delete ()
     {
-        if (READONLY) {
+       /*` if (READONLY) {
             return;
-        }
+        } */
 
         $this->wherePk();
         if (empty($this->error)) $this->controlPk();
@@ -596,13 +597,13 @@ class Bdo_Db_Line
 
     public function update ()
     {
-        if (READONLY) {
+       /* if (READONLY) {
             //problème si on crée un 'error', les utilisateurs ne peuvent plus se connecter :
             //autoLogin appelle User->addNbConnect() qui cause un update et autoLogin() refuse
             //le login si 'error' est set. Il faudrait prévoir un $this->warning[] = ...
             //$this->error[] = "Read-only mode is ON.";
             return;
-        }
+        } */
 
         $this->wherePk();
 
