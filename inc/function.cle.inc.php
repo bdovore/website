@@ -84,6 +84,8 @@ function EAN_to_ISBN($EAN) {
  *
  */
 function check_EAN($EAN) {
+    if (is_null($EAN)) return false;
+    if (strlen($EAN) != 13) return false;
     // parse le code EAN
     for($i = 1; $i <= 13; $i ++) {
         $letter [$i] = substr ( $EAN, $i - 1, 1 );
@@ -106,6 +108,8 @@ function check_EAN($EAN) {
  *
  */
 function check_ISBN($ISBN) {
+    if (is_null($ISBN)) return false;
+    if (strlen($ISBN) != 10) return false;
     // parse le code ISBN
     for($i = 1; $i <= 10; $i ++) {
         $letter [$i] = (substr ( $ISBN, $i - 1, 1 ) == 'X' ? 10 : substr ( $ISBN, $i - 1, 1 ));

@@ -85,11 +85,14 @@ function deleteProposition(idpropale,typeprop){
         <tbody>
         <!-- BEGIN PropBlock -->
         <?php if (issetNotEmpty($view->dbs_prop))  { foreach ($view->dbs_prop->a_dataQuery as $prop) {
-                $date_parution = new DateTime($prop->DTE_PARUTION);
+                $stylevaliddelay =  "";
+                if (!is_null($prop->DTE_PARUTION)) {
+                    $date_parution = new DateTime($prop->DTE_PARUTION);
 
-                if ($date_parution > $date_courante_21){
-            $stylevaliddelay = 'style="background-color: #FFDB70;" title="Parution le '.$prop->DTE_PARUTION.'"';
+                    if ($date_parution > $date_courante_21){
+                        $stylevaliddelay = 'style="background-color: #FFDB70;" title="Parution le '.$prop->DTE_PARUTION.'"';
 
+                    }
                 }
                 ?>
             <tr>

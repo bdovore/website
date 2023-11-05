@@ -1160,3 +1160,11 @@ function clean_rss ($str) {
 
     return $str_ret;
 }
+
+function if_null_quote ($str) {
+    if (is_null($str)) {
+        return "";
+    } else {
+        return $str;
+    }
+}

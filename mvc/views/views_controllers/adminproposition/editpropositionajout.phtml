@@ -94,7 +94,7 @@ function verifAddExisting(myIdTome,myAction) {
                                 </div>
                             </td>
                             <td>
-                                <input name="txtSerie" type="text" id="txtSerie3" value="<?php echo $view->SERIE;?>" size="40" class="<?php echo $view->CLSERIE;?>" /> <?php echo $view->LIENEDITSERIE;?>
+                                <input name="txtSerie" type="text" id="txtSerie3" value="<?php echo $view->SERIE;?>" size="40" class="<?php echo $view->CLSERIE;?>" /> <?php echo if_null_quote($view->LIENEDITSERIE);?>
                             </td>
                             <td>
                                 <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('serie',document.myform.txtSerie.value,'myform','txtSerie',true)" />
@@ -395,7 +395,7 @@ function verifAddExisting(myIdTome,myAction) {
                                     <span class="texte">Commentaires des correcteurs<br /></span>
                                     <textarea name="txtCommentCorr" class="textarea_description_edition" style="background-color: <?php echo $view->COLOR_STATUS;?>; border: 1px dotted #FFFFFF;"><?php echo $view->CORRCOMMENT;?></textarea>
                                     <br />
-                                    <?php echo $view->CURRENTSTATUS;?>
+                                    <?php echo isset($view->CURRENTSTATUS) ? $view->CURRENTSTATUS : "" ;?>
                                     <input name="txtComBut" value="Valider" type="submit" />
                                 </form>
                             </td>

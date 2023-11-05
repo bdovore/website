@@ -45,16 +45,16 @@ class Export extends Bdo_Controller {
                         // Determine le flag achat
                         $where = " WHERE ua.user_id = ".$_SESSION["userConnect"]->user_id;
                         if ($contenu == 0) {
-                            $nomFichier = "Collection au " . strftime("%d-%m-%Y");
+                            $nomFichier = "Collection au " . date("d-m-Y");
                             $where .= " and flg_achat = 'N' ";
                         } else if ($contenu == 1) {
-                            $nomFichier = "Achats futurs au " . strftime("%d-%m-%Y");
+                            $nomFichier = "Achats futurs au " . date("d-m-Y");
                             $where .= " and flg_achat = 'O' ";
                         } else if ($contenu == 4) {
-                            $nomFichier = "Albums lus au " . strftime("%d-%m-%Y");
+                            $nomFichier = "Albums lus au " . date("d-m-Y");
                             $where .= " and flg_lu = 'O' ";
                         } else {
-                            $nomFichier = "Collection et Achats futurs au " . strftime("%d-%m-%Y");
+                            $nomFichier = "Collection et Achats futurs au " . date("d-m-Y");
 
                         }
                         $order = " ORDER BY s.tri, s.NOM, bd_tome.NUM_TOME,  en.DTE_PARUTION";
@@ -109,7 +109,7 @@ class Export extends Bdo_Controller {
                         //$entete = array('Serie', 'Titre', 'Tome', 'ISBN', 'Genre', 'Scenariste', 'Dessinateur', 'Editeur', 'Collection', 'Date parution');
                         //$largeur = array(20, 20, 5, 10, 15, 15, 15, 15, 18, 15);
                         $nbpages = 100;
-                        $nomFichier = "Albums manquants au " . strftime("%d-%m-%Y");
+                        $nomFichier = "Albums manquants au " . date("d-m-Y");
                 }
 
                 switch ($info) {
@@ -213,7 +213,7 @@ class Export extends Bdo_Controller {
                             $sep_line = "";
                             $txtCol = "";
                             foreach ($a_line as $cell) {
-                                $txtCol .= $sep_line.'"'.preg_replace('/"/','""',$cell).'"';
+                                $txtCol .= $sep_line.'"'.($cell ? preg_replace('/"/','""',$cell) : "").'"';
                                 $sep_line = $sep;
                             }
                             echo $txtCol . "\n";
@@ -501,6 +501,8 @@ class Export extends Bdo_Controller {
                 for ($i = 0; $i <= 20; $i++) {
                     if (substr($codesel, $i, 1) == "1") {
                         $this->view->set_var("SELFIELD" . $i, 'checked');
+                    } else {
+                        $this->view->set_var("SELFIELD" . $i, '');
                     }
                 }
 
@@ -583,7 +585,7 @@ class Export extends Bdo_Controller {
                                
                             }
                             if (in_array("19", $sel_field)) $a_line[] = $tome->EAN_EDITION;
-                             if (in_array("20", $sel_field))$a_line[] = $tome->FLG_LU;
+                            if (in_array("20", $sel_field))$a_line[] = $tome->FLG_LU;
 
                             $dataArray[] = $a_line;
                         }
@@ -622,7 +624,7 @@ class Export extends Bdo_Controller {
             $imdata = base64_encode($im);
         } else {
 
-            $im  = file_get_contents(BDO_DIR_COUV . "default.png");
+             $im  = file_get_contents(BDO_DIR_COUV . "default.png");
              $imdata = base64_encode($im);
         }
                     switch (substr($infos["IMG_COUV"],-3)) {
@@ -669,7 +671,7 @@ class Export extends Bdo_Controller {
                                                     <td>Dépôt Légal  </td><td> '. htmlspecialchars($infos["DATE_PARUTION"]) .' </td>
                                     </tr>
                                     <tr>
-                                                    <td>ISBN  </td><td> '. htmlspecialchars($infos["ISBN"]) .'  </td>
+                                                    <td>ISBN  </td><td> '. (is_null($infos["ISBN"]) ? "" : htmlspecialchars($infos["ISBN"])) .'  </td>
                                     </tr>
                                     </table>
                             </td>

@@ -26,6 +26,8 @@ class Adminproposition extends Bdo_Controller {
             $validationdelay = 30; //nbre de jours après lesquels on ne valide pas (pour les parutions futures)
             // LISTE LES PROPOSALS
             $this->loadModel("User_album_prop");
+            $dbs_prop = NULL;
+            $dbs_edition = NULL;
             switch ($type) {
                 case "AJOUT" :
                     $titre_admin = "Nouveaux Albums en attente";
@@ -227,6 +229,7 @@ private function getDateBeforeValid() {
             // Determine l'URL image
             if (is_null($this->User_album_prop->IMG_COUV) | ($this->User_album_prop->IMG_COUV == '')) {
                 $url_image = BDO_URL_COUV . "default.png";
+                $dim_image = imgdim($url_image);
             } else {
                 $url_image = BDO_URL_IMAGE . "tmp" . DS . $this->User_album_prop->IMG_COUV;
                 $dim_image = imgdim(BDO_DIR_UPLOAD . $this->User_album_prop->IMG_COUV);
@@ -234,27 +237,27 @@ private function getDateBeforeValid() {
 
             $this->view->set_var(array(
                 "DATEBEFOREVALID" => $this->getDateBeforeValid(),
-                "PROPID" => stripslashes($this->User_album_prop->ID_PROPOSAL),
-                "TITRE" => stripslashes($this->User_album_prop->TITRE),
-                "CLTITRE" => ($this->User_album_prop->TITRE != '' ? "flat" : "to_be_corrected"),
-                "ORITITRE" => stripslashes($this->User_album_prop->TITRE),
-                "IDSERIE" => stripslashes($this->User_album_prop->ID_SERIE),
-                "CLIDSERIE" => (is_numeric($this->User_album_prop->ID_SERIE) ? "flat" : "to_be_corrected"),
-                "ORISERIE" => stripslashes($this->User_album_prop->SERIE),
-                "TOME" => $this->User_album_prop->NUM_TOME,
+                "PROPID" => stripslashes(if_null_quote($this->User_album_prop->ID_PROPOSAL)),
+                "TITRE" => stripslashes(if_null_quote($this->User_album_prop->TITRE)),
+                "CLTITRE" => (if_null_quote($this->User_album_prop->TITRE) != '' ? "flat" : "to_be_corrected"),
+                "ORITITRE" => stripslashes(if_null_quote($this->User_album_prop->TITRE)),
+                "IDSERIE" => stripslashes(if_null_quote($this->User_album_prop->ID_SERIE)),
+                "CLIDSERIE" => (is_numeric(if_null_quote($this->User_album_prop->ID_SERIE)) ? "flat" : "to_be_corrected"),
+                "ORISERIE" => stripslashes(if_null_quote($this->User_album_prop->SERIE)),
+                "TOME" => if_null_quote($this->User_album_prop->NUM_TOME),
                 "CLTOME" => "flat",
-                "PRIX_VENTE" => $this->User_album_prop->PRIX,
-                "ISINT" => (($this->User_album_prop->FLG_INT == 'O') ? 'checked' : ''),
-                "OPTTYPE" => GetOptionValue($opt_type, $this->User_album_prop->FLG_TYPE),
-                "IDGENRE" => $this->User_album_prop->ID_GENRE,
-                "CLIDGENRE" => (is_numeric($this->User_album_prop->ID_GENRE) ? "flat" : "to_be_corrected"),
-                "ORIGENRE" => $this->User_album_prop->GENRE,
-                "IDSCEN" => $this->User_album_prop->ID_SCENAR,
+                "PRIX_VENTE" => if_null_quote($this->User_album_prop->PRIX),
+                "ISINT" => ((if_null_quote($this->User_album_prop->FLG_INT) == 'O') ? 'checked' : ''),
+                "OPTTYPE" => GetOptionValue($opt_type, if_null_quote($this->User_album_prop->FLG_TYPE)),
+                "IDGENRE" => if_null_quote($this->User_album_prop->ID_GENRE),
+                "CLIDGENRE" => (is_numeric(if_null_quote($this->User_album_prop->ID_GENRE)) ? "flat" : "to_be_corrected"),
+                "ORIGENRE" => if_null_quote($this->User_album_prop->GENRE),
+                "IDSCEN" => if_null_quote($this->User_album_prop->ID_SCENAR),
                 "CLIDSCEN" => (is_numeric($this->User_album_prop->ID_SCENAR) ? "flat" : "to_be_corrected"),
                 "ORISCENARISTE" => $this->User_album_prop->SCENAR,
                 "IDSCENALT" => $this->User_album_prop->ID_SCENAR_ALT,
                 "CLIDSCENALT" => "flat",
-                "ORISCENARISTEALT" => $this->User_album_prop->SCENARALT,
+                "ORISCENARISTEALT" => isset($this->User_album_prop->SCENARALT) ? $this->User_album_prop->SCENARALT: NULL,
                 "IDEDIT" => $this->User_album_prop->ID_EDITEUR,
                 "CLIDEDIT" => (is_numeric($this->User_album_prop->ID_EDITEUR) ? "flat" : "to_be_corrected"),
                 "ORIEDITEUR" => $this->User_album_prop->EDITEUR,
@@ -263,13 +266,13 @@ private function getDateBeforeValid() {
                 "ORIDESSINATEUR" => $this->User_album_prop->DESSIN,
                 "IDDESSALT" => $this->User_album_prop->ID_DESSIN_ALT,
                 "CLIDDESSALT" => "flat",
-                "ORIDESSINATEURALT" => $this->User_album_prop->DESSINALT,
+                "ORIDESSINATEURALT" => isset($this->User_album_prop->DESSINALT) ? $this->User_album_prop->DESSINALT : NULL,
                 "IDCOLOR" => $this->User_album_prop->ID_COLOR,
                 "CLIDCOLOR" => (is_numeric($this->User_album_prop->ID_COLOR) ? "flat" : "to_be_corrected"),
                 "ORICOLORISTE" => $this->User_album_prop->COLOR,
                 "IDCOLORALT" => $this->User_album_prop->ID_COLOR_ALT,
                 "CLIDCOLORALT" => "flat",
-                "ORICOLORISTEALT" => $this->User_album_prop->COLORALT,
+                "ORICOLORISTEALT" => isset($this->User_album_prop->COLORALT) ? $this->User_album_prop->COLORALT : "",
                 "IDCOLLEC" => $this->User_album_prop->ID_COLLECTION,
                 "CLIDCOLLEC" => (is_numeric($this->User_album_prop->ID_COLLECTION) ? "flat" : "to_be_corrected"),
                 "ORICOLLECTION" => $this->User_album_prop->COLLECTION,
@@ -285,28 +288,28 @@ private function getDateBeforeValid() {
                 "CLDTPAR" => "flat",
                 "URLIMAGE" => $url_image,
                 "DIMIMAGE" => $dim_image,
-                "HISTOIRE" => stripslashes($this->User_album_prop->HISTOIRE),
-                "SERIE" => is_null($this->User_album_prop->ID_SERIE) ? stripslashes($this->User_album_prop->SERIE) : stripslashes($this->User_album_prop->ACTUSERIE),
+                "HISTOIRE" => stripslashes(if_null_quote($this->User_album_prop->HISTOIRE)),
+                "SERIE" => is_null($this->User_album_prop->ID_SERIE) ? stripslashes(if_null_quote($this->User_album_prop->SERIE)) : stripslashes(if_null_quote($this->User_album_prop->ACTUSERIE)),
                 "CLSERIE" => ($this->User_album_prop->SERIE == $this->User_album_prop->ACTUSERIE ? "flat" : "has_changed"),
                 "GENRE" => is_null($this->User_album_prop->ID_GENRE) ? $this->User_album_prop->GENRE : $this->User_album_prop->ACTUGENRE,
                 "CLGENRE" => ($this->User_album_prop->GENRE == $this->User_album_prop->ACTUGENRE ? "flat" : "has_changed"),
-                "SCENARISTE" => is_null($this->User_album_prop->ID_SCENAR) ? $this->User_album_prop->ACTUSCENAR : ($this->User_album_prop->PSEUDO_SCENAR),
+                "SCENARISTE" => is_null($this->User_album_prop->ID_SCENAR) ? $this->User_album_prop->PSEUDO_SCENAR : ($this->User_album_prop->SCENAR),
                 "CLSCENARISTE" => ($this->User_album_prop->PSEUDO_SCENAR == $this->User_album_prop->SCENAR ? "flat" : "has_changed"),
-                "SCENARISTEALT" => is_null($this->User_album_prop->ID_SCENAR_ALT) ? ($this->User_album_prop->SCENARALT) : ($this->User_album_prop->PSEUDO_SCENAR_ALT),
-                "CLSCENARISTEALT" => ($this->User_album_prop->PSEUDO_SCENAR_ALT == $this->User_album_prop->SCENARALT ? "flat" : "has_changed"),
+                "SCENARISTEALT" => is_null($this->User_album_prop->ID_SCENAR_ALT) ? ($this->User_album_prop->SCENAR_ALT) : ($this->User_album_prop->PSEUDO_SCENAR_ALT),
+                "CLSCENARISTEALT" => ($this->User_album_prop->PSEUDO_SCENAR_ALT == $this->User_album_prop->SCENAR_ALT ? "flat" : "has_changed"),
                 "DESSINATEUR" => is_null($this->User_album_prop->ID_DESSIN) ? ($this->User_album_prop->DESSIN) : ($this->User_album_prop->PSEUDO_DESSIN),
                 "CLDESSINATEUR" => ($this->User_album_prop->PSEUDO_DESSIN == $this->User_album_prop->DESSIN ? "flat" : "has_changed"),
-                "DESSINATEURALT" => is_null($this->User_album_prop->ID_DESSIN_ALT) ? ($this->User_album_prop->DESSINALT) : ($this->User_album_prop->PSEUDO_DESSIN_ALT),
-                "CLDESSINATEURALT" => ($this->User_album_prop->PSEUDO_DESSIN_ALT == $this->User_album_prop->ORIDESSINALT ? "flat" : "has_changed"),
+                "DESSINATEURALT" => is_null($this->User_album_prop->ID_DESSIN_ALT) ? ($this->User_album_prop->DESSIN_ALT) : ($this->User_album_prop->PSEUDO_DESSIN_ALT),
+                "CLDESSINATEURALT" => ($this->User_album_prop->PSEUDO_DESSIN_ALT == $this->User_album_prop->DESSIN_ALT ? "flat" : "has_changed"),
                 "COLORISTE" => is_null($this->User_album_prop->ID_COLOR) ? ($this->User_album_prop->COLOR) : ($this->User_album_prop->PSEUDO_COLOR),
                 "CLCOLORISTE" => ($this->User_album_prop->PSEUDO_COLOR == $this->User_album_prop->COLOR ? "flat" : "has_changed"),
-                "COLORISTEALT" => is_null($this->User_album_prop->ID_COLOR_ALT) ? ($this->User_album_prop->COLORALT) : ($this->User_album_prop->PSEUDO_COLOR_ALT),
-                "CLCOLORISTEALT" => ($this->User_album_prop->PSEUDO_COLOR_ALT == $this->User_album_prop->COLORALT ? "flat" : "has_changed"),
+                "COLORISTEALT" => is_null($this->User_album_prop->ID_COLOR_ALT) ? ($this->User_album_prop->COLOR_ALT) : ($this->User_album_prop->PSEUDO_COLOR_ALT),
+                "CLCOLORISTEALT" => ($this->User_album_prop->PSEUDO_COLOR_ALT == $this->User_album_prop->COLOR_ALT ? "flat" : "has_changed"),
                 "EDITEUR" => is_null($this->User_album_prop->ID_EDITEUR) ? ($this->User_album_prop->EDITEUR) : ($this->User_album_prop->ACTUEDITEUR),
                 "CLEDITEUR" => ($this->User_album_prop->ACTUEDITEUR == $this->User_album_prop->EDITEUR ? "flat" : "has_changed"),
                 "COLLECTION" => is_null($this->User_album_prop->ID_COLLECTION) ? ($this->User_album_prop->COLLECTION) : ($this->User_album_prop->COLLECTION),
                 "CLCOLLECTION" => ($this->User_album_prop->COLLECTION == $this->User_album_prop->COLLECTION ? "flat" : "has_changed"),
-                "COMMENT" => stripslashes($this->User_album_prop->DESCRIB_EDITION),
+                "COMMENT" => $this->User_album_prop->DESCRIB_EDITION ? stripslashes($this->User_album_prop->DESCRIB_EDITION) : "",
                 "CORRCOMMENT" => $this->User_album_prop->CORR_COMMENT,
                 "OPTIONSTATUS" => GetOptionValue($opt_status, $this->User_album_prop->STATUS),
                 "COLOR_STATUS" => $color_status,
@@ -344,10 +347,12 @@ private function getDateBeforeValid() {
                 $this->view->set_var(
                         "LIENEDITSERIE", "<a href='" . BDO_URL . "admin/editserie?serie_id=" . stripslashes($this->User_album_prop->ID_SERIE) . "'><img src='" . BDO_URL_IMAGE . "edit.gif' width='18' height='13' border='0'></a>"
                 );
+            } else {
+                $this->view->set_var("LIENEDITSERIE", "");
             }
             // Détermine les albums ayant une syntaxe approchante
             $main_words = main_words(stripslashes($this->User_album_prop->TITRE));
-            if ($main_words[1][0] != '') {
+            if (isset($main_words[1][0])) {
                 $query = "
                         where
                                 bd_tome.titre like '%" . Db_Escape_String($main_words[0][0]) . "%" . DB_Escape_String($main_words[1][0]) . "%'
