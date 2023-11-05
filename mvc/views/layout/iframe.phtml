@@ -5,13 +5,13 @@ $jquery = $view->getHelper('jquery');
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title><?php echo $view->PAGETITLE;?></title>
+<title><?php echo isset($view->PAGETITLE) ? $view->PAGETITLE : "" ;?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="content-language" content="fr" />
 <meta name="description"
-    content="<?php echo htmlentities($view->DESCRIPTION);?> BDovore - Le site des collectionneurs de BD. Gérer votre collection de bandes dessinées en ligne et gratuitement !" />
+    content="<?php if (isset($view->DESCRIPTION)) echo htmlentities($view->DESCRIPTION);?> BDovore - Le site des collectionneurs de BD. Gérer votre collection de bandes dessinées en ligne et gratuitement !" />
 <meta name="keywords"
-    content="<?php echo htmlentities($view->KEYWORD);?>, bd, bandes dessinées, bandes, dessinées, bande, dessinée, profiler, bdprofiler, comics, manga, collection, collections, bdvore, collectionneur, dedicace, auteurs, albums, editeurs, gratuit, base de données, <?php echo $view->PAGEKEYWORD;?>" />
+    content="<?php if (isset($view->KEYWORD) ) echo htmlentities($view->KEYWORD);?>, bd, bandes dessinées, bandes, dessinées, bande, dessinée, profiler, bdprofiler, comics, manga, collection, collections, bdvore, collectionneur, dedicace, auteurs, albums, editeurs, gratuit, base de données, <?php echo $view->PAGEKEYWORD;?>" />
 <meta name="author" content="Tomlameche/Latruffe/Zéas" />
 <meta name="category" content="BD, bande dessinee" /> 
 <meta name="robots" content="index, follow" />
@@ -88,7 +88,7 @@ $jquery = $view->getHelper('jquery');
 
 </head>
 
-<body onLoad="<?php echo $view->BODYONLOAD;?>">
+<body onLoad="<?php echo isset($view->BODYONLOAD) ? $view->BODYONLOAD : "" ;?>">
 
 
 

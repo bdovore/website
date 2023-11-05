@@ -1567,16 +1567,25 @@ class Admin extends Bdo_Controller {
                        $wikideath = $entity->getPropertyValues('P570');
                        $wikinationality = $entity->getPropertyValues('P27');
                        
+                } else {
+                    $wikilabel = null;
+                    $wikidescription = null;
+                    $wikiimage =  null;
+                    $wikiwebsite = null;
+                    $wikibirth = null;
+                    $wikideath = null;
+                    $wikinationality =  null;
+                    $entityId = null;
                 }
                 $this->view->set_var(array
                     ("IDAUTEUR" => $this->Auteur->ID_AUTEUR,
                     "PSEUDO" => stripslashes($this->Auteur->PSEUDO),
                     "NOM" => (stripslashes($this->Auteur->NOM)),
                     "PRENOM" => (stripslashes($this->Auteur->PRENOM)),
-                    "ISSCENAR" => $this->Auteur->FLG_SCENAR == 1 ? checked : '',
-                    "ISDESSIN" => $this->Auteur->FLG_DESSIN == 1 ? checked : '',
-                    "ISCOLOR" => $this->Auteur->FLG_COLOR == 1 ? checked : '',
-                    "COMMENT" => (stripslashes($this->Auteur->COMMENT)),
+                    "ISSCENAR" => $this->Auteur->FLG_SCENAR == 1 ? "checked" : '',
+                    "ISDESSIN" => $this->Auteur->FLG_DESSIN == 1 ? "checked" : '',
+                    "ISCOLOR" => $this->Auteur->FLG_COLOR == 1 ? "checked" : '',
+                    "COMMENT" => (stripslashes(if_null_quote($this->Auteur->COMMENT))),
                     "DTNAIS" => $this->Auteur->DTE_NAIS,
                     "DTDECES" => $this->Auteur->DTE_DECES,
                     "DTNATION" => $this->Auteur->NATIONALITE,
