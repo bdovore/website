@@ -173,4 +173,17 @@ class FicheSerie {
 
       return $html;
     }
+    public function get_sponsor ($o_serie) {
+        $html="";
+        $img = true;
+        // budule
+        $variable = "";
+        $html .= "&nbsp;<a title=".'"'."Achetez d'occasion sur Budule !".'"' ." href='https://www.budule.fr/recherche-bd?series=".htmlentities($o_serie->NOM_SERIE);
+        if ($img) {
+            $html .= $variable."' target='_blank'><img src='" . BDO_URL_IMAGE . "budule.png' class='img-sponsor' height='30px' width='85px' style='align-content: center; margin-left: 20px;'></a>";
+        } else {
+            $html .= "' target='_blank'>Commandez sur Budule</a>";
+        }
+        return ($html);
+    }
 }
