@@ -453,6 +453,14 @@ class FicheAlbum {
             } else {
                 $html .= "' target='_blank'>Commandez sur Recylivre</a>";
             }
+            // budule
+            $variable = "";
+            $html .= "&nbsp;<a title='Achetez d'occasion sur Budule !' href='https://www.budule.fr/recherche-bd?series=".htmlentities($o_tome->NOM_SERIE);
+            if ($img) {
+                $html .= $variable."' target='_blank'><img src='" . BDO_URL_IMAGE . "budule.png' class='img-sponsor' height='30px' width='85px'></a>";
+            } else {
+                $html .= "' target='_blank'>Commandez sur Recylivre</a>";
+            }
         }   
        
         
