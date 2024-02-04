@@ -508,9 +508,12 @@ function tableOfFetchObj ($data, $a_onlyCol = array(), $specialChar = true)
     if (is_array($data)) {
         if (0 == count($data)) return false;
         $tab_objVar = get_object_vars(firstObjectArray($data));
+        $tab_col = array();
         foreach ($tab_objVar as $key => $val) {
             if (! stristr($key, 'bgcolor_')) {
-                $tab_col[]->name = $key;
+                $obj = new stdClass();
+                $obj->name = $key;
+                $tab_col[] = $obj;
             }
         }
         $tab_obj = $data;

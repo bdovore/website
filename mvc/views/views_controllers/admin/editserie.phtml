@@ -55,7 +55,7 @@ function valider(){
                     </tr>
                     <tr>
                         <td>Intro Série</td>
-                        <td colspan="4"><textarea name="txtSerieHist" id="txtSerieHist" class="<?php echo $view->CHAMPFORMSTYLE; ?>champ_commentaire"><?php echo nl2br($view->HISTOIRE_SERIE); ?></textarea></td>
+                        <td colspan="4"><textarea name="txtSerieHist" id="txtSerieHist" class="<?php echo $view->CHAMPFORMSTYLE; ?>champ_commentaire"><?php echo nl2br(if_null_quote($view->HISTOIRE_SERIE)); ?></textarea></td>
                     </tr>
                     <tr>
                         <td>Séries liées</td>

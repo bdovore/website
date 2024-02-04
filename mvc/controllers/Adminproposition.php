@@ -309,7 +309,7 @@ private function getDateBeforeValid() {
                 "CLEDITEUR" => ($this->User_album_prop->ACTUEDITEUR == $this->User_album_prop->EDITEUR ? "flat" : "has_changed"),
                 "COLLECTION" => is_null($this->User_album_prop->ID_COLLECTION) ? ($this->User_album_prop->COLLECTION) : ($this->User_album_prop->COLLECTION),
                 "CLCOLLECTION" => ($this->User_album_prop->COLLECTION == $this->User_album_prop->COLLECTION ? "flat" : "has_changed"),
-                "COMMENT" => $this->User_album_prop->DESCRIB_EDITION ? stripslashes($this->User_album_prop->DESCRIB_EDITION) : "",
+                "COMMENT" => !is_null($this->User_album_prop->DESCRIB_EDITION) ? stripslashes($this->User_album_prop->DESCRIB_EDITION) : "",
                 "CORRCOMMENT" => $this->User_album_prop->CORR_COMMENT,
                 "OPTIONSTATUS" => GetOptionValue($opt_status, $this->User_album_prop->STATUS),
                 "COLOR_STATUS" => $color_status,
@@ -542,7 +542,8 @@ private function getDateBeforeValid() {
                     "COMMENT" => postVal('txtCommentEdition'),
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
                     "VALID_DTE" => date('d/m/Y H:i:s'),
-                    "FLG_EXPLICIT" => (postVal("chkExplicit") == "checked" ? 1 : 0)
+                    "FLG_EXPLICIT" => (postVal("chkExplicit") == "checked" ? 1 : 0),
+                    "PROP_DTE" => $this->User_album_prop->PROP_DTE
                 ));
                 $this->Edition->update();
                 if (issetNotEmpty($this->Edition->error)) {

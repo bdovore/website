@@ -78,7 +78,7 @@ class Album extends Bdo_Controller {
             'PAGETITLE' => "Album BD : " . $o_tome->TITRE_TOME,
             "KEYWORD" => $o_tome->TITRE_TOME,
             'connected' => (!empty($_SESSION['userConnect']->user_id)),
-            "DESCRIPTION" => "Tout sur l'album BD " .$o_tome->TITRE_TOME . " "  . strip_tags( notIssetOrEmpty($this->Tome) ? $this->Edition->HISTOIRE_TOME :  $this->Tome->HISTOIRE_TOME),
+            "DESCRIPTION" => "Tout sur l'album BD " .$o_tome->TITRE_TOME . " "  . strip_tags( if_null_quote(notIssetOrEmpty($this->Tome) ? $this->Edition->HISTOIRE_TOME :  $this->Tome->HISTOIRE_TOME)),
             "mobile" => $mobile
         ));
 

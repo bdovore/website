@@ -258,21 +258,26 @@ class Controle extends Bdo_Controller
             </div>
             </form>';
 
-
-            if (issetNotEmpty(postVal('execformvalue'))  ) {
-                $title = $a_queryRegle[postVal('id_queryRegle]')]["title"];
-                if (isset($a_queryRegle[postVal('id_queryRegle')]["url"])) $url = $a_queryRegle[postVal('id_queryRegle')]["url"];
-                if (isset($a_queryRegle[postVal('id_queryRegle')]["colUrl"]))
+            $exec = postVal('execformvalue');
+            if (issetNotEmpty($exec)  ) {
+                $title = $a_queryRegle[postVal('id_queryRegle')]["title"];
+                if (isset($a_queryRegle[postVal('id_queryRegle')]["url"])) {
+                    $url = $a_queryRegle[postVal('id_queryRegle')]["url"];
+                }
+                if (isset($a_queryRegle[postVal('id_queryRegle')]["colUrl"])) {
                     $colUrl = $a_queryRegle[postVal('id_queryRegle')]["colUrl"];
-                if (isset($a_queryRegle[postVal('id_queryRegle')]["colExplode"]))
+                }
+                if (isset($a_queryRegle[postVal('id_queryRegle')]["colExplode"])) {
                     $colExplode = $a_queryRegle[postVal('id_queryRegle')]["colExplode"];
-                if (isset($a_queryRegle[postVal('id_queryRegle')]["urlExplode"]))
+                }
+                if (isset($a_queryRegle[postVal('id_queryRegle')]["urlExplode"])) {
                     $urlExplode = $a_queryRegle[postVal('id_queryRegle')]["urlExplode"];
+                }
 
                 $query = $a_queryRegle[postVal('id_queryRegle')]["query"];
                 $query .= " LIMIT 0,200";
-
-                if (issetNotEmpty(postVal('viewQuery'))) {
+                $viewQuery = postVal('viewQuery');
+                if (issetNotEmpty($viewQuery)) {
                     echo_pre($query);
                 }
 
@@ -301,7 +306,7 @@ class Controle extends Bdo_Controller
                 if ($nbr > 0) {
                     echo '<h3>' . $title . '</h3>';
                     echo $cmpt . ' lignes sur ' . $nbr;
-                    tableOfFetchObj($a_obj, $a_onlyCol, false);
+                    tableOfFetchObj($data = $a_obj, $specialChar= false);
                 } else {
                     echo 'Aucune ligne de resultat !';
                 }
