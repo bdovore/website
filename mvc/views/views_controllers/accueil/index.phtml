@@ -24,8 +24,28 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
          Besoin d'une visite guidée ?<a href="<?php echo BDO_URL; ?>tutoriel" style="font-weight: bold;"> Suivez le tutoriel BDovore !</a> <br>
         </p>
     </div>
+    
+    <hr class="expSep" />
+    <div class="cadre1" id="news_du_site">
+        <div class="middle_title" ><h3>A la Une</h3></div>
+        <div id="accordion" >
+
+           <?php $lastNews = $view->a_lastNews[0]; ?>
+
+            <div class="cadre1">
+                <h4><?php echo $lastNews->news_titre;?> - Postée par <?php echo $lastNews->news_posteur;?> </h4>
+                <div>
+                    <p>
+                        <?php echo $lastNews->news_text;?>
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
             <!-- Column 2 start -->
- <hr class="expSep" />
+
     
     <div class="cadre1">
         <div class="middle_title"><h3><a href="./leguide/avis">Dernières Critiques</a></h3></div>
@@ -145,14 +165,4 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
      <hr class="expSep" />
  </div>
          
-    
-<script>
-   $( document ).ready(function() { 
-       var fwidth = 650; //$("#newsfacebook").width();
-       var fheight = $("#news_du_site").height();
-        
-        $("#newsfacebook").append('<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fbdovore%2F&tabs=timeline&width='+fwidth + '&height='+ fheight+'&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false&appId=167515296514" width="100%" height="800" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>');
-    });
-       
-</script>
-    
+

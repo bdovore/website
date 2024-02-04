@@ -300,6 +300,9 @@ class Bdo_Db_Line
 
     public function ctrlDataPost ()
     {
+        if (!is_array($this->error)) {
+            $this->error = []; // S'assure que $this->error est un tableau
+           }
         foreach ($this->a_column as $column_name => $obj) {
             if (! isset($obj->EXTRA_CHAMP)) $obj->EXTRA_CHAMP = '';
 
@@ -308,7 +311,7 @@ class Bdo_Db_Line
                 if (is_null($this->a_dataColumn[$column_name])) {
                     if ('YES' == $obj->IS_NULLABLE) $this->a_updateColumn[$column_name] = "NULL";
                     else
-                        $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR3;
+                        $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . " must not be null";
                 }
                 else {
                     // vérification par type
@@ -320,7 +323,7 @@ class Bdo_Db_Line
                             {
                                 if (empty($obj->EXTRA_CHAMP)) {
                                     if (! ($this->a_updateColumn[$column_name] = PrepaDate($this->a_dataColumn[$column_name]))) {
-                                        $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR4;
+                                        $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . " bad date format";
                                     }
                                 }
                                 else {
@@ -334,7 +337,7 @@ class Bdo_Db_Line
                                     $this->a_updateColumn[$column_name] = "'" . $this->a_dataColumn[$column_name] . "'";
                                 }
                                 else {
-                                    $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] = [ ' . $this->a_dataColumn[$column_name] . ' ] : ' . LANG_INSERTERROR5;
+                                    $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] = [ ' . $this->a_dataColumn[$column_name] . ' ] : ' . "bad enum value";
                                 }
                                 break;
                             }
@@ -347,7 +350,7 @@ class Bdo_Db_Line
                                         $this->a_updateColumn[$column_name] = "'" . $this->a_dataColumn[$column_name] . "'";
                                     }
                                     else {
-                                        $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] = [ ' . $this->a_dataColumn[$column_name] . ' ] : ' . LANG_INSERTERROR5;
+                                        $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] = [ ' . $this->a_dataColumn[$column_name] . ' ] : ' . " format error";
                                     }
                                 }
                                 if ($a_data_set_update) {
@@ -368,7 +371,7 @@ class Bdo_Db_Line
                                     unset($retourVerifMaxNumValue);
                                 }
                                 else {
-                                    $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR6;
+                                    $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . "format error";
                                 }
 
                                 break;
@@ -397,7 +400,7 @@ class Bdo_Db_Line
                                     unset($retourVerifMaxNumValue);
                                 }
                                 else {
-                                    $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR6;
+                                    $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . "format error";
                                 }
 
                                 break;
@@ -405,7 +408,7 @@ class Bdo_Db_Line
                         case 'time':
                             if (empty($obj->EXTRA_CHAMP)) {
                                 if (! ($this->a_updateColumn[$column_name] = PrepaTime($this->a_dataColumn[$column_name]))) {
-                                    $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR7;
+                                    $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . "time format error";
                                 }
                             }
                             else {
@@ -475,14 +478,14 @@ class Bdo_Db_Line
                                         {
                                             if (stristr($obj->COLUMN_NAME, 'EMAIL')) {
                                                 if (! Bdo_Security::is_mail($this->a_dataColumn[$column_name])) {
-                                                    $this->error[] = "[ " . $obj->TITRE_CHAMP . " ] : " . LANG_INSERTERROR10;
+                                                    $this->error[] = "[ " . $obj->TITRE_CHAMP . " ] : " . "format error";
                                                 }
                                             }
                                             if ($obj->CHARACTER_MAXIMUM_LENGTH >= mb_strlen($this->a_dataColumn[$column_name])) {
                                                 $this->a_updateColumn[$column_name] = "'" . Db_Escape_String($this->a_dataColumn[$column_name]) . "'";
                                             }
                                             else {
-                                                $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . LANG_INSERTERROR11;
+                                                $this->error[] = '[ ' . $obj->TITRE_CHAMP . ' ] : ' . "length format error";
                                             }
                                         }
                                 }

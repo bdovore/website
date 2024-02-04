@@ -694,6 +694,7 @@ class Admin extends Bdo_Controller {
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
                     "ID_TOME" => $lid_tome,
                     "VALID_DTE" => date('d/m/Y H:i:s'),
+                    "PROP_DTE" => date('d/m/Y H:i:s'),
                     "FLG_EXPLICIT" => $explicit
                 ));
                 $this->Edition->update();
