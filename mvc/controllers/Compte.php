@@ -40,7 +40,7 @@ class Compte extends Bdo_Controller {
             }
 
 
-// Mettre à jour les informations
+            // Mettre à jour les informations
 
             if ($act == "update") {
                 // vérifie que ni nom, prénom ou email ne sont nuls
@@ -173,6 +173,13 @@ class Compte extends Bdo_Controller {
                 //$this->view->layout = "iframe";
                 $this->view->render();
             }
+        } else {
+            $this->view->set_var("PAGETITLE", "BDOVORE.com : Mon profil");
+            $this->view->layout = "iframe";
+            $this->view->set_var("CONNECTION", 1);
+                //$this->view->layout = "iframe";
+            $this->view->render();
+            
         }
     }
 

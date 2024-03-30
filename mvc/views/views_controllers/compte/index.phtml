@@ -3,7 +3,42 @@
     $(function() {
         $("#txtanniv").datepicker({dateFormat: "yy-mm-dd"});
     });
+    $("#loginContainer").hide();
 </script>
+<?php if ($view->CONNECTION == 1) { ?>
+<div class="cadre1" >
+    <br>
+    <h2 >&nbsp;Identifiez-vous pour modifier votre compte</h2>
+    <br>
+    <div >
+               
+                <div style="clear:both"></div>
+                <div>
+                    <form  method="post" action="<?php echo BDO_URL;?>">
+                        <fieldset id="loginBody">
+                            <fieldset>
+                                <div class="input-container">
+                                 <i class="fa fa-user icon"></i>
+                                <input type="text" name="user_login" id="user_login" placeholder="login"/>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <div class="input-container">
+                                 <i class="fa fa-key icon"></i>
+                                <input type="password" name="user_password" id="user_password" placeholder="Mot de passe" />
+                                </div>
+                            </fieldset>
+                            <input  type="submit" id="submitLoginConnect" name="submitLoginConnect" value="Se connecter" />
+                            <label for="chkvisit">Rester connecter</label><input type="checkbox" style="width:auto;margin-top: 12px;" id="chkvisit" name="chkvisit" />
+                        </fieldset>
+                        
+                        <span><a href="<?php echo BDO_URL;?>compte/forgotpass?" class="fancybox fancybox.iframe {width:600,height:300}">Mot de passe oublié ?</a></span>
+                         </form>
+                </div>
+            </div>
+    <br><br>
+</div>
+<?php  } else { ?>
 <div class="cadre1" style="margin-top: 5px;">
     <form name="form1" method="post" action="<?php echo BDO_URL; ?>compte?act=update&user_id=<?php echo $view->USERID; ?>">
         <br>
@@ -103,3 +138,4 @@
                "></div>
 
 </div>
+<?php } ?>
