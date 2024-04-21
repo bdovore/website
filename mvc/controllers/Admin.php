@@ -726,7 +726,9 @@ class Admin extends Bdo_Controller {
                             echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">URL image incomplete. Vous allez etre redirige.';
                             exit();
                         }
+                       
                         $img_couv = imgCouvFromUrl2($url_ary[0], $lid_tome, $lid_edition);
+                        
                     } else {
                         $img_couv = '';
                     }
@@ -755,6 +757,7 @@ class Admin extends Bdo_Controller {
                                 $new_w = $imagelargeur;
                             }
                             $new_image = imagecreatetruecolor($new_w, $new_h);
+                            
                             switch ($imagetype) {
                                 case "1":
                                     $source = imagecreatefromgif(BDO_DIR_COUV . $img_couv);
@@ -767,6 +770,9 @@ class Admin extends Bdo_Controller {
                                     break;
                                 case "6":
                                     $source = imagecreatefrombmp(BDO_DIR_COUV . $img_couv);
+                                    break;
+                                case IMAGETYPE_WEBP:
+                                    $source = imagecreatefromwebp(BDO_DIR_COUV. $img_couv);
                                     break;
                             }
                             imagecopyresampled($new_image, $source, 0, 0, 0, 0, $new_w, $new_h, $imagelargeur, $imagehauteur);
@@ -2379,6 +2385,11 @@ class Admin extends Bdo_Controller {
                     case "6":
                         $source = imagecreatefrombmp($imagedir . $newfilename);
                         break;
+                    
+                    case IMAGETYPE_WEBP:
+                        $source = imagecreatefromwebp(BDO_DIR_COUV. $img_couv);
+                        break;
+                    
                 }
 
                 imagecopyresampled($new_image, $source, 0, 0, 0, 0, $new_w, $new_h, $imagelargeur, $imagehauteur);
