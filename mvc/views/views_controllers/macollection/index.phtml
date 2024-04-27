@@ -132,7 +132,7 @@ $(document).ready(function() {
     <h2>Derniers achats</h2>
 
     <div class="scrollauto">
-        <table><tr>
+        <table><tr style = "vertical-align: top;">
             <?php
 
             foreach ($view->a_lastAchat->a_dataQuery as $o_tome) {
@@ -153,7 +153,7 @@ $(document).ready(function() {
     <h2>Derniers ajouts dans mes futurs achats</h2>
 
     <div class="scrollauto">
-        <table><tr>
+        <table><tr style = "vertical-align: top;">
             <?php
 
             foreach ($view->a_lastFuturAchat->a_dataQuery as $o_tome) {
@@ -163,7 +163,7 @@ $(document).ready(function() {
             }
 
             ?>
-        <tr>
+        </tr>
         </table>
         </div>
         <hr class="expSep"/>
