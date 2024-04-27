@@ -1,8 +1,0 @@
-CREATE TABLE IF NOT EXISTS `groupe_serie` (
-  `ID_GROUPE` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ID_SERIE_1` mediumint(11) NOT NULL,
-  `ID_SERIE_2` mediumint(9) NOT NULL,
-  PRIMARY KEY (`ID_GROUPE`),
-  KEY `SERIE1` (`ID_SERIE_1`),
-  KEY `SERIE2` (`ID_SERIE_2`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
