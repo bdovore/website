@@ -59,7 +59,10 @@ class AlbumComment extends Bdo_Controller {
             $comment = getVal('comment','');
             $note = getValInteger("note",0);
             $this->loadModel('Comment');
-
+            
+            if ($comment == "null") {
+                $comment = "";
+            }
             $this->Comment->load("c"," WHERE c.user_id = ".$user_id . " and c.id_tome = ".$id_tome);
 
             $this->Comment->set_dataPaste(
