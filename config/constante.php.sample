@@ -149,7 +149,7 @@ switch ($_SERVER["SERVER_NAME"]) {
     case '192.168.1.77':
     case 'localhost':
         {
-            error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
+            error_reporting(E_ALL);
 
             // use BDO_URL_RELATIVE here if available instead of /bdovore/beta/
             // NB: configure Apache correctly so that it directly redirects to ./public/
@@ -166,7 +166,7 @@ switch ($_SERVER["SERVER_NAME"]) {
             define('BDO_DIR_UPLOAD', BDO_DIR_IMAGE . 'tmp' . DS);
 
             define('BDO_DB_HOST', 'localhost');
-            define('BDO_DB_SID', 'bdovore');
+            define('BDO_DB_SID', 'Bdovore');
             define('BDO_DB_USER', 'root');
             define('BDO_DB_PWD', '');
 
@@ -175,7 +175,7 @@ switch ($_SERVER["SERVER_NAME"]) {
             define('FORUM_DB_USER', 'root');
             define('FORUM_DB_PWD', '');
 
-            define('DEBUG', true); // mode debug
+            define('DEBUG', false); // mode debug
             define('READONLY', false); // mode lecture seul
 
             break;
