@@ -155,7 +155,8 @@ class Macollection extends Bdo_Controller {
                 $last = $this->majLastUpdate($user_id);
                 $this->Useralbum->update();
                 if ($apiversion == 2 ) {
-                    $this->view->set_var('json', json_encode(array("error" => $this->Useralbum->error, "timestamp" => $last) ));
+                    $txtError = empty($this->Useralbum->error) ? "" : $this->Useralbum->error;
+                    $this->view->set_var('json', json_encode(array("error" => $txtError, "timestamp" => $last) ));
                 } else {
                     $this->view->set_var('json', json_encode( $this->Useralbum->error));
                 }
