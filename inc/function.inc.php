@@ -353,6 +353,9 @@ function check_image_type (&$type, &$error)
         case 'png':
             return '.png';
             break;
+        case 'webp':
+            return '.webp';
+            break;
         default:
             $error = true;
             $error_msg = "Wrong image type";
@@ -710,6 +713,7 @@ function imgCouvFromForm($lid_tome, $lid_edition) {
          $tmp_filename = tempnam(BDO_DIR_UPLOAD, uniqid(rand()) . '-');         
          $save = file_put_contents($tmp_filename,$avatar_data);
          $mime_type = mime_content_type($tmp_filename);
+         
          // Check la validité de l'image
         if (!preg_match('#image.([a-z]+)#i', $mime_type, $file_data2)) {
             $error = true;
