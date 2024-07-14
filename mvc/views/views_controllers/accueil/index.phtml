@@ -78,20 +78,21 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                  $close="";
                  $i = 0;
 
-                 echo "<div style='float:left; padding:1px;margin:0 auto;max-width:265px;'>";
+                 echo "<div style='float:left; padding:1px;margin:0 auto;/*max-width:265px;*/'>";
                 foreach ($view->ACTUAIR as $actu) { 
                      $i++;               
 
-                    echo "<div style='float:left;padding:2px;height:191px;'>".$ficheAlbum->urlAlbum($actu,$class="couvBig",$sponsor=FALSE)."</div>";
+                    echo "<div style='float:left;padding:2px;height:210px;'>".$ficheAlbum->urlAlbum($actu,$class="couvBig",$sponsor=FALSE)."</div>";
                      if ($i==4) {                    
                         echo "</div>";
                         $i=0;
-                         echo "<div style='float:left; padding:1px;margin:0 auto;max-width:275px;'>";
+                        echo "<div style='float:left; padding:1px;margin:0 auto;/*max-width:275px;*/'>";
+                        $close = "</div>";
                     }
                     //$genre = $actu->ORIGINE_GENRE;
 
-              } 
-              echo $close;
+                } 
+                echo $close;
               ?>
             </div>
        
