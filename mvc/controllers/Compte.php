@@ -13,6 +13,7 @@ class Compte extends Bdo_Controller {
         /*
          * Affichage des informations du compte ou création de compte
          */
+        $mobile = getVal("mobile",""); // check if mobile device detected
         if (User::minAccesslevel(2)) {
             $user_id = getVal("user_id", "");
             $act=getVal("act","");
@@ -163,9 +164,12 @@ class Compte extends Bdo_Controller {
                     "OPTIONCARRE" => GetOptionValue($carre_options, $this->User->CARRE_TYPE),
                      "ADULTYESISSELECTED" => ($this->User->EXPLICIT_CONTENT == "1" ? 'Selected' : ''),
                     "ADULTNOISSELECTED" => ($this->User->EXPLICIT_CONTENT == "0" ? 'Selected' : '')));
-
+                
+                if ($mobile != "T") {
+                     $this->view->layout = "iframe";
+                }
                 $this->view->set_var("PAGETITLE", "BDOVORE.com : Mon profil");
-                $this->view->layout = "iframe";
+                //$this->view->layout = "iframe";
                 $this->view->render();
             }
         }

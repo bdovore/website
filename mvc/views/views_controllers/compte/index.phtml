@@ -4,30 +4,24 @@
         $("#txtanniv").datepicker({dateFormat: "yy-mm-dd"});
     });
 </script>
-<div class="cadre1">
+<div class="cadre1" style="margin-top: 5px;">
     <form name="form1" method="post" action="<?php echo BDO_URL; ?>compte?act=update&user_id=<?php echo $view->USERID; ?>">
-        <h2>Profil de <font color="#990000"><?php echo $view->UTILISATEUR; ?></font></h2>
+        <br>
+        <h2> Compte de <font color="#990000"><?php echo $view->UTILISATEUR; ?></font></h2>
 
 
         <table align="center" border="0" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC">
             <tr>
-                <td align="right">Adresse e-mail :</td>
-                <td><input name="txtemail" type="text" id="txtemail" value="<?php echo $view->EMAIL; ?>" size="50"></td>
+                <td align="right">E-mail :</td>
+                <td><input name="txtemail" type="email" id="txtemail" value="<?php echo $view->EMAIL; ?>" size="30"></td>
 
             </tr>
-            <tr>
-                <td align="right">Ville :</td>
-                <td><input name="txtlocation" type="text" id="txtlocation" value="<?php echo $view->LOCATION; ?>"></td>
-            </tr>
-            <tr>
-                <td align="right">Date de naissance :</td>
-                <td><input name="txtanniv" type="text" id="txtanniv" value="<?php echo $view->BIRTHDAY; ?>">(aaaa-mm-jj)</td>
-            </tr>
+            
 
 
         </table>
         <br />
-        <h3>Personnalisation</h3>
+        <h3> Personnalisation</h3>
         <table border="0" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC">
 
             <tr>
