@@ -135,6 +135,7 @@ class Import extends Bdo_Controller {
                                                 break;
                                             }
                                         case 'flg_achat' :
+                                        case 'flg_tete' : 
                                         case 'flg_pret' :
                                         case 'flg_dedicace' :
                                         case 'flg_cadeau' : {
