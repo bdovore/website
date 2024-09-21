@@ -316,6 +316,7 @@ class Controle extends Bdo_Controller
 
 
             $this->view->set_var("PAGE_OB", ob_get_clean());
+            $this->view->set_var("PAGETITLE", "Contrôle de la base de données");
 
             $this->view->render();
         };

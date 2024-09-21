@@ -160,7 +160,7 @@ class Compte extends Bdo_Controller {
                     "URLCOLLEC" => BDO_URL . 'guest?user=' . encodeUserId($profile_user_id),
                     
                     "IS_NEWSLETTER" => ($this->User->ABT_NEWS == 1 ? 'Checked' : ''),
-                  
+                    "CONNECTION" => 0,
                     "OPTIONCARRE" => GetOptionValue($carre_options, $this->User->CARRE_TYPE),
                      "ADULTYESISSELECTED" => ($this->User->EXPLICIT_CONTENT == "1" ? 'Selected' : ''),
                     "ADULTNOISSELECTED" => ($this->User->EXPLICIT_CONTENT == "0" ? 'Selected' : '')));

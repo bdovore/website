@@ -503,7 +503,7 @@ function firstObjectArray ($data)
     }
 }
 
-function tableOfFetchObj ($data, $a_onlyCol = array(), $specialChar = true)
+function tableOfFetchObj ($data, $a_onlyCol = array(), $specialChar = false)
 {
     if (is_array($data)) {
         if (0 == count($data)) return false;
