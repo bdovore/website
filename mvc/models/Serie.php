@@ -149,24 +149,44 @@ class Serie extends Bdo_Db_Line
             $a_dessin[] = $obj->id;
 
         }
-
-        $where = " WHERE (bd_serie.id_serie in (select distinct id_serie from bd_tome where id_scenar in (".implode(",",$a_scenar)."))
+        $where = " WHERE id_serie <> " .getValInteger($p_serie); 
+        $and_or = " AND (";
+        $close = "";
+        $same = false;
+        if (count($a_dessin) > 0) {
+            $where .= " AND ( bd_serie.id_serie in (select distinct id_serie from bd_tome where id_scenar in (".implode(",",$a_scenar)."))";
+            $and_or = " OR ";
+            $close = ")";
+            $same = true;
+        }
+        if (count($a_scenar) > 0) {
+            $where .= $and_or. "bd_serie.id_serie in (select distinct id_serie from bd_tome where id_dessin in (".implode(",",$a_dessin)."))";
+            $close = ")";
+            $same = true;
+        }
+        $where .= $close;
+        /*$where = " WHERE (bd_serie.id_serie in (select distinct id_serie from bd_tome where id_scenar in (".implode(",",$a_scenar)."))
                             OR bd_serie.id_serie in (select distinct id_serie from bd_tome where id_dessin in (".implode(",",$a_dessin).")))
-                                and id_serie <> ".$p_serie;
+                                and id_serie <> ".$p_serie; */
         $order = " ORDER BY NBR_USER_ID_SERIE desc";
         $requete = $this->select().$where." group by id_serie ".$order." LIMIT 0,20";
-
-        $resultat = Db_query($requete);
-
-
+        
         $a_obj = array();
+        if ($same) {
+            $resultat = Db_query($requete);
+            while ($obj = Db_fetch_object($resultat)) {
 
-        while ($obj = Db_fetch_object($resultat)) {
+                $a_obj[] = $obj;
 
-            $a_obj[] = $obj;
+            }
 
         }
+        
 
+
+        
+
+        
         return $a_obj;
 
     }
