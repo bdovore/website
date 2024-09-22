@@ -561,7 +561,48 @@ class Admin extends Bdo_Controller {
                     "URLEDITEDIT" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
                     "URLEDITCOLL" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
                     "URLEDITCOLLALT" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
-                    "URLACTION" => BDO_URL . "admin/editalbum?act=append"
+                    "URLACTION" => BDO_URL . "admin/editalbum?act=append",
+                    
+                    "IDTOME" => "",
+                    "TITRE" => "",
+                    "IDSERIE" => "",
+                    "SERIE" => "",
+                    "TRI" => "",
+                    "IDGENRE" => "",
+                    "GENRE" => "",
+                    "NBTOME" => "",
+                    "HISTOIRE_SERIE" => "",
+                    "TOME" => "",
+                    "PRIX_VENTE" => "",
+                    "IDSCEN" => "",
+                    "SCENARISTE" => "",
+                    "IDSCENALT" => "",
+                    "SCENARISTEALT" => "",
+                    "IDDESS" => "",
+                    "DESSINATEUR" => "",
+                    "IDDESSALT" => "",
+                    "DESSINATEURALT" => "",
+                   
+                     "IDCOLOR" => "",
+                    "COLORISTE" => "",
+                    "IDCOLORALT" => "",
+                    "COLORISTEALT" => "",
+                    "IDEDIT" => "",
+                    "EDITEUR" => "",
+                   "ISINT" => "",
+                    "HISTOIRE" => "",
+                    "DIMIMAGE" => "",
+                    "EXPLICIT_CHECKED" => "",
+                    "COLLECTION" => "",
+                    "IDCOLLEC" => NULL,
+                    "CHKFLAG_DTE_PARUTION" => NULL,
+                    "ISTT" => "",
+                    "EAN" => "",
+                    "ISBN" => "",
+                    "COMMENT" => "",
+                    "OPTSTATUS" => GetOptionValue($opt_status, 0),
+                   
+                    
                 ));
                 $this->view->render();
             }
@@ -1700,7 +1741,25 @@ class Admin extends Bdo_Controller {
                     "URLDELETE" => "javascript:alert('Déeactue;sactiv&eactue;');",
                     "ACTIONNAME" => "Enregistrer",
                     "URLEDITGENRE" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
-                    "URLACTION" => BDO_URL . "admin/editserie?act=append"
+                    "URLACTION" => BDO_URL . "admin/editserie?act=append",
+                    "IDSERIE" => "",
+                    "SERIE" => "",
+                    "TRI" => "",
+                    "IDGENRE" => "",
+                    "GENRE" => "",
+                    "NOTE" => "",
+                    "WARNING_NOTE" => "",
+                    "HISTOIRE_SERIE" => "",
+                    
+                    "NBTOME" => "",
+                    
+                    
+                    "URLMASSDETAIL" => "javascript:alert('Déeactue;sactiv&eactue;');",
+                    "URLMASSUPDATE" => "javascript:alert('Déeactue;sactiv&eactue;');",
+                    "URLMASSRENAME" => "javascript:alert('Déeactue;sactiv&eactue;');",
+                    "URLMASSCOUV" => "javascript:alert('Déeactue;sactiv&eactue;');",
+                    "URLAJOUTALB" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
+                    "dbs_serie_liee" => array()
                 ));
                 // assigne la barre de login
                 $this->view->layout = "iframe";
@@ -1842,7 +1901,10 @@ class Admin extends Bdo_Controller {
                     "URLDELETE" => "javascript:alert('D&eacute;sactiv&eacute;');",
                     "URLFUSION" => "javascript:alert('D&eacute;sactiv&eacute;');",
                     "ACTIONNAME" => "Enregistrer",
-                    "URLACTION" => BDO_URL . "admin/editgenre?act=append"
+                    "URLACTION" => BDO_URL . "admin/editgenre?act=append",
+                    "IDGENRE" => "",
+                    "GENRE" => "",
+                    "ORIGINE" => ""
                 ));
                 $this->view->layout = "iframe";
                 $this->view->render();
@@ -1932,7 +1994,10 @@ class Admin extends Bdo_Controller {
                     "URLADDCOLLEC" => "javascript:alert('D&eacutesactiv&eacute');",
                     "URLFUSION" => "javascript:alert('D&eacutesactiv&eacute');",
                     "ACTIONNAME" => "Enregistrer",
-                    "URLACTION" => BDO_URL . "admin/editediteur?act=append"
+                    "URLACTION" => BDO_URL . "admin/editediteur?act=append",
+                     "ID_EDITEUR" => "",
+                    "NOM" => "",
+                    "URLWEBSITE" => ""
                 ));
                 $this->view->layout = "iframe";
                 $this->view->render();
@@ -2283,7 +2348,9 @@ class Admin extends Bdo_Controller {
                     "URLDELETE" => "javascript:alert('D&eacute;sactiv&eacute;');",
                     "ACTIONNAME" => "Enregistrer",
                     "URLEDITEDIT" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
-                    "URLACTION" => BDO_URL . "admin/editcollection?act=append"
+                    "URLACTION" => BDO_URL . "admin/editcollection?act=append",
+                    "NOM" => "",
+                    "EDITEUR" => ""
                 ));
                 $this->view->layout = "iframe";
                 $this->view->render();
