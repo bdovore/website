@@ -84,20 +84,29 @@ function EAN_to_ISBN($EAN) {
  *
  */
 function check_EAN($EAN) {
+    // Vérifie que $EAN n'est pas nul
     if (is_null($EAN)) return false;
+    
+    // Vérifie que $EAN a exactement 13 caractères
     if (strlen($EAN) != 13) return false;
-    // parse le code EAN
-    for($i = 1; $i <= 13; $i ++) {
-        $letter [$i] = substr ( $EAN, $i - 1, 1 );
+    
+    // Vérifie que chaque caractère est bien un chiffre
+    if (!ctype_digit($EAN)) return false;
+    
+    // Parse le code EAN
+    $key_sum = 0;
+    for($i = 1; $i <= 12; $i++) {
+        $digit = (int) substr($EAN, $i - 1, 1);
+        
+        // Alternance des coefficients 1 et 3
+        $key_sum += ($i % 2 === 0) ? 3 * $digit : $digit;
     }
-    // Calcule la clé sur 13 chiffres
-    $key_sum = $letter [1] + 3 * $letter [2] + $letter [3] + 3 * $letter [4] + $letter [5] + 3 * $letter [6] + $letter [7] + 3 * $letter [8] + $letter [9] + 3 * $letter [10] + $letter [11] + 3 * $letter [12] + $letter [13];
-    // Vérifie que lon a un multiple de 10
-    if (($key_sum / 10) == intval ( $key_sum / 10 )) {
-        return true;
-    } else {
-        return false;
-    }
+
+    // Calcule le dernier chiffre de contrôle
+    $check_digit = (10 - ($key_sum % 10)) % 10;
+
+    // Vérifie que le dernier chiffre correspond à la clé de contrôle
+    return (int) substr($EAN, 12, 1) === $check_digit;
 }
 
 /**
@@ -108,18 +117,35 @@ function check_EAN($EAN) {
  *
  */
 function check_ISBN($ISBN) {
+    // Vérifie que $ISBN n'est pas nul
     if (is_null($ISBN)) return false;
+    
+    // Vérifie que $ISBN a exactement 10 caractères
     if (strlen($ISBN) != 10) return false;
-    // parse le code ISBN
-    for($i = 1; $i <= 10; $i ++) {
-        $letter [$i] = (substr ( $ISBN, $i - 1, 1 ) == 'X' ? 10 : substr ( $ISBN, $i - 1, 1 ));
+
+    // Vérifie que chaque caractère est bien un chiffre ou 'X' (seulement possible en 10ème position)
+    for ($i = 0; $i < 9; $i++) {
+        if (!ctype_digit($ISBN[$i])) {
+            return false;
+        }
     }
-    // Calcule la clé sur 9 chiffres
-    $key_sum = 10 * $letter [1] + 9 * $letter [2] + 8 * $letter [3] + 7 * $letter [4] + 6 * $letter [5] + 5 * $letter [6] + 4 * $letter [7] + 3 * $letter [8] + 2 * $letter [9] + $letter [10];
-    // Vérifie que lon a un multiple de 11
-    if (($key_sum / 11) == intval ( $key_sum / 11 )) {
-        return true;
-    } else {
+    
+    // Le dernier caractère peut être un chiffre ou un 'X'
+    if (!ctype_digit($ISBN[9]) && $ISBN[9] != 'X') {
         return false;
     }
+    
+    // Calcule la clé sur 9 chiffres, avec gestion du 'X' en tant que 10
+    $key_sum = 0;
+    for ($i = 0; $i < 9; $i++) {
+        $key_sum += (10 - $i) * (int)$ISBN[$i];
+    }
+
+    // Gestion de la dernière lettre (10ème position)
+    $last_digit = ($ISBN[9] == 'X') ? 10 : (int)$ISBN[9];
+    $key_sum += $last_digit;
+
+    // Vérifie que la somme est un multiple de 11
+    return $key_sum % 11 === 0;
 }
+

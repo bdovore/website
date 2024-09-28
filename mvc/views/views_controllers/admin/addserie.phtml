@@ -58,5 +58,5 @@ function valider(){
 </form>
 <script>
 addAutocomplete("txtGenre","txtGenreId","txtGenreId","<?php echo BDO_URL; ?>getjson?data=Genre");
-<?php echo $view->script; ?>
+<?php echo $view->script ?? ""; ?>
 </script>

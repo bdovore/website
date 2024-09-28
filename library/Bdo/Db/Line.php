@@ -303,6 +303,7 @@ class Bdo_Db_Line
         if (!is_array($this->error)) {
             $this->error = []; // S'assure que $this->error est un tableau
            }
+        $this->a_updateColumn = []; // set empty array for update values
         foreach ($this->a_column as $column_name => $obj) {
             if (! isset($obj->EXTRA_CHAMP)) $obj->EXTRA_CHAMP = '';
 

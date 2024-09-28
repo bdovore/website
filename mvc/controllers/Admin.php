@@ -394,6 +394,10 @@ class Admin extends Bdo_Controller {
                 if ($this->Edition->PROP_STATUS == 0) {
                     $actionautorise = "<a href=\"" . BDO_URL . "admin/editedition?act=autorize&edition_id=" . $edition_id . "\">Activer cette &eacute;dition</a>";
                     $contactuser = "propos&eacute;e par <a href=\"mailto:" . $mail_adress . "?subject=" . $mailsubject . "\" style=\"font-weight: bold;\">" . $pseudo . "</a> (" . $mail_adress . ")<br />";
+                } else {
+                    $actionautorise = "";
+                    $contactuser = "";
+                    
                 }
 
                 $this->view->set_var(array(
@@ -407,7 +411,7 @@ class Admin extends Bdo_Controller {
                     "DTPAR" => $this->Edition->DATE_PARUTION_EDITION,
                     "CHKFLAG_DTE_PARUTION" => (($this->Edition->FLAG_DTE_PARUTION == 1) ? 'CHECKED' : ''),
                     "COMMENT" => stripslashes($this->Edition->COMMENT_EDITION),
-                    "ISTT" => (($this->Edition->FLG_TT == 'O') ? 'checked' : ''),
+                    "ISTT" => isset($this->Edition->FLG_TT) ? "" : (($this->Edition->FLG_TT == 'O') ? 'checked' : ''),
                     "FLGDEF" => (($this->Edition->ID_EDITION == $this->Edition->ID_EDITION_DEFAULT ? 'O' : '')),
                     "EAN" => $this->Edition->EAN_EDITION,
                     "URLEAN" => "http://www.bdnet.com/" . $this->Edition->EAN_EDITION . "/alb.htm",
@@ -428,7 +432,7 @@ class Admin extends Bdo_Controller {
                     "URLACTION" => BDO_URL . "admin/editedition?act=update",
                     "EXPLICIT_CHECKED" => $this->Edition->FLG_EXPLICIT ? "checked" : ""
                 ));
-                if ($this->Edition->DTE_PARUTION == "0000-00-00") {
+                if ($this->Edition->DATE_PARUTION_EDITION == "0000-00-00") {
                     $this->view->set_var("PARUTION_0", "to_be_corrected");
                 }
 

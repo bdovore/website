@@ -982,14 +982,26 @@ function gen_css_links ($css_sheets)
  */
 function imgdim ($url_image)
 {
-    // if ($_SERVER["SERVER_NAME"] != 'localhost')
-    // {
-    $imgdim = getimagesize($url_image);
-    return "LxH : " . $imgdim[0] . "x" . $imgdim[1] . "";
-    // }
-    // else {
-    // return "<i>Pas de fichier image ".$url_image.".</i>";
-    // }
+      try {
+        // Vérifier si le fichier existe
+        if (!file_exists($url_image)) {
+            // Si le fichier n'existe pas, on lève une exception
+            throw new Exception("Fichier image non trouvé.");
+        }
+        
+        // Tenter de récupérer les dimensions de l'image
+        $imgdim = getimagesize($url_image);
+        
+        if ($imgdim === false) {
+            // Si getimagesize retourne false, cela signifie que l'image n'a pas été trouvée
+            throw new Exception("Impossible de récupérer les dimensions de l'image.");
+        }
+
+        return "LxH : " . $imgdim[0] . "x" . $imgdim[1];
+    } catch (Exception $e) {
+        // En cas d'erreur (fichier inexistant ou autre problème), retourner "LxH : 0x0"
+        return "LxH : 0x0";
+    }
 }
 
 function lit_rss ($xml, $objets)

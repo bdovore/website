@@ -63,7 +63,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Couverture</strong></font> <div class="texte">(360px de large si possible)</div></td>
 
-                            <td><?php if(IssetNotEmpty($view->edition)) { ?><img src="<?php echo BDO_URL_COUV.$view->edition->IMG_COUV;?>" align="middle" border="0" height="220" width="169"> <?php } ?>
+                            <td><?php if(IssetNotEmpty($view->edition->IMG_COUV)) { ?><img src="<?php echo BDO_URL_COUV.$view->edition->IMG_COUV;?>" align="middle" border="0" height="220" width="169"> <?php } ?>
 
                             </td>
 
@@ -118,7 +118,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                           <tr>
                             <td>&nbsp;</td>
                             <td class="data" align="center"><input name="chkIntegrale" value="checkbox" <?php if ($view->edition->FLG_INT_TOME == 1) echo "checked='O'"; ?> type="checkbox"></td>
-                            <td class="data" align="center"><select name="lstType" size="1"><option value="0" <?php if ($view->edition->FLG_TYP_TOME == 0) echo "selected='O'"; ?>>Album</option><option value="1" <?php if ($view->edition->FLG_TYP_TOME == 1) echo "selected='O'"; ?>>Coffret</option>
+                            <td class="data" align="center"><select name="lstType" size="1"><option value="0" <?php if ($view->edition->FLG_TYPE_TOME == 0) echo "selected='O'"; ?>>Album</option><option value="1" <?php if ($view->edition->FLG_TYPE_TOME == 1) echo "selected='O'"; ?>>Coffret</option>
                               </select></td>
                             <td>&nbsp;</td>
                           </tr>
@@ -337,11 +337,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td class="label" width="26%"> <font color="#990000" size="-1"><strong>Editeur</strong></font></td>
 
-                      <td bordercolor="#DAC1B3" width="2%"> <input name="txtEditeurId" id="txtEditeurId" value="<?php echo $view->edition->ID_EDITEUR; ?>" size="7" type="hidden" >
-                          <span id="spEditeur"><?php echo $view->edition->ID_EDITEUR; ?></span>
+                      <td bordercolor="#DAC1B3" width="2%"> <input name="txtEditeurId" id="txtEditeurId" value="<?php echo $view->edition->ID_EDITEUR ?? ""; ?>" size="7" type="hidden" >
+                          <span id="spEditeur"><?php echo $view->edition->ID_EDITEUR ?? ""; ?></span>
                       </td>
 
-                      <td bordercolor="#DAC1B3" width="59%"> <input name="txtEditeur" id="txtEditeur" value="<?php echo $view->edition->NOM_EDITEUR; ?>" size="40" class="flat" type="text" onchange="changeEditeur();"></td>
+                      <td bordercolor="#DAC1B3" width="59%"> <input name="txtEditeur" id="txtEditeur" value="<?php echo $view->edition->NOM_EDITEUR ?? ""; ?>" size="40" class="flat" type="text" onchange="changeEditeur();"></td>
 
 
 
@@ -351,11 +351,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td class="label"> <font color="#990000" size="-1"><strong>Collection</strong></font></td>
 
-                      <td bordercolor="#DAC1B3"> <input name="txtCollecId" id="txtCollecId" value="<?php echo $view->edition->ID_COLLECTION; ?>" size="7" type="hidden">
-                      <span id="spCollec"><?php echo $view->edition->ID_COLLECTION; ?></span>
+                      <td bordercolor="#DAC1B3"> <input name="txtCollecId" id="txtCollecId" value="<?php echo $view->edition->ID_COLLECTION ?? ""; ?>" size="7" type="hidden">
+                      <span id="spCollec"><?php echo $view->edition->ID_COLLECTION ?? ""; ?></span>
                       </td>
 
-                      <td bordercolor="#DAC1B3"> <input name="txtCollec" id="txtCollec" value="<?php echo $view->edition->NOM_COLLECTION; ?>" size="40" class="flat" type="text"></td>
+                      <td bordercolor="#DAC1B3"> <input name="txtCollec" id="txtCollec" value="<?php echo $view->edition->NOM_COLLECTION ?? ""; ?>" size="40" class="flat" type="text"></td>
 
 
 
@@ -366,7 +366,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                           <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-13 (EAN)</strong></font></td>
                             <td> <div align="left"> </div></td>
                             <td colspan="3">
-                                <input name="txtEAN" id="txtEAN" value="<?php echo $view->edition->EAN_EDITION; ?>" size="13" maxlength="13" class="flat" type="text">
+                                <input name="txtEAN" id="txtEAN" value="<?php echo $view->edition->EAN_EDITION ?? ""; ?>" size="13" maxlength="13" class="flat" type="text">
                                 <span class="texte">ISBN à 13 chiffres <u>sans</u> trait d'union ni espace (aussi appelé EAN)</span>
                             </td>
                     </tr>
@@ -374,7 +374,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                         <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>ISBN-10</strong></font></td>
                         <td> <div align="left"> </div></td>
                         <td colspan="3">
-                            <input name="txtISBN" id="txtISBN" value="<?php echo $view->edition->ISBN_EDITION; ?>" size="10" maxlength="10" class="flat" type="text">
+                            <input name="txtISBN" id="txtISBN" value="<?php echo $view->edition->ISBN_EDITION ?? ""; ?>" size="10" maxlength="10" class="flat" type="text">
                             <span class="texte">ISBN à 10 chiffres <u>sans</u> trait d'union ni espace (obsolète depuis janvier 2007)</span>
                         </td>
                     </tr>
@@ -385,7 +385,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td>&nbsp; </td>
 
-                      <td> <input name="txtDateParution" id="txtDateParution3" value="<?php echo $view->edition->DATE_PARUTION_EDITION; ?>" size="15" class="flat" type="text">
+                      <td> <input name="txtDateParution" id="txtDateParution3" value="<?php echo $view->edition->DATE_PARUTION_EDITION ?? "0000-00-00"; ?>" size="15" class="flat" type="text">
 
                         </td>
 

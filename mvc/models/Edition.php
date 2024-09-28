@@ -50,9 +50,9 @@ class Edition extends Bdo_Db_Line
             note_tome.MOYENNE_NOTE_TOME,
             bd_edition_stat.NBR_USER_ID_EDITION as NBR_USER_ID,
 
-                s.ID_SERIE,
+            s.ID_SERIE,
             s.nom as NOM_SERIE,
-                s.FLG_FINI,
+            s.FLG_FINI,
 
             g.ID_GENRE,
             g.libelle as NOM_GENRE,
@@ -91,7 +91,8 @@ class Edition extends Bdo_Db_Line
             us.username USERNAME,
             us.email EMAIL,
             valid_user.username VALIDATOR_USERNAME,
-            bd_edition.FLG_EXPLICIT";
+            bd_edition.FLG_EXPLICIT,
+            bd_edition.FLG_TT";
         $from = "
             FROM bd_edition
             INNER JOIN bd_tome ON bd_tome.id_tome = bd_edition.id_tome

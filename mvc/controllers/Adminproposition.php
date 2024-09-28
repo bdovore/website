@@ -995,6 +995,7 @@ private function getDateBeforeValid() {
             // Determine l'URL image modifiée
             if (is_null($this->User_album_prop->IMG_COUV) | ($this->User_album_prop->IMG_COUV == '')) {
                 $url_image = $ori_url_image;
+                $dim_image = "";
             } else {
                 $url_image = BDO_URL_IMAGE . "tmp" . DS . $this->User_album_prop->IMG_COUV;
                 $dim_image = imgdim(BDO_DIR_UPLOAD . $this->User_album_prop->IMG_COUV);
@@ -1026,8 +1027,8 @@ private function getDateBeforeValid() {
                 "NEW_FLG_FINI" => ($this->User_album_prop->FLG_FINI == $this->Tome->FLG_FINI ? "" : "*"),
                 "ORITOME" => $this->Tome->NUM_TOME,
                 "CLTOME" => ($this->User_album_prop->NUM_TOME == $this->Tome->NUM_TOME ? "flat" : "has_changed"),
-                "NEW_FLG_INT" => ($this->User_album_prop->FLG_INT == $this->Tome->FLG_INT ? "" : "*"),
-                "NEW_FLG_TYPE" => ($this->User_album_prop->FLG_TYPE == $this->Tome->FLG_TYPE ? "" : "*"),
+                "NEW_FLG_INT" => ($this->User_album_prop->FLG_INT == $this->Tome->FLG_INT_TOME ? "" : "*"),
+                "NEW_FLG_TYPE" => ($this->User_album_prop->FLG_TYPE == $this->Tome->FLG_TYPE_TOME ? "" : "*"),
                 "ORIGENRE" => $this->Tome->NOM_GENRE,
                 "CLGENRE" => ($this->User_album_prop->GENRE == $this->Tome->NOM_GENRE ? "flat" : "has_changed"),
                 "ORISCENARISTE" => stripslashes($this->Tome->scpseudo),
@@ -1048,10 +1049,10 @@ private function getDateBeforeValid() {
                 "CLEAN" => ($this->User_album_prop->EAN == $this->Edition->EAN_EDITION ? "flat" : "has_changed"),
                 "ORIISBN" => ($this->Tome->ISBN_EDITION == "") ? "&nbsp;" : $this->Edition->ISBN_EDITION,
                 "CLISBN" => ($this->User_album_prop->ISBN == $this->Edition->ISBN_EDITION ? "flat" : "has_changed"),
-                "ORIDTPAR" => $this->Edition->DTE_PARUTION,
-                "CLDTPAR" => ($this->User_album_prop->DTE_PARUTION == $this->Edition->DTE_PARUTION ? "flat" : "has_changed"),
-                "ORIHISTOIRE" => stripslashes($this->Edition->HISTOIRE),
-                "CLHISTOIRE" => ($this->User_album_prop->HISTOIRE == $this->Edition->HISTOIRE ? "flat" : "has_changed"),
+                "ORIDTPAR" => $this->Edition->DATE_PARUTION_EDITION,
+                "CLDTPAR" => ($this->User_album_prop->DTE_PARUTION == $this->Edition->DATE_PARUTION_EDITION ? "flat" : "has_changed"),
+                "ORIHISTOIRE" => stripslashes($this->Edition->HISTOIRE_TOME),
+                "CLHISTOIRE" => ($this->User_album_prop->HISTOIRE == $this->Edition->HISTOIRE_TOME ? "flat" : "has_changed"),
                 "URLIMAGE" => $url_image,
                 "URLORIIMAGE" => $ori_url_image,
                 "DIMIMAGE" => $dim_image,
@@ -1059,7 +1060,9 @@ private function getDateBeforeValid() {
                 "USERHASEDITION" => $has_edition,
                 "MODIFONDEFAULT" => $is_def_edition,
                 "DEFEDITIONID" => $def_edition,
-                "USEROWN" => $user_owns
+                "USEROWN" => $user_owns,
+                "ISEAN" => check_EAN($this->User_album_prop->EAN) ? "" : "*",
+                "ISISBN" => check_ISBN($this->User_album_prop->ISBN) ? "" : "*",
             ));
 
             // Récupère l'adresse mail de l'utilisateur

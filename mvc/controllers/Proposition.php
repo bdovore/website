@@ -40,6 +40,9 @@ class Proposition extends Bdo_Controller {
             }
             else {
                 if ($type == "EDITION") {
+                    $this->loadModel("Edition");
+                    $this->Edition->load();
+                    $this->view->set_var("edition",$this->Edition);
                     $this->view->set_var("ID_TOME",getValInteger("id_tome"));
                     $this->view->set_var('PAGETITLE',"Proposer l'ajout d'une édition ");
                     $this->view->set_var("TYPE","EDITION");
