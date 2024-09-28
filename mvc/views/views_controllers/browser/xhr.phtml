@@ -3,7 +3,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 ?>
 <table class="browser" width="100%">
     <tr>
-        <td class="milieu" align="center" colspan="3"><?php echo $view->TOTALROW;?></td>
+        <td class="milieu" align="center" colspan="3"><?php echo $view->TOTALROW ?? "";?></td>
     </tr>
     <tr>
         <td class="milieu" align="center" colspan="3"><?php echo $view->URLPREVPAGE;?> <?php echo $view->URLNEXTPAGE;?></td>
@@ -30,7 +30,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 });
                 '>
 <span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-arrowthick-2-n-s"></span>
-                <?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'];?></div>
+                <?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'] ?? "";?></div>
             <div class="ui-state-active" id='onglet_div_moins_<?php echo $row['LEVSIGN'];?>'
                 style='DISPLAY: none'
                 onMouseOver='this.className="ui-state-hover"'
@@ -38,7 +38,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                 onClick='Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
                 Block_None_Div("onglet_div_plus_<?php echo $row['LEVSIGN'];?>");
                 Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>")'>
-<span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-arrowthickstop-1-n"></span><?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'];?></div>
+<span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-arrowthickstop-1-n"></span><?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'] ?? "";?></div>
             <div id='onglet_div_xhr_<?php echo $row['LEVSIGN'];?>'
                 style='DISPLAY: none'></div></td>
     </tr>

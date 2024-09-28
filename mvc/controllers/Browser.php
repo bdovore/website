@@ -218,7 +218,7 @@ class Browser extends Bdo_Controller
             foreach($dbsData->a_dataQuery as $data) {
                 if ($this->rb_browse == "aut") {
                     // class pour le bouton d'édition en fonction de présence d'une bio ou non
-                    if (strlen( $row["COMMENT"]) > 0 ) {
+                    if (strlen( $row["COMMENT"] ?? "") > 0 ) {
                         $img_edit ="aut_edit.jpg";
                     }  else {
                         $img_edit = "edit.gif";
