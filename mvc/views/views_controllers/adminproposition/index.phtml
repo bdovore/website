@@ -121,7 +121,7 @@ function deleteProposition(idpropale,typeprop){
                 <td class="data_admin"><?php echo $prop->TITRE_TOME;?></td>
                 <td class="data_admin <?php echo "status".$prop->PROP_STATUS;?>"><?php echo GetOption1Value($opt_status,$prop->PROP_STATUS);?></td>
                 <td class="data_admin"><a href="<?php echo $view->URLEDIT.$prop->ID_EDITION;?>" target="_blank"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a></td>
-                <td class="data_admin" <?php echo $view->STYLE_VALIDDELAY;?>><a onclick="deleteProposition(<?php echo $prop->ID_EDITION ?>,'EDITION');"><img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif" width="20" height="21" border="0" /></a></td>
+                <td class="data_admin" <?php echo $view->STYLE_VALIDDELAY ?? "";?>><a onclick="deleteProposition(<?php echo $prop->ID_EDITION ?>,'EDITION');"><img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif" width="20" height="21" border="0" /></a></td>
             </tr>
         <?php }} ?>
 
