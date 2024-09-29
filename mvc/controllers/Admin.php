@@ -853,90 +853,95 @@ class Admin extends Bdo_Controller {
                 $this->Tome->set_dataPaste(array("ID_TOME" => $alb_id));
                 $this->Tome->load();
                 // récupère le nombre d'utilisateurs
-
-                $nb_users = $this->Tome->NBR_USER_ID_TOME;
-
-
-                $nb_comments = $this->Tome->NB_NOTE_TOME;
-
-                $id_edition_default = $this->Tome->ID_EDITION;
-
-                $champ_form_style = 'champ_form_desactive';
-
-                // détermine s'il est possible d'effacer cet album
-                if (($nb_users == 0) & ($nb_comments == 0)) {
-                    $url_delete = BDO_URL . "admin/editalbum?act=delete&idtome=" . $this->Tome->ID_TOME;
+                if (!isset($this->Tome->ID_TOME)) {
+                    echo GetMetaTag(2, "L'album n'existe pas", (BDO_URL . "admin"));
                 } else {
-                    $url_delete = "javascript:alert('Impossible');";
-                }
-
-                $this->view->set_var(array(
-                    "CHAMPFORMSTYLE" => $champ_form_style,
-                    "IDTOME" => $this->Tome->ID_TOME,
-                    "TITRE" => $this->Tome->TITRE_TOME,
-                    "IDSERIE" => $this->Tome->ID_SERIE,
-                    "SERIE" => $this->Tome->NOM_SERIE,
-                    "TRI" => $this->Tome->TRI,
-                    "IDGENRE" => $this->Tome->ID_GENRE,
-                    "GENRE" => $this->Tome->NOM_GENRE,
-                    "OPTSTATUS" => GetOptionValue($opt_status, $this->Tome->FLG_FINI),
-                    "NBTOME" => $this->Tome->NB_TOME,
-                    "HISTOIRE_SERIE" => $this->Tome->HISTOIRE_SERIE,
-                    "TOME" => $this->Tome->NUM_TOME,
-                    "PRIX_VENTE" => $this->Tome->PRIX_BDNET,
-                    "IDSCEN" => $this->Tome->ID_SCENAR,
-                    "SCENARISTE" => $this->Tome->scpseudo,
-                    "IDSCENALT" => $this->Tome->ID_SCENAR_ALT,
-                    "SCENARISTEALT" => ($this->Tome->ID_SCENAR_ALT == 0 ) ? "" : $this->Tome->scapseudo,
-                    "IDDESS" => $this->Tome->ID_DESSIN,
-                    "DESSINATEUR" => $this->Tome->depseudo,
-                    "IDDESSALT" => $this->Tome->ID_DESSIN_ALT,
-                    "DESSINATEURALT" => ($this->Tome->ID_DESSIN_ALT == 0 ) ? "" : $this->Tome->deapseudo,
-                    "IDCOLOR" => $this->Tome->ID_COLOR,
-                    "COLORISTE" => $this->Tome->copseudo,
-                    "IDCOLORALT" => $this->Tome->ID_COLOR_ALT,
-                    "COLORISTEALT" => ($this->Tome->ID_COLOR_ALT == 0 ) ? "" : $this->Tome->coapseudo,
-                    "IDEDIT" => $this->Tome->ID_EDITEUR,
-                    "EDITEUR" => $this->Tome->NOM_EDITEUR,
-                    "IDCOLLEC" => $this->Tome->ID_COLLECTION,
-                    "COLLECTION" => $this->Tome->NOM_COLLECTION,
-                    "HISTOIRE" => $this->Tome->HISTOIRE_TOME,
-                    "ID_EDITION" => $this->Tome->ID_EDITION,
-                    "ISINT" => (($this->Tome->FLG_INT_TOME == 'O') ? 'checked' : ''),
-                    "OPTTYPE" => GetOptionValue($opt_type, $this->Tome->FLG_TYPE_TOME),
-                    "NBUSERS" => $nb_users,
-                    "NBUSERS2" => $nb_comments,
-                    "URLDELETE" => $url_delete,
-                    "URLFUSION" => BDO_URL . "admin/mergealbums?source_id=" . $this->Tome->ID_TOME,
-                    "URLSPLIT" => BDO_URL . "admin/splitedition?alb_id=" . $this->Tome->ID_TOME,
-                    "URLFUSIONDELETE" => BDO_URL . "admin/fusiondelete?alb_id=" . $this->Tome->ID_TOME,
-                    "URLEDITSERIE" => BDO_URL . "admin/editserie?serie_id=" . $this->Tome->ID_SERIE,
-                    "URLEDITGENRE" => BDO_URL . "admin/editgenre?genre_id=" . $this->Tome->ID_GENRE,
-                    "URLEDITSCEN" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_SCENAR,
-                    "URLEDITDESS" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_DESSIN,
-                    "URLEDITCOLOR" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_COLOR,
-                    "URLEDITSCENALT" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_SCENAR_ALT,
-                    "URLEDITDESSALT" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_DESSIN_ALT,
-                    "URLEDITCOLORALT" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_COLOR_ALT,
-                    "URLEDITEDIT" => BDO_URL . "admin/editediteur?editeur_id=" . $this->Tome->ID_EDITEUR,
-                    "URLEDITCOLL" => BDO_URL . "admin/editcollection?collec_id=" . $this->Tome->ID_COLLECTION,
-                    "ACTIONNAME" => "Valider les Modifications",
-                    "URLACTION" => BDO_URL . "admin/editalbum?act=update"
-                ));
-
-                // Affiche les informations relatives aux différentes éditions
-                $this->loadModel("Edition");
-                $dbs_edition = $this->Edition->load("c", "where bd_tome.id_tome =" . $this->Tome->ID_TOME ." ORDER BY DATE_PARUTION_EDITION");
+                    
+               
+                    $nb_users = $this->Tome->NBR_USER_ID_TOME;
 
 
+                    $nb_comments = $this->Tome->NB_NOTE_TOME;
 
-                $this->view->set_var(array(
-                    "NBEDITIONS" => count($dbs_edition->a_dataQuery),
-                    "dbs_edition" => $dbs_edition,
-                    "URLAJOUTEDITION" => BDO_URL . "admin/editedition?act=new&alb_id=" . $alb_id
-                ));
+                    $id_edition_default = $this->Tome->ID_EDITION;
 
-                $this->view->render();
+                    $champ_form_style = 'champ_form_desactive';
+
+                    // détermine s'il est possible d'effacer cet album
+                    if (($nb_users == 0) & ($nb_comments == 0)) {
+                        $url_delete = BDO_URL . "admin/editalbum?act=delete&idtome=" . $this->Tome->ID_TOME;
+                    } else {
+                        $url_delete = "javascript:alert('Impossible');";
+                    }
+
+                    $this->view->set_var(array(
+                        "CHAMPFORMSTYLE" => $champ_form_style,
+                        "IDTOME" => $this->Tome->ID_TOME,
+                        "TITRE" => $this->Tome->TITRE_TOME,
+                        "IDSERIE" => $this->Tome->ID_SERIE,
+                        "SERIE" => $this->Tome->NOM_SERIE,
+                        "TRI" => $this->Tome->TRI,
+                        "IDGENRE" => $this->Tome->ID_GENRE,
+                        "GENRE" => $this->Tome->NOM_GENRE,
+                        "OPTSTATUS" => GetOptionValue($opt_status, $this->Tome->FLG_FINI),
+                        "NBTOME" => $this->Tome->NB_TOME,
+                        "HISTOIRE_SERIE" => $this->Tome->HISTOIRE_SERIE,
+                        "TOME" => $this->Tome->NUM_TOME,
+                        "PRIX_VENTE" => $this->Tome->PRIX_BDNET,
+                        "IDSCEN" => $this->Tome->ID_SCENAR,
+                        "SCENARISTE" => $this->Tome->scpseudo,
+                        "IDSCENALT" => $this->Tome->ID_SCENAR_ALT,
+                        "SCENARISTEALT" => ($this->Tome->ID_SCENAR_ALT == 0 ) ? "" : $this->Tome->scapseudo,
+                        "IDDESS" => $this->Tome->ID_DESSIN,
+                        "DESSINATEUR" => $this->Tome->depseudo,
+                        "IDDESSALT" => $this->Tome->ID_DESSIN_ALT,
+                        "DESSINATEURALT" => ($this->Tome->ID_DESSIN_ALT == 0 ) ? "" : $this->Tome->deapseudo,
+                        "IDCOLOR" => $this->Tome->ID_COLOR,
+                        "COLORISTE" => $this->Tome->copseudo,
+                        "IDCOLORALT" => $this->Tome->ID_COLOR_ALT,
+                        "COLORISTEALT" => ($this->Tome->ID_COLOR_ALT == 0 ) ? "" : $this->Tome->coapseudo,
+                        "IDEDIT" => $this->Tome->ID_EDITEUR,
+                        "EDITEUR" => $this->Tome->NOM_EDITEUR,
+                        "IDCOLLEC" => $this->Tome->ID_COLLECTION,
+                        "COLLECTION" => $this->Tome->NOM_COLLECTION,
+                        "HISTOIRE" => $this->Tome->HISTOIRE_TOME,
+                        "ID_EDITION" => $this->Tome->ID_EDITION,
+                        "ISINT" => (($this->Tome->FLG_INT_TOME == 'O') ? 'checked' : ''),
+                        "OPTTYPE" => GetOptionValue($opt_type, $this->Tome->FLG_TYPE_TOME),
+                        "NBUSERS" => $nb_users,
+                        "NBUSERS2" => $nb_comments,
+                        "URLDELETE" => $url_delete,
+                        "URLFUSION" => BDO_URL . "admin/mergealbums?source_id=" . $this->Tome->ID_TOME,
+                        "URLSPLIT" => BDO_URL . "admin/splitedition?alb_id=" . $this->Tome->ID_TOME,
+                        "URLFUSIONDELETE" => BDO_URL . "admin/fusiondelete?alb_id=" . $this->Tome->ID_TOME,
+                        "URLEDITSERIE" => BDO_URL . "admin/editserie?serie_id=" . $this->Tome->ID_SERIE,
+                        "URLEDITGENRE" => BDO_URL . "admin/editgenre?genre_id=" . $this->Tome->ID_GENRE,
+                        "URLEDITSCEN" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_SCENAR,
+                        "URLEDITDESS" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_DESSIN,
+                        "URLEDITCOLOR" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_COLOR,
+                        "URLEDITSCENALT" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_SCENAR_ALT,
+                        "URLEDITDESSALT" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_DESSIN_ALT,
+                        "URLEDITCOLORALT" => BDO_URL . "admin/editauteur?auteur_id=" . $this->Tome->ID_COLOR_ALT,
+                        "URLEDITEDIT" => BDO_URL . "admin/editediteur?editeur_id=" . $this->Tome->ID_EDITEUR,
+                        "URLEDITCOLL" => BDO_URL . "admin/editcollection?collec_id=" . $this->Tome->ID_COLLECTION,
+                        "ACTIONNAME" => "Valider les Modifications",
+                        "URLACTION" => BDO_URL . "admin/editalbum?act=update"
+                    ));
+
+                    // Affiche les informations relatives aux différentes éditions
+                    $this->loadModel("Edition");
+                    $dbs_edition = $this->Edition->load("c", "where bd_tome.id_tome =" . $this->Tome->ID_TOME ." ORDER BY DATE_PARUTION_EDITION");
+
+
+
+                    $this->view->set_var(array(
+                        "NBEDITIONS" => count($dbs_edition->a_dataQuery),
+                        "dbs_edition" => $dbs_edition,
+                        "URLAJOUTEDITION" => BDO_URL . "admin/editedition?act=new&alb_id=" . $alb_id
+                    ));
+
+                    $this->view->render();
+                 }
             }
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
