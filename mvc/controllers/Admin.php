@@ -274,7 +274,7 @@ class Admin extends Bdo_Controller {
                 // determine si une référence d'album a été passée
                  
                 if (getVal("alb_id", "") <> "") {
-                    $alb_id = getValInteger(alb_id);
+                    $alb_id = getValInteger($alb_id);
                     $this->Tome->set_dataPaste(array("ID_TOME" => $alb_id));
                     $this->Tome->load();
                     $alb_titre = $this->Tome->TITRE_TOME;

@@ -2,10 +2,10 @@
 
 
 
-include (BDO_DIR."inc/function.cle.inc.php");
+//include (BDO_DIR."inc/function.cle.inc.php");
 
 minAccessLevel(1);
-
+$act = getVal("act", "");
 
 // Tableau pour les choix d'options
 $opt_type[0][0] = 0;

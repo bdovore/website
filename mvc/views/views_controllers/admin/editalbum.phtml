@@ -17,36 +17,36 @@
     </tr>
     <tr align="center">
         <td width="13%" height="27">Série</td>
-        <td width="9%"><input name="txtSerieId" id="txtSerieId" type="text" value="<?php echo $view->IDSERIE;?>" size="5" class="<?php echo $view->CHAMPFORMSTYLE_NEWFSERIE;?>" /></td>
-        <td width="60%"><input name="txtSerie" id="txtSerie" type="text" value="<?php echo $view->SERIE;?>" style="width: 100%" class="<?php echo $view->CHAMPFORMSTYLE_NEWFSERIE;?>" /></td>
+        <td width="9%"><input name="txtSerieId" id="txtSerieId" type="text" value="<?php echo $view->IDSERIE ?? "";?>" size="5" class="<?php echo $view->CHAMPFORMSTYLE_NEWFSERIE ?? "";?>" /></td>
+        <td width="60%"><input name="txtSerie" id="txtSerie" type="text" value="<?php echo $view->SERIE ?? "";?>" style="width: 100%" class="<?php echo $view->CHAMPFORMSTYLE_NEWFSERIE ?? "";?>" /></td>
         <td width="12%">
-            <a href="<?php echo $view->URLEDITSERIE;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
+            <a href="<?php echo $view->URLEDITSERIE ?? "";?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('serie',document.myform.txtSerie.value,'myform','txtSerie',true)" />
         </td>
-        <td width="9%"><input name="txtTri" type="text" id="txtTri" value="<?php echo $view->TRI;?>" size="3" maxlength="3" class="<?php echo $view->CHAMPFORMSTYLE;?>" /></td>
+        <td width="9%"><input name="txtTri" type="text" id="txtTri" value="<?php echo $view->TRI;?>" size="3" maxlength="3" class="<?php echo $view->CHAMPFORMSTYLE ?? "";?>" /></td>
     </tr>
     <tr>
         <td height="28" align="center">Genre</td>
         <td align="center">
-            <input name="txtGenreId" type="text" id="txtGenreId" value="<?php echo $view->IDGENRE;?>" size="2" class="<?php echo $view->CHAMPFORMSTYLE;?>" />
+            <input name="txtGenreId" type="text" id="txtGenreId" value="<?php echo $view->IDGENRE  ?? "";?>" size="2" class="<?php echo $view->CHAMPFORMSTYLE ?? "";?>" />
         </td>
         <td colspan="3">
-            <input name="txtGenre" type="text" id="txtGenre" value="<?php echo $view->GENRE;?>" size="35" class="<?php echo $view->CHAMPFORMSTYLE;?>" />
-            <a href="<?php echo $view->URLEDITGENRE;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
+            <input name="txtGenre" type="text" id="txtGenre" value="<?php echo $view->GENRE  ?? "";?>" size="35" class="<?php echo $view->CHAMPFORMSTYLE  ?? "";?>" />
+            <a href="<?php echo $view->URLEDITGENRE  ?? "";?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('genre',document.input_form.txtGenre.value,'input_form','txtGenre',false)" />
         </td>
     </tr>
     <tr>
         <td align="center">Statut</td>
-        <td colspan="4"><select name="chkFini" size="1" class="<?php echo $view->CHAMPFORMSTYLE;?>"><?php echo $view->OPTSTATUS;?></select></td>
+        <td colspan="4"><select name="chkFini" size="1" class="<?php echo $view->CHAMPFORMSTYLE  ?? "";?>"><?php echo $view->OPTSTATUS  ?? "";?></select></td>
     </tr>
     <tr>
         <td align="center">Nb final</td>
-        <td colspan="4"><input name="txtNbTome" type="text" id="txtNbTome" value="<?php echo $view->NBTOME;?>" size="3" class="<?php echo $view->CHAMPFORMSTYLE;?>" style="text-align: center;" /> tomes</td>
+        <td colspan="4"><input name="txtNbTome" type="text" id="txtNbTome" value="<?php echo $view->NBTOME  ?? "";?>" size="3" class="<?php echo $view->CHAMPFORMSTYLE  ?? "";?>" style="text-align: center;" /> tomes</td>
     </tr>
     <tr>
         <td>Intro Série</td>
-        <td colspan="4"><textarea name="txtSerieHist" id="txtSerieHist" class="<?php echo $view->CHAMPFORMSTYLE;?>champ_commentaire"><?php echo nl2br($view->HISTOIRE_SERIE);?></textarea></td>
+        <td colspan="4"><textarea name="txtSerieHist" id="txtSerieHist" class="<?php echo $view->CHAMPFORMSTYLE  ?? "";?>champ_commentaire"><?php echo nl2br($view->HISTOIRE_SERIE  ?? "");?></textarea></td>
     </tr>
 </table>
 
@@ -56,8 +56,8 @@
         <td width="15%" class="label">
             <div align="center">Titre</div>
         </td>
-        <input name="txtTomeId" type="hidden" id="txtTomeId" value="<?php echo $view->IDTOME;?>" />
-        <td colspan="3" width="85%"><input name="txtTitre" type="text" id="txtTitre" value="<?php echo $view->TITRE;?>" size="50" /></td>
+        <input name="txtTomeId" type="hidden" id="txtTomeId" value="<?php echo $view->IDTOME  ?? "";?>" />
+        <td colspan="3" width="85%"><input name="txtTitre" type="text" id="txtTitre" value="<?php echo $view->TITRE  ?? "";?>" size="50" /></td>
     </tr>
     <tr>
         <td colspan="4" class="label">
@@ -70,11 +70,11 @@
                 </tr>
                 <tr>
                     <td align="center">
-                        <select name="lstType" size="1"><?php echo $view->OPTTYPE;?></select>
+                        <select name="lstType" size="1"><?php echo $view->OPTTYPE  ?? "";?></select>
                     </td>
-                    <td align="center"><input name="txtNumTome" type="text" id="txtNumTome" value="<?php echo $view->TOME;?>" size="3" style="text-align: center;" /></td>
-                    <td align="center"><input type="checkbox" name="chkIntegrale" value="checkbox" <?php echo $view->ISINT;?> /></td>
-                    <td align="center"><input name="txtPrixVente" type="text" id="txtPrixVente" value="<?php echo $view->PRIX_VENTE;?>" size="5" style="text-align: center;" /></td>
+                    <td align="center"><input name="txtNumTome" type="text" id="txtNumTome" value="<?php echo $view->TOME  ?? "";?>" size="3" style="text-align: center;" /></td>
+                    <td align="center"><input type="checkbox" name="chkIntegrale" value="checkbox" <?php echo $view->ISINT  ?? "";?> /></td>
+                    <td align="center"><input name="txtPrixVente" type="text" id="txtPrixVente" value="<?php echo $view->PRIX_VENTE  ?? "";?>" size="5" style="text-align: center;" /></td>
                 </tr>
             </table>
         </td>
@@ -82,62 +82,62 @@
     <tr>
         <td class="label">Intro Tome</td>
         <td colspan="3">
-            <textarea name="txtHistoire" id="txtHistoire" class="champ_commentaire"><?php echo nl2br($view->HISTOIRE);?></textarea>
+            <textarea name="txtHistoire" id="txtHistoire" class="champ_commentaire"><?php echo nl2br($view->HISTOIRE  ?? "");?></textarea>
         </td>
     </tr>
 
 
     <tr>
         <td width="88" class="label">Scenariste</td>
-        <td width="37"><input name="txtScenarId" id="txtScenarId" type="text" value="<?php echo $view->IDSCEN;?>" size="5" /></td>
-        <td width="278"><input name="txtScenar" id="txtScenar" type="text" value="<?php echo $view->SCENARISTE;?>" size="30" /></td>
+        <td width="37"><input name="txtScenarId" id="txtScenarId" type="text" value="<?php echo $view->IDSCEN  ?? "";?>" size="5" /></td>
+        <td width="278"><input name="txtScenar" id="txtScenar" type="text" value="<?php echo $view->SCENARISTE  ?? "";?>" size="30" /></td>
         <td width="62">
-            <a href="<?php echo $view->URLEDITSCEN;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
+            <a href="<?php echo $view->URLEDITSCEN  ?? "";?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenar.value,'myform','txtScenar',true)" />
         </td>
     </tr>
     <tr>
         <td class="label">(Optionnel)</td>
-        <td><input name="txtScenarAltId" id="txtScenarAltId" type="text" value="<?php echo $view->IDSCENALT;?>" size="5" /></td>
-        <td><input name="txtScenarAlt" id="txtScenarAlt" type="text" value="<?php echo $view->SCENARISTEALT;?>" size="30" /></td>
+        <td><input name="txtScenarAltId" id="txtScenarAltId" type="text" value="<?php echo $view->IDSCENALT  ?? "";?>" size="5" /></td>
+        <td><input name="txtScenarAlt" id="txtScenarAlt" type="text" value="<?php echo $view->SCENARISTEALT  ?? "";?>" size="30" /></td>
         <td>
-            <a href="<?php echo $view->URLEDITSCENALT;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
+            <a href="<?php echo $view->URLEDITSCENALT  ?? "";?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenarAlt.value,'myform','txtScenarAlt',true)" />
         </td>
     </tr>
     <tr>
         <td class="label">Dessinateur</td>
-        <td><input name="txtDessiId" id="txtDessiId" type="text" value="<?php echo $view->IDDESS;?>" size="5" /></td>
-        <td><input name="txtDessi" id="txtDessi" type="text" value="<?php echo $view->DESSINATEUR;?>" size="30" /></td>
+        <td><input name="txtDessiId" id="txtDessiId" type="text" value="<?php echo $view->IDDESS  ?? "";?>" size="5" /></td>
+        <td><input name="txtDessi" id="txtDessi" type="text" value="<?php echo $view->DESSINATEUR  ?? "";?>" size="30" /></td>
         <td>
-            <a href="<?php echo $view->URLEDITDESS;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a>
+            <a href="<?php echo $view->URLEDITDESS  ?? "";?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessi.value,'myform','txtDessi',true)" />
         </td>
     </tr>
     <tr>
         <td class="label">(optionnel)</td>
-        <td><input name="txtDessiAltId" id="txtDessiAltId" type="text" value="<?php echo $view->IDDESSALT;?>" size="5" /></td>
-        <td><input name="txtDessiAlt" id="txtDessiAlt" type="text" value="<?php echo $view->DESSINATEURALT;?>" size="30" /></td>
+        <td><input name="txtDessiAltId" id="txtDessiAltId" type="text" value="<?php echo $view->IDDESSALT  ?? "";?>" size="5" /></td>
+        <td><input name="txtDessiAlt" id="txtDessiAlt" type="text" value="<?php echo $view->DESSINATEURALT  ?? "";?>" size="30" /></td>
         <td>
-            <a href="<?php echo $view->URLEDITDESSALT;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a>
+            <a href="<?php echo $view->URLEDITDESSALT  ?? "";?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0"></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessiAlt.value,'myform','txtDessiAlt',true)" />
         </td>
     </tr>
     <tr>
         <td class="label">Coloriste</td>
-        <td> <input name="txtColorId" id="txtColorId" type="text" value="<?php echo $view->IDCOLOR;?>" size="5" /></td>
-        <td> <input name="txtColor" id="txtColor" type="text" value="<?php echo $view->COLORISTE;?>" size="30" /></td>
+        <td> <input name="txtColorId" id="txtColorId" type="text" value="<?php echo $view->IDCOLOR  ?? "";?>" size="5" /></td>
+        <td> <input name="txtColor" id="txtColor" type="text" value="<?php echo $view->COLORISTE  ?? "";?>" size="30" /></td>
         <td>
-            <a href="<?php echo $view->URLEDITCOLOR;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
+            <a href="<?php echo $view->URLEDITCOLOR  ?? "";?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColor.value,'myform','txtColor',true)" />
         </td>
     </tr>
     <tr>
         <td class="label">(Optionnel)</td>
-        <td><input name="txtColorAltId" id="txtColorAltId" type="text" value="<?php echo $view->IDCOLORALT;?>" size="5" /></td>
-        <td><input name="txtColorAlt" id="txtColorAlt" type="text" value="<?php echo $view->COLORISTEALT;?>" size="30" /></td>
+        <td><input name="txtColorAltId" id="txtColorAltId" type="text" value="<?php echo $view->IDCOLORALT  ?? "";?>" size="5" /></td>
+        <td><input name="txtColorAlt" id="txtColorAlt" type="text" value="<?php echo $view->COLORISTEALT  ?? "";?>" size="30" /></td>
         <td>
-            <a href="<?php echo $view->URLEDITCOLORALT;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
+            <a href="<?php echo $view->URLEDITCOLORALT  ?? "";?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColorAlt.value,'myform','txtColorAlt',true)" />
         </td>
     </tr>
@@ -147,9 +147,9 @@
                 <table class="tableaux_admin">
     <tr>
         <td align="center">
-            <img src="<?php echo $view->URLIMAGE;?>" width="180" border="0" align="absmiddle" />
+            <img src="<?php echo $view->URLIMAGE  ?? "";?>" width="180" border="0" align="absmiddle" />
             <br />
-            <?php echo $view->DIMIMAGE;?>
+            <?php echo $view->DIMIMAGE  ?? "";?>
         </td>
     </tr>
     <tr>
@@ -202,11 +202,11 @@
                 <tr>
                     <td align="center">
                         ISBN-13 (EAN) :
-                        <input name="txtEAN" type="text" value="<?php echo $view->EAN;?>" size="14" />
+                        <input name="txtEAN" type="text" value="<?php echo $view->EAN  ?? "";?>" size="14" />
                     </td>
                     <td align="center">
                         ISBN-10 :
-                        <input name="txtISBN" type="text" value="<?php echo $view->ISBN;?>" size="10" />
+                        <input name="txtISBN" type="text" value="<?php echo $view->ISBN  ?? "";?>" size="10" />
                     </td>
                 </tr>
             </table>
@@ -219,19 +219,19 @@
                     <td width="22%" align="center" title="si 0000-00-00 apparaît, cela signifie que le membre a mal saisi la date">
                         Date Parution
                         <div class="petite_police" style="margin-bottom: 10px;">(aaaa-mm-jj)</div>
-                        <input name="txtDateParution" type="text" id="txtDateParution" value="<?php echo $view->DTPAR;?>" size="10" class="<?php echo $view->PARUTION_0;?>" />
+                        <input name="txtDateParution" type="text" id="txtDateParution" value="<?php echo $view->DTPAR  ?? "";?>" size="10" class="<?php echo $view->PARUTION_0  ?? ""; ?>" />
                         <br />
-                        <label for="FLAG_DTE_PARUTION">Introuvable <input name="FLAG_DTE_PARUTION" type="checkbox" id="FLAG_DTE_PARUTION" value="1" <?php echo $view->CHKFLAG_DTE_PARUTION;?> /></label>
+                        <label for="FLAG_DTE_PARUTION">Introuvable <input name="FLAG_DTE_PARUTION" type="checkbox" id="FLAG_DTE_PARUTION" value="1" <?php echo $view->CHKFLAG_DTE_PARUTION  ?? "";?> /></label>
                     </td>
                     <td width="1%" align="center"></td>
                     <td width="8%" align="center">
                         <div>Tirage de t&ecirc;te</div>
-                        <input type="checkbox" name="chkTT" value="checkbox" <?php echo $view->ISTT;?> />
+                        <input type="checkbox" name="chkTT" value="checkbox" <?php echo $view->ISTT  ?? "";?> />
                     </td>
                     <td width="1%" align="center"></td>
                     <td width="68%" align="center">
                         Description de l'édition<br />
-                        <textarea name="txtComment" class="textarea_description_edition"><?php echo $view->COMMENT;?></textarea>
+                        <textarea name="txtComment" class="textarea_description_edition"><?php echo $view->COMMENT  ?? "";?></textarea>
                     </td>
                 </tr>
             </table>

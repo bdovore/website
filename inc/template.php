@@ -267,7 +267,7 @@ class Template
             $this->file[$varname] = $this->filename($filename);
         } else {
             reset($varname);
-            while(list($v, $f) = each($varname)) {
+            foreach ($varname as $v => $f) {
                 if ($this->debug & 4) {
                     echo "<p><b>set_file:</b> (with array) varname = $v, filename = $f</p>\n";
                 }
