@@ -374,6 +374,7 @@ class Admin extends Bdo_Controller {
                 // Determine l'URL image
                 if (is_null($this->Edition->IMG_COUV) | ($this->Edition->IMG_COUV == '')) {
                     $url_image = BDO_URL_COUV . "default.png";
+                    $dim_image = "";
                 } else {
                     if (substr($this->Edition->IMG_COUV, 0, 3) == "tmp") { // image temporaire dans le repertoire upload
                         $url_image = BDO_URL_IMAGE . "tmp/" . $this->Edition->IMG_COUV;
@@ -1702,7 +1703,7 @@ class Admin extends Bdo_Controller {
                 // mise à jour des liens entre séries
                 $this->loadModel("Groupeserie");
                 $this->Groupeserie->deleteLiens(postVal("txtSerieId"));
-                $listSerieLiee = postVal("idSerie","");
+                $listSerieLiee = postVal("idSerie",[]);
                 if (count($listSerieLiee) > 0 ) {
                     $this->Groupeserie->addLiens(postVal("txtSerieId"),$listSerieLiee);
                 }

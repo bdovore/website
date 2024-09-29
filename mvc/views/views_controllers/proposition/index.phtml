@@ -477,8 +477,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
      changeEditeur();
     function changeEditeur() {
         addAutocomplete("txtCollec","spCollec","txtCollecId","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val());
-        //addSelectOption("txtCollec1","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo issetNotEmpty($view->edition) ? $view->edition->ID_COLLECTION : 0;?>);
-
+       
     }
      $(document).ready(function(){
   $('#txtDateParution3').mask('0000-00-00', {placeholder: "0000-00-00"});
