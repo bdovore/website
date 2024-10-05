@@ -23,8 +23,10 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     <tr>
     <td class="milieu" colspan="3">
     <?php 
-    unset($view->a_row[0]->NUM_TOME);
-    echo $ficheAlbum->serie($view->a_row[0]);?>
+    if (isset($view->a_row[0])) {
+        unset($view->a_row[0]->NUM_TOME);
+        echo $ficheAlbum->serie($view->a_row[0]);
+    }?>
     </td>
     </tr>
         <?php
