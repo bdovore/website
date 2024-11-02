@@ -96,8 +96,10 @@ class GetJSON extends Bdo_Controller {
         } else if ($term <> "") {
             $where = " WHERE PSEUDO like '%" . Db_Escape_String($term) . "%' ORDER BY PSEUDO";
             $this->Auteur->load("c", $where);
+        } else {
+            $this->view->set_var('json',"{}");
         }
-        if ($mode == 0) {
+        if ($mode == 0 AND isset($this->Auteur->dbSelect->a_dataQuery)) {
             foreach ($this->Auteur->dbSelect->a_dataQuery as $obj) {
 
                 $arr[] = (object) array(
@@ -106,7 +108,7 @@ class GetJSON extends Bdo_Controller {
                 );
             }
             $this->view->set_var('json', json_encode($arr));
-        } else {
+        } else if (isset($this->Auteur->dbSelect->a_dataQuery)) {
             $this->view->set_var('json', json_encode($this->Auteur->dbSelect->a_dataQuery));
         }
 
@@ -269,7 +271,7 @@ class GetJSON extends Bdo_Controller {
                             'id' => $obj->ID_GENRE
                 );
             }
-            $this->view->set_var('json', json_encode($arr));
+            $this->view->set_var('json', json_encode($arr ?? []));
         } else {
             $this->view->set_var('json', json_encode($this->Genre->dbSelect->a_dataQuery));
         }
@@ -302,7 +304,7 @@ class GetJSON extends Bdo_Controller {
                             'id' => $obj->ID_EDITEUR
                 );
             }
-            $this->view->set_var('json', json_encode($arr));
+            $this->view->set_var('json', json_encode($arr ?? []));
         } else {
             $this->view->set_var('json', json_encode($this->Editeur->dbSelect->a_dataQuery));
         }
@@ -344,7 +346,7 @@ class GetJSON extends Bdo_Controller {
                             'id' => $obj->ID_COLLECTION
                 );
             }
-            $this->view->set_var('json', json_encode($arr));
+            $this->view->set_var('json', json_encode($arr ?? []));
         } else {
             $this->view->set_var('json', json_encode($this->Collection->dbSelect->a_dataQuery));
         }
@@ -391,7 +393,7 @@ class GetJSON extends Bdo_Controller {
                             'id' => $obj->ID_SERIE
                 );
             }
-            $this->view->set_var('json', json_encode($arr));
+            $this->view->set_var('json', json_encode($arr ?? []));
         } else {
             $this->view->set_var('json', json_encode($this->Serie->dbSelect->a_dataQuery));
         }
@@ -489,7 +491,7 @@ class GetJSON extends Bdo_Controller {
                             "ID_TOME" => $id_tome
                         ));
                     $dbs_album = $this->Tome->load();
-                    $id_serie = $this->Tome->ID_SERIE;
+                    $id_serie = $this->Tome->ID_SERIE ?? 0;
                  }
                 $this->loadModel("Users_exclusions");
                 // on check si l'album ou la série est exclue
@@ -522,7 +524,7 @@ class GetJSON extends Bdo_Controller {
             $this->loadModel("Useralbum");
             $this->loadModel("Users_exclusions");
             $user_id = intval($_SESSION['userConnect']->user_id);
-            $dbs_serie = $this->Useralbum->getUserSerie($user_id, $page, $length,$term,$origin,$auteur, $liste, $complet, $from);
+            $dbs_serie = $this->Useralbum->getUserSerie($user_id, $page, $length,$term,$origin,$auteur="", $liste="", $complet, $from);
             $a_obj = array();
             foreach ($dbs_serie as $serie) {
                 $a_obj[] = $serie;
