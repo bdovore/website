@@ -404,6 +404,7 @@ FROM " . $this->table_name . "
                 return $error;
                 //throw new Exception(curl_error($ch), curl_errno($ch));
             }
+            Db_close($connexion);
                     /*
             $query = "SELECT MAX(user_id) AS total FROM bb3_users";
             $result = Db_query($query,$connexion);
