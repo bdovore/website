@@ -16,11 +16,11 @@
                         </td>
                         <td width="10%">
                             <div align="left">
-                                <input name="txtTomeId" type="text" id="txtTomeId" value="<?php echo $view->IDTOME;?>" size="5" class="champ_form_desactive" />
+                                <input name="txtTomeId" type="text" id="txtTomeId" value="<?php echo $view->IDTOME ?? "";?>" size="5" class="champ_form_desactive" />
                             </div>
                         </td>
                         <td colspan="2" width="80%">
-                            <input name="txtTome" type="text" id="txtTome" value="<?php echo $view->TITRE;?>" class="champ_form_desactive" style="width: 100%;" />
+                            <input name="txtTome" type="text" id="txtTome" value="<?php echo $view->TITRE ?? "";?>" class="champ_form_desactive" style="width: 100%;" />
                         </td>
                     </tr>
                 </table>
@@ -31,17 +31,17 @@
                             <table class="tableaux_admin">
     <tr>
         <td width="16%" class="label"><div align="center">Editeur</div></td>
-        <td width="12%"><input name="txtEditeurId" id="txtEditeurId" type="text" value="<?php echo $view->IDEDIT;?>" size="5" /></td>
-        <td width="58%"><input name="txtEditeur" id="txtEditeur" type="text" value="<?php echo $view->EDITEUR;?>" size="30" onchange="changeEditeur();"/></td>
+        <td width="12%"><input name="txtEditeurId" id="txtEditeurId" type="text" value="<?php echo $view->IDEDIT ?? "";?>" size="5" /></td>
+        <td width="58%"><input name="txtEditeur" id="txtEditeur" type="text" value="<?php echo $view->EDITEUR ?? "";?>" size="30" onchange="changeEditeur();"/></td>
         <td width="14%">
-            <a href="<?php echo $view->URLEDITEDIT;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
+            <a href="<?php echo $view->URLEDITEDIT ?? "";?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE ?? "";?>edit.gif" width="18" height="13" border="0" /></a>
 
         </td>
     </tr>
     <tr>
         <td class="label"><div align="center">Collection</div></td>
-        <td><input name="txtCollecId" id="txtCollecId" type="text" value="<?php echo $view->IDCOLLEC;?>" size="5" /></td>
-        <td><input name="txtCollec" id="txtCollec" type="text" value="<?php echo $view->COLLECTION;?>" size="30" /></td>
+        <td><input name="txtCollecId" id="txtCollecId" type="text" value="<?php echo $view->IDCOLLEC ?? "";?>" size="5" /></td>
+        <td><input name="txtCollec" id="txtCollec" type="text" value="<?php echo $view->COLLECTION ?? "" ;?>" size="30" /></td>
         <td>
             <a href="<?php echo $view->URLEDITCOLL;?>" class="fancybox fancybox.iframe {width:600,height:300}"><img src="<?php echo BDO_URL_IMAGE;?>edit.gif" width="18" height="13" border="0" /></a>
 
@@ -53,11 +53,11 @@
                 <tr>
                     <td align="center">
                         ISBN-13 (EAN) :
-                        <input name="txtEAN" type="text" value="<?php echo $view->EAN;?>" size="14" />
+                        <input name="txtEAN" type="text" value="<?php echo $view->EAN ?? "";?>" size="14" />
                     </td>
                     <td align="center">
                         ISBN-10 :
-                        <input name="txtISBN" type="text" value="<?php echo $view->ISBN;?>" size="10" />
+                        <input name="txtISBN" type="text" value="<?php echo $view->ISBN ?? "";?>" size="10" />
                     </td>
                 </tr>
             </table>
@@ -70,19 +70,19 @@
                     <td width="22%" align="center" title="si 0000-00-00 apparaît, cela signifie que le membre a mal saisi la date">
                         Date Parution
                         <div class="petite_police" style="margin-bottom: 10px;">(aaaa-mm-jj)</div>
-                        <input name="txtDateParution" type="text" id="txtDateParution" value="<?php echo $view->DTPAR;?>" size="10" class="<?php echo $view->PARUTION_0;?>" />
+                        <input name="txtDateParution" type="text" id="txtDateParution" value="<?php echo $view->DTPAR ?? "";?>" size="10" class="<?php echo $view->PARUTION_0 ?? "";?>" />
                         <br />
-                        <label for="FLAG_DTE_PARUTION">Introuvable <input name="FLAG_DTE_PARUTION" type="checkbox" id="FLAG_DTE_PARUTION" value="1" <?php echo $view->CHKFLAG_DTE_PARUTION;?> /></label>
+                        <label for="FLAG_DTE_PARUTION">Introuvable <input name="FLAG_DTE_PARUTION" type="checkbox" id="FLAG_DTE_PARUTION" value="1" <?php echo $view->CHKFLAG_DTE_PARUTION ?? "";?> /></label>
                     </td>
                     <td width="1%" align="center"></td>
                     <td width="8%" align="center">
                         <div>Tirage de t&ecirc;te</div>
-                        <input type="checkbox" name="chkTT" value="checkbox" <?php echo $view->ISTT;?> />
+                        <input type="checkbox" name="chkTT" value="checkbox" <?php echo $view->ISTT ?? "";?> />
                     </td>
                     <td width="1%" align="center"></td>
                     <td width="68%" align="center">
                         Description de l'édition<br />
-                        <textarea name="txtComment" class="textarea_description_edition"><?php echo $view->COMMENT;?></textarea>
+                        <textarea name="txtComment" class="textarea_description_edition"><?php echo $view->COMMENT ?? "";?></textarea>
                     </td>
                 </tr>
             </table>
@@ -96,9 +96,9 @@
                 <table class="tableaux_admin">
     <tr>
         <td align="center">
-            <img src="<?php echo $view->URLIMAGE;?>" width="180" border="0" align="absmiddle" />
+            <img src="<?php echo $view->URLIMAGE ?? "";?>" width="180" border="0" align="absmiddle" />
             <br />
-            <?php echo $view->DIMIMAGE;?>
+            <?php echo $view->DIMIMAGE ?? "";?>
         </td>
     </tr>
     <tr>
@@ -110,7 +110,7 @@
     <tr>
         <td class="label">
             Contenu explicite :
-            <input type="checkbox" name="chkExplicite" value="checked" <?php echo $view->EXPLICIT_CHECKED; ?> />
+            <input type="checkbox" name="chkExplicite" value="checked" <?php echo $view->EXPLICIT_CHECKED ?? ""; ?> />
         </td>
     </tr>
     <tr>
@@ -134,13 +134,13 @@
                     <tr>
                         <td>
                             <p class="b">Statistiques</p>
-                            <p><?php echo $view->NBUSERS;?> utilisateur(s) ont cette edition dans leur collection <?php echo $view->VIEWUSEREDITION;?></p>
+                            <p><?php echo $view->NBUSERS ?? 0;?> utilisateur(s) ont cette edition dans leur collection <?php echo $view->VIEWUSEREDITION ?? "";?></p>
                             <p class="b">Menu Express</p>
                             <p>
-                                <?php echo $view->ACTIONAUTORIZE;?> <?php echo $view->CONTACTUSER;?>
+                                <?php echo $view->ACTIONAUTORIZE ?? "";?> <?php echo $view->CONTACTUSER ?? "";?>
                                 <ul>
-                                    <a href="<?php echo $view->URLFUSIONEDITION;?>"><li>Fusionner cette édition</li></a>
-                                    <a href="<?php echo $view->URLDELETE;?>"><li>Supprimer cette edition</li></a>
+                                    <a href="<?php echo $view->URLFUSIONEDITION ?? "";?>"><li>Fusionner cette édition</li></a>
+                                    <a href="<?php echo $view->URLDELETE ?? "";?>"><li>Supprimer cette edition</li></a>
                                     <a href="#" onclick="javascript:window.open('addauteur','myauteur','scrollbars=no,resizable=yes,width=400,height=150');return(false)"></a>
                                 </ul>
                             </p>
@@ -159,7 +159,7 @@
 
      changeEditeur();
     function changeEditeur() {
-        //addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo $view->IDCOLLEC + 0;?>);
+        //addSelectOption("txtCollec","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val(),<?php echo ($view->IDCOLLEC ?? 0) + 0;?>);
     addAutocomplete("txtCollec","spCollec","txtCollecId","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val());
     }
     $(document).ready(function(){

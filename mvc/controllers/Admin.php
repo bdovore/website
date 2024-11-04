@@ -274,7 +274,7 @@ class Admin extends Bdo_Controller {
                 // determine si une référence d'album a été passée
                  
                 if (getVal("alb_id", "") <> "") {
-                    $alb_id = getValInteger($alb_id);
+                    $alb_id = getValInteger("alb_id");
                     $this->Tome->set_dataPaste(array("ID_TOME" => $alb_id));
                     $this->Tome->load();
                     $alb_titre = $this->Tome->TITRE_TOME;
@@ -778,70 +778,14 @@ class Admin extends Bdo_Controller {
                     } else {
                         $img_couv = '';
                     }
-                    if (postVal("chkResize") == "checked" && $img_couv != '') {
-                        //Redimensionnement
-                        $max_size = 360;
-                        $imageproperties = getimagesize(BDO_DIR_COUV . $img_couv);
-                        if ($imageproperties != false) {
-                            $imagetype = $imageproperties[2];
-                            $imagelargeur = $imageproperties[0];
-                            $imagehauteur = $imageproperties[1];
-
-                            //Détermine s'il y a lieu de redimensionner l'image
-                            if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $maxsize)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
-                                if ($imagelargeur < $imagehauteur) {
-                                    // image de type panorama : on limite la largeur à 128
-                                    $new_w = $max_size;
-                                    $new_h = round($imagehauteur * $max_size / $imagelargeur);
-                                } else {
-                                    // imahe de type portrait : on limite la hauteur au maxi
-                                    $new_h = $max_size;
-                                    $new_w = round($imagelargeur * $max_size / $imagehauteur);
-                                }
-                            } else {
-                                $new_h = $imagehauteur;
-                                $new_w = $imagelargeur;
-                            }
-                            $new_image = imagecreatetruecolor($new_w, $new_h);
-                            
-                            switch ($imagetype) {
-                                case "1":
-                                    $source = imagecreatefromgif(BDO_DIR_COUV . $img_couv);
-                                    break;
-                                case "2":
-                                    $source = imagecreatefromjpeg(BDO_DIR_COUV . $img_couv);
-                                    break;
-                                case "3":
-                                    $source = imagecreatefrompng(BDO_DIR_COUV . $img_couv);
-                                    break;
-                                case "6":
-                                    $source = imagecreatefrombmp(BDO_DIR_COUV . $img_couv);
-                                    break;
-                                case IMAGETYPE_WEBP:
-                                    $source = imagecreatefromwebp(BDO_DIR_COUV. $img_couv);
-                                    break;
-                            }
-                            imagecopyresampled($new_image, $source, 0, 0, 0, 0, $new_w, $new_h, $imagelargeur, $imagehauteur);
-                            switch ($imagetype) {
-                                case "2":
-                                    unlink(BDO_DIR_COUV . $img_couv);
-                                    imagejpeg($new_image, BDO_DIR_COUV . $img_couv, 100);
-                                    break;
-                                case "1":
-                                case "3":
-                                case "6":
-                                    unlink(BDO_DIR_COUV . $img_couv);
-                                    $img_couv = substr($img_couv, 0, strlen($img_couv) - 3) . "jpg";
-                                    imagejpeg($new_image, BDO_DIR_COUV . $img_couv, 100);
-                            }
-                        }
-                        echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
-                        echo "Image redimensionn&eacute;e<br />";
-                    }
+                    
 
                     // met à jours la référence au fichier dans la table bd_edition
                     $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
                     $this->Edition->update();
+                    if (postVal("chkResize") == "checked" && $img_couv != '') {
+                       $this->resize_edition_image($lid_edition, BDO_DIR_COUV);
+                    }
                 }
                 echo GetMetaTag(2, "L'album a &eacute;t&eacute; ajout&eacute;", (BDO_URL . "admin/editalbum?alb_id=" . $lid_tome));
             }
