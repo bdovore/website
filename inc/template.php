@@ -256,28 +256,36 @@ class Template
     * @return    boolean
     */
     function set_file($varname, $filename = "") {
-        if (!is_array($varname)) {
+        // Si $varname est un string
+        if (is_string($varname)) {
             if ($this->debug & 4) {
                 echo "<p><b>set_file:</b> (with scalar) varname = $varname, filename = $filename</p>\n";
             }
-            if ($filename == "") {
+            if (empty($filename)) {  // Utiliser empty() pour vérifier les valeurs nulles ou vides
                 $this->halt("set_file: For varname $varname filename is empty.");
                 return false;
             }
             $this->file[$varname] = $this->filename($filename);
-        } else {
-            reset($varname);
+
+        // Si $varname est un tableau associatif (hash)
+        } elseif (is_array($varname)) {
             foreach ($varname as $v => $f) {
                 if ($this->debug & 4) {
                     echo "<p><b>set_file:</b> (with array) varname = $v, filename = $f</p>\n";
                 }
-                if ($f == "") {
+                if (empty($f)) {  // Utiliser empty() pour gérer les chaînes vides ou nulles
                     $this->halt("set_file: For varname $v filename is empty.");
                     return false;
                 }
                 $this->file[$v] = $this->filename($f);
             }
+
+        // Gestion d’un type inattendu pour $varname
+        } else {
+            $this->halt("set_file: varname should be a string or an array.");
+            return false;
         }
+
         return true;
     }
 
@@ -365,12 +373,12 @@ class Template
             }
         } else {
             reset($varname);
-            while(list($k, $v) = each($varname)) {
+           foreach ($varname as $k => $v) {
                 if (!empty($k)) {
                     if ($this->debug & 1) {
                         printf("<b>set_var:</b> (with array) <b>%s</b> = '%s'<br>\n", $k, htmlspecialchars($v));
                     }
-                    $this->varkeys[$k] = "/".$this->varname($k)."/";
+                    $this->varkeys[$k] = "/" . $this->varname($k) . "/";
                     if ($append && isset($this->varvals[$k])) {
                         $this->varvals[$k] .= $v;
                     } else {
@@ -493,10 +501,9 @@ class Template
 
         // quote the replacement strings to prevent bogus stripping of special chars
         reset($this->varvals);
-        while(list($k, $v) = each($this->varvals)) {
+       foreach ($this->varvals as $k => $v) {
             $varvals_quoted[$k] = preg_replace(array('/\\\\/', '/\$/'), array('\\\\\\\\', '\\\\$'), $v);
         }
-
         $str = $this->get_var($varname);
         $str = preg_replace($this->varkeys, $varvals_quoted, $str);
         return $str;

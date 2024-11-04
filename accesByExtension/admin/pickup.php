@@ -4,14 +4,15 @@
 
 minAccessLevel(5);
 
-// Déclare le template à utiliser
+// Dï¿½clare le template ï¿½ utiliser
 $t = new Template(BDO_DIR."public/templates");
-// fichier à utiliser
+$t->set_root(BDO_DIR."public/templates");
+// fichier ï¿½ utiliser
 $t->set_file("tpBody","pickup.tpl");
-// Block à utiliser
+// Block ï¿½ utiliser
 $t->set_block('tpBody','ResultBlock','RBlock');
 
-//détermine la query à utiliser
+//dï¿½termine la query ï¿½ utiliser
 switch ($cat){
     case "serie":   $query = "select id_serie as myID, nom as myName from bd_serie where nom like '%".$DB->escape($text)."%' or nom like '".$DB->escape($text)."' order by nom";
         break;

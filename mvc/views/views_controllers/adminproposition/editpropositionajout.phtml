@@ -1,40 +1,5 @@
 <script src="<?php echo BDO_URL;?>jquery/jquery.mask.min" type="text/javascript"></script>
-<SCRIPT type="text/javascript"><!--
-function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
-    if ((isMandatory == true) && (myText.length < 2)) {
-        alert('Veuillez saisir au moins 2 caractères');
-    }else {
-        if (myCategory == "collection") {
-            if (myEditeur == '') {
-                alert("Veuillez saisir l'éditeur en premier");
-            }else {
-                mywindow=open("pickup?cat=" + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement + "&IdEditeur=" + myEditeur,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-            }
-        }else {
-            mywindow=open('pickup?cat=' + myCategory + "&text=" + myText + "&ReturnDoc=" + myForm + "&ReturnElement=" + myElement,'myname','scrollbars=yes,resizable=yes,width=350,height=270');
-        }
-    }
-}
-function verifFieldNull(myField) {
-    if(myField == "0") {
-        alert('Veuillez attribuer une série à l\'album rogntudju !');
-        return false;
-    }else{
-        return true;
-    }
-}
-function verifAddExisting(myIdTome,myAction) {
-    if(myAction == "2") {
-        alert("Le membre ne semble pas avoir demandé qu'un album soit ajouté à sa collection ou futurs achats.");
-        return false;
-    }else if(myIdTome == "") {
-        alert("Veuillez indiquer l'identifiant de l'album rogntudju !");
-        return false;
-    }else{
-        return true;
-    }
-}
-//--></SCRIPT>
+
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
 <div class="fond_admin">
     <div class="titre_admin">Traitement des albums en attente</div>
