@@ -19,7 +19,7 @@ function valider(){
         <table width="100%" border="1" bgcolor="#FFFFCC" valign="top">
           <tr bordercolor="#FFFFCC">
             <td width="18%" height="27">Nom</td>
-            <td width="82%"><input name="txtIdEditeur" type="hidden" value="<?php echo $view->IDEDITEUR;?>">
+            <td width="82%"><input name="txtIdEditeur" type="hidden" value="<?php echo $view->IDEDITEUR ?? "";?>">
               <input name="txtNomEditeur" type="text" value="<?php echo $view->NOM;?>" size="38"></td>
           </tr>
           <tr bordercolor="#FFFFCC">
@@ -34,7 +34,7 @@ function valider(){
     <div class="cadre1">
    <p>Nombre de collections
           : <?php echo $view->NBCOLLEC;?><br>
-        <?php if (issetNotEmpty($view->dbs_collection)) {
+        <?php if (issetNotEmpty($view->dbs_collection ?? Null)) {
                     foreach ($view->dbs_collection->a_dataQuery as $collection ) { ?>
           <a href="<?php echo BDO_URL."admin/editcollection?collec_id=".$collection->ID_COLLECTION; ?>"><?php echo htmlspecialchars($collection->NOM);?></a><br>
 

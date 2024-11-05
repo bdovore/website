@@ -140,7 +140,7 @@ FROM " . $this->table_name . "
         // tentative de connexion automatique
         if ((! isset($_SESSION['userConnect']->user_id) or empty($_SESSION['userConnect']->user_id))
                 and issetNotEmpty($_COOKIE["username"])
-                and issetNotEmpty($_COOKIE["pass"])) {
+                and issetNotEmpty($_COOKIE["pass"] ?? "")) {
 
             $this->load('c', "
                 WHERE username ='" . Db_Escape_String($_COOKIE["username"]) . "'

@@ -298,9 +298,9 @@
                         <td colspan="4" class="label">
                             <table width="100%" border="0">
                                 <tr>
-                                    <td align="center"><a href="<?php echo $view->URLEAN;?>" title="Teste le code EAN sur BDNet" target="_blank">EAN</a> :
+                                    <td align="center"><a href="<?php echo $view->URLEAN ?? "";?>" title="Teste le code EAN sur BDNet" target="_blank">EAN</a> :
                                     <input name="txtEAN" type="text" value="<?php echo $view->EAN;?>" size="14" class="<?php echo $view->CLEAN;?>" /><?php echo $view->ISEAN;?></td>
-                                    <td align="center"><a href="<?php echo $view->URLISBN;?>" title="Teste le code ISBN sur Amazon" target="_blank">ISBN</a> :
+                                    <td align="center"><a href="<?php echo $view->URLISBN ?? "";?>" title="Teste le code ISBN sur Amazon" target="_blank">ISBN</a> :
                                     <input name="txtISBN" type="text" value="<?php echo $view->ISBN;?>" size="10" class="<?php echo $view->CLISBN;?>" /><?php echo $view->ISISBN;?></td>
                                 </tr>
                         <tr>

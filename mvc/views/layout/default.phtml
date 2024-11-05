@@ -6,7 +6,7 @@ $jquery = $view->getHelper('jquery');
    "http://www.w3.org/TR/html4/loose.dtd">
 <html<?php if (isset($view->opengraph)) echo ' xmlns:og="http://ogp.me/ns#"'; ?>>
 <head>
-<title><?php echo $view->PAGETITLE;?></title>
+<title><?php echo $view->PAGETITLE ?? "Bdovore...";?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="content-language" content="fr" />
 <meta name="description" content="<?php echo issetNotEmpty($view->DESCRIPTION) ?  htmlentities($view->DESCRIPTION) : '';?> BDovore - Le site des collectionneurs de BD. G&eacute;rer votre collection de bandes dessin&eacute;es en ligne et gratuitement !" />
@@ -351,7 +351,7 @@ div.verticaltext {
 </style>
 </head>
 
-<body onLoad="<?php echo issetNotEmpty($view->BODYONLOAD) ? $view->BODYONLOAD : '' ;?>">
+<body onLoad="<?php echo $view->BODYONLOAD ?? "" ;?>">
 
 
     <div id="header" style="position: relative; z-index: 10;">

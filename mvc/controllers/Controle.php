@@ -249,7 +249,7 @@ class Controle extends Bdo_Controller
                 Controle :
                 <select name="id_queryRegle">';
             foreach ($a_queryRegle as $id_queryRegle => $queryRegle) {
-                $selected = ($id_queryRegle == $_POST['id_queryRegle']) ? 'SELECTED' : '';
+                $selected = ($id_queryRegle == $_POST['id_queryRegle'] ?? "") ? 'SELECTED' : '';
                 echo '<option value="' . $id_queryRegle . '" ' . $selected . ' >' . $queryRegle['title'] . '</option>';
             };
             echo '</select><br />

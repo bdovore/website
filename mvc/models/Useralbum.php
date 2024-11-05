@@ -785,7 +785,7 @@ class Useralbum extends Bdo_Db_Line
         $stat = array();
         $obj = Db_fetch_object($resultat);
         for ($i = 1; $i <= 10 ; $i++) {
-          if ($obj->note == $i) {
+          if ($obj->note ?? -1 == $i) {
               $stat[] = $obj;
               $obj = Db_fetch_object($resultat);
           }  else {

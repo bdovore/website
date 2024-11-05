@@ -143,7 +143,7 @@
     </tr>
 </table>
                 <!-- Partie Edition pour la création d'un nouvel album -->
-                <?php if (notIssetOrEmpty($view->dbs_edition)) { ?>
+                <?php if (notIssetOrEmpty($view->dbs_edition ?? "")) { ?>
                 <table class="tableaux_admin">
     <tr>
         <td align="center">
@@ -239,7 +239,7 @@
     </tr>
 </table>
                 <?php } ?>
-                <?php if (issetNotEmpty($view->dbs_edition)) { ?>
+                <?php if (issetNotEmpty($view->dbs_edition ?? "")) { ?>
                 <table class="tableaux_admin" width="100%">
                     <tr>
                         <td class="label">

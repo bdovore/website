@@ -313,7 +313,7 @@ class Compte extends Bdo_Controller {
             $frame = "default";
         }
         if ($mobile == "T") $frame = "default";*/
-        
+        $this->view->set_var("PAGETITLE", "BDOVORE.com : inscription");
         //$this->view->layout = "$frame";
         $this->view->render();
     }

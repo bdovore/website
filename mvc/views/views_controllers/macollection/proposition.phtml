@@ -59,7 +59,7 @@ $status[0] = "En attente";
                     </tr>
                     </thead>
                     <tbody>
-                    <?php if (issetNotEmpty($view->dbs_prop)) { foreach ($view->dbs_prop->a_dataQuery as $prop) { ?>
+                    <?php if (issetNotEmpty($view->dbs_prop ?? Null)) { foreach ($view->dbs_prop->a_dataQuery as $prop) { ?>
                     <!-- BEGIN PropBlock -->
                     <tr>
                         <td>
@@ -87,7 +87,7 @@ $status[0] = "En attente";
                     </tr>
                     <?php }} ?>
 
-                     <?php if (issetNotEmpty($view->dbs_edition)) { foreach ($view->dbs_edition->a_dataQuery as $prop) { ?>
+                     <?php if (issetNotEmpty($view->dbs_edition ?? Null)) { foreach ($view->dbs_edition->a_dataQuery as $prop) { ?>
                     <!-- BEGIN PropBlock -->
                     <tr>
                         <td>

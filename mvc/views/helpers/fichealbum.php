@@ -4,13 +4,13 @@ class FicheAlbum {
 
     public function getTitreTome ($o_tome,$url=true, $comment = false) {
         $html = "";
-        if (issetNotEmpty($o_tome->TITRE_TOME)) {
-            $int = issetNotEmpty($o_tome->FLG_INT_TOME) ? $o_tome->FLG_INT_TOME : "";
+        if (issetNotEmpty($o_tome->TITRE_TOME ?? Null)) {
+            $int = $o_tome->FLG_INT_TOME ?? "";
             if ($int == "O" and stripos(strtolower($o_tome->TITRE_TOME),"intégrale") === false) {
                 $html .= '<i>Intégrale - </i> ';
             }
 
-           if (issetNotEmpty($o_tome->NUM_TOME)) {
+           if (issetNotEmpty($o_tome->NUM_TOME ?? Null)) {
                if (preg_match("/n°".$o_tome->NUM_TOME."\b/i",$o_tome->TITRE_TOME) !== 1) {
                    $html .= '<i>T' . $o_tome->NUM_TOME . ' - </i> ';
                    
@@ -136,13 +136,13 @@ class FicheAlbum {
         }
 
         // editeur
-        if (issetNotEmpty($o_tome->NOM_EDITEUR)) {
+        if (issetNotEmpty($o_tome->NOM_EDITEUR ?? Null)) {
             $html .= 'Edition ';
             $html .= '<i><span itemprop="publisher">' . $o_tome->NOM_EDITEUR . '</span></i>';
             if (($o_tome->NOM_COLLECTION) and ($o_tome->NOM_COLLECTION != '<N/A>')) {
                 $html .= ' -  <i>' . $o_tome->NOM_COLLECTION . '</i>';
             }
-            if (issetNotEmpty($o_tome->DATE_PARUTION_EDITION)) {
+            if (issetNotEmpty($o_tome->DATE_PARUTION_EDITION ?? "")) {
            // $html .= 'Date parution : ';
             $html .= '<i> ('.$this->dateParution($o_tome->DATE_PARUTION_EDITION). ')</i>';
             }
@@ -204,7 +204,7 @@ class FicheAlbum {
         }
 
         //avancement 0: Finie, 1: En cours, 2: One-shot, 3:Interrompue
-        if (issetNotEmpty($o_serie->FLG_FINI_SERIE)) {
+        if (issetNotEmpty($o_serie->FLG_FINI_SERIE ?? Null)) {
             $a_avancement = array(
                 0 => 'Finie',
                 1 => 'En cours',
@@ -248,7 +248,7 @@ class FicheAlbum {
         if ($gotocomment) 
             $id_link .="#comment";
         // couverture par defaut
-        if (!issetNotEmpty($o_tome->IMG_COUV))
+        if (!issetNotEmpty($o_tome->IMG_COUV ?? Null))
             $o_tome->IMG_COUV = "default.png";
 
         $x = getenv("HTTP_USER_AGENT");
@@ -262,7 +262,7 @@ class FicheAlbum {
                     if (strtolower($o_tome->NOM_SERIE) != strtolower($o_tome->TITRE_TOME)) {
                          $titleHtml = $o_tome->NOM_SERIE;
 
-                        if (issetNotEmpty($o_tome->NUM_TOME)) {
+                        if (issetNotEmpty($o_tome->NUM_TOME ?? 0)) {
                             if (stripos($o_tome->TITRE_TOME, "n°".$o_tome->NUM_TOME) === false) {
                                  $titleHtml .= ' - ' . 'tome ' . $o_tome->NUM_TOME;
                             }
@@ -292,7 +292,7 @@ class FicheAlbum {
 
                 case "couvMedium": {
                         $html .= '<img itemprop="image" src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
-                        $html .= '</a>' . (issetNotEmpty($o_tome->NOM_EDITEUR) ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
+                        $html .= '</a>' . (issetNotEmpty($o_tome->NOM_EDITEUR ?? Null) ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
                         break;
                 }
 
@@ -419,7 +419,7 @@ class FicheAlbum {
     public function getSponsor($o_tome, $img=true, $all=false) {
         $html="";
         // bdfugue
-        if (issetNotEmpty($o_tome->EAN_EDITION) ) {
+        if (issetNotEmpty($o_tome->EAN_EDITION ?? Null) ) {
             $html .= "<a title='Achetez sur BDfugue !' target='_blank' href='" . BDO_PROTOCOL . "://www.bdfugue.com/a/?ref=295&ean=" . $o_tome->EAN_EDITION ."'><img src='" . BDO_URL_IMAGE . "bdfugue.png' height='22px' width='85px' class='img-sponsor'></a>";
         } 
         
@@ -430,7 +430,7 @@ class FicheAlbum {
             if (issetNotEmpty($o_tome->ISBN_EDITION) ) {
                 
                 $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . $o_tome->ISBN_EDITION . "/bdovorecom-21/";
-            } else if (issetNotEmpty($o_tome->EAN_EDITION)) {
+            } else if (issetNotEmpty($o_tome->EAN_EDITION ?? "")) {
                 $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . EAN_to_ISBN($o_tome->EAN_EDITION) . "/bdovorecom-21/";
             } else {
                 $html .= BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword=" . htmlentities ($o_tome->TITRE_TOME,$flag=ENT_QUOTES) . "&mode=books-fr";
@@ -443,7 +443,7 @@ class FicheAlbum {
              // Recyclivre
             $variable = "&utm_source=affiliation&utm_medium=affilae&utm_campaign=Bdovore#ae132" ;
             $html .= "&nbsp;<a title='Achetez sur Recyclivre !' href='https://www.recyclivre.com/search?";
-            if (issetNotEmpty($o_tome->EAN_EDITION)) {
+            if (issetNotEmpty($o_tome->EAN_EDITION ?? "")) {
                 $html .= "q=" . $o_tome->EAN_EDITION;
             } else {
                 $html .=  "filter%5Btaxon%5D=1151&q=" . htmlentities ($o_tome->TITRE_TOME,$flag=ENT_QUOTES) ;

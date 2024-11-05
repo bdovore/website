@@ -13,7 +13,7 @@
     <a href='<?php echo BDO_URL; ?>admin/editGenre?act=new' class="fancybox fancybox.iframe {width:600,height:300}">Ajout rapide d'un genre</a><br>
 
     <b><a href="?list=genre">Lister les genres disponibles</a></b>
-    <?php if (issetNotEmpty($view->listGenreBD)) { ?>
+    <?php if (issetNotEmpty($view->listGenreBD ?? Null)) { ?>
     <div id="listgenre">
 
         <h3>BD</h3>  <div>

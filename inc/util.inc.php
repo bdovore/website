@@ -293,7 +293,7 @@ function protectAttack ($GLOBALVAR)
     $headersAlert .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
 
     if (! isset($_SESSION["UserLevel"]) or ($_SESSION["UserLevel"] > 1)) {
-        if (issetNotEmpty(${$GLOBALVAR})) {
+        if (issetNotEmpty(${$GLOBALVAR} ?? Null) ?? Null) {
             foreach (${$GLOBALVAR} as $key => $val) {
                 if (strlen($val) > 15) {
                     foreach ($a_motInterdit as $mot) {
@@ -390,7 +390,7 @@ function PMA_sqlAddslashes ($a_string = '', $is_like = false, $crlf = false, $ph
 
     return $a_string;
 } // end of the 'PMA_sqlAddslashes()' function
-function issetNotEmpty (&$var)
+function issetNotEmpty ($var)
 {
     if (isset($var) and ! empty($var)) {
         return true;
@@ -398,7 +398,7 @@ function issetNotEmpty (&$var)
     return false;
 }
 
-function notIssetOrEmpty (&$var)
+function notIssetOrEmpty ($var)
 {
     if (! isset($var) or empty($var)) {
         return true;
