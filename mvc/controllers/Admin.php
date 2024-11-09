@@ -395,6 +395,7 @@ class Admin extends Bdo_Controller {
                         "URLACTION" => BDO_URL . "admin/editedition?act=update",
                         "EXPLICIT_CHECKED" => ""
                     ));
+                    $this->view->addAlertPage("Edition fantôme : vous pouvez la <a href='".BDO_URL . "admin/editedition?act=delete&edition_id=" . $edition_id."'>supprimer</a>");
                 } else {
                      $nbusers = intval($this->Edition->NBR_USER_ID ?? 0);
 
@@ -409,7 +410,7 @@ class Admin extends Bdo_Controller {
 
                     // Determine l'URL image
                     $img = $this->Edition->IMG_COUV ?? Null;
-                    if (is_null($img) | ($img)) {
+                    if (is_null($img) | ($img == "")) {
                         $url_image = BDO_URL_COUV . "default.png";
                         $dim_image = "";
                     } else {
