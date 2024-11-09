@@ -1702,11 +1702,13 @@ class Admin extends Bdo_Controller {
 // EFFACEMENT D'UN ALBUM
             elseif ($act == "delete") {
                 if ($conf == "ok") {
-                    $this->Tome->load("c", " WHERE BD_TOME.ID_SERIE = " . $idserie);
-
+                    // echo "Recherche d'album pour série ". $idserie;
+                    $this->Tome->load("c", " WHERE bd_tome.id_serie = " . $idserie);
+                    // echo "Load tome : vérification avant suppression pour série ".$idserie;
                     $nb_tome = $this->Tome->dbSelect->nbLineResult;
                     if ($nb_tome > 0)
                         exit('La s&eacute;rie contient encore ' . $nb_tome . ' album(s). Suppression interdite.');
+                    //echo "Tentatative de suppression";
                     $this->Serie->set_dataPaste(array("ID_SERIE" => $idserie));
                     $this->Serie->delete();
                     if (issetNotEmpty($this->Serie->error)) {
