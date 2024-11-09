@@ -523,11 +523,17 @@ class Bdo_Db_Line
                 // mettre un log ici
             }
             else {
+                if (!is_array($this->error)) {
+                    $this->error = []; // S'assure que $this->error est un tableau
+                 }
                 $this->error[] = "execute 'delete' query failed";
             }
         }
         else {
-            $this->error[] = LANG_DATAFALSE;
+            if (!is_array($this->error)) {
+                $this->error = []; // S'assure que $this->error est un tableau
+            }
+            $this->error[] = "No data to delete";
         }
     }
 

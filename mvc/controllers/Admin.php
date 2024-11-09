@@ -360,83 +360,122 @@ class Admin extends Bdo_Controller {
                 $this->Edition->set_dataPaste(array("ID_EDITION" => $edition_id));
 
                 $this->Edition->load();
-                $nbusers = intval($this->Edition->NBR_USER_ID);
-
-                // Récupère l'adresse mail de l'utilisateur
-
-                $mail_adress = $this->Edition->EMAIL;
-                $mailsubject = "Votre proposition de nouvelle &eacute;dition pour l'album : " . $this->Edition->TITRE_TOME;
-                $pseudo = $this->Edition->USERNAME;
-
-
-
-
-                // Determine l'URL image
-                if (is_null($this->Edition->IMG_COUV) | ($this->Edition->IMG_COUV == '')) {
-                    $url_image = BDO_URL_COUV . "default.png";
-                    $dim_image = "";
+                $id_edition = $this->Edition->ID_EDITION ?? -1;
+                if ($id_edition == -1) {
+                    // on sort : impossible de charger l'édition
+                    $this->view->set_var(array(
+                        "IDTOME" => 0,
+                        "IDEDITION" => $edition_id,
+                        "TITRE" => "",
+                        "IDEDIT" => 0,
+                        "EDITEUR" => "",
+                        "IDCOLLEC" => 0,
+                        "COLLECTION" => "",
+                        "DTPAR" => "",
+                        "CHKFLAG_DTE_PARUTION" => "",
+                        "COMMENT" => "",
+                        "ISTT" => "",
+                        "FLGDEF" => "",
+                        "EAN" => "",
+                        "URLEAN" => "",
+                        "ISBN" => "",
+                        "URLISBN" => "",
+                        "URLIMAGE" => "",
+                        "DIMIMAGE" => "",
+                        "NBUSERS" => 0,
+                        "VIEWUSEREDITION" => "<a href='" . BDO_URL . "admin/viewUserEdition.php?id_edition=" . $edition_id . "'>(voir les utilisateurs)</a>",
+                        "ACTIONAUTORIZE" => "",
+                        "CONTACTUSER" => "",
+                        "URLDELETE" => BDO_URL . "admin/editedition?act=delete&edition_id=" . $edition_id,
+                        "URLFUSION" => "",
+                        "URLFUSIONEDITION" => BDO_URL . "admin/mergeeditions?source_id=" . $edition_id,
+                        "URLEDITEDIT" => "",
+                        "URLEDITCOLL" => "",
+                        "ACTIONNAME" => "Valider les Modifications",
+                        "URLACTION" => BDO_URL . "admin/editedition?act=update",
+                        "EXPLICIT_CHECKED" => ""
+                    ));
                 } else {
-                    if (substr($this->Edition->IMG_COUV, 0, 3) == "tmp") { // image temporaire dans le repertoire upload
-                        $url_image = BDO_URL_IMAGE . "tmp/" . $this->Edition->IMG_COUV;
-                        $dim_image = imgdim(BDO_DIR_UPLOAD . $this->Edition->IMG_COUV);
+                     $nbusers = intval($this->Edition->NBR_USER_ID ?? 0);
+
+                    // Récupère l'adresse mail de l'utilisateur
+
+                    $mail_adress = $this->Edition->EMAIL ?? Null;
+                    $mailsubject = "Votre proposition de nouvelle &eacute;dition pour l'album : " . $this->Edition->TITRE_TOME ?? "";
+                    $pseudo = $this->Edition->USERNAME ?? "";
+
+
+
+
+                    // Determine l'URL image
+                    $img = $this->Edition->IMG_COUV ?? Null;
+                    if (is_null($img) | ($img)) {
+                        $url_image = BDO_URL_COUV . "default.png";
+                        $dim_image = "";
                     } else {
-                        $url_image = BDO_URL_COUV . $this->Edition->IMG_COUV;
-                        $dim_image = imgdim(BDO_DIR_COUV . $this->Edition->IMG_COUV);
+                        if (substr($this->Edition->IMG_COUV, 0, 3) == "tmp") { // image temporaire dans le repertoire upload
+                            $url_image = BDO_URL_IMAGE . "tmp/" . $this->Edition->IMG_COUV;
+                            $dim_image = imgdim(BDO_DIR_UPLOAD . $this->Edition->IMG_COUV);
+                        } else {
+                            $url_image = BDO_URL_COUV . $this->Edition->IMG_COUV;
+                            $dim_image = imgdim(BDO_DIR_COUV . $this->Edition->IMG_COUV);
+                        }
                     }
-                }
 
-                // détermine s'il est possible d'effacer cet album
-                if (($this->Edition->ID_EDITION == $this->Edition->ID_EDITION_DEFAULT) | ($nbusers > 0)) {
-                    $url_delete = "javascript:alert('Impossible d\'effacer cette &eacute;dition');";
-                } else {
-                    $url_delete = BDO_URL . "admin/editedition?act=delete&edition_id=" . $edition_id;
-                }
-                // Activation de l'edition
-                if ($this->Edition->PROP_STATUS == 0) {
-                    $actionautorise = "<a href=\"" . BDO_URL . "admin/editedition?act=autorize&edition_id=" . $edition_id . "\">Activer cette &eacute;dition</a>";
-                    $contactuser = "propos&eacute;e par <a href=\"mailto:" . $mail_adress . "?subject=" . $mailsubject . "\" style=\"font-weight: bold;\">" . $pseudo . "</a> (" . $mail_adress . ")<br />";
-                } else {
-                    $actionautorise = "";
-                    $contactuser = "";
-                    
-                }
+                    // détermine s'il est possible d'effacer cet album
+                    if (($this->Edition->ID_EDITION == $this->Edition->ID_EDITION_DEFAULT) | ($nbusers > 0)) {
+                        $url_delete = "javascript:alert('Impossible d\'effacer cette &eacute;dition');";
+                    } else {
+                        $url_delete = BDO_URL . "admin/editedition?act=delete&edition_id=" . $edition_id;
+                    }
+                    // Activation de l'edition
+                    if ($this->Edition->PROP_STATUS == 0) {
+                        $actionautorise = "<a href=\"" . BDO_URL . "admin/editedition?act=autorize&edition_id=" . $edition_id . "\">Activer cette &eacute;dition</a>";
+                        $contactuser = "propos&eacute;e par <a href=\"mailto:" . $mail_adress . "?subject=" . $mailsubject . "\" style=\"font-weight: bold;\">" . $pseudo . "</a> (" . $mail_adress . ")<br />";
+                    } else {
+                        $actionautorise = "";
+                        $contactuser = "";
 
-                $this->view->set_var(array(
-                    "IDTOME" => $this->Edition->ID_TOME,
-                    "IDEDITION" => $edition_id,
-                    "TITRE" => stripslashes($this->Edition->TITRE_TOME),
-                    "IDEDIT" => $this->Edition->ID_EDITEUR,
-                    "EDITEUR" => $this->Edition->NOM_EDITEUR,
-                    "IDCOLLEC" => $this->Edition->ID_COLLECTION,
-                    "COLLECTION" => $this->Edition->NOM_COLLECTION,
-                    "DTPAR" => $this->Edition->DATE_PARUTION_EDITION,
-                    "CHKFLAG_DTE_PARUTION" => (($this->Edition->FLAG_DTE_PARUTION == 1) ? 'CHECKED' : ''),
-                    "COMMENT" => stripslashes($this->Edition->COMMENT_EDITION),
-                    "ISTT" => isset($this->Edition->FLG_TT) ? "" : (($this->Edition->FLG_TT == 'O') ? 'checked' : ''),
-                    "FLGDEF" => (($this->Edition->ID_EDITION == $this->Edition->ID_EDITION_DEFAULT ? 'O' : '')),
-                    "EAN" => $this->Edition->EAN_EDITION,
-                    "URLEAN" => "http://www.bdnet.com/" . $this->Edition->EAN_EDITION . "/alb.htm",
-                    "ISBN" => $this->Edition->ISBN_EDITION,
-                    "URLISBN" => BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . $this->Edition->ISBN_EDITION,
-                    "URLIMAGE" => $url_image,
-                    "DIMIMAGE" => $dim_image,
-                    "NBUSERS" => $nbusers,
-                    "VIEWUSEREDITION" => "<a href='" . BDO_URL . "admin/viewUserEdition.php?id_edition=" . $edition_id . "'>(voir les utilisateurs)</a>",
-                    "ACTIONAUTORIZE" => $actionautorise,
-                    "CONTACTUSER" => $contactuser,
-                    "URLDELETE" => $url_delete,
-                    "URLFUSION" => BDO_URL . "admin/mergealbums?source_id=" . $this->Edition->ID_TOME,
-                    "URLFUSIONEDITION" => BDO_URL . "admin/mergeeditions?source_id=" . $edition_id,
-                    "URLEDITEDIT" => BDO_URL . "admin/editediteur?editeur_id=" . $this->Edition->ID_EDITEUR,
-                    "URLEDITCOLL" => BDO_URL . "admin/editcollection?collec_id=" . $this->Edition->ID_COLLECTION,
-                    "ACTIONNAME" => "Valider les Modifications",
-                    "URLACTION" => BDO_URL . "admin/editedition?act=update",
-                    "EXPLICIT_CHECKED" => $this->Edition->FLG_EXPLICIT ? "checked" : ""
-                ));
-                if ($this->Edition->DATE_PARUTION_EDITION == "0000-00-00") {
-                    $this->view->set_var("PARUTION_0", "to_be_corrected");
-                }
+                    }
 
+                    $this->view->set_var(array(
+                        "IDTOME" => $this->Edition->ID_TOME,
+                        "IDEDITION" => $edition_id,
+                        "TITRE" => stripslashes($this->Edition->TITRE_TOME),
+                        "IDEDIT" => $this->Edition->ID_EDITEUR,
+                        "EDITEUR" => $this->Edition->NOM_EDITEUR,
+                        "IDCOLLEC" => $this->Edition->ID_COLLECTION,
+                        "COLLECTION" => $this->Edition->NOM_COLLECTION,
+                        "DTPAR" => $this->Edition->DATE_PARUTION_EDITION,
+                        "CHKFLAG_DTE_PARUTION" => (($this->Edition->FLAG_DTE_PARUTION == 1) ? 'CHECKED' : ''),
+                        "COMMENT" => stripslashes($this->Edition->COMMENT_EDITION),
+                        "ISTT" => isset($this->Edition->FLG_TT) ? "" : (($this->Edition->FLG_TT == 'O') ? 'checked' : ''),
+                        "FLGDEF" => (($this->Edition->ID_EDITION == $this->Edition->ID_EDITION_DEFAULT ? 'O' : '')),
+                        "EAN" => $this->Edition->EAN_EDITION,
+                        "URLEAN" => "http://www.bdnet.com/" . $this->Edition->EAN_EDITION . "/alb.htm",
+                        "ISBN" => $this->Edition->ISBN_EDITION,
+                        "URLISBN" => BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . $this->Edition->ISBN_EDITION,
+                        "URLIMAGE" => $url_image,
+                        "DIMIMAGE" => $dim_image,
+                        "NBUSERS" => $nbusers,
+                        "VIEWUSEREDITION" => "<a href='" . BDO_URL . "admin/viewUserEdition.php?id_edition=" . $edition_id . "'>(voir les utilisateurs)</a>",
+                        "ACTIONAUTORIZE" => $actionautorise,
+                        "CONTACTUSER" => $contactuser,
+                        "URLDELETE" => $url_delete,
+                        "URLFUSION" => BDO_URL . "admin/mergealbums?source_id=" . $this->Edition->ID_TOME,
+                        "URLFUSIONEDITION" => BDO_URL . "admin/mergeeditions?source_id=" . $edition_id,
+                        "URLEDITEDIT" => BDO_URL . "admin/editediteur?editeur_id=" . $this->Edition->ID_EDITEUR,
+                        "URLEDITCOLL" => BDO_URL . "admin/editcollection?collec_id=" . $this->Edition->ID_COLLECTION,
+                        "ACTIONNAME" => "Valider les Modifications",
+                        "URLACTION" => BDO_URL . "admin/editedition?act=update",
+                        "EXPLICIT_CHECKED" => $this->Edition->FLG_EXPLICIT ? "checked" : ""
+                    ));
+                    if ($this->Edition->DATE_PARUTION_EDITION == "0000-00-00") {
+                        $this->view->set_var("PARUTION_0", "to_be_corrected");
+                    }
+
+                }
+               
                 $this->view->render();
             }
         } else {
