@@ -174,8 +174,11 @@ class Proposition extends Bdo_Controller {
                 case IMAGETYPE_PNG:
                     $new_filename .=".png";
                     break;
+                case IMAGETYPE_WEBP:
+                    $new_filename .=".webp";
+                    break;
                 default:
-                    echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers PNG, JPEG ou GIF peuvent être chargés. Vous allez être redirigé.';
+                    echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers PNG, JPEG, WEBP ou GIF peuvent être chargés. Vous allez être redirigé.';
                     exit();
                     break;
             }
