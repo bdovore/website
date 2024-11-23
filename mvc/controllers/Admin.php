@@ -211,7 +211,8 @@ class Admin extends Bdo_Controller {
                 // On rajoute un redimensionnement si le correcteur l'a voulu
                 if (postVal("chkResize") == "checked") {
                     $id_edition = intval(postVal("txtEditionId"));
-                    $this->resize_edition_image($id_edition, BDO_DIR_COUV);
+                    $img_couv = $this->resize_edition_image($id_edition, BDO_DIR_COUV);
+                    
                 }
 
                 $redirection = BDO_URL . "admin/editalbum?alb_id=" . postVal("txtTomeId");
@@ -347,9 +348,10 @@ class Admin extends Bdo_Controller {
 
                 // On rajoute un redimensionnement si le correcteur l'a voulu
                 if (postVal("chkResize") == "checked") {
-                    $this->resize_edition_image($lid, BDO_DIR_COUV);
+                    $img_couv = $this->resize_edition_image($lid, BDO_DIR_COUV);
+                    
                 }
-
+                
                 echo GetMetaTag(2, "L'&eacute;dition a &eacute;t&eacute; ajout&eacute;e", (BDO_URL . "admin/editalbum?alb_id=" . $id_tome));
             }
 
@@ -819,13 +821,15 @@ class Admin extends Bdo_Controller {
                         $img_couv = '';
                     }
                     
-
                     // met à jours la référence au fichier dans la table bd_edition
                     $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
                     $this->Edition->update();
+                    
                     if (postVal("chkResize") == "checked" && $img_couv != '') {
-                       $this->resize_edition_image($lid_edition, BDO_DIR_COUV);
+                       $img_couv = $this->resize_edition_image($lid_edition, BDO_DIR_COUV);
+                       
                     }
+                    
                 }
                 echo GetMetaTag(2, "L'album a &eacute;t&eacute; ajout&eacute;", (BDO_URL . "admin/editalbum?alb_id=" . $lid_tome));
             }
@@ -2459,7 +2463,7 @@ class Admin extends Bdo_Controller {
                         break;
                     
                     case IMAGETYPE_WEBP:
-                        $source = imagecreatefromwebp(BDO_DIR_COUV. $img_couv);
+                        $source = imagecreatefromwebp($imagedir . $newfilename);
                         break;
                     
                 }
@@ -2475,16 +2479,23 @@ class Admin extends Bdo_Controller {
                     case "1":
                     case "3":
                     case "6":
+                    case IMAGETYPE_WEBP:
                         unlink($imagedir . $newfilename);
-                        $img_couv = substr($newfilename, 0, strlen($newfilename) - 3) . "jpg";
+                        $extension = $imagetype == 18 ? 4 : 3;
+                        $img_couv = substr($newfilename, 0, strlen($newfilename) - $extension) . "jpg";
                         imagejpeg($new_image, $imagedir . $img_couv, 100);
+                        $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
+                        $this->Edition->update();
                 }
+                
             } else {
                 echo "error : no image properties <br/>";
+                return "";
             }
 
             echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
             echo "Image redimensionnée<br />";
+            return $img_couv;
         }
     }
 

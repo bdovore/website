@@ -681,6 +681,9 @@ function imgCouvFromForm($lid_tome, $lid_edition) {
             case IMAGETYPE_PNG:
                 $newfilename .=".png";
                 break;
+            case IMAGETYPE_WEBP:
+                $newfilename .=".webp";
+                break;
             default:
                 echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">Seul des fichiers PNG, JPEG ou GIF peuvent &ecirc;tre charg&eacute;s. Vous allez &ecirc;tre redirig&eacute;.';
                 exit();

@@ -584,8 +584,19 @@ private function getDateBeforeValid() {
                     // vérifie si une image a été proposée
                     if (($prop_img != '') && (postVal('chkDelete') != 'checked')) {// copie l'image dans les couvertures
                         $newfilename = "CV-" . sprintf("%06d", $lid_tome) . "-" . sprintf("%06d", $lid_edition);
-                        $strLen = strlen($prop_img);
-                        $newfilename .= substr($prop_img, $strLen - 4, $strLen);
+                        // Découper la chaîne pour récupérer l'extension
+                        $parts = explode('.', $prop_img);
+
+                        // Vérifier s'il y a bien une extension
+                        if (count($parts) > 1) {
+                            $extension = end($parts); // Prendre la dernière partie comme extension
+                            $newfilename .= '.' . $extension; // Ajouter l'extension avec un point
+                        } else {
+                            // Gérer les cas sans extension si nécessaire
+                            $newfilename .= ''; 
+                        }
+
+                        // $newfilename contient maintenant le nom complet avec l'extension correcte
                         @copy(BDO_DIR_UPLOAD . $prop_img, BDO_DIR_COUV . $newfilename);
                         @unlink(BDO_DIR_UPLOAD . $prop_img);
 
@@ -646,6 +657,12 @@ private function getDateBeforeValid() {
                             case "6":
                                 $source = imagecreatefrombmp(BDO_DIR_COUV . $newfilename);
                                 break;
+                            
+                            case "18": // WebP
+                                $source = imagecreatefromwebp(BDO_DIR_COUV . $newfilename);
+                                break;
+                            default:
+                                die("Format d'image non supporté : $imagetype");
                         }
 
                         imagecopyresampled($new_image, $source, 0, 0, 0, 0, $new_w, $new_h, $imagelargeur, $imagehauteur);
@@ -659,8 +676,10 @@ private function getDateBeforeValid() {
                             case "1":
                             case "3":
                             case "6":
+                            case "18":
                                 unlink(BDO_DIR_COUV . $newfilename);
-                                $img_couv = substr($newfilename, 0, strlen($newfilename) - 3) . "jpg";
+                                $extension = $imagetype == 18 ? 4 : 3;
+                                $img_couv = substr($newfilename, 0, strlen($newfilename) - $extension) . "jpg";
                                 imagejpeg($new_image, BDO_DIR_COUV . $img_couv, 100);
 
                                 // met à jour la référence au fichier dans la table bd_edition
