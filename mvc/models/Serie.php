@@ -154,13 +154,13 @@ class Serie extends Bdo_Db_Line
         $close = "";
         $same = false;
         if (count($a_dessin) > 0) {
-            $where .= " AND ( bd_serie.id_serie in (select distinct id_serie from bd_tome where id_scenar in (".implode(",",$a_scenar)."))";
+            $where .= " AND ( bd_serie.id_serie in (select distinct id_serie from bd_tome where id_scenar in (".implode(",",$a_dessin)."))";
             $and_or = " OR ";
             $close = ")";
             $same = true;
         }
         if (count($a_scenar) > 0) {
-            $where .= $and_or. "bd_serie.id_serie in (select distinct id_serie from bd_tome where id_dessin in (".implode(",",$a_dessin)."))";
+            $where .= $and_or. "bd_serie.id_serie in (select distinct id_serie from bd_tome where id_dessin in (".implode(",",$a_scenar)."))";
             $close = ")";
             $same = true;
         }
