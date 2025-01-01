@@ -200,10 +200,10 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td><select name="lstAchevee" size="1">
 
-                      <option value="0" <?php if ($view->edition->FLG_FINI ?? "" == 0) echo "selected"; ?>>Finie</option>
-                      <option value="1" <?php if ($view->edition->FLG_FINI ?? "" == 1) echo "selected"; ?>>En cours</option>
-                      <option value="2" <?php if ($view->edition->FLG_FINI ?? "" == 2) echo "selected"; ?>>One Shot</option>
-                      <option value="3" <?php if ($view->edition->FLG_FINI ?? "" == 3) echo "selected"; ?>>Interrompue/Abandonnée</option>
+                      <option value="0" <?php if (($view->edition->FLG_FINI ?? "0") == "0") echo "selected"; ?>>Finie</option>
+                      <option value="1" <?php if (($view->edition->FLG_FINI ?? "0") == "1") echo "selected"; ?>>En cours</option>
+                      <option value="2" <?php if (($view->edition->FLG_FINI ?? "0" )== "2") echo "selected"; ?>>One Shot</option>
+                      <option value="3" <?php if (($view->edition->FLG_FINI ?? "0") == "3") echo "selected"; ?>>Interrompue/Abandonnée</option>
 
                         </select></td>
 
