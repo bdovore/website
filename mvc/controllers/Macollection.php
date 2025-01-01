@@ -1025,7 +1025,7 @@ class Macollection extends Bdo_Controller {
             $propid = getValInteger("propid",0);
 
             $lstSource = getVal("lstSource",0);
-            $lstFiltre= getVal("lstFiltre","");
+            $lstFiltre= getVal("lstFiltre",0);
 
             if ($lstSource == 2){
                 $criteria = "CORRECTION";
