@@ -7,6 +7,14 @@
  *
  */
 
+use Amazon\ProductAdvertisingAPI\v1\ApiException;
+use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi;
+use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\PartnerType;
+use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\ProductAdvertisingAPIClientException;
+use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\SearchItemsRequest;
+use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\SearchItemsResource;
+use Amazon\ProductAdvertisingAPI\v1\Configuration;
+
 class Proposition extends Bdo_Controller {
 
     public function Index () {
@@ -59,9 +67,17 @@ class Proposition extends Bdo_Controller {
                     $this->view->set_var("TYPE","CORRECTION");
                 }
                 else {
+                    $step = getValInteger("step", 0);
+                    $keyword = postVal("keyword", "");
+                    $items = array();
+                    if ($keyword != "") {
+                        $items = $this->searchItems($keyword);
+                    }
                     $this->view->set_var('PAGETITLE',"Proposer l'ajout d'un album");
                     $this->view->set_var("OPTIONS",GetOptionValue($action_user,0));
                     $this->view->set_var("TYPE","AJOUT");
+                    $this->view->set_var("keyword", $keyword);
+                    $this->view->set_var("items", $items);
                 }
             }
         }
@@ -323,6 +339,169 @@ class Proposition extends Bdo_Controller {
         $this->view->set_var("PAGETITLE","Liste des proposition : ".Db_Escape_String($type));
         $this->view->render();
 
+    }
+    
+    private function getItemInfo ($item) {
+        $byLineInfo = $item->getItemInfo()->getByLineInfo();
+        $externalIds = $item->getItemInfo()->getExternalIds();
+        $contentInfo = $item->getItemInfo()->getContentInfo();
+        $data = [
+            'asin' => $item->getASIN(),
+            'title' => $item->getItemInfo() && $item->getItemInfo()->getTitle() ? $item->getItemInfo()->getTitle()->getDisplayValue() : null,
+            'publisher' => is_null($byLineInfo) ? null : 
+                                   ($byLineInfo->getManufacturer() ? $byLineInfo->getManufacturer()->getDisplayValue() : null),
+            'contributors' => [
+                'authors' => [],
+                'illustrators' => [],
+                'colorists' => []
+            ],
+            'eans' => [],
+            'isbns' => [],
+            'content' =>  is_null($contentInfo) ? [ 'edition' => null, 'pages_count' => null, 'publication_date' => null] : [
+                'edition' => $contentInfo->getEdition() ? $contentInfo->getEdition()->getDisplayValue() : null,
+                'pages_count' => $contentInfo->getPagesCount() ? $contentInfo->getPagesCount()->getDisplayValue() : null,
+                'publication_date' => $contentInfo->getPublicationDate() ? $contentInfo->getPublicationDate()->getDisplayValue() : null,
+            ],
+            'image' => $item->getImages() && $item->getImages()->getPrimary() && $item->getImages()->getPrimary()->getLarge() ? $item->getImages()->getPrimary()->getLarge()->getURL() : null
+        ];
+
+        // Ajouter les auteurs
+        // Ajouter les contributeurs (scénaristes, dessinateurs, coloristes)
+        if (! is_null($byLineInfo)) {
+            if ($byLineInfo->getContributors() !== null) {
+                foreach ($byLineInfo->getContributors() as $contributor) {
+                    switch ($contributor->getRoleType()) {
+                        case 'contributor':
+                        case 'author': // Scénaristes
+                            $data['contributors']['authors'][] = $contributor->getName();
+                            break;
+                        case 'drawing': // Dessinateurs
+                        case 'drawings': // Dessinateurs
+                        case 'illustrator':
+                            $data['contributors']['illustrators'][] = $contributor->getName();
+                            break;
+                        case 'colorist': // Coloristes (hypothétique : à vérifier)
+                            $data['contributors']['colorists'][] = $contributor->getName();
+                            break;
+                    }
+                }
+            }
+        }
+        
+        if (! is_null($externalIds)) {
+            // Ajouter les EANs
+            if ($externalIds->getEANs() !== null) {
+                $data['eans'] = $externalIds->getEANs()->getDisplayValues();
+            }
+
+            // Ajouter les ISBNs
+            if ($externalIds->getISBNs() !== null) {
+                $data['isbns'] = $externalIds->getISBNs()->getDisplayValues();
+            }
+        }
+
+        //print_r($data);
+        return $data;
+    }
+
+    private function searchItems($keyword)
+    {
+        $config = new Configuration();
+
+        $config->setAccessKey(AMAZON_KEY);
+        $config->setSecretKey(AMAZON_SECRET);
+        $partnerTag = 'bdovorecom-21';
+        $config->setHost('webservices.amazon.fr');
+        $config->setRegion('eu-west-1');
+
+        $apiInstance = new DefaultApi(
+            new GuzzleHttp\Client(),
+            $config
+        );
+
+        $searchIndex = "Books";
+
+        # Specify item count to be returned in search result
+        $itemCount = 5;
+
+        $resources = [
+            SearchItemsResource::ITEM_INFOTITLE,
+            SearchItemsResource::ITEM_INFOBY_LINE_INFO,
+            SearchItemsResource::ITEM_INFOPRODUCT_INFO,
+            SearchItemsResource::ITEM_INFOCONTENT_INFO,
+            SearchItemsResource::IMAGESPRIMARYLARGE,
+            SearchItemsResource::ITEM_INFOEXTERNAL_IDS,
+            SearchItemsResource::BROWSE_NODE_INFOBROWSE_NODES
+            ,
+            SearchItemsResource::ITEM_INFOFEATURES
+        ];
+
+        # Forming the request
+        $searchItemsRequest = new SearchItemsRequest();
+        $searchItemsRequest->setSearchIndex($searchIndex);
+        $searchItemsRequest->setKeywords($keyword);
+        $searchItemsRequest->setItemCount($itemCount);
+        $searchItemsRequest->setPartnerTag($partnerTag);
+        $searchItemsRequest->setPartnerType(PartnerType::ASSOCIATES);
+        $searchItemsRequest->setResources($resources);
+
+        # Validating request
+        $invalidPropertyList = $searchItemsRequest->listInvalidProperties();
+        $length = count($invalidPropertyList);
+        if ($length > 0) {
+            echo "Error forming the request", PHP_EOL;
+            foreach ($invalidPropertyList as $invalidProperty) {
+                echo $invalidProperty, PHP_EOL;
+            }
+            return;
+        }
+        $data = array();
+        # Sending the request
+        try {
+            $searchItemsResponse = $apiInstance->searchItems($searchItemsRequest);
+
+           // echo 'API called successfully', PHP_EOL;
+           // echo 'Complete Response: ', $searchItemsResponse, PHP_EOL;
+
+            # Parsing the response
+            if ($searchItemsResponse->getSearchResult() !== null) {
+                // echo 'Printing first item information in SearchResult:', PHP_EOL;
+               
+                $items = $searchItemsResponse->getSearchResult()->getItems();
+                foreach ($items as $item) {
+                    if ($item !== null) {
+                       $data[] = $this->getItemInfo($item);
+                    }
+                }
+                
+            }
+            if ($searchItemsResponse->getErrors() !== null) {
+                /*echo PHP_EOL, 'Printing Errors:', PHP_EOL, 'Printing first error object from list of errors', PHP_EOL;
+                echo 'Error code: ', $searchItemsResponse->getErrors()[0]->getCode(), PHP_EOL;
+                echo 'Error message: ', $searchItemsResponse->getErrors()[0]->getMessage(), PHP_EOL; */
+            }
+        } catch (ApiException $exception) {
+            /*echo "Error calling PA-API 5.0!", PHP_EOL;
+            echo "HTTP Status Code: ", $exception->getCode(), PHP_EOL;
+            echo "Error Message: ", $exception->getMessage(), PHP_EOL;
+            if ($exception->getResponseObject() instanceof ProductAdvertisingAPIClientException) {
+                $errors = $exception->getResponseObject()->getErrors();
+                foreach ($errors as $error) {
+                    echo "Error Type: ", $error->getCode(), PHP_EOL;
+                    echo "Error Message: ", $error->getMessage(), PHP_EOL;
+                }
+            } else {
+                echo "Error response body: ", $exception->getResponseBody(), PHP_EOL;
+            } */
+        } catch (Exception $exception) {
+           // echo "Error Message: ", $exception->getMessage(), PHP_EOL;
+        }
+        return $data;
+    }
+    
+    public function searchProposition() {
+        $data = $this->searchItems("Les 5 terres tome 2");
+        print_r( $data);
     }
 }
 

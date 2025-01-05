@@ -8,7 +8,8 @@
         "mpdf/mpdf" : ">=6.0",
         "jpgraph/jpgraph" : ">=3.0",
         "phpoffice/phpspreadsheet":">= 1.7.8",
-        "jamesfrost/wikidata": "^1.0"
+        "jamesfrost/wikidata": "^1.0",
+        "thewirecutter/paapi5-php-sdk": "^1.2"
     },
     "config": {
         "platform": {

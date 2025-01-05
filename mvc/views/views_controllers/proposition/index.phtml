@@ -5,20 +5,11 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 
 ?>
-<script src="<?php echo BDO_URL;?>jquery/jquery.mask.min" type="text/javascript"></script>
+<script src="<?php echo BDO_URL;?>jquery/jquery.mask.min.js" type="text/javascript"></script>
 <div class="cadre1">
     <div class="middle_title"><h3>Proposition d'ajout et de correction</h3></div>
    <?php if(IssetNotEmpty($view->edition ?? "")) { ?> <a href="#null" onclick="javascript:history.back();"> Retour à la fiche Album</a> <?php } ?>
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
-<form enctype="multipart/form-data" action="" name="action" value="append" method="POST">
-     <?php if(IssetNotEmpty($view->edition ?? "")) { ?>
-        <input type="hidden" name="txtTomeId" value="<?php echo $view->edition->ID_TOME; ?>">
-        <input type="hidden" name="txtEditionId" value="<?php echo $view->edition->ID_EDITION; ?>">
-
-    <?php } ?>
-        <?php if(IssetNotEmpty($view->ID_TOME ?? 0)) { ?>
-         <input type="hidden" name="txtTomeId" value="<?php echo $view->ID_TOME; ?>">
-        <?php } ?>
 <table cellpadding="10" cellspacing="10" align="center" bgcolor="EED8BF">
           <!--DWLayoutTable-->
           <tbody>
@@ -53,8 +44,85 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                     que l'album n'existe pas déjà via le moteur de recherche ou le <a href="<?php echo BDO_URL;?>browser">BDoBrowser</a>.
                 </p>
                  <div style="padding-top: 10px;"><span class="i">La meilleure source pour remplir ce formulaire est <span class="b">votre exemplaire</span> (si vous en possédez un)</span> - Proverbe bdovorien présocrato-cambrien</div>
-                  <?php } ?>
+                 
+                 <table frame="box" rules="groups" cellpadding="5" bgcolor="#DAC1B3" border="1" bordercolor="#FFFFCC" width="550px" id="suggest">
+                     <tr>
+                         <td>
+                             <form enctype="multipart/form-data" action="#suggest" name="findamazon" value="" method="POST">
+                     
+                                 <b>Pré-remplir le formulaire via Amazon</b> <br> si votre album est relativement récent, il est possible de pré-remplir le formulaire.
+                                 Saisissez le titre ou l'identifiant (ISBN / EAN) de l'album pour le rechercher :<br>
+                            <br>Titre ou ISBN :<input name="keyword" id="keyword" size="40" class="flat" type="text" value="<?php echo $view->keyword ?? ""; ?>" /> 
+                            <button type="submit" value="OK">Go !</button>
+                             </form>
+                         </td>
+                     </tr>
+                     <?php if (issetNotEmpty($view->items)) { ?>
+                     <tr><td> <i>Trouvé ! Cliquez sur le bouton d'un album pour pré-remplir le formulaire, puis validez les propositions avec la loupe et complétez les informations manquantes</i> </td></tr>
+                     <script>
+                     propData = <?php echo json_encode($view->items) ?>;
+                     fillForm = function (index) {
+                         if (index < propData.length) {
+                             propAlbum = propData[index];
+                             // on remplit avec les infos trouvé
+                             $("#txtFileURL").val(propAlbum.image);
+                             $("#txtTitre").val(propAlbum.title);
+                             if (propAlbum.contributors.authors.length > 0) {
+                                 $("#txtScenar").val(propAlbum.contributors.authors[0]);
+                             }
+                             if (propAlbum.contributors.authors.length > 1) {
+                                 $("#txtScenarAlt").val(propAlbum.contributors.authors[1]);
+                             }
+                             if (propAlbum.contributors.illustrators.length > 0) {
+                                 $("#txtDessi").val(propAlbum.contributors.illustrators[0]);
+                             }
+                             if (propAlbum.contributors.illustrators.length > 1) {
+                                 $("#txtDessiAlt").val(propAlbum.contributors.illustrators[1]);
+                             }
+                             $("#txtEditeur").val(propAlbum.publisher);
+                             if (propAlbum.eans.length > 0) {
+                                 $("#txtEAN").val(propAlbum.eans[0]);
+                             }
+                             if (propAlbum.isbns.length > 0) {
+                                 $("#txtISBN").val(propAlbum.isbns[0]);
+                             }
+                             $("#txtDateParution3").val(propAlbum.content.publication_date.substring(0,10));
+                         }
+                     }
+                     </script>
+                     <?php 
+                         foreach ($view->items as $index => $item) { 
+                             $elementtitle = $item["title"]. (is_null($item["publisher"]) ? "" : " - ed. ". $item["publisher"]." (".substr($item["content"]["publication_date"], 0,4).")")
+                             ?>
+                             <tr> 
+                                 <td>
+                                     <a href="https://www.amazon.fr/exec/obidos/ASIN/<?php echo $item["asin"]; ?>/bdovorecom-21/" target="_blank"> <?php echo $elementtitle; ?></a>
+                                     - <button value="<?php echo $index ;?>" onclick="fillForm(<?php echo $index;?>);">Pré-remplir</button>
+                                 </td>
+                             
+                                    
+                             </tr>
+                      <?php   }
+                     } else if (issetNotEmpty($view->keyword)){
+                         echo "<tr><td><i>Aucun album trouvé. Merci de remplir le formulaire</i></td></tr>";
+                         
+                     } ?>
+                 </table>
+                 <br><br>
+         <?php } ?>
+ 
+   <form enctype="multipart/form-data" action="" name="action" id="action" value="append" method="POST">
+     <?php if(IssetNotEmpty($view->edition ?? "")) { ?>
+        <input type="hidden" name="txtTomeId" value="<?php echo $view->edition->ID_TOME; ?>">
+        <input type="hidden" name="txtEditionId" value="<?php echo $view->edition->ID_EDITION; ?>">
 
+    <?php } ?>
+        <?php if(IssetNotEmpty($view->ID_TOME ?? 0)) { ?>
+         <input type="hidden" name="txtTomeId" value="<?php echo $view->ID_TOME; ?>">
+        <?php } ?>
+
+
+ 
     <table frame="box" rules="groups" cellpadding="5" bgcolor="#DAC1B3" border="1" bordercolor="#FFFFCC" width="550px">
 
                   <tbody>
@@ -166,14 +234,14 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Serie</strong></font></td>
 
-                      <td width="39"> <div align="left">
+                      <td > <div align="left">
 
-                          <input name="txtSerieId" id="txtSerieId" value="<?php echo $view->edition->ID_SERIE ?? ""; ?>" type="hidden">
-                          <span id="spSerie"><?php echo $view->edition->ID_SERIE ?? ""; ?></span>
+                          <input name="txtSerieId" id="txtSerieId"  value="<?php echo $view->edition->ID_SERIE ?? ""; ?>"  type="text" readonly size="5">
 
                         </div></td>
 
-                      <td width="571"> <input name="txtSerie" id="txtSerie" value="<?php echo $view->edition->NOM_SERIE ?? ""; ?>" size="50" class="flat" type="text"></td>
+                      <td > <input name="txtSerie" id="txtSerie" value="<?php echo $view->edition->NOM_SERIE ?? ""; ?>" size="45" class="flat" type="text">
+                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('serie',document.action.txtSerie.value,'action','txtSerie',true)" /></td>
 
 
 
@@ -183,11 +251,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3" class="label" width="8%"><font color="#990000" size="-1"><strong>Genre</strong></font></td>
 
-                      <td width="6%"> <input name="txtGenreId" id="txtGenreId" value="<?php echo $view->edition->ID_GENRE ?? ""; ?>" size="3" class="flat" type="hidden">
-                                        <span id="spGenre" > <?php echo $view->edition->ID_GENRE ?? ""; ?></span>
+                      <td > <input name="txtGenreId" id="txtGenreId" value="<?php echo $view->edition->ID_GENRE ?? ""; ?>"  class="flat" readonly size="4">
+                                       
                       </td>
 
-                      <td width="73%"> <input name="txtGenre" id="txtGenre"  value="<?php echo $view->edition->NOM_GENRE ?? ""; ?>" size="30" class="flat" type="text"></td>
+                      <td > <input name="txtGenre" id="txtGenre"  value="<?php echo $view->edition->NOM_GENRE ?? ""; ?>" size="30" class="flat" type="text">
+                      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('genre',document.action.txtGenre.value,'action','txtGenre',false)" />
+                      </td>
 
 
                     </tr>
@@ -236,11 +306,12 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3" class="label" width="18%"><font color="#990000" size="-1"><strong>Scenariste(s)</strong></font></td>
 
-                      <td width="10%"> <input name="txtScenarId" id="txtScenarId" value="<?php echo $view->edition->ID_SCENAR ?? ""; ?>" size="5" type="hidden">
-                          <span id="spScenar"></span>
+                      <td width="10%"> <input name="txtScenarId" id="txtScenarId" value="<?php echo $view->edition->ID_SCENAR ?? ""; ?>" size="5" readonly>
+                          
                       </td>
 
-                      <td width="59%"> <input name="txtScenar" id="txtScenar" value="<?php echo $view->edition->scpseudo ?? ""; ?>" size="40" class="flat" type="text"></td>
+                      <td width="59%"> <input name="txtScenar" id="txtScenar" value="<?php echo $view->edition->scpseudo ?? ""; ?>" size="40" class="flat" type="text">
+                      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.action.txtScenar.value,'action','txtScenar',true)" /></td>
 
 
 
@@ -250,11 +321,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3" class="label">&nbsp;</td>
 
-                      <td> <input name="txtScenarAltId"  id="txtScenarAltId" value="<?php echo $view->edition->ID_SCENAR_ALT ?? ""; ?>" size="5" type="hidden">
-                           <span id="spScenarAlt"></span>
+                      <td> <input name="txtScenarAltId"  id="txtScenarAltId" value="<?php echo $view->edition->ID_SCENAR_ALT ?? ""; ?>" size="5" readonly>
+                           
                       </td>
 
-                      <td> <input name="txtScenarAlt" id="txtScenarAlt" value="<?php echo $view->edition->scapseudo ?? ""; ?>" size="40" class="flat" type="text"></td>
+                      <td> <input name="txtScenarAlt" id="txtScenarAlt" value="<?php echo $view->edition->scapseudo ?? ""; ?>" size="40" class="flat" type="text">
+                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.action.txtScenarAlt.value,'action','txtScenarAlt',true)" />
+                      </td>
 
 
 
@@ -264,11 +337,14 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Dessinateur(s)</strong></font></td>
 
-                      <td> <input name="txtDessiId" id="txtDessiId" value="<?php echo $view->edition->ID_DESSIN ?? ""; ?>" size="5" type="hidden">
-                           <span id="spDessi"></span>
+                      <td> <input name="txtDessiId" id="txtDessiId" value="<?php echo $view->edition->ID_DESSIN ?? ""; ?>" size="5" readonly>
+                           
                       </td>
 
-                      <td bordercolor="#DAC1B3"> <input name="txtDessi"  id="txtDessi" value="<?php echo $view->edition->depseudo ?? ""; ?>" size="40" class="flat" type="text"></td>
+                      <td bordercolor="#DAC1B3"> 
+                          <input name="txtDessi"  id="txtDessi" value="<?php echo $view->edition->depseudo ?? ""; ?>" size="40" class="flat" type="text">
+                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.action.txtDessi.value,'action','txtDessi',true)" />
+                      </td>
 
 
 
@@ -278,11 +354,14 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1">&nbsp;</font></td>
 
-                      <td> <input name="txtDessiAltId" id="txtDessiAltId" value="<?php echo $view->edition->ID_DESSIN_ALT ?? ""; ?>" size="5" type="hidden">
-                          <span id="spDessiAlt"></span>
+                      <td> <input name="txtDessiAltId" id="txtDessiAltId" value="<?php echo $view->edition->ID_DESSIN_ALT ?? ""; ?>" size="5" readonly>
+                          
                       </td>
 
-                      <td bordercolor="#DAC1B3"> <input name="txtDessiAlt" id="txtDessiAlt"  value="<?php echo $view->edition->deapseudo ?? ""; ?>" size="40" class="flat" type="text"></td>
+                      <td bordercolor="#DAC1B3"> 
+                          <input name="txtDessiAlt" id="txtDessiAlt"  value="<?php echo $view->edition->deapseudo ?? ""; ?>" size="40" class="flat" type="text">
+                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.action.txtDessiAlt.value,'action','txtDessiAlt',true)" />
+                     </td>
 
 
 
@@ -292,11 +371,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1"><strong>Coloriste</strong></font></td>
 
-                      <td> <input name="txtColorId" id="txtColorId"  value="<?php echo $view->edition->ID_COLOR ?? ""; ?>" size="5" type="hidden">
-                      <span id="spColor"></span>
+                      <td> <input name="txtColorId" id="txtColorId"  value="<?php echo $view->edition->ID_COLOR ?? ""; ?>" size="5" readonly>
+                      
                       </td>
 
                       <td> <input name="txtColor" id="txtColor" value="<?php echo $view->edition->copseudo ?? ""; ?>" size="40" class="flat" type="text">
+                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.action.txtColor.value,'action','txtColor',true)" />
+                    
 
                       </td>
 
@@ -308,11 +389,14 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3" class="label"><font color="#990000" size="-1">&nbsp;</font></td>
 
-                      <td> <input name="txtColorAltId" id="txtColorAltId"  value="<?php echo $view->edition->ID_COLOR_ALT ?? ""; ?>" size="5" type="hidden">
-                      <span id="spColorAlt"></span>
+                      <td> <input name="txtColorAltId" id="txtColorAltId"  value="<?php echo $view->edition->ID_COLOR_ALT ?? ""; ?>" size="5" readonly>
+                     
                       </td>
 
-                      <td> <input name="txtColorAlt" id="txtColorAlt" value="<?php echo $view->edition->coapseudo ?? ""; ?>" size="40" class="flat" type="text">
+                      <td> 
+                          <input name="txtColorAlt" id="txtColorAlt" value="<?php echo $view->edition->coapseudo ?? ""; ?>" size="40" class="flat" type="text">
+                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.action.txtColorAlt.value,'action','txtColorAlt',true)" />
+                    
 
                       </td>
 
@@ -340,13 +424,16 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                     <tr bordercolor="#DAC1B3">
 
-                      <td class="label" width="26%"> <font color="#990000" size="-1"><strong>Editeur</strong></font></td>
+                      <td class="label" > <font color="#990000" size="-1"><strong>Editeur</strong></font></td>
 
-                      <td bordercolor="#DAC1B3" width="2%"> <input name="txtEditeurId" id="txtEditeurId" value="<?php echo $view->edition->ID_EDITEUR ?? ""; ?>" size="7" type="hidden" >
-                          <span id="spEditeur"><?php echo $view->edition->ID_EDITEUR ?? ""; ?></span>
+                      <td bordercolor="#DAC1B3"> <input name="txtEditeurId" id="txtEditeurId" value="<?php echo $view->edition->ID_EDITEUR ?? ""; ?>" size="5" readonly >
+                          
                       </td>
 
-                      <td bordercolor="#DAC1B3" width="59%"> <input name="txtEditeur" id="txtEditeur" value="<?php echo $view->edition->NOM_EDITEUR ?? ""; ?>" size="40" class="flat" type="text" onchange="changeEditeur();"></td>
+                      <td bordercolor="#DAC1B3"> 
+                          <input name="txtEditeur" id="txtEditeur" value="<?php echo $view->edition->NOM_EDITEUR ?? ""; ?>" size="35" class="flat" type="text" onchange="changeEditeur();">
+                       <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('editeur',document.action.txtEditeur.value,'action','txtEditeur',true)" />
+                    </td>
 
 
 
@@ -356,11 +443,14 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td class="label"> <font color="#990000" size="-1"><strong>Collection</strong></font></td>
 
-                      <td bordercolor="#DAC1B3"> <input name="txtCollecId" id="txtCollecId" value="<?php echo $view->edition->ID_COLLECTION ?? ""; ?>" size="7" type="hidden">
-                      <span id="spCollec"><?php echo $view->edition->ID_COLLECTION ?? ""; ?></span>
+                      <td bordercolor="#DAC1B3"> <input name="txtCollecId" id="txtCollecId" value="<?php echo $view->edition->ID_COLLECTION ?? ""; ?>" size="5" readonly>
+                     
                       </td>
 
-                      <td bordercolor="#DAC1B3"> <input name="txtCollec" id="txtCollec" value="<?php echo $view->edition->NOM_COLLECTION ?? ""; ?>" size="40" class="flat" type="text"></td>
+                      <td bordercolor="#DAC1B3"> 
+                          <input name="txtCollec" id="txtCollec" value="<?php echo $view->edition->NOM_COLLECTION ?? ""; ?>" size="35" class="flat" type="text">
+                        <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('collection',document.action.txtCollec.value,'action','txtCollec',false,document.action.txtEditeurId.value)" />
+                     </td>
 
 
 
@@ -405,7 +495,6 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                   </tbody>
 
                 </table>
-
                 <p> </p>
 <table frame="box" rules="groups" cellpadding="5" bgcolor="#DAC1B3" border="1" bordercolor="#FFFFCC" width="550px">
 
@@ -452,14 +541,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                   <br>
 
-                </div></td>
+                </div></form></td>
 
             </tr>
 
           </tbody>
 
         </table>
-</form>
 </div>
 <script>
     /*

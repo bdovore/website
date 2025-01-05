@@ -10,7 +10,7 @@ function authentification() {
         $_SESSION ["UserName"] = null;
 
         // tentative de connexion automatique
-        if (issetNotEmpty ( $_COOKIE ["username"] ) and issetNotEmpty ( $_COOKIE ["pass"] )) {
+        if (issetNotEmpty ( $_COOKIE ["username"] ?? null ) and issetNotEmpty ( $_COOKIE ["pass"] ?? null )) {
             $DB->query ( "
             SELECT user_id,level,username FROM users
             WHERE username ='" . $DB->escape ( $_COOKIE ["username"] ) . "'
