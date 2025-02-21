@@ -321,53 +321,90 @@ class Compte extends Bdo_Controller {
     public function forgotPass() {
         $email = getVal("email");
         $this->view->layout = "iframe";
-        if ($email=="ok")
-        {//initialise la procédure de renvoi
+        if ($email == "ok") {
             $user_username = postVal("txtusername");
             $user_email = postVal("txtemail");
-                    $this->loadModel("User");
-                    $this->User->load("c", " WHERE username= '".Db_Escape_String($user_username)."' and email = '".Db_Escape_String($user_email)."'");
+            $this->loadModel("User");
+            $this->User->load("c", " WHERE username= '" . Db_Escape_String($user_username) . "' and email = '" . Db_Escape_String($user_email) . "'");
 
-            //Verifie qu'un nom a été retourné par la query
-            if (notIssetOrEmpty($this->User->user_id))
-            {
-                $this->view->addAlertPage("L'utilisateur n'existe pas ou l'adresse e-mail est erron&eacute;e !");
-                            $this->view->addPhtmlFile('alert', 'BODY');
+            if (notIssetOrEmpty($this->User->user_id)) {
+                $this->view->addAlertPage("L'utilisateur n'existe pas ou l'adresse e-mail est erronée !");
+                $this->view->addPhtmlFile('alert', 'BODY');
+            } else {
+                // Génère un token unique
+                $token = bin2hex(random_bytes(16));
+                $expiry = date('Y-m-d H:i:s', strtotime('+1 hour')); // Token valide pendant 1 heure
 
-            }
-            else {
+                // Stocke le token dans la table password_reset_tokens
+                $this->loadModel("PasswordResetToken");
+                $this->PasswordResetToken->set_dataPaste(array(
+                    "user_id" => $this->User->user_id,
+                    "token" => $token,
+                    "expires_at" => $expiry
+                ));
+                $this->PasswordResetToken->update();
 
-                //génère un nouveau mot de passe et l'envoie à l'utilisateur
-
-
-                $newpassword = passgen(8);
-                        $this->User->set_dataPaste(array("user_id" => $this->User->user_id, "password" =>md5($newpassword) ));
-                        $this->User->update();
-
-                        if (issetNotEmpty($this->User->error)) {
-                            var_dump($this->User->error);
-                            exit;
-                        }
-
-                //Prépare l'email à envoyer
+                // Prépare l'email à envoyer
+                $reset_link = BDO_URL."compte/resetpassword?token=" . $token;
                 $textemail = "Bonjour,\n\n";
-                $textemail .= "Suite à votre demande, votre mot de passe pour accéder à www.bdovore.com a été changé.\n";
-                $textemail .= "Votre nouveau mot de passe est :\n\n";
-                $textemail .= "$newpassword\n\n";
-                $textemail .= "N'oubliez pas de changer votre mot de passe dans votre profil lors de votre prochain login.\n";
+                $textemail .= "Cliquez sur le lien suivant pour réinitialiser votre mot de passe :\n";
+                $textemail .= $reset_link . "\n\n";
+                $textemail .= "Ce lien expirera dans 1 heure.\n";
+                $textemail .= "Si vous n'avez pas demandé de réinitialisation, ignorez cet email.\n";
                 $textemail .= "Amicalement\n";
 
+                mail($user_email, "Réinitialisation de votre mot de passe", $textemail);
 
-                mail($user_email,"Votre nouveau mot de passe",$textemail);
-
-                echo  "Votre nouveau mot de passe a &eacute;t&eacute; envoy&eacute;. Vous pouvez fermer cette fenêtre.";
+                echo "Un email avec un lien de réinitialisation vous a été envoyé. Vous pouvez fermer cette fenêtre.";
                 exit();
-             }
+            }
         }
-
+        
+         
         $this->view->render();
-
     }
+    
+    public function resetPassword() {
+        $token = getVal("token");
+        $this->loadModel("PasswordResetToken");
+        $this->PasswordResetToken->load("c", " WHERE token= '" . Db_Escape_String($token) . "' AND expires_at > NOW()");
+
+        if (notIssetOrEmpty($this->PasswordResetToken->user_id ?? Null)) {
+            $this->view->addAlertPage("Le lien de réinitialisation est invalide ou a expiré.");
+            $this->view->addPhtmlFile('alert', 'BODY');
+            $this->view->render();
+        } else {
+            $token_id = $this->PasswordResetToken->id;
+            // Afficher un formulaire pour définir un nouveau mot de passe
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $new_password = postVal("NewPass1");
+                $new_passowrd2 = postVal("NewPass2");
+                $this->loadModel("User");
+                $this->User->set_dataPaste(array(
+                    "user_id" => $this->PasswordResetToken->user_id,
+                    "password" => md5($new_password)
+                ));
+                $this->User->update();
+
+                // Supprimer le token après utilisation
+                $this->PasswordResetToken->set_dataPaste(array(
+                        "id" => $token_id
+                        ));
+                $this->PasswordResetToken->delete();
+
+                $this->view->addAlertPage("Le mot de passe a été réinitialisé. Vous pouvez <a href='". BDO_URL."'>retourner à l'accueil</a> et vous connecter.");
+                $this->view->addPhtmlFile('alert', 'BODY');
+                $this->view->render();
+            } else {
+                $this->view->set_var("PAGETITLE", "BDOVORE.com : réinitiliasation mot de passe");
+                $this->view->set_var("token", $token);
+
+                // Afficher le formulaire de réinitialisation
+                $this->view->render('resetpassword');
+            }
+        }
+    }
+
     
     public function forgotLogin() {
         $login = getVal("login");
