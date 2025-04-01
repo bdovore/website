@@ -102,7 +102,7 @@
           foreach ($view->dbs_serie as $serie) {
              if ($tr == 1) echo "<tr>";
         ?>
-            <td class="mw50">
+            <td >
               <?php 
                 $incomplet = array_search($serie->ID_SERIE, $view->incomplets); 
                 $exclu = false; 
@@ -116,7 +116,7 @@
             </td>
         <?php
             $tr++;
-            if ($tr > 3) {
+            if ($tr > 2) {
               echo "</tr>";
               $tr = 1;
             }
