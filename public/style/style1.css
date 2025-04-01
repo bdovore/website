@@ -1091,6 +1091,7 @@ font.pucenum {
     overflow-x: auto; /* Active le défilement horizontal */
     white-space: nowrap; /* Empêche les éléments de passer à la ligne */
     -webkit-overflow-scrolling: touch;
+    padding-bottom: 10px;
 }
 
 
