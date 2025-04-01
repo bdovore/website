@@ -161,7 +161,7 @@ class Pagination{
 
         // tableaux contenant les liens d'accès et le texte à afficher
         $tab_menu_lien = array( "macollection", "macollection/mesetageres", "macollection/messeries", "macollection/mesauteurs", "macollection/futursachats", "macollection/monactu", "macollection/seriecomplete", "macollection/addition", "macollection/proposition","macollection/statistiques");
-        $tab_menu_texte = array( "Accueil", "Mes Albums", "Mes Séries", "Mes Auteurs", "Futurs Achats", "Mon Actualité", "A compléter", "L'Addition","Propositions", "Stats" );
+        $tab_menu_texte = array( "Accueil", "Mes Albums", "Mes Séries", "Mes Auteurs", "Wishlist", "Mon Actu", "A compléter", "L'Addition","Propositions", "Stats" );
 
         // informations sur la page
 
@@ -172,8 +172,15 @@ class Pagination{
         $onglet = $a_request_uri[0];
 
         // boucle qui parcours les deux tableaux
+        $i = 0;
         foreach($tab_menu_lien as $cle=>$lien)
         {
+            $i = $i + 1;
+           /* if ($i == 5) {
+                // on ajoute la drop down
+                $menu .= " <li class='dropdown-toggle'>Plus ⋮ 
+                <ul class='dropdown-menu'>";
+            } */
             $menu .= "    <li";
 
 
@@ -185,7 +192,31 @@ class Pagination{
         }
 
         $menu .= "</ul>\n</div>    <hr class='expSep'>";
+        // on ajoute le javascript 
+        $menu .= "<script>
+            window.addEventListener('load', scrollToActiveTab);
+        window.addEventListener('resize', scrollToActiveTab);
 
+        function scrollToActiveTab() {
+            const ul = document.getElementById('onglets');
+            const activeTab = ul.querySelector('li.active');
+
+            if (activeTab) {
+                // Calculer le décalage par rapport au conteneur
+                const ulRect = ul.getBoundingClientRect();
+                const activeTabRect = activeTab.getBoundingClientRect();
+
+                // Calculer le décalage nécessaire pour centrer l'onglet actif
+                const scrollLeft = activeTabRect.left - ulRect.left + ul.scrollLeft - (ulRect.width / 2) + (activeTabRect.width / 2);
+
+                // Faire défiler vers l'onglet actif
+                ul.scrollTo({
+                    left: scrollLeft,
+                    behavior: 'smooth' // Pour un défilement fluide
+                });
+            }
+        }
+    </script>";
         // on renvoie le code xHTML
         return $menu;
 

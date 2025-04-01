@@ -1084,18 +1084,39 @@ font.pucenum {
     font : bold 2em;
     list-style-type : none;
     padding-bottom : 28px; /* à modifier suivant la taille de la police ET de la hauteur de l'onglet dans #onglets li */
-    border-bottom : 1px solid #9EA0A1;
-    margin-left : 0;
+     display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    overflow-x: auto; /* Active le défilement horizontal */
+    white-space: nowrap; /* Empêche les éléments de passer à la ligne */
+    -webkit-overflow-scrolling: touch;
+}
+
+
+/* Style optionnel pour améliorer l'apparence */
+#onglets::-webkit-scrollbar {
+    height: 8px; /* Hauteur de la barre de défilement */
+}
+
+#onglets::-webkit-scrollbar-thumb {
+    background-color: #888; /* Couleur de la barre de défilement */
+    border-radius: 4px;
+}
+
+#onglets::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Couleur de la piste de défilement */
 }
 
 #onglets li {
     float : left;
-    height : 21px; /* à modifier suivant la taille de la police pour centrer le texte dans l'onglet */
+    height : 21px; 
     background-color: #F4F9FD;
-    margin : 2px 2px 0 2px !important;  /* Pour les navigateurs autre que IE */
-    margin : 1px 2px 0 2px;  /* Pour IE  */
+    margin : 2px 2px 0 2px !important;  
+    margin : 1px 2px 0 2px;  
     border : 1px solid #9EA0A1;
     padding: 2px 2px 2px 2px;
+    flex-shrink: 0;
 }
 
 #onglets li.active {
@@ -1104,15 +1125,44 @@ font.pucenum {
 }
 
 #onglets a {
-    display: block;
+    display: flex;
     color: #101D44;
     text-decoration: none;
     padding: 0px 1em;
     font-weight: bold;
+     position: relative;
 }
 
 #onglets a:hover {
     background : #fff;
+}
+
+#onglets > li.dropdown-toggle {
+    position: relative;
+    cursor: pointer;
+} 
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.3); /* Fond semi-transparent */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Bordure légère pour la visibilité */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2;
+    list-style-type: none;
+    padding: 0;
+}
+
+.dropdown-menu li {
+    padding: 10px;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown-toggle:hover .dropdown-menu {
+    display: block;
 }
 
 #menu {
@@ -1425,7 +1475,7 @@ div.textmasked {
     #select_genre{
         display:none;
     }
-    #onglets > li:nth-child(10) {
+    /*#onglets > li:nth-child(10) {
         display:none;
     }
     #onglets > li:nth-child(9) {
@@ -1440,14 +1490,22 @@ div.textmasked {
         display:none;
     }
 
-    /*#onglets > li:nth-child(4) {
+    #onglets > li:nth-child(4) {
         display:none;
-    }*/
+    } */
 
    /* td[class="colselect"] {
         display: none!important;
     }*/
+    #onglets > li.dropdown-toggle {
+           display: block;
+       }
 
+    /* Ajuste l'alignement du menu déroulant pour éviter le dépassement */
+    .dropdown-menu {
+        left: auto; /* Annule l'alignement à gauche */
+        right: 0; /* Aligne le menu à droite */
+    }
     ul.ui-autocomplete {
         width:100%;
         height: 500px !important;
