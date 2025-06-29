@@ -94,12 +94,16 @@ class GetJSON extends Bdo_Controller {
             $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $id_auteur));
             $this->Auteur->load();
         } else if ($term <> "") {
-            $where = " WHERE PSEUDO like '%" . Db_Escape_String($term) . "%' ORDER BY PSEUDO";
+            
+            //$where = " WHERE PSEUDO like '%" . Db_Escape_String($term) . "%' ORDER BY PSEUDO";
+            $where = " WHERE MATCH(search_field) AGAINST( '" . Db_Escape_String($term) . "' IN NATURAL LANGUAGE MODE) "
+                    . "ORDER BY MATCH(search_field) AGAINST( '" . Db_Escape_String($term) . "') DESC";
             $this->Auteur->load("c", $where);
         } else {
             $this->view->set_var('json',"{}");
         }
         if ($mode == 0 AND isset($this->Auteur->dbSelect->a_dataQuery)) {
+            $arr = array();
             foreach ($this->Auteur->dbSelect->a_dataQuery as $obj) {
 
                 $arr[] = (object) array(
@@ -292,8 +296,10 @@ class GetJSON extends Bdo_Controller {
             $this->Editeur->set_dataPaste(array("ID_EDITEUR" => $id_editeur));
             $this->Editeur->load();
         } else if ($term <> "") {
-            $where = " WHERE NOM like '%" . Db_Escape_String($term) . "%' ORDER BY NOM";
-
+            //$where = " WHERE NOM like '%" . Db_Escape_String($term) . "%' ORDER BY NOM";
+            $where = " WHERE MATCH (NOM) AGAINST ( '" . Db_Escape_String($term) . "'  IN NATURAL LANGUAGE MODE) "
+                    . " ORDER BY MATCH (NOM) AGAINST ( '" . Db_Escape_String($term) . "' ) DESC";
+            
             $this->Editeur->load("c", $where);
         }
         if ($mode == 0) {
@@ -330,7 +336,7 @@ class GetJSON extends Bdo_Controller {
              * Sélection de la liste des collection disponible pour cet éditeur
              */
             $where = " WHERE bd_collection.ID_EDITEUR =" . $id_editeur . " ";
-            if ($term <> "")
+            if ($term <> "" AND $term <> "<defaut>")
                 $where .= " AND bd_collection.NOM like '%" . Db_Escape_String($term) . "%' ORDER BY bd_collection.NOM ";
 
             $this->Collection->load("c", $where);

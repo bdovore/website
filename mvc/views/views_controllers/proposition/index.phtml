@@ -311,7 +311,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                       </td>
 
                       <td width="59%"> <input name="txtScenar" id="txtScenar" value="<?php echo $view->edition->scpseudo ?? ""; ?>" size="40" class="flat" type="text">
-                      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.action.txtScenar.value,'action','txtScenar',true)" /></td>
+                      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="$('#txtScenar').autocomplete('search')" /></td>
 
 
 
@@ -326,7 +326,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                       </td>
 
                       <td> <input name="txtScenarAlt" id="txtScenarAlt" value="<?php echo $view->edition->scapseudo ?? ""; ?>" size="40" class="flat" type="text">
-                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.action.txtScenarAlt.value,'action','txtScenarAlt',true)" />
+                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="$('#txtScenarAlt').autocomplete('search')" />
                       </td>
 
 
@@ -343,7 +343,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3"> 
                           <input name="txtDessi"  id="txtDessi" value="<?php echo $view->edition->depseudo ?? ""; ?>" size="40" class="flat" type="text">
-                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.action.txtDessi.value,'action','txtDessi',true)" />
+                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="$('#txtDessi').autocomplete('search')" />
                       </td>
 
 
@@ -360,7 +360,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3"> 
                           <input name="txtDessiAlt" id="txtDessiAlt"  value="<?php echo $view->edition->deapseudo ?? ""; ?>" size="40" class="flat" type="text">
-                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.action.txtDessiAlt.value,'action','txtDessiAlt',true)" />
+                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="$('#txtDessiAlt').autocomplete('search')" />
                      </td>
 
 
@@ -376,7 +376,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                       </td>
 
                       <td> <input name="txtColor" id="txtColor" value="<?php echo $view->edition->copseudo ?? ""; ?>" size="40" class="flat" type="text">
-                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.action.txtColor.value,'action','txtColor',true)" />
+                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="$('#txtColor').autocomplete('search')" />
                     
 
                       </td>
@@ -395,7 +395,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td> 
                           <input name="txtColorAlt" id="txtColorAlt" value="<?php echo $view->edition->coapseudo ?? ""; ?>" size="40" class="flat" type="text">
-                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.action.txtColorAlt.value,'action','txtColorAlt',true)" />
+                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="$('#txtColorAlt').autocomplete('search')" />
                     
 
                       </td>
@@ -426,13 +426,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td class="label" > <font color="#990000" size="-1"><strong>Editeur</strong></font></td>
 
-                      <td bordercolor="#DAC1B3"> <input name="txtEditeurId" id="txtEditeurId" value="<?php echo $view->edition->ID_EDITEUR ?? ""; ?>" size="5" readonly >
+                      <td bordercolor="#DAC1B3"> <input name="txtEditeurId" id="txtEditeurId" value="<?php echo $view->edition->ID_EDITEUR ?? ""; ?>" size="5" readonly onchange="changeEditeur();" >
                           
                       </td>
 
                       <td bordercolor="#DAC1B3"> 
                           <input name="txtEditeur" id="txtEditeur" value="<?php echo $view->edition->NOM_EDITEUR ?? ""; ?>" size="35" class="flat" type="text" onchange="changeEditeur();">
-                       <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('editeur',document.action.txtEditeur.value,'action','txtEditeur',true)" />
+                       <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="$('#txtEditeur').autocomplete('search')" />
                     </td>
 
 
@@ -449,7 +449,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td bordercolor="#DAC1B3"> 
                           <input name="txtCollec" id="txtCollec" value="<?php echo $view->edition->NOM_COLLECTION ?? ""; ?>" size="35" class="flat" type="text">
-                        <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('collection',document.action.txtCollec.value,'action','txtCollec',false,document.action.txtEditeurId.value)" />
+                        <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="loadCollection()" />
                      </td>
 
 
@@ -573,8 +573,21 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
        
     }
      $(document).ready(function(){
-  $('#txtDateParution3').mask('0000-00-00', {placeholder: "0000-00-00"});
-});
+        $('#txtDateParution3').mask('0000-00-00', {placeholder: "0000-00-00"});
+    });
+    function loadCollection () {
+        if ($("#txtEditeurId").val() != '' ){
+            changeEditeur();
+            if ($("#txtCollec").val() != "") {
+                $("#txtCollec").autocomplete("search");
+            } else {
+                $("#txtCollec").autocomplete("search", "<defaut>");
+            } 
+        } else {
+            alert("Veuillez saisir l'éditeur en premier");
+        }
+            
+    }
 </script>
 
 
