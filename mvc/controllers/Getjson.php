@@ -97,6 +97,7 @@ class GetJSON extends Bdo_Controller {
             
             //$where = " WHERE PSEUDO like '%" . Db_Escape_String($term) . "%' ORDER BY PSEUDO";
             $where = " WHERE MATCH(search_field) AGAINST( '" . Db_Escape_String($term) . "' IN NATURAL LANGUAGE MODE) "
+                    . " OR PSEUDO like '%" . Db_Escape_String($term) . "%' "
                     . "ORDER BY MATCH(search_field) AGAINST( '" . Db_Escape_String($term) . "') DESC";
             $this->Auteur->load("c", $where);
         } else {

@@ -241,7 +241,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                         </div></td>
 
                       <td > <input name="txtSerie" id="txtSerie" value="<?php echo $view->edition->NOM_SERIE ?? ""; ?>" size="45" class="flat" type="text">
-                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('serie',document.action.txtSerie.value,'action','txtSerie',true)" /></td>
+                          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="$('#txtSerie').autocomplete('search')" /></td>
 
 
 
@@ -256,7 +256,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                       </td>
 
                       <td > <input name="txtGenre" id="txtGenre"  value="<?php echo $view->edition->NOM_GENRE ?? ""; ?>" size="30" class="flat" type="text">
-                      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('genre',document.action.txtGenre.value,'action','txtGenre',false)" />
+                      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="$('#txtGenre').autocomplete('search')" />
                       </td>
 
 
