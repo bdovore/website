@@ -298,8 +298,9 @@ class GetJSON extends Bdo_Controller {
             $this->Editeur->load();
         } else if ($term <> "") {
             //$where = " WHERE NOM like '%" . Db_Escape_String($term) . "%' ORDER BY NOM";
-            $where = " WHERE MATCH (NOM) AGAINST ( '" . Db_Escape_String($term) . "'  IN NATURAL LANGUAGE MODE) "
-                    . " ORDER BY MATCH (NOM) AGAINST ( '" . Db_Escape_String($term) . "' ) DESC";
+            $where = " WHERE MATCH (NOM) AGAINST ( '" . Db_Escape_String($term) . "'  IN NATURAL LANGUAGE MODE) OR "
+                    . " NOM like '%" . Db_Escape_String($term) . "%' "
+                    . " ORDER BY MATCH (NOM) AGAINST ( '" . Db_Escape_String($term) . "' ) DESC, NOM";
             
             $this->Editeur->load("c", $where);
         }
