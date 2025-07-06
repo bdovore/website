@@ -41,7 +41,7 @@ class Proposition extends Bdo_Controller {
                     die("Erreur lors de l'insertion, contactez l'équipe !");
                 }
                 else {
-                    $this->view->addAlertPage("Votre demande est bien enregistrée !");
+                    $this->view->addInfoPage("Merci :) Votre demande est bien enregistrée !");
                     $this->view->addPhtmlFile('alert', 'BODY');
                     
                 }
@@ -78,6 +78,7 @@ class Proposition extends Bdo_Controller {
                     $this->view->set_var("TYPE","AJOUT");
                     $this->view->set_var("keyword", $keyword);
                     $this->view->set_var("items", $items);
+                    $this->view->addPhtmlFile("proposition/index_alt", "BODY");
                 }
             }
         }
@@ -152,7 +153,7 @@ class Proposition extends Bdo_Controller {
                 "EAN" => postVal("txtEAN"),
                 "ISBN" => postVal("txtISBN"),
                 "HISTOIRE" => postVal("txtHistoire"),
-                "COMMENTAIRE" => postVal("txtCommentaire"),
+                "DESCRIB_EDITION" => postVal("txtCommentaire"),
                 "ACTION" => postVal("cmbAction"),
                 "NOTIF_MAIL" =>((postVal("chkNotEmail") == "checked") ? "1" : "0")
             ));

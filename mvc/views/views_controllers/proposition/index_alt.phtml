@@ -1,0 +1,548 @@
+<?php
+$ficheAlbum = $view->getHelper('ficheAlbum');
+?>
+<script src="<?php echo BDO_URL;?>jquery/jquery.mask.min.js" type="text/javascript"></script>
+<script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
+
+<div class="cadre1">
+  <div class="middle_title"><h3>Proposition d'ajout d'album dans BDOvore</h3></div>
+
+  <div id="form-step-container">
+    <!-- Étape 1 : Recherche Amazon -->
+    <div id="step-1" class="form-step">
+        <p>
+                    Avant de commencer à remplir ce formulaire d'ajout, vous pouvez consulter la
+                    <b><a href="<?php echo BDO_URL;?>listpropal?type=AJOUT">liste des demandes d'ajout en cours de traitement</a></b>
+                    afin de vous éviter de saisir une proposition déjà faite récemment (et évidemment de bien vérifier
+                    que l'album n'existe pas déjà via le moteur de recherche ou le <a href="<?php echo BDO_URL;?>browser">BDoBrowser</a>).
+                </p>
+      <h4>Étape 1 : Recherche de l'album sur le web pour pré-remplir les informations</h4>
+      <form enctype="multipart/form-data" action="#suggest" name="findamazon" method="POST">
+        <label for="keyword">Titre ou ISBN :</label>
+        <input name="keyword" id="keyword" size="40" class="flat" type="text" value="<?php echo $view->keyword ?? ''; ?>" /> 
+        <button class="btn-search" type="submit">Go !</button>
+      </form>
+      <?php if (issetNotEmpty($view->items)) { ?>
+      <p><i>Trouvé ! Cliquez sur un album pour pré-remplir le formulaire</i></p>
+      <ul>
+        <?php foreach ($view->items as $index => $item) {
+          $elementtitle = $item["title"] . (is_null($item["publisher"]) ? "" : " - ed. " . $item["publisher"] . " (" . substr($item["content"]["publication_date"], 0, 4) . ")");
+        ?>
+        <li>
+            <div class="album-result">
+          <a href="https://www.amazon.fr/exec/obidos/ASIN/<?php echo $item['asin']; ?>/bdovorecom-21/" target="_blank"> <?php echo $elementtitle; ?></a>
+          - <button type="button" class="btn-fill" onclick="fillForm(<?php echo $index; ?>);">Pré-remplir</button>
+            </div>
+            </li>
+        <?php } ?>
+      </ul>
+      <p><i>Aucune proposition ne correspond ? Refaites une recherche ou cliquez sur suivant pour remplir le formulaire manuellement</i></p>
+      <script>
+        const propData = <?php echo json_encode($view->items) ?>;
+        function fillForm(index) {
+          const album = propData[index];
+          if (!album) return;
+          $('#txtTitre').val(album.title);
+          $('#txtFileURL').val(album.image);
+          $('#txtScenar').val(album.contributors.authors[0] || '');
+          $('#txtScenarAlt').val(album.contributors.authors[1] || '');
+          $('#txtDessi').val(album.contributors.illustrators[0] || '');
+          $('#txtDessiAlt').val(album.contributors.illustrators[1] || '');
+          $('#txtEditeur').val(album.publisher);
+          $('#txtEAN').val(album.eans[0] || '');
+          $('#txtISBN').val(album.isbns[0] || '');
+          $('#txtDateParution3').val(album.content.publication_date?.substring(0,10) || '');
+          if (album.image) {
+            $('#previewCover').attr('src', album.image).show();
+          }
+          
+          if ($('#txtScenarAlt').val() != '') {
+              showScenarAlt();
+          }
+          if ($('#txtDessiAlt').val() != '') {
+              showDessiAlt();
+          }
+          if ($('#txtColorAlt').val() != '') {
+              showColorAlt();
+          }
+          checkAutocompleteStatus();
+
+          showStep(2);
+        }
+      </script>
+      <?php } elseif (issetNotEmpty($view->keyword)) { ?>
+        <p><i>Aucun album trouvé. Merci de remplir manuellement en cliquant sur suivant.</i></p>
+      <?php } ?>
+        <div class="step-buttons">
+            <button type="button" onclick="showStep(2)">Suivant</button>
+        </div>
+        
+        <p>Merci de prendre le temps de lire les guides de saisie disponibles :
+                        </p><ul type="SQUARE">
+                            <li><a href="<?php echo BDO_URL_FORUM;?>viewtopic.php?t=352" target="_blank">Tutorial : comment faire une demande d'ajout ou de correction</a>
+                            </li><li><a href="<?php echo BDO_URL_FORUM;?>viewtopic.php?t=617" target="_blank">Tutorial : les mangas V.O</a>
+                            </li><li><a href="<?php echo BDO_URL_FORUM;?>viewtopic.php?t=392" target="_blank">Tutorial : les BD et Comics V.O</a>
+                            </li><li><a href="<?php echo BDO_URL_FORUM;?>viewtopic.php?t=618" target="_blank">Tutorial : les séries francaises traduites en d'autres langues</a>
+                            </li><li><a href="<?php echo BDO_URL_FORUM;?>viewtopic.php?t=391" target="_blank">Tutorial : les artbooks</a>
+                        </li></ul>
+                          <p></p>
+                          <p>Nos valideurs et correcteurs travaillent d'arrache pied (et bénévolement) pour que notre base de données soit la plus complète possible, aidez les en renseignant au mieux toutes les informations à votre disposition et en utilisant les propositions automatiques lors de la saisie !</p>
+            <br>
+    </div>
+    <form enctype="multipart/form-data" action="" name="action" id="action" value="append" method="POST">
+    <!-- Étape 2 : Titre, Série et Couverture -->
+    <div id="step-2" class="form-step" style="display: none;">
+      <h4>Étape 2 : Titre, Série & Couverture</h4>
+       <b>Informations sur l'album</b><br>
+      <label for="txtTitre">Titre de l'album</label>
+      <input type="text" id="txtTitre" name="txtTitre" size="50" /><br>
+      <span class="petite_police">
+                            En l'absence de titre distinctif : "<i>Titre de la Série</i>, Tome X" ; "<i>Titre de la Série</i>" pour un one-shot
+      </span><br /><br />
+      <label for="lstType">Type:</label>
+      <select name="lstType" size="1">
+                                    <option value="0" <?php if ($view->edition->FLG_TYPE_TOME ?? 0 == 0) echo "selected='O'"; ?>>Album</option>
+                                    <option value="1" <?php if ($view->edition->FLG_TYPE_TOME ?? 0 == 1) echo "selected='O'"; ?>>Coffret</option>
+                              </select>
+      <label for="chkIntegrale">Intégrale</label> <input name="chkIntegrale" value="checkbox" <?php if (($view->edition->FLG_INT_TOME ?? 0) == 1) echo "checked='O'"; ?> type="checkbox">
+      <br>
+      <label for="txtNumTome">Tome n°</label>
+      <input name="txtNumTome" id="txtNumTome" value="<?php echo $view->edition->NUM_TOME ?? ""; ?>" size="2" class="flat" type="text">
+      <br> 
+      <label for="txtHistoire">Synopsis</label><br>
+      <textarea cols="50" name="txtHistoire" rows="8" id="txtHistoire"><?php echo $view->edition->HISTOIRE_TOME ?? ""; ?>
+     </textarea><br>
+                            <span class="petite_police">Utiliser ce champ pour indiquer le "résumé" de l'album. <u>Indiquez votre source !</u> (votre pseudo si vous en êtes l'auteur, le nom de l'éditeur,...).
+                            <br /></span>
+     <br>
+      <br>
+      <b>Couverture</b><br>
+      <label for="txtFileURL">URL image de couverture</label>
+      <input type="text" id="txtFileURL" name="txtFileURL" size="60" oninput="updateCoverPreview()" /><br />
+
+      <label for="uploadCover">ou envoyer une image :</label>
+      <input type="file" id="txtFileLoc" name="txtFileLoc" accept="image/*" onchange="loadCoverFile(this)" /><br />
+
+      <img id="previewCover" src="" alt="Prévisualisation couverture" style="display: none; max-height: 200px; margin-top: 10px;" />
+
+      <br><br>
+      
+      <b>Informations sur la Série</b><br>
+      
+      <label for="txtSerie">Série</label>
+      
+      <input type="text" id="txtSerie" name="txtSerie" size="45" />
+      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtSerie').autocomplete('search')" /><br/> 
+      <small id="warnSerie" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
+
+      <label for="txtSerieId">Identifant Bdovore</label>
+      <input type="text" id="txtSerieId" name="txtSerieId" readonly size="5" />
+       <button id="addSerie" type="button" class="btn-plus" onclick="showSerie()">+ Série à créer</button>
+      <br /><br>
+      <div id="addSerieInfo">
+           <label for="txtGenre">Genre</label>
+          <input name="txtGenre" id="txtGenre"  value="<?php echo $view->edition->NOM_GENRE ?? ""; ?>" size="30" class="flat" type="text">
+          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="$('#txtGenre').autocomplete('search')" /><br>
+          <label for="txtGenreId">Identifant Bdovore</label>
+          <input name="txtGenreId" id="txtGenreId" value="<?php echo $view->edition->ID_GENRE ?? ""; ?>"  class="flat" readonly size="4"><br>
+        <label for="lstAchevee">Status d'avancement</label>
+        <select name="lstAchevee" size="1">
+
+                        <option value="0" <?php if (($view->edition->FLG_FINI ?? "0") == "0") echo "selected"; ?>>Finie</option>
+                        <option value="1" <?php if (($view->edition->FLG_FINI ?? "0") == "1") echo "selected"; ?>>En cours</option>
+                        <option value="2" <?php if (($view->edition->FLG_FINI ?? "0" )== "2") echo "selected"; ?>>One Shot</option>
+                        <option value="3" <?php if (($view->edition->FLG_FINI ?? "0") == "3") echo "selected"; ?>>Interrompue/Abandonnée</option>
+
+                          </select>
+
+        <br /><br>
+        
+      </div>
+      
+     
+      <div class="step-buttons">
+        <button type="button" onclick="showStep(1)">Retour</button>
+        <button type="button" onclick="showStep(3)">Suivant</button>
+      </div>
+    </div>
+
+    <!-- Étape 3 : Auteurs, Éditeur et Identifiants -->
+    <div id="step-3" class="form-step" style="display: none;">
+      <h4>Étape 3 : Auteurs</h4>
+        <strong>Informations sur les auteurs</strong></font><br> 
+        <font size="-2">(Vous pouvez proposer deux scénaristes / dessinateurs par tome)</font>
+        <span class="petite_police"> (un seul par champ, à valider à la loupe si présent dans la base.
+                            <br />Vous pouvez sélectionner "Collectif" comme 1er ou 2nd auteur si plus de 2)</span><br />
+      <label for="txtScenar">Scénariste</label>
+      <input type="text" id="txtScenar" name="txtScenar" size="40" />
+      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtScenar').autocomplete('search')" /><br />
+      <small id="warnScenar" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
+      <label for="txtScenarId">Identifant Bdovore :</label>
+      <input name="txtScenarId" id="txtScenarId" value="<?php echo $view->edition->ID_SCENAR ?? ""; ?>" size="5" readonly> <br />
+      <br />
+      <button id="addScenar" type="button" class="btn-plus" onclick="showScenarAlt()">+ Ajouter un scénariste</button><br>
+      <div id="scenarAlt">
+        <label for="txtScenarAlt">Scénariste 2</label>
+        <input type="text" id="txtScenarAlt" name="txtScenarAlt" size="40" />
+        <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtScenarAlt').autocomplete('search')" /><br />
+        <small id="warnScenarAlt" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
+        <label for="txtScenarAltId">Identifant Bdovore :</label>
+        <input name="txtScenarAltId" id="txtScenarAltId" value="<?php echo $view->edition->ID_SCENAR_ALT ?? ""; ?>" size="5" readonly> <br />
+        <br />
+      </div>
+      <label for="txtDessi">Dessinateur</label>
+      <input type="text" id="txtDessi" name="txtDessi" size="40" />
+      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtDessi').autocomplete('search')" /><br />
+      <small id="warnDessi" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
+      <label for="txtDessiId">Identifant Bdovore :</label>
+      <input name="txtDessiId" id="txtDessiId" value="<?php echo $view->edition->ID_DESSIN ?? ""; ?>" size="5" readonly> <br />
+      <button id="addDessi" type="button" class="btn-plus" onclick="showDessiAlt()">+ Ajouter un dessinateur</button><br>
+      <br />
+      <div id="dessiAlt">
+        <label for="txtDessiAlt">Dessinateur 2</label>
+        <input type="text" id="txtDessiAlt" name="txtDessiAlt" size="40" />
+         <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtDessiAlt').autocomplete('search')" /><br />
+         <small id="warnDessiAlt" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
+        <label for="txtDessiAltId">Identifant Bdovore :</label>
+        <input name="txtDessiAltId" id="txtDessiAltId" value="<?php echo $view->edition->ID_DESSIN_ALT ?? ""; ?>" size="5" readonly> <br />
+        <br />
+      </div>
+      
+      <label for="txtColor">Coloriste</label>
+      <input type="text" id="txtColor" name="txtColor" size="40" />
+      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtColor').autocomplete('search')" /><br />
+      <small id="warnColorr" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
+      <label for="txtColorId">Identifant Bdovore :</label>
+      <input name="txtColorId" id="txtColorId" value="<?php echo $view->edition->ID_COLOR ?? ""; ?>" size="5" readonly> <br />
+      <button id="addColor" type="button" class="btn-plus" onclick="showColorAlt()">+ Ajouter un coloriste</button><br>
+      <br />
+      <div id="colorAlt">
+        <label for="txtColorAlt">Coloriste 2</label>
+        <input type="text" id="txtColorAlt" name="txtColorAlt" size="40" />
+         <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtColorAlt').autocomplete('search')" /><br />
+         <small id="warnColorAlt" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
+        <label for="txtColorAltId">Identifant Bdovore :</label>
+        <input name="txtColorAltId" id="txtColorAltId" value="<?php echo $view->edition->ID_COLOR_ALT ?? ""; ?>" size="5" readonly> <br />
+        <br />
+      </div>
+    <div class="step-buttons">
+        <button type="button" onclick="showStep(2)">Retour</button>
+        <button type="button" onclick="showStep(4)">Suivant</button>
+      </div>
+    </div>
+    
+    <div id="step-4" class="form-step" style="display: none;">
+         <label for="txtEditeur">Éditeur</label>
+      <input type="text" id="txtEditeur" name="txtEditeur" size="50" />
+      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtEditeur').autocomplete('search')" /><br />
+      <small id="warnEditeur" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
+      <label for="txtEditeurId">Identifant Bdovore: </label>
+      <input name="txtEditeurId" id="txtEditeurId" value="<?php echo $view->edition->ID_EDITEUR ?? ""; ?>" size="5" readonly onchange="changeEditeur();"><br />
+      
+      
+      <span class="petite_police">Les éditeurs organisent souvent les productions en différentes collections que vous pouvez renseigner ici.<br> 
+          Si ce n'est pas le cas, cliquez sur la loupe et sélectionnez N/A après avoir</span>
+      <br />
+      <label for="txtCollec">Collection</label>
+      <input name="txtCollec" id="txtCollec" value="<?php echo $view->edition->NOM_COLLECTION ?? ""; ?>" size="35" class="flat" type="text">
+      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="loadCollection()" />
+      <label for="txtCollecId">Identifant Bdovore:</label>
+      <input name="txtCollecId" id="txtCollecId" value="<?php echo $view->edition->ID_COLLECTION ?? ""; ?>" size="5" readonly><br />
+      
+      <br />
+      <label for="txtEAN">EAN</label>
+      <input type="text" id="txtEAN" name="txtEAN" size="20" /><br />
+
+      <label for="txtISBN">ISBN</label>
+      <input type="text" id="txtISBN" name="txtISBN" size="20" /><br />
+
+      <label for="txtDateParution">Date de parution</label>
+      <input type="date" id="txtDateParution" name="txtDateParution" /><br />
+      <span class="texte"><u>BDovore NE gère PAS les réimpressions</u>.<br>Assurez-vous que la date de l'album que vous proposez correspond à une édition originale ou à une réédition (couverture ou contenu différent), PAS à une réimpression (même contenu que la dernière édition)</span> 
+      <br />
+      <div class="step-buttons">
+        <button type="button" onclick="showStep(3)">Retour</button>
+        <button type="button" onclick="showStep(5)">Suivant</button>
+      </div>
+    </div>
+    <div id="step-5" class="form-step" style="display:none;">
+       
+     <strong>Ajoutez
+
+                      ici votre commentaire sur votre proposition</strong></font><br><font size="-2">(Vous
+
+                        pouvez également utiliser ce champs pour signaler un doublon ou demander un effacement)</font><br> <br>
+                        <label for="txtCommentaire">Commentaire</label>
+                      <textarea name="txtCommentaire" cols="60" rows="8" id="textarea"></textarea>
+                      <br>
+                       Après ajout dans la base
+                            <select name="cmbAction" size="1" id="cmbAction"><?php echo $view->OPTIONS;?></select>
+                            
+                            <br>
+                            <input name="chkNotEmail" value="checked" type="checkbox" checked />
+                            <font size="-1">recevoir un email d'information/confirmation après traitement de cette proposition par l'équipe</font>
+                            
+                            <input type="hidden" name="type" value="<?php echo $view->TYPE; ?>">
+             <input type="hidden" name="action" value="append">
+             <div class="step-buttons">
+      
+                <button type="button" onclick="showStep(4)">Retour</button>
+                <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; font-size: 16px; border: none; border-radius: 6px; cursor: pointer;">Valider la proposition</button>
+            </div>
+             
+
+    </div>
+    </form> 
+  </div>
+</div>
+
+<script>
+  function showStep(stepNumber) {
+    $('.form-step').hide();
+    $('#step-' + stepNumber).show();
+  }
+
+  function updateCoverPreview() {
+    const url = $('#txtFileURL').val();
+    if (url) {
+      $('#previewCover').attr('src', url).show();
+    }
+  }
+
+  function loadCoverFile(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        $('#previewCover').attr('src', e.target.result).show();
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+  
+  function changeEditeur() {
+        addAutocomplete("txtCollec","spCollec","txtCollecId","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val());
+       
+    }
+    $(document).ready(function(){
+        $('#txtDateParution').mask('0000-00-00', {placeholder: "0000-00-00"});
+    });
+  function loadCollection () {
+        if ($("#txtEditeurId").val() != '' ){
+            changeEditeur();
+            if ($("#txtCollec").val() != "") {
+                $("#txtCollec").autocomplete("search");
+            } else {
+                $("#txtCollec").autocomplete("search", "<defaut>");
+            } 
+        } else {
+            alert("Veuillez saisir l'éditeur en premier");
+        }
+            
+    }
+
+
+   function checkAutocompleteStatus() {
+        const pairs = [
+          { field: '#txtSerie', idField: '#txtSerieId', warn: '#warnSerie' },
+          { field: '#txtScenar', idField: '#txtScenarId', warn: '#warnScenar' },
+          { field: '#txtDessi', idField: '#txtDessiId', warn: '#warnDessi' },
+          { field: '#txtScenarAlt', idField: '#txtScenarAltId', warn: '#warnScenarAlt' },
+          { field: '#txtDessiAlt', idField: '#txtDessiAltId', warn: '#warnDessiAlt' },
+          { field: '#txtColor', idField: '#txtColorId', warn: '#warnColor' },
+        { field: '#txtColorAlt', idField: '#txtColorAltId', warn: '#warnColorAlt' },
+          { field: '#txtEditeur', idField: '#txtEditeurId', warn: '#warnEditeur' }, 
+        ];
+
+        pairs.forEach(({ field, idField, warn }) => {
+          const hasText = $(field).val().trim() !== '';
+          const hasId = $(idField).val().trim() !== '';
+          if (hasText && !hasId) {
+            $(field).addClass('input-warning');
+            $(warn).show();
+            if (field == "#txtSerie") {
+                $("#addSerie").show();
+            }
+          } else {
+            $(field).removeClass('input-warning');
+            $(warn).hide();
+            if (field == "#txtSerie") {
+                $("#addSerie").hide();
+            }
+          }
+        });
+      }
+
+    function showScenarAlt() {
+          $("#scenarAlt").show();
+          $("#addScenar").hide();
+    }
+    
+    function showDessiAlt() {
+          $("#dessiAlt").show();
+          $("#addDessi").hide();
+    }
+    function showColorAlt() {
+          $("#colorAlt").show();
+          $("#addColor").hide();
+    }
+    
+    function showSerie() {
+        $("#addSerieInfo").show();
+    }
+  $(document).ready(function() {
+    addAutocomplete("txtSerie","spSerie","txtSerieId","<?php echo BDO_URL; ?>getjson?data=Serie");
+    addAutocomplete("txtGenre","spGenre","txtGenreId","<?php echo BDO_URL; ?>getjson?data=Genre");
+    addAutocomplete("txtScenar","spScenar","txtScenarId","<?php echo BDO_URL; ?>getjson?data=Auteur");
+    addAutocomplete("txtScenarAlt","spScenarAlt","txtScenarAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
+    addAutocomplete("txtDessiAlt","spDessiAlt","txtDessiAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
+    addAutocomplete("txtDessi","spDessi","txtDessiId","<?php echo BDO_URL; ?>getjson?data=Auteur");
+
+     addAutocomplete("txtColor","spColor","txtColorId","<?php echo BDO_URL; ?>getjson?data=Auteur");
+     addAutocomplete("txtColorAlt","spColorAlt","txtColorAltId","<?php echo BDO_URL; ?>getjson?data=Auteur");
+    addAutocomplete("txtEditeur","spEditeur","txtEditeurId","<?php echo BDO_URL; ?>getjson?data=Editeur");
+    
+    // Vérification en live
+     $('#txtSerie, #txtScenar, #txtDessi, #txtScenarAlt, #txtDessiAlt, #txtColor, #txtColorAlt,#txtEditeur').on('change', checkAutocompleteStatus);
+     $('#txtSerie, #txtScenar, #txtDessi, #txtScenarAlt, #txtDessiAlt, #txtColor, #txtColorAlt,#txtEditeur').on('autocompleteselect', function () {
+      setTimeout(() => checkAutocompleteStatus(), 50);});
+      
+     $("#scenarAlt").hide();
+     $("#dessiAlt").hide();
+     $("#colorAlt").hide();
+     $('#addSerieInfo').hide();
+     $("#addSerie").hide();
+     // Empêche la soumission par "Entrée" sauf pour le champ de recherche
+    $(document).on('keydown', 'form', function(e) {
+      if (e.key === "Enter") {
+        const isKeywordInput = $(e.target).is('#keyword');
+        if (!isKeywordInput) {
+          e.preventDefault();
+          return false;
+        }
+      }
+});
+
+  });
+  
+</script>
+
+<style>
+  .form-step {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 20px;
+    background: #f9f4f1;
+  }
+  .step-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.step-buttons button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.step-buttons button:hover {
+  background-color: #0056b3;
+}
+.input-warning {
+  border: 2px solid #cc0000;
+  background-color: #fff2f2;
+}
+
+.warn-message {
+  color: #cc0000;
+  font-size: 0.85em;
+  display: none;
+  margin-bottom: 8px;
+}
+
+.btn-plus {
+  background-color: #e0e0e0;
+  border: 1px solid #bbb;
+  color: #333;
+  padding: 4px 10px;
+  border-radius: 18px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 5px;
+  margin-bottom: 8px;
+}
+
+.btn-plus:hover {
+  background-color: #d0d0d0;
+}
+
+.btn-fill {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-left: 10px;
+}
+
+.btn-fill:hover {
+  background-color: #0056b3;
+}
+
+.btn-search {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-left: 10px;
+}
+
+.btn-search:hover {
+  background-color: #1e7e34;
+}
+
+.album-result {
+  border: 1px solid #ddd;
+  background-color: #fff;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.album-result:hover {
+  background-color: #f5f9ff;
+}
+
+.album-result a {
+  font-weight: bold;
+  color: #0056b3;
+  text-decoration: none;
+  flex-grow: 1;
+}
+
+.album-result a:hover {
+  text-decoration: underline;
+}
+
+
+</style>
