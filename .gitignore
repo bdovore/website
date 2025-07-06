@@ -21,7 +21,9 @@ Collection au*
 *.pdf
 !/mvc/views/views_controllers/cache/
 /public/tmp/
-/vendor/
+/vendor/*
+!/vendor/autoload.php
+!/vendor/composer/
 /public/robots.txt
 /nbproject/private/
 .DS_Store

@@ -4,27 +4,151 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc0cf4ed6de39150d21971e5a66dd483b
+class ComposerStaticInitae8e1e2c3b003ce5b9df12d2008204ca
 {
+    public static $files = array (
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
+        'db356362850385d08a5381de2638b5fd' => __DIR__ . '/..' . '/mpdf/mpdf/src/functions.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
+        's' => 
+        array (
+            'setasign\\Fpdi\\' => 14,
+        ),
+        'Z' => 
+        array (
+            'ZipStream\\' => 10,
+        ),
         'W' => 
         array (
             'Wikidata\\' => 9,
         ),
+        'P' => 
+        array (
+            'Psr\\SimpleCache\\' => 16,
+            'Psr\\Log\\' => 8,
+            'Psr\\Http\\Message\\' => 17,
+            'Psr\\Http\\Client\\' => 16,
+            'PhpOffice\\PhpSpreadsheet\\' => 25,
+        ),
+        'M' => 
+        array (
+            'Mpdf\\PsrLogAwareTrait\\' => 22,
+            'Mpdf\\PsrHttpMessageShim\\' => 24,
+            'Mpdf\\' => 5,
+            'Matrix\\' => 7,
+        ),
+        'G' => 
+        array (
+            'GuzzleHttp\\Psr7\\' => 16,
+            'GuzzleHttp\\Promise\\' => 19,
+            'GuzzleHttp\\' => 11,
+        ),
+        'D' => 
+        array (
+            'DeepCopy\\' => 9,
+        ),
+        'C' => 
+        array (
+            'Complex\\' => 8,
+        ),
+        'A' => 
+        array (
+            'Amazon\\ProductAdvertisingAPI\\v1\\' => 32,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'setasign\\Fpdi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
+        'ZipStream\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
+        ),
         'Wikidata\\' => 
         array (
-            0 => __DIR__ . '/..' . '/freearhey/wikidata/src',
+            0 => __DIR__ . '/..' . '/jamesfrost/wikidata/src',
         ),
+        'Psr\\SimpleCache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/src',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'Psr\\Http\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-client/src',
+        ),
+        'PhpOffice\\PhpSpreadsheet\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
+        ),
+        'Mpdf\\PsrLogAwareTrait\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src',
+        ),
+        'Mpdf\\PsrHttpMessageShim\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src',
+        ),
+        'Mpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
+        ),
+        'Matrix\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
+        ),
+        'GuzzleHttp\\Psr7\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'GuzzleHttp\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
+        ),
+        'GuzzleHttp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'DeepCopy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
+        'Complex\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
+        ),
+        'Amazon\\ProductAdvertisingAPI\\v1\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/thewirecutter/paapi5-php-sdk/src',
+        ),
+    );
+
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'JpGraph\\JpGraph' => __DIR__ . '/..' . '/jpgraph/jpgraph/lib/JpGraph.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc0cf4ed6de39150d21971e5a66dd483b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc0cf4ed6de39150d21971e5a66dd483b::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitae8e1e2c3b003ce5b9df12d2008204ca::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitae8e1e2c3b003ce5b9df12d2008204ca::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitae8e1e2c3b003ce5b9df12d2008204ca::$classMap;
 
         }, null, ClassLoader::class);
     }
