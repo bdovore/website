@@ -19,8 +19,10 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
       <h4>Étape 1 : Recherche de l'album sur le web pour pré-remplir les informations</h4>
       <form enctype="multipart/form-data" action="#suggest" name="findamazon" method="POST">
         <label for="keyword">Titre ou ISBN :</label>
-        <input name="keyword" id="keyword" size="40" class="flat" type="text" value="<?php echo $view->keyword ?? ''; ?>" /> 
-        <button class="btn-search" type="submit">Go !</button>
+         <div class="input-row">
+            <input name="keyword" id="keyword" size="40" class="flat input-flex" type="text" value="<?php echo $view->keyword ?? ''; ?>"  /> 
+            <button class="btn-search" type="submit">Go !</button>
+         </div>
       </form>
       <?php if (issetNotEmpty($view->items)) { ?>
       <p><i>Trouvé ! Cliquez sur un album pour pré-remplir le formulaire</i></p>
@@ -95,7 +97,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
       <h4>Étape 2 : Titre, Série & Couverture</h4>
        <b>Informations sur l'album</b><br>
       <label for="txtTitre">Titre de l'album</label>
-      <input type="text" id="txtTitre" name="txtTitre" size="50" /><br>
+      <input type="text" id="txtTitre" name="txtTitre" size="50" style="max-width:100%" /><br>
       <span class="petite_police">
                             En l'absence de titre distinctif : "<i>Titre de la Série</i>, Tome X" ; "<i>Titre de la Série</i>" pour un one-shot
       </span><br /><br />
@@ -110,7 +112,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
       <input name="txtNumTome" id="txtNumTome" value="<?php echo $view->edition->NUM_TOME ?? ""; ?>" size="2" class="flat" type="text">
       <br> 
       <label for="txtHistoire">Synopsis</label><br>
-      <textarea cols="50" name="txtHistoire" rows="8" id="txtHistoire"><?php echo $view->edition->HISTOIRE_TOME ?? ""; ?>
+      <textarea cols="50" name="txtHistoire" rows="8" id="txtHistoire" style="max-width:100%" ><?php echo $view->edition->HISTOIRE_TOME ?? ""; ?>
      </textarea><br>
                             <span class="petite_police">Utiliser ce champ pour indiquer le "résumé" de l'album. <u>Indiquez votre source !</u> (votre pseudo si vous en êtes l'auteur, le nom de l'éditeur,...).
                             <br /></span>
@@ -118,7 +120,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
       <br>
       <b>Couverture</b><br>
       <label for="txtFileURL">URL image de couverture</label>
-      <input type="text" id="txtFileURL" name="txtFileURL" size="60" oninput="updateCoverPreview()" /><br />
+      <input type="text" id="txtFileURL" name="txtFileURL" size="60" oninput="updateCoverPreview()" style="max-width:100%" /><br />
 
       <label for="uploadCover">ou envoyer une image :</label>
       <input type="file" id="txtFileLoc" name="txtFileLoc" accept="image/*" onchange="loadCoverFile(this)" /><br />
@@ -129,10 +131,13 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
       
       <b>Informations sur la Série</b><br>
       
-      <label for="txtSerie">Série</label>
       
-      <input type="text" id="txtSerie" name="txtSerie" size="45" />
-      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtSerie').autocomplete('search')" /><br/> 
+      <div class="input-row">
+          <label for="txtSerie">Série</label>
+        <input type="text" id="txtSerie" name="txtSerie" size="45" class="input-flex" />
+        <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtSerie').autocomplete('search')" class="icon-loupe"  />
+      </div>
+      <br/> 
       <small id="warnSerie" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
 
       <label for="txtSerieId">Identifant Bdovore</label>
@@ -173,53 +178,69 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         <font size="-2">(Vous pouvez proposer deux scénaristes / dessinateurs par tome)</font>
         <span class="petite_police"> (un seul par champ, à valider à la loupe si présent dans la base.
                             <br />Vous pouvez sélectionner "Collectif" comme 1er ou 2nd auteur si plus de 2)</span><br />
-      <label for="txtScenar">Scénariste</label>
-      <input type="text" id="txtScenar" name="txtScenar" size="40" />
-      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtScenar').autocomplete('search')" /><br />
+       <div class="input-row">
+            <label for="txtScenar">Scénariste</label>
+            <input type="text" id="txtScenar" name="txtScenar" size="40" class="input-flex"/>
+            <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtScenar').autocomplete('search')" class="icon-loupe"/>
+       </div>
+      
       <small id="warnScenar" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
       <label for="txtScenarId">Identifant Bdovore :</label>
       <input name="txtScenarId" id="txtScenarId" value="<?php echo $view->edition->ID_SCENAR ?? ""; ?>" size="5" readonly> <br />
       <br />
       <button id="addScenar" type="button" class="btn-plus" onclick="showScenarAlt()">+ Ajouter un scénariste</button><br>
       <div id="scenarAlt">
-        <label for="txtScenarAlt">Scénariste 2</label>
-        <input type="text" id="txtScenarAlt" name="txtScenarAlt" size="40" />
-        <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtScenarAlt').autocomplete('search')" /><br />
+         <div class="input-row">
+            <label for="txtScenarAlt">Scénariste 2</label>
+            <input type="text" id="txtScenarAlt" name="txtScenarAlt" size="40" class="input-flex" />
+            <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtScenarAlt').autocomplete('search')" class="icon-loupe"/>
+         </div>
+        
         <small id="warnScenarAlt" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
         <label for="txtScenarAltId">Identifant Bdovore :</label>
         <input name="txtScenarAltId" id="txtScenarAltId" value="<?php echo $view->edition->ID_SCENAR_ALT ?? ""; ?>" size="5" readonly> <br />
         <br />
       </div>
-      <label for="txtDessi">Dessinateur</label>
-      <input type="text" id="txtDessi" name="txtDessi" size="40" />
-      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtDessi').autocomplete('search')" /><br />
+       <div class="input-row">
+        <label for="txtDessi">Dessinateur</label>
+        <input type="text" id="txtDessi" name="txtDessi" size="40" class="input-flex" />
+        <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtDessi').autocomplete('search')" class="icon-loupe" />
+       </div>
+        
       <small id="warnDessi" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
       <label for="txtDessiId">Identifant Bdovore :</label>
       <input name="txtDessiId" id="txtDessiId" value="<?php echo $view->edition->ID_DESSIN ?? ""; ?>" size="5" readonly> <br />
       <button id="addDessi" type="button" class="btn-plus" onclick="showDessiAlt()">+ Ajouter un dessinateur</button><br>
       <br />
       <div id="dessiAlt">
+         <div class="input-row">
         <label for="txtDessiAlt">Dessinateur 2</label>
-        <input type="text" id="txtDessiAlt" name="txtDessiAlt" size="40" />
-         <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtDessiAlt').autocomplete('search')" /><br />
+        <input type="text" id="txtDessiAlt" name="txtDessiAlt" size="40" class="input-flex" />
+         <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtDessiAlt').autocomplete('search')" class="icon-loupe" />
+         </div>
+         
          <small id="warnDessiAlt" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
         <label for="txtDessiAltId">Identifant Bdovore :</label>
         <input name="txtDessiAltId" id="txtDessiAltId" value="<?php echo $view->edition->ID_DESSIN_ALT ?? ""; ?>" size="5" readonly> <br />
         <br />
       </div>
       
-      <label for="txtColor">Coloriste</label>
-      <input type="text" id="txtColor" name="txtColor" size="40" />
-      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtColor').autocomplete('search')" /><br />
+       <div class="input-row">
+        <label for="txtColor">Coloriste</label>
+        <input type="text" id="txtColor" name="txtColor" size="40" class="input-flex" />
+        <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtColor').autocomplete('search')" class="icon-loupe"/>
+       </div>
       <small id="warnColorr" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
       <label for="txtColorId">Identifant Bdovore :</label>
       <input name="txtColorId" id="txtColorId" value="<?php echo $view->edition->ID_COLOR ?? ""; ?>" size="5" readonly> <br />
       <button id="addColor" type="button" class="btn-plus" onclick="showColorAlt()">+ Ajouter un coloriste</button><br>
       <br />
       <div id="colorAlt">
-        <label for="txtColorAlt">Coloriste 2</label>
-        <input type="text" id="txtColorAlt" name="txtColorAlt" size="40" />
-         <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtColorAlt').autocomplete('search')" /><br />
+           <div class="input-row">
+                <label for="txtColorAlt">Coloriste 2</label>
+                <input type="text" id="txtColorAlt" name="txtColorAlt" size="40" class="input-flex"/>
+                 <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtColorAlt').autocomplete('search')" class="icon-loupe"/>
+           </div>
          <small id="warnColorAlt" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
         <label for="txtColorAltId">Identifant Bdovore :</label>
         <input name="txtColorAltId" id="txtColorAltId" value="<?php echo $view->edition->ID_COLOR_ALT ?? ""; ?>" size="5" readonly> <br />
@@ -232,9 +253,12 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     </div>
     
     <div id="step-4" class="form-step" style="display: none;">
-         <label for="txtEditeur">Éditeur</label>
-      <input type="text" id="txtEditeur" name="txtEditeur" size="50" />
-      <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtEditeur').autocomplete('search')" /><br />
+      <div class="input-row">
+            <label for="txtEditeur">Éditeur</label>
+          <input type="text" id="txtEditeur" name="txtEditeur" size="50" class="input-flex" />
+          <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" class="icon-loupe" onclick="$('#txtEditeur').autocomplete('search')" />
+      </div> 
+        
       <small id="warnEditeur" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
       <label for="txtEditeurId">Identifant Bdovore: </label>
       <input name="txtEditeurId" id="txtEditeurId" value="<?php echo $view->edition->ID_EDITEUR ?? ""; ?>" size="5" readonly onchange="changeEditeur();"><br />
@@ -273,7 +297,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                         pouvez également utiliser ce champs pour signaler un doublon ou demander un effacement)</font><br> <br>
                         <label for="txtCommentaire">Commentaire</label>
-                      <textarea name="txtCommentaire" cols="60" rows="8" id="textarea"></textarea>
+                      <textarea name="txtCommentaire" cols="60" rows="8" id="textarea" style="max-width:100%"></textarea>
                       <br>
                        Après ajout dans la base
                             <select name="cmbAction" size="1" id="cmbAction"><?php echo $view->OPTIONS;?></select>
@@ -542,6 +566,28 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 .album-result a:hover {
   text-decoration: underline;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  margin-bottom: 10px;
+}
+
+.input-flex {
+  flex: 1;
+  min-width: 0; /* important pour éviter de dépasser */
+  max-width: 90%;
+  padding: 6px;
+  font-size: 12px;
+}
+
+.icon-loupe {
+  width: 24px;
+  height: auto;
+  cursor: pointer;
 }
 
 
