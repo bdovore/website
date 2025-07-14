@@ -53,7 +53,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
           $('#txtEditeur').val(album.publisher);
           $('#txtEAN').val(album.eans[0] || '');
           $('#txtISBN').val(album.isbns[0] || '');
-          $('#txtDateParution3').val(album.content.publication_date?.substring(0,10) || '');
+          $('#txtDateParution').val(album.content.publication_date?.substring(0,10) || '');
           if (album.image) {
             $('#previewCover').attr('src', album.image).show();
           }
@@ -130,28 +130,32 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
       <br><br>
       
       <b>Informations sur la Série</b><br>
-      
+       <span class="petite_police">S'il s'agit d'un one-shot, vous pouvez mettre le titre de l'album 
+                            </span>
+          <br />
       
       <div class="input-row">
+          
           <label for="txtSerie">Série</label>
+          
         <input type="text" id="txtSerie" name="txtSerie" size="45" class="input-flex" />
         <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onclick="$('#txtSerie').autocomplete('search')" class="icon-loupe"  />
       </div>
-      <br/> 
       <small id="warnSerie" class="warn-message">⚠️ Cliquez sur la loupe et sélectionnez dans la liste si une proposition correspond<br></small>
 
       <label for="txtSerieId">Identifant Bdovore</label>
-      <input type="text" id="txtSerieId" name="txtSerieId" readonly size="5" />
-       <button id="addSerie" type="button" class="btn-plus" onclick="showSerie()">+ Série à créer</button>
-      <br /><br>
+      <input type="text" id="txtSerieId" name="txtSerieId" readonly size="5"  />
+      <br />
+     
       <div id="addSerieInfo">
+          <span class="petite_police">Si la série doit être créée, ou s'il s'agit d'un one-shot, merci de renseigner un genre ici<br></span>
            <label for="txtGenre">Genre</label>
           <input name="txtGenre" id="txtGenre"  value="<?php echo $view->edition->NOM_GENRE ?? ""; ?>" size="30" class="flat" type="text">
           <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="$('#txtGenre').autocomplete('search')" /><br>
           <label for="txtGenreId">Identifant Bdovore</label>
           <input name="txtGenreId" id="txtGenreId" value="<?php echo $view->edition->ID_GENRE ?? ""; ?>"  class="flat" readonly size="4"><br>
         <label for="lstAchevee">Status d'avancement</label>
-        <select name="lstAchevee" size="1">
+        <select name="lstAchevee" id="lstAchevee" size="1">
 
                         <option value="0" <?php if (($view->edition->FLG_FINI ?? "0") == "0") echo "selected"; ?>>Finie</option>
                         <option value="1" <?php if (($view->edition->FLG_FINI ?? "0") == "1") echo "selected"; ?>>En cours</option>
@@ -281,7 +285,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
       <input type="text" id="txtISBN" name="txtISBN" size="20" /><br />
 
       <label for="txtDateParution">Date de parution</label>
-      <input type="date" id="txtDateParution" name="txtDateParution" /><br />
+      <input type="date" id="txtDateParution" name="txtDateParution" onchange="checkDate()" /><br />
+      <small id="warnDate" class="warn-message">⚠️ N'oubliez pas de renseigner une date !<br></small>
       <span class="texte"><u>BDovore NE gère PAS les réimpressions</u>.<br>Assurez-vous que la date de l'album que vous proposez correspond à une édition originale ou à une réédition (couverture ou contenu différent), PAS à une réimpression (même contenu que la dernière édition)</span> 
       <br />
       <div class="step-buttons">
@@ -363,7 +368,14 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         }
             
     }
-
+    function checkDate() {
+     if ($("#txtDateParution").val() != "") {
+         $("#warnDate").hide();
+     } else {
+          $("#warnDate").show();
+        }
+        
+    }
 
    function checkAutocompleteStatus() {
         const pairs = [
@@ -380,20 +392,25 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         pairs.forEach(({ field, idField, warn }) => {
           const hasText = $(field).val().trim() !== '';
           const hasId = $(idField).val().trim() !== '';
-          if (hasText && !hasId) {
+          if (hasId && !hasText) {
+              $(idField).val("");
+          }
+          else if (hasText && !hasId) {
             $(field).addClass('input-warning');
             $(warn).show();
             if (field == "#txtSerie") {
-                $("#addSerie").show();
+               // $("#addSerie").show();
             }
           } else {
             $(field).removeClass('input-warning');
             $(warn).hide();
             if (field == "#txtSerie") {
-                $("#addSerie").hide();
+              //  $("#addSerie").hide();
+                setGenreForSerie();
             }
           }
         });
+        checkDate();
       }
 
     function showScenarAlt() {
@@ -412,6 +429,33 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     
     function showSerie() {
         $("#addSerieInfo").show();
+    }
+    
+   
+    
+    function setGenreForSerie() {
+     const serieId = $("#txtSerieId").val();
+
+    if (!serieId) {
+        console.warn("Aucun ID de série fourni.");
+        return;
+    }
+
+    $.getJSON(`<?php echo BDO_URL; ?>getjson?data=Serie&id_serie=${serieId}&mode=1`)
+        .done(function(data) {
+            if (Array.isArray(data) && data.length > 0) {
+                const serie = data[0];
+                $("#txtGenreId").val(serie.ID_GENRE || "");
+                $("#txtGenre").val(serie.NOM_GENRE || "");
+                $("#lstAchevee").val(serie.FLG_FINI_SERIE || "0");
+            } else {
+                console.warn("Aucune donnée trouvée pour cette série.");
+            }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.error("Erreur lors de la récupération des données :", textStatus, errorThrown);
+        });   
+        
     }
   $(document).ready(function() {
     addAutocomplete("txtSerie","spSerie","txtSerieId","<?php echo BDO_URL; ?>getjson?data=Serie");
@@ -433,8 +477,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
      $("#scenarAlt").hide();
      $("#dessiAlt").hide();
      $("#colorAlt").hide();
-     $('#addSerieInfo').hide();
-     $("#addSerie").hide();
+     $("#warnDate").show();
      // Empêche la soumission par "Entrée" sauf pour le champ de recherche
     $(document).on('keydown', 'form', function(e) {
       if (e.key === "Enter") {

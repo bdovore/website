@@ -99,7 +99,7 @@ class GetJSON extends Bdo_Controller {
             $where = " WHERE MATCH(search_field) AGAINST( '" . Db_Escape_String($term) . "' IN NATURAL LANGUAGE MODE) "
                     . " OR PSEUDO like '%" . Db_Escape_String($term) . "%' "
                     . "ORDER BY CASE WHEN pseudo = '" . Db_Escape_String($term) . "' THEN 1 ELSE 0 END DESC, "
-                    . "MATCH(search_field) AGAINST( '" . Db_Escape_String($term) . "') DESC";
+                    . "MATCH(search_field) AGAINST( '" . Db_Escape_String($term) . "') DESC, pseudo LIMIT 0, 10";
             $this->Auteur->load("c", $where);
         } else {
             $this->view->set_var('json',"{}");
