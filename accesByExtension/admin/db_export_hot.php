@@ -1,1 +1,0 @@
-<?php/** * Dump MySQL de bdovore_db5 * **/minAccessLevel(0);set_time_limit(3600);echo "Votre base est en cours de sauvegarde.......\n<br />";flush();// extraction avec mysqldumpexec("mysqlhotcopy --opt --host=mysql5-3 --user=bdovore_db5 --password=mJCAN5jS bdovore_db5 /homez.95/bdovore/backup/mysqldump/bdovore_db5/test");echo "<hr>hotcopy terminée";
