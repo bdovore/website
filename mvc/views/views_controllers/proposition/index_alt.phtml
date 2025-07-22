@@ -112,8 +112,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
       <input name="txtNumTome" id="txtNumTome" value="<?php echo $view->edition->NUM_TOME ?? ""; ?>" size="2" class="flat" type="text">
       <br> 
       <label for="txtHistoire">Synopsis</label><br>
-      <textarea cols="50" name="txtHistoire" rows="8" id="txtHistoire" style="max-width:100%" ><?php echo $view->edition->HISTOIRE_TOME ?? ""; ?>
-     </textarea><br>
+      <textarea cols="50" name="txtHistoire" rows="8" id="txtHistoire" style="max-width:100%"><?php echo $view->edition->HISTOIRE_TOME ?? ""; ?></textarea>
+      <br>
                             <span class="petite_police">Utiliser ce champ pour indiquer le "résumé" de l'album. <u>Indiquez votre source !</u> (votre pseudo si vous en êtes l'auteur, le nom de l'éditeur,...).
                             <br /></span>
      <br>
@@ -481,13 +481,14 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
      // Empêche la soumission par "Entrée" sauf pour le champ de recherche
     $(document).on('keydown', 'form', function(e) {
       if (e.key === "Enter") {
-        const isKeywordInput = $(e.target).is('#keyword');
+        const isKeywordInput = $(e.target).is('#keyword, textarea');
+        
         if (!isKeywordInput) {
           e.preventDefault();
           return false;
         }
       }
-});
+    });
 
   });
   
