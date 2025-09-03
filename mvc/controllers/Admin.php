@@ -1598,7 +1598,7 @@ class Admin extends Bdo_Controller {
                 } else {
                     $search_wiki = $this->Auteur->PSEUDO;
                 }
-                $result = $wikidata->search($search_wiki);
+                $result = new class { public function isEmpty() { return true; } };;// $wikidata->search($search_wiki);
                 if(!$result->isEmpty()) {
                        $singleResult = $result->first();
                        $entityId = $singleResult->getEntityId();
