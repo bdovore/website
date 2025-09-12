@@ -3,7 +3,7 @@
     <div class="middle_title" ><h3>News du site</h3></div>
     <div style="margin: 5px;" >
     
-       <?php foreach ($view->a_lastNews as $lastNews) { ?>
+       <?php foreach (array_slice($view->a_lastNews, 1) as $lastNews) { ?>
             
         <div class="cadre1">
             <h4><?php echo $lastNews->news_titre;?> - Postée par <?php echo $lastNews->news_posteur;?> le <?php echo $lastNews->news_date;?></h4>

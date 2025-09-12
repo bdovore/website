@@ -143,7 +143,8 @@ class Actus
                 INNER JOIN note_tome on note_tome.ID_TOME= t.id_tome
     WHERE
         en.dte_parution >= DATE_SUB(NOW(),INTERVAL 3 MONTH)AND
-                en.dte_parution <= NOW()
+                en.dte_parution <= NOW() AND
+                en.FLG_EXPLICIT = 0
     ";
 
         $order_actu = " ORDER BY score desc, en.dte_parution DESC LIMIT 0,6";
