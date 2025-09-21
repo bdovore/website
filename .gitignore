@@ -4,7 +4,7 @@ library/Zend/*
 #public/jquery/
 public/script/fckeditor
 vendors/*
-
+.vscode/*
 images/
 
 #sensitive data & setup-dependent files
@@ -27,3 +27,10 @@ Collection au*
 /public/robots.txt
 /nbproject/private/
 .DS_Store
+nbproject/project.properties
+vendor/composer/autoload_files.php
+vendor/composer/installed.php
+vendor/composer/InstalledVersions.php
+vendor/composer/platform_check.php
+nbproject/project.properties
+.vscode/launch.json
