@@ -40,6 +40,7 @@ class Browser extends Bdo_Controller
 
     public $a_searchType = array(
             'ser' => 'Série',
+            'alb' => 'Album' ,
             'aut' => 'Auteur',
             'edit' => 'Editeur'
     );
@@ -152,6 +153,19 @@ class Browser extends Bdo_Controller
              $this->Editeur->calcFoundRow = true;
             $dbsData = $this->Editeur->load("c", $query_where. $query_order." LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
       
+        } elseif ($this->rb_browse == "alb") {
+            $this->loadModel("Tome");
+            if ($this->let) {
+                $query_where .= " AND TITRE like '" .$pre_filtre. PMA_sqlAddslashes($this->let, true) . "%' ";
+            }
+            if ($this->a_idGenre) {
+                $query_where .= " AND ID_GENRE IN (".implode(',',$this->a_idGenre). ")";
+            }
+            $query_order = " ORDER BY TITRE ASC ";
+            $this->Tome->calcFoundRow = true;
+            $this->Tome->selectType = "browse";
+            $dbsData = $this->Tome->load("c", $query_where. $query_order ." LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
+        
         }
 
         $totalRows = getValInteger('totalRows',-1);
@@ -201,6 +215,11 @@ class Browser extends Bdo_Controller
             $this->view->set_var("TYPBROWSE", "edit");
              $url_edit = BDO_URL.$this->url_edit["EDITEUR"];
         }
+        if ($this->rb_browse == 'alb') {
+            $this->view->set_var("ALBCHECK", "checked");
+            $this->view->set_var("TYPBROWSE", "edit");
+            $url_edit = BDO_URL.$this->url_edit["ALBUM"];
+        }
 
         $query_string = "";
         if ($this->rb_browse) {
@@ -214,7 +233,7 @@ class Browser extends Bdo_Controller
 
         $a_row = array();
         $img_edit = "edit.gif";
-        if ($this->rb_browse != "ser") {
+        if ($this->rb_browse != "ser" && $this->rb_browse != "alb") {
             foreach($dbsData->a_dataQuery as $data) {
                 if ($this->rb_browse == "aut") {
                     // class pour le bouton d'édition en fonction de présence d'une bio ou non
@@ -247,8 +266,8 @@ class Browser extends Bdo_Controller
         else {
             // browse par série : seulement 2 niveaux
             foreach($dbsData->a_dataQuery as $data) {
-                $id = $data->ID_SERIE;
-                    $nom = $data->NOM_SERIE;
+                $id = $this->rb_browse == "ser" ? $data->ID_SERIE : $data->ID_TOME;
+                $nom = $this->rb_browse == "ser" ?  $data->NOM_SERIE : $data->TITRE_TOME;
                 $a_row[] = array(
                         "WSPACER" => "0px",
                         "HSPACER" => "0px",
@@ -427,7 +446,11 @@ class Browser extends Bdo_Controller
             $this->Serie->calcFoundRow = true;
             $dbsData = $this->Serie->load("c",$where . " LIMIT " . intval($this->startRow) . "," . intval($this->maxRows) );
           
-        }        
+        }  else if ($this->rb_browse == 'alb')  {
+            $this->loadModel("Tome");
+            $this->Tome->calcFoundRow = true;
+            $dbsData = $this->Tome->load("c"," WHERE bd_tome.id_tome = $this->lev_id");
+        }    
         else {
             // browse par série ou auteur : seulement 2 niveaux
             // aJOUT DE LA PREmière ligne Fiche Série

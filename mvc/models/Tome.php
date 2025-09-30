@@ -13,6 +13,9 @@ class Tome extends Bdo_Db_Line
     public $table_name = 'bd_tome';
 
     public $error = '';
+    
+    public $selectType = "select"; // selectType : 2 valeurs possible "select" pour sélection d'une série, "browse" pour les requetes de recherche
+
     var $default_select = "
         SELECT SQL_CALC_FOUND_ROWS
             bd_tome.ID_TOME,
@@ -101,59 +104,71 @@ class Tome extends Bdo_Db_Line
 
     public function select ()
     {
-        $select = "
-        SELECT SQL_CALC_FOUND_ROWS
-            bd_tome.ID_TOME,
-            bd_tome.TITRE as TITRE_TOME,
-            bd_tome.NUM_TOME,
-            bd_tome.PRIX_BDNET,
-            bd_tome.FLG_INT as FLG_INT_TOME,
-            bd_tome.FLG_TYPE as FLG_TYPE_TOME,
-            bd_tome.HISTOIRE as HISTOIRE_TOME,
-            note_tome.NB_NOTE_TOME,
-            note_tome.MOYENNE_NOTE_TOME,
-            bd_edition_stat.NBR_USER_ID_TOME,
+        if ($this->selectType=="select") {
+            $select = "
+            SELECT SQL_CALC_FOUND_ROWS
+                bd_tome.ID_TOME,
+                bd_tome.TITRE as TITRE_TOME,
+                bd_tome.NUM_TOME,
+                bd_tome.PRIX_BDNET,
+                bd_tome.FLG_INT as FLG_INT_TOME,
+                bd_tome.FLG_TYPE as FLG_TYPE_TOME,
+                bd_tome.HISTOIRE as HISTOIRE_TOME,
+                note_tome.NB_NOTE_TOME,
+                note_tome.MOYENNE_NOTE_TOME,
+                bd_edition_stat.NBR_USER_ID_TOME,
 
-            s.ID_SERIE,
-            s.NOM as NOM_SERIE,
-            s.TRI as TRI,
-            s.flg_fini as FLG_FINI,
-            s.nb_tome as NB_TOME,
-            s.HISTOIRE as HISTOIRE_SERIE,
+                s.ID_SERIE,
+                s.NOM as NOM_SERIE,
+                s.TRI as TRI,
+                s.flg_fini as FLG_FINI,
+                s.nb_tome as NB_TOME,
+                s.HISTOIRE as HISTOIRE_SERIE,
 
-            g.ID_GENRE,
-            g.libelle as NOM_GENRE,
-            g.ORIGINE,
+                g.ID_GENRE,
+                g.libelle as NOM_GENRE,
+                g.ORIGINE,
 
-            en.ID_EDITION, ".
-       ( Bdo_Cfg::getVar("explicit") ? "en.IMG_COUV," : " IF (en.FLG_EXPLICIT, CONCAT('?source=',en.IMG_COUV), en.IMG_COUV) as IMG_COUV,  ") ."
-            en.ean as EAN_EDITION,
-            en.isbn as ISBN_EDITION,
-            en.DTE_PARUTION,
-            en.COMMENT as COMMENT_EDITION,
-            c.ID_COLLECTION,
-            c.nom as NOM_COLLECTION,
+                en.ID_EDITION, ".
+        ( Bdo_Cfg::getVar("explicit") ? "en.IMG_COUV," : " IF (en.FLG_EXPLICIT, CONCAT('?source=',en.IMG_COUV), en.IMG_COUV) as IMG_COUV,  ") ."
+                en.ean as EAN_EDITION,
+                en.isbn as ISBN_EDITION,
+                en.DTE_PARUTION,
+                en.COMMENT as COMMENT_EDITION,
+                c.ID_COLLECTION,
+                c.nom as NOM_COLLECTION,
 
-            er.ID_EDITEUR,
-            er.nom as NOM_EDITEUR,
-            concat_ws(' ',er.nom, year(en.DTE_PARUTION)) as NOM_EDITION,
-            bd_tome.ID_SCENAR,
-            sc.pseudo as scpseudo,
-            bd_tome.ID_DESSIN,
-            de.pseudo as depseudo,
-            bd_tome.ID_COLOR,
-            co.pseudo as copseudo,
-            bd_tome.ID_SCENAR_ALT,
-            sca.pseudo as scapseudo,
-            bd_tome.ID_DESSIN_ALT,
-            dea.pseudo as deapseudo,
-            bd_tome.ID_COLOR_ALT,
-            coa.pseudo as coapseudo,
-            en.FLG_EXPLICIT";
-        $from = $this->defaut_from;
+                er.ID_EDITEUR,
+                er.nom as NOM_EDITEUR,
+                concat_ws(' ',er.nom, year(en.DTE_PARUTION)) as NOM_EDITION,
+                bd_tome.ID_SCENAR,
+                sc.pseudo as scpseudo,
+                bd_tome.ID_DESSIN,
+                de.pseudo as depseudo,
+                bd_tome.ID_COLOR,
+                co.pseudo as copseudo,
+                bd_tome.ID_SCENAR_ALT,
+                sca.pseudo as scapseudo,
+                bd_tome.ID_DESSIN_ALT,
+                dea.pseudo as deapseudo,
+                bd_tome.ID_COLOR_ALT,
+                coa.pseudo as coapseudo,
+                en.FLG_EXPLICIT";
+            $from = $this->defaut_from;
 
 
-        return $select.$from;
+            return $select.$from;
+        } else {
+            $select = "
+            SELECT SQL_CALC_FOUND_ROWS
+                bd_tome.ID_TOME,
+                bd_tome.TITRE AS TITRE_TOME
+                
+            FROM bd_tome
+            ";
+            return $select;
+
+        }
     }
 
     public function search ($a_data = array())

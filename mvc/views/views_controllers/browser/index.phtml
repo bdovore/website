@@ -33,10 +33,54 @@
 
     </script>
     <form id="browser" name="browser" method="get" onsubmit='return false;'>
-        <div id="select_genre" align=center>
+      <div style="text-align: center; margin: 20px 0;">
+        <div style="display: inline-block; position: relative;">
+            <input
+                type="text"
+                id="searchtext"
+                placeholder="(3 caractères minimum)"
+                onKeyUp='chrono=setTimeout("go()", 1000);'
+                onKeyDown="clearTimeout(chrono)"
+                autocomplete="off"
+                name="let"
+                value="<?php echo $view->VALUELET;?>"
+                style="
+                    padding: 10px 15px 10px 35px;
+                    border: 1px solid #ccc;
+                    border-radius: 20px;
+                    font-size: 14px;
+                    width: 300px;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    outline: none;
+                    margin: 5px 0;
+                    box-sizing: border-box;
+                "
+                onfocus="this.style.borderColor='#4a90e2'; this.style.boxShadow='0 0 0 2px rgba(74,144,226,0.2)';"
+                onblur="this.style.borderColor='#ccc'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)';"
+            />
+            <span style="
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #999;
+                pointer-events: none;
+            ">🔍</span>
+        </div>
+      </div>
+      <!-- Lien pour afficher/masquer les filtres -->
+    <div style="margin-top: -5px; margin-bottom: 5px; text-align: center;">
+        <a href="javascript:void(0);"
+           onclick="document.getElementById('select_genre').style.display = (document.getElementById('select_genre').style.display === 'none' ? 'block' : 'none');"
+           style="color: #4a90e2; text-decoration: none; font-size: 14px; cursor: pointer;">
+            Filtre additionnel par genres ▼
+        </a>
+    </div>
+<div id="select_genre" align=center style="display: none; margin-top: 10px;">
           Genre : <select data-placeholder="Choisir un ou plusieurs genres..."
                           name="a_idGenre[]" id="a_idGenre" style="width: 350px;"
-                          multiple="multiple" size="10">
+                          multiple="multiple" size="10" onchange="go();">
                     <?php
 
                       foreach ($view->dbs_genre->a_dataQuery as $genre) {
@@ -54,6 +98,7 @@
             });
           </script>
         <br /><br /></div>
+        
         <div class="nbGalerie">
           <div class="nbConteneur">
             <div class="newButton">
@@ -69,13 +114,11 @@
             </div>
           </div>
           <br />
-          contenant : <input type="text" id="searchtext" placeholder="(3 caractères minimum)"
-                        onKeyUp='chrono=setTimeout("go()", 1000);'
-                        onKeyDown="clearTimeout(chrono)" autocomplete="off" name="let"
-                        value="<?php echo $view->VALUELET;?>" /><input type=hidden id="rb_browse" name="rb_browse"
+          <input type=hidden id="rb_browse" name="rb_browse"
                         value="<?php echo $view->TYPBROWSE;?>" /> <input type=hidden
                         name="pageNum" value="" />
         </div>
+        
 <script>
 $(document).ready(function() {
     $( "#chbrowses" ).buttonset();
