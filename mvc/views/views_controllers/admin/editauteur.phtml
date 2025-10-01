@@ -55,13 +55,13 @@ function valider(){
           </tr>
           <tr bordercolor="#FFFFCC">
             <td height="28">Date Naissance</td>
-            <td colspan="4"><input name="txtDateNaiss" type="text" id="txtDateNaiss" value="<?php echo $view->DTNAIS;?>" size="10">
+            <td colspan="4"><input name="txtDateNaiss" type="date" id="txtDateNaiss" value="<?php echo $view->DTNAIS;?>" size="10">
                 <?php if (isset($view->WIKIBIRTH)) echo $view->WIKIBIRTH[0]->time; ?> 
             </td>
           </tr>
           <tr bordercolor="#FFFFCC">
             <td height="28">Date d&eacute;c&egrave;s</td>
-            <td colspan="4"><input name="txtDateDeces" type="text" id="txtDateDeces" value="<?php echo $view->DTDECES;?>" size="10">
+            <td colspan="4"><input name="txtDateDeces" type="date" id="txtDateDeces" value="<?php echo $view->DTDECES;?>" size="10">
             <?php if (isset($view->WIKIDEATH)) echo $view->WIKIDEATH[0]->time; ?> </td>
           </tr>
           <tr bordercolor="#FFFFCC">

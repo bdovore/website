@@ -23,10 +23,6 @@ class ComposerStaticInitae8e1e2c3b003ce5b9df12d2008204ca
         array (
             'ZipStream\\' => 10,
         ),
-        'W' => 
-        array (
-            'Wikidata\\' => 9,
-        ),
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
@@ -70,10 +66,6 @@ class ComposerStaticInitae8e1e2c3b003ce5b9df12d2008204ca
         'ZipStream\\' => 
         array (
             0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
-        ),
-        'Wikidata\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/jamesfrost/wikidata/src',
         ),
         'Psr\\SimpleCache\\' => 
         array (

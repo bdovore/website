@@ -1,5 +1,18 @@
 <?php
+spl_autoload_register(function ($class) {
+    // Préfixe du namespace de ta lib
+    $prefix = 'Wikidata\\';
+    $base_dir = BDO_DIR . '/library/wikidata/src/';
 
+    // Vérifie si la classe commence par le namespace de la lib
+    if (strpos($class, $prefix) === 0) {
+        $relative_class = substr($class, strlen($prefix));
+        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+        if (file_exists($file)) {
+            require $file;
+        }
+    }
+});
 
 use Wikidata\Wikidata;
 /**
@@ -1593,12 +1606,23 @@ class Admin extends Bdo_Controller {
                 $nb_auteur = intval($this->Auteur->getNbAlbumForAuteur($auteur_id));
                 
                 $wikidata = new Wikidata();
+                $wikidata->user_agent = "Bdovore/1.0 (tomlameche@bdovore.com)";
                 if ($this->Auteur->PSEUDO == $this->Auteur->NOM.", ".$this->Auteur->PRENOM) {
                     $search_wiki = $this->Auteur->PRENOM." ".$this->Auteur->NOM;
                 } else {
                     $search_wiki = $this->Auteur->PSEUDO;
                 }
-                $result = new class { public function isEmpty() { return true; } };;// $wikidata->search($search_wiki);
+                try {
+                    $result = $wikidata->search($search_wiki);
+                } 
+                catch (\Exception $e) {
+                        // En cas d'erreur, crée un objet anonyme avec isEmpty()
+                        $result = new class {
+                            public function isEmpty() {
+                                return true;
+                            }
+                        };
+                }
                 if(!$result->isEmpty()) {
                        $singleResult = $result->first();
                        $entityId = $singleResult->getEntityId();

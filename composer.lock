@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e4566d3150202c2d1c44443255b5d33",
+    "content-hash": "3102ddf34d7720726fa77582e4d141dd",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -330,49 +330,6 @@
                 }
             ],
             "time": "2024-07-18T11:15:46+00:00"
-        },
-        {
-            "name": "jamesfrost/wikidata",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/JamesFrost/wikidata.git",
-                "reference": "f7cd75c9d19c6e9a3a43eabcca8277eace315f8e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/JamesFrost/wikidata/zipball/f7cd75c9d19c6e9a3a43eabcca8277eace315f8e",
-                "reference": "f7cd75c9d19c6e9a3a43eabcca8277eace315f8e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Wikidata\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Aleksandr Statciuk",
-                    "email": "free.arhey@gmail.com",
-                    "role": "developer"
-                }
-            ],
-            "description": "A PHP client for working with Wikidata API.",
-            "homepage": "https://github.com/freearhey/wikidata",
-            "keywords": [
-                "client",
-                "php",
-                "wikidata"
-            ],
-            "time": "2017-02-27T11:58:13+00:00"
         },
         {
             "name": "jpgraph/jpgraph",
@@ -1443,13 +1400,13 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.2"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
