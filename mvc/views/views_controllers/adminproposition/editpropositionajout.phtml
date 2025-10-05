@@ -6,7 +6,7 @@
     <div class="date_before_valid"><?php echo $view->DATEBEFOREVALID;?></div>
     <table width="100%">
         <tr>
-            <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" onsubmit="return verifFieldNull(document.myform.txtSerieId.value);">
+            <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" onsubmit="return validerProposition(event);">
 
                 <!--Debut colonne gauche -->
                 <td width="65%" valign="top">
@@ -495,7 +495,54 @@
     }
 
     $(document).ready(function(){
-  $('#txtDateParution').mask('0000-00-00', {placeholder: "0000-00-00"});
-});
+        $('#txtDateParution').mask('0000-00-00', {placeholder: "0000-00-00"});
+    });
+    function validerProposition(event) {
+        // Empêche la soumission automatique
+        event.preventDefault();
+
+        // Récupère l'état de la case à cocher
+        const isSimpleUpdate =$('#chkUpdate').is(':checked');
+
+        // Si la case n'est pas cochée, on vérifie les champs obligatoires
+        if (!isSimpleUpdate) {
+            // Remplace 'auteur', 'editeur', 'serie' par les IDs réels de tes champs
+            const champsObligatoires = [
+            { id: '#txtScenarId', nom: 'scénariste' },
+            { id: '#txtDessiId', nom: 'dessinateur' },
+            { id: '#txtEditeurId', nom: 'éditeur' },
+            { id: '#txtCollecId', nom: 'collection'},
+            { id: '#txtSerieId2', nom: 'série' }
+            ];
+
+            // Vérifie si au moins un champ obligatoire est vide ou égal à "0"
+            let champsManquants = [];
+            champsObligatoires.forEach(function(champ) {
+                if ($(champ.id).val() == "0" ) {
+                    champsManquants.push(champ.nom);
+                }
+            });
+
+            // Si des champs sont manquants, on affiche une confirmation
+            if (champsManquants.length > 0) {
+                const nomsManquants = champsManquants.join(', ');
+                const confirmation = confirm(
+                    `Attention : il manque des informations obligatoires (${nomsManquants}) pour l'ajout de l'album. Valider quand même ?`
+            );
+
+            // Si l'utilisateur confirme, on soumet le formulaire
+            if (confirmation) {
+                event.target.submit();
+            }
+            } else {
+            // Tous les champs sont remplis, on soumet le formulaire
+            event.target.submit();
+            }
+        } else {
+            // Case cochée : on soumet directement le formulaire
+            event.target.submit();
+        }
+        }
+
 </script>
 
