@@ -39,6 +39,7 @@ class News extends Bdo_Db_Line
                     WHERE news_level = 5
                     GROUP BY ID_NEWS_TYPE
                 ) as last ON n.ID_NEWS_TYPE = last.ID_NEWS_TYPE AND n.news_id = last.last_id
+                ORDER BY news_id DESC
         ";
         $resultat = Db_query($query);
 
