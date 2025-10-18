@@ -55,6 +55,7 @@ class Adminnews extends Bdo_Controller {
          */
         if (User::minAccesslevel(1)) {
             $this->loadModel("News");
+            $this->loadModel("Newstype");
             $status = getVal("status");
             $newsid = getVal("newsid",0);
             if ($status == "ok") {
@@ -65,7 +66,8 @@ class Adminnews extends Bdo_Controller {
                 $this->News->set_dataPaste(array(
                     "news_titre" => postVal("txttitre"),
                     "news_text" => postVal("txtcontent"),
-                    "news_level" => "5"
+                    "news_level" => postVal("news-level"),
+                    "ID_NEWS_TYPE" => postVal("news-type")
                 ));
                 if ($newsid > 0) {
                     // cas mise à jour
@@ -89,9 +91,21 @@ class Adminnews extends Bdo_Controller {
                 $this->view->set_var(array(
                     "titrenews" => $this->News->news_titre,
                     "txtnews" => $this->News->news_text,
-                    "newsid" => $newsid
+                    "newsid" => $newsid,
+                    "newstype" => $this->News->ID_NEWS_TYPE,
+                    "newslevel" => $this->News->news_level
                 ));
+            } else {
+                $this->view->set_var(array(
+                    "titrenews" => "",
+                    "txtnews" => "",
+                    "newsid" => 0,
+                    "newstype" => 1,
+                    "newslevel" => 1
+                    ));
             }
+            $dbs_newstype = $this->Newstype->load("c", "");
+            $this->view->set_var("dbs_newstype", $dbs_newstype );
             $this->view->layout = "iframe";
             $this->view->render();
         }

@@ -41,16 +41,25 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         <div class="middle_title" ><h3>A la Une</h3></div>
         <div style="margin: 5px;" >
 
-           <?php $lastNews = $view->a_lastNews[0]; ?>
+           <?php 
+           $icones = array(
+                1 => "📢",
+                2 => "👓",
+                3 => "🎟️",
+                4 => "📅",
+                5 => "🎭"
+           );
+           foreach ( $view->a_laUne as $lastNews) { ?>
 
             <div class="cadre1">
-                <h4><?php echo $lastNews->news_titre;?> - Postée par <?php echo $lastNews->news_posteur;?> </h4>
+                <h4><?php echo $icones[$lastNews->ID_NEWS_TYPE]." ". $lastNews->news_titre;?> - Postée par <?php echo $lastNews->news_posteur;?> </h4>
                 <div>
                     <p>
                         <?php echo $lastNews->news_text;?>
                     </p>
                 </div>
             </div>
+            <?php } ?>
 
 
         </div>

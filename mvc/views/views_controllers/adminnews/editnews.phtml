@@ -1,10 +1,35 @@
+<?php $news_levels = array(
+    2 => "Archivé",
+    1 => "Brouillon",
+    5 => "Publié",
+
+) ?>
 <script src="<?php echo BDO_URL; ?>jquery/jQuery-TE_v.1.4.0/jquery-te-1.4.0.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo BDO_URL;?>jquery/jQuery-TE_v.1.4.0/jquery-te-1.4.0.css" />
 <div class="cadre1">
     <form method='post' action='?status=ok'>
     <h3>Publication d'une nouvelle news</h3>
     <br>
-
+    <label for="news-type">Type de news :</label>
+    <select id="news-type" name= "news-type" type="select" value="">
+        <option value="0" <?php ?> disabled>Sélectionnez un type</option>
+    <?php  
+        foreach ($view->dbs_newstype->a_dataQuery as $el) {
+            ?>
+                <option value="<?php echo $el->ID_NEWS_TYPE; ?>" <?php if (($view->newstype ?? 0) == $el->ID_NEWS_TYPE) echo "selected"; ?>>
+                    <?php echo $el->label_news_type ; ?>
+                </option> 
+            <?php 
+        }
+    ?>
+    </select>
+    <label for="news-level">Publication</label>
+    <select id="news-level" name="news-level" type="select">
+        <option value="1" <?php if ($view->newslevel == 1) echo "selected";  ?>>Brouillon</option>
+        <option value="5" <?php if ($view->newslevel == 5) echo "selected";  ?>>Publié</option>
+        <option value="2" <?php if ($view->newslevel == 2) echo "selected";  ?>>Archivé</option>
+    </select>
+    <br>
     Titre : <input name="txttitre" id="txttitre" value="<?php echo $view->titrenews ?? "";?>" size="50" type="text" /> <br/>
     <textarea name="txtcontent" cols="45" rows="8" id="txtcontent"><?php echo $view->txtnews ?? "";?></textarea>
     <input type='hidden' name="newsid" id='newsid' value='<?php echo $view->newsid ?? "";?>'/>

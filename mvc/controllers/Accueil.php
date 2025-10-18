@@ -20,6 +20,7 @@ class Accueil extends Bdo_Controller
 
         $this->loadModel('Actus');
         $this->loadModel("Tome");
+        $this->loadModel("News");
         $this->view->set_var(array(
                 'ACTUAIR' => $this->Actus->actuAir(),
                 'LASTAJOUT' => $this->Actus->lastAjout()
@@ -34,7 +35,8 @@ class Accueil extends Bdo_Controller
         $this->view->set_var(
                 array(
                         'a_lastSorties' => $this->lastSorties(6),
-                        'a_lastNews' => $this->lastNews(4),
+                        'a_lastNews' => $this->News->getLastSecondNews(5),
+                        'a_laUne' => $this->News->getLastNewsPerType(),
                        /* 'a_lastBD' => $this->lastCommentaires(3),
                         'a_lastManga' => $this->lastCommentaires(3,"Mangas"),
                         'a_lastComics' => $this->lastCommentaires(3,"Comics"),*/
@@ -80,5 +82,6 @@ class Accueil extends Bdo_Controller
 
         return $dbs->a_dataQuery;
     }
+
 }
 
