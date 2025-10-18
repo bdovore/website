@@ -60,7 +60,7 @@ class News extends Bdo_Db_Line
                     WHERE news_level = 5
                     GROUP BY ID_NEWS_TYPE
                 ) as last ON n.ID_NEWS_TYPE = last.ID_NEWS_TYPE AND n.news_id = last.last_id
-                WHERE last.last_id IS NULL 
+                WHERE last.last_id IS NULL AND news_level = 5
                 ORDER BY news_id DESC
                 LIMIT 0, $limit
         ";
