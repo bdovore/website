@@ -205,11 +205,11 @@
                                     <tr>
                                         <td align="center">
                                             <a href="<?php echo $view->URLEAN;?>" title="Teste le code EAN sur BDNet" target="_blank">EAN</a> :
-                                            <input name="txtEAN" type="text" value="<?php echo $view->EAN;?>" size="14" /><?php echo $view->ISEAN;?>
+                                            <input name="txtEAN" type="text" value="<?php echo $view->EAN;?>" size="14" maxlength="14" /><?php echo $view->ISEAN;?>
                                         </td>
                                         <td align="center">
                                             <a href="<?php echo $view->URLISBN;?>" title="Teste le code ISBN sur Amazon" target="_blank">ISBN</a> :
-                                            <input name="txtISBN" type="text" value="<?php echo $view->ISBN;?>" size="10" /><?php echo $view->ISISBN;?>
+                                            <input name="txtISBN" type="text" value="<?php echo $view->ISBN;?>" size="10" maxlength="10" /><?php echo $view->ISISBN;?>
                                         </td>
                                     </tr>
                                 </table>
@@ -262,7 +262,7 @@
                     <div align="center">
                         <p></p>
                         <div style="float: left;">Simple mise à jour de la proposition :</div>
-                        <div align="center" style="width: 20px; margin: auto; text-align: center;"><input type="checkbox" name="chkUpdate" value="O" /></div>
+                        <div align="center" style="width: 20px; margin: auto; text-align: center;"><input type="checkbox" id="chkUpdate" name="chkUpdate" value="O" /></div>
                         <br />
                         <input type="submit" name="Submit" value="<?php echo $view->ACTIONNAME;?>" />
                         <br />
@@ -508,11 +508,11 @@
         if (!isSimpleUpdate) {
             // Remplace 'auteur', 'editeur', 'serie' par les IDs réels de tes champs
             const champsObligatoires = [
-            { id: '#txtScenarId', nom: 'scénariste' },
-            { id: '#txtDessiId', nom: 'dessinateur' },
-            { id: '#txtEditeurId', nom: 'éditeur' },
-            { id: '#txtCollecId', nom: 'collection'},
-            { id: '#txtSerieId2', nom: 'série' }
+            { id: '#txtScenarId', nom: '- scénariste' },
+            { id: '#txtDessiId', nom: '- dessinateur' },
+            { id: '#txtEditeurId', nom: '- éditeur' },
+            { id: '#txtCollecId', nom: '- collection'},
+            { id: '#txtSerieId2', nom: '- série' }
             ];
 
             // Vérifie si au moins un champ obligatoire est vide ou égal à "0"
@@ -525,15 +525,15 @@
 
             // Si des champs sont manquants, on affiche une confirmation
             if (champsManquants.length > 0) {
-                const nomsManquants = champsManquants.join(', ');
-                const confirmation = confirm(
-                    `Attention : il manque des informations obligatoires (${nomsManquants}) pour l'ajout de l'album. Valider quand même ?`
+                const nomsManquants = champsManquants.join('\n');
+                const confirmation = alert(
+                    `Attention : il manque des informations obligatoires:\n${nomsManquants}\n pour l'ajout de l'album.`
             );
 
             // Si l'utilisateur confirme, on soumet le formulaire
-            if (confirmation) {
-                event.target.submit();
-            }
+            // if (confirmation) {
+            //     event.target.submit();
+            // }
             } else {
             // Tous les champs sont remplis, on soumet le formulaire
             event.target.submit();

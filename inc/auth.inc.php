@@ -2,7 +2,7 @@
 function authentification() {
     global $DB;
 
-    if (notIssetOrEmpty ( $_SESSION ["UserId"] )) {
+    if (notIssetOrEmpty ( $_SESSION ["UserId"] ?? NULL )) {
         // classe automatiquement l'utilisateur au niveau public
 
         $_SESSION ["UserLevel"] = 5; // niveau publique
