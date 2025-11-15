@@ -393,7 +393,7 @@ class Compte extends Bdo_Controller {
                 $this->PasswordResetToken->delete();
 
                 $this->view->addAlertPage("Le mot de passe a été réinitialisé. Vous pouvez <a href='". BDO_URL."'>retourner à l'accueil</a> et vous connecter.");
-                $this->view->addPhtmlFile('alert', 'BODY');
+                $this->view->addPhtmlFile('reset', 'BODY');
                 $this->view->render();
             } else {
                 $this->view->set_var("PAGETITLE", "BDOVORE.com : réinitiliasation mot de passe");
