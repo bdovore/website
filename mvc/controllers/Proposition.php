@@ -68,7 +68,12 @@ class Proposition extends Bdo_Controller {
                 }
                 else {
                     $step = getValInteger("step", 0);
-                    $keyword = postVal("keyword", "");
+                    // keyword peut être passé en post ou en get, on teste les deux
+                    $keyword = getVal("keyword", "");
+                    if ($keyword == "") {
+                        $keyword = postVal("keyword", "");
+                    }
+                    
                     $items = array();
                     if ($keyword != "") {
                         $items = $this->searchItems($keyword);
