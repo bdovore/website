@@ -428,8 +428,12 @@ class GetJSON extends Bdo_Controller {
         $sort = getVal("sort","default");
         $origin = getVal("origin",""); // manga / comics / BD
         $from = getValInteger("from",0);
+        $withComment = getVal("withComment", "N");
+
         $this->loadModel("Useralbum");
-        
+        if ($withComment == "O") {
+            $this->Useralbum->setWithUserComment(TRUE);
+        }
         if ($length > 30000) $length = 30000;
         if (Bdo_Cfg::user()->minAccesslevel(2)) {
             if ($mode ) {
