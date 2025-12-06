@@ -2439,7 +2439,7 @@ class Admin extends Bdo_Controller {
         } else {
             $newfilename = $url_img;
 
-            $max_size = 360;
+            $max_size = 720;
 
             //if ($_SERVER["SERVER_NAME"] != 'localhost')
             $imageproperties = getimagesize($imagedir . $newfilename);
