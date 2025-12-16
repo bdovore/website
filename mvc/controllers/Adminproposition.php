@@ -79,7 +79,7 @@ class Adminproposition extends Bdo_Controller {
             $this->view->set_var("PAGETITLE", "Administration des propositions");
             $this->view->render();
         } else {
-            die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+            die("Vous n'avez pas acc&egrave;s à cette page.");
         }
     }
 
@@ -168,11 +168,11 @@ private function getDateBeforeValid() {
                 } else {
                     // on charge la fiche suivante
                     $next_url = BDO_URL . "Adminproposition";
-                    echo GetMetaTag(1, "La proposition a &eacute;t&eacute; supprim&eacute;", $next_url);
+                    echo GetMetaTag(1, "La proposition a été supprimé", $next_url);
                 }
             }
         } else {
-            die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+            die("Vous n'avez pas acc&egrave;s à cette page.");
         }
     }
 
@@ -208,8 +208,8 @@ private function getDateBeforeValid() {
                     break;
             }
 
-            $opt_action[0] = "Ins&eacute;rer dans la collection";
-            $opt_action[1] = "Ins&eacute;rer comme achat futur";
+            $opt_action[0] = "Insérer dans la collection";
+            $opt_action[1] = "Insérer comme achat futur";
             $opt_action[2] = "Aucune";
             $opt_type[0][0] = 0;
 
@@ -220,7 +220,7 @@ private function getDateBeforeValid() {
             $opt_status[2][0] = 3;
             $opt_status[2][1] = "Aide requise";
             $opt_status[3][0] = 4;
-            $opt_status[3][1] = "Aide apport&eacute;e";
+            $opt_status[3][1] = "Aide apportée";
 
             $opt_type[0][1] = 'Album';
             $opt_type[1][0] = 1;
@@ -328,16 +328,16 @@ private function getDateBeforeValid() {
             $mail_body = "Bonjour, \n";
             $mail_body .= "Votre proposition ";
             $mail_body .= '"' . $titre . '"';
-            $mail_body .= " a &eacute;t&eacute; refus&eacute;e par l'&eacute;quipe de correction. \n";
-            $mail_body .= "- Les informations que vous avez fournies n'&eacute;taient pas suffisantes. \n";
-            $mail_body .= "- La proposition d'un autre membre a &eacute;t&eacute; pr&eacute;f&eacute;r&eacute;e ou valid&eacute;e avant. \n";
-            $mail_body .= "- Nous consid&eacute;rons que cet album n'a pas de rapport suffisamment proche &agrave; la bande dessin&eacute;e pour &ecirc;tre int&eacute;gr&eacute; &agrave; la base de donn&eacute;es du site. \n";
-            $mail_body .= "- Cet album figurait d&eacute;j&agrave; dans votre collection. \n";
-            $mail_body .= "Si l'&eacute;dition par d&eacute;faut de cet album ne correspond pas &agrave; celle que vous poss&eacute;dez,";
-            $mail_body .= " d'autres &eacute;ditions sont peut-&ecirc;tre d&eacute;j&agrave; pr&eacute;sentes dans la base et peuvent &ecirc;tre s&eacute;lectionn&eacute;es en cliquant sur l'album en question depuis votre garde-manger (menu d&eacute;roulant [Mon &eacute;dition] des fiches album). \n";
-            $mail_body .= "Si ce n'est pas le cas, vous pouvez faire une proposition de nouvelle &eacute;dition via ce m&ecirc;me menu d&eacute;roulant.\n\n";
-            $mail_body .= "Merci de votre compr&eacute;hension, \n";
-            $mail_body .= "L'&eacute;quipe BDOVORE";
+            $mail_body .= " a été refusée par l'équipe de correction. \n";
+            $mail_body .= "- Les informations que vous avez fournies n'étaient pas suffisantes. \n";
+            $mail_body .= "- La proposition d'un autre membre a été préférée ou validée avant. \n";
+            $mail_body .= "- Nous considérons que cet album n'a pas de rapport suffisamment proche à la bande dessinée pour être intégré à la base de données du site. \n";
+            $mail_body .= "- Cet album figurait déjà dans votre collection. \n";
+            $mail_body .= "Si l'édition par défaut de cet album ne correspond pas à celle que vous possédez,";
+            $mail_body .= " d'autres éditions sont peut-être déjà présentes dans la base et peuvent être sélectionnées en cliquant sur l'album en question depuis votre garde-manger (menu déroulant [Mon édition] des fiches album). \n";
+            $mail_body .= "Si ce n'est pas le cas, vous pouvez faire une proposition de nouvelle édition via ce même menu déroulant.\n\n";
+            $mail_body .= "Merci de votre compréhension, \n";
+            $mail_body .= "L'équipe BDOVORE";
             $this->view->set_var(array(
                 "SUJET_EMAIL" => $mail_sujet,
                 "CORPS_EMAIL" => $mail_body
@@ -417,7 +417,7 @@ private function getDateBeforeValid() {
 
             $this->view->render();
         } else {
-            die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
+            die("Vous n'avez pas acc&egrave;s à cette page.");
         }
     }
 
@@ -486,7 +486,7 @@ private function getDateBeforeValid() {
                 // n'insère dans bd_tome que s'il s'agit d'une nouvelle édition
                 $txtDateParution = completeDate(postVal('txtDateParution'));
                 if (!validateDate($txtDateParution)) {
-                     echo "Erreur : la date fournie est invalide et risque de g&eacute;n&eacute;rer un album fantome :D";
+                     echo "Erreur : la date fournie est invalide et risque de générer un album fantome :D";
                      exit();
                 }
                 if (postVal('txtExistingTomeId', '') == '') {
@@ -519,7 +519,7 @@ private function getDateBeforeValid() {
                         var_dump($this->Tome->error);
                         exit();
                     }
-                    echo "Album ajout&eacute; dans la table bd_tome<br />";
+                    echo "Album ajouté dans la table bd_tome<br />";
 
                     // récupère la valeur de la dernière insertion
                     $lid_tome = $this->Tome->ID_TOME;
@@ -550,7 +550,7 @@ private function getDateBeforeValid() {
                     var_dump($this->Edition->error);
                     exit();
                 }
-                echo "Nouvelle &eacute;dition ins&eacute;r&eacute;e dans la table id_edition<br />";
+                echo "Nouvelle édition insérée dans la table id_edition<br />";
 
                 // récupère la valeur de la dernière insertion
                 $lid_edition = $this->Edition->ID_EDITION;
@@ -579,7 +579,7 @@ private function getDateBeforeValid() {
                     $this->Edition->update();
 
 
-                    echo "Nouvelle image ins&eacute;r&eactue;e dans la base<br />";
+                    echo "Nouvelle image insér&eactue;e dans la base<br />";
                 } else {
                     // vérifie si une image a été proposée
                     if (($prop_img != '') && (postVal('chkDelete') != 'checked')) {// copie l'image dans les couvertures
@@ -605,7 +605,7 @@ private function getDateBeforeValid() {
                         $this->Edition->update();
 
 
-                        echo "Image propos&eacute;e ins&eacute;r&eacute;e dans la base<br />";
+                        echo "Image proposée insérée dans la base<br />";
                     }
                 }
 
@@ -689,7 +689,7 @@ private function getDateBeforeValid() {
                     }
 
                     echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
-                    echo "Image redimensionn&eacute;e<br />";
+                    echo "Image redimensionnée<br />";
                 }
                 // Ajoute l'album à la collection de l'utilisateur
                 if ($prop_action != 2) {
@@ -705,7 +705,7 @@ private function getDateBeforeValid() {
                         var_dump($this->Useralbum->error);
                         exit();
                     }
-                    echo "Album ajout&eacute; dans la collection de l'utilisateur<br />";
+                    echo "Album ajouté dans la collection de l'utilisateur<br />";
                 }
 
                 //Efface le fichier de la base et passe le status de l'album à validé
@@ -719,22 +719,22 @@ private function getDateBeforeValid() {
 
                 // Envoie un mail si nécessaire pour prévenir l'utilisateur
                 if ($notif_mail == 1) {
-                    $mail_action[0] = "L'album a &eacute;t&eacute; ajout&eacute; &agrave; votre collection, comme demand&eacute;.\n\n";
-                    $mail_action[1] = "L'album a &eacute;t&eacute; ajout&eacute; dans vos achats futurs, comme demand&eacute;.\n\n";
-                    $mail_action[2] = "L'album n'a pas &eacute;t&eacute; ajout&eacute; &agrave; votre collection, comme demand&eacute;.";
+                    $mail_action[0] = "L'album a été ajouté à votre collection, comme demandé.\n\n";
+                    $mail_action[1] = "L'album a été ajouté dans vos achats futurs, comme demandé.\n\n";
+                    $mail_action[2] = "L'album n'a pas été ajouté à votre collection, comme demandé.";
 
 
                     $mail_adress = $this->User_album_prop->EMAIL;
                     $mail_sujet = "Ajout d'un album dans la base BDOVORE";
                     $mail_entete = "From: no-reply@bdovore.com";
                     $mail_text = "Bonjour, \n\n";
-                    $mail_text .="Votre proposition d'ajout &agrave; la base de donn&eacute;es de BDOVORE a &eacute;t&eacute; valid&eacute;e.\n\n";
+                    $mail_text .="Votre proposition d'ajout à la base de données de BDOVORE a été validée.\n\n";
                     $mail_text .="Titre : " . postVal('txtTitre') . "\n";
                     $mail_text .=$mail_action[$prop_action];
                     $mail_text .="Merci pour votre participation\n\n";
-                    $mail_text .="L'&eacute;quipe BDOVORE";
+                    $mail_text .="L'équipe BDOVORE";
                     mail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
-                    echo "Email de confirmation envoy&eacute;<br />";
+                    echo "Email de confirmation envoyé<br />";
                 }
 
                 $this->User_album_prop->load("c", " WHERE
@@ -750,7 +750,7 @@ private function getDateBeforeValid() {
                     $next_url = BDO_URL . "admin/editAlbum?alb_id=" . $lid_tome;
                 }
 
-                echo GetMetaTag(1, "L'album a &eacute;t&eacute; ajout&eacute;", $next_url);
+                echo GetMetaTag(1, "L'album a été ajouté", $next_url);
             }
         }
     }
@@ -768,13 +768,13 @@ private function getDateBeforeValid() {
         $notif_mail = $this->User_album_prop->NOTIF_MAIL;
 
 
-        // Ajoute l'album existant &agrave; la collection ou aux futurs achats de l'utilisateur
+        // Ajoute l'album existant à la collection ou aux futurs achats de l'utilisateur
         // Vérifie la présence de l'album existant dans la collection de l'utilisateur
         $this->loadModel("Useralbum");
         $this->Useralbum->load("c", " WHERE ua.user_id = " . $prop_user . " and bd_tome.ID_TOME =" . $idtome);
 
         if ($this->Useralbum->dbSelect->nbLineResult > 0) {
-            echo GetMetaTag(1, "Cet album est d&eacute;j&agrave; pr&eacute;sent dans la collection de l'utilisateur", BDO_URL . "admin/adminproposals.php?act=valid&propid=" . $propid);
+            echo GetMetaTag(1, "Cet album est déjà présent dans la collection de l'utilisateur", BDO_URL . "admin/adminproposals.php?act=valid&propid=" . $propid);
             exit();
         } else { // Ajoute l'album
             // on récupère l'id édition par défaut
@@ -797,7 +797,7 @@ private function getDateBeforeValid() {
                 var_dump($this->Useralbum->error);
                 exit();
             }
-            echo "L'album s&eacute;lectionn&eacute; a &eacute;t&eacute; ajout&eacute; &agrave; la collection de l'utilisateur<br />";
+            echo "L'album sélectionné a été ajouté à la collection de l'utilisateur<br />";
 
             // Archive la proposition
             $this->User_album_prop->set_dataPaste(array(
@@ -812,8 +812,8 @@ private function getDateBeforeValid() {
             }
             // Envoie un mail si nécessaire pour prévenir l'utilisateur
             if ($notif_mail == 1) {
-                $mail_action[0] = "Cet album a &eacute;t&eacute; plac&eacute; dans votre collection, comme demand&eacute;.\n\n";
-                $mail_action[1] = "Cet album a &eacute;t&eacute; plac&eacute; dans vos achats futurs, comme demand&eacute;.\n\n";
+                $mail_action[0] = "Cet album a été placé dans votre collection, comme demandé.\n\n";
+                $mail_action[1] = "Cet album a été placé dans vos achats futurs, comme demandé.\n\n";
 
                 // Récupère l'adresse du posteur et compose l'email
 
@@ -822,16 +822,16 @@ private function getDateBeforeValid() {
                 $mail_entete = "From: no-reply@bdovore.com";
                 $mail_text = "Bonjour, \n\n";
                 $mail_text .="Proposition : " . postVal('txtTitre') . "\n";
-                $mail_text .= "Votre proposition d'ajout &agrave; la base de donn&eacute;es n'a pas &eacute;t&eacute; accept&eacute;e car l'album en question y figurait d&eacute;j&agrave;. \n";
+                $mail_text .= "Votre proposition d'ajout à la base de données n'a pas été acceptée car l'album en question y figurait déjà. \n";
                 $mail_text .=$mail_action[$prop_action];
-                $mail_text .= "Si l'&eacute;dition par d&eacute;faut de cet album ne correspond pas &agrave; celle que vous poss&eacute;dez,
-                            d'autres &eacute;ditions sont peut-&ecirc;tre d&eacute;j&agrave; pr&eacute;sentes dans la base et peuvent &ecirc;tre
-                            s&eacute;lectionn&eacute;es en cliquant sur l'album en question depuis votre garde-manger (menu d&eacute;roulant [Mon &eacute;dition]
-                            des fiches album). Si ce n'est pas le cas, vous pouvez faire une proposition de nouvelle &eacute;dition via ce m&ecirc;me
-                            menu d&eacute;roulant.\n\n";
-                $mail_text .="L'&eacute;quipe BDOVORE";
+                $mail_text .= "Si l'édition par défaut de cet album ne correspond pas à celle que vous possédez,
+                            d'autres éditions sont peut-être déjà présentes dans la base et peuvent être
+                            sélectionnées en cliquant sur l'album en question depuis votre garde-manger (menu déroulant [Mon édition]
+                            des fiches album). Si ce n'est pas le cas, vous pouvez faire une proposition de nouvelle édition via ce même
+                            menu déroulant.\n\n";
+                $mail_text .="L'équipe BDOVORE";
                 mail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
-                echo "Email d'information envoy&eacute; &agrave; l'utilisateur<br />";
+                echo "Email d'information envoyé à l'utilisateur<br />";
             }
 
             // Prépare la redirection vers la proposition suivante
@@ -848,7 +848,7 @@ private function getDateBeforeValid() {
                 $next_url = BDO_URL . "admin/editAlbum?alb_id=" . $idtome;
             }
         }
-        echo GetMetaTag(1, "Bien jou&eacute; !", $next_url);
+        echo GetMetaTag(1, "Bien joué !", $next_url);
     }
 
     public function commentProposition() {
@@ -1022,18 +1022,18 @@ private function getDateBeforeValid() {
 
             // Détermine la nature de la correction
             if ($edition_id == 0) {
-                $has_edition = 'La correction porte sur <strong>toutes</strong> les &eacute;ditions.';
+                $has_edition = 'La correction porte sur <strong>toutes</strong> les éditions.';
             } elseif ($edition_id == $user_edition) {
-                $has_edition = 'La correction porte sur l\'&eacute;dition qu\'il poss&egrave;de.';
+                $has_edition = 'La correction porte sur l\'édition qu\'il poss&egrave;de.';
             } else {
-                $has_edition = 'La correction porte sur une &eacute;dition qu\'il <b>ne poss&egrave;de pas</b>.';
+                $has_edition = 'La correction porte sur une édition qu\'il <b>ne poss&egrave;de pas</b>.';
             }
 
             // Détermine s'il s'agit de l'édition par défaut
             if (($edition_id == $def_edition) | ($edition_id == 0)) {
-                $is_def_edition = '<b>L\'&eacute;dition utilis&eacute;e par d&eacute;faut va &ecirc;tre modifi&eacute;e.</b>';
+                $is_def_edition = '<b>L\'édition utilisée par défaut va être modifiée.</b>';
             } else {
-                $is_def_edition = 'L\'&eacute;dition utilis&eacute;e par d&eacute;faut ne sera pas modifi&eacute;e.';
+                $is_def_edition = 'L\'édition utilisée par défaut ne sera pas modifiée.';
             }
 
             // Récupère les données actuelles
@@ -1182,7 +1182,7 @@ private function getDateBeforeValid() {
 
             // Met à jour les informations série dans la table bd_tome
             $this->Tome->updateGenreForSerie(postVal("txtSerieId"), postVal("txtGenreId"));
-            echo 'Info s&eacute;rie : base bd_tome mise a jour.<br>';
+            echo 'Info série : base bd_tome mise a jour.<br>';
 
             $this->loadModel("Serie");
             $this->Serie->set_dataPaste(array("ID_SERIE" => postVal("txtSerieId")));
@@ -1198,7 +1198,7 @@ private function getDateBeforeValid() {
                 var_dump($this->Serie->error);
                 exit();
             }
-            echo 'Info s&eacute;rie : base bd_serie mise a jour.<br />';
+            echo 'Info série : base bd_serie mise a jour.<br />';
 
             // copie l'image dans les couvertures
             if (($prop_img != '') && (postVal('chkDelete') != 'checked') && $edition != 0) {
@@ -1248,7 +1248,7 @@ private function getDateBeforeValid() {
                         var_dump($this->Edition->error);
                         exit();
                     }
-                    echo 'Info &eacute;dition : base bd_edition mise &agrave; jour.<br>';
+                    echo 'Info édition : base bd_edition mise à jour.<br>';
                 }
             }
 
@@ -1352,7 +1352,7 @@ private function getDateBeforeValid() {
                 $next_url = BDO_URL . "admin/editAlbum?alb_id=" . $lid;
             }
 
-            echo GetMetaTag(2, "L'album a &eacute;t&eacute; mis a jour", $next_url);
+            echo GetMetaTag(2, "L'album a été mis a jour", $next_url);
         }
     }
 
