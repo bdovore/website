@@ -30,7 +30,8 @@ class Sponsors extends Bdo_Controller
             'logo' => BDO_URL_IMAGE . "amazon%20blanc.jpg",
             'patterns' => [
                 'isbn' => "https://www.amazon.fr/exec/obidos/ASIN/{isbn}/bdovorecom-21/",
-                'title' => "https://www.amazon.fr/exec/obidos/external-search?tag=bdovorecom-21&keyword={title}&mode=books-fr"
+                'title' => "https://www.amazon.fr/s?tag=bdovorecom-21&i=stripbooks&k={title}",
+                'ean' => "https://www.amazon.fr/s?tag=bdovorecom-21&i=stripbooks&k={ean}"
             ]
         ],
         [
