@@ -24,7 +24,7 @@ class Social extends Bdo_Db_Line
     public function select ()
     {
         return "
-        SELECT SQL_CALC_FOUND_ROWS 
+        SELECT  
             `TYPE_ACTION` ,
             social.`USER_ID` ,
             `SOURCE_USER` ,

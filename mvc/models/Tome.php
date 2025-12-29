@@ -17,7 +17,7 @@ class Tome extends Bdo_Db_Line
     public $selectType = "select"; // selectType : 2 valeurs possible "select" pour sélection d'une série, "browse" pour les requetes de recherche
 
     var $default_select = "
-        SELECT SQL_CALC_FOUND_ROWS
+        SELECT 
             bd_tome.ID_TOME,
             bd_tome.TITRE as TITRE_TOME,
             bd_tome.NUM_TOME,
@@ -106,7 +106,7 @@ class Tome extends Bdo_Db_Line
     {
         if ($this->selectType=="select") {
             $select = "
-            SELECT SQL_CALC_FOUND_ROWS
+            SELECT 
                 bd_tome.ID_TOME,
                 bd_tome.TITRE as TITRE_TOME,
                 bd_tome.NUM_TOME,
@@ -159,8 +159,7 @@ class Tome extends Bdo_Db_Line
 
             return $select.$from;
         } else {
-            $select = "
-            SELECT SQL_CALC_FOUND_ROWS
+            $select = "SELECT 
                 bd_tome.ID_TOME,
                 bd_tome.TITRE AS TITRE_TOME
                 

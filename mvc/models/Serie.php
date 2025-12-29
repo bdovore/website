@@ -60,7 +60,7 @@ class Serie extends Bdo_Db_Line
     {
         if ($this->selectType=="select") {
             return "
-            SELECT SQL_CALC_FOUND_ROWS
+            SELECT 
 
                     `bd_serie`.`ID_SERIE`  ,
 
@@ -100,7 +100,7 @@ class Serie extends Bdo_Db_Line
             LEFT JOIN note_tome on (bd_tome.ID_TOME =note_tome.ID_TOME)
             ";
         } else {
-            return "  SELECT SQL_CALC_FOUND_ROWS
+            return "  SELECT 
 
                 `bd_serie`.`ID_SERIE`  ,
 
@@ -113,7 +113,7 @@ class Serie extends Bdo_Db_Line
 
 
     public function browseSerie ($filter) {
-        $this->select = "  SELECT SQL_CALC_FOUND_ROWS
+        $this->select = "  SELECT 
 
                 `bd_serie`.`ID_SERIE`  ,
 

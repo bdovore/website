@@ -30,7 +30,7 @@ class Editeur extends Bdo_Db_Line {
     public function select ()
     {
         return "
-        SELECT SQL_CALC_FOUND_ROWS
+        SELECT 
         `bd_editeur`.`ID_EDITEUR` ,
         `bd_editeur`.`NOM` ,
         `bd_editeur`.`URL_SITE`

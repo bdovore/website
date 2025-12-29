@@ -112,7 +112,7 @@ class Browser extends Bdo_Controller
             $query_order = " ORDER BY nom ASC ";
             $this->Serie->calcFoundRow = true;
             $this->Serie->selectType = "browse";
-            $dbsData = $this->Serie->load("c", $query_where. " GROUP BY ID_SERIE ". $query_order ." LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
+            $dbsData = $this->Serie->load("c", $query_where. $query_order ." LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
         }
         elseif ($this->rb_browse == 'aut') {
             $this->loadModel("Auteur");
@@ -150,7 +150,7 @@ class Browser extends Bdo_Controller
 
             }
             $query_order = " ORDER BY NOM ASC ";
-             $this->Editeur->calcFoundRow = true;
+            $this->Editeur->calcFoundRow = true;
             $dbsData = $this->Editeur->load("c", $query_where. $query_order." LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
       
         } elseif ($this->rb_browse == "alb") {

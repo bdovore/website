@@ -24,7 +24,7 @@ class Socialreview extends Bdo_Db_Line
     public function select ()
     {
         return "
-        SELECT SQL_CALC_FOUND_ROWS 
+        SELECT  
             `id` ,
             (social.`USER_ID`*1209 + 951) as USER_ID,
             `source` ,

@@ -319,9 +319,17 @@ class Bdo_Db_Select
         if ($this->queryFull) {
             $this->infoQuery($resultat);
             if ($this->calcFoundRow) {
-                $resCount = Db_query('SELECT FOUND_ROWS() as nb');
-                $rowCount = Db_fetch_object($resCount);
-                $this->nbLineTotal = $rowCount->nb;
+                // On isole la partie avant le ORDER BY et on remplace le SELECT
+                $baseSql = preg_split('/ORDER\s+BY|LIMIT/i', $this->queryFull)[0];
+
+                if (stripos($baseSql, 'GROUP BY') !== false) {
+                    $countSql = $baseSql;
+                } else {
+                    $countSql = preg_replace('/SELECT\s+.*?\s+FROM\s+/is', 'SELECT * FROM ', $baseSql);
+                }
+                
+                $nb = Db_CountRow($countSql);
+                $this->nbLineTotal = $nb;
             }
         }
         else {
