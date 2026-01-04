@@ -161,7 +161,7 @@ private function getDateBeforeValid() {
                     $mail_sujet = "Votre proposition d'ajout dans la base BDOVORE";
                     $mail_entete = "From: no-reply@bdovore.com";
                     $mail_text = stripslashes($mail) . "\n\n";
-                    mail($notif_mail, $mail_sujet, $mail_text, $mail_entete);
+                    bdovoreMail($notif_mail, $mail_sujet, $mail_text, $mail_entete);
                 }
                 if ($src == "list") {
                     $this->view->render();
@@ -733,7 +733,7 @@ private function getDateBeforeValid() {
                     $mail_text .=$mail_action[$prop_action];
                     $mail_text .="Merci pour votre participation\n\n";
                     $mail_text .="L'équipe BDOVORE";
-                    mail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
+                    bdovoreMail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
                     echo "Email de confirmation envoyé<br />";
                 }
 
@@ -830,7 +830,7 @@ private function getDateBeforeValid() {
                             des fiches album). Si ce n'est pas le cas, vous pouvez faire une proposition de nouvelle édition via ce même
                             menu déroulant.\n\n";
                 $mail_text .="L'équipe BDOVORE";
-                mail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
+                bdovoreMail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
                 echo "Email d'information envoyé à l'utilisateur<br />";
             }
 

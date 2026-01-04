@@ -5,6 +5,8 @@
  * @author Tom
  *
  */
+require_once BDO_DIR . "inc" . DS . "mail.php";
+
 class Compte extends Bdo_Controller {
 
     /**
@@ -86,16 +88,8 @@ class Compte extends Bdo_Controller {
                 $mail_text .="Nous respectons votre d&eacute;cision et esperons vous revoir tr&eacute;s bientot.\n\n";
                 $mail_text .="L'&eacute;quipe BDOVORE";
 
-                mail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
+                bdovoreMail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
 
-                $mail_adress = 'tomlameche@gmail.com';
-                $mail_sujet = "BDOVORE - suppression de compte";
-                $mail_entete = "From: BDoVore <no-reply@bdovore.com>";
-                $mail_text = "id : " . $profile_user_id . ", \n";
-                $mail_text .= "username : " . $username . ", \n";
-                $mail_text .= "email : " . $useremail . ", \n";
-
-                mail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
 
                 echo "Votre profil BDoVore a &eacute;t&eacute; supprim&eacute; d&eacute;finitivement.";
             }
@@ -353,7 +347,7 @@ class Compte extends Bdo_Controller {
                 $textemail .= "Si vous n'avez pas demandé de réinitialisation, ignorez cet email.\n";
                 $textemail .= "Amicalement\n";
                 $mail_entete = "From: no-reply@bdovore.com";
-                mail($user_email, "Réinitialisation de votre mot de passe", $textemail, $mail_entete);
+                bdovoreMail($user_email, "Réinitialisation de votre mot de passe", $textemail, $mail_entete);
 
                 echo "Un email avec un lien de réinitialisation vous a été envoyé. Vous pouvez fermer cette fenêtre.";
                 exit();
@@ -441,7 +435,7 @@ class Compte extends Bdo_Controller {
                 $textemail .= "Amicalement\n";
 
 
-                mail($user_email,"Votre pseudo Bdovore",$textemail);
+                bdovoreMail($user_email,"Votre pseudo Bdovore",$textemail);
                 //echo $textemail;
                 echo  "Votre pseudo a &eacute;t&eacute; envoy&eacute;. Vous pouvez fermer cette fenêtre.";
                 exit();
