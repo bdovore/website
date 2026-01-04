@@ -133,3 +133,21 @@ if (Bdo_Cfg::debug()) {
 // echo '<pre>';
 // print_r(cfg::schema());
 
+// chargement autoload Amazon Creator API
+spl_autoload_register(function ($class) {
+    $prefix = 'Amazon\\CreatorsAPI\\v1\\';
+    $baseDir = BDO_DIR . '/vendors/creatorsapi-php-sdk/src/'; // Chemin vers le dossier src du SDK
+
+    // Vérifie si la classe utilise le namespace du SDK
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
+        return; // Ne pas interférer avec d'autres autoloaders
+    }
+
+    $relativeClass = substr($class, $len);
+    $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
+
+    if (file_exists($file)) {
+        require $file;
+    }
+});

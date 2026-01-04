@@ -7,13 +7,19 @@
  *
  */
 
-use Amazon\ProductAdvertisingAPI\v1\ApiException;
-use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi;
-use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\PartnerType;
-use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\ProductAdvertisingAPIClientException;
-use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\SearchItemsRequest;
-use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\SearchItemsResource;
-use Amazon\ProductAdvertisingAPI\v1\Configuration;
+// use Amazon\ProductAdvertisingAPI\v1\ApiException;
+// use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi;
+// use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\PartnerType;
+// use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\ProductAdvertisingAPIClientException;
+// use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\SearchItemsRequest;
+// use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\SearchItemsResource;
+// use Amazon\ProductAdvertisingAPI\v1\Configuration;
+require_once(BDO_DIR . '/vendors/creatorsapi-php-sdk/vendor/autoload.php');
+use Amazon\CreatorsAPI\v1\Configuration;
+use Amazon\CreatorsAPI\v1\com\amazon\creators\api\DefaultApi;
+use Amazon\CreatorsAPI\v1\com\amazon\creators\model\SearchItemsRequestContent;
+use Amazon\CreatorsAPI\v1\com\amazon\creators\model\SearchItemsResource;
+use Amazon\CreatorsAPI\v1\ApiException;
 
 class Proposition extends Bdo_Controller {
 
@@ -412,97 +418,70 @@ class Proposition extends Bdo_Controller {
 
     private function searchItems($keyword)
     {
+        // Configuration avec les identifiants OAuth2
         $config = new Configuration();
+        $config->setCredentialId(AMAZON_CREDENTIAL);
+        $config->setCredentialSecret(AMAZON_CREATOR_SECRET);
+        $config->setVersion("2.2"); // Version pour l'Europe (EU)
 
-        $config->setAccessKey(AMAZON_KEY);
-        $config->setSecretKey(AMAZON_SECRET);
+        // Initialisation de l'API
+        $apiInstance = new DefaultApi(null, $config);
+
+        // Paramètres de la requête
+        $marketplace = "www.amazon.fr"; // Marketplace français
         $partnerTag = 'bdovorecom-21';
-        $config->setHost('webservices.amazon.fr');
-        $config->setRegion('eu-west-1');
-
-        $apiInstance = new DefaultApi(
-            new GuzzleHttp\Client(),
-            $config
-        );
-
         $searchIndex = "Books";
-
-        # Specify item count to be returned in search result
         $itemCount = 5;
 
+        // Ressources demandées
         $resources = [
-            SearchItemsResource::ITEM_INFOTITLE,
-            SearchItemsResource::ITEM_INFOBY_LINE_INFO,
-            SearchItemsResource::ITEM_INFOPRODUCT_INFO,
-            SearchItemsResource::ITEM_INFOCONTENT_INFO,
-            SearchItemsResource::IMAGESPRIMARYLARGE,
-            SearchItemsResource::ITEM_INFOEXTERNAL_IDS,
-            SearchItemsResource::BROWSE_NODE_INFOBROWSE_NODES
-            ,
-            SearchItemsResource::ITEM_INFOFEATURES
+            SearchItemsResource::ITEM_INFO_TITLE,
+            SearchItemsResource::ITEM_INFO_BY_LINE_INFO,
+            SearchItemsResource::ITEM_INFO_PRODUCT_INFO,
+            SearchItemsResource::ITEM_INFO_CONTENT_INFO,
+            SearchItemsResource::IMAGES_PRIMARY_LARGE,
+            SearchItemsResource::ITEM_INFO_EXTERNAL_IDS,
+            SearchItemsResource::BROWSE_NODE_INFO_BROWSE_NODES,
+            SearchItemsResource::ITEM_INFO_FEATURES,
         ];
 
-        # Forming the request
-        $searchItemsRequest = new SearchItemsRequest();
-        $searchItemsRequest->setSearchIndex($searchIndex);
-        $searchItemsRequest->setKeywords($keyword);
-        $searchItemsRequest->setItemCount($itemCount);
+        // Création de la requête
+        $searchItemsRequest = new SearchItemsRequestContent();
         $searchItemsRequest->setPartnerTag($partnerTag);
-        $searchItemsRequest->setPartnerType(PartnerType::ASSOCIATES);
+        $searchItemsRequest->setKeywords($keyword);
+        $searchItemsRequest->setSearchIndex($searchIndex);
+        $searchItemsRequest->setItemCount($itemCount);
         $searchItemsRequest->setResources($resources);
 
-        # Validating request
-        $invalidPropertyList = $searchItemsRequest->listInvalidProperties();
-        $length = count($invalidPropertyList);
-        if ($length > 0) {
-            echo "Error forming the request", PHP_EOL;
-            foreach ($invalidPropertyList as $invalidProperty) {
-                echo $invalidProperty, PHP_EOL;
-            }
-            return;
-        }
-        $data = array();
-        # Sending the request
+        // Envoi de la requête
         try {
-            $searchItemsResponse = $apiInstance->searchItems($searchItemsRequest);
+            $response = $apiInstance->searchItems($marketplace, $searchItemsRequest);
+            $data = [];
 
-           // echo 'API called successfully', PHP_EOL;
-           // echo 'Complete Response: ', $searchItemsResponse, PHP_EOL;
-
-            # Parsing the response
-            if ($searchItemsResponse->getSearchResult() !== null) {
-                // echo 'Printing first item information in SearchResult:', PHP_EOL;
-               
-                $items = $searchItemsResponse->getSearchResult()->getItems();
-                foreach ($items as $item) {
+            // Traitement de la réponse
+            if ($response->getSearchResult()->getItems() != null) {
+                foreach ($response->getSearchResult()->getItems() as $item) {
                     if ($item !== null) {
-                       $data[] = $this->getItemInfo($item);
+                        $data[] = $this->getItemInfo($item);
                     }
                 }
-                
             }
-            if ($searchItemsResponse->getErrors() !== null) {
-                /*echo PHP_EOL, 'Printing Errors:', PHP_EOL, 'Printing first error object from list of errors', PHP_EOL;
-                echo 'Error code: ', $searchItemsResponse->getErrors()[0]->getCode(), PHP_EOL;
-                echo 'Error message: ', $searchItemsResponse->getErrors()[0]->getMessage(), PHP_EOL; */
-            }
-        } catch (ApiException $exception) {
-            /*echo "Error calling PA-API 5.0!", PHP_EOL;
-            echo "HTTP Status Code: ", $exception->getCode(), PHP_EOL;
-            echo "Error Message: ", $exception->getMessage(), PHP_EOL;
-            if ($exception->getResponseObject() instanceof ProductAdvertisingAPIClientException) {
-                $errors = $exception->getResponseObject()->getErrors();
-                foreach ($errors as $error) {
-                    echo "Error Type: ", $error->getCode(), PHP_EOL;
-                    echo "Error Message: ", $error->getMessage(), PHP_EOL;
+
+            // Gestion des erreurs
+            if ($response->getErrors() !== null) {
+                foreach ($response->getErrors() as $error) {
+                    error_log("Error: " . $error->getCode() . " - " . $error->getMessage());
                 }
-            } else {
-                echo "Error response body: ", $exception->getResponseBody(), PHP_EOL;
-            } */
-        } catch (Exception $exception) {
-           // echo "Error Message: ", $exception->getMessage(), PHP_EOL;
+            }
+
+            return $data;
+        } catch (ApiException $e) {
+            error_log("API Error: " . $e->getMessage());
+            return [];
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return [];
         }
-        return $data;
     }
     
     public function searchProposition() {
