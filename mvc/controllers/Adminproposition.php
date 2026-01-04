@@ -4,6 +4,7 @@
  * @author Tom
  *
  */
+require_once BDO_DIR . "inc" . DS . "mail.php";
 class Adminproposition extends Bdo_Controller {
 
     /**
