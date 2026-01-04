@@ -352,8 +352,8 @@ class Compte extends Bdo_Controller {
                 $textemail .= "Ce lien expirera dans 1 heure.\n";
                 $textemail .= "Si vous n'avez pas demandé de réinitialisation, ignorez cet email.\n";
                 $textemail .= "Amicalement\n";
-
-                mail($user_email, "Réinitialisation de votre mot de passe", $textemail);
+                $mail_entete = "From: no-reply@bdovore.com";
+                mail($user_email, "Réinitialisation de votre mot de passe", $textemail, $mail_entete);
 
                 echo "Un email avec un lien de réinitialisation vous a été envoyé. Vous pouvez fermer cette fenêtre.";
                 exit();
