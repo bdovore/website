@@ -139,6 +139,7 @@
                             <p>
                                 <?php echo $view->ACTIONAUTORIZE ?? "";?> <?php echo $view->CONTACTUSER ?? "";?>
                                 <ul>
+                                    <a href="<?php echo BDO_URL.'admin/editalbum?alb_id='.$view->IDTOME ?>" target='_blank'><li>Afficher l'album</li></a>
                                     <a href="<?php echo $view->URLFUSIONEDITION ?? "";?>"><li>Fusionner cette édition</li></a>
                                     <a href="<?php echo $view->URLDELETE ?? "";?>"><li>Supprimer cette edition</li></a>
                                     <a href="#" onclick="javascript:window.open('addauteur','myauteur','scrollbars=no,resizable=yes,width=400,height=150');return(false)"></a>

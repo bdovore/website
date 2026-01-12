@@ -238,6 +238,30 @@ class Controle extends Bdo_Controller
                     "url" => BDO_URL . "admin/editserie?serie_id=",
                     "colUrl" => "ID_SERIE",
                 )
+                ,
+                array(
+                    "title" => "Editions non validées mais pourtant présentes dans au moins une collection",
+                    "query" => "
+                        SELECT bd_edition.ID_EDITION, 
+                                CASE PROP_STATUS WHEN 1 THEN 'Validé' WHEN 99 then 'Supprimé' WHEN 98 THEN 'Non validé' WHEN 0 THEN 'Inactive' END as 'Status',
+                               count(*) AS 'Nb de user' 
+                        FROM `bd_edition` INNER JOIN users_album using (id_edition) 
+                        WHERE PROP_STATUS <> 1
+                        GROUP BY bd_edition.ID_EDITION, PROP_STATUS",
+                    "url" => BDO_URL."admin/editedition?edition_id=",
+                    "colUrl" => "ID_EDITION",
+                ),
+                array(
+                    "title" => "Editions sans EAN ou ISBN (parution à partir de 1974)",
+                    "query" => "
+                        SELECT bd_edition.ID_EDITION , DTE_PARUTION , EAN, ISBN
+                        FROM `bd_edition` 
+                        WHERE PROP_STATUS = 1 AND 
+                        (isbn is null and ean is null and DTE_PARUTION >= '1974-01-01' )
+                        ",
+                    "url" => BDO_URL."admin/editedition?edition_id=",
+                    "colUrl" => "ID_EDITION",
+                )
                 );
 
 
