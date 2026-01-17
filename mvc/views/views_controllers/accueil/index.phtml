@@ -92,29 +92,14 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             <h3><a href="./leguide/actualites_bd">Albums BD Mangas Comics tendances</a></h3>
         </div>
         
-            <div style='margin:0 auto; max-width:900px;'>
-                <?php 
-                 $genre ="";
-                 $close="";
-                 $i = 0;
+            <div class="albums-grid">
+            <?php foreach ($view->ACTUAIR as $actu): ?>
+                <div class="album-item">
+                    <?php echo $ficheAlbum->urlAlbum($actu, $class="couvBig", $sponsor=FALSE); ?>
+                </div>
+            <?php endforeach; ?>
+</div>
 
-                 echo "<div style='float:left; padding:1px;margin:0 auto;/*max-width:265px;*/'>";
-                foreach ($view->ACTUAIR as $actu) { 
-                     $i++;               
-
-                    echo "<div style='float:left;padding:2px;height:210px;'>".$ficheAlbum->urlAlbum($actu,$class="couvBig",$sponsor=FALSE)."</div>";
-                     if ($i==4) {                    
-                        echo "</div>";
-                        $i=0;
-                        echo "<div style='float:left; padding:1px;margin:0 auto;/*max-width:275px;*/'>";
-                        $close = "</div>";
-                    }
-                    //$genre = $actu->ORIGINE_GENRE;
-
-                } 
-                echo $close;
-              ?>
-            </div>
        
     </div>
     <hr class="expSep" />
