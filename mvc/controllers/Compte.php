@@ -115,6 +115,13 @@ class Compte extends Bdo_Controller {
                         echo GetMetaTag(2, "Votre mot de passe est modifi&eacute;.", (BDO_URL . "Compte"));
                     }
 
+            } elseif ($act == "setforum") {
+                $this->User->set_dataPaste(array("user_id" => $profile_user_id));
+                $this->User->load();
+                $this->User->setForumAccount($this->User->username, genererMotDePasse(10), $this->User->email );
+
+                echo GetMetaTag(2, "Votre compte forum a été créé. Vous devrez demander un nouveau mot de passe pour l'utiliser.", (BDO_URL . "Compte"));
+
             }
             // Afficher le formulaire pré-remplis
             elseif ($act == "") {
@@ -152,11 +159,11 @@ class Compte extends Bdo_Controller {
                     "YESISSELECTED" => ($this->User->OPEN_COLLEC == 'Y' ? 'Selected' : ''),
                     "NOISSELECTED" => ($this->User->OPEN_COLLEC == 'N' ? 'Selected' : ''),
                     "URLCOLLEC" => BDO_URL . 'guest?user=' . encodeUserId($profile_user_id),
-                    
+                    "HASFORUMACCOUNT" => $this->User->hasForumAccount($this->User->username),
                     "IS_NEWSLETTER" => ($this->User->ABT_NEWS == 1 ? 'Checked' : ''),
                     "CONNECTION" => 0,
                     "OPTIONCARRE" => GetOptionValue($carre_options, $this->User->CARRE_TYPE),
-                     "ADULTYESISSELECTED" => ($this->User->EXPLICIT_CONTENT == "1" ? 'Selected' : ''),
+                    "ADULTYESISSELECTED" => ($this->User->EXPLICIT_CONTENT == "1" ? 'Selected' : ''),
                     "ADULTNOISSELECTED" => ($this->User->EXPLICIT_CONTENT == "0" ? 'Selected' : '')));
                 
                 if ($mobile != "T") {

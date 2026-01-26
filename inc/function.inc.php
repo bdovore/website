@@ -1187,3 +1187,15 @@ function if_null_quote ($str) {
         return $str;
     }
 }
+
+function genererMotDePasse($longueur = 12) {
+    $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()';
+    $motDePasse = '';
+    $max = strlen($caracteres) - 1;
+
+    for ($i = 0; $i < $longueur; $i++) {
+        $motDePasse .= $caracteres[random_int(0, $max)];
+    }
+
+    return $motDePasse;
+}

@@ -123,6 +123,31 @@
     </form>
 </div>
 <div class="cadre1">
+    <h3>Compte forum</h3>
+    Statut du compte forum :
+<?php if ($view->HASFORUMACCOUNT == true) : ?>
+    <span style="color: #28a745; font-weight: bold; background-color: #e9f7ef; padding: 5px 10px; border-radius: 4px; display: inline-block;">
+        <i class="fas fa-check-circle" style="margin-right: 5px;"></i> Compte forum validé ✓
+    </span>
+<?php else : ?>
+    <div style="color: #dc3545; background-color: #fdecea; padding: 10px; border-radius: 4px; border-left: 4px solid #dc3545; margin: 5px 0;">
+        <strong>Compte forum non créé</strong><br>
+        <p style="margin: 5px 0 0 0;">
+            Vous n'avez pas encore de compte forum.
+            <a href="<?php echo BDO_URL; ?>compte?act=setforum&user_id=<?php echo $view->USERID; ?>"
+               style="color: #007bff; text-decoration: none; font-weight: bold;">
+                Cliquez ici pour créer votre compte
+            </a>.
+        </p>
+        <p style="margin: 5px 0 0 0; font-size: 0.9em; color: #6c757d;">
+            <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
+            Une fois créé, vous devrez <strong>faire une demande de réinitialisation du mot de passe</strong> pour l'utiliser.
+        </p>
+    </div>
+<?php endif; ?>
+    
+</div>
+<div class="cadre1">
 
     <h2>Suppression de compte BDoVORE</h2>
     <div align="center">Si vous voulez supprimer votre profil BDoVore définitivement, cette option est pour vous.

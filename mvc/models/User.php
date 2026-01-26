@@ -405,29 +405,23 @@ FROM " . $this->table_name . "
                 //throw new Exception(curl_error($ch), curl_errno($ch));
             }
             Db_close($connexion);
-                    /*
-            $query = "SELECT MAX(user_id) AS total FROM bb3_users";
-            $result = Db_query($query,$connexion);
-            $o = Db_fetch_object($result);
-            $id = $o->total + 1;
-            $query = "INSERT INTO bb3_users (
-                    user_id , username,username_clean, user_password, user_email, user_regdate, group_id, user_style, user_options, user_allow_viewemail ) VALUES (
-                    $id, '" . $username . "', lower('" . $username . "'), '" . md5($password) . "', '" . $email . "'," . time() . ", 545, 2, 230207,0
-                    )";
-            $result = Db_query($query,$connexion);
-            if ($result) {
-                 $query = "INSERT INTO `bb3_user_group` (
-                        `group_id` ,
-                        `user_id` ,
-                        `group_leader` ,
-                        `user_pending`
-                        )
-                        VALUES (
-                        '545', $id, '0', '0'
-                        )";
-                 $result = Db_query($query,$connexion);
-                 
-            }*/
+        }
+    }
+
+    public function hasForumAccount($username) {
+         $connexion = Db_connect(array(
+                'login' => FORUM_DB_USER,
+                'password' => FORUM_DB_PWD,
+                'sid' => FORUM_DB_SID,
+                'server' => FORUM_DB_HOST));
+        // on vérifit que le compte n'existe pas déjà
+        $verif = "SELECT count(*) AS nb FROM bb3_users WHERE username_clean=lower('" . $username . "')";
+        $result = Db_query($verif,$connexion);
+        $o = Db_fetch_object($result);
+        if ($o->nb == 0) {
+            return false;
+        } else {
+            return true;
         }
     }
 
