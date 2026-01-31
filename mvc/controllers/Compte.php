@@ -76,22 +76,25 @@ class Compte extends Bdo_Controller {
                 $username = $this->User->username;
 
                 // si user correcteur ou admin
-
+                if ($this->User->level < 2) {
+                    echo "Impossible de supprimer un compte admin. Modifiez le niveau du compte avant de faire cette action";
+                    exit;
+                }
                 User::deleteAllDataForUser($profile_user_id);
-                $this->User->logout();
+                
                 $mail_adress = $useremail;
                 $mail_sujet = "BDOVORE - suppression de votre compte";
                 $mail_entete = "From: BDoVore <no-reply@bdovore.com>";
                 $mail_text = "Bonjour " . $username . ", \n\n";
-                $mail_text .="Votre compte BDoVore a &eactue;t&eactue; supprim&eactue;.\n\n";
-                $mail_text .="Votre compte sur le forum BDoVore n'a pas &eacute;t&eacute; supprim&eacute;.\nSi vous le d&eacute;sirez, merci de nous faire part des raisons ayant motiv&eacute;es votre d&eacute;part.\n\n";
-                $mail_text .="Nous respectons votre d&eacute;cision et esperons vous revoir tr&eacute;s bientot.\n\n";
-                $mail_text .="L'&eacute;quipe BDOVORE";
+                $mail_text .="Votre compte BDoVore a été supprimé.\n\n";
+                $mail_text .="Votre compte sur le forum BDoVore n'a pas été supprimé.\nSi vous le désirez, merci de nous faire part des raisons ayant motivées votre départ.\n\n";
+                $mail_text .="Nous respectons votre décision et esperons vous revoir trés bientot.\n\n";
+                $mail_text .="L'équipe BDOVORE";
 
                 bdovoreMail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
+                $this->User->logout();
 
-
-                echo "Votre profil BDoVore a &eacute;t&eacute; supprim&eacute; d&eacute;finitivement.";
+                //echo "Votre profil BDoVore a été supprim&eacute; d&eacute;finitivement.";
             }
 
 

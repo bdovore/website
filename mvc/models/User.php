@@ -293,17 +293,28 @@ FROM " . $this->table_name . "
         $_SESSION['userConnect'] = $user;
     }
 
-    public function logout ()
+    public function logout()
     {
         $this->guest();
 
-        // on efface le cookie
+        // On efface le cookie
         if (isset($_COOKIE["pass"])) unset($_COOKIE["pass"]);
-        setcookie("pass", "", time() + 3600, "/");
+        setcookie("pass", "", time() - 3600, "/"); // Note: time() - 3600 pour supprimer le cookie
 
-        header("Location:" . BDO_URL);
+       
+        echo '<script type="text/javascript">
+                if (window !== window.top) {
+                    // Si on est dans un iframe, on recharge le parent
+                    window.parent.location.reload();
+                } else {
+                    // Sinon, on redirige normalement
+                    window.location.href = "' . BDO_URL . '";
+                }
+            </script>';
+       
         Bdo_Cfg::quit();
     }
+
 
     public static function minAccesslevel ($level = 5)
     {
@@ -434,8 +445,6 @@ FROM " . $this->table_name . "
 
         Db_query("UPDATE `bd_edition` SET `USER_ID`=NULL WHERE `user_id`='" . $user_id . "'");
         Db_query("UPDATE `bd_edition` SET `VALIDATOR`=NULL WHERE `VALIDATOR`='" . $user_id . "'");
-        Db_query("UPDATE `newsletter` SET `USR_CREA`=NULL WHERE `USR_CREA`='" . $user_id . "'");
-        Db_query("UPDATE `newsletter` SET `USR_MODIF`=NULL WHERE `USR_MODIF`='" . $user_id . "'");
         Db_query("UPDATE `users_alb_prop` SET `VALIDATOR`=NULL WHERE `VALIDATOR`='" . $user_id . "'");
 
         // dans tout les cas
