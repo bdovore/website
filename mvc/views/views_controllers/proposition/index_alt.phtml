@@ -250,6 +250,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         <input name="txtColorAltId" id="txtColorAltId" value="<?php echo $view->edition->ID_COLOR_ALT ?? ""; ?>" size="5" readonly> <br />
         <br />
       </div>
+       
     <div class="step-buttons">
         <button type="button" onclick="showStep(2)">Retour</button>
         <button type="button" onclick="showStep(4)">Suivant</button>
@@ -257,6 +258,8 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     </div>
     
     <div id="step-4" class="form-step" style="display: none;">
+      <h4>Étape 4 : Edition</h4>
+        <strong>Informations sur les auteurs</strong></font><br>
       <div class="input-row">
             <label for="txtEditeur">Éditeur</label>
           <input type="text" id="txtEditeur" name="txtEditeur" size="50" class="input-flex" />
@@ -288,6 +291,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
       <input type="date" id="txtDateParution" name="txtDateParution" onchange="checkDate()" /><br />
       <small id="warnDate" class="warn-message">⚠️ N'oubliez pas de renseigner une date !<br></small>
       <span class="texte"><u>BDovore NE gère PAS les réimpressions</u>.<br>Assurez-vous que la date de l'album que vous proposez correspond à une édition originale ou à une réédition (couverture ou contenu différent), PAS à une réimpression (même contenu que la dernière édition)</span> 
+      <label for="txtCommentaire">Description de l'édition</label>
+      <textarea name="txtCommentaireEdition" cols="60" rows="8" id="textarea" style="max-width:100%"></textarea>
+                     
       <br />
       <div class="step-buttons">
         <button type="button" onclick="showStep(3)">Retour</button>

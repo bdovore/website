@@ -164,7 +164,8 @@ class Proposition extends Bdo_Controller {
                 "EAN" => postVal("txtEAN"),
                 "ISBN" => postVal("txtISBN"),
                 "HISTOIRE" => postVal("txtHistoire"),
-                "DESCRIB_EDITION" => postVal("txtCommentaire"),
+                "DESCRIB_EDITION" => postVal("txtCommentaireEdition"),
+                "COMMENTAIRE" => postVal("txtCommentaire"),
                 "ACTION" => postVal("cmbAction"),
                 "NOTIF_MAIL" =>((postVal("chkNotEmail") == "checked") ? "1" : "0")
             ));

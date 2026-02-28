@@ -1,18 +1,24 @@
-<?php
-
-    $page = $view->getHelper('pagination');
-    ?>
 <script src="<?php echo BDO_URL;?>jquery/jquery.mask.min" type="text/javascript"></script>
 
-<div align="center" class="cadre1" width="100%">
-    <h1>Validation d'une correction</h1>
-    <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
-
-        <table width="100%" border="0">
+<script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
+<div class="fond_admin">
+    <div class="titre_admin">Traitement des corrections en attente</div>
+    
+    <table width="100%">
         <tr>
-            <td>
-                <table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-                    <tr bordercolor="#FFFFCC">
+            <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" onsubmit="return validerProposition(event);">
+
+                <!--Debut colonne gauche -->
+                <td width="65%" valign="top">
+                     <table class="tableaux_admin">
+                        <tr >
+                            <td class="label" width="15%">Commentaire de l'utilisateur :</td>
+                            <td><?php echo $view->USERCOMMENT;?></td>
+                        </tr>
+                        
+                    </table>
+                      <table class="tableaux_admin">   
+                        <tr >
                         <td width="38" class="label">Titre</td>
                         <td width="34">
                             <div align="left">
@@ -23,14 +29,14 @@
                             <input name="txtTitre" type="text" id="txtTitre2" value="<?php echo $view->TITRE;?>" size="40" class="<?php echo $view->CLTITRE;?>" />
                         </td>
                         <td width="70"><!--DWLayoutEmptyCell-->&nbsp;</td>
-                    </tr>
-                    <tr bordercolor="#FFFFCC">
+                        </tr>
+                    <tr >
                         <td><!--DWLayoutEmptyCell-->&nbsp;</td>
                         <td><!--DWLayoutEmptyCell-->&nbsp;</td>
                         <td class="original"><?php echo $view->ORITITRE;?></td>
                         <td><!--DWLayoutEmptyCell-->&nbsp;</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label">Tome</td>
                         <td> </td>
                         <td>
@@ -40,13 +46,13 @@
                         </td>
                         <td></td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label">&nbsp;</td>
                         <td></td>
                         <td class="original"><?php echo $view->ORITOME;?></td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td colspan="4" class="label">
                             <table width="100%" border="0">
                                 <tr>
@@ -70,7 +76,7 @@
                             </table>
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td colspan="4" class="label">
                             Histoire
                             <br />
@@ -79,13 +85,13 @@
                             <br />
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td colspan="4" class="original"><?php echo $view->ORIHISTOIRE;?></td>
                     </tr>
                 </table>
                 <br />
-                <table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-                    <tr bordercolor="#FFFFCC">
+                <table class="tableaux_admin">
+                    <tr >
                         <td class="label">Serie</td>
                         <td>
                             <div align="left">
@@ -97,13 +103,13 @@
                             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('serie',document.myform.txtSerie.value,'myform','txtSerie',true)" alt="Loupe" />
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td><!--DWLayoutEmptyCell-->&nbsp;</td>
                         <td><!--DWLayoutEmptyCell-->&nbsp;</td>
                         <td class="original"><?php echo $view->ORISERIE;?></td>
                         <td><!--DWLayoutEmptyCell-->&nbsp;</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td width="10%" class="label">Genre</td>
                         <td width="8%">
                             <div align="center">
@@ -117,13 +123,13 @@
                             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('genre',document.myform.txtGenre.value,'myform','txtGenre',false)" alt="Loupe" />
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="original"><?php echo $view->ORIGENRE;?></td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label">Statut</td>
                         <td>
                             <div align="center"> </div>
@@ -136,7 +142,7 @@
                         </td>
                         <td>&nbsp; </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="original"><?php echo $view->ORISERIEFINI;?></td>
@@ -144,8 +150,8 @@
                     </tr>
                 </table>
                 <br />
-                <table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
-                    <tr bordercolor="#FFFFCC">
+                <table class="tableaux_admin" >
+                    <tr >
                         <td width="18%" class="label">Scenariste</td>
                         <td width="10%">
                             <input name="txtScenarId" id="txtScenarId" type="text" value="<?php echo $view->IDSCEN;?>" size="4" class="<?php echo $view->CLIDSCEN;?>" />
@@ -157,13 +163,13 @@
                             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenar.value,'myform','txtScenar',true)" alt="Loupe" />
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="original"><?php echo $view->ORISCENARISTE;?></td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label">Scenariste #2</td>
                         <td>
                             <input name="txtScenarAltId" id="txtScenarAltId" type="text" value="<?php echo $view->IDSCENALT;?>" size="4" class="<?php echo $view->CLIDSCENALT;?>" />
@@ -175,13 +181,13 @@
                             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenarAlt.value,'myform','txtScenarAlt',true)" alt="Loupe" />
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="original"><?php echo $view->ORISCENARISTEALT;?></td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label">Dessinateur</td>
                         <td>
                             <input name="txtDessiId" id="txtDessiId" type="text" value="<?php echo $view->IDDESS;?>" size="4" class="<?php echo $view->CLIDDESS;?>" />
@@ -193,13 +199,13 @@
                             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessi.value,'myform','txtDessi',true)" alt="Loupe" />
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="original"><?php echo $view->ORIDESSINATEUR;?></td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label">Dessinateur #2</td>
                         <td>
                             <input name="txtDessiAltId" id="txtDessiAltId"  type="text" value="<?php echo $view->IDDESSALT;?>" size="4" class="<?php echo $view->CLIDDESSALT;?>" />
@@ -211,13 +217,13 @@
                             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessiAlt.value,'myform','txtDessiAlt',true)" alt="Loupe" />
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="original"><?php echo $view->ORIDESSINATEURALT;?></td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label">Coloriste</td>
                         <td>
                             <input name="txtColorId" id="txtColorId" type="text" value="<?php echo $view->IDCOLOR;?>" size="4" class="<?php echo $view->CLIDCOLOR;?>" />
@@ -229,7 +235,7 @@
                             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColor.value,'myform','txtColor',true)" alt="Loupe" />
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="original"><?php echo $view->ORICOLORISTE;?></td>
@@ -244,8 +250,8 @@
                     </div>
             </td>
             <td valign="top">
-                <table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-                    <tr bordercolor="#FFFFCC">
+                <table width="100%" class="tableaux_admin" >
+                    <tr >
                         <td class="label">
                             <?php echo $view->USEROWN;?>
                             <br />
@@ -257,8 +263,8 @@
                     </tr>
                 </table>
                 <br />
-                <table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
-                    <tr bordercolor="#FFFFCC">
+                <table class="tableaux_admin" >
+                    <tr >
                         <td width="21%" class="label">Editeur</td>
                         <td width="9%">
                             <input name="txtEditeurId"  id="txtEditeurId" type="text" value="<?php echo $view->IDEDIT;?>" size="3" class="<?php echo $view->CLIDEDIT;?>" />
@@ -270,13 +276,13 @@
                             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('editeur',document.myform.txtEditeur.value,'myform','txtEditeur',true)" alt="Loupe" />
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="original"><?php echo $view->ORIEDITEUR;?></td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label">Collection</td>
                         <td>
                             <input name="txtCollecId" id="txtCollecId" type="text" value="<?php echo $view->IDCOLLEC;?>" size="3" class="<?php echo $view->CLIDCOLLEC;?>" />
@@ -288,13 +294,13 @@
                             <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('collection',document.myform.txtCollec.value,'myform','txtCollec',false,document.myform.txtEditeurId.value)" alt="Loupe" />
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="original"><?php echo $view->ORICOLLECTION;?></td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td colspan="4" class="label">
                             <table width="100%" border="0">
                                 <tr>
@@ -310,7 +316,7 @@
                             </table>
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label">Date de parution</td>
                         <td>&nbsp; </td>
                         <td>
@@ -318,13 +324,13 @@
                         </td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label">&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="original"><?php echo $view->ORIDTPAR;?></td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td colspan="4" class="label">
                             Ignorer les modifications relatives &agrave; l'&eacute;dition
                             <input type="checkbox" name="chkModifEdition" checked="checked" />
@@ -332,42 +338,42 @@
                     </tr>
                 </table>
                 <br />
-                <table width="100%" border="1" cellpadding="5" bordercolor="#666666" bgcolor="#FFFFCC">
+                <table class="tableaux_admin" >
                     <tr>
-                        <td width="50%" align="center" bordercolor="#FFFFCC" bgcolor="#FFFFCC">
+                        <td width="50%" align="center"  >
                             <img src="<?php echo $view->URLIMAGE;?>" width="180" border="0" align="absmiddle" alt="Couverture" />
                             <br />
                             <?php echo $view->DIMIMAGE;?>
                         </td>
-                        <td width="50%" align="center" bordercolor="#FFFFCC" bgcolor="#FFFFCC" class="original">
+                        <td width="50%" align="center"   class="original">
                             <img src="<?php echo $view->URLORIIMAGE;?>" width="180" border="0" align="absmiddle" alt="Couverture originale" />
                             <br />
                             <?php echo $view->ORIDIMIMAGE;?>
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
+                    <tr  >
                         <td colspan="2" class="label">
                             Ignorer le changement de couverture (les dimensions de l'image de gauche n'apparaissent pas si l'utilisateur ne propose pas de nouvelle couverture)
                             <input type="checkbox" name="chkDelete" value="checked" />
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC" bgcolor="#FFFFCC">
+                    <tr  >
                         <td class="label">Redimensionner la couverture</td>
                         <td><input type="checkbox" name="chkResize" value="checked"></td>
                     </tr>
                 </table>
                 <br />
-                <table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-                    <tr bordercolor="#FFFFCC">
+                <table class="tableaux_admin" >
+                    <tr >
                         <td class="label">Commentaire de l'utilisateur :</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label"><?php echo $view->USERCOMMENT;?></td>
                     </tr>
                 </table>
                 <br />
-                <table width="100%" border="1" bordercolor="#333333" bgcolor="#FFFFCC">
-                    <tr bordercolor="#FFFFCC">
+                <table class="tableaux_admin">
+                    <tr >
                         <td>
                             <p class="texte">
                                 Contact
@@ -381,8 +387,8 @@
                     </tr>
                 </table>
                 <br />
-                <table width="100%" border="1" cellpadding="5" bordercolor="#333333" bgcolor="#FFFFCC">
-                    <tr bordercolor="#FFFFCC">
+                <table class="tableaux_admin" >
+                    <tr >
                         <td width="18%" class="label">
                             En rouge <div align="center"> </div>
                         </td>
@@ -390,11 +396,11 @@
                             Incoh&eacute;rence entre l'ID et la valeur saisie
                         </td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label">En orange</td>
                         <td class="texte">Champ modifi&eacute; par l'utilisateur</td>
                     </tr>
-                    <tr bordercolor="#FFFFCC">
+                    <tr >
                         <td class="label">En gris</td>
                         <td class="texte">Information actuellement dans la base</td>
                     </tr>

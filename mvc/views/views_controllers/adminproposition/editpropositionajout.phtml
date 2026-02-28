@@ -10,6 +10,13 @@
 
                 <!--Debut colonne gauche -->
                 <td width="65%" valign="top">
+                     <table class="tableaux_admin">
+                        <tr >
+                            <td class="label" width="15%">Commentaire de l'utilisateur :</td>
+                            <td><?php echo $view->USERCOMMENT;?></td>
+                        </tr>
+                        
+                    </table>
                     <table class="tableaux_admin">
                         <tr>
                             <td width="15%" class="label" align="center">Album</td>
@@ -232,7 +239,7 @@
                                         <td width="1%" align="center"></td>
                                         <td width="68%" align="center">
                                             Description de l'édition<br />
-                                            <textarea name="txtCommentEdition" class="textarea_description_edition"><?php echo $view->COMMENT;?></textarea>
+                                            <textarea name="txtCommentEdition" class="textarea_description_edition"><?php echo $view->DESCRIB_EDITION;?></textarea>
                                         </td>
                                     </tr>
                                 </table>
@@ -347,6 +354,7 @@
                             </td>
                         </tr>
                     </table>
+                   
             </form>
                     <table class="cadre_texte-admin">
                         <tr>

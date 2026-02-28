@@ -5,7 +5,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 
 ?>
-<script src="<?php echo BDO_URL;?>jquery/jquery.mask.min.js" type="text/javascript"></script>
+
 <div class="cadre1">
     <div class="middle_title"><h3>Proposition d'ajout et de correction</h3></div>
    <?php if(IssetNotEmpty($view->edition ?? "")) { ?> <a href="#null" onclick="javascript:history.back();"> Retour à la fiche Album</a> <?php } ?>
@@ -480,8 +480,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
                       <td>&nbsp; </td>
 
-                      <td> <input name="txtDateParution" id="txtDateParution3" value="<?php echo $view->edition->DATE_PARUTION_EDITION ?? "0000-00-00"; ?>" size="15" class="flat" type="text">
-
+                      <td> 
+                        <input type="date" id="txtDateParution3" name="txtDateParution" value="<?php echo $view->edition->DATE_PARUTION_EDITION ?? "0000-00-00"; ?>" />
+                        
                         </td>
 
                       <td>&nbsp;</td>
@@ -572,9 +573,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
         addAutocomplete("txtCollec","spCollec","txtCollecId","<?php echo BDO_URL; ?>getjson?data=Collection&id_editeur="+$("#txtEditeurId").val());
        
     }
-     $(document).ready(function(){
-        $('#txtDateParution3').mask('0000-00-00', {placeholder: "0000-00-00"});
-    });
+     
     function loadCollection () {
         if ($("#txtEditeurId").val() != '' ){
             changeEditeur();
