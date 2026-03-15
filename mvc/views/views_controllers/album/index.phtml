@@ -68,31 +68,14 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
         function setDteAchat(){
                     if (!$("cb_achat").is(':checked')) {
-                            d = new Date();
-                            mm = d.getMonth() + 1;
-                            yyyy = d.getFullYear();
-                            dd = d.getDate();
-                            dte = "";
-                            if (dd < 10) {
-                                    dte = "0" + dd;
-                            }
-                            else {
-                                    dte += dd;
-                            }
-                            if (mm < 10) {
-                                    dte = dte + "/0" + mm;
-                            }
-                            else {
-                                    dte = dte + "/" + mm;
-                            }
-                            dte = dte + "/" + yyyy;
-                            $("#date_achat").val(dte);
+                            const today = new Date();
+                            const year = today.getFullYear();
+                            const month = String(today.getMonth() + 1).padStart(2, '0'); // +1 car les mois commencent à 0
+                            const day = String(today.getDate()).padStart(2, '0');
+
+                            $("#date_achat").val(`${year}-${month}-${day}`);
                 }
-}
-        //-->
-//                $( document ).ready(function() {
-//                  getComment(page=1, id_tome=<?php echo $view->tome->ID_TOME;?> );
-//                });
+        }   
 
 
 
@@ -227,8 +210,6 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             <font size="-1"><?php echo nl2br($view->tome->HISTOIRE_TOME);?> </font>
                   
             <?php } ?><br>
-        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5aa565c61fcc82d7"></script> 
-         <div class="addthis_inline_share_toolbox"></div>
         <br>
         <div id="simil">
             <a href="<?php echo BDO_URL;?>discovery?ID_TOME=<?php echo $view->tome->ID_TOME ?>" target="_parent" title="Albums similaires..." align="right">== Vous aimerez aussi peut être... ==</a>
@@ -562,6 +543,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                // on renseigne chaque champs du formulaire
                if (data.data[0].FLG_ACHAT == 'O') {
                    $('#cb_achat').attr('checked', true);
+                   toggleFutureAchatFields();
                } else {
                     $('#cb_achat_view').hide();
                     // DATE_ACHAT est déjà au format YYYY-MM-DD, utilisation directe

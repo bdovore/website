@@ -78,7 +78,11 @@ function addAlbum(id_serie, id_tome, id_edition, exclu, flg_achat) {
           $("#info_collection").show();
           if (flg_achat == "O") {
               $("#cb_achat").attr('checked', true);
+              $('#cb_achat_view').show();
+          } else {
+            $("#cb_achat").attr('checked', false);
           }
+          toggleFutureAchatFields();
           getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu);
       }
       else {
