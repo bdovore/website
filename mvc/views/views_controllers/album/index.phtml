@@ -11,14 +11,47 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 -->
     <script language="JavaScript">
 
-                $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
-
-        $(function() {
-                    $( "#date_achat" ).datepicker({dateFormat: "dd/mm/yy"});
-                });
+        // Datepicker natif HTML5 utilisé - plus besoin de jQuery UI
+        // $(function() {
+        //     $( "#date_achat" ).datepicker({dateFormat: "dd/mm/yy"});
+        // });
         function changeEdition () {
             window.location="album?id_tome=<?php echo $view->tome->ID_TOME;?>&id_edition="+ document.getElementById('sel_edition').value+"&frame=<?php echo $view->frame;?>" ;
         }
+        
+        // Fonction pour masquer/montrer les champs en fonction de l'état "Futur achat"
+        function toggleFutureAchatFields() {
+            const isFutureAchat = $('#cb_achat').is(':checked');
+            
+            // Champs à masquer si "Futur achat" est coché
+            const fieldsToToggle = [
+                '.field-dedicace',
+                '.field-cadeau', 
+                '.field-lu',
+                '.field-numerique',
+                '.field-pret',
+                '.field-date-achat',
+                '.field-prix'
+            ];
+            
+            fieldsToToggle.forEach(function(selector) {
+                if (isFutureAchat) {
+                    $(selector).hide();
+                } else {
+                    $(selector).show();
+                }
+            });
+        }
+        
+        $(function() {
+            // Gérer le masquage des champs en fonction de l'état "Futur achat"
+            toggleFutureAchatFields();
+            
+            // Écouter les changements sur la case "Futur achat"
+            $('#cb_achat').change(function() {
+                toggleFutureAchatFields();
+            });
+        });
 
         function liencorrection () {
             parent.location.href="prop_correct?alb_id=<?php echo $view->tome->ID_TOME;?>&id_edition="+ document.getElementById('sel_edition').value;
@@ -219,41 +252,177 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     <center><strong>Données privées</strong><br><span class="petite_police">(pour votre utilisation personnelle)</span></center>
     <hr style="align: center; width: 50%;">
     <input type="hidden" id="user_edition" value="<?php echo $view->tome->ID_EDITION; ?>" />
-    <table>
-        <tr>
-            <td>
-                Futur achat : <input name="cb_achat" id="cb_achat" value="O" type="checkbox" onclick="setDteAchat();">
-                Date d'achat : <span class="petite_police">(dd/mm/aaaa)</span>  <input name="date_achat" id="date_achat" value="" size="10" maxlength="10" type="text">
-                Prix/cote :<input class="numbersOnly" name="prix" id="prix" value="" size="4" maxlength="8" type="text">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                E.O :   <input name="cb_tete" id="cb_tete" value="O" type="checkbox" >
-                Dédicace : <input name="cb_dedicace" id="cb_dedicace" value="O" type="checkbox" >
-                Cadeau :<input name="cb_cadeau" id="cb_cadeau" value="checkbox" type="checkbox" >
-                Lu :<input name="cb_lu" id="cb_lu" value="checkbox" type="checkbox" >
-                Ed. numérique :<input name="cb_num" id="cb_num" value="checkbox" type="checkbox" >
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Prêt :
+    
+    <style>
+    /* Style pour les cases à cocher avec icônes (comme dans Mes Albums) */
+    .album-filter-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        background: white;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        margin-right: 8px;
+        margin-bottom: 8px;
+    }
+    .album-filter-item:hover {
+        background: #f8f9fa;
+    }
+    .album-filter-item input[type="checkbox"] {
+        margin: 0;
+    }
+    .album-filter-item i {
+        color: #6c757d;
+    }
+    .album-filter-item input[type="checkbox"]:checked + i {
+        color: #007bff;
+    }
+    
+    /* Classes pour le masquage conditionnel */
+    .field-dedicace, .field-cadeau, .field-lu, .field-numerique, .field-pret, .field-date-achat, .field-prix {
+        transition: all 0.3s ease;
+    }
+    
+    /* Style pour les grilles de filtres - disposition flex */
+    .filter-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+        align-items: center;
+    }
+    
+    /* Conteneur pour les champs masquables */
+    .filter-field-container {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+    </style>
+    
+    <div class="filter-grid" id="cb_achat_view">
+        <!-- Futur achat - Masqué si l'album est déjà dans la collection -->
+        <?php if (!($view->tome->USER_EDITON ?? false)): ?>
+        <label class="album-filter-item">
+            <input name="cb_achat" id="cb_achat" value="O" type="checkbox" onclick="setDteAchat();">
+            <i class="fas fa-calendar-plus"></i>
+            <span>Futur achat</span>
+        </label>
+        <?php endif; ?>
+    </div>
+    
+    <style>
+    /* Style spécifique pour le champ prix */
+    .price-field {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 4px 8px;
+        background: white;
+    }
+    .price-field input {
+        border: none;
+        outline: none;
+        width: 80px;
+        padding: 4px 0;
+    }
+    .price-field .euro-symbol {
+        color: #6c757d;
+        margin-right: 5px;
+        font-weight: bold;
+    }
+    </style>
+    
+    <div class="filter-grid">
+        <div class="filter-field-container field-date-achat">
+            Date d'achat : 
+            <input name="date_achat" id="date_achat" value="" type="date">
+        </div>
+        
+        <div class="filter-field-container field-prix">
+            Prix/cote : 
+            <div class="price-field">
+                <span class="euro-symbol">€</span>
+                <input class="numbersOnly" name="prix" id="prix" value="" size="6" maxlength="8" 
+                       type="text" placeholder="Ex: 12,50">
+            </div>
+        </div>
+    </div>
+    
+    <div class="filter-grid">
+        <div class="filter-field-container field-dedicace">
+            <!-- E.O. -->
+            <label class="album-filter-item">
+                <input name="cb_tete" id="cb_tete" value="O" type="checkbox">
+                <i class="fas fa-book"></i>
+                <span>Édition Originale</span>
+            </label>
+        </div>
+        
+        <div class="filter-field-container field-cadeau">
+            <!-- Dédicace -->
+            <label class="album-filter-item">
+                <input name="cb_dedicace" id="cb_dedicace" value="O" type="checkbox">
+                <i class="fas fa-signature"></i>
+                <span>Dédicace</span>
+            </label>
+        </div>
+        
+        <div class="filter-field-container field-lu">
+            <!-- Cadeau -->
+            <label class="album-filter-item">
+                <input name="cb_cadeau" id="cb_cadeau" value="checkbox" type="checkbox">
+                <i class="fas fa-gift"></i>
+                <span>Cadeau</span>
+            </label>
+        </div>
+        
+        <div class="filter-field-container field-numerique">
+            <!-- Lu -->
+            <label class="album-filter-item">
+                <input name="cb_lu" id="cb_lu" value="checkbox" type="checkbox">
+                <i class="fas fa-eye"></i>
+                <span>Lu</span>
+            </label>
+        </div>
+        
+        <div class="filter-field-container field-numerique">
+            <!-- Edition numérique -->
+            <label class="album-filter-item">
+                <input name="cb_num" id="cb_num" value="checkbox" type="checkbox">
+                <i class="fas fa-tablet-alt"></i>
+                <span>Numérique</span>
+            </label>
+        </div>
+        <div class="filter-field-container field-pret">
+            <!-- Prêt -->
+            <label class="album-filter-item">
                 <input name="cb_pret" id="cb_pret" value="checkbox" type="checkbox">
-                Dernier emprunteur :
-                <input name="nom_pret" id="nom_pret" value="" size="15" maxlength="100" type="text" >
-                Email :
-                <input name="email_pret" id="email_pret" value="" size="15" maxlength="100" type="text">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Remarque personnelle (état, mémo, ...) :
-                <textarea name="remarque" id="remarque" class="champ_commentaire"></textarea>
-            </td>
-        </tr>
-    </table>
-    <div id="save_collection"><input type="button" value="Enregistrer les modifications" onclick="saveCollection();"/></div>
+                <i class="fas fa-handshake"></i>
+                <span>Prêté</span>
+            </label>
+        </div>
+    </div>
+    
+    <div class="filter-grid">
+        Dernier emprunteur :
+        <input name="nom_pret" id="nom_pret" value="" size="15" maxlength="100" type="text">
+        Email :
+        <input name="email_pret" id="email_pret" value="" size="15" maxlength="100" type="text">
+    </div>
+    
+    <div style="margin-top: 15px;">
+        Remarque personnelle (état, mémo, ...) :
+        <textarea name="remarque" id="remarque" class="champ_commentaire" style="width: 100%;"></textarea>
+    </div>
+    
+    <div id="save_collection" style="margin-top: 15px;">
+        <input type="button" value="Enregistrer les modifications" onclick="saveCollection();" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+    </div>
 </div>
 
 <hr class="expSep">
@@ -394,7 +563,9 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                if (data.data[0].FLG_ACHAT == 'O') {
                    $('#cb_achat').attr('checked', true);
                } else {
-                   $("#date_achat").val(data.data[0].DATE_ACHAT.substring(8,10)+ '/' + data.data[0].DATE_ACHAT.substring(5,7)+ '/' + data.data[0].DATE_ACHAT.substring(0,4));
+                    $('#cb_achat_view').hide();
+                    // DATE_ACHAT est déjà au format YYYY-MM-DD, utilisation directe
+                    $("#date_achat").val(data.data[0].DATE_ACHAT.substring(0,10));
                }
                 if (data.data[0].FLG_PRET == 'O') {
                    $('#cb_pret').attr('checked', true);

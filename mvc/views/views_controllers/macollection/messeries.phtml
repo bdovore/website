@@ -34,6 +34,23 @@
 <?php
   $ficheSerie = $view->getHelper('ficheSerie');
   $page = $view->getHelper('pagination');
+  
+  // Calcul pour la pagination
+  $nbpage = ceil($view->nbr / $view->length);
+  $uri = "";
+  $a_uri = explode("?", $_SERVER['REQUEST_URI']);
+  if (count($a_uri) > 1) {
+     $a_uri = explode("&", $a_uri [1]);
+    foreach ($a_uri as $key => $value) {
+        if (substr($a_uri[$key], 0, 4) <> "page" and $a_uri[$key] <> "") {
+            $uri .= "&" . $a_uri[$key];
+        }
+    }
+  }
+  $url = BDO_URL . "macollection/messeries?" . $uri . "&";
+  
+  // Génère les paginations haut et bas
+  $paginations = $page->paginateTopAndBottom($url, "page=", $nbpage, $view->page);
 ?>
 <div align="center" class="cadre1">
 <?php 
@@ -69,29 +86,39 @@
                   A compléter : <input name="flg_incomplete" type="checkbox" id="flg_incomplete" value="1" <?php echo ($view->flg_incomplete ? "checked" : "");  ?> onchange="submit();">
                      <?php if ($view->flg_incomplete)  {?> hors futurs achats <input name="flg_achat" type="checkbox" id="flg_achat" value="1" <?php echo ($view->flg_achat ? "checked" : "");  ?> onchange="submit();"><?php } ?> </p>
                   </div><br>
-
-        <div id="data_length" class="dataTables_length">
-          Voir :
-            <label>
-              <select class="" id="length" name="length">
-                <option value="12" <?php if ($view->length == 12) { echo "selected"; } ?> >  10</option>
-                <option value="24" <?php if ($view->length == 24) { echo "selected"; } ?>>  20</option>
-                <option value="48" <?php if ($view->length == 48) { echo "selected"; } ?>>  50</option>
-                <option value="96" <?php if ($view->length == 96) { echo "selected"; } ?>> 100</option>
-              </select>
-              éléments
-            </label>
-        </div>
-
-        <div id="filter" class="dataTables_filter">
-          <label>
-            Rechercher:
-              <input class="" type="search" placeholder="" id="l_search" name="l_search" value="<?php echo $view->searchvalue; ?>" />
-          </label>
-        </div>
+        
+        
+        <!-- Conteneur flex pour aligner les éléments sur la même ligne -->
+        
+            <!-- Voir n lignes -->
+            <div id="data_length" class="dataTables_length">
+                Voir :
+                <label>
+                  <select class="" id="length" name="length">
+                    <option value="12" <?php if ($view->length == 12) { echo "selected"; } ?> >  10</option>
+                    <option value="24" <?php if ($view->length == 24) { echo "selected"; } ?>>  20</option>
+                    <option value="48" <?php if ($view->length == 48) { echo "selected"; } ?>>  50</option>
+                    <option value="96" <?php if ($view->length == 96) { echo "selected"; } ?>> 100</option>
+                  </select>
+                  éléments
+                </label>
+            </div>
+            <!-- Rechercher -->
+            <div id="filter" class="dataTables_filter">
+                <label>
+                  Rechercher:
+                    <input class="" type="search" placeholder="" id="l_search" name="l_search" value="<?php echo $view->searchvalue; ?>" />
+                </label>
+            </div>
+        
       </form>
   </div>
+  <div align="center">
+      <?php echo $paginations['top']; ?>
+  </div>
   <hr>
+  <!-- Pagination centrée -->
+  
   <div class="cadre1">
     <table class="list_album">
      
@@ -129,21 +156,8 @@
   
   <div align="center">
     <?php
-      $nbpage = ceil($view->nbr / $view->length);
-      $uri = "";
-      $a_uri = explode("?", $_SERVER['REQUEST_URI']);
-      if (count($a_uri) > 1) {
-         $a_uri = explode("&", $a_uri [1]);
-        foreach ($a_uri as $key => $value) {
-            if (substr($a_uri[$key], 0, 4) <> "page" and $a_uri[$key] <> "") {
-                $uri .= "&" . $a_uri[$key];
-            }
-        }
-      }
-      
-      $url = BDO_URL . "macollection/messeries?" . $uri . "&";
-
-      echo $page->paginate($url, "page=", $nbpage, $view->page);
+      // Affiche la pagination en bas
+      echo $paginations['bottom'];
     ?>
   </div>
 </div>

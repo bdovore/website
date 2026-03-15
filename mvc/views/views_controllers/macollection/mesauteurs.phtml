@@ -34,6 +34,23 @@
 <?php
   $ficheAuteur = $view->getHelper('ficheAuteur');
   $page = $view->getHelper('pagination');
+  
+  // Calcul pour la pagination
+  $nbpage = ceil($view->nbr / $view->length);
+  $uri = "";
+  $a_uri = explode("?", $_SERVER['REQUEST_URI']);
+  if (count($a_uri) > 1) {
+    $a_uri = explode("&", $a_uri [1]);
+    foreach ($a_uri as $key => $value) {
+        if (substr($a_uri[$key], 0, 4) <> "page" and $a_uri[$key] <> "") {
+            $uri .= "&" . $a_uri[$key];
+        }
+    }
+  }
+  $url = BDO_URL . "macollection/mesauteurs?" . $uri . "&";
+  
+  // Génère les paginations haut et bas
+  $paginations = $page->paginateTopAndBottom($url, "page=", $nbpage, $view->page);
 ?>
 <div align="center" class="cadre1">
   <?php echo $page->menuCollection(); ?>
@@ -78,18 +95,24 @@
               </select>
               éléments
             </label>
-        </div>
-
+        </div>  
+        <!-- Rechercher -->
         <div id="filter" class="dataTables_filter">
-          <label>
-            Rechercher:
-              <input class="" type="search" placeholder="" id="l_search" name="l_search" value="<?php echo $view->searchvalue; ?>" />
-          </label>
+            <label>
+              Rechercher:
+                <input class="" type="search" placeholder="" id="l_search" name="l_search" value="<?php echo $view->searchvalue; ?>" />
+            </label>
         </div>
+        
       </form>
+      <div align="center" style="padding:5px">
+                <?php echo $paginations['top']; ?>
+            </div>
   </div>
+  
   <hr>
   <div class="cadre1">
+     <!-- Pagination centrée -->    
     <table class="list_album">  <!-- Pas de raison, pour le moment, d'utiliser un autre style que pour les albums. -->
      
         <?php
@@ -121,20 +144,8 @@
   
   <div align="center">
     <?php
-      $nbpage = ceil($view->nbr / $view->length);
-      $uri = "";
-      $a_uri = explode("?", $_SERVER['REQUEST_URI']);
-      if (count($a_uri) > 1) {
-        $a_uri = explode("&", $a_uri [1]);
-        foreach ($a_uri as $key => $value) {
-            if (substr($a_uri[$key], 0, 4) <> "page" and $a_uri[$key] <> "") {
-                $uri .= "&" . $a_uri[$key];
-            }
-        }
-      }
-      $url = BDO_URL . "macollection/mesauteurs?" . $uri . "&";
-
-      echo $page->paginate($url, "page=", $nbpage, $view->page);
+      // Affiche la pagination en bas
+      echo $paginations['bottom'];
     ?>
   </div>
 </div>

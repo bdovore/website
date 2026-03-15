@@ -99,10 +99,15 @@ class Album extends Bdo_Controller {
         );
         $this->view->set_var("opengraph",$opengraph);
         // set frame
-        $url_referer = parse_url($_SERVER["HTTP_REFERER"]);
-        $domaine = $url_referer['host'];
-        $url_host =  parse_url(BDO_URL);
-        if ($domaine != $url_host['host']) {
+        $domaine = null;
+        if (isset($_SERVER["HTTP_REFERER"]) && !empty($_SERVER["HTTP_REFERER"])) {
+            $url_referer = parse_url($_SERVER["HTTP_REFERER"]);
+            if ($url_referer !== false && isset($url_referer['host'])) {
+                $domaine = $url_referer['host'];
+            }
+        }
+        $url_host = parse_url(BDO_URL);
+        if ($domaine !== null && $url_host !== false && $domaine != $url_host['host']) {
             $frame = "default";
         }
         if ($mobile == "T") $frame = "default";

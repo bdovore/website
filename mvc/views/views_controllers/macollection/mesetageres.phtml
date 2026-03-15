@@ -148,66 +148,285 @@ $page = $view->getHelper('pagination');
     <br>
     <input type="hidden" name="page" id="page" value="<?php echo $view->page; ?>" />
     <br>
+    <style>
+    /* Style pour les filtres améliorés */
+    .filter-section {
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .filter-header {
+        padding: 12px 15px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8f9fa;
+        border-bottom: 1px solid #eee;
+    }
+    .filter-header h4 {
+        margin: 0;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .filter-header i.chevron {
+        transition: transform 0.3s ease;
+    }
+    .filter-header.collapsed i.chevron {
+        transform: rotate(-90deg);
+    }
+    .filter-content {
+        padding: 15px;
+        max-height: 500px;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    .filter-content.collapsed {
+        max-height: 0;
+        padding: 0 15px;
+    }
+    .filter-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 10px;
+    }
+    .filter-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: white;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .filter-item:hover {
+        background: #e9ecef;
+        border-color: #ced4da;
+    }
+    .filter-item input[type="checkbox"] {
+        margin: 0;
+    }
+    .filter-item i {
+        color: #6c757d;
+    }
+    .filter-item.active {
+        background: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+    .filter-item.active i {
+        color: white;
+    }
+    .filter-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    .filter-type-select {
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        background: white;
+    }
+    </style>
+    
+    <script>
+    // Fonction pour basculer l'affichage des filtres
+    function toggleFilters() {
+        const filterHeader = document.querySelector('.filter-header');
+        const filterContent = document.querySelector('.filter-content');
+        const filterStateInput = document.getElementById('filter_state');
+        const isCollapsed = filterHeader.classList.contains('collapsed');
+        
+        // Basculer l'état
+        filterHeader.classList.toggle('collapsed');
+        filterContent.classList.toggle('collapsed');
+        
+        // Mettre à jour le champ caché
+        const newState = isCollapsed ? 'open' : 'closed';
+        filterStateInput.value = newState;
+        
+        // Mettre à jour l'URL avec le nouvel état
+        updateURLParam('filters', newState);
+    }
+    
+    // Fonction pour mettre à jour un paramètre dans l'URL
+    function updateURLParam(key, value) {
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        
+        if (value) {
+            params.set(key, value);
+        } else {
+            params.delete(key);
+        }
+        
+        // Mettre à jour l'URL sans recharger la page
+        window.history.replaceState({}, '', url.pathname + '?' + params.toString());
+    }
+    
+    // Fonction pour obtenir un paramètre de l'URL
+    function getURLParam(key) {
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        return params.get(key);
+    }
+    
+    // Initialiser l'état des filtres en fonction de l'URL
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterHeader = document.querySelector('.filter-header');
+        const filterContent = document.querySelector('.filter-content');
+        
+        if (filterHeader && filterContent) {
+            const filterState = getURLParam('filters');
+            const shouldBeOpen = filterState === 'open';
+            
+            // Si pas de paramètre dans l'URL, les filtres sont fermés par défaut
+            if (!shouldBeOpen) {
+                filterHeader.classList.add('collapsed');
+                filterContent.classList.add('collapsed');
+            }
+        }
+    });
+    
+    // Le champ caché filter_state est maintenant soumis automatiquement avec le formulaire
+    // Pas besoin de JavaScript supplémentaire pour la soumission
+    </script>
+    <?php
+    // Calcul pour la pagination
+    $nbpage = ceil($view->nbr / $view->length);
+    $uri = "";
+    $a_uri = explode("?", $_SERVER['REQUEST_URI']);
+    if (count($a_uri) > 1) {
+        $a_uri = explode("&", $a_uri [1]);
+        foreach ($a_uri as $key => $value) {
+            if (substr($a_uri[$key], 0, 4) <> "page" and $a_uri[$key] <> "") {
+                $uri .= "&" . $a_uri[$key];
+            }
+        }
+    }
+    $url = BDO_URL . "macollection/mesetageres?" . $uri . "&";
+    
+    // Génère les paginations haut et bas
+    $paginations = $page->paginateTopAndBottom($url, "page=", $nbpage, $view->page);
+    ?>
+   
     <div class="dataTables_wrapper">
         <form id="f_collection" method="GET" action="" >
-            <div id="filtre">
-                Filtrer :
-                Type : <select id='sel_type' name='sel_type' onChange='$("#f_collection").submit();'>
-                    <option value="Tous" <?php if ($view->sel_type  =="Tous") echo "selected" ?> >Tous</option>
-                    <option value="BD" <?php if ($view->sel_type  =="BD") echo "selected" ?>>BD</option>
-                    <option value="Mangas" <?php if ($view->sel_type  =="Mangas") echo "selected" ?>>Mangas</option>
-                    <option value = "Comics" <?php if ($view->sel_type  =="Comics") echo "selected" ?> >Comics</option>
+            <!-- Champ caché pour conserver l'état des filtres -->
+            <input type="hidden" name="filters" id="filter_state" value="<?php echo isset($_GET['filters']) && $_GET['filters'] === 'open' ? 'open' : 'closed'; ?>">
+            
+            <!-- Section des filtres améliorée avec repliement -->
+            <div class="filter-section">
+                <div class="filter-header" onclick="toggleFilters()">
+                    <h4><i class="fas fa-filter"></i> Filtres de collection</h4>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="filter-content">
+                    <div class="filter-group">
+                        <div class="filter-type-select">
+                            Type : <select id='sel_type' name='sel_type' onChange='$("#f_collection").submit();'>
+                                <option value="Tous" <?php if ($view->sel_type  =="Tous") echo "selected" ?> >Tous</option>
+                                <option value="BD" <?php if ($view->sel_type  =="BD") echo "selected" ?>>BD</option>
+                                <option value="Mangas" <?php if ($view->sel_type  =="Mangas") echo "selected" ?>>Mangas</option>
+                                <option value = "Comics" <?php if ($view->sel_type  =="Comics") echo "selected" ?> >Comics</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-grid">
+                    <!-- Filtre E.O. -->
+                    <label class="filter-item <?php if ($view->eo == "O") echo "active"; ?>">
+                        <input id="cb_tete" type="checkbox" value="O" name="cb_tete" onChange='$("#f_collection").submit();' <?php if ($view->eo == "O") echo "checked"; ?>>
+                        <i class="fas fa-book"></i>
+                        <span>Édition Originale</span>
+                    </label>
+                    
+                    <!-- Filtre Dédicace -->
+                    <label class="filter-item <?php if ($view->dedicace == "O") echo "active"; ?>">
+                        <input id="cb_dedicace" type="checkbox" value="O" name="cb_dedicace" onChange='$("#f_collection").submit();' <?php if ($view->dedicace == "O") echo "checked"; ?>>
+                        <i class="fas fa-signature"></i>
+                        <span>Dédicace</span>
+                    </label>
+                    
+                    <!-- Filtre Cadeau -->
+                    <label class="filter-item <?php if ($view->cadeau == "O") echo "active"; ?>">
+                        <input id="cb_cadeau" name="cb_cadeau" type="checkbox" value="O" onChange='$("#f_collection").submit();' <?php if ($view->cadeau == "O") echo "checked"; ?>>
+                        <i class="fas fa-gift"></i>
+                        <span>Cadeau</span>
+                    </label>
+                    
+                    <!-- Filtre Prêt -->
+                    <label class="filter-item <?php if ($view->pret == "O") echo "active"; ?>">
+                        <input id="cb_pret" name="cb_pret" type="checkbox" value="O" onChange='$("#f_collection").submit();' <?php if ($view->pret == "O") echo "checked"; ?>>
+                        <i class="fas fa-handshake"></i>
+                        <span>Prêté</span>
+                    </label>
+                    
+                    <!-- Filtre Non lu -->
+                    <label class="filter-item <?php if ($view->non_lu == "O") echo "active"; ?>">
+                        <input id="cb_lu" name="cb_lu" type="checkbox" value="O" onChange='$("#f_collection").submit();' <?php if ($view->non_lu == "O") echo "checked"; ?>>
+                        <i class="fas fa-eye-slash"></i>
+                        <span>Non lu</span>
+                    </label>
+                    
+                    <!-- Filtre Edition numérique -->
+                    <label class="filter-item <?php if ($view->num == "O") echo "active"; ?>">
+                        <input id="cb_num" name="cb_num" type="checkbox" value="O" onChange='$("#f_collection").submit();' <?php if ($view->num == "O") echo "checked"; ?>>
+                        <i class="fas fa-tablet-alt"></i>
+                        <span>Numérique</span>
+                    </label>
+                    
+                    <!-- Filtre Coffret -->
+                    <label class="filter-item <?php if ($view->coffret == "O") echo "active"; ?>">
+                        <input id="cb_coffret" name="cb_coffret" type="checkbox" value="O" onChange='$("#f_collection").submit();' <?php if ($view->coffret == "O") echo "checked"; ?>>
+                        <i class="fas fa-box"></i>
+                        <span>Coffret</span>
+                    </label>
+                </div>
+            </div>
+            </div>
+            <!-- Conteneur flex pour aligner les éléments sur la même ligne -->
+    
+        <!-- Voir n lignes -->
+        <div id="data_length" class="dataTables_length">
+            Voir :
+            <label>
+                <select class="" id="length" name="length">
+                    <option value="10" <?php if ($view->length == 10) { echo "selected"; } ?> >  10</option>
+                    <option value="25" <?php if ($view->length == 25) { echo "selected"; } ?>>  25</option>
+                    <option value="50" <?php if ($view->length == 50) { echo "selected"; } ?>>  50</option>
+                    <option value="100" <?php if ($view->length == 100) { echo "selected"; } ?>> 100</option>
                 </select>
-                E.O :<input id="cb_tete" type="checkbox" value="O" name="cb_tete" onChange='$("#f_collection").submit();' <?php if ($view->eo == "O") echo "checked"; ?>/>
-                Dédicace : <input id="cb_dedicace" type="checkbox" value="O" name="cb_dedicace" onChange='$("#f_collection").submit();'  <?php if ($view->dedicace == "O") echo "checked"; ?> />
-                Cadeau :<input id="cb_cadeau" name="cb_cadeau" type="checkbox" value="O" onChange='$("#f_collection").submit();' <?php if ($view->cadeau == "O") echo "checked"; ?>/>
-                Prêt :<input id="cb_pret" name="cb_pret" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->pret == "O") echo "checked"; ?>/>
-                Non lu :<input id="cb_lu" name="cb_lu" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->non_lu == "O") echo "checked"; ?>/>
-                Edition numérique :<input id="cb_num" name="cb_num" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->num == "O") echo "checked"; ?>/>
-                Coffret : <input id="cb_num" name="cb_coffret" type="checkbox" value="O"  onChange='$("#f_collection").submit();' <?php if ($view->coffret == "O") echo "checked"; ?>/>
-            </div><br>
-            <div id="data_length" class="dataTables_length">
-                Voir :
-                <label>
-
-
-
-                    <select class="" id="length" name="length">
-                        <option value="10" <?php if ($view->length == 10) {
-    echo "selected";
-} ?> >  10</option>
-                        <option value="25" <?php if ($view->length == 25) {
-    echo "selected";
-} ?>>  25</option>
-                        <option value="50" <?php if ($view->length == 50) {
-    echo "selected";
-} ?>>  50</option>
-                        <option value="100" <?php if ($view->length == 100) {
-    echo "selected";
-} ?>> 100</option>
-                    </select>
-
-                    lignes
-
-                </label> |
-                <a href="#selcolumn"  id="inline" >Afficher/Masquer les colonnes</a>
-
-            </div>
-
-            <div id="filter" class="dataTables_filter">
-
-                <label>
-
-                    Rechercher:
-
-                    <input class="" type="search" placeholder="" id="l_search" name="l_search" value="<?php echo $view->searchvalue; ?>" />
-                </label>
-
-            </div>
+                lignes |
+                <a href="#selcolumn" id="inline">Afficher/Masquer les colonnes</a>
+            </label>
+        </div>
+        
+        
+        
+        <!-- Rechercher -->
+        <div id="filter" class="dataTables_filter">
+            <label>
+                Rechercher:
+                <input class="" type="search" placeholder="" id="l_search" name="l_search" value="<?php echo $view->searchvalue; ?>" />
+            </label>
+        </div>
+    
 
             <input type="hidden" id="sort" name="sort" value="<?php echo $view->sort; ?>" />
             <input type="hidden" id="order" name="order" value="<?php echo $view->order; ?>" />
        </form>
+       
             <div style="display:none;"><div id="selcolumn" height="500px">
 
                         <label>
@@ -245,6 +464,10 @@ $page = $view->getHelper('pagination');
                 </div>
             </div>
         <div class="scrollauto">
+        <!-- Pagination centrée -->
+        <div align="center" style="padding:5px">
+            <?php echo $paginations['top']; ?>
+        </div>
         <table id="t_collection" class="display dataTable">
             <thead>
                 <tr>
@@ -315,25 +538,11 @@ $page = $view->getHelper('pagination');
         </div>
         <div align="center" id="save_collection"><input type="button" id="bssave" value="Enregistrer les modifications" onclick="saveCollection();"/></div>
 
-        <div align="center">
-<?php
-$nbpage = ceil($view->nbr / $view->length);
-$uri = "";
-$a_uri = explode("?", $_SERVER['REQUEST_URI']);
-if (count($a_uri) > 1) {
-    $a_uri = explode("&", $a_uri [1]);
-    foreach ($a_uri as $key => $value) {
-
-        if (substr($a_uri[$key], 0, 4) <> "page" and $a_uri[$key] <> "") {
-            $uri .= "&" . $a_uri[$key];
-        }
-    }
-}
-//$url = BDO_URL."macollection/mesetageres?length=".$view->length."&order=".$view->order."&sort=".$view->sort."&";
-$url = BDO_URL . "macollection/mesetageres?" . $uri . "&";
-
-echo $page->paginate($url, "page=", $nbpage, $view->page);
-?>
+        <div align="center" style="padding:5px">
+            <?php
+                // Affiche la pagination en bas
+                echo $paginations['bottom'];
+            ?>
         </div>
     </div>
 </div>

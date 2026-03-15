@@ -288,5 +288,28 @@ class Pagination{
 
 
     }
+
+    /**
+     * Génère la pagination pour le haut et le bas de page
+     * @param string $url L'URL ou nom de la page appelant la fonction
+     * @param string $link La nom du paramètre pour la page affichée dans l'URL
+     * @param int $total Le nombre total de pages
+     * @param int $current Le numéro de la page courante
+     * @param int $adj (facultatif) Le nombre de pages affichées de chaque côté de la page courante (défaut : 3)
+     * @return array Tableau associatif avec 'top' et 'bottom' contenant les paginations
+     */
+    public function paginateTopAndBottom($url, $link, $total, $current, $adj=3) {
+        // Génère la pagination pour le haut
+        $topPagination = $this->paginate($url, $link, $total, $current, $adj);
+
+        // Génère la pagination pour le bas (identique)
+        $bottomPagination = $this->paginate($url, $link, $total, $current, $adj);
+
+        // Retourne les deux paginations dans un tableau
+        return array(
+            'top' => $topPagination,
+            'bottom' => $bottomPagination
+        );
+    }
  }
 ?>
