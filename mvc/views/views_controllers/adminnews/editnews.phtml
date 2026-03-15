@@ -1,40 +1,142 @@
-<?php $news_levels = array(
-    2 => "Archivé",
-    1 => "Brouillon",
-    5 => "Publié",
+<?php $news_levels = array(2 => "Archivé", 1 => "Brouillon", 5 => "Publié") ?>
 
-) ?>
-<script src="<?php echo BDO_URL; ?>jquery/jQuery-TE_v.1.4.0/jquery-te-1.4.0.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="<?php echo BDO_URL;?>jquery/jQuery-TE_v.1.4.0/jquery-te-1.4.0.css" />
+<script src="<?php echo BDO_URL; ?>jquery/jQuery-TE_v.1.4.0/jquery-te-1.4.0.min.js"></script>
+<link rel="stylesheet" href="<?php echo BDO_URL; ?>jquery/jQuery-TE_v.1.4.0/jquery-te-1.4.0.css" />
+
+<style>
+   
+    .modal-overlay {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+        background: white; border-radius: 8px; padding: 20px; width: 90%; max-width: 500px;
+    }
+    .modal-box h4 { margin-top: 0; }
+    .modal-box label { display: block; margin-top: 10px; font-weight: bold; }
+    .modal-box input, .modal-box textarea {
+        width: 100%; padding: 6px; margin-top: 4px;
+        border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;
+    }
+    .modal-actions { margin-top: 15px; text-align: right; }
+    .modal-actions button { margin-left: 8px; padding: 6px 14px; cursor: pointer; }
+    .btn-insert { background: #007BFF; color: white; border: none; border-radius: 4px; }
+    .btn-cancel { background: #ccc; border: none; border-radius: 4px; }
+</style>
+
 <div class="cadre1">
-    <form method='post' action='?status=ok'>
-    <h3>Publication d'une nouvelle news</h3>
-    <br>
-    <label for="news-type">Type de news :</label>
-    <select id="news-type" name= "news-type" type="select" value="">
-        <option value="0" <?php ?> disabled>Sélectionnez un type</option>
-    <?php  
-        foreach ($view->dbs_newstype->a_dataQuery as $el) {
-            ?>
-                <option value="<?php echo $el->ID_NEWS_TYPE; ?>" <?php if (($view->newstype ?? 0) == $el->ID_NEWS_TYPE) echo "selected"; ?>>
-                    <?php echo $el->label_news_type ; ?>
-                </option> 
-            <?php 
-        }
-    ?>
-    </select>
-    <label for="news-level">Publication</label>
-    <select id="news-level" name="news-level" type="select">
-        <option value="1" <?php if ($view->newslevel == 1) echo "selected";  ?>>Brouillon</option>
-        <option value="5" <?php if ($view->newslevel == 5) echo "selected";  ?>>Publié</option>
-        <option value="2" <?php if ($view->newslevel == 2) echo "selected";  ?>>Archivé</option>
-    </select>
-    <br>
-    Titre : <input name="txttitre" id="txttitre" value="<?php echo $view->titrenews ?? "";?>" size="50" type="text" /> <br/>
-    <textarea name="txtcontent" cols="45" rows="8" id="txtcontent"><?php echo $view->txtnews ?? "";?></textarea>
-    <input type='hidden' name="newsid" id='newsid' value='<?php echo $view->newsid ?? "";?>'/>
-    <p align="center"><input type='submit' value="Valider" /></p>
+    <form method="post" action="?status=ok" onsubmit="return validateForm()">
+        <h3>Publication d'une nouvelle news</h3><br>
+        <label for="news-type">Type de news :</label>
+        <select id="news-type" name="news-type">
+            <option value="0" disabled>Sélectionnez un type</option>
+            <?php foreach ($view->dbs_newstype->a_dataQuery as $el): ?>
+                <option value="<?php echo $el->ID_NEWS_TYPE; ?>"
+                    <?php if (($view->newstype ?? 0) == $el->ID_NEWS_TYPE) echo "selected"; ?>>
+                    <?php echo $el->label_news_type; ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <label for="news-level">Publication</label>
+        <select id="news-level" name="news-level">
+            <option value="1" <?php if ($view->newslevel == 1) echo "selected"; ?>>Brouillon</option>
+            <option value="5" <?php if ($view->newslevel == 5) echo "selected"; ?>>Publié</option>
+            <option value="2" <?php if ($view->newslevel == 2) echo "selected"; ?>>Archivé</option>
+        </select><br>
+        Titre : <input name="txttitre" id="txttitre" value="<?php echo $view->titrenews ?? ''; ?>" size="50" type="text" /><br/>
+
+        <button type="button" onclick="openAlbumModal()" style="margin: 10px 0; padding: 6px 12px; cursor: pointer;">
+            + Ajouter une fiche album
+        </button>
+
+        <textarea name="txtcontent" id="txtcontent"><?php echo $view->txtnews ?? ''; ?></textarea>
+        <input type="hidden" name="newsid" value="<?php echo $view->newsid ?? ''; ?>" />
+        <p align="center"><input type="submit" value="Valider" /></p>
     </form>
 </div>
-<script>$("#txtcontent").jqte(); </script>
 
+<div class="modal-overlay" id="albumModal">
+    <div class="modal-box">
+        <h4>Ajouter une fiche album</h4>
+        <label>Titre de l'album *</label>
+        <input type="text" id="albumTitle">
+        <label>URL de l'image</label>
+        <input type="text" id="albumImage" placeholder="https://...">
+        <label>Description</label>
+        <textarea id="albumDescription" rows="2"></textarea>
+        <label>Lien vers la fiche BDovore *</label>
+        <input type="text" id="albumLink">
+        <div class="modal-actions">
+            <button type="button" class="btn-cancel" onclick="closeAlbumModal()">Annuler</button>
+            <button type="button" class="btn-insert" onclick="insertAlbumCard()">Insérer</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Init jqte
+$("#txtcontent").jqte();
+
+function validateForm() {
+    if (document.getElementById('txttitre').value.trim() === '') {
+        alert('Le titre est obligatoire.');
+        return false;
+    }
+    return true;
+}
+
+function openAlbumModal() {
+    document.getElementById('albumModal').classList.add('active');
+}
+function closeAlbumModal() {
+    document.getElementById('albumModal').classList.remove('active');
+    document.getElementById('albumTitle').value = '';
+    document.getElementById('albumImage').value = '';
+    document.getElementById('albumDescription').value = '';
+    document.getElementById('albumLink').value = '';
+}
+
+function insertAlbumCard() {
+    var title = document.getElementById('albumTitle').value.trim();
+    var image = document.getElementById('albumImage').value.trim();
+    var description = document.getElementById('albumDescription').value.trim();
+    var link = document.getElementById('albumLink').value.trim();
+
+    if (!title || !link) {
+        alert('Titre et lien sont obligatoires.');
+        return;
+    }
+
+    // HTML d'une seule carte (sans le conteneur)
+    var cardHtml = '<div class="album-card">';
+    if (image) {
+        cardHtml += '<div><img src="' + image + '" alt="' + title + '"></div>';
+    }
+    cardHtml += '<div class="album-info">';
+    cardHtml += '<h3>' + title + '</h3>';
+    if (description) {
+        cardHtml += '<p>' + description + '</p>';
+    }
+    cardHtml += '</div>';
+    cardHtml += '<div class="album-link-container">';
+    cardHtml += '<a href="' + link + '" target="_blank">Voir la fiche</a>';
+    cardHtml += '</div></div>';
+
+    var $editor = $('.jqte_editor');
+    $editor.focus();
+
+    // Chercher un conteneur existant, sinon en créer un
+    var $container = $editor.find('.albums-container');
+    if ($container.length === 0) {
+        $editor.append('<div class="albums-container"></div>');
+        $container = $editor.find('.albums-container');
+    }
+
+    // Ajouter la carte dans le conteneur unique
+    $container.append(cardHtml);
+
+    $('#txtcontent').val($editor.html());
+    closeAlbumModal();
+}
+</script>
