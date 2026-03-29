@@ -435,6 +435,7 @@ class Macollection extends Bdo_Controller {
           // Filtres
           $flg_incomplete = getValInteger("flg_incomplete",0); // On filtre sur les séries incomplètes ?
           $flg_achat = getValInteger("flg_achat",0);           // On considère les futurs achats comme achetés (pour considérer une série comme complète) ? 
+          $sel_status = getVal("sel_status","Tous");        // Filtre par statut d'avancement
           $auteur = getVal("auteur","");
           if ($auteur <> "") {
             $this->loadModel("Auteur");
@@ -482,8 +483,8 @@ class Macollection extends Bdo_Controller {
           }
 
           // Récupération des séries avec filtre sur les incomplètes ou non
-          $dbs_serie = $flg_incomplete ? $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,$auteur,implode(',',$incomplets))
-                                       : $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,$auteur);
+          $dbs_serie = $flg_incomplete ? $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,$auteur,implode(',',$incomplets),"",0, $sel_status)
+                                       : $this->Useralbum->getUserSerie($user_id, $page, $length,$searchvalue,$origin,$auteur,"","",0, $sel_status);
           $stat = $this->Useralbum->getStatistiques($user_id,"album",$auteur,$origin,"",$searchvalue);
           $nbr = $stat["nbseries"];
 
@@ -498,6 +499,7 @@ class Macollection extends Bdo_Controller {
               "sel_type" => $sel_type,
               "flg_incomplete" => $flg_incomplete,
               "flg_achat" => $flg_achat,
+              "sel_status" => $sel_status,
               "auteur" => $auteur,
               "pseudo" => $pseudo
               ));

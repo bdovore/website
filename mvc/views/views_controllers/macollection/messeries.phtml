@@ -83,6 +83,13 @@
                     <option value="Mangas" <?php if ($view->sel_type  =="Mangas") echo "selected" ?>>Mangas</option>
                     <option value = "Comics" <?php if ($view->sel_type  =="Comics") echo "selected" ?> >Comics</option>
                   </select>
+                  Statut : <select id='sel_status' name='sel_status' onChange='$("#f_collection").submit();'>
+                    <option value="Tous" <?php if (!isset($view->sel_status) || $view->sel_status =="Tous") echo "selected" ?> >Tous</option>
+                    <option value="Fini" <?php if (isset($view->sel_status) && $view->sel_status =="Fini") echo "selected" ?>>Fini</option>
+                    <option value="En cours" <?php if (isset($view->sel_status) && $view->sel_status =="En cours") echo "selected" ?>>En cours</option>
+                    <option value="One Shot" <?php if (isset($view->sel_status) && $view->sel_status =="One Shot") echo "selected" ?>>One Shot</option>
+                    <option value="Interrompue" <?php if (isset($view->sel_status) && $view->sel_status =="Interrompue") echo "selected" ?>>Interrompue</option>
+                  </select>
                   A compléter : <input name="flg_incomplete" type="checkbox" id="flg_incomplete" value="1" <?php echo ($view->flg_incomplete ? "checked" : "");  ?> onchange="submit();">
                      <?php if ($view->flg_incomplete)  {?> hors futurs achats <input name="flg_achat" type="checkbox" id="flg_achat" value="1" <?php echo ($view->flg_achat ? "checked" : "");  ?> onchange="submit();"><?php } ?> </p>
                   </div><br>

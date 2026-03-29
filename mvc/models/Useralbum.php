@@ -490,7 +490,7 @@ class Useralbum extends Bdo_Db_Line
         return Db_affected_rows();
     }
     
-    public function getUserSerie ($user_id, $page=1, $length=10, $search = "", $origin= "",$auteur = "", $liste = "", $complet="", $from=0) {
+    public function getUserSerie ($user_id, $page=1, $length=10, $search = "", $origin= "",$auteur = "", $liste = "", $complet="", $from=0, $status="Tous") {
       if ($auteur <> "")
         $whereAut = "and (   id_scenar = ".$auteur." or id_scenar_alt = ".$auteur." 
                           or id_dessin = ".$auteur." or id_dessin_alt = ".$auteur." 
@@ -542,6 +542,14 @@ class Useralbum extends Bdo_Db_Line
 
       if ($liste <> "") {
         $where .= " and `bd_serie`.`ID_SERIE` in (" . $liste . ") ";
+      }
+
+      // Filtre par statut d'avancement
+      if ($status <> "Tous") {
+        if ($status == "Fini") $where .= " and bd_serie.FLG_FINI = 0 ";
+        else if ($status == "En cours") $where .= " and bd_serie.FLG_FINI = 1 ";
+        else if ($status == "One Shot") $where .= " and bd_serie.FLG_FINI = 2 ";
+        else if ($status == "Interrompue") $where .= " and bd_serie.FLG_FINI = 3 ";
       }
 
       $group= "

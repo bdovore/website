@@ -6,7 +6,7 @@ public/script/fckeditor
 vendors/*
 .vscode/*
 images/
-
+.vibe/*
 #sensitive data & setup-dependent files
 config/constante.php
 public/.htaccess
