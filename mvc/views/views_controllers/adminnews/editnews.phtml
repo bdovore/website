@@ -1,7 +1,7 @@
 <?php $news_levels = array(2 => "Archivé", 1 => "Brouillon", 5 => "Publié") ?>
 
-<script src="<?php echo BDO_URL; ?>jquery/jQuery-TE_v.1.4.0/jquery-te-1.4.0.min.js"></script>
-<link rel="stylesheet" href="<?php echo BDO_URL; ?>jquery/jQuery-TE_v.1.4.0/jquery-te-1.4.0.css" />
+<!-- Summernote CSS via CDN -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 
 <style>
    
@@ -23,60 +23,185 @@
     .modal-actions button { margin-left: 8px; padding: 6px 14px; cursor: pointer; }
     .btn-insert { background: #007BFF; color: white; border: none; border-radius: 4px; }
     .btn-cancel { background: #ccc; border: none; border-radius: 4px; }
+    
+    /* Styles pour les cartes d'albums */
+    .albums-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+        margin: 15px 0;
+        padding: 10px;
+        border: 1px dashed #ccc;
+        background-color: #f9f9f9;
+    }
+    .album-card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .album-card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+    }
+    .album-info {
+        padding: 10px;
+    }
+    .album-info h3 {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+    }
+    .album-info p {
+        margin: 0;
+        font-size: 13px;
+        color: #666;
+    }
+    .album-link-container {
+        padding: 8px 10px;
+        background-color: #f5f5f5;
+        text-align: center;
+    }
+    .album-link-container a {
+        display: inline-block;
+        padding: 4px 10px;
+        background-color: #007BFF;
+        color: white;
+        text-decoration: none;
+        border-radius: 3px;
+        font-size: 12px;
+    }
 </style>
 
-<div class="cadre1">
+<!-- Header avec bouton de retour -->
+<div style="background-color: #f8f9fa; padding: 15px 20px; border-bottom: 1px solid #dee2e6; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="margin: 0; color: #333;"><?php echo isset($view->newsid) && $view->newsid > 0 ? 'Édition de la news #' . $view->newsid : 'Nouvelle news'; ?></h2>
+    <a href="<?php echo BDO_URL; ?>adminnews" style="padding: 8px 16px; background-color: #C8857C; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
+        ← Retour à la liste
+    </a>
+</div>
+
+<div class="cadre1" style="max-width: 1200px; margin: 0 auto; padding: 25px;">
     <form method="post" action="?status=ok" onsubmit="return validateForm()">
-        <h3>Publication d'une nouvelle news</h3><br>
-        <label for="news-type">Type de news :</label>
-        <select id="news-type" name="news-type">
-            <option value="0" disabled>Sélectionnez un type</option>
-            <?php foreach ($view->dbs_newstype->a_dataQuery as $el): ?>
-                <option value="<?php echo $el->ID_NEWS_TYPE; ?>"
-                    <?php if (($view->newstype ?? 0) == $el->ID_NEWS_TYPE) echo "selected"; ?>>
-                    <?php echo $el->label_news_type; ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <label for="news-level">Publication</label>
-        <select id="news-level" name="news-level">
-            <option value="1" <?php if ($view->newslevel == 1) echo "selected"; ?>>Brouillon</option>
-            <option value="5" <?php if ($view->newslevel == 5) echo "selected"; ?>>Publié</option>
-            <option value="2" <?php if ($view->newslevel == 2) echo "selected"; ?>>Archivé</option>
-        </select><br>
-        Titre : <input name="txttitre" id="txttitre" value="<?php echo $view->titrenews ?? ''; ?>" size="50" type="text" /><br/>
+        <!-- Metadonnées organisées -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div>
+                <label for="news-type" style="display: block; margin-bottom: 5px; font-weight: bold; color: #8F1204;">Type de news :</label>
+                <select id="news-type" name="news-type" style="width: 100%; padding: 10px; border: 1px solid #C8857C; border-radius: 4px; background-color: white; font-size: 14px; color: #333;">
+                    <option value="0" disabled style="color: #999;">Sélectionnez un type</option>
+                    <?php foreach ($view->dbs_newstype->a_dataQuery as $el): ?>
+                        <option value="<?php echo $el->ID_NEWS_TYPE; ?>" <?php if (($view->newstype ?? 0) == $el->ID_NEWS_TYPE) echo "selected"; ?> style="padding: 5px;">
+                            <?php echo $el->label_news_type; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div>
+                <label for="news-level" style="display: block; margin-bottom: 5px; font-weight: bold; color: #8F1204;">Statut de publication</label>
+                <select id="news-level" name="news-level" style="width: 100%; padding: 10px; border: 1px solid #C8857C; border-radius: 4px; background-color: white; font-size: 14px; color: #333;">
+                    <option value="1" <?php if ($view->newslevel == 1) echo "selected"; ?> style="padding: 5px;">Brouillon</option>
+                    <option value="5" <?php if ($view->newslevel == 5) echo "selected"; ?> style="padding: 5px;">Publié</option>
+                    <option value="2" <?php if ($view->newslevel == 2) echo "selected"; ?> style="padding: 5px;">Archivé</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Titre en évidence -->
+        <div style="margin-bottom: 20px;">
+            <label for="txttitre" style="display: block; margin-bottom: 5px; font-weight: bold; color: #8F1204;">Titre de la news</label>
+            <input name="txttitre" id="txttitre" value="<?php echo $view->titrenews ?? ''; ?>" style="width: 100%; padding: 10px; font-size: 18px; border: 1px solid #C8857C; border-radius: 4px; color: #333;" type="text" placeholder="Entrez le titre de la news..." />
+        </div>
 
-        <button type="button" onclick="openAlbumModal()" style="margin: 10px 0; padding: 6px 12px; cursor: pointer;">
-            + Ajouter une fiche album
-        </button>
+        <!-- Bouton d'ajout d'album mis en évidence -->
+        <div style="margin: 20px 0;">
+            <button type="button" onclick="openAlbumModal()" style="padding: 10px 20px; background-color: #C8857C; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold;">
+                + Ajouter une fiche album
+            </button>
+        </div>
 
-        <textarea name="txtcontent" id="txtcontent"><?php echo $view->txtnews ?? ''; ?></textarea>
+        <!-- Éditeur Summernote -->
+        <div style="margin-bottom: 30px;">
+            <label style="display: block; margin-bottom: 10px; font-weight: bold;">Contenu de la news</label>
+            <textarea name="txtcontent" id="txtcontent" style="display: none;"><?php echo $view->txtnews ?? ''; ?></textarea>
+        </div>
+        
         <input type="hidden" name="newsid" value="<?php echo $view->newsid ?? ''; ?>" />
-        <p align="center"><input type="submit" value="Valider" /></p>
+        
+        <!-- Bouton de soumission -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="submit" style="padding: 12px 30px; background-color: #990000; color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer;">
+                Enregistrer la news
+            </button>
+        </div>
     </form>
 </div>
 
+<!-- Summernote JS via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+<!-- Modal Album - Style moderne -->
 <div class="modal-overlay" id="albumModal">
     <div class="modal-box">
-        <h4>Ajouter une fiche album</h4>
-        <label>Titre de l'album *</label>
-        <input type="text" id="albumTitle">
-        <label>URL de l'image</label>
-        <input type="text" id="albumImage" placeholder="https://...">
-        <label>Description</label>
-        <textarea id="albumDescription" rows="2"></textarea>
-        <label>Lien vers la fiche BDovore *</label>
-        <input type="text" id="albumLink">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin: 0; color: #333;">Ajouter une fiche album</h3>
+            <button type="button" onclick="closeAlbumModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">×</button>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Titre de l'album *</label>
+            <input type="text" id="albumTitle" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" placeholder="Ex: Astérix - Le Papyrus de César">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">URL de l'image</label>
+            <input type="text" id="albumImage" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" placeholder="https://...">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Description</label>
+            <textarea id="albumDescription" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"></textarea>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Lien vers la fiche BDovore *</label>
+            <input type="text" id="albumLink" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" placeholder="https://bdovore.com/album/...">
+        </div>
+        
         <div class="modal-actions">
-            <button type="button" class="btn-cancel" onclick="closeAlbumModal()">Annuler</button>
-            <button type="button" class="btn-insert" onclick="insertAlbumCard()">Insérer</button>
+            <button type="button" class="btn-cancel" onclick="closeAlbumModal()" style="padding: 10px 20px; background: #f8f9fa; color: #666; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+                Annuler
+            </button>
+            <button type="button" class="btn-insert" onclick="insertAlbumCard()" style="padding: 10px 20px; background: #990000; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                Insérer l'album
+            </button>
         </div>
     </div>
 </div>
 
 <script>
-// Init jqte
-$("#txtcontent").jqte();
+// Initialize Summernote editor
+$(document).ready(function() {
+    $('#txtcontent').summernote({
+        height: 300,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ],
+        callbacks: {
+            onChange: function(contents, $editable) {
+                // Update textarea value
+                $('#txtcontent').val(contents);
+            }
+        }
+    });
+});
 
 function validateForm() {
     if (document.getElementById('txttitre').value.trim() === '') {
@@ -89,6 +214,7 @@ function validateForm() {
 function openAlbumModal() {
     document.getElementById('albumModal').classList.add('active');
 }
+
 function closeAlbumModal() {
     document.getElementById('albumModal').classList.remove('active');
     document.getElementById('albumTitle').value = '';
@@ -123,20 +249,23 @@ function insertAlbumCard() {
     cardHtml += '<a href="' + link + '" target="_blank">Voir la fiche</a>';
     cardHtml += '</div></div>';
 
-    var $editor = $('.jqte_editor');
-    $editor.focus();
+    // Insert into Summernote editor
+    var $noteEditable = $('.note-editable');
+    $noteEditable.focus();
 
     // Chercher un conteneur existant, sinon en créer un
-    var $container = $editor.find('.albums-container');
+    var $container = $noteEditable.find('.albums-container');
     if ($container.length === 0) {
-        $editor.append('<div class="albums-container"></div>');
-        $container = $editor.find('.albums-container');
+        $noteEditable.append('<div class="albums-container"></div>');
+        $container = $noteEditable.find('.albums-container');
     }
 
     // Ajouter la carte dans le conteneur unique
     $container.append(cardHtml);
 
-    $('#txtcontent').val($editor.html());
+    // Update the textarea value
+    $('#txtcontent').val($noteEditable.html());
+    
     closeAlbumModal();
 }
 </script>

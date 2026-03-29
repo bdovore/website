@@ -106,7 +106,7 @@ class Adminnews extends Bdo_Controller {
             }
             $dbs_newstype = $this->Newstype->load("c", "");
             $this->view->set_var("dbs_newstype", $dbs_newstype );
-            $this->view->layout = "iframe";
+            // Utilisation du layout par défaut pour une expérience full-screen
             $this->view->render();
         }
     }
