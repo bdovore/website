@@ -13,7 +13,9 @@
                      <table class="tableaux_admin">
                         <tr >
                             <td class="label" width="15%">Commentaire de l'utilisateur :</td>
-                            <td><?php echo $view->USERCOMMENT;?></td>
+                            <td style="width: 85%; word-wrap: break-word; overflow-wrap: break-word; max-width: 0;">
+                                <?php echo nl2br(htmlspecialchars($view->USERCOMMENT));?>
+                            </td>
                         </tr>
                         
                     </table>
