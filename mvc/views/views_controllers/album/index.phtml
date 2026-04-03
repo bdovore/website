@@ -140,16 +140,25 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 <div class="conteneuralb" itemprop="mainEntity" itemscope itemtype="http://schema.org/Book">
 
-            <div class="alb-img">
-                            <div id="couv"><img src="<?php echo ($view->tome->IMG_COUV ? BDO_URL_COUV.$view->tome->IMG_COUV : BDO_URL_COUV.'default.png' ); ?>" itemprop="image" name="imgEdition" id="imgEdition" alt="couverture" border="1"></div>
-                            <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
-                            <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION ;?></div>
-                            <div id="sponsor" align="center"><?php echo $ficheAlbum->getSponsor($view->tome, $img=true, $all=true); ?></div>
+            <div class="alb-img" style="text-align: center; margin: 10px;">
+                <div id="couv">
+                    <img src="<?php echo ($view->tome->IMG_COUV ? BDO_URL_COUV.$view->tome->IMG_COUV : BDO_URL_COUV.'default.png' ); ?>"
+                        itemprop="image" name="imgEdition" id="imgEdition" alt="couverture" border="1"
+                        style="max-width: 280px; width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 3px;">
+                </div>
+                <div class="petite_police">&copy;<?php echo $view->tome->NOM_EDITEUR;?>/<?php echo $view->tome->scpseudo; ?></div>
+                <div class="petite_police"><?php echo $view->tome->COMMENT_EDITION ;?></div>
+                <div id="sponsor" align="center"><?php echo $ficheAlbum->getSponsor($view->tome, $img=true, $all=true); ?></div>
             </div>
 
         <div class="contentalb" id="alb-description">
-            <h3 align="center"><?php echo $ficheAlbum->getTitreTome($view->tome,$url=false);?> <br>
-                            <?php echo $ficheAlbum->urlSerie($view->tome,"_parent");?></h3>
+            <h3 style="text-align: center; font-size: clamp(1rem, 4vw, 1.3rem); line-height: 1.3; margin: 8px 4px;">
+                <?php echo $ficheAlbum->getTitreTome($view->tome, $url=false); ?>
+                <br>
+                <span style="font-size: 0.85em; font-weight: normal; color: #555;">
+                    <?php echo $ficheAlbum->urlSerie($view->tome, "_parent"); ?>
+                </span>
+            </h3>
             <p align="center">
             <?php if ($view->tome->NB_NOTE_TOME > 0) { ?> 
              <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"> 
