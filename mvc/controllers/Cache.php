@@ -12,6 +12,9 @@ class Cache extends Bdo_Controller
      */
     public function Index ()
     {
+        if (! User::minAccesslevel(1)) {
+            die("Vous n'avez pas accès à cette page");
+        }
         $max_id_tome = 0;
         $max_id_edition = 0;
         $max_id_serie = 0;
