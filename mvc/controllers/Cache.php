@@ -47,6 +47,9 @@ class Cache extends Bdo_Controller
      */
     public function Simil ()
     {
+        if (! User::minAccesslevel(1)) {
+            die("Vous n'avez pas accès à cette page");
+        }
         $a_idGenreExclu = array(
                 80,
                 82,
@@ -101,6 +104,9 @@ class Cache extends Bdo_Controller
      */
     public function Nbuserbytome ()
     {
+        if (! User::minAccesslevel(1)) {
+            die("Vous n'avez pas accès à cette page");
+        }
         $nbruser_ID_TOME = getValInteger('nbruser_ID_TOME', 0) + 0;
         $continuer = getVal('continuer', '');
 
@@ -149,6 +155,9 @@ class Cache extends Bdo_Controller
 
     public function Nbuserbyedition ()
     {
+        if (! User::minAccesslevel(1)) {
+            die("Vous n'avez pas accès à cette page");
+        }
         $nbruser_ID_EDITION = getVal('nbruser_ID_EDITION', '') + 0;
         $continuer = getVal('continuer', '');
 
@@ -200,6 +209,9 @@ WHERE bd_edition_stat.ID_EDITION BETWEEN " . $nbruser_ID_EDITION_next . " AND " 
 
     public function Nbuserbyserie ()
     {
+        if (! User::minAccesslevel(1)) {
+            die("Vous n'avez pas accès à cette page");
+        }
         $nbruser_ID_SERIE = getValInteger('nbruser_ID_SERIE', 0) + 0;
         $continuer = getVal('continuer', '');
 
