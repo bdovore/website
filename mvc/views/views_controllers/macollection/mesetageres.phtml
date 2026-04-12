@@ -143,11 +143,84 @@ $page = $view->getHelper('pagination');
 
     <div class="middle_title"><h3 >Mes Albums</h3></div>
 
+    <!-- Sélecteur de vue amélioré -->
+    <div style="margin: 15px 0; padding: 10px; background: #f8f9fa; border-radius: 8px; display: inline-block;">
+        <strong style="margin-right: 10px;">Mode d'affichage :</strong>
+        <a href="?<?php 
+            $query = $_SERVER['QUERY_STRING'];
+            $query = str_replace('&view=grid', '', $query);
+            $query = str_replace('view=grid&', '', $query);
+            $query = str_replace('view=grid', '', $query);
+            echo $query ? $query . '&view=table' : 'view=table';
+        ?>" class="view-mode-btn <?php echo (!isset($view->view_mode) || $view->view_mode == 'table') ? 'active' : ''; ?>" title="Affichage tableau pour l'édition">
+            <i class="fas fa-table"></i> <span class="desktop-text">Tableau</span>
+        </a>
+        <a href="?<?php 
+            $query = $_SERVER['QUERY_STRING'];
+            $query = str_replace('&view=table', '', $query);
+            $query = str_replace('view=table&', '', $query);
+            $query = str_replace('view=table', '', $query);
+            echo $query ? $query . '&view=grid' : 'view=grid';
+        ?>" class="view-mode-btn <?php echo (isset($view->view_mode) && $view->view_mode == 'grid') ? 'active' : ''; ?>" title="Affichage grille pour la visualisation">
+            <i class="fas fa-th"></i> <span class="desktop-text">Grille</span>
+        </a>
+    </div>
+
+    <style>
+    .view-mode-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 12px;
+        margin-left: 5px;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+    }
+    .view-mode-btn:hover {
+        background: #e9ecef;
+        transform: translateY(-1px);
+    }
+    .view-mode-btn.active {
+        background: #007bff;
+        color: white;
+        border-color: #007bff;
+        box-shadow: 0 2px 4px rgba(0,123,255,0.2);
+    }
+    .view-mode-btn i {
+        margin-right: 6px;
+        font-size: 14px;
+    }
+    .view-mode-btn .desktop-text {
+        font-size: 13px;
+    }
+    @media (max-width: 768px) {
+        .view-mode-btn .desktop-text {
+            display: none;
+        }
+        .view-mode-btn {
+            padding: 6px 8px;
+            font-size: 12px;
+        }
+    }
+    </style>
+
     <b> <?php echo $view->nbr; ?> albums dans la collection. </b>
 
     <br>
     <input type="hidden" name="page" id="page" value="<?php echo $view->page; ?>" />
     <br>
+
+    <?php
+    // Si on est en mode grille, on inclut la vue grille
+    if (isset($view->view_mode) && $view->view_mode == 'grid') {
+        include 'mesalbumsgrille.phtml';
+        return;
+    }
+    ?>
+
     <style>
     /* Style pour les filtres améliorés */
     .filter-section {
@@ -401,13 +474,13 @@ $page = $view->getHelper('pagination');
         <div id="data_length" class="dataTables_length">
             Voir :
             <label>
-                <select class="" id="length" name="length">
-                    <option value="10" <?php if ($view->length == 10) { echo "selected"; } ?> >  10</option>
-                    <option value="25" <?php if ($view->length == 25) { echo "selected"; } ?>>  25</option>
-                    <option value="50" <?php if ($view->length == 50) { echo "selected"; } ?>>  50</option>
-                    <option value="100" <?php if ($view->length == 100) { echo "selected"; } ?>> 100</option>
+                <select class="" id="length" name="length" onchange='$("#f_collection").submit();'>
+                    <option value="12" <?php if ($view->length == 12) { echo "selected"; } ?> >  12</option>
+                    <option value="24" <?php if ($view->length == 24) { echo "selected"; } ?>>  24</option>
+                    <option value="48" <?php if ($view->length == 48) { echo "selected"; } ?>>  48</option>
+                    <option value="96" <?php if ($view->length == 96) { echo "selected"; } ?>>  96</option>
                 </select>
-                lignes |
+                albums par page |
                 <a href="#selcolumn" id="inline">Afficher/Masquer les colonnes</a>
             </label>
         </div>

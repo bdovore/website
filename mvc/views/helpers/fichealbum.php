@@ -283,6 +283,7 @@ class FicheAlbum {
                 'href="' . BDO_URL . $id_link . '" title="' . $titleHtml . '" '.( $target ? 'target="'. $target.'"' : '') .'>';
 
             switch ($class) {
+                case "album-cover":
                 case "couvBig": {
                         $html .= '<img itemprop="image" src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" class="' . $class . '" title="' . $titleHtml . '"/>';
                         $html .= '</a>' . (isset($o_tome->NOM_EDITEUR) ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');
@@ -313,6 +314,8 @@ class FicheAlbum {
                       break;
                     
                 }
+
+                
                 default: {
                         $html .= '<img itemprop="image" src="' . BDO_URL_COUV . $o_tome->IMG_COUV . '" title="' . $titleHtml . '"/>';
                         $html .= '</a>' . (issetNotEmpty($o_tome->NOM_EDITEUR) ? '<div class="copyright">&copy; ' . $o_tome->NOM_EDITEUR . '</div>' : '');

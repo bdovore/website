@@ -228,14 +228,29 @@ class Macollection extends Bdo_Controller {
           $page = getValInteger("page",1);
           $length = getValInteger("length",0);
           $sel_type = getVal("sel_type","Tous");
+          $view_mode = getVal("view","table"); // tableau par défaut, ou "grid" pour la grille
+          
+          // Gestion du mode de vue dans les cookies
+          if ($_COOKIE["view_mode"] && !isset($_GET['view'])) {
+              $view_mode = $_COOKIE["view_mode"];
+          }
+          setcookie("view_mode", $view_mode, time()+2592000);
+          
+          // Options de pagination uniformisées : 12, 24, 48, 96
           //TODO mettre une longueur max. pour la recherche ?
           if (!$length) {
               if ($_COOKIE["l_etageres"] ) {
-                  // récupére la valeur dans un coockie
+                  // récupére la valeur dans un cookie
                   $length = $_COOKIE["l_etageres"];
               } else {
-                  $length = 10;
+                  // 24 par défaut pour les deux modes (compromis raisonnable)
+                  $length = 24;
               }
+          }
+          // S'assurer que la longueur est dans les options autorisées
+          $valid_lengths = array(12, 24, 48, 96);
+          if (!in_array($length, $valid_lengths)) {
+              $length = 24; // valeur par défaut si invalide
           }
           setcookie("l_etageres",$length,time()+2592000);
 
@@ -285,8 +300,14 @@ class Macollection extends Bdo_Controller {
           $num = getVal("cb_num","N");
           $coffret = getVal("cb_coffret","N");
 
+          // Pour la vue grille, on utilise un tri fixe par date d'achat
+          if ($view_mode == "grid") {
+              $orderby = " order by DATE_ACHAT DESC";
+          } else {
+              $orderby = " order by ".$a_order[$sort-1]." ".$order;
+          }
+          
           $limit = " limit ".(($page - 1)*$length).", ".$length;
-          $orderby = " order by ".$a_order[$sort-1]." ".$order;
 
           $where = " where ua.user_id = ".$user_id ." and flg_achat = 'N' ";
 
@@ -338,16 +359,19 @@ class Macollection extends Bdo_Controller {
               "searchvalue" => $l_search,
                "sel_type" => $sel_type,
               "num" => $num,
-              "coffret" => $coffret
+              "coffret" => $coffret,
+              "view_mode" => $view_mode
               ));
       }
       else {
           die("Vous devez vous authentifier pour accéder à cette page.");
       }
-
+      
       $this->view->set_var("PAGETITLE","Ma Collection sur Bdovore");
       $this->view->render();
     }
+
+
 
     public function mesAuteurs () {
       if (User::minAccesslevel(2)) {
