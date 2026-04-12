@@ -323,6 +323,11 @@ class Browser extends Bdo_Controller
     public function Xhr ()
     {
         if ($this->rb_browse == 'aut') {
+            // aJOUT DE LA PREmière ligne Fiche Série
+            $this->view->set_var(
+                    array(
+                            "FICHEAUTEUR" => $this->lev_id,
+                    ));
             $this->loadModel("Serie");
             $where = " WHERE
             

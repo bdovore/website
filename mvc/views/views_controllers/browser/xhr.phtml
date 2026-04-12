@@ -1,5 +1,6 @@
 <?php
 $ficheAlbum = $view->getHelper('ficheAlbum');
+$ficheAuteur = $view->getHelper("ficheAuteur");
 ?>
 <table class="browser" width="100%">
     <tr>
@@ -8,6 +9,26 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
     <tr>
         <td class="milieu" align="center" colspan="3"><?php echo $view->URLPREVPAGE;?> <?php echo $view->URLNEXTPAGE;?></td>
     </tr>
+    <?php 
+    if ($view->FICHEAUTEUR ?? "") {
+    ?>
+    <tr>
+        <td class="bord_gauche">&nbsp;</td>
+        <td class="milieu"><img
+            src="<?php echo BDO_URL_IMAGE;?>site/spacer.gif"
+            width='10px'
+            height='1px' />
+    
+    <?php 
+    if (isset($view->a_row[0])) {
+       // unset($view->a_row[0]->NUM_TOME);
+        echo '<a href="'.BDO_URL.'auteur-bd-'.$view->FICHEAUTEUR.'">Fiche auteur</a><br>';
+    }?>
+    </td>
+    </tr>
+        <?php
+    }
+    ?>
     <!-- BEGIN DataBlock -->
     <?php
     foreach ($view->a_row as $row) {
