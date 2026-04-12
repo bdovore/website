@@ -40,7 +40,7 @@ class FicheAlbum {
             <div  class="mw50 couvleft">
             ' . $this->urlAlbum($o_tome, 'couvSmall') . '
             </div>
-            <div  class="mw50 textleft">';
+            <div  class="mw50 textleft" style="padding:5px;">';
 
         // titre de l'album
         if ($o_tome->TITRE_TOME) {

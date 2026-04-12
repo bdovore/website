@@ -85,11 +85,65 @@ $pageinate = $view->getHelper('Pagination');
 
             <div class="cadre1"><div class="middle_title">
   <form id="form1" name="form1" method="get">
-                <div id="select_activite">
+                <div id="select_activite" style="position: relative;">
                     <span id="album_as"> Albums en tant que...</span>   <label for="a1"><img src="<?php echo BDO_URL_IMAGE;?>site/picto-scenario.png" width="25px" alt="scenariste" title="Scénariste"></label>  <input type="radio" name="activite" id="a1" value="1" <?php if ($view->activite == 1) echo "checked"; ?> onclick="$('#form1').submit();">  <label for="a2"><img src="<?php echo BDO_URL_IMAGE;?>site/picto-dessin.png" width="25px" alt="dessin" title="Dessinateur"> </label> <input type="radio" name="activite" id="a2" value="2" <?php if ($view->activite == 2) echo "checked"; ?> onclick="$('#form1').submit();">  <label for="a3"><img src="<?php echo BDO_URL_IMAGE;?>site/picto-color.png" width="25px" alt="coloriste" title="Coloriste"></label>  <input type="radio" name="activite" id="a3" value="3" <?php if ($view->activite == 3) echo "checked"; ?> onclick="$('#form1').submit();">
-
+                    
+                    <!-- Bouton de tri discret avec chevron -->
+                    <div id="tri-toggle" style="
+                        position: absolute;
+                        right: 0;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        cursor: pointer;
+                        font-size: 14px;
+                        color: white;
+                        background-color: #990000;
+                        padding: 6px 12px;
+                        border-radius: 4px;
+                        transition: all 0.2s ease;
+                        font-weight: normal;
+                    " onclick="toggleTriMenu()">
+                        ▼ Trier
+                    </div>
+                    
+                    <!-- Menu de tri masqué -->
+                    <div id="tri-menu" style="
+                        position: absolute;
+                        right: 0;
+                        top: 100%;
+                        margin-top: 5px;
+                        background: white;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                        padding: 8px 0;
+                        z-index: 1000;
+                        display: none;
+                        min-width: 220px;
+                    ">
+                        <div style="padding: 0 12px 8px; font-weight: bold; color: #990000; font-size: 13px; border-bottom: 1px solid #eee; margin: 0 8px;">
+                            Trier par
+                        </div>
+                        <div style="padding: 8px 12px; cursor: pointer; color: #333; position: relative;" onclick="setTri(1)">
+                            <input type="radio" name="tri" value="1" <?php if ($view->tri == 1) echo "checked"; ?> style="margin-right: 8px;">
+                            Date (récent d'abord)
+                            <?php if ($view->tri == 1) echo '<span style="position: absolute; right: 12px; color: #990000; font-weight: bold;">✓</span>'; ?>
+                        </div>
+                        <div style="padding: 8px 12px; cursor: pointer; color: #333; position: relative;" onclick="setTri(2)">
+                            <input type="radio" name="tri" value="2" <?php if ($view->tri == 2) echo "checked"; ?> style="margin-right: 8px;">
+                            Date (ancien d'abord)
+                            <?php if ($view->tri == 2) echo '<span style="position: absolute; right: 12px; color: #990000; font-weight: bold;">✓</span>'; ?>
+                        </div>
+                        <div style="padding: 8px 12px; cursor: pointer; color: #333; position: relative;" onclick="setTri(3)">
+                            <input type="radio" name="tri" value="3" <?php if ($view->tri == 3) echo "checked"; ?> style="margin-right: 8px;">
+                            Série (A-Z)
+                            <?php if ($view->tri == 3) echo '<span style="position: absolute; right: 12px; color: #990000; font-weight: bold;">✓</span>'; ?>
+                        </div>
+                    </div>
                 </div>
-
+                
+                <input type="hidden" name="id_auteur" value="<?php echo $view->auteur->ID_AUTEUR; ?>">
+                <input type="hidden" name="page" value="<?php echo $view->page; ?>">
 
   </form>  </div>
                 <!-- BEGIN AlbBlock -->
@@ -149,12 +203,66 @@ if ($view->nb_album > 20) {
                 <!-- Column 2 end -->
 </div>
 </div>
+<style>
+    /* Style pour le bouton de tri discret */
+    #tri-toggle {
+        font-family: Arial, sans-serif;
+    }
+    #tri-toggle:hover {
+        background-color: #c00000;
+    }
+    
+    /* Style pour le menu de tri */
+    #tri-menu {
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+    }
+    #tri-menu div:hover {
+        background-color: #f5f5f5;
+    }
+    
+    /* Style pour le bouton de tri actif */
+    #tri-toggle.active {
+        background-color: #c00000;
+    }
+</style>
+
 <script>
     $(document).ready(function() {
         $("#select_activite").buttonset();
         
-        
+        // Fermer le menu si clic en dehors
+        $(document).click(function(e) {
+            if (!$(e.target).closest('#tri-toggle').length && !$(e.target).closest('#tri-menu').length) {
+                $('#tri-menu').hide();
+                $('#tri-toggle').removeClass('active');
+            }
+        });
     });
+    
+    // Fonction pour afficher/masquer le menu de tri
+    function toggleTriMenu() {
+        var menu = $('#tri-menu');
+        var toggle = $('#tri-toggle');
+        
+        if (menu.is(':visible')) {
+            menu.hide();
+            toggle.removeClass('active');
+        } else {
+            menu.show();
+            toggle.addClass('active');
+        }
+        
+        // Empêcher la propagation du clic
+        event.stopPropagation();
+    }
+    
+    // Fonction pour définir le tri et soumettre le formulaire
+    function setTri(value) {
+        $('input[name="tri"]').val([value]);
+        $('#form1').submit();
+    }
+    
     // affichage des infos de bio : on affiche le début et un bouton "voir plus"
         if ($("#bioauteur").height() > 120) {
              $("#bioauteur").addClass("textmasked");

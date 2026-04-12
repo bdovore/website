@@ -622,34 +622,51 @@ class Tome extends Bdo_Db_Line
         return $nb;
     }
 
-    public function getAlbumAsScenariste($id_auteur, $limit = "") {
-        // filtre et renvoie la liste des albums d'un auteur en tant que scénariste
-        $order = " order by NOM_SERIE, NUM_TOME";
-        return $this->load("c"," WHERE bd_tome.id_scenar = ".intval($id_auteur). " OR bd_tome.id_scenar_alt = ".intval($id_auteur).$order." ".$limit);
-
+    public function getAlbumForAuteur($id_auteur, $role = "scenariste", $limit = "", $tri = 1) {
+        // filtre et renvoie la liste des albums d'un auteur selon son rôle
+        // $role: "scenariste", "dessinateur" ou "coloriste"
+        // $tri: 1=date décroissante, 2=date croissante, 3=par série
+        
+        // Déterminer les champs à utiliser selon le rôle
+        switch ($role) {
+            case "dessinateur":
+                $field = "id_dessin";
+                $field_alt = "id_dessin_alt";
+                break;
+            case "coloriste":
+                $field = "id_color";
+                $field_alt = "id_color_alt";
+                break;
+            case "scenariste":
+            default:
+                $field = "id_scenar";
+                $field_alt = "id_scenar_alt";
+                break;
+        }
+        
+        // Déterminer l'ordre de tri
+        if ($tri == 1) {
+            $order = " order by en.DTE_PARUTION DESC, NOM_SERIE, NUM_TOME";
+        } elseif ($tri == 2) {
+            $order = " order by en.DTE_PARUTION ASC, NOM_SERIE, NUM_TOME";
+        } else {
+            $order = " order by NOM_SERIE, NUM_TOME";
+        }
+        
+        return $this->load("c"," WHERE bd_tome.$field = ".intval($id_auteur). " OR bd_tome.$field_alt = ".intval($id_auteur).$order." ".$limit);
     }
     
-    public function getAlbumForCollection($id_collection, $limit = "") {
-        // filtre et renvoie la liste des albums d'un auteur en tant que scénariste
-        $order = " order by NOM_SERIE, NUM_TOME";
-        return $this->load("c"," WHERE c.id_collection = ".intval($id_collection). " ".$order." ".$limit);
-
+    // Méthodes de compatibilité pour rétrocompatibilité
+    public function getAlbumAsScenariste($id_auteur, $limit = "", $tri = 1) {
+        return $this->getAlbumForAuteur($id_auteur, "scenariste", $limit, $tri);
     }
-
-    public function getAlbumAsDessinateur($id_auteur, $limit = "") {
-        // filtre et renvoie la liste des albums d'un auteur en tant que dessinateur
-
-        $order = " order by NOM_SERIE, NUM_TOME";
-        return $this->load("c"," WHERE bd_tome.id_dessin = ".intval($id_auteur). " OR bd_tome.id_dessin_alt = ".intval($id_auteur).$order." ".$limit);
-
+    
+    public function getAlbumAsDessinateur($id_auteur, $limit = "", $tri = 1) {
+        return $this->getAlbumForAuteur($id_auteur, "dessinateur", $limit, $tri);
     }
-
-    public function getAlbumAsColoriste($id_auteur, $limit = "") {
-        // filtre et renvoie la liste des albums d'un auteur en tant que coloriste
-
-        $order = " order by NOM_SERIE, NUM_TOME";
-        return $this->load("c"," WHERE bd_tome.id_color = ".intval($id_auteur). " OR bd_tome.id_color_alt = ".intval($id_auteur).$order." ".$limit);
-
+    
+    public function getAlbumAsColoriste($id_auteur, $limit = "", $tri = 1) {
+        return $this->getAlbumForAuteur($id_auteur, "coloriste", $limit, $tri);
     }
 
     public function getNbAlbumForAuteur($id_auteur,$activite=0) {

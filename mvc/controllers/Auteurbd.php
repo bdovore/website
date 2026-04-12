@@ -13,6 +13,8 @@ class AuteurBD extends Bdo_Controller {
         $ID_AUTEUR = getValInteger('id_auteur',1);
         $activite = getValInteger('activite',0);
         $page = getValInteger('page',1);
+        $tri = getValInteger('tri',1); // 1=date décroissante (défaut), 2=date croissante, 3=par série
+        
         $this->loadModel('Auteur');
         $this->loadModel("Tome");
 
@@ -39,17 +41,17 @@ class AuteurBD extends Bdo_Controller {
         switch ($activite) {
 
             case 1 :
-                $dbs_tome =  $this->Tome->getAlbumAsScenariste($ID_AUTEUR, $limit);
+                $dbs_tome =  $this->Tome->getAlbumAsScenariste($ID_AUTEUR, $limit, $tri);
                 break;
             case 2 :
-                $dbs_tome =  $this->Tome->getAlbumAsDessinateur($ID_AUTEUR, $limit);
+                $dbs_tome =  $this->Tome->getAlbumAsDessinateur($ID_AUTEUR, $limit, $tri);
                 break;
             case 3 :
-                $dbs_tome =  $this->Tome->getAlbumAsColoriste($ID_AUTEUR , $limit);
+                $dbs_tome =  $this->Tome->getAlbumAsColoriste($ID_AUTEUR , $limit, $tri);
                 break;
 
             default :
-                $dbs_tome =  $this->Tome->getAlbumAsScenariste($ID_AUTEUR , $limit);
+                $dbs_tome =  $this->Tome->getAlbumAsScenariste($ID_AUTEUR , $limit, $tri);
                 break;
         }
 
@@ -64,6 +66,7 @@ class AuteurBD extends Bdo_Controller {
             "nb_album" =>  $this->Tome->getNbAlbumForAuteur($ID_AUTEUR,$activite),
             "activite" => $activite,
             "page" => $page,
+            "tri" => $tri,
             "lastAlbum" => $this->Tome->getLastAlbumForAuteur($ID_AUTEUR,10),
             "opengraph" => array(
                 "type" => "webpage",
