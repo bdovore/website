@@ -24,6 +24,40 @@
     .btn-insert { background: #007BFF; color: white; border: none; border-radius: 4px; }
     .btn-cancel { background: #ccc; border: none; border-radius: 4px; }
     
+    /* Preview Modal Styles */
+    .preview-modal-overlay {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center;
+    }
+    .preview-modal-overlay.active { display: flex; }
+    .preview-modal-box {
+        background: white; border-radius: 8px; padding: 30px; width: 90%; max-width: 800px;
+        max-height: 80vh; overflow-y: auto; position: relative;
+    }
+    .preview-modal-header {
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+        padding-bottom: 15px; border-bottom: 1px solid #eee;
+    }
+    .preview-modal-header h3 {
+        margin: 0; color: #333; font-size: 20px;
+    }
+    .preview-close-btn {
+        background: none; border: none; font-size: 28px; cursor: pointer; color: #666;
+        padding: 0; line-height: 1;
+    }
+    .preview-content {
+        font-family: Arial, sans-serif; line-height: 1.6; color: #333;
+    }
+    .preview-content h1, .preview-content h2, .preview-content h3 {
+        color: #8F1204; margin-top: 20px; margin-bottom: 15px;
+    }
+    .preview-content p {
+        margin-bottom: 15px;
+    }
+    .preview-content img {
+        max-width: 100%; height: auto; margin: 15px 0;
+    }
+    
     /* Styles pour les cartes d'albums */
     .albums-container {
         display: grid;
@@ -128,8 +162,11 @@
         
         <input type="hidden" name="newsid" value="<?php echo $view->newsid ?? ''; ?>" />
         
-        <!-- Bouton de soumission -->
+        <!-- Boutons de soumission et prévisualisation -->
         <div style="text-align: center; margin-top: 30px;">
+            <button type="button" onclick="showPreview()" style="padding: 12px 30px; background-color: #C8857C; color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; margin-right: 10px;">
+                Prévisualiser
+            </button>
             <button type="submit" style="padding: 12px 30px; background-color: #990000; color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer;">
                 Enregistrer la news
             </button>
@@ -176,6 +213,17 @@
                 Insérer l'album
             </button>
         </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="preview-modal-overlay" id="previewModal">
+    <div class="preview-modal-box">
+        <div class="preview-modal-header">
+            <h3>Prévisualisation de la news</h3>
+            <button type="button" class="preview-close-btn" onclick="closePreview()">×</button>
+        </div>
+        <div class="preview-content" id="previewContent"></div>
     </div>
 </div>
 
@@ -267,5 +315,81 @@ function insertAlbumCard() {
     $('#txtcontent').val($noteEditable.html());
     
     closeAlbumModal();
+}
+
+// Preview functionality
+function showPreview() {
+    var title = document.getElementById('txttitre').value.trim();
+    var content = $('.note-editable').html();
+    
+    var previewHtml = '';
+    
+    if (title) {
+        previewHtml += '<h2 style="color: #8F1204; margin-bottom: 20px; border-bottom: 2px solid #C8857C; padding-bottom: 10px;">' + title + '</h2>';
+    }
+    
+    previewHtml += content;
+    
+    document.getElementById('previewContent').innerHTML = previewHtml;
+    document.getElementById('previewModal').classList.add('active');
+    
+    // Copy album styles to preview
+    copyAlbumStyles();
+}
+
+function closePreview() {
+    document.getElementById('previewModal').classList.remove('active');
+}
+
+function copyAlbumStyles() {
+    // Copy the album styles from the main page to the preview
+    var style = document.createElement('style');
+    style.innerHTML = `
+        .albums-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .album-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .album-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .album-info {
+            padding: 10px;
+        }
+        .album-info h3 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+        }
+        .album-info p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+        }
+        .album-link-container {
+            padding: 8px 10px;
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+        .album-link-container a {
+            display: inline-block;
+            padding: 4px 10px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+    `;
+    document.getElementById('previewContent').appendChild(style);
 }
 </script>
