@@ -327,6 +327,7 @@ if (! isset($page)) {
             <!-- Champ caché pour conserver l'état des filtres -->
             <input type="hidden" name="filters" id="filter_state" value="<?php echo isset($_GET['filters']) && $_GET['filters'] === 'open' ? 'open' : 'closed'; ?>">
             <input type="hidden" name="view" value="grid">
+            <input type="hidden" name="grid_sort" value="<?php echo isset($view->grid_sort) ? $view->grid_sort : 'date_desc'; ?>">
             
             <!-- Section des filtres améliorée avec repliement -->
             <div class="filter-section">
@@ -399,28 +400,163 @@ if (! isset($page)) {
             </div>
             </div>
             
-            <!-- Voir n lignes -->
-            <div id="data_length" class="dataTables_length">
-                Voir :
-                <label>
-                    <select class="" id="length" name="length" onchange='$("#f_collection").submit();'>
-                        <option value="12" <?php if ($view->length == 12) { echo "selected"; } ?> >  12</option>
-                        <option value="24" <?php if ($view->length == 24) { echo "selected"; } ?>>  24</option>
-                        <option value="48" <?php if ($view->length == 48) { echo "selected"; } ?>>  48</option>
-                        <option value="96" <?php if ($view->length == 96) { echo "selected"; } ?>>  96</option>
-                    </select>
-                    albums par page
-                </label>
-            </div>
-            
-            <!-- Rechercher -->
-            <div id="filter" class="dataTables_filter">
-                <label>
-                    Rechercher:
-                    <input class="" type="search" placeholder="" id="l_search" name="l_search" value="<?php echo $view->searchvalue; ?>" />
-                </label>
+            <!-- Conteneur flex pour aligner les éléments à droite -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-top: 10px;">
+                
+                <!-- Voir n lignes -->
+                <div id="data_length" class="dataTables_length" style="flex: 1; min-width: 200px;">
+                    Voir :
+                    <label>
+                        <select class="" id="length" name="length" onchange='$("#f_collection").submit();'>
+                            <option value="12" <?php if ($view->length == 12) { echo "selected"; } ?> >  12</option>
+                            <option value="24" <?php if ($view->length == 24) { echo "selected"; } ?>>  24</option>
+                            <option value="48" <?php if ($view->length == 48) { echo "selected"; } ?>>  48</option>
+                            <option value="96" <?php if ($view->length == 96) { echo "selected"; } ?>>  96</option>
+                        </select>
+                        albums par page
+                    </label>
+                </div>
+                
+                <!-- Conteneur pour la recherche et le tri -->
+                <div style="position: relative; display: inline-block; margin-left: auto;">
+                    <div id="filter" class="dataTables_filter" style="display: inline-block; padding-right: 100px;">
+                        <label>
+                            Rechercher:
+                            <input class="" type="search" placeholder="" id="l_search" name="l_search" value="<?php echo $view->searchvalue; ?>" />
+                        </label>
+                    </div>
+                    
+                    <!-- Bouton de tri discret avec chevron comme sur Auteurbd -->
+                    <div id="tri-toggle" style="
+                        position: absolute;
+                        right: 0px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        cursor: pointer;
+                        font-size: 13px;
+                        color: white;
+                        background-color: #990000;
+                        padding: 6px 12px;
+                        border-radius: 4px;
+                        transition: all 0.2s ease;
+                        font-weight: normal;
+                        font-family: Arial, sans-serif;
+                    " onclick="toggleTriMenu()">
+                        ▼ Trier
+                    </div>
+                    
+                    <!-- Menu de tri masqué -->
+                    <div id="tri-menu" style="
+                        position: absolute;
+                        right: -0px;
+                        top: 100%;
+                        margin-top: 5px;
+                        background: white;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                        padding: 8px 0;
+                        z-index: 1000;
+                        display: none;
+                        min-width: 220px;
+                        font-family: Arial, sans-serif;
+                        font-size: 13px;
+                    ">
+                        <div style="padding: 0 12px 8px; font-weight: bold; color: #990000; font-size: 13px; border-bottom: 1px solid #eee; margin: 0 8px;">
+                            Trier par
+                        </div>
+                        <div style="padding: 8px 12px; cursor: pointer; color: #333; position: relative;" onclick="setGridSort('date_desc')">
+                            <input type="radio" name="grid_sort_radio" value="date_desc" <?php if (!isset($view->grid_sort) || $view->grid_sort == 'date_desc') echo 'checked'; ?> style="margin-right: 8px;">
+                            Date d'achat (récent)
+                            <?php if (!isset($view->grid_sort) || $view->grid_sort == 'date_desc') echo '<span style="position: absolute; right: 12px; color: #990000; font-weight: bold;">✓</span>'; ?>
+                        </div>
+                        <div style="padding: 8px 12px; cursor: pointer; color: #333; position: relative;" onclick="setGridSort('date_asc')">
+                            <input type="radio" name="grid_sort_radio" value="date_asc" <?php if (isset($view->grid_sort) && $view->grid_sort == 'date_asc') echo 'checked'; ?> style="margin-right: 8px;">
+                            Date d'achat (ancien)
+                            <?php if (isset($view->grid_sort) && $view->grid_sort == 'date_asc') echo '<span style="position: absolute; right: 12px; color: #990000; font-weight: bold;">✓</span>'; ?>
+                        </div>
+                        <div style="padding: 8px 12px; cursor: pointer; color: #333; position: relative;" onclick="setGridSort('serie_asc')">
+                            <input type="radio" name="grid_sort_radio" value="serie_asc" <?php if (isset($view->grid_sort) && $view->grid_sort == 'serie_asc') echo 'checked'; ?> style="margin-right: 8px;">
+                            Série (A-Z)
+                            <?php if (isset($view->grid_sort) && $view->grid_sort == 'serie_asc') echo '<span style="position: absolute; right: 12px; color: #990000; font-weight: bold;">✓</span>'; ?>
+                        </div>
+                        <div style="padding: 8px 12px; cursor: pointer; color: #333; position: relative;" onclick="setGridSort('serie_desc')">
+                            <input type="radio" name="grid_sort_radio" value="serie_desc" <?php if (isset($view->grid_sort) && $view->grid_sort == 'serie_desc') echo 'checked'; ?> style="margin-right: 8px;">
+                            Série (Z-A)
+                            <?php if (isset($view->grid_sort) && $view->grid_sort == 'serie_desc') echo '<span style="position: absolute; right: 12px; color: #990000; font-weight: bold;">✓</span>'; ?>
+                        </div>
+                        <div style="padding: 8px 12px; cursor: pointer; color: #333; position: relative;" onclick="setGridSort('titre_asc')">
+                            <input type="radio" name="grid_sort_radio" value="titre_asc" <?php if (isset($view->grid_sort) && $view->grid_sort == 'titre_asc') echo 'checked'; ?> style="margin-right: 8px;">
+                            Titre (A-Z)
+                            <?php if (isset($view->grid_sort) && $view->grid_sort == 'titre_asc') echo '<span style="position: absolute; right: 12px; color: #990000; font-weight: bold;">✓</span>'; ?>
+                        </div>
+                        <div style="padding: 8px 12px; cursor: pointer; color: #333; position: relative;" onclick="setGridSort('titre_desc')">
+                            <input type="radio" name="grid_sort_radio" value="titre_desc" <?php if (isset($view->grid_sort) && $view->grid_sort == 'titre_desc') echo 'checked'; ?> style="margin-right: 8px;">
+                            Titre (Z-A)
+                            <?php if (isset($view->grid_sort) && $view->grid_sort == 'titre_desc') echo '<span style="position: absolute; right: 12px; color: #990000; font-weight: bold;">✓</span>'; ?>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         </form>
+        
+        <style>
+        /* Style pour le bouton de tri discret comme sur Auteurbd */
+        #tri-toggle {
+            font-family: Arial, sans-serif;
+        }
+        #tri-toggle:hover {
+            background-color: #c00000;
+        }
+        
+        /* Style pour le menu de tri */
+        #tri-menu {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+        }
+        #tri-menu div:hover {
+            background-color: #f5f5f5;
+        }
+        
+        /* Style pour le bouton de tri actif */
+        #tri-toggle.active {
+            background-color: #c00000;
+        }
+        </style>
+        
+        <script>
+        // Fermer le menu si clic en dehors
+        $(document).click(function(e) {
+            if (!$(e.target).closest('#tri-toggle').length && !$(e.target).closest('#tri-menu').length) {
+                $('#tri-menu').hide();
+                $('#tri-toggle').removeClass('active');
+            }
+        });
+        
+        // Fonction pour afficher/masquer le menu de tri
+        function toggleTriMenu() {
+            var menu = $('#tri-menu');
+            var toggle = $('#tri-toggle');
+            
+            if (menu.is(':visible')) {
+                menu.hide();
+                toggle.removeClass('active');
+            } else {
+                menu.show();
+                toggle.addClass('active');
+            }
+            
+            // Empêcher la propagation du clic
+            event.stopPropagation();
+        }
+        
+        // Fonction pour définir le tri et soumettre le formulaire
+        function setGridSort(value) {
+            $('input[name="grid_sort"]').val(value);
+            $('#f_collection').submit();
+        }
+        </script>
         
         <!-- Pagination centrée -->
         <div align="center" style="padding:8px">

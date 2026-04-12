@@ -300,9 +300,32 @@ class Macollection extends Bdo_Controller {
           $num = getVal("cb_num","N");
           $coffret = getVal("cb_coffret","N");
 
-          // Pour la vue grille, on utilise un tri fixe par date d'achat
+          // Pour la vue grille, on utilise des options de tri simplifiées
           if ($view_mode == "grid") {
-              $orderby = " order by DATE_ACHAT DESC";
+              $grid_sort = getVal("grid_sort", "date_desc"); // date_desc, date_asc, serie_asc, serie_desc, titre_asc, titre_desc
+              
+              switch ($grid_sort) {
+                  case 'date_asc':
+                      $orderby = " order by DATE_ACHAT ASC";
+                      break;
+                  case 'serie_asc':
+                      $orderby = " order by NOM_SERIE ASC, NUM_TOME ASC";
+                      break;
+                  case 'serie_desc':
+                      $orderby = " order by NOM_SERIE DESC, NUM_TOME ASC";
+                      break;
+                  case 'titre_asc':
+                      $orderby = " order by TITRE_TOME ASC";
+                      break;
+                  case 'titre_desc':
+                      $orderby = " order by TITRE_TOME DESC";
+                      break;
+                  case 'date_desc':
+                  default:
+                      $orderby = " order by DATE_ACHAT DESC";
+              }
+              
+              $this->view->set_var("grid_sort", $grid_sort);
           } else {
               $orderby = " order by ".$a_order[$sort-1]." ".$order;
           }
