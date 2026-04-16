@@ -53,9 +53,8 @@ $ficheAuteur = $view->getHelper("ficheAuteur");
                 '>
 <span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-arrowthick-2-n-s"></span>
                 <?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'] ?? "";?></div>
-            <div class="ui-state-active" id='onglet_div_moins_<?php echo $row['LEVSIGN'];?>'
+            <div class="ui-state-active browser-elem" id='onglet_div_moins_<?php echo $row['LEVSIGN'];?>'
                 style='DISPLAY: none'
-                class='browser-elem'
                 onMouseOver='this.classList.add("ui-state-hover")'
                 onMouseOut='this.classList.remove("ui-state-hover")'
                 onClick='Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
@@ -63,7 +62,7 @@ $ficheAuteur = $view->getHelper("ficheAuteur");
                 Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>")'>
 <span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-arrowthickstop-1-n"></span><?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'] ?? "";?></div>
             <div id='onglet_div_xhr_<?php echo $row['LEVSIGN'];?>'
-                style='DISPLAY: none'></div></td>
+                style='DISPLAY: none' class='browser-elem'></div></td>
     </tr>
     <?php
 }
