@@ -273,7 +273,7 @@ table.browser {
     line-height: 13px;
 }
 
-.browser div {
+.browser-elem {
     margin: 0;
     padding: 0;
     border: 0;

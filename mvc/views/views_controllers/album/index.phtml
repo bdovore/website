@@ -165,7 +165,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                  <font size="-1">
             <meta itemprop='ratingValue' content='<?php echo $view->tome->MOYENNE_NOTE_TOME / 2.0; ?>'  />
                   <span id="noteTome<?php echo $view->tome->ID_TOME; ?>" style="vertical-align: -3px;"> </span> 
-                  pour <span itemprop="reviewCount"><?php echo $view->tome->NB_NOTE_TOME ?></span> notes. 
+                   (<span itemprop="reviewCount"><?php echo $view->tome->NB_NOTE_TOME; ?></span> <?php echo $view->tome->NB_NOTE_TOME > 1 ? "notes" : "note" ?>) 
              <script>$('#noteTome<?php echo $view->tome->ID_TOME; ?>').raty({score: <?php echo $view->tome->MOYENNE_NOTE_TOME/2.0; ?>, readOnly: true});</script> 
              </font></div>  <?php ;} ?>
 

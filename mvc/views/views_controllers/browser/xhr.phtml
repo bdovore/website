@@ -41,8 +41,9 @@ $ficheAuteur = $view->getHelper("ficheAuteur");
             height=<?php echo $row['HSPACER'];?> />
             <div id='onglet_div_plus_<?php echo $row['LEVSIGN'];?>'
                 style='DISPLAY: block'
-                onMouseOver='this.className="ui-state-hover"'
-                onMouseOut='this.className="off"'
+                class='browser-elem'
+                onMouseOver='this.classList.add("ui-state-hover")'
+                onMouseOut='this.classList.remove("ui-state-hover")'
                 onClick='Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
                 Block_None_Div("onglet_div_plus_<?php echo $row['LEVSIGN'];?>");
                 Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>");
@@ -54,8 +55,9 @@ $ficheAuteur = $view->getHelper("ficheAuteur");
                 <?php echo $row['NAMELEVEL'];?> <?php echo $row['URLEDIT'] ?? "";?></div>
             <div class="ui-state-active" id='onglet_div_moins_<?php echo $row['LEVSIGN'];?>'
                 style='DISPLAY: none'
-                onMouseOver='this.className="ui-state-hover"'
-                    onMouseOut='this.className="ui-state-active"'
+                class='browser-elem'
+                onMouseOver='this.classList.add("ui-state-hover")'
+                onMouseOut='this.classList.remove("ui-state-hover")'
                 onClick='Block_None_Div("onglet_div_xhr_<?php echo $row['LEVSIGN'];?>");
                 Block_None_Div("onglet_div_plus_<?php echo $row['LEVSIGN'];?>");
                 Block_None_Div("onglet_div_moins_<?php echo $row['LEVSIGN'];?>")'>
