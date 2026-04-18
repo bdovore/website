@@ -36,7 +36,8 @@ class News extends Bdo_Db_Line
                 INNER JOIN (
                     SELECT ID_NEWS_TYPE, MAX(news_id) as last_id
                     FROM news
-                    WHERE news_level = 5
+                    WHERE news_level = 5 AND 
+                    news_date > DATE_SUB(NOW(), INTERVAL 15 DAY)
                     GROUP BY ID_NEWS_TYPE
                 ) as last ON n.ID_NEWS_TYPE = last.ID_NEWS_TYPE AND n.news_id = last.last_id
                 ORDER BY news_id DESC
@@ -57,7 +58,8 @@ class News extends Bdo_Db_Line
                 LEFT JOIN (
                     SELECT ID_NEWS_TYPE, MAX(news_id) as last_id
                     FROM news
-                    WHERE news_level = 5
+                    WHERE news_level = 5 AND 
+                    news_date > DATE_SUB(NOW(), INTERVAL 15 DAY)
                     GROUP BY ID_NEWS_TYPE
                 ) as last ON n.ID_NEWS_TYPE = last.ID_NEWS_TYPE AND n.news_id = last.last_id
                 WHERE last.last_id IS NULL AND news_level = 5
