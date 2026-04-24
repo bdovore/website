@@ -33,7 +33,8 @@ class SerieBD extends Bdo_Controller {
             "KEYWORD" => $this->Serie->NOM_SERIE,
             'NUM_PAGE' => $page,
             "opengraph" => array ("type" => "website",
-                     "image" => BDO_URL_COUV.$this->Serie->IMG_COUV_SERIE)
+                     "image" => BDO_URL_COUV.$this->Serie->IMG_COUV_SERIE),
+            'CANONICAL_URL' => BDO_URL . 'serie-bd-' . $this->Serie->ID_SERIE . '-' . clean_url($this->Serie->NOM_SERIE) . ($page > 1 ? '?page=' . $page : '')
         ));
 
 

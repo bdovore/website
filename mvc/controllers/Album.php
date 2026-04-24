@@ -77,6 +77,7 @@ class Album extends Bdo_Controller {
             'dateparution' => notIssetOrEmpty($this->Tome ?? Null) ? $this->Edition->DATE_PARUTION_EDITION : $this->Tome->DTE_PARUTION,
             'PAGETITLE' => "Album BD : " . $o_tome->TITRE_TOME,
             "KEYWORD" => $o_tome->TITRE_TOME,
+            'CANONICAL_URL' => BDO_URL . "Album?id_tome=" .$ID_TOME,
             'connected' => (!empty($_SESSION['userConnect']->user_id)),
             "DESCRIPTION" => "Tout sur l'album BD " .$o_tome->TITRE_TOME . " "  . strip_tags( if_null_quote(notIssetOrEmpty($this->Tome ?? Null) ? $this->Edition->HISTOIRE_TOME :  $this->Tome->HISTOIRE_TOME)),
             "mobile" => $mobile
@@ -107,7 +108,9 @@ class Album extends Bdo_Controller {
             }
         }
         $url_host = parse_url(BDO_URL);
-        if ($domaine !== null && $url_host !== false && $domaine != $url_host['host']) {
+        if (!is_null($domaine) && $domaine != $url_host['host']) {
+            $frame = "default";
+        } else if (is_null($domaine)) {
             $frame = "default";
         }
         if ($mobile == "T") $frame = "default";

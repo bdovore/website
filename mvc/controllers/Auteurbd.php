@@ -71,7 +71,8 @@ class AuteurBD extends Bdo_Controller {
             "opengraph" => array(
                 "type" => "webpage",
                 "image" => BDO_URL_IMAGE."auteur/".($this->Auteur->IMG_AUT ?$this->Auteur->IMG_AUT : "default_auteur.png" )
-            )
+            ),
+            'CANONICAL_URL' => BDO_URL . 'auteur-bd-' . $this->Auteur->ID_AUTEUR . '-' . clean_url($this->Auteur->PSEUDO) . ($page > 1 ? '?page=' . $page : '') 
         ));
 
         $this->view->render();

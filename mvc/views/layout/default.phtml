@@ -15,6 +15,9 @@ $jquery = $view->getHelper('jquery');
 
 <meta name="category" content="BD, bande dessinee" />   
 <meta name="robots" content="index, follow" />
+<?php if (isset($view->CANONICAL_URL)) { ?>
+<link rel="canonical" href="<?php echo $view->CANONICAL_URL; ?>" />
+<?php } ?>
 <?php if (isset($view->opengraph)) { ?>
 <!-- open graph -->
 <meta property="og:title" content="<?php echo $view->PAGETITLE;?>" />
