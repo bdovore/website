@@ -117,7 +117,10 @@ class Browser extends Bdo_Controller
         elseif ($this->rb_browse == 'aut') {
             $this->loadModel("Auteur");
             if ($this->let) {
-                $query_where .= " AND pseudo like '".$pre_filtre. PMA_sqlAddslashes($this->let, true) . "%'";
+                $term = $pre_filtre. PMA_sqlAddslashes($this->let, true) ;
+                // PSEUDO LIKE '". $term ."%') OR (CONCAT(PRENOM, ' ', NOM) LIKE '". $term ."%') 
+                $query_where .= " AND (pseudo like '".$term . "%' )
+                                OR (CONCAT(PRENOM, ' ', NOM) LIKE '". $term ."%') ";
             }
 
             if ($this->a_idGenre) {
