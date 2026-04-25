@@ -115,12 +115,14 @@ class Browser extends Bdo_Controller
             $dbsData = $this->Serie->load("c", $query_where. $query_order ." LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
         }
         elseif ($this->rb_browse == 'aut') {
+            $query_where .= " AND  id_auteur NOT in (5572, 8497, 6086, 2, 6243, 3)";// on enlève le codes auteurs spéciaux
             $this->loadModel("Auteur");
             if ($this->let) {
                 $term = $pre_filtre. PMA_sqlAddslashes($this->let, true) ;
                 // PSEUDO LIKE '". $term ."%') OR (CONCAT(PRENOM, ' ', NOM) LIKE '". $term ."%') 
-                $query_where .= " AND (pseudo like '".$term . "%' )
-                                OR (CONCAT(PRENOM, ' ', NOM) LIKE '". $term ."%') ";
+                $query_where .= " AND ((pseudo like '".$term . "%' )
+                                OR (CONCAT(PRENOM, ' ', NOM) LIKE '". $term ."%')) 
+                                 "; 
             }
 
             if ($this->a_idGenre) {
