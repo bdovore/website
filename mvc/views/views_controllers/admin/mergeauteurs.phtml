@@ -97,7 +97,7 @@ function urldest(){
 
   <tr>
 
-    <td colspan="2" align="center"><font color="#FF0000" face="Arial, Helvetica, sans-serif"><strong><?php echo $view->ERRORMESSAGE;?></strong></font></td>
+    <td colspan="2" align="center"><font color="#FF0000" face="Arial, Helvetica, sans-serif"><strong><?php echo $view->ERRORMESSAGE ?? '';?></strong></font></td>
 
   </tr>
 
@@ -163,7 +163,7 @@ function urldest(){
 
           <td>Date Naissance</td>
 
-          <td colspan="4"><?php echo $view->AUTEUR1->DTE_NAISS;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR1->DTE_NAISS ?? '';?></td>
 
         </tr>
 
@@ -171,7 +171,7 @@ function urldest(){
 
           <td>Date Dec&egrave;s</td>
 
-          <td colspan="4"><?php echo $view->AUTEUR1->DTE_DECES;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR1->DTE_DECES ?? '';?></td>
 
         </tr>
 
@@ -179,7 +179,7 @@ function urldest(){
 
           <td>Nationalit&eacute;</td>
 
-          <td colspan="4"><?php echo $view->AUTEUR1->NATIONALITE;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR1->NATIONALITE ?? '';?></td>
 
         </tr>
 
@@ -227,7 +227,9 @@ function urldest(){
 
           <td width="22%">Commentaire</td>
 
-          <td width="78%" colspan="4"><?php echo $view->AUTEUR1->COMMENT;?></td>
+         <td width="78%" colspan="4">
+            <div style="max-height: 120px; overflow-y: auto;"><?php echo $view->AUTEUR1->COMMENT;?></div>
+          </td>
 
         </tr>
 
@@ -255,7 +257,7 @@ function urldest(){
 
           <td>Date Naissance</td>
 
-          <td colspan="4"><?php echo $view->AUTEUR2->DTE_NAISS;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR2->DTE_NAISS ?? '';?></td>
 
         </tr>
 
@@ -263,7 +265,7 @@ function urldest(){
 
           <td>Date Dec&egrave;s</td>
 
-          <td colspan="4"><?php echo $view->AUTEUR2->DTE_DECES;?></td>
+          <td colspan="4"><?php echo $view->AUTEUR2->DTE_DECES ?? '';?></td>
 
         </tr>
 
@@ -319,7 +321,9 @@ function urldest(){
 
           <td width="22%">Commentaire</td>
 
-          <td width="78%" colspan="4"><?php echo $view->AUTEUR2->COMMENT;?></td>
+          <td width="78%" colspan="4">
+  <div style="max-height: 120px; overflow-y: auto;"><?php echo $view->AUTEUR2->COMMENT;?></div>
+</td>
 
         </tr>
 
