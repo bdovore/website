@@ -153,6 +153,11 @@ class Auteur extends Bdo_Db_Line
     public static function replaceAuteur($source_id, $dest_id) {
         // Remplace l'id d'auteur source par l'id auteur dest dans les différents champs de bd_tome
         // Met à jour l'information contenue dans la base de données
+
+        // GUARD: valeurs invalides = refus total
+        if ($source_id <= 0 || $dest_id <= 0 || $source_id === $dest_id) {
+            return 0;
+        }
         $modif = 0;
         $dest_id = intval($dest_id);
         $source_id = intval($source_id);

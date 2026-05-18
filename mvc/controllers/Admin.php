@@ -2215,15 +2215,18 @@ class Admin extends Bdo_Controller {
 
         if ($act == "merge") {
             // vérifie que source_id et dest_id ont été defini
-            if ((is_null($dest_id)) | ($dest_id == "")) {
+            if ((is_null($dest_id)) || ($dest_id == "")) {
                 header("Location:" . BDO_URL . "admin/mergeauteurs?source_id=$source_id&error=1");
+                exit(); 
             }
-            if ((is_null($source_id)) | ($source_id == "")) {
+            if ((is_null($source_id)) || ($source_id == "")) {
                 header("Location:" . BDO_URL . "admin/mergeauteurs?dest_id=$dest_id&error=0");
+                exit(); 
             }
 
             if ($source_id == $dest_id) {
                 header("Location:" . BDO_URL . "admin/mergeauteurs?source_id=$source_id&dest_id=$dest_id&error=2");
+                exit(); 
             }
 
             if ($conf == "ok") {
