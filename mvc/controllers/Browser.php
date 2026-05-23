@@ -103,13 +103,22 @@ class Browser extends Bdo_Controller
           $query_where = " WHERE 1 ";
         if ($this->rb_browse == 'ser' || ! $this->rb_browse) {
             $this->loadModel("Serie");
+            $query_order = " ORDER BY nom ASC ";
             if ($this->let) {
-                $query_where .= " AND nom like '" .$pre_filtre. PMA_sqlAddslashes($this->let, true) . "%' ";
+                $term = PMA_sqlAddslashes($this->let, true);
+                $query_where .= " AND (MATCH (NOM) AGAINST ( '.$term.' IN NATURAL LANGUAGE MODE) OR NOM LIKE '$pre_filtre.$term%' ) ";
+                $query_order = " ORDER BY (CASE
+                    WHEN LOWER(NOM) = LOWER('".$term."') THEN 1000
+                    WHEN NOM LIKE '".$term."%' THEN 500
+                    ELSE MATCH(NOM) AGAINST('".$term."' IN NATURAL LANGUAGE MODE) * 10
+                    END) DESC,
+                    NOM ";
+                //$query_where .= " AND nom like '" .$pre_filtre. PMA_sqlAddslashes($this->let, true) . "%' ";
             }
             if ($this->a_idGenre) {
                 $query_where .= " AND ID_GENRE IN (".implode(',',$this->a_idGenre). ")";
             }
-            $query_order = " ORDER BY nom ASC ";
+            
             $this->Serie->calcFoundRow = true;
             $this->Serie->selectType = "browse";
             $dbsData = $this->Serie->load("c", $query_where. $query_order ." LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
@@ -160,13 +169,22 @@ class Browser extends Bdo_Controller
       
         } elseif ($this->rb_browse == "alb") {
             $this->loadModel("Tome");
+            $query_order = " ORDER BY TITRE ";
             if ($this->let) {
-                $query_where .= " AND TITRE like '" .$pre_filtre. PMA_sqlAddslashes($this->let, true) . "%' ";
+                $term = PMA_sqlAddslashes($this->let, true);
+                $query_where .= " AND (TITRE like '" .$pre_filtre. $term . "%' ". "
+                OR  MATCH (TITRE) AGAINST ('". $term. "' IN NATURAL LANGUAGE MODE )) ";
+                 $query_order = " ORDER BY (CASE
+                    WHEN LOWER(TITRE) = LOWER('".$term."') THEN 1000  
+                    WHEN TITRE LIKE '".$term."%' THEN 500             
+                    ELSE MATCH(TITRE) AGAINST('".$term."' IN NATURAL LANGUAGE MODE) * 10  
+                END) DESC,
+                TITRE  ";
             }
             if ($this->a_idGenre) {
                 $query_where .= " AND ID_GENRE IN (".implode(',',$this->a_idGenre). ")";
             }
-            $query_order = " ORDER BY TITRE ASC ";
+            
             $this->Tome->calcFoundRow = true;
             $this->Tome->selectType = "browse";
             $dbsData = $this->Tome->load("c", $query_where. $query_order ." LIMIT " . intval($this->startRow) . "," . intval($this->maxRows));
