@@ -106,7 +106,7 @@ class Browser extends Bdo_Controller
             $query_order = " ORDER BY nom ASC ";
             if ($this->let) {
                 $term = PMA_sqlAddslashes($this->let, true);
-                $query_where .= " AND (MATCH (NOM) AGAINST ( '.$term.' IN NATURAL LANGUAGE MODE) OR NOM LIKE '$pre_filtre.$term%' ) ";
+                $query_where .= " AND ( NOM LIKE '".$pre_filtre.$term."%' OR MATCH (NOM) AGAINST ( '.$term.' IN NATURAL LANGUAGE MODE) ) ";
                 $query_order = " ORDER BY (CASE
                     WHEN LOWER(NOM) = LOWER('".$term."') THEN 1000
                     WHEN NOM LIKE '".$term."%' THEN 500
