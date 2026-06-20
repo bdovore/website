@@ -32,7 +32,7 @@ class Controle extends Bdo_Controller
                     "colUrl" => "ID_SERIE",
                 ),
                 array(
-                    "title" => "EAN référencés plusieurs fois dans la table des éditions pour des albums différents (parution >31/12/2006 ou non-renseignée)",
+                    "title" => "EAN référencés plusieurs fois dans la table des éditions pour des albums différents (parution >01/01/1973 ou non-renseignée)",
                     "query" => "
             SELECT SQL_CALC_FOUND_ROWS
                     COUNT(DISTINCT(`ID_TOME`)) AS 'ID albums différents',
@@ -43,7 +43,7 @@ class Controle extends Bdo_Controller
             WHERE
                     `EAN` IS NOT NULL
                                     AND TRIM(`EAN`)<>''
-            AND (`DTE_PARUTION` > '2006-12-31' OR `DTE_PARUTION` IS NULL )
+            AND (`DTE_PARUTION` > '1973-01-01' OR `DTE_PARUTION` IS NULL )
             GROUP BY `EAN`
             HAVING COUNT(DISTINCT(`ID_TOME`))>1
             ORDER BY 1 DESC",
