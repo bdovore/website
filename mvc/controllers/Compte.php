@@ -109,9 +109,10 @@ class Compte extends Bdo_Controller {
                     } elseif (($newpass1 != $newpass2) and ($validpassword == 1)) {
                         echo GetMetaTag(5, "Les mots de passes ne sont pas identiques. Vous allez etre redirig&eacute;", (BDO_URL . "Compte"));
                     } elseif (($validpassword == 1) and ($newpass1 === $newpass2)) {
+                        $newHash = password_hash($newpass2, PASSWORD_BCRYPT, ['cost' => 12]);
                         $this->User->set_dataPaste(array(
                             "user_id" => intval($profile_user_id),
-                            "password" => md5($newpass1)
+                            "password_v2" => $newHash
                         ));
                         $this->User->update();
 
@@ -384,9 +385,10 @@ class Compte extends Bdo_Controller {
                 $new_password = postVal("NewPass1");
                 $new_passowrd2 = postVal("NewPass2");
                 $this->loadModel("User");
+                $hash = password_hash($new_password, PASSWORD_BCRYPT, ['cost' => 12]);
                 $this->User->set_dataPaste(array(
                     "user_id" => $this->PasswordResetToken->user_id,
-                    "password" => md5($new_password)
+                    "password_v2" => $hash
                 ));
                 $this->User->update();
 

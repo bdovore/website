@@ -59,7 +59,8 @@ class User extends Bdo_Db_Line
                 API_TOKEN,
                 DATE_TOKEN,
                 LAST_UPDATE,
-                EXPLICIT_CONTENT
+                EXPLICIT_CONTENT,
+                password_v2
         FROM `" . $this->table_name . "`
  ";
     }
@@ -168,9 +169,25 @@ FROM " . $this->table_name . "
 
                 if (1 == $this->dbSelect->nbLineResult) {
 
-                    $mdp_user = md5($_POST['user_password']);
+                    $authenticated = false;
 
-                    if ($mdp_user and ($this->password == md5($_POST['user_password']))) {
+                    if (!empty($this->password_v2)) {
+                        // Utilisateur déjà migré : on utilise password_verify()
+                        $authenticated = password_verify($_POST['user_password'], $this->password_v2);
+                    } else {
+                        // Ancien utilisateur MD5 : on vérifie à l'ancienne...
+                        if (md5($_POST['user_password']) === $this->password) {
+                            $authenticated = true;
+                            // ...et on en profite pour migrer immédiatement
+                            $newHash = password_hash($_POST['user_password'], PASSWORD_BCRYPT, ['cost' => 12]);
+                            Db_query("UPDATE users SET 
+                                password_v2 = '" . Db_Escape_String($newHash) . "',
+                                password = 'migrated'
+                                WHERE user_id = " . intval($this->user_id));
+                        }
+                    }
+
+                    if ($authenticated) {
                         if ($this->level < 98) {
 
                             $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
@@ -609,9 +626,21 @@ FROM " . $this->table_name . "
          $error = "";
         if (1 == $this->dbSelect->nbLineResult) {
 
-            $mdp_user = md5($password);
+            $authenticated = false;
 
-            if ($mdp_user and ($this->password == md5($password))) {
+            if (!empty($this->password_v2)) {
+                $authenticated = password_verify($password, $this->password_v2);
+            } else {
+                $authenticated = (md5($password) === $this->password);
+                if ($authenticated) {
+                    // Migration au passage
+                    $newHash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+                    Db_query("UPDATE users SET password_v2='" . Db_Escape_String($newHash) . "',
+                        password='migrated' WHERE user_id=" . intval($this->user_id));
+                }
+            }
+
+            if ($authenticated) {
                 if ($this->level < 98) {
 
                    $API_TOKEN = uniqid($prefix=$this->user_id."-");
