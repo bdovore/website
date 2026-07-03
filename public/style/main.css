@@ -714,6 +714,47 @@ iframe.tom {
     color: #990000 !important;
 }
 
+.bdovore-modal {
+  max-width: calc(100% - 30px);
+}
+
+.bdovore-modal .ui-dialog-titlebar {
+  background: rgb(71,28,28);
+  color: white;
+  border: 0;
+}
+
+.bdovore-modal .bdovore-modal-message {
+  color: #333333;
+  font-size: 1em;
+  line-height: 1.4;
+  min-height: 0 !important;
+}
+
+.bdovore-modal .bdovore-modal-message p {
+  margin: 0.4em 0;
+}
+
+.bdovore-modal .ui-dialog-buttonpane {
+  border-top: 1px solid #dddddd;
+  margin-top: 0;
+  padding: 0.6em 1em;
+}
+
+.bdovore-modal .ui-dialog-buttonset button {
+  background: rgb(71,28,28);
+  border: 1px solid rgb(71,28,28);
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.bdovore-modal .ui-dialog-buttonset button:first-child:not(:only-child) {
+  background: #f5f5f5;
+  border-color: #cccccc;
+  color: #555555;
+}
+
 /* Style the input container */
 .input-container {
   display: flex;

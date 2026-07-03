@@ -9,24 +9,148 @@
  * Avis aux hackers en herbe ou chevronnés : suis preneur d'un coup de main pour la partie sécurité, j'y connais rien...
  */
 
+var bdovoreModal = (function($) {
+  var defaultErrorMessage = "Une erreur est survenue. Veuillez contacter l'administrateur du site.";
+
+  function normalizeOptions(options, defaultTitle) {
+    if (typeof options === "string") {
+      options = { message: options };
+    }
+    options = options || {};
+    return {
+      title: options.title || defaultTitle,
+      message: options.message || "",
+      confirmText: options.confirmText || "Valider",
+      cancelText: options.cancelText || "Annuler",
+      buttonText: options.buttonText || "OK"
+    };
+  }
+
+  function hasDialog() {
+    return $ && $.fn && $.fn.dialog;
+  }
+
+  function closeDialog($dialog) {
+    $dialog.dialog("close");
+  }
+
+  function openDialog(options, buttons, closeCallback) {
+    var $dialog = $("<div class=\"bdovore-modal-message\"></div>")
+      .append($("<p></p>").text(options.message))
+      .appendTo("body");
+
+    $dialog.dialog({
+      modal: true,
+      resizable: false,
+      draggable: false,
+      title: options.title,
+      width: Math.min($(window).width() - 30, 430),
+      dialogClass: "bdovore-modal",
+      buttons: buttons,
+      close: function() {
+        if (closeCallback) {
+          closeCallback();
+        }
+        $dialog.dialog("destroy").remove();
+      }
+    });
+  }
+
+  function confirm(options) {
+    var def = $.Deferred();
+    var settings = normalizeOptions(options, "Confirmation");
+
+    if (!hasDialog()) {
+      if (window.confirm(settings.message)) {
+        def.resolve();
+      } else {
+        def.reject();
+      }
+      return def.promise();
+    }
+
+    var answered = false;
+    var buttons = {};
+    buttons[settings.cancelText] = function() {
+      answered = true;
+      def.reject();
+      closeDialog($(this));
+    };
+    buttons[settings.confirmText] = function() {
+      answered = true;
+      def.resolve();
+      closeDialog($(this));
+    };
+
+    openDialog(settings, buttons, function() {
+      if (!answered) {
+        def.reject();
+      }
+    });
+
+    return def.promise();
+  }
+
+  function alert(options) {
+    var def = $.Deferred();
+    var settings = normalizeOptions(options, "Erreur");
+
+    if (!hasDialog()) {
+      window.alert(settings.message);
+      def.resolve();
+      return def.promise();
+    }
+
+    var resolved = false;
+    var buttons = {};
+    buttons[settings.buttonText] = function() {
+      resolved = true;
+      def.resolve();
+      closeDialog($(this));
+    };
+
+    openDialog(settings, buttons, function() {
+      if (!resolved) {
+        def.resolve();
+      }
+    });
+
+    return def.promise();
+  }
+
+  return {
+    alert: alert,
+    confirm: confirm,
+    defaultErrorMessage: defaultErrorMessage
+  };
+})(jQuery);
+
 function addSerie(id_serie, flg_achat) {
-  if (confirm("Toutes les éditions par défaut de la série seront ajoutées à votre collection. Etes vous sûr ?")) {
+  bdovoreModal.confirm({
+    message: "Toutes les éditions par défaut de la série seront ajoutées à votre collection. Etes vous sûr ?"
+  }).done(function() {
       $("#addSerie" + id_serie).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
        var url = $.bdovore.URL + "macollection/addserie?api_version=2&id_serie=" + id_serie  + "&flg_achat=" + flg_achat;
        $.getJSON(url, function(data) {
          if (data.error == "") {
-             alert("Tous les albums de la série ont été ajoutés :)");
-             window.location.reload();
+             bdovoreModal.alert({
+               title: "Collection mise à jour",
+               message: "Tous les albums de la série ont été ajoutés :)"
+             }).done(function() {
+               window.location.reload();
+             });
          }
          else {
-             alert("Une erreur est survenue. Veuillez contacter l'administrateur du site.");
+             bdovoreModal.alert(bdovoreModal.defaultErrorMessage);
          }
        });
-  }
+  });
 }
 
 function excludeSerie(id_serie) {
-  if (confirm("Cette série sera considérée comme complète.")) {
+  bdovoreModal.confirm({
+    message: "Cette série sera considérée comme complète."
+  }).done(function() {
     $("#inExSerie" + id_serie).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
     var url = $.bdovore.URL + "macollection/excludeserie?id_serie=" + id_serie;
     $.getJSON(url)
@@ -41,13 +165,15 @@ function excludeSerie(id_serie) {
       .fail(function( data, textStatus, error ) {
         //var err = textStatus + ", " + error;
         //console.log("excludeSerie : " + err);
-        alert("Une erreur est survenue. Veuillez contacter l'administrateur du site.");
+        bdovoreModal.alert(bdovoreModal.defaultErrorMessage);
       });
-  }
+  });
 }
 
 function includeSerie(id_serie) {
-  if (confirm("Cette série ne sera plus exclue des séries incomplètes.")) {
+  bdovoreModal.confirm({
+    message: "Cette série ne sera plus exclue des séries incomplètes."
+  }).done(function() {
     $("#inExSerie" + id_serie).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
     var url = $.bdovore.URL + "macollection/includeserie?id_serie=" + id_serie;
     $.getJSON(url)
@@ -62,9 +188,9 @@ function includeSerie(id_serie) {
       .fail(function( data, textStatus, error ) {
         //var err = textStatus + ", " + error;
         //console.log("includeSerie : " + err);
-        alert("Une erreur est survenue. Veuillez contacter l'administrateur du site.");
+        bdovoreModal.alert(bdovoreModal.defaultErrorMessage);
       });
-  }
+  });
 }
 
 // Boutons "Acheter" et "Futur achat" sur un album
@@ -86,7 +212,7 @@ function addAlbum(id_serie, id_tome, id_edition, exclu, flg_achat) {
           getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu);
       }
       else {
-          alert("Une erreur est survenue. Veuillez contacter l'administrateur du site.");
+          bdovoreModal.alert(bdovoreModal.defaultErrorMessage);
       }
 
   }
@@ -96,7 +222,9 @@ function addAlbum(id_serie, id_tome, id_edition, exclu, flg_achat) {
 
 // Bouton "Supprimer" sur un album
 function deleteEdition(id_serie, id_tome, id_edition, exclu) {
-  if (confirm("Supprimer l'édition de votre collection ?")) {
+  bdovoreModal.confirm({
+    message: "Supprimer l'édition de votre collection ?"
+  }).done(function() {
       $("#addAlbum" + id_edition).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
       var url = $.bdovore.URL + "macollection/deleteAlbum?api_version=2&id_edition=" + id_edition;
 
@@ -107,15 +235,17 @@ function deleteEdition(id_serie, id_tome, id_edition, exclu) {
               getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu);
           }
           else {
-              alert(data);
+              bdovoreModal.alert(data);
           }
       });
-  }
+  });
 }
 
 // Bouton Ignorer sur un album
 function excludeAlbum(id_serie, id_tome, id_edition, exclu) {
-  if (confirm("Cet album sera retiré des albums manquants.")) {
+  bdovoreModal.confirm({
+    message: "Cet album sera retiré des albums manquants."
+  }).done(function() {
     $("#inExAlbum" + id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
     var url = $.bdovore.URL + "macollection/excludealbum?id_serie=" + id_serie + "&id_tome=" + id_tome;
     $.getJSON(url)
@@ -125,14 +255,16 @@ function excludeAlbum(id_serie, id_tome, id_edition, exclu) {
       .fail(function( data, textStatus, error ) {
         //var err = textStatus + ", " + error;
         //console.log("excludeSerie : " + err);
-        alert("Une erreur est survenue. Veuillez contacter l'administrateur du site.");
+        bdovoreModal.alert(bdovoreModal.defaultErrorMessage);
       });
-  }
+  });
 }
 
 // Bouton "Ne plus ignorer" sur un album
 function includeAlbum(id_serie, id_tome, id_edition, exclu) {
-  if (confirm("Cet album ne sera plus exclus des albums manquants.")) {
+  bdovoreModal.confirm({
+    message: "Cet album ne sera plus exclus des albums manquants."
+  }).done(function() {
     $("#inExAlbum" + id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
     var url = $.bdovore.URL + "macollection/includealbum?id_serie=" + id_serie + "&id_tome=" + id_tome;
     $.getJSON(url)
@@ -142,10 +274,10 @@ function includeAlbum(id_serie, id_tome, id_edition, exclu) {
       .fail(function( data, textStatus, error ) {
         var err = textStatus + ", " + error;
         //console.log("excludeSerie : " + err);
-        alert("Une erreur est survenue (" + err + "). " +
+        bdovoreModal.alert("Une erreur est survenue (" + err + "). " +
               "Veuillez contacter l'administrateur du site.");
       });
-  }
+  });
 }
 
 function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly) {
@@ -270,5 +402,4 @@ function isValidEmailAddress(emailAddress) {
  * - fonction setInfoCollection pour envoyer mise à jour des infos d'un album de la collection
  *
  */
-
 
