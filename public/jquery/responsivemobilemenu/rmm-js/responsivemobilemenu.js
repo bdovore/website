@@ -31,19 +31,13 @@ function responsiveMobileMenu() {
 			/* 	width of menu list (non-toggled) */
 			
 			var $width = 0;
-				$(this).find('ul li').each(function() {
-					$width += $(this).outerWidth();
+				$(this).children('.rmm-main-list').children('li').each(function() {
+					$width += $(this).children('a').outerWidth(true);
 				});
-				
-			// if modern browser
-			
-			if ($.support.leadingWhitespace) {
-				$(this).css('max-width' , $width*1.05+'px');
-			}
-			// 
-			else {
-				$(this).css('width' , $width*1.05+'px');
-			}
+
+			// La largeur calculee sert uniquement de seuil de repli. Le conteneur
+			// reste libre de prendre toute la place disponible sur grand ecran.
+			$(this).data('menu-width', $width);
 		
 	 	});
 }
@@ -71,9 +65,26 @@ function adaptMenu() {
 	/* 	toggle menu on resize */
 	
 	$('.rmm').each(function() {
-			var $width = $(this).css('max-width');
-			$width = $width.replace('px', ''); 
-			if ( $(this).parent().width() < $width*1.05 ) {
+			var $width = $(this).data('menu-width');
+			// La largeur utile peut etre reduite par des elements voisins (compte,
+			// logo...). On se base donc sur la place reelle du menu plutot que sur
+			// la largeur totale de son parent.
+			var availableWidth = this.getBoundingClientRect().width;
+			var parent = this.parentNode;
+			var parentStyle = window.getComputedStyle(parent);
+			if ( parentStyle.display.indexOf('flex') !== -1 ) {
+				availableWidth = parent.getBoundingClientRect().width;
+				var visibleSiblings = 0;
+				$(this).siblings().each(function() {
+					if ( window.getComputedStyle(this).display !== 'none' ) {
+						availableWidth -= this.getBoundingClientRect().width;
+						visibleSiblings++;
+					}
+				});
+				var gap = parseFloat(parentStyle.columnGap) || 0;
+				availableWidth -= gap * visibleSiblings;
+			}
+			if ( availableWidth + 0.5 < $width ) {
 				$(this).children('.rmm-main-list').hide(0);
 				$(this).children('.rmm-toggled').show(0);
 			}
@@ -90,6 +101,8 @@ $(function() {
 	 responsiveMobileMenu();
 	 getMobileMenu();
 	 adaptMenu();
+	 // Une seconde passe prend en compte la largeur finale de la barre flex.
+	 setTimeout(adaptMenu, 0);
 	 
 	 /* slide down mobile menu on click */
 	 
@@ -107,6 +120,10 @@ $(function() {
 
 });
 	/* 	hide mobile menu on resize */
+var rmmResizeTimer;
 $(window).resize(function() {
- 	adaptMenu();
+	// Laisse le navigateur recalculer la largeur des elements flexibles avant
+	// de choisir entre le menu complet et sa version repliee.
+	clearTimeout(rmmResizeTimer);
+	rmmResizeTimer = setTimeout(adaptMenu, 0);
 });

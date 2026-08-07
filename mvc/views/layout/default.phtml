@@ -72,7 +72,7 @@ $jquery = $view->getHelper('jquery');
 <link href="<?php echo BDO_URL;?>jquery/bxslider/jquery.bxslider.css" rel="stylesheet">
 
 <link rel="stylesheet" href="<?php echo BDO_URL;?>jquery/responsivemobilemenu/rmm-css/responsivemobilemenu.css" type="text/css"/>
-<script type="text/javascript" src="<?php echo BDO_URL;?>jquery/responsivemobilemenu/rmm-js/responsivemobilemenu.js"></script>
+<script type="text/javascript" src="<?php echo BDO_URL;?>jquery/responsivemobilemenu/rmm-js/responsivemobilemenu.js?v=4"></script>
 <!-- Add mousewheel plugin (this is optional) -->
 <script type="text/javascript" src="<?php echo BDO_URL;?>jquery/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
 
@@ -284,7 +284,8 @@ $(document).ready(function() {
 
 
 <link href="<?php echo BDO_URL;?>jquery/cool-login/cool-login.css" rel="stylesheet">
-<script src="<?php echo BDO_URL;?>jquery/cool-login/cool-login.js" type="text/javascript"></script>
+<script src="<?php echo BDO_URL;?>jquery/cool-login/cool-login.js?v=5" type="text/javascript"></script>
+<link href="<?php echo BDO_URL;?>style/header.css?v=4" rel="stylesheet" type="text/css" />
 <!--
 
     <link type="text/css" rel="stylesheet" href="<?php echo BDO_URL;?>jquery/openid-selector/css/openid.css" />
@@ -359,13 +360,14 @@ div.verticaltext {
 
     <div id="header" style="position: relative; z-index: 10;">
         <div class="fondNoir"></div>
-        <div id="logo">
-            <a href="<?php echo BDO_URL;?>"><img
-                src="<?php echo BDO_URL_IMAGE;?>site/bdovore-logo.png" border="0"
-                alt="logo BDovore" width="120px" id="logo" /></a>
-        </div>
-        <div id="searchtable" class="rmm">
-            <ul id="menusite1">
+        <div id="headerToolbar">
+            <div id="logo">
+                <a href="<?php echo BDO_URL;?>"><img
+                    src="<?php echo BDO_URL_IMAGE;?>site/bdovore-logo.png" border="0"
+                    alt="logo BDovore" width="120px" id="logo" /></a>
+            </div>
+            <div id="searchtable" class="rmm">
+                <ul id="menusite1">
                             <li> <a class="menuGene" href="<?php echo BDO_URL;?>"
                     title="Retour à l'accueil">Accueil</a></li>
                 <li><a class="menuGene" href="<?php echo BDO_URL;?>browser"
@@ -391,10 +393,12 @@ div.verticaltext {
 if (User::minAccesslevel(1)) { ?><li>
 <a class="menuGene" href="<?php echo BDO_URL;?>admin"
 title="Pour les admins !">Admin</a></li> <?php } ?>
-            </ul>
-            <br />
-            <form action="<?php echo BDO_URL;?>browser" method="post"
-                id="formsearch" name="formsearch" target="_self">
+                </ul>
+            </div>
+            <?php echo $view->LOGINBARRE;?>
+        </div>
+        <form action="<?php echo BDO_URL;?>browser" method="post"
+            id="formsearch" name="formsearch" target="_self">
                 
 <div class="ui-widget">
     <a class="facebook-social" id="facebookheader" target="_blank" href="https://fr-fr.facebook.com/bdovore/" title="Suivez-nous sur Facebook" style="opacity: 1;"><img src="<?php echo BDO_URL_IMAGE;?>site/facebook.png"></a>
@@ -406,9 +410,7 @@ title="Pour les admins !">Admin</a></li> <?php } ?>
                     maxlength="60" value="Rechercher album, série, auteur..." />
                 <img id="img_loupe" src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif">
 </div>
-            </form>
-        </div>
-            <?php echo $view->LOGINBARRE;?>
+        </form>
 
         <hr class="expSep" />
     </div>

@@ -1,0 +1,116 @@
+/* En-tête principal : le menu et le compte partagent toujours la même ligne. */
+#headerToolbar {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+}
+
+#headerToolbar > #logo {
+    flex: 0 0 170px;
+    float: none;
+}
+
+#headerToolbar > #searchtable {
+    flex: 1 1 auto;
+    float: none;
+    min-width: 0;
+    padding: 0;
+}
+
+#headerToolbar > #loginContainer {
+    flex: 0 0 auto;
+    float: none;
+    margin: 0;
+}
+
+/* Conserve 10 px entre les boutons tant que le menu complet est affiche. */
+#headerToolbar #searchtable .rmm-main-list {
+    font-size: 0;
+}
+
+#headerToolbar #searchtable .rmm-main-list > li > a {
+    margin: 0 5px;
+    padding: 8px 18px;
+    font-size: 15px;
+}
+
+#headerToolbar #loginButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    float: none;
+    background-color: rgba(143, 18, 4, 1);
+    border: 0;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .35);
+    font-family: inherit;
+}
+
+#headerToolbar #loginButton:hover,
+#headerToolbar #loginButton:focus {
+    background-color: #6c3030;
+}
+
+#headerToolbar #loginButton:focus {
+    outline: 2px solid #cd6767;
+    outline-offset: 2px;
+}
+
+#headerToolbar #loginButton.active {
+    border-radius: 50%;
+}
+
+#headerToolbar #loginButton span,
+#headerToolbar #loginButton.active span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 35px;
+    height: 35px;
+    max-width: none;
+    padding: 0;
+    background: none;
+    color: #fff;
+    font-size: 16px;
+    line-height: 1;
+    text-shadow: 1px 1px #331414;
+}
+
+#headerToolbar #loginButton.loginButton-user span {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#headerToolbar #loginButton em {
+    display: none;
+}
+
+#formsearch {
+    margin: 10px 0 3px;
+    text-align: center;
+}
+
+@media screen and (max-width: 1200px) {
+    #formsearch {
+        margin-left: 0;
+    }
+}
+
+@media screen and (max-width: 920px), screen and (max-device-width: 768px) {
+    #headerToolbar > #searchtable {
+        padding: 0 !important;
+    }
+
+    #headerToolbar .rmm.graphite .rmm-toggled {
+        width: 100%;
+    }
+
+    #formsearch {
+        margin-top: 10px;
+    }
+}
