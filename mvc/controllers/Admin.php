@@ -179,6 +179,7 @@ class Admin extends Bdo_Controller {
             if ($act == "update") {
                 $tome_id = postValInteger("txtTomeId");
                 $edition_id = postValInteger("txtEditionId");
+                $isbnEanFormData = $this->getIsbnEanFormData();
                 if (is_file($_FILES["txtFileLoc"]["tmp_name"])) {// un fichier à uploader
                     $img_couv = imgCouvFromForm($tome_id, $edition_id);
                 } else if (preg_match('/^(https?:\/\/)?([\w\-\.]+)\:?([0-9]*)\/(.*)$/', postVal('txtFileURL'), $url_ary)) { // un fichier à télécharger
@@ -196,10 +197,11 @@ class Admin extends Bdo_Controller {
                     "ID_EDITION" => $edition_id,
                     'DTE_PARUTION' => $txtDateParution,
                     'FLAG_DTE_PARUTION' => ((postVal('FLAG_DTE_PARUTION') == "1") ? "1" : ""),
+                    'FLAG_SANS_ISBN_EAN' => $isbnEanFormData['FLAG_SANS_ISBN_EAN'],
                     'ID_EDITEUR' => postValInteger('txtEditeurId'),
                     'ID_COLLECTION' => postValInteger('txtCollecId'),
-                    'EAN' => trim(postVal('txtEAN')),
-                    'ISBN' => trim(postVal("txtISBN")),
+                    'EAN' => $isbnEanFormData['EAN'],
+                    'ISBN' => $isbnEanFormData['ISBN'],
                     'COMMENT' => postVal("txtComment"),
                     "FLG_TT" => ((postVal('chkTT') == "checkbox") ? "O" : "N"),
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
@@ -304,6 +306,7 @@ class Admin extends Bdo_Controller {
                     "NBUSERS" => "0",
                     "IDTOME" => $alb_id,
                     "TITRE" => $alb_titre,
+                    "CHKFLAG_SANS_ISBN_EAN" => "",
                     "URLDELETE" => "javascript:alert('D&eactue;sactiv&eacute;');",
                     "ACTIONNAME" => "Enregistrer",
                     "URLACTION" => BDO_URL . "admin/editedition?act=append"
@@ -315,6 +318,7 @@ class Admin extends Bdo_Controller {
 // INSERE UNE NOUVELLE EDITION DANS LA BASE
             elseif ($act == "append") {
                 $id_tome = postValInteger('txtTomeId');
+                $isbnEanFormData = $this->getIsbnEanFormData();
 
                 $txtDateParution = completeDate(postVal('txtDateParution'));
                 if (postVal('txtDateParution') == "")
@@ -328,8 +332,9 @@ class Admin extends Bdo_Controller {
                     "ID_COLLECTION" => postValInteger('txtCollecId'),
                     "DTE_PARUTION" => $txtDateParution,
                     "FLAG_DTE_PARUTION" => $flag_dte_par,
-                    "EAN" => trim(postVal("txtEAN")),
-                    'ISBN' => trim(postVal("txtISBN")),
+                    "FLAG_SANS_ISBN_EAN" => $isbnEanFormData['FLAG_SANS_ISBN_EAN'],
+                    "EAN" => $isbnEanFormData['EAN'],
+                    'ISBN' => $isbnEanFormData['ISBN'],
                     'COMMENT' => postVal("txtComment"),
                     "FLG_TT" => ((postVal('chkTT') == "checkbox") ? "O" : "N"),
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
@@ -388,6 +393,7 @@ class Admin extends Bdo_Controller {
                         "COLLECTION" => "",
                         "DTPAR" => "",
                         "CHKFLAG_DTE_PARUTION" => "",
+                        "CHKFLAG_SANS_ISBN_EAN" => "",
                         "COMMENT" => "",
                         "ISTT" => "",
                         "FLGDEF" => "",
@@ -464,6 +470,7 @@ class Admin extends Bdo_Controller {
                         "COLLECTION" => $this->Edition->NOM_COLLECTION,
                         "DTPAR" => $this->Edition->DATE_PARUTION_EDITION,
                         "CHKFLAG_DTE_PARUTION" => (($this->Edition->FLAG_DTE_PARUTION == 1) ? 'CHECKED' : ''),
+                        "CHKFLAG_SANS_ISBN_EAN" => (($this->Edition->FLAG_SANS_ISBN_EAN == 1) ? 'CHECKED' : ''),
                         "COMMENT" => stripslashes($this->Edition->COMMENT_EDITION),
                         "ISTT" => isset($this->Edition->FLG_TT) ? "" : (($this->Edition->FLG_TT == 'O') ? 'checked' : ''),
                         "FLGDEF" => (($this->Edition->ID_EDITION == $this->Edition->ID_EDITION_DEFAULT ? 'O' : '')),
@@ -656,6 +663,7 @@ class Admin extends Bdo_Controller {
                     "COLLECTION" => "",
                     "IDCOLLEC" => NULL,
                     "CHKFLAG_DTE_PARUTION" => NULL,
+                    "CHKFLAG_SANS_ISBN_EAN" => NULL,
                     "ISTT" => "",
                     "EAN" => "",
                     "ISBN" => "",
@@ -729,7 +737,8 @@ class Admin extends Bdo_Controller {
                     "URLEDITCOLL" => BDO_URL . "admin/editcollection?collec_id=" . $this->Tome->ID_COLLECTION,
                     "URLEDITCOLLALT" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
                     "URLACTION" => BDO_URL . "admin/editalbum?act=append",
-                    "EXPLICIT_CHECKED" => $explicit
+                    "EXPLICIT_CHECKED" => $explicit,
+                    "CHKFLAG_SANS_ISBN_EAN" => ""
                 ));
 
                 $this->view->render();
@@ -740,6 +749,7 @@ class Admin extends Bdo_Controller {
             elseif ($act == "append") {
 
                 // on vérifie d'abord la date
+                $isbnEanFormData = $this->getIsbnEanFormData();
                 $txtDateParution = completeDate(postVal('txtDateParution'));
                 $flgDteParution = postVal('FLAG_DTE_PARUTION');
                 $explicit = postVal("chkExplicite") == "checked" ? 1 : 0 ;
@@ -786,10 +796,11 @@ class Admin extends Bdo_Controller {
                 $this->Edition->set_dataPaste(array(
                     'DTE_PARUTION' => $txtDateParution,
                     'FLAG_DTE_PARUTION' => ((postVal('FLAG_DTE_PARUTION') == "1") ? "1" : ""),
+                    'FLAG_SANS_ISBN_EAN' => $isbnEanFormData['FLAG_SANS_ISBN_EAN'],
                     'ID_EDITEUR' => postValInteger('txtEditeurId'),
                     'ID_COLLECTION' => postValInteger('txtCollecId'),
-                    'EAN' => trim(postVal('txtEAN')),
-                    'ISBN' => trim(postVal("txtISBN")),
+                    'EAN' => $isbnEanFormData['EAN'],
+                    'ISBN' => $isbnEanFormData['ISBN'],
                     'COMMENT' => postVal("txtComment"),
                     "FLG_TT" => ((postVal('chkTT') == "checkbox") ? "O" : "N"),
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
@@ -2422,6 +2433,23 @@ class Admin extends Bdo_Controller {
         } else {
             die("Vous n'avez pas acc&egrave;s &agrave; cette page.");
         }
+    }
+
+    private function getIsbnEanFormData() {
+        $ean = trim(postVal('txtEAN'));
+        $isbn = trim(postVal('txtISBN'));
+        $sansIsbnEan = postVal('FLAG_SANS_ISBN_EAN') == "1";
+
+        if ($sansIsbnEan && ($ean !== '' || $isbn !== '')) {
+            echo "Erreur : la case « Sans ISBN ou EAN » ne peut être cochée que si les champs ISBN et EAN sont vides.";
+            exit();
+        }
+
+        return array(
+            'FLAG_SANS_ISBN_EAN' => $sansIsbnEan ? "1" : "",
+            'EAN' => $ean,
+            'ISBN' => $isbn
+        );
     }
 
     private function resize_edition_image($id_edition, $imagedir) {

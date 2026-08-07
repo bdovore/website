@@ -258,6 +258,7 @@ class Controle extends Bdo_Controller
                         FROM `bd_edition` 
                         WHERE PROP_STATUS = 1 AND 
                         (isbn is null and ean is null and DTE_PARUTION >= '1974-01-01' )
+                        AND FLAG_SANS_ISBN_EAN IS NULL
                         ",
                     "url" => BDO_URL."admin/editedition?edition_id=",
                     "colUrl" => "ID_EDITION",
@@ -348,4 +349,3 @@ class Controle extends Bdo_Controller
 
 
 }
-

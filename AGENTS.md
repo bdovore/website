@@ -77,3 +77,4 @@ Before adding new JS or CSS dependencies, check whether the needed behavior is a
 - Avoid broad refactors while fixing a feature.
 - Be careful with dynamic properties: several core classes rely on `#[AllowDynamicProperties]`.
 - When creating new pages or actions, create the controller method and the matching `.phtml` template path expected by the router/view system.
+
