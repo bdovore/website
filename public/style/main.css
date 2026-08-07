@@ -754,6 +754,65 @@ iframe.tom {
     margin-right: 0.35em;
 }
 
+.album-genre {
+    color: #555;
+    font-style: italic;
+    margin-bottom: 0.55em;
+}
+
+.album-contributors {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.35em;
+    margin: 0 auto 0.55em;
+    max-width: 100%;
+    text-align: left;
+}
+
+.album-contributor-row {
+    align-items: center;
+    display: grid;
+    gap: 0.5em;
+    grid-template-columns: auto minmax(0, 1fr);
+}
+
+.album-role-badge {
+    align-items: center;
+    background-color: #f4eeee;
+    border: 1px solid #d8c9c7;
+    border-radius: 1em;
+    color: #63312f;
+    display: inline-flex;
+    font-size: 0.82em;
+    font-weight: 600;
+    gap: 0.35em;
+    line-height: 1.2;
+    padding: 0.25em 0.55em;
+    white-space: nowrap;
+}
+
+.album-role-icons {
+    align-items: center;
+    display: inline-flex;
+    gap: 0.1em;
+}
+
+.album-role-icons img {
+    height: 14px;
+    object-fit: contain;
+    width: 14px;
+}
+
+.album-contributor-names {
+    font-weight: 600;
+    min-width: 0;
+}
+
+.album-contributor-separator {
+    color: #999;
+    margin: 0 0.35em;
+}
+
 .bdovore-modal {
   max-width: calc(100% - 30px);
 }

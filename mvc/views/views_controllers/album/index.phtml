@@ -170,9 +170,114 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
              </font></div>  <?php ;} ?>
 
              </p>
-             <span itemprop="genre"><?php echo $view->tome->NOM_GENRE;?></span>  -   <?php echo $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR, "PSEUDO" => $view->tome->scpseudo),$target="_parent"). ($view->tome->scapseudo == "Aucun" ? "" : " - ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_SCENAR_ALT,"PSEUDO" => $view->tome->scapseudo),$target="_parent"));
-            if ($view->tome->scpseudo <> $view->tome->depseudo || $view->tome->deapseudo <> "Aucun" ) echo "/".$ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN, "PSEUDO" => $view->tome->depseudo),$target="_parent").($view->tome->deapseudo == "Aucun" ? "" : " - ". $ficheAlbum->urlAuteur(array("ID_AUTEUR" => $view->tome->ID_DESSIN_ALT, "PSEUDO" => $view->tome->deapseudo),$target="_parent")); ?>
-            <?php if ($view->tome->copseudo <> $view->tome->depseudo and $view->tome->copseudo <> "Aucun" and $view->tome->copseudo <> "<indéterminé>") echo "<br>Couleur : ".$ficheAlbum->urlAuteur(array("ID_AUTEUR" =>$view->tome->ID_COLOR,"PSEUDO" => $view->tome->copseudo),$target="_parent"); ?>
+             <div class="album-genre"><span itemprop="genre"><?php echo $view->tome->NOM_GENRE;?></span></div>
+             <?php
+             $albumRoles = array(
+                 array(
+                     'label' => 'scénario',
+                     'icon' => 'picto-scenario.png',
+                     'contributors' => array(
+                         array('id' => $view->tome->ID_SCENAR ?? 0, 'pseudo' => $view->tome->scpseudo ?? ''),
+                         array('id' => $view->tome->ID_SCENAR_ALT ?? 0, 'pseudo' => $view->tome->scapseudo ?? '')
+                     )
+                 ),
+                 array(
+                     'label' => 'dessin',
+                     'icon' => 'picto-dessin.png',
+                     'contributors' => array(
+                         array('id' => $view->tome->ID_DESSIN ?? 0, 'pseudo' => $view->tome->depseudo ?? ''),
+                         array('id' => $view->tome->ID_DESSIN_ALT ?? 0, 'pseudo' => $view->tome->deapseudo ?? '')
+                     )
+                 ),
+                 array(
+                     'label' => 'couleur',
+                     'icon' => 'picto-color.png',
+                     'contributors' => array(
+                         array('id' => $view->tome->ID_COLOR ?? 0, 'pseudo' => $view->tome->copseudo ?? ''),
+                         array('id' => $view->tome->ID_COLOR_ALT ?? 0, 'pseudo' => $view->tome->coapseudo ?? '')
+                     )
+                 )
+             );
+
+             $normalizedAlbumRoles = array();
+             foreach ($albumRoles as $albumRole) {
+                 $contributors = array();
+                 foreach ($albumRole['contributors'] as $contributor) {
+                     $pseudo = trim((string) $contributor['pseudo']);
+                     if ($pseudo === '' || $pseudo === 'Aucun' || $pseudo === '<indéterminé>') {
+                         continue;
+                     }
+
+                     $contributorKey = $contributor['id'] > 0 ? 'id-' . $contributor['id'] : 'pseudo-' . $pseudo;
+                     if (!isset($contributors[$contributorKey])) {
+                         $contributors[$contributorKey] = array(
+                             'id' => $contributor['id'],
+                             'pseudo' => $pseudo
+                         );
+                     }
+                 }
+
+                 if (!empty($contributors)) {
+                     $albumRole['contributors'] = $contributors;
+                     $normalizedAlbumRoles[] = $albumRole;
+                 }
+             }
+
+             $albumRoleGroups = array();
+             $singleContributorGroups = array();
+             foreach ($normalizedAlbumRoles as $albumRole) {
+                 if (count($albumRole['contributors']) === 1) {
+                     $contributorKey = key($albumRole['contributors']);
+                     if (isset($singleContributorGroups[$contributorKey])) {
+                         $albumRoleGroups[$singleContributorGroups[$contributorKey]]['roles'][] = $albumRole;
+                         continue;
+                     }
+
+                     $singleContributorGroups[$contributorKey] = count($albumRoleGroups);
+                 }
+
+                 $albumRoleGroups[] = array(
+                     'roles' => array($albumRole),
+                     'contributors' => $albumRole['contributors']
+                 );
+             }
+             ?>
+             <div class="album-contributors">
+                 <?php foreach ($albumRoleGroups as $albumRoleGroup) {
+                     $roleLabels = array();
+                     foreach ($albumRoleGroup['roles'] as $albumRole) {
+                         $roleLabels[] = $albumRole['label'];
+                     }
+                     $lastRoleLabel = array_pop($roleLabels);
+                     $roleLabel = empty($roleLabels)
+                         ? ucfirst($lastRoleLabel)
+                         : ucfirst(implode(', ', $roleLabels)) . ' & ' . $lastRoleLabel;
+                 ?>
+                 <div class="album-contributor-row">
+                     <span class="album-role-badge">
+                         <span class="album-role-icons" aria-hidden="true">
+                             <?php foreach ($albumRoleGroup['roles'] as $albumRole) { ?>
+                             <img src="<?php echo BDO_URL_IMAGE; ?>site/<?php echo $albumRole['icon']; ?>" alt="">
+                             <?php } ?>
+                         </span>
+                         <?php echo $roleLabel; ?>
+                     </span>
+                     <span class="album-contributor-names">
+                         <?php $contributorPosition = 0;
+                         foreach ($albumRoleGroup['contributors'] as $albumContributor) {
+                             if ($contributorPosition > 0) { ?>
+                             <span class="album-contributor-separator" aria-hidden="true">&middot;</span>
+                             <?php }
+                             echo $ficheAlbum->urlAuteur(
+                                 array('ID_AUTEUR' => $albumContributor['id'], 'PSEUDO' => $albumContributor['pseudo']),
+                                 '_parent'
+                             );
+                             $contributorPosition++;
+                         } ?>
+                     </span>
+                 </div>
+                 <?php } ?>
+             </div>
             <br> <b>Edition </b><font size="-1">
                             <?php if (count($view->dbs_edition->a_dataQuery) == 1) {
                                     if ($view->dateparution) {
