@@ -339,20 +339,22 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly
       $dte = data.data[0].DATE_AJOUT.substring(8,10) + "/" +   data.data[0].DATE_AJOUT.substring(5,7) + "/" +  data.data[0].DATE_AJOUT.substring(0,4);
       if (data.data[0].FLG_ACHAT === "O") {
         // C'est un achat futur
-        $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
-                + '&#9825; Achat futur depuis le ' + $dte + "<br>"
+        $madiv = '<div id="addAlbum' + id_edition + '" class="collection-status collection-status-wishlist">'
+                + '<span class="collection-status-badge"><span class="far fa-heart" aria-hidden="true"></span>Dans ma wishlist</span>'
+                + '<span class="collection-status-date">Depuis le ' + $dte + '</span>'
                + ' <div class="button-simple"> <a   '
                + '     onclick="addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')"'
                + '     title="Ajouter cet album dans votre collection">' 
-               + '  <span class="fas fa-check fa-border button-collection"></span><span class="for-big-screen">J\'ai</span></div>'
+               + '  <span class="fas fa-check fa-border button-collection"></span><span class="for-big-screen">J\'ai</span></a></div>'
                 + ' <div class="button-simple">'
                + '  <a  title="Supprimer ?"  onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">'
-               + '   <span class="far fa-trash-alt fa-border button-collection"></span><span class="for-big-screen">Supprimer</span></div>'
+               + '   <span class="far fa-trash-alt fa-border button-collection"></span><span class="for-big-screen">Supprimer</span></a></div>'
                + '</div>';
       } else {
         // on l'a réellement
-        $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
-                + '<span style="font-size:1.5em">&#10003;</span> Ajouté le ' + $dte + ' '
+        $madiv = '<div id="addAlbum' + id_edition + '" class="collection-status collection-status-owned">'
+                + '<span class="collection-status-badge"><span class="fas fa-check" aria-hidden="true"></span>Dans ma collection</span>'
+                + '<span class="collection-status-date">Ajouté le ' + $dte + '</span>'
                + '  <a class="far fa-trash-alt fa-border button-collection" '
                + '     title="Supprimer l\' édition de ma collection ?"'
                + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">'
@@ -402,4 +404,3 @@ function isValidEmailAddress(emailAddress) {
  * - fonction setInfoCollection pour envoyer mise à jour des infos d'un album de la collection
  *
  */
-

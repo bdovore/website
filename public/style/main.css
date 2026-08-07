@@ -714,6 +714,46 @@ iframe.tom {
     color: #990000 !important;
 }
 
+.collection-status {
+    font-size: 0.9em;
+    margin-top: 0.5em;
+}
+
+.collection-status-badge {
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: 1em;
+    display: inline-flex;
+    font-weight: 600;
+    gap: 0.35em;
+    line-height: 1.2;
+    padding: 0.25em 0.55em;
+}
+
+.collection-status-wishlist .collection-status-badge {
+    background-color: #fff1cf;
+    border-color: #d9a441;
+    color: #6f4a00;
+}
+
+.collection-status-owned .collection-status-badge {
+    background-color: #e4f4e8;
+    border-color: #7aae85;
+    color: #245b32;
+}
+
+.collection-status-date {
+    color: #666;
+    display: block;
+    font-size: 0.85em;
+    margin: 0.2em 0 0.35em 0.2em;
+}
+
+.collection-status-owned .collection-status-date {
+    display: inline-block;
+    margin-right: 0.35em;
+}
+
 .bdovore-modal {
   max-width: calc(100% - 30px);
 }
