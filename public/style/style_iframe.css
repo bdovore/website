@@ -690,47 +690,10 @@ div.contenu>.clear {
     /* Précaution pour IE 7 */
 }
 
-div.conteneuralb {
-    width: 100%;
-    padding-top: 15px;
-    margin: auto;
-    position: relative;
-    float: left;
-    background-color: white;
-}
-
 div.alb-fiche {
     float: left;
     width: 190px;
     padding-left: 10px;
-}
-
-div.alb-img {
-    float: left;
-    width: 190px;
-    padding-left: 10px;
-    margin-right:10px;
-}
-
-div.contentalb {
-    float: left;
-    width: 340px;
-}
-
-div.synopsis {
-    margin-top: 20px;
-    padding-left: 5px;
-    padding-right: 5px;
-    float: left;
-    width: 530px;
-}
-
-div.comment {
-    margin-top: 20px;
-    float: left;
-    width: 530px;
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
 div.action {

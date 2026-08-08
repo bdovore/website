@@ -754,6 +754,132 @@ iframe.tom {
     margin-right: 0.35em;
 }
 
+/* Fiche album : grille commune aux vues pleine page et Fancybox. */
+div.conteneuralb {
+    align-items: start;
+    background: #fff;
+    box-sizing: border-box;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-areas:
+        "cover"
+        "details"
+        "synopsis"
+        "private"
+        "comments";
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    padding: 1rem;
+    text-align: center;
+    width: 100%;
+}
+
+div.conteneuralb > hr.expSep {
+    display: none;
+}
+
+div.conteneuralb > .alb-img {
+    box-sizing: border-box;
+    float: none;
+    grid-area: cover;
+    justify-self: center;
+    margin: 0 auto !important;
+    max-width: 250px;
+    min-width: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.alb-img #couv,
+.alb-img #imgEdition {
+    max-width: 100%;
+    width: 100%;
+}
+
+.alb-img #imgEdition {
+    border-radius: 3px;
+    box-sizing: border-box;
+    display: block;
+    height: auto;
+    margin: 0 auto;
+}
+
+.alb-img .petite_police {
+    line-height: 1.35;
+    margin-top: 0.35rem;
+}
+
+.alb-img .album-edition-comment {
+    text-align: left;
+}
+
+.alb-img #sponsor {
+    margin-top: 0.65rem;
+}
+
+div.conteneuralb > .contentalb {
+    box-sizing: border-box;
+    float: none;
+    grid-area: details;
+    min-width: 0;
+    width: auto;
+}
+
+.album-title {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    line-height: 1.3;
+    margin: 0 0 0.5rem;
+    text-align: center;
+}
+
+.album-series {
+    color: #555;
+    font-size: 0.85em;
+    font-weight: normal;
+}
+
+.album-rating {
+    margin: 0 0 0.6rem;
+    text-align: center;
+}
+
+div.conteneuralb > .synopsis {
+    box-sizing: border-box;
+    float: none;
+    grid-area: synopsis;
+    line-height: 1.45;
+    margin: 0;
+    min-width: 0;
+    padding: 0;
+    text-align: left;
+    width: auto;
+}
+
+div.conteneuralb > #info_collection {
+    box-sizing: border-box;
+    grid-area: private;
+    min-width: 0;
+    text-align: left;
+    width: 100%;
+}
+
+div.conteneuralb > .comment {
+    box-sizing: border-box;
+    float: none;
+    grid-area: comments;
+    margin: 0;
+    min-width: 0;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+}
+
+div.conteneuralb .action {
+    float: none;
+    width: 100%;
+}
+
 .album-genre {
     color: #555;
     font-style: italic;
@@ -811,6 +937,48 @@ iframe.tom {
 .album-contributor-separator {
     color: #999;
     margin: 0 0.35em;
+}
+
+@media (min-width: 560px) {
+    div.conteneuralb {
+        gap: 1rem;
+        grid-template-areas:
+            "cover details"
+            "synopsis synopsis"
+            "private private"
+            "comments comments";
+        grid-template-columns: minmax(190px, 0.8fr) minmax(0, 1.2fr);
+    }
+
+    div.conteneuralb > .alb-img {
+        max-width: 240px;
+    }
+}
+
+@media (min-width: 760px) {
+    div.conteneuralb {
+        gap: 1.25rem;
+        grid-template-areas:
+            "cover details synopsis"
+            "private private private"
+            "comments comments comments";
+        grid-template-columns:
+            minmax(180px, 0.85fr)
+            minmax(220px, 1fr)
+            minmax(240px, 1.25fr);
+    }
+
+    div.conteneuralb > .alb-img {
+        max-width: 280px;
+    }
+}
+
+@media (min-width: 760px) and (max-width: 999px) {
+    .album-contributor-row {
+        gap: 0.25em;
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+    }
 }
 
 .bdovore-modal {
