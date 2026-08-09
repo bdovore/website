@@ -1,0 +1,32 @@
+.parabd-page { max-width: 1180px; margin: 0 auto; box-sizing: border-box; }
+.parabd-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.parabd-heading h1 { margin-bottom: .25rem; }
+.parabd-search, .parabd-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; margin: 1rem 0; }
+.parabd-search { grid-template-columns: auto 1fr auto; align-items: end; }
+.parabd-fields label, .parabd-step > label { display: flex; flex-direction: column; gap: .3rem; }
+.parabd-fields .wide, .parabd-step .wide { grid-column: 1 / -1; }
+.parabd-fields input, .parabd-fields select, .parabd-fields textarea, .parabd-search input { width: 100%; box-sizing: border-box; padding: .55rem; }
+.parabd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.parabd-card { display: flex; gap: .8rem; border: 1px solid #ddd; border-radius: 5px; background: #fff; padding: .75rem; min-width: 0; }
+.parabd-card img { width: 96px; height: 120px; object-fit: contain; flex: 0 0 auto; background: #f4f4f4; }
+.parabd-card h2 { font-size: 1.05rem; margin: .25rem 0; overflow-wrap: anywhere; }
+.parabd-detail { display: grid; grid-template-columns: minmax(250px, 38%) 1fr; gap: 2rem; }
+.parabd-gallery { display: grid; gap: .75rem; }
+.parabd-gallery img { display: block; max-width: 100%; max-height: 560px; margin: auto; }
+.parabd-data { display: grid; grid-template-columns: auto 1fr; gap: .35rem 1rem; }
+.parabd-data dt { font-weight: bold; }.parabd-data dd { margin: 0; }
+.parabd-step { border: 1px solid #ddd; border-radius: 5px; padding: 1rem; margin: 1rem 0; }
+.parabd-step[hidden] { display: none; }
+.parabd-duplicate { padding: .7rem; border-left: 4px solid #d79d00; background: #fff8dc; margin: .5rem 0; }
+.parabd-duplicate.certain { border-color: #b00020; }
+.parabd-error { color: #a40000; margin: .75rem 0; }
+.parabd-charter { margin: 1rem 0; }.parabd-lists { display: flex; gap: 1rem; margin: 1rem 0; }.parabd-lists .active { font-weight: bold; }
+.parabd-admin-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid #ddd; padding: .6rem 0; }
+.parabd-page form.inline { display: inline; margin-left: .5rem; }
+.parabd-page form.inline button { font-size: .8rem; padding: .15rem .35rem; }
+@media (max-width: 700px) {
+    .parabd-heading, .parabd-admin-row { align-items: stretch; flex-direction: column; }
+    .parabd-search, .parabd-fields, .parabd-detail { grid-template-columns: 1fr; }
+    .parabd-fields .wide { grid-column: auto; }
+    .parabd-card img { width: 80px; height: 105px; }
+}

@@ -1,0 +1,11 @@
+<?php $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }; $page = $view->getHelper('pagination'); $fields = array('TITLE'=>'Titre','DESCRIPTION'=>'Description','MATERIAL'=>'Matière','COLOR'=>'Couleur','WIDTH_MM'=>'Largeur','HEIGHT_MM'=>'Hauteur','DEPTH_MM'=>'Profondeur','WEIGHT_G'=>'Poids','SCALE'=>'Échelle','RELEASE_DATE'=>'Date','DATE_PRECISION'=>'Précision date','PRINT_RUN'=>'Tirage','MANUFACTURER'=>'Fabricant','PUBLISHER'=>'Éditeur','LICENSE_NAME'=>'Licence','RANGE_NAME'=>'Gamme','UNIVERSE_NAME'=>'Univers'); ?>
+<div class="cadre1 parabd-page">
+    <?php echo $page->menuAdmin(); ?><h1>Fusion assistée Para-BD</h1>
+    <p>La fiche source #<?php echo intval($view->source['ID_ITEM']); ?> sera conservée comme redirection vers la cible #<?php echo intval($view->target['ID_ITEM']); ?>. Les exemplaires personnels resteront séparés.</p>
+    <form method="post" action="<?php echo BDO_URL; ?>adminparabd/merge">
+        <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="source_id" value="<?php echo intval($view->source['ID_ITEM']); ?>"><input type="hidden" name="target_id" value="<?php echo intval($view->target['ID_ITEM']); ?>">
+        <table class="table"><thead><tr><th>Champ</th><th>Source</th><th>Cible</th></tr></thead><tbody><?php foreach ($fields as $field=>$label) { ?><tr><th><?php echo $h($label); ?></th><td><label><input type="radio" name="prefer[<?php echo $h($field); ?>]" value="source"> <?php echo $h($view->source[$field]); ?></label></td><td><label><input type="radio" name="prefer[<?php echo $h($field); ?>]" value="target" checked> <?php echo $h($view->target[$field]); ?></label></td></tr><?php } ?></tbody></table>
+        <h2>Visuel principal</h2><div class="parabd-grid"><?php foreach (array_merge($view->target['media'], $view->source['media']) as $media) { ?><label class="parabd-card"><input type="radio" name="primary_media_id" value="<?php echo intval($media['ID_MEDIA']); ?>"<?php if ($media['IS_PRIMARY'] && intval($media['ITEM_ID']) === intval($view->target['ID_ITEM'])) echo ' checked'; ?>><img src="<?php echo $h(BDO_URL_PARABD . $media['FILE_PATH']); ?>" alt=""></label><?php } ?></div>
+        <p><button type="submit">Confirmer la fusion</button> <a href="<?php echo BDO_URL; ?>adminparabd">Annuler</a></p>
+    </form>
+</div>

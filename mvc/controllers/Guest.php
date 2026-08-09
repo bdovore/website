@@ -338,5 +338,34 @@ class Guest extends Bdo_Controller
 
         $this->view->render();
     }
-}
 
+    public function Parabd () {
+        if (!defined('BDO_PARABD_ENABLED') || !BDO_PARABD_ENABLED) {
+            http_response_code(404);
+            die('Fonctionnalité Para-BD indisponible.');
+        }
+        $user = $this->getUserInfo();
+        // Contrairement aux autres écrans guest, Para-BD reste fermé tant que
+        // OPEN_COLLEC n'est pas explicitement activé, y compris pour le propriétaire.
+        if (!$user->user_id || !$user->is_openCollection()) {
+            http_response_code(404);
+            $this->view->addAlertPage("Cette collection Para-BD n'est pas publique.");
+            $this->view->addPhtmlFile('alert', 'BODY');
+            $this->view->render();
+            return;
+        }
+        $state = strtolower(getVal('list', 'owned')) === 'wishlist' ? 'WISHLIST' : 'OWNED';
+        $this->loadModel('ParabdService');
+        $this->view->addCssFile('style/parabd.css');
+        $this->view->set_var(array(
+            'PAGETITLE' => 'Para-BD de ' . $user->username,
+            'ROBOTS' => 'noindex,follow',
+            'copies' => $this->ParabdService->getUserCopies(intval($user->user_id), $state, true),
+            'state' => $state,
+            'IDUSER' => intval($user->user_id),
+            'USERNAME' => $user->username,
+            'is_authenticated' => User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1)
+        ));
+        $this->view->render();
+    }
+}

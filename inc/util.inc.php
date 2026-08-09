@@ -463,6 +463,24 @@ function postValInteger ($nomvar, $default = 0)
         return intval($val);
 }
 
+/** Session-scoped CSRF token dedicated to a Para-BD mutation scope. */
+function parabdCsrfToken ($scope = 'write')
+{
+    if (!isset($_SESSION['parabd_csrf']) || !is_array($_SESSION['parabd_csrf'])) {
+        $_SESSION['parabd_csrf'] = array();
+    }
+    if (empty($_SESSION['parabd_csrf'][$scope])) {
+        $_SESSION['parabd_csrf'][$scope] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['parabd_csrf'][$scope];
+}
+
+function parabdValidateCsrf ($scope, $token)
+{
+    $expected = isset($_SESSION['parabd_csrf'][$scope]) ? $_SESSION['parabd_csrf'][$scope] : '';
+    return is_string($token) && $expected !== '' && hash_equals($expected, $token);
+}
+
 function var_dump_pre ($var)
 {
     echo "<pre>";
@@ -895,4 +913,3 @@ function is_utf8 ($string)
     }
     return false;
 }
-

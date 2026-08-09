@@ -1188,5 +1188,27 @@ class Macollection extends Bdo_Controller {
          }
     }
 
+    public function Parabd () {
+        if (!defined('BDO_PARABD_ENABLED') || !BDO_PARABD_ENABLED) {
+            http_response_code(404);
+            die('Fonctionnalité Para-BD indisponible.');
+        }
+        if (!User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1)) {
+            http_response_code(401);
+            die('Vous devez vous authentifier pour accéder à cette page.');
+        }
+        $this->loadModel('ParabdService');
+        $state = strtoupper(getVal('list', 'OWNED')) === 'WISHLIST' ? 'WISHLIST' : 'OWNED';
+        $this->view->addCssFile('style/parabd.css');
+        $this->view->set_var(array(
+            'PAGETITLE' => 'Ma collection Para-BD',
+            'ROBOTS' => 'noindex,nofollow',
+            'copies' => $this->ParabdService->getUserCopies(intval($_SESSION['userConnect']->user_id), $state),
+            'state' => $state,
+            'csrf_token' => parabdCsrfToken('parabd-write')
+        ));
+        $this->view->render();
+    }
+
 
 }

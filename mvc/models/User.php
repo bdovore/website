@@ -464,6 +464,26 @@ FROM " . $this->table_name . "
         Db_query("UPDATE `bd_edition` SET `VALIDATOR`=NULL WHERE `VALIDATOR`='" . $user_id . "'");
         Db_query("UPDATE `users_alb_prop` SET `VALIDATOR`=NULL WHERE `VALIDATOR`='" . $user_id . "'");
 
+        // Para-BD keeps the shared catalogue and audit trail, but removes
+        // personal data and anonymises the deleted member's contributions.
+        Db_query("UPDATE `parabd_item` SET `CREATED_BY`=NULL WHERE `CREATED_BY`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_item` SET `UPDATED_BY`=NULL WHERE `UPDATED_BY`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_identifier` SET `CREATED_BY`=NULL WHERE `CREATED_BY`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_media` SET `CREATED_BY`=NULL WHERE `CREATED_BY`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_source` SET `CREATED_BY`=NULL WHERE `CREATED_BY`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_item_author` SET `CREATED_BY`=NULL WHERE `CREATED_BY`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_item_series` SET `CREATED_BY`=NULL WHERE `CREATED_BY`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_item_tome` SET `CREATED_BY`=NULL WHERE `CREATED_BY`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_revision` SET `AUTHOR_ID`=NULL WHERE `AUTHOR_ID`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_revision` SET `VALIDATED_BY`=NULL WHERE `VALIDATED_BY`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_duplicate` SET `RESOLVED_BY`=NULL WHERE `RESOLVED_BY`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_report` SET `RESOLVED_BY`=NULL WHERE `RESOLVED_BY`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_user_profile` SET `TRUST_OVERRIDE_BY`=NULL WHERE `TRUST_OVERRIDE_BY`='" . $user_id . "'");
+        Db_query("DELETE FROM `parabd_revision_vote` WHERE `USER_ID`='" . $user_id . "'");
+        Db_query("DELETE FROM `parabd_report` WHERE `REPORTER_ID`='" . $user_id . "'");
+        Db_query("DELETE FROM `users_parabd` WHERE `USER_ID`='" . $user_id . "'");
+        Db_query("DELETE FROM `parabd_user_profile` WHERE `USER_ID`='" . $user_id . "'");
+
         // dans tout les cas
         Db_query("DELETE FROM `serie_comment` WHERE `user_id`='" . $user_id . "'");
         Db_query("DELETE FROM `users_album` WHERE `user_id`='" . $user_id . "'");
