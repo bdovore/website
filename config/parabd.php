@@ -3,7 +3,7 @@
 // Safe defaults for the Para-BD MVP. Environment-specific constante.php files
 // may define any value before this file is loaded.
 if (!defined('BDO_PARABD_ENABLED')) define('BDO_PARABD_ENABLED', false);
-if (!defined('BDO_PARABD_MIN_LEVEL')) define('BDO_PARABD_MIN_LEVEL', 1);
+if (!defined('BDO_PARABD_MIN_LEVEL')) define('BDO_PARABD_MIN_LEVEL', 2);
 if (!defined('BDO_PARABD_CHARTER_VERSION')) define('BDO_PARABD_CHARTER_VERSION', '1');
 if (!defined('BDO_PARABD_CREATIONS_PER_HOUR')) define('BDO_PARABD_CREATIONS_PER_HOUR', 10);
 if (!defined('BDO_PARABD_UPLOADS_PER_HOUR')) define('BDO_PARABD_UPLOADS_PER_HOUR', 20);

@@ -49,6 +49,11 @@ $csrf = parabdCsrfToken('parabd-test');
 parabdAssert(strlen($csrf) === 64 && parabdValidateCsrf('parabd-test', $csrf), 'jeton CSRF par périmètre');
 parabdAssert(!parabdValidateCsrf('parabd-test', str_repeat('0', 64)), 'jeton CSRF incorrect refusé');
 
+parabdAssert(!ParabdService::isPublicRemoteIp('127.0.0.1'), 'URL image locale IPv4 refusée');
+parabdAssert(!ParabdService::isPublicRemoteIp('192.168.1.10'), 'URL image privée IPv4 refusée');
+parabdAssert(!ParabdService::isPublicRemoteIp('::1'), 'URL image locale IPv6 refusée');
+parabdAssert(ParabdService::isPublicRemoteIp('8.8.8.8'), 'URL image publique acceptée');
+
 if (extension_loaded('gd') && extension_loaded('fileinfo')) {
     $tmpRoot = sys_get_temp_dir() . '/bdovore-parabd-test-' . getmypid();
     if (!defined('DS')) define('DS', DIRECTORY_SEPARATOR);

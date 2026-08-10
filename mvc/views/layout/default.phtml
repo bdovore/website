@@ -375,6 +375,8 @@ div.verticaltext {
                 <li><a class="menuGene" href="<?php echo BDO_URL;?>leguide/avis"
                     title="Le top des votes, les albums les plus r&eacute;pandus, les derniers commentaires, les derni&egrave;res sorties...">Le
                         Guide BD</a></li>
+                <?php if (defined('BDO_PARABD_ENABLED') && BDO_PARABD_ENABLED) { ?><li><a class="menuGene" href="<?php echo BDO_URL; ?>parabd"
+                    title="Rechercher dans le catalogue Para-BD">Para-BD</a></li><?php } ?>
 
                                  <li><a class="menuGene" href=<?php
                                                 if (User::minAccesslevel(2)) {

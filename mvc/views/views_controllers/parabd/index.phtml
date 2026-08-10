@@ -2,18 +2,22 @@
 <div class="cadre1 parabd-page">
     <div class="parabd-heading">
         <div><h1>Catalogue Para-BD</h1><p>Objets partagés par les collectionneurs.</p></div>
-        <a class="button" href="<?php echo BDO_URL; ?>parabd/create">Créer un objet</a>
     </div>
-    <form method="get" action="<?php echo BDO_URL; ?>parabd" class="parabd-search">
+    <form method="get" action="<?php echo BDO_URL; ?>parabd" class="parabd-search" id="parabd-catalog-search" data-autocomplete-url="<?php echo BDO_URL; ?>parabd/autocomplete">
         <label for="parabd-q">Rechercher</label>
-        <input id="parabd-q" name="q" value="<?php echo $h($view->search); ?>" placeholder="Titre, personnage, fabricant…">
+        <input id="parabd-q" name="q" value="<?php echo $h($view->search); ?>" placeholder="Auteur, série, album, titre, fabricant, éditeur…" autocomplete="off">
+        <input type="hidden" name="filter_type" value="<?php echo $h($view->filter_type); ?>">
+        <input type="hidden" name="filter_id" value="<?php echo intval($view->filter_id); ?>">
+        <input type="hidden" name="filter_value" value="<?php echo $h($view->filter_value); ?>">
         <button type="submit">Rechercher</button>
     </form>
+    <?php if ($view->filter_type) { ?><p class="parabd-active-filter">Filtre actif : <strong><?php echo $h(($view->filter_id ? '#' . intval($view->filter_id) . ' — ' : '') . $view->filter_value); ?></strong> <a href="<?php echo BDO_URL; ?>parabd">Effacer</a></p><?php } ?>
     <div class="parabd-grid">
         <?php foreach ($view->items as $item) { ?>
             <article class="parabd-card">
                 <?php if ($item['PRIMARY_IMAGE']) { ?><img src="<?php echo $h(BDO_URL_PARABD . $item['PRIMARY_IMAGE']); ?>" alt=""><?php } ?>
                 <div><small><?php echo $h($item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL']); ?></small>
+                    <?php if ($item['IS_EXPLICIT']) { ?><p><span class="parabd-explicit-badge">Contenu explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Image floutée</small><?php } ?></p><?php } ?>
                     <h2><a href="<?php echo BDO_URL; ?>parabd/fiche?id=<?php echo intval($item['ID_ITEM']); ?>"><?php echo $h($item['TITLE']); ?></a></h2>
                     <?php if ($item['MANUFACTURER']) { ?><p><?php echo $h($item['MANUFACTURER']); ?></p><?php } ?>
                 </div>
@@ -22,3 +26,4 @@
     </div>
     <?php if (!$view->items) { ?><p>Aucun objet ne correspond à cette recherche.</p><?php } ?>
 </div>
+<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260809b" type="text/javascript"></script>

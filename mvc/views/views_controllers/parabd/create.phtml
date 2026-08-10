@@ -18,14 +18,22 @@ foreach ($view->types as $type) {
                 <label>Type *<select name="type_code" id="parabd-type" required><option value="">Choisir…</option><?php foreach ($parents as $type) { ?><option value="<?php echo $h($type['CODE']); ?>" data-id="<?php echo intval($type['ID_TYPE']); ?>"><?php echo $h($type['LABEL']); ?></option><?php } ?></select></label>
                 <label>Sous-type<select name="subtype_code" id="parabd-subtype"><option value="">Non précisé</option><?php foreach ($children as $parentId => $types) foreach ($types as $type) { ?><option value="<?php echo $h($type['CODE']); ?>" data-parent="<?php echo intval($parentId); ?>"><?php echo $h($type['LABEL']); ?></option><?php } ?></select></label>
                 <label class="wide">Titre *<input name="title" id="parabd-title" maxlength="255" required></label>
-                <label class="wide">Visuel principal *<input type="file" name="visual" accept="image/jpeg,image/png,image/webp" required><small>JPEG, PNG ou WebP, 5 Mo maximum.</small></label>
+                <fieldset class="wide parabd-image-choice">
+                    <legend>Visuel principal *</legend>
+                    <label>Depuis mon appareil<input type="file" name="visual" accept="image/jpeg,image/png,image/webp"></label>
+                    <span class="parabd-choice-separator">ou</span>
+                    <label>Depuis une URL d’image<input type="url" name="visual_url" placeholder="https://exemple.fr/image.jpg"></label>
+                    <small>JPEG, PNG ou WebP, 5 Mo maximum. L’image est copiée dans le catalogue.</small>
+                    <span class="parabd-image-error parabd-error" aria-live="assertive"></span>
+                </fieldset>
+                <label class="wide parabd-explicit-choice"><span><input type="checkbox" name="is_explicit" value="1"> Contenu explicite</span><small>Cochez cette case si le visuel comporte un contenu sexuel ou érotique. L’image sera floutée pour les visiteurs qui n’ont pas autorisé ce type de contenu.</small></label>
             </div>
             <button type="button" class="parabd-next">Continuer</button>
         </section>
         <section class="parabd-step" data-step="2" hidden>
             <h2>2. Vérifier les doublons</h2>
-            <p>Consultez les objets ressemblants avant de continuer.</p>
-            <button type="button" id="parabd-check-duplicates">Lancer la recherche</button>
+            <p>Des objets ressemblants ont été trouvés. Consultez-les avant de continuer.</p>
+            <button type="button" id="parabd-check-duplicates">Relancer la recherche</button>
             <div id="parabd-duplicates" aria-live="polite"></div>
             <label class="wide">Pourquoi est-ce un objet différent ?<textarea name="duplicate_reason" rows="2"></textarea></label>
             <button type="button" class="parabd-prev">Retour</button> <button type="button" class="parabd-next">Continuer</button>
@@ -46,8 +54,19 @@ foreach ($view->types as $type) {
                 <label>Édition limitée ?<select name="is_limited"><option value="unknown">Inconnu</option><option value="1">Oui</option><option value="0">Non</option></select></label>
                 <label>Schéma identifiant<select name="identifier_scheme"><option value="">Aucun</option><option>EAN13</option><option>UPCA</option><option>ISBN10</option><option>ISBN13</option><option>MANUFACTURER_REF</option><option>PUBLISHER_REF</option><option>EXTERNAL_DB</option></select></label>
                 <label>Identifiant<input name="identifier_value"></label><label>Émetteur<input name="identifier_issuer"></label>
-                <label>ID auteur BD<input name="author_id" inputmode="numeric"></label><label>ID série BD<input name="series_id" inputmode="numeric"></label>
-                <label>ID album BD<input name="tome_id" inputmode="numeric"></label><label>Page / case<input name="page_no" inputmode="numeric" placeholder="Page"> <input name="panel_no" inputmode="numeric" placeholder="Case"></label>
+                <label>Auteur BD
+                    <input id="parabd-author-label" class="parabd-reference-input" data-source="<?php echo BDO_URL; ?>getjson?data=Auteur" placeholder="Saisir un nom d’auteur" autocomplete="off">
+                    <input type="hidden" name="author_id" id="parabd-author-id"><small class="parabd-reference-status">Sélectionnez une proposition pour associer l’ID et le nom.</small>
+                </label>
+                <label>Série BD
+                    <input id="parabd-series-label" class="parabd-reference-input" data-source="<?php echo BDO_URL; ?>getjson?data=Serie" placeholder="Saisir un nom de série" autocomplete="off">
+                    <input type="hidden" name="series_id" id="parabd-series-id"><small class="parabd-reference-status">Sélectionnez une proposition pour associer l’ID et le nom.</small>
+                </label>
+                <label>Album BD
+                    <input id="parabd-tome-label" class="parabd-reference-input" data-source="<?php echo BDO_URL; ?>getjson?data=Album" placeholder="Saisir un titre d’album" autocomplete="off">
+                    <input type="hidden" name="tome_id" id="parabd-tome-id"><small class="parabd-reference-status">Sélectionnez une proposition pour associer l’ID et le titre.</small>
+                </label>
+                <label>Page / case<input name="page_no" inputmode="numeric" placeholder="Page"> <input name="panel_no" inputmode="numeric" placeholder="Case"></label>
                 <label class="wide">Source externe<input type="url" name="source_url" placeholder="https://…"></label>
             </div>
             <button type="button" class="parabd-prev">Retour</button> <button type="button" class="parabd-next">Continuer</button>
@@ -55,15 +74,11 @@ foreach ($view->types as $type) {
         <section class="parabd-step" data-step="4" hidden>
             <h2>4. Finaliser</h2>
             <label>Après création<select name="collection_action"><option value="OWNED">Ajouter à ma collection</option><option value="WISHLIST">Ajouter à mes envies</option><option value="none">Créer seulement la fiche</option></select></label>
-            <div class="parabd-fields">
-                <label>Numéro d’exemplaire<input name="copy_number"></label><label>Prix payé<input name="price" inputmode="decimal"></label>
-                <label>Devise<input name="currency" value="EUR" maxlength="3"></label><label><input type="checkbox" name="is_price_public" value="1"> Afficher ce prix sur ma page guest</label>
-                <label><input type="hidden" name="is_public" value="0"><input type="checkbox" name="is_public" value="1" checked> Afficher cet exemplaire sur ma page guest</label>
-            </div>
-            <label class="parabd-charter"><input type="checkbox" name="accept_charter" value="1" required> J’accepte la charte de contribution Para-BD, version <?php echo $h($view->charter_version); ?>.</label>
+            <p>Après l’ajout à votre collection, vous pourrez compléter les informations de votre exemplaire depuis sa fiche.</p>
+            <label class="parabd-charter"><input type="checkbox" name="accept_charter" value="1" required> J’accepte la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte de contribution Para-BD</a>, version <?php echo $h($view->charter_version); ?>.</label>
             <div id="parabd-form-error" class="parabd-error" aria-live="assertive"></div>
             <button type="button" class="parabd-prev">Retour</button> <button type="submit">Créer l’objet</button>
         </section>
     </form>
 </div>
-<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260809a" type="text/javascript"></script>
+<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260809b" type="text/javascript"></script>

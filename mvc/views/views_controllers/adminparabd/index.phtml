@@ -1,9 +1,30 @@
 <?php $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }; $page = $view->getHelper('pagination'); ?>
-<div class="cadre1 parabd-page">
-    <?php echo $page->menuAdmin(); ?><h1>Administration Para-BD</h1>
-    <section><h2>Doublons (<?php echo count($view->queues['duplicates']); ?>)</h2><?php foreach ($view->queues['duplicates'] as $row) { ?><article class="parabd-admin-row"><p><strong><?php echo $h($row['LEVEL']); ?></strong> — <?php echo $h($row['TITLE_LOW']); ?> / <?php echo $h($row['TITLE_HIGH']); ?> (<?php echo $h($row['SCORE']); ?> %)</p><div><a class="button" href="<?php echo BDO_URL; ?>adminparabd/merge?source_id=<?php echo intval($row['ITEM_ID_HIGH']); ?>&amp;target_id=<?php echo intval($row['ITEM_ID_LOW']); ?>">Comparer et fusionner</a><form class="inline" method="post" action="<?php echo BDO_URL; ?>adminparabd/duplicate"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="duplicate_id" value="<?php echo intval($row['ID_DUPLICATE']); ?>"><button name="decision" value="ignore">Pas un doublon</button><button name="decision" value="collision">Collision d’identifiant</button></form></div></article><?php } ?></section>
-    <section><h2>Signalements (<?php echo count($view->queues['reports']); ?>)</h2><?php foreach ($view->queues['reports'] as $row) { ?><article class="parabd-admin-row"><p><?php echo $h($row['TARGET_TYPE'] . ' #' . $row['TARGET_ID'] . ' — ' . $row['REASON']); ?></p><form method="post" action="<?php echo BDO_URL; ?>adminparabd/report"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="report_id" value="<?php echo intval($row['ID_REPORT']); ?>"><button name="decision" value="resolve">Résoudre</button> <button name="decision" value="dismiss">Classer</button></form></article><?php } ?></section>
-    <section><h2>Conflits (<?php echo count($view->queues['conflicts']); ?>)</h2><?php foreach ($view->queues['conflicts'] as $row) { ?><article class="parabd-admin-row"><p><?php echo $h($row['TITLE']); ?> — révision #<?php echo intval($row['ID_REVISION']); ?></p><form method="post" action="<?php echo BDO_URL; ?>adminparabd/revision"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="revision_id" value="<?php echo intval($row['ID_REVISION']); ?>"><button name="decision" value="accept">Accepter</button> <button name="decision" value="reject">Refuser</button></form></article><?php } ?></section>
-    <section><h2>Fiches incomplètes (<?php echo count($view->queues['incomplete']); ?>)</h2><ul><?php foreach ($view->queues['incomplete'] as $row) { ?><li><a href="<?php echo BDO_URL; ?>parabd/fiche?id=<?php echo intval($row['ID_ITEM']); ?>"><?php echo $h($row['TITLE']); ?></a><form class="inline" method="post" action="<?php echo BDO_URL; ?>adminparabd/visibility"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($row['ID_ITEM']); ?>"><button name="status" value="HIDDEN">Masquer</button></form></li><?php } ?></ul></section>
-    <section><h2>Fiches masquées (<?php echo count($view->queues['hidden']); ?>)</h2><ul><?php foreach ($view->queues['hidden'] as $row) { ?><li><?php echo $h($row['TITLE']); ?><form class="inline" method="post" action="<?php echo BDO_URL; ?>adminparabd/visibility"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($row['ID_ITEM']); ?>"><button name="status" value="ACTIVE">Restaurer</button></form></li><?php } ?></ul></section>
+<div class="cadre1 parabd-page parabd-admin-page">
+    <?php echo $page->menuAdmin(); ?>
+    <nav class="parabd-admin-nav" aria-label="Administration Para-BD">
+        <a class="active" href="<?php echo BDO_URL; ?>adminparabd">Fiches</a>
+        <a href="<?php echo BDO_URL; ?>adminparabd/queues">Files d’attente</a>
+    </nav>
+    <div class="parabd-admin-heading">
+        <div><h1>Fiches Para-BD</h1><p>Consultez et modifiez directement les données communes du catalogue, indépendamment de votre collection.</p></div>
+        <a class="button parabd-primary-action" href="<?php echo BDO_URL; ?>adminparabd/create"><span class="fa fa-plus" aria-hidden="true"></span> Créer une fiche complète</a>
+    </div>
+    <form class="parabd-admin-search" method="get" action="<?php echo BDO_URL; ?>adminparabd">
+        <label>Rechercher une fiche<input name="q" value="<?php echo $h($view->search); ?>" placeholder="ID, titre, fabricant ou éditeur"></label>
+        <label>Statut<select name="status"><option value="">Tous</option><?php foreach (array('ACTIVE'=>'Active','HIDDEN'=>'Masquée','MERGED'=>'Fusionnée') as $code=>$label) { ?><option value="<?php echo $code; ?>"<?php if ($view->status === $code) echo ' selected'; ?>><?php echo $label; ?></option><?php } ?></select></label>
+        <button type="submit"><span class="fa fa-search" aria-hidden="true"></span> Rechercher</button>
+    </form>
+    <?php if (!$view->items) { ?><p class="parabd-empty">Aucune fiche ne correspond à cette recherche.</p><?php } else { ?>
+    <div class="parabd-admin-table-wrap"><table class="table parabd-admin-table">
+        <thead><tr><th>ID</th><th>Fiche</th><th>Statut</th><th>Exemplaires</th><th>Historique</th><th>Dernière modification</th><th></th></tr></thead>
+        <tbody><?php foreach ($view->items as $item) { ?><tr>
+            <td>#<?php echo intval($item['ID_ITEM']); ?></td>
+            <td><strong><?php echo $h($item['TITLE']); ?></strong><br><small><?php echo $h($item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL']); ?><?php if ($item['MANUFACTURER']) echo ' · ' . $h($item['MANUFACTURER']); ?></small></td>
+            <td><span class="parabd-status parabd-status-<?php echo strtolower($item['STATUS']); ?>"><?php echo $h($item['STATUS']); ?></span><?php if ($item['STATUS'] === 'MERGED') { ?><br><small>vers #<?php echo intval($item['MERGED_INTO_ID']); ?></small><?php } ?></td>
+            <td><?php echo intval($item['COPY_COUNT']); ?></td><td><?php echo intval($item['HISTORY_COUNT']); ?></td>
+            <td><?php echo $h(date('d/m/Y H:i', strtotime($item['UPDATED_AT']))); ?></td>
+            <td><a class="button" href="<?php echo BDO_URL; ?>adminparabd/edit?id=<?php echo intval($item['ID_ITEM']); ?>"><?php echo $item['STATUS'] === 'MERGED' ? 'Consulter' : 'Modifier'; ?></a></td>
+        </tr><?php } ?></tbody>
+    </table></div>
+    <?php } ?>
 </div>

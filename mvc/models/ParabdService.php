@@ -58,6 +58,12 @@ class ParabdService
         return $row ?: null;
     }
 
+    private function mediaPathSql($mediaAlias = 'm', $itemAlias = 'i')
+    {
+        if (Bdo_Cfg::getVar('explicit')) return $mediaAlias . '.FILE_PATH';
+        return "IF($itemAlias.IS_EXPLICIT=1,CONCAT('?source=',$mediaAlias.FILE_PATH),$mediaAlias.FILE_PATH)";
+    }
+
     public static function normalizeText($value)
     {
         $value = trim(mb_strtolower((string) $value, 'UTF-8'));
@@ -173,15 +179,96 @@ class ParabdService
         return $this->rows($this->query("SELECT * FROM parabd_type WHERE IS_ACTIVE=1 ORDER BY PARENT_ID IS NOT NULL, SORT_ORDER, LABEL"));
     }
 
-    public function getCatalogue($search = '', $limit = 60)
+    public function getCatalogue($search = '', $filterType = '', $filterId = 0, $filterValue = '', $limit = 60)
     {
         $where = "i.STATUS='ACTIVE'";
-        if (trim($search) !== '') $where .= " AND i.TITLE_NORMALIZED LIKE '%" . $this->escape(self::normalizeText($search)) . "%'";
-        return $this->rows($this->query("SELECT i.*, t.LABEL TYPE_LABEL, st.LABEL SUBTYPE_LABEL, m.FILE_PATH PRIMARY_IMAGE
+        $filterType = strtolower(trim((string) $filterType));
+        $filterId = intval($filterId);
+        $filterValue = trim((string) $filterValue);
+        if ($filterType === 'author' && $filterId) {
+            $where .= " AND EXISTS (SELECT 1 FROM parabd_item_author ia WHERE ia.ITEM_ID=i.ID_ITEM AND ia.AUTHOR_ID=$filterId)";
+        } elseif ($filterType === 'series' && $filterId) {
+            $where .= " AND EXISTS (SELECT 1 FROM parabd_item_series isa WHERE isa.ITEM_ID=i.ID_ITEM AND isa.SERIES_ID=$filterId)";
+        } elseif ($filterType === 'tome' && $filterId) {
+            $where .= " AND EXISTS (SELECT 1 FROM parabd_item_tome it WHERE it.ITEM_ID=i.ID_ITEM AND it.TOME_ID=$filterId)";
+        } elseif ($filterType === 'manufacturer' && $filterValue !== '') {
+            $where .= " AND i.MANUFACTURER_NORMALIZED='" . $this->escape(self::normalizeText($filterValue)) . "'";
+        } elseif ($filterType === 'publisher' && $filterValue !== '') {
+            $where .= " AND i.PUBLISHER='" . $this->escape($filterValue) . "'";
+        } elseif (trim($search) !== '') {
+            $raw = $this->escape(trim($search));
+            $normalized = $this->escape(self::normalizeText($search));
+            $where .= " AND (i.TITLE_NORMALIZED LIKE '%$normalized%' OR i.MANUFACTURER_NORMALIZED LIKE '%$normalized%'
+                OR i.PUBLISHER LIKE '%$raw%'
+                OR EXISTS (SELECT 1 FROM parabd_item_author ia JOIN bd_auteur a ON a.ID_AUTEUR=ia.AUTHOR_ID
+                    WHERE ia.ITEM_ID=i.ID_ITEM AND (a.PSEUDO LIKE '%$raw%' OR a.NOM LIKE '%$raw%' OR a.PRENOM LIKE '%$raw%'))
+                OR EXISTS (SELECT 1 FROM parabd_item_series isa JOIN bd_serie s ON s.ID_SERIE=isa.SERIES_ID
+                    WHERE isa.ITEM_ID=i.ID_ITEM AND s.NOM LIKE '%$raw%')
+                OR EXISTS (SELECT 1 FROM parabd_item_tome it JOIN bd_tome bt ON bt.ID_TOME=it.TOME_ID
+                    WHERE it.ITEM_ID=i.ID_ITEM AND bt.TITRE LIKE '%$raw%'))";
+        }
+        $mediaPath = $this->mediaPathSql('m', 'i');
+        return $this->rows($this->query("SELECT i.*, t.LABEL TYPE_LABEL, st.LABEL SUBTYPE_LABEL, $mediaPath PRIMARY_IMAGE
             FROM parabd_item i JOIN parabd_type t ON t.ID_TYPE=i.TYPE_ID
             LEFT JOIN parabd_type st ON st.ID_TYPE=i.SUBTYPE_ID
             LEFT JOIN parabd_media m ON m.ITEM_ID=i.ID_ITEM AND m.IS_PRIMARY=1 AND m.IS_HIDDEN=0
             WHERE $where ORDER BY i.UPDATED_AT DESC LIMIT " . max(1, min(200, intval($limit)))));
+    }
+
+    public function getAdminCatalogue($search = '', $status = '', $limit = 200)
+    {
+        $where = '1=1';
+        $search = trim((string) $search);
+        $status = strtoupper(trim((string) $status));
+        if ($search !== '') {
+            if (ctype_digit($search)) $where .= ' AND (i.ID_ITEM=' . intval($search) . " OR i.TITLE LIKE '%" . $this->escape($search) . "%')";
+            else $where .= " AND (i.TITLE_NORMALIZED LIKE '%" . $this->escape(self::normalizeText($search)) . "%' OR i.MANUFACTURER LIKE '%" . $this->escape($search) . "%' OR i.PUBLISHER LIKE '%" . $this->escape($search) . "%')";
+        }
+        if (in_array($status, array('ACTIVE','HIDDEN','MERGED'), true)) $where .= " AND i.STATUS='$status'";
+        return $this->rows($this->query("SELECT i.*,t.LABEL TYPE_LABEL,st.LABEL SUBTYPE_LABEL,
+            (SELECT COUNT(*) FROM users_parabd up WHERE up.ITEM_ID=i.ID_ITEM) COPY_COUNT,
+            (SELECT COUNT(*) FROM parabd_revision r WHERE r.ITEM_ID=i.ID_ITEM) HISTORY_COUNT
+            FROM parabd_item i JOIN parabd_type t ON t.ID_TYPE=i.TYPE_ID
+            LEFT JOIN parabd_type st ON st.ID_TYPE=i.SUBTYPE_ID
+            WHERE $where ORDER BY i.UPDATED_AT DESC LIMIT " . max(1, min(500, intval($limit)))));
+    }
+
+    public function autocompleteCatalogue($term, $limitPerCategory = 6)
+    {
+        $term = trim((string) $term);
+        if (mb_strlen($term, 'UTF-8') < 2) return array();
+        $like = $this->escape($term);
+        $normalized = $this->escape(self::normalizeText($term));
+        $limit = max(1, min(10, intval($limitPerCategory)));
+        $result = array();
+
+        $authors = $this->rows($this->query("SELECT ID_AUTEUR id, COALESCE(NULLIF(PSEUDO,''),TRIM(CONCAT_WS(' ',PRENOM,NOM))) label
+            FROM bd_auteur WHERE PSEUDO LIKE '%$like%' OR NOM LIKE '%$like%' OR PRENOM LIKE '%$like%'
+            ORDER BY (PSEUDO='$like') DESC, PSEUDO LIMIT $limit"));
+        foreach ($authors as $row) $result[] = array('category' => 'Auteurs', 'type' => 'author', 'id' => intval($row['id']), 'label' => $row['label']);
+
+        $series = $this->rows($this->query("SELECT ID_SERIE id, NOM label FROM bd_serie WHERE NOM LIKE '%$like%'
+            ORDER BY (NOM='$like') DESC, NOM LIMIT $limit"));
+        foreach ($series as $row) $result[] = array('category' => 'Séries', 'type' => 'series', 'id' => intval($row['id']), 'label' => $row['label']);
+
+        $tomes = $this->rows($this->query("SELECT t.ID_TOME id, t.TITRE label, s.NOM series_label FROM bd_tome t
+            LEFT JOIN bd_serie s ON s.ID_SERIE=t.ID_SERIE WHERE t.TITRE LIKE '%$like%'
+            ORDER BY (t.TITRE='$like') DESC, t.TITRE LIMIT $limit"));
+        foreach ($tomes as $row) {
+            $label = $row['label'] . (!empty($row['series_label']) ? ' — ' . $row['series_label'] : '');
+            $result[] = array('category' => 'Albums', 'type' => 'tome', 'id' => intval($row['id']), 'label' => $label);
+        }
+
+        $manufacturers = $this->rows($this->query("SELECT DISTINCT MANUFACTURER label FROM parabd_item
+            WHERE STATUS='ACTIVE' AND MANUFACTURER_NORMALIZED LIKE '%$normalized%' AND MANUFACTURER IS NOT NULL AND MANUFACTURER<>''
+            ORDER BY MANUFACTURER LIMIT $limit"));
+        foreach ($manufacturers as $row) $result[] = array('category' => 'Fabricants', 'type' => 'manufacturer', 'id' => 0, 'label' => $row['label']);
+
+        $publishers = $this->rows($this->query("SELECT DISTINCT PUBLISHER label FROM parabd_item
+            WHERE STATUS='ACTIVE' AND PUBLISHER LIKE '%$like%' AND PUBLISHER IS NOT NULL AND PUBLISHER<>''
+            ORDER BY PUBLISHER LIMIT $limit"));
+        foreach ($publishers as $row) $result[] = array('category' => 'Éditeurs', 'type' => 'publisher', 'id' => 0, 'label' => $row['label']);
+        return $result;
     }
 
     public function getItem($itemId, $includeHidden = false)
@@ -193,11 +280,34 @@ class ParabdService
         if ($item['STATUS'] === 'MERGED' && !empty($item['MERGED_INTO_ID'])) $item['REDIRECT_ID'] = intval($item['MERGED_INTO_ID']);
         $item['identifiers'] = $this->rows($this->query("SELECT * FROM parabd_identifier WHERE ITEM_ID=" . intval($itemId) . " ORDER BY ID_IDENTIFIER"));
         $item['media'] = $this->rows($this->query("SELECT * FROM parabd_media WHERE ITEM_ID=" . intval($itemId) . " AND IS_HIDDEN=0 ORDER BY IS_PRIMARY DESC, SORT_ORDER, ID_MEDIA"));
+        if (!Bdo_Cfg::getVar('explicit') && !empty($item['IS_EXPLICIT'])) {
+            foreach ($item['media'] as &$media) $media['FILE_PATH'] = '?source=' . $media['FILE_PATH'];
+            unset($media);
+        }
         $item['sources'] = $this->rows($this->query("SELECT * FROM parabd_source WHERE ITEM_ID=" . intval($itemId) . " ORDER BY ID_SOURCE"));
-        $item['authors'] = $this->rows($this->query("SELECT l.*, COALESCE(NULLIF(a.PSEUDO,''), CONCAT_WS(' ',a.PRENOM,a.NOM)) LABEL FROM parabd_item_author l LEFT JOIN bd_auteur a ON a.ID_AUTEUR=l.AUTHOR_ID WHERE l.ITEM_ID=" . intval($itemId)));
-        $item['series'] = $this->rows($this->query("SELECT l.*, s.NOM LABEL FROM parabd_item_series l LEFT JOIN bd_serie s ON s.ID_SERIE=l.SERIES_ID WHERE l.ITEM_ID=" . intval($itemId)));
-        $item['tomes'] = $this->rows($this->query("SELECT l.*, t.TITRE LABEL FROM parabd_item_tome l LEFT JOIN bd_tome t ON t.ID_TOME=l.TOME_ID WHERE l.ITEM_ID=" . intval($itemId)));
+        $item['authors'] = $this->rows($this->query("SELECT l.*, COALESCE(NULLIF(a.PSEUDO,''),NULLIF(TRIM(CONCAT_WS(' ',a.PRENOM,a.NOM)),''),CONCAT('Auteur #',l.AUTHOR_ID)) LABEL FROM parabd_item_author l LEFT JOIN bd_auteur a ON a.ID_AUTEUR=l.AUTHOR_ID WHERE l.ITEM_ID=" . intval($itemId)));
+        $item['series'] = $this->rows($this->query("SELECT l.*, COALESCE(s.NOM,CONCAT('Série #',l.SERIES_ID)) LABEL FROM parabd_item_series l LEFT JOIN bd_serie s ON s.ID_SERIE=l.SERIES_ID WHERE l.ITEM_ID=" . intval($itemId)));
+        $item['tomes'] = $this->rows($this->query("SELECT l.*, COALESCE(t.TITRE,CONCAT('Album #',l.TOME_ID)) LABEL FROM parabd_item_tome l LEFT JOIN bd_tome t ON t.ID_TOME=l.TOME_ID WHERE l.ITEM_ID=" . intval($itemId)));
         return $item;
+    }
+
+    public function getAdminItem($itemId)
+    {
+        $item = $this->getItem($itemId, true);
+        if (!$item) return null;
+        $item['media'] = $this->rows($this->query("SELECT * FROM parabd_media WHERE ITEM_ID=" . intval($itemId) . " ORDER BY IS_PRIMARY DESC,SORT_ORDER,ID_MEDIA"));
+        return $item;
+    }
+
+    public function getAdminItemHistory($itemId)
+    {
+        return $this->rows($this->query("SELECT r.*,ua.username AUTHOR_NAME,uv.username VALIDATOR_NAME,
+            SUM(v.VOTE='CONFIRM') CONFIRMS,SUM(v.VOTE='CONTEST') CONTESTS
+            FROM parabd_revision r
+            LEFT JOIN users ua ON ua.user_id=r.AUTHOR_ID
+            LEFT JOIN users uv ON uv.user_id=r.VALIDATED_BY
+            LEFT JOIN parabd_revision_vote v ON v.REVISION_ID=r.ID_REVISION
+            WHERE r.ITEM_ID=" . intval($itemId) . " GROUP BY r.ID_REVISION ORDER BY r.CREATED_AT DESC,r.ID_REVISION DESC"));
     }
 
     public function searchDuplicates($input, $limit = 20)
@@ -241,7 +351,8 @@ class ParabdService
 
     private function primaryImage($itemId)
     {
-        $row = $this->one("SELECT FILE_PATH FROM parabd_media WHERE ITEM_ID=$itemId AND IS_PRIMARY=1 AND IS_HIDDEN=0 LIMIT 1");
+        $mediaPath = $this->mediaPathSql('m', 'i');
+        $row = $this->one("SELECT $mediaPath FILE_PATH FROM parabd_media m JOIN parabd_item i ON i.ID_ITEM=m.ITEM_ID WHERE m.ITEM_ID=$itemId AND m.IS_PRIMARY=1 AND m.IS_HIDDEN=0 LIMIT 1");
         return $row ? $row['FILE_PATH'] : null;
     }
 
@@ -337,7 +448,8 @@ class ParabdService
             'HAS_CERTIFICATE' => $this->tri(isset($input['has_certificate']) ? $input['has_certificate'] : ''), 'IS_LIMITED' => $this->tri(isset($input['is_limited']) ? $input['is_limited'] : ''),
             'MANUFACTURER' => trim(isset($input['manufacturer']) ? $input['manufacturer'] : ''), 'PUBLISHER' => trim(isset($input['publisher']) ? $input['publisher'] : ''),
             'LICENSE_NAME' => trim(isset($input['license_name']) ? $input['license_name'] : ''), 'RANGE_NAME' => trim(isset($input['range_name']) ? $input['range_name'] : ''),
-            'UNIVERSE_NAME' => trim(isset($input['universe_name']) ? $input['universe_name'] : '')
+            'UNIVERSE_NAME' => trim(isset($input['universe_name']) ? $input['universe_name'] : ''),
+            'IS_EXPLICIT' => !empty($input['is_explicit']) ? 1 : 0
         );
         $data['MANUFACTURER_NORMALIZED'] = self::normalizeText($data['MANUFACTURER']);
         return $data;
@@ -373,12 +485,15 @@ class ParabdService
             $decoded = json_decode($input['identifiers_json'], true);
             if (!is_array($decoded)) throw new ParabdException('VALIDATION_ERROR', 'Les identifiants sont invalides.', array('identifiers' => 'JSON invalide.'));
             $identifiers = $decoded;
+        } elseif (isset($input['identifiers']) && is_array($input['identifiers'])) {
+            $identifiers = $input['identifiers'];
         } elseif (!empty($input['identifier_scheme']) || !empty($input['identifier_value'])) {
             $identifiers[] = array('scheme' => isset($input['identifier_scheme']) ? $input['identifier_scheme'] : '', 'issuer' => isset($input['identifier_issuer']) ? $input['identifier_issuer'] : '', 'value' => isset($input['identifier_value']) ? $input['identifier_value'] : '');
         }
         $allowed = array('EAN13','UPCA','ISBN10','ISBN13','MANUFACTURER_REF','PUBLISHER_REF','EXTERNAL_DB');
         $clean = array();
         foreach ($identifiers as $identifier) {
+            if (empty($identifier['scheme']) && empty($identifier['value'])) continue;
             $scheme = strtoupper(isset($identifier['scheme']) ? $identifier['scheme'] : '');
             if (!in_array($scheme, $allowed, true)) throw new ParabdException('VALIDATION_ERROR', 'Schéma d’identifiant invalide.');
             $value = self::normalizeIdentifier($scheme, isset($identifier['value']) ? $identifier['value'] : '');
@@ -389,6 +504,34 @@ class ParabdService
             $clean[] = array('scheme' => $scheme, 'issuer' => $issuer, 'issuer_normalized' => self::normalizeText($issuer), 'value' => trim($identifier['value']), 'value_normalized' => $value);
         }
         return $clean;
+    }
+
+    private function relationsFromInput($input)
+    {
+        $relations = array('authors' => array(), 'series' => array(), 'tomes' => array());
+        if (isset($input['authors']) && is_array($input['authors'])) {
+            foreach ($input['authors'] as $row) if (!empty($row['id'])) $relations['authors'][] = array('id' => intval($row['id']), 'role' => trim(isset($row['role']) ? $row['role'] : 'ARTIST') ?: 'ARTIST');
+        } elseif (!empty($input['author_id'])) $relations['authors'][] = array('id' => intval($input['author_id']), 'role' => trim(isset($input['author_role']) ? $input['author_role'] : 'ARTIST') ?: 'ARTIST');
+        if (isset($input['series']) && is_array($input['series'])) {
+            foreach ($input['series'] as $row) if (!empty($row['id'])) $relations['series'][] = array('id' => intval($row['id']), 'relation_type' => trim(isset($row['relation_type']) ? $row['relation_type'] : 'RELATED') ?: 'RELATED');
+        } elseif (!empty($input['series_id'])) $relations['series'][] = array('id' => intval($input['series_id']), 'relation_type' => 'RELATED');
+        if (isset($input['tomes']) && is_array($input['tomes'])) {
+            foreach ($input['tomes'] as $row) if (!empty($row['id'])) $relations['tomes'][] = array('id' => intval($row['id']), 'relation_type' => trim(isset($row['relation_type']) ? $row['relation_type'] : 'RELATED') ?: 'RELATED', 'page_no' => $this->positiveInt(isset($row['page_no']) ? $row['page_no'] : null), 'panel_no' => $this->positiveInt(isset($row['panel_no']) ? $row['panel_no'] : null));
+        } elseif (!empty($input['tome_id'])) $relations['tomes'][] = array('id' => intval($input['tome_id']), 'relation_type' => 'RELATED', 'page_no' => $this->positiveInt(isset($input['page_no']) ? $input['page_no'] : null), 'panel_no' => $this->positiveInt(isset($input['panel_no']) ? $input['panel_no'] : null));
+        return $relations;
+    }
+
+    private function sourcesFromInput($input)
+    {
+        $sources = array();
+        if (isset($input['sources']) && is_array($input['sources'])) {
+            foreach ($input['sources'] as $row) {
+                $url = trim(isset($row['url']) ? $row['url'] : '');
+                if ($url !== '') $sources[] = array('url' => $url, 'label' => trim(isset($row['label']) ? $row['label'] : ''), 'notes' => trim(isset($row['notes']) ? $row['notes'] : ''));
+            }
+        } elseif (!empty($input['source_url'])) $sources[] = array('url' => trim($input['source_url']), 'label' => trim(isset($input['source_label']) ? $input['source_label'] : ''), 'notes' => '');
+        foreach ($sources as $source) if (!filter_var($source['url'], FILTER_VALIDATE_URL) || !in_array(strtolower(parse_url($source['url'], PHP_URL_SCHEME)), array('http','https'), true)) throw new ParabdException('VALIDATION_ERROR', 'URL source invalide.');
+        return $sources;
     }
 
     private function sqlValue($value)
@@ -403,12 +546,21 @@ class ParabdService
         return $this->sqlValue($value);
     }
 
-    public function createItem($userId, $input, $file)
+    public function createItem($userId, $input, $file, $adminDirect = false)
     {
-        $this->requireCharter($userId);
-        if (!$file || !isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) throw new ParabdException('VALIDATION_ERROR', 'Un visuel principal est obligatoire.', array('visual' => 'Visuel obligatoire.'));
+        if (!$adminDirect) $this->requireCharter($userId);
+        $visualUrl = trim(isset($input['visual_url']) ? $input['visual_url'] : '');
+        $hasUpload = $file && isset($file['error']) && $file['error'] === UPLOAD_ERR_OK;
+        if (!$hasUpload && $visualUrl === '') throw new ParabdException('VALIDATION_ERROR', 'Un fichier ou une URL d’image est obligatoire.', array('visual' => 'Visuel obligatoire.'));
         $data = $this->cleanInput($input);
+        if ($adminDirect) {
+            $adminStatus = strtoupper(trim(isset($input['status']) ? $input['status'] : 'ACTIVE'));
+            if (!in_array($adminStatus, array('ACTIVE','HIDDEN'), true)) throw new ParabdException('VALIDATION_ERROR', 'Statut de fiche invalide.');
+            $data['STATUS'] = $adminStatus;
+        }
         $identifiers = $this->identifiersFromInput($input);
+        $relations = $this->relationsFromInput($input);
+        $sources = $this->sourcesFromInput($input);
         $duplicateInput = array_merge($data, array('identifiers' => $identifiers, 'AUTHOR_ID' => isset($input['author_id']) ? intval($input['author_id']) : 0, 'SERIES_ID' => isset($input['series_id']) ? intval($input['series_id']) : 0, 'TOME_ID' => isset($input['tome_id']) ? intval($input['tome_id']) : 0));
         $duplicates = $this->searchDuplicates($duplicateInput);
         foreach ($duplicates as $duplicate) {
@@ -421,6 +573,11 @@ class ParabdService
         // uploads cannot bypass throttling by forcing a rollback.
         $this->consumeRate($userId, 'creation');
         $this->consumeRate($userId, 'upload');
+        $remoteFile = null;
+        if (!$hasUpload) {
+            $file = $this->downloadRemoteImage($visualUrl);
+            $remoteFile = $file['tmp_name'];
+        }
         $connection = $this->connection();
         $writtenFile = null;
         Db_autocommit(false, $connection);
@@ -433,56 +590,65 @@ class ParabdService
                 $this->query("INSERT INTO parabd_identifier (ITEM_ID,SCHEME,ISSUER,ISSUER_NORMALIZED,VALUE,VALUE_NORMALIZED,CREATED_BY) VALUES
                     ($itemId,'" . $this->escape($identifier['scheme']) . "'," . $this->sqlValue($identifier['issuer']) . ",'" . $this->escape($identifier['issuer_normalized']) . "','" . $this->escape($identifier['value']) . "','" . $this->escape($identifier['value_normalized']) . "'," . intval($userId) . ")");
             }
-            $this->insertRelations($itemId, $userId, $input);
+            $this->insertRelations($itemId, $userId, $relations);
             $image = $this->storeImage($file, $itemId, 1);
             $writtenFile = $image['absolute_path'];
             $this->query("INSERT INTO parabd_media (ITEM_ID,MEDIA_TYPE,FILE_PATH,MIME_TYPE,WIDTH_PX,HEIGHT_PX,IS_PRIMARY,CREATED_BY) VALUES
                 ($itemId,'PRIMARY','" . $this->escape($image['relative_path']) . "','" . $this->escape($image['mime']) . "'," . intval($image['width']) . "," . intval($image['height']) . ",1," . intval($userId) . ")");
-            if (!empty($input['source_url'])) $this->addSource($itemId, $userId, $input['source_url'], isset($input['source_label']) ? $input['source_label'] : '');
-            $snapshot = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-            $this->query("INSERT INTO parabd_revision (ITEM_ID,AUTHOR_ID,BASE_REVISION_NO,PATCH_AFTER,CHANGE_KIND,STATUS,APPLIED_AT) VALUES ($itemId," . intval($userId) . ",0,'" . $this->escape($snapshot) . "','CREATE','APPLIED',NOW())");
+            foreach ($sources as $source) $this->addSource($itemId, $userId, $source['url'], $source['label'], $source['notes']);
+            if ($visualUrl !== '' && !in_array($visualUrl, array_column($sources, 'url'), true)) $this->addSource($itemId, $userId, $visualUrl, 'Source du visuel principal');
+            $snapshot = json_encode($this->adminSnapshot($itemId), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $this->query("INSERT INTO parabd_revision (ITEM_ID,AUTHOR_ID,BASE_REVISION_NO,PATCH_AFTER,CHANGE_KIND,STATUS,APPLIED_AT,VALIDATED_BY,VALIDATED_AT) VALUES ($itemId," . intval($userId) . ",0,'" . $this->escape($snapshot) . "','CREATE','" . ($adminDirect ? 'ACCEPTED' : 'APPLIED') . "',NOW()," . ($adminDirect ? intval($userId) : 'NULL') . "," . ($adminDirect ? 'NOW()' : 'NULL') . ")");
             $copyId = null;
             $collectionAction = isset($input['collection_action']) ? $input['collection_action'] : 'none';
             if (in_array($collectionAction, array('OWNED','WISHLIST'), true)) $copyId = $this->saveCopy($userId, array_merge($input, array('item_id' => $itemId, 'state' => $collectionAction)), true);
             foreach ($duplicates as $duplicate) $this->recordDuplicate($itemId, intval($duplicate['ID_ITEM']), $duplicate);
             Db_commit($connection);
             Db_autocommit(true, $connection);
+            if ($remoteFile && is_file($remoteFile)) @unlink($remoteFile);
             return array('item_id' => intval($itemId), 'copy_id' => $copyId, 'duplicates' => $duplicates);
         } catch (Throwable $error) {
             Db_rollback($connection);
             Db_autocommit(true, $connection);
             if ($writtenFile && is_file($writtenFile)) @unlink($writtenFile);
+            if ($remoteFile && is_file($remoteFile)) @unlink($remoteFile);
             if ($error instanceof ParabdException) throw $error;
             if ($connection->errno === 1062 || strpos($error->getMessage(), 'Duplicate entry') !== false) throw new ParabdException('DUPLICATE_EXACT', 'Un identifiant identique vient d’être créé. Relancez la recherche.');
             throw $error;
         }
     }
 
-    private function insertRelations($itemId, $userId, $input)
+    public function adminCreateItem($adminId, $input, $file)
     {
-        if (!empty($input['author_id'])) {
-            if (!$this->one("SELECT ID_AUTEUR FROM bd_auteur WHERE ID_AUTEUR=" . intval($input['author_id']))) throw new ParabdException('VALIDATION_ERROR', 'Auteur inconnu.');
-            $this->query("INSERT INTO parabd_item_author (ITEM_ID,AUTHOR_ID,ROLE,CREATED_BY) VALUES ($itemId," . intval($input['author_id']) . ",'" . $this->escape(isset($input['author_role']) ? $input['author_role'] : 'ARTIST') . "'," . intval($userId) . ")");
+        $input['collection_action'] = 'none';
+        return $this->createItem($adminId, $input, $file, true);
+    }
+
+    private function insertRelations($itemId, $userId, $relations)
+    {
+        foreach ($relations['authors'] as $row) {
+            if (!$this->one("SELECT ID_AUTEUR FROM bd_auteur WHERE ID_AUTEUR=" . intval($row['id']))) throw new ParabdException('VALIDATION_ERROR', 'Auteur inconnu.');
+            $this->query("INSERT INTO parabd_item_author (ITEM_ID,AUTHOR_ID,ROLE,CREATED_BY) VALUES ($itemId," . intval($row['id']) . ",'" . $this->escape($row['role']) . "'," . intval($userId) . ")");
         }
-        if (!empty($input['series_id'])) {
-            if (!$this->one("SELECT ID_SERIE FROM bd_serie WHERE ID_SERIE=" . intval($input['series_id']))) throw new ParabdException('VALIDATION_ERROR', 'Série inconnue.');
-            $this->query("INSERT INTO parabd_item_series (ITEM_ID,SERIES_ID,RELATION_TYPE,CREATED_BY) VALUES ($itemId," . intval($input['series_id']) . ",'RELATED'," . intval($userId) . ")");
+        foreach ($relations['series'] as $row) {
+            if (!$this->one("SELECT ID_SERIE FROM bd_serie WHERE ID_SERIE=" . intval($row['id']))) throw new ParabdException('VALIDATION_ERROR', 'Série inconnue.');
+            $this->query("INSERT INTO parabd_item_series (ITEM_ID,SERIES_ID,RELATION_TYPE,CREATED_BY) VALUES ($itemId," . intval($row['id']) . ",'" . $this->escape($row['relation_type']) . "'," . intval($userId) . ")");
         }
-        if (!empty($input['tome_id'])) {
-            if (!$this->one("SELECT ID_TOME FROM bd_tome WHERE ID_TOME=" . intval($input['tome_id']))) throw new ParabdException('VALIDATION_ERROR', 'Album inconnu.');
-            $this->query("INSERT INTO parabd_item_tome (ITEM_ID,TOME_ID,RELATION_TYPE,PAGE_NO,PANEL_NO,CREATED_BY) VALUES ($itemId," . intval($input['tome_id']) . ",'RELATED'," . $this->sqlValue($this->positiveInt(isset($input['page_no']) ? $input['page_no'] : null)) . "," . $this->sqlValue($this->positiveInt(isset($input['panel_no']) ? $input['panel_no'] : null)) . "," . intval($userId) . ")");
+        foreach ($relations['tomes'] as $row) {
+            if (!$this->one("SELECT ID_TOME FROM bd_tome WHERE ID_TOME=" . intval($row['id']))) throw new ParabdException('VALIDATION_ERROR', 'Album inconnu.');
+            $this->query("INSERT INTO parabd_item_tome (ITEM_ID,TOME_ID,RELATION_TYPE,PAGE_NO,PANEL_NO,CREATED_BY) VALUES ($itemId," . intval($row['id']) . ",'" . $this->escape($row['relation_type']) . "'," . $this->sqlValue($row['page_no']) . "," . $this->sqlValue($row['panel_no']) . "," . intval($userId) . ")");
         }
     }
 
-    private function addSource($itemId, $userId, $url, $label)
+    private function addSource($itemId, $userId, $url, $label, $notes = '')
     {
         if (!filter_var($url, FILTER_VALIDATE_URL) || !in_array(strtolower(parse_url($url, PHP_URL_SCHEME)), array('http','https'), true)) throw new ParabdException('VALIDATION_ERROR', 'URL source invalide.');
-        $this->query("INSERT INTO parabd_source (ITEM_ID,SOURCE_TYPE,URL,LABEL,CREATED_BY) VALUES ($itemId,'URL','" . $this->escape($url) . "','" . $this->escape($label) . "'," . intval($userId) . ")");
+        $this->query("INSERT INTO parabd_source (ITEM_ID,SOURCE_TYPE,URL,LABEL,NOTES,CREATED_BY) VALUES ($itemId,'URL','" . $this->escape($url) . "','" . $this->escape($label) . "','" . $this->escape($notes) . "'," . intval($userId) . ")");
     }
 
     public function storeImage($file, $itemId, $sequence)
     {
-        if (!isset($file['tmp_name']) || !is_uploaded_file($file['tmp_name']) && PHP_SAPI !== 'cli') throw new ParabdException('VALIDATION_ERROR', 'Fichier uploadé invalide.', array('visual' => 'Upload invalide.'));
+        if (!isset($file['tmp_name']) || (!is_uploaded_file($file['tmp_name']) && PHP_SAPI !== 'cli' && empty($file['_parabd_remote']))) throw new ParabdException('VALIDATION_ERROR', 'Fichier uploadé invalide.', array('visual' => 'Upload invalide.'));
         $maxBytes = defined('BDO_PARABD_MAX_UPLOAD_BYTES') ? BDO_PARABD_MAX_UPLOAD_BYTES : 5242880;
         $actualSize = @filesize($file['tmp_name']);
         if ($actualSize === false || $actualSize <= 0 || $actualSize > $maxBytes) throw new ParabdException('VALIDATION_ERROR', 'Le visuel dépasse 5 Mo ou est vide.', array('visual' => '5 Mo maximum.'));
@@ -524,6 +690,107 @@ class ParabdService
         return array('absolute_path' => $absolute, 'relative_path' => $shard . '/' . intval($itemId) . '/' . $filename, 'mime' => $mime, 'width' => $width, 'height' => $height);
     }
 
+    public static function isPublicRemoteIp($ip)
+    {
+        return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false;
+    }
+
+    private function publicAddressesForHost($host)
+    {
+        if (filter_var($host, FILTER_VALIDATE_IP)) return self::isPublicRemoteIp($host) ? array($host) : array();
+        $addresses = array();
+        if (function_exists('dns_get_record')) {
+            $records = @dns_get_record($host, DNS_A | DNS_AAAA);
+            if (is_array($records)) foreach ($records as $record) {
+                if (!empty($record['ip'])) $addresses[] = $record['ip'];
+                if (!empty($record['ipv6'])) $addresses[] = $record['ipv6'];
+            }
+        }
+        if (!$addresses) {
+            $ipv4 = @gethostbynamel($host);
+            if (is_array($ipv4)) $addresses = $ipv4;
+        }
+        return array_values(array_filter(array_unique($addresses), array(__CLASS__, 'isPublicRemoteIp')));
+    }
+
+    private function absoluteRedirectUrl($base, $location)
+    {
+        if (preg_match('#^https?://#i', $location)) return $location;
+        $parts = parse_url($base);
+        if (!$parts || empty($parts['scheme']) || empty($parts['host'])) return '';
+        $origin = $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . intval($parts['port']) : '');
+        if (strpos($location, '//') === 0) return $parts['scheme'] . ':' . $location;
+        if (strpos($location, '/') === 0) return $origin . $location;
+        $path = isset($parts['path']) ? $parts['path'] : '/';
+        return $origin . preg_replace('#/[^/]*$#', '/', $path) . $location;
+    }
+
+    private function downloadRemoteImage($url)
+    {
+        if (!function_exists('curl_init')) throw new ParabdException('VALIDATION_ERROR', 'L’import d’image par URL est indisponible sur ce serveur.');
+        $maxBytes = defined('BDO_PARABD_MAX_UPLOAD_BYTES') ? BDO_PARABD_MAX_UPLOAD_BYTES : 5242880;
+        $currentUrl = trim((string) $url);
+        for ($redirect = 0; $redirect <= 3; $redirect++) {
+            if (strlen($currentUrl) > 1000 || !filter_var($currentUrl, FILTER_VALIDATE_URL)) {
+                throw new ParabdException('VALIDATION_ERROR', 'URL d’image invalide.', array('visual_url' => 'URL HTTP(S) valide attendue.'));
+            }
+            $parts = parse_url($currentUrl);
+            $scheme = isset($parts['scheme']) ? strtolower($parts['scheme']) : '';
+            $host = isset($parts['host']) ? strtolower($parts['host']) : '';
+            $port = isset($parts['port']) ? intval($parts['port']) : ($scheme === 'https' ? 443 : 80);
+            if (!in_array($scheme, array('http','https'), true) || $host === '' || !empty($parts['user']) || !empty($parts['pass']) || !in_array($port, array(80,443), true)) {
+                throw new ParabdException('VALIDATION_ERROR', 'URL d’image invalide ou protocole non autorisé.', array('visual_url' => 'URL HTTP(S) publique attendue.'));
+            }
+            $addresses = $this->publicAddressesForHost($host);
+            if (!$addresses) throw new ParabdException('VALIDATION_ERROR', 'L’adresse de l’image est locale, privée ou introuvable.', array('visual_url' => 'Adresse publique requise.'));
+
+            $body = '';
+            $location = '';
+            $tooLarge = false;
+            $resolvedAddress = strpos($addresses[0], ':') !== false ? '[' . $addresses[0] . ']' : $addresses[0];
+            $curl = curl_init($currentUrl);
+            curl_setopt_array($curl, array(
+                CURLOPT_FOLLOWLOCATION => false,
+                CURLOPT_CONNECTTIMEOUT => 8,
+                CURLOPT_TIMEOUT => 20,
+                CURLOPT_USERAGENT => 'BDovore-ParaBD-Image/1.0',
+                CURLOPT_PROXY => '',
+                CURLOPT_SSL_VERIFYPEER => true,
+                CURLOPT_SSL_VERIFYHOST => 2,
+                CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+                CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+                CURLOPT_RESOLVE => array($host . ':' . $port . ':' . $resolvedAddress),
+                CURLOPT_WRITEFUNCTION => function ($handle, $chunk) use (&$body, &$tooLarge, $maxBytes) {
+                    if (strlen($body) + strlen($chunk) > $maxBytes) { $tooLarge = true; return 0; }
+                    $body .= $chunk; return strlen($chunk);
+                },
+                CURLOPT_HEADERFUNCTION => function ($handle, $header) use (&$location) {
+                    if (stripos($header, 'Location:') === 0) $location = trim(substr($header, 9));
+                    return strlen($header);
+                }
+            ));
+            $ok = curl_exec($curl);
+            $status = intval(curl_getinfo($curl, CURLINFO_RESPONSE_CODE));
+            $error = curl_error($curl);
+            curl_close($curl);
+            if ($tooLarge) throw new ParabdException('VALIDATION_ERROR', 'L’image distante dépasse 5 Mo.', array('visual_url' => '5 Mo maximum.'));
+            if ($status >= 300 && $status < 400 && $location !== '') {
+                $currentUrl = $this->absoluteRedirectUrl($currentUrl, $location);
+                continue;
+            }
+            if (!$ok || $status < 200 || $status >= 300 || $body === '') throw new ParabdException('VALIDATION_ERROR', 'Impossible de télécharger l’image distante' . ($error ? ' : ' . $error : '.'), array('visual_url' => 'Téléchargement impossible.'));
+
+            $tmp = tempnam(sys_get_temp_dir(), 'parabd-url-');
+            if (!$tmp || file_put_contents($tmp, $body) === false) throw new RuntimeException('Impossible de préparer l’image distante.');
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $mime = $finfo->file($tmp);
+            $extensions = array('image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp');
+            if (!isset($extensions[$mime])) { @unlink($tmp); throw new ParabdException('VALIDATION_ERROR', 'L’URL ne désigne pas une image JPEG, PNG ou WebP.'); }
+            return array('tmp_name' => $tmp, 'name' => 'image-distante.' . $extensions[$mime], 'size' => strlen($body), 'error' => UPLOAD_ERR_OK, '_parabd_remote' => true);
+        }
+        throw new ParabdException('VALIDATION_ERROR', 'L’image distante effectue trop de redirections.');
+    }
+
     public static function orientImage($image, $orientation)
     {
         if ($orientation === 2 || $orientation === 4 || $orientation === 5 || $orientation === 7) imageflip($image, IMG_FLIP_HORIZONTAL);
@@ -544,11 +811,11 @@ class ParabdService
     {
         $where = 'c.USER_ID=' . intval($userId) . " AND i.STATUS='ACTIVE'";
         if ($state) $where .= " AND c.STATE='" . $this->escape($state) . "'";
-        if ($publicOnly) $where .= ' AND c.IS_PUBLIC=1';
+        $mediaPath = $this->mediaPathSql('m', 'i');
         $copyFields = $publicOnly
-            ? "c.ID_COPY,c.USER_ID,c.ITEM_ID,c.STATE,c.QUANTITY,c.COPY_NUMBER,c.IS_PUBLIC,c.IS_PRICE_PUBLIC,IF(c.IS_PRICE_PUBLIC=1,c.PRICE,NULL) PRICE,IF(c.IS_PRICE_PUBLIC=1,c.CURRENCY,NULL) CURRENCY,c.CREATED_AT,c.UPDATED_AT"
+            ? "c.ID_COPY,c.USER_ID,c.ITEM_ID,c.STATE,c.QUANTITY,c.COPY_NUMBER,c.COPY_IS_SIGNED,c.COPY_IS_DEDICATED,c.IS_PRICE_PUBLIC,IF(c.IS_PRICE_PUBLIC=1,c.PRICE,NULL) PRICE,IF(c.IS_PRICE_PUBLIC=1,c.CURRENCY,NULL) CURRENCY,c.CREATED_AT,c.UPDATED_AT"
             : 'c.*';
-        return $this->rows($this->query("SELECT $copyFields, i.TITLE, i.TYPE_ID, t.LABEL TYPE_LABEL, st.LABEL SUBTYPE_LABEL, m.FILE_PATH PRIMARY_IMAGE
+        return $this->rows($this->query("SELECT $copyFields, i.TITLE, i.TYPE_ID, i.IS_EXPLICIT, t.LABEL TYPE_LABEL, st.LABEL SUBTYPE_LABEL, $mediaPath PRIMARY_IMAGE
             FROM users_parabd c JOIN parabd_item i ON i.ID_ITEM=c.ITEM_ID JOIN parabd_type t ON t.ID_TYPE=i.TYPE_ID
             LEFT JOIN parabd_type st ON st.ID_TYPE=i.SUBTYPE_ID LEFT JOIN parabd_media m ON m.ITEM_ID=i.ID_ITEM AND m.IS_PRIMARY=1 AND m.IS_HIDDEN=0
             WHERE $where ORDER BY c.CREATED_AT DESC"));
@@ -563,10 +830,18 @@ class ParabdService
         if (!$this->one("SELECT ID_ITEM FROM parabd_item WHERE ID_ITEM=$itemId AND STATUS='ACTIVE'")) throw new ParabdException('NOT_FOUND', 'Objet Para-BD introuvable.');
         $copyId = intval(isset($input['copy_id']) ? $input['copy_id'] : 0);
         $state = isset($input['state']) && $input['state'] === 'WISHLIST' ? 'WISHLIST' : 'OWNED';
+        $quantity = $this->copyQuantity(isset($input['quantity']) ? $input['quantity'] : 1);
+        $copyNumber = trim(isset($input['copy_number']) ? $input['copy_number'] : '');
+        if (mb_strlen($copyNumber, 'UTF-8') > 80) throw new ParabdException('VALIDATION_ERROR', 'Le numéro d’exemplaire est trop long.', array('copy_number' => '80 caractères maximum.'));
+        $condition = strtoupper(trim(isset($input['condition_code']) ? $input['condition_code'] : 'UNKNOWN'));
+        if (!in_array($condition, array('UNKNOWN','MINT','NEAR_MINT','VERY_GOOD','GOOD','FAIR','POOR'), true)) throw new ParabdException('VALIDATION_ERROR', 'État de conservation invalide.', array('condition_code' => 'Valeur invalide.'));
+        $purchaseDate = $this->copyDate(isset($input['purchase_date']) ? $input['purchase_date'] : '');
         $price = $this->decimal(isset($input['price']) ? $input['price'] : null);
         $currency = strtoupper(trim(isset($input['currency']) ? $input['currency'] : 'EUR'));
         if ($price !== null && !preg_match('/^[A-Z]{3}$/', $currency)) throw new ParabdException('VALIDATION_ERROR', 'Devise ISO-3 invalide.');
-        $fields = "STATE='$state',QUANTITY=" . max(1, intval(isset($input['quantity']) ? $input['quantity'] : 1)) . ",COPY_NUMBER=" . $this->sqlValue(trim(isset($input['copy_number']) ? $input['copy_number'] : '')) . ",PRICE=" . $this->sqlValue($price) . ",CURRENCY=" . $this->sqlValue($price === null ? null : $currency) . ",IS_PRICE_PUBLIC=" . (!empty($input['is_price_public']) ? 1 : 0) . ",IS_PUBLIC=" . (isset($input['is_public']) && !$input['is_public'] ? 0 : 1) . ",SELLER=" . $this->sqlValue(trim(isset($input['seller']) ? $input['seller'] : '')) . ",ESTIMATED_VALUE=" . $this->sqlValue($this->decimal(isset($input['estimated_value']) ? $input['estimated_value'] : null)) . ",PERSONAL_NOTES=" . $this->sqlValue(trim(isset($input['personal_notes']) ? $input['personal_notes'] : ''));
+        $seller = trim(isset($input['seller']) ? $input['seller'] : '');
+        if (mb_strlen($seller, 'UTF-8') > 255) throw new ParabdException('VALIDATION_ERROR', 'Le nom du vendeur est trop long.', array('seller' => '255 caractères maximum.'));
+        $fields = "STATE='$state',QUANTITY=$quantity,COPY_NUMBER=" . $this->sqlValue($copyNumber) . ",CONDITION_CODE='" . $this->escape($condition) . "',COPY_IS_SIGNED=" . $this->sqlValue($this->tri(isset($input['copy_is_signed']) ? $input['copy_is_signed'] : '')) . ",COPY_IS_DEDICATED=" . $this->sqlValue($this->tri(isset($input['copy_is_dedicated']) ? $input['copy_is_dedicated'] : '')) . ",HAS_BOX=" . $this->sqlValue($this->tri(isset($input['has_box']) ? $input['has_box'] : '')) . ",HAS_CERTIFICATE=" . $this->sqlValue($this->tri(isset($input['copy_has_certificate']) ? $input['copy_has_certificate'] : '')) . ",IS_GIFT=" . (!empty($input['is_gift']) ? 1 : 0) . ",PURCHASE_DATE=" . $this->sqlValue($purchaseDate) . ",PRICE=" . $this->sqlValue($price) . ",CURRENCY=" . $this->sqlValue($price === null ? null : $currency) . ",IS_PRICE_PUBLIC=" . (!empty($input['is_price_public']) ? 1 : 0) . ",SELLER=" . $this->sqlValue($seller) . ",ESTIMATED_VALUE=" . $this->sqlValue($this->decimal(isset($input['estimated_value']) ? $input['estimated_value'] : null)) . ",PERSONAL_NOTES=" . $this->sqlValue(trim(isset($input['personal_notes']) ? $input['personal_notes'] : ''));
         if ($copyId) {
             $this->query("UPDATE users_parabd SET $fields WHERE ID_COPY=$copyId AND USER_ID=" . intval($userId));
             if (Db_affected_rows($this->connection()) === 0 && !$this->one("SELECT ID_COPY FROM users_parabd WHERE ID_COPY=$copyId AND USER_ID=" . intval($userId))) throw new ParabdException('NOT_FOUND', 'Exemplaire introuvable.');
@@ -584,6 +859,22 @@ class ParabdService
         }
     }
 
+    private function copyQuantity($value)
+    {
+        $value = trim((string) $value);
+        if (!ctype_digit($value) || intval($value) < 1 || intval($value) > 65535) throw new ParabdException('VALIDATION_ERROR', 'La quantité doit être comprise entre 1 et 65 535.', array('quantity' => 'Quantité invalide.'));
+        return intval($value);
+    }
+
+    private function copyDate($value)
+    {
+        $value = trim((string) $value);
+        if ($value === '') return null;
+        if (preg_match('#^(\d{4})-(\d{2})-(\d{2})$#', $value, $match) && checkdate(intval($match[2]), intval($match[3]), intval($match[1]))) return $value;
+        if (preg_match('#^(\d{2})/(\d{2})/(\d{4})$#', $value, $match) && checkdate(intval($match[2]), intval($match[1]), intval($match[3]))) return $match[3] . '-' . $match[2] . '-' . $match[1];
+        throw new ParabdException('VALIDATION_ERROR', 'La date d’achat est invalide.', array('purchase_date' => 'Format attendu : JJ/MM/AAAA.'));
+    }
+
     public function removeCopy($userId, $copyId)
     {
         $this->query("DELETE FROM users_parabd WHERE ID_COPY=" . intval($copyId) . " AND USER_ID=" . intval($userId));
@@ -593,7 +884,7 @@ class ParabdService
     public function contribute($userId, $itemId, $baseRevision, $field, $value)
     {
         $this->requireCharter($userId);
-        $allowed = array('TITLE','DESCRIPTION','MATERIAL','COLOR','WIDTH_MM','HEIGHT_MM','DEPTH_MM','WEIGHT_G','SCALE','RELEASE_DATE','PRINT_RUN','IS_NUMBERED','IS_SIGNED','HAS_CERTIFICATE','IS_LIMITED','MANUFACTURER','PUBLISHER','LICENSE_NAME','RANGE_NAME','UNIVERSE_NAME','TYPE_ID','SUBTYPE_ID');
+        $allowed = array('TITLE','DESCRIPTION','MATERIAL','COLOR','WIDTH_MM','HEIGHT_MM','DEPTH_MM','WEIGHT_G','SCALE','RELEASE_DATE','PRINT_RUN','IS_NUMBERED','IS_SIGNED','HAS_CERTIFICATE','IS_LIMITED','IS_EXPLICIT','MANUFACTURER','PUBLISHER','LICENSE_NAME','RANGE_NAME','UNIVERSE_NAME','TYPE_ID','SUBTYPE_ID');
         $deleteRelations = array('DELETE_AUTHOR' => array('parabd_item_author','AUTHOR_ID'), 'DELETE_SERIES' => array('parabd_item_series','SERIES_ID'), 'DELETE_TOME' => array('parabd_item_tome','TOME_ID'));
         if (!in_array($field, $allowed, true) && !isset($deleteRelations[$field])) throw new ParabdException('VALIDATION_ERROR', 'Champ de contribution invalide.');
         $connection = $this->connection(); Db_autocommit(false, $connection);
@@ -613,7 +904,7 @@ class ParabdService
         $extraBefore = array();
         if (in_array($field, array('WIDTH_MM','HEIGHT_MM','DEPTH_MM','WEIGHT_G'), true)) $value = $this->decimal($value);
         elseif ($field === 'PRINT_RUN') $value = $this->positiveInt($value);
-        elseif (in_array($field, array('IS_NUMBERED','IS_SIGNED','HAS_CERTIFICATE','IS_LIMITED'), true)) $value = $this->tri($value);
+        elseif (in_array($field, array('IS_NUMBERED','IS_SIGNED','HAS_CERTIFICATE','IS_LIMITED','IS_EXPLICIT'), true)) $value = $this->tri($value);
         elseif ($field === 'RELEASE_DATE') {
             $parsed = self::parsePartialDate($value); $value = $parsed['date'];
             $extraBefore['DATE_PRECISION'] = $item['DATE_PRECISION']; $extraAfter['DATE_PRECISION'] = $parsed['precision'];
@@ -625,7 +916,7 @@ class ParabdService
         }
         $before = $item[$field];
         $protected = in_array($field, array('TYPE_ID','SUBTYPE_ID'), true);
-        $apply = !$protected && (($before === null || $before === '') || $this->isTrusted($userId));
+        $apply = !$protected && (($field === 'IS_EXPLICIT' && intval($value) === 1) || ($before === null || $before === '') || $this->isTrusted($userId));
         $kind = $protected ? 'TYPE_CHANGE' : 'UPDATE';
         $beforePatch = array_merge(array($field => $before), $extraBefore);
         $afterPatch = array_merge(array($field => $value), $extraAfter);
@@ -676,7 +967,7 @@ class ParabdService
     {
         return $this->rows($this->query("SELECT r.*,SUM(v.VOTE='CONFIRM') CONFIRMS,SUM(v.VOTE='CONTEST') CONTESTS
             FROM parabd_revision r LEFT JOIN parabd_revision_vote v ON v.REVISION_ID=r.ID_REVISION
-            WHERE r.ITEM_ID=" . intval($itemId) . " AND r.STATUS IN ('PENDING','APPLIED')
+            WHERE r.ITEM_ID=" . intval($itemId) . " AND r.STATUS IN ('PENDING','APPLIED') AND r.CHANGE_KIND<>'CREATE'
             GROUP BY r.ID_REVISION ORDER BY r.CREATED_AT DESC"));
     }
 
@@ -694,7 +985,7 @@ class ParabdService
             $this->query("UPDATE parabd_item SET REVISION_NO=REVISION_NO+1,UPDATED_BY=" . intval($validatorId) . " WHERE ID_ITEM=" . intval($revision['ITEM_ID']));
             return;
         }
-        $allowed = array('TITLE','TITLE_NORMALIZED','DESCRIPTION','MATERIAL','COLOR','WIDTH_MM','HEIGHT_MM','DEPTH_MM','WEIGHT_G','SCALE','RELEASE_DATE','DATE_PRECISION','PRINT_RUN','IS_NUMBERED','IS_SIGNED','HAS_CERTIFICATE','IS_LIMITED','MANUFACTURER','MANUFACTURER_NORMALIZED','PUBLISHER','LICENSE_NAME','RANGE_NAME','UNIVERSE_NAME','TYPE_ID','SUBTYPE_ID');
+        $allowed = array('TITLE','TITLE_NORMALIZED','DESCRIPTION','MATERIAL','COLOR','WIDTH_MM','HEIGHT_MM','DEPTH_MM','WEIGHT_G','SCALE','RELEASE_DATE','DATE_PRECISION','PRINT_RUN','IS_NUMBERED','IS_SIGNED','HAS_CERTIFICATE','IS_LIMITED','IS_EXPLICIT','MANUFACTURER','MANUFACTURER_NORMALIZED','PUBLISHER','LICENSE_NAME','RANGE_NAME','UNIVERSE_NAME','TYPE_ID','SUBTYPE_ID');
         $sets = array();
         foreach ($patch as $field => $value) {
             if (!in_array($field, $allowed, true)) throw new RuntimeException('Champ de patch Para-BD invalide.');
@@ -714,21 +1005,127 @@ class ParabdService
         return intval(Db_insert_id($this->connection()));
     }
 
-    public function addMedia($userId, $itemId, $file, $mediaType)
+    public function addMedia($userId, $itemId, $file, $mediaType, $visualUrl = '')
     {
         $this->requireCharter($userId);
         $mediaType = strtoupper($mediaType);
         if (!in_array($mediaType, array('GALLERY','CERTIFICATE','BOX','DETAIL'), true)) $mediaType = 'GALLERY';
         if (!$this->one("SELECT ID_ITEM FROM parabd_item WHERE ID_ITEM=" . intval($itemId) . " AND STATUS='ACTIVE'")) throw new ParabdException('NOT_FOUND', 'Objet Para-BD introuvable.');
         $this->consumeRate($userId, 'upload');
+        $hasUpload = $file && isset($file['error']) && $file['error'] === UPLOAD_ERR_OK;
+        $remoteFile = null;
+        if (!$hasUpload) {
+            if (trim($visualUrl) === '') throw new ParabdException('VALIDATION_ERROR', 'Choisissez un fichier ou indiquez une URL d’image.');
+            $file = $this->downloadRemoteImage($visualUrl);
+            $remoteFile = $file['tmp_name'];
+        }
         $connection = $this->connection(); Db_autocommit(false, $connection); $path = null;
         try {
             $count = $this->one("SELECT COUNT(*) total FROM parabd_media WHERE ITEM_ID=" . intval($itemId));
             $image = $this->storeImage($file, intval($itemId), intval($count['total']) + 1); $path = $image['absolute_path'];
             $this->query("INSERT INTO parabd_media (ITEM_ID,MEDIA_TYPE,FILE_PATH,MIME_TYPE,WIDTH_PX,HEIGHT_PX,CREATED_BY) VALUES (" . intval($itemId) . ",'$mediaType','" . $this->escape($image['relative_path']) . "','" . $this->escape($image['mime']) . "'," . intval($image['width']) . "," . intval($image['height']) . "," . intval($userId) . ")");
-            Db_commit($connection); Db_autocommit(true, $connection); return intval(Db_insert_id($connection));
+            if (!$hasUpload) $this->addSource(intval($itemId), $userId, $visualUrl, 'Source du visuel');
+            Db_commit($connection); Db_autocommit(true, $connection); if ($remoteFile && is_file($remoteFile)) @unlink($remoteFile); return intval(Db_insert_id($connection));
         } catch (Throwable $error) {
-            Db_rollback($connection); Db_autocommit(true, $connection); if ($path && is_file($path)) @unlink($path); throw $error;
+            Db_rollback($connection); Db_autocommit(true, $connection); if ($path && is_file($path)) @unlink($path); if ($remoteFile && is_file($remoteFile)) @unlink($remoteFile); throw $error;
+        }
+    }
+
+    private function adminSnapshot($itemId)
+    {
+        $itemId = intval($itemId);
+        $item = $this->one("SELECT TYPE_ID,SUBTYPE_ID,TITLE,DESCRIPTION,MATERIAL,COLOR,WIDTH_MM,HEIGHT_MM,DEPTH_MM,WEIGHT_G,SCALE,RELEASE_DATE,DATE_PRECISION,PRINT_RUN,IS_NUMBERED,IS_SIGNED,HAS_CERTIFICATE,IS_LIMITED,MANUFACTURER,PUBLISHER,LICENSE_NAME,RANGE_NAME,UNIVERSE_NAME,IS_EXPLICIT,STATUS,MERGED_INTO_ID FROM parabd_item WHERE ID_ITEM=$itemId");
+        if (!$item) return null;
+        $item['identifiers'] = $this->rows($this->query("SELECT SCHEME,ISSUER,VALUE FROM parabd_identifier WHERE ITEM_ID=$itemId ORDER BY ID_IDENTIFIER"));
+        $item['authors'] = $this->rows($this->query("SELECT AUTHOR_ID,ROLE FROM parabd_item_author WHERE ITEM_ID=$itemId ORDER BY AUTHOR_ID,ROLE"));
+        $item['series'] = $this->rows($this->query("SELECT SERIES_ID,RELATION_TYPE FROM parabd_item_series WHERE ITEM_ID=$itemId ORDER BY SERIES_ID,RELATION_TYPE"));
+        $item['tomes'] = $this->rows($this->query("SELECT TOME_ID,RELATION_TYPE,PAGE_NO,PANEL_NO FROM parabd_item_tome WHERE ITEM_ID=$itemId ORDER BY TOME_ID,RELATION_TYPE"));
+        $item['sources'] = $this->rows($this->query("SELECT SOURCE_TYPE,URL,LABEL,NOTES FROM parabd_source WHERE ITEM_ID=$itemId ORDER BY ID_SOURCE"));
+        $item['media'] = $this->rows($this->query("SELECT ID_MEDIA,MEDIA_TYPE,FILE_PATH,IS_PRIMARY,IS_HIDDEN,SORT_ORDER FROM parabd_media WHERE ITEM_ID=$itemId ORDER BY ID_MEDIA"));
+        return $item;
+    }
+
+    public function adminUpdateItem($adminId, $itemId, $input, $file = null)
+    {
+        $itemId = intval($itemId);
+        $data = $this->cleanInput($input);
+        $identifiers = $this->identifiersFromInput($input);
+        $relations = $this->relationsFromInput($input);
+        $sources = $this->sourcesFromInput($input);
+        $status = strtoupper(trim(isset($input['status']) ? $input['status'] : 'ACTIVE'));
+        if (!in_array($status, array('ACTIVE','HIDDEN'), true)) throw new ParabdException('VALIDATION_ERROR', 'Statut de fiche invalide.');
+
+        $visualUrl = trim(isset($input['visual_url']) ? $input['visual_url'] : '');
+        $hasUpload = $file && isset($file['error']) && $file['error'] === UPLOAD_ERR_OK;
+        $remoteFile = null;
+        if (!$hasUpload && $visualUrl !== '') {
+            $file = $this->downloadRemoteImage($visualUrl);
+            $remoteFile = $file['tmp_name'];
+        }
+
+        $connection = $this->connection();
+        $writtenFile = null;
+        Db_autocommit(false, $connection);
+        try {
+            $locked = $this->one("SELECT * FROM parabd_item WHERE ID_ITEM=$itemId FOR UPDATE");
+            if (!$locked) throw new ParabdException('NOT_FOUND', 'Objet Para-BD introuvable.');
+            if ($locked['STATUS'] === 'MERGED') throw new ParabdException('VALIDATION_ERROR', 'Une fiche fusionnée est consultable mais ne peut plus être modifiée.');
+            $before = $this->adminSnapshot($itemId);
+
+            $sets = array();
+            foreach ($data as $field => $value) $sets[] = "`$field`=" . $this->sqlItemValue($field, $value);
+            $sets[] = "STATUS='$status'";
+            $this->query("UPDATE parabd_item SET " . implode(',', $sets) . " WHERE ID_ITEM=$itemId");
+
+            $this->query("DELETE FROM parabd_identifier WHERE ITEM_ID=$itemId");
+            foreach ($identifiers as $identifier) $this->query("INSERT INTO parabd_identifier (ITEM_ID,SCHEME,ISSUER,ISSUER_NORMALIZED,VALUE,VALUE_NORMALIZED,CREATED_BY) VALUES
+                ($itemId,'" . $this->escape($identifier['scheme']) . "'," . $this->sqlValue($identifier['issuer']) . ",'" . $this->escape($identifier['issuer_normalized']) . "','" . $this->escape($identifier['value']) . "','" . $this->escape($identifier['value_normalized']) . "'," . intval($adminId) . ")");
+
+            foreach (array('parabd_item_author','parabd_item_series','parabd_item_tome') as $table) $this->query("DELETE FROM $table WHERE ITEM_ID=$itemId");
+            $this->insertRelations($itemId, $adminId, $relations);
+
+            $this->query("DELETE FROM parabd_source WHERE ITEM_ID=$itemId");
+            foreach ($sources as $source) $this->addSource($itemId, $adminId, $source['url'], $source['label'], $source['notes']);
+
+            $mediaRows = $this->rows($this->query("SELECT ID_MEDIA,IS_PRIMARY FROM parabd_media WHERE ITEM_ID=$itemId ORDER BY ID_MEDIA"));
+            $mediaIds = array_map(function ($row) { return intval($row['ID_MEDIA']); }, $mediaRows);
+            $hidden = isset($input['media_hidden']) && is_array($input['media_hidden']) ? array_map('intval', array_keys($input['media_hidden'])) : array();
+            foreach ($mediaIds as $mediaId) $this->query("UPDATE parabd_media SET IS_HIDDEN=" . (in_array($mediaId, $hidden, true) ? '1' : '0') . " WHERE ID_MEDIA=$mediaId AND ITEM_ID=$itemId");
+
+            $primaryMediaId = isset($input['primary_media_id']) ? intval($input['primary_media_id']) : 0;
+            if (!$primaryMediaId) foreach ($mediaRows as $row) if ($row['IS_PRIMARY']) { $primaryMediaId = intval($row['ID_MEDIA']); break; }
+            if ($hasUpload || $visualUrl !== '') {
+                $count = $this->one("SELECT COUNT(*) total FROM parabd_media WHERE ITEM_ID=$itemId");
+                $image = $this->storeImage($file, $itemId, intval($count['total']) + 1);
+                $writtenFile = $image['absolute_path'];
+                $mediaType = strtoupper(trim(isset($input['new_media_type']) ? $input['new_media_type'] : 'GALLERY'));
+                if (!in_array($mediaType, array('GALLERY','CERTIFICATE','BOX','DETAIL'), true)) $mediaType = 'GALLERY';
+                $this->query("INSERT INTO parabd_media (ITEM_ID,MEDIA_TYPE,FILE_PATH,MIME_TYPE,WIDTH_PX,HEIGHT_PX,CREATED_BY) VALUES ($itemId,'$mediaType','" . $this->escape($image['relative_path']) . "','" . $this->escape($image['mime']) . "'," . intval($image['width']) . ',' . intval($image['height']) . ',' . intval($adminId) . ')');
+                $newMediaId = intval(Db_insert_id($connection));
+                if (!empty($input['new_media_primary']) || !$primaryMediaId) $primaryMediaId = $newMediaId;
+                if ($visualUrl !== '' && !in_array($visualUrl, array_column($sources, 'url'), true)) $this->addSource($itemId, $adminId, $visualUrl, 'Source du nouveau visuel');
+            }
+            if (!$primaryMediaId || (!$this->one("SELECT ID_MEDIA FROM parabd_media WHERE ID_MEDIA=$primaryMediaId AND ITEM_ID=$itemId AND IS_HIDDEN=0"))) throw new ParabdException('VALIDATION_ERROR', 'Choisissez un visuel principal visible.');
+            $this->query("UPDATE parabd_media SET IS_PRIMARY=0,MEDIA_TYPE=IF(MEDIA_TYPE='PRIMARY','GALLERY',MEDIA_TYPE) WHERE ITEM_ID=$itemId");
+            $this->query("UPDATE parabd_media SET IS_PRIMARY=1,MEDIA_TYPE='PRIMARY' WHERE ID_MEDIA=$primaryMediaId AND ITEM_ID=$itemId");
+
+            $after = $this->adminSnapshot($itemId);
+            $beforeJson = json_encode($before, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $afterJson = json_encode($after, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            if ($beforeJson !== $afterJson) {
+                $baseRevision = intval($locked['REVISION_NO']);
+                $this->query("UPDATE parabd_item SET REVISION_NO=REVISION_NO+1,UPDATED_BY=" . intval($adminId) . " WHERE ID_ITEM=$itemId");
+                $this->query("INSERT INTO parabd_revision (ITEM_ID,AUTHOR_ID,BASE_REVISION_NO,PATCH_BEFORE,PATCH_AFTER,CHANGE_KIND,STATUS,APPLIED_AT,VALIDATED_BY,VALIDATED_AT) VALUES ($itemId," . intval($adminId) . ",$baseRevision,'" . $this->escape($beforeJson) . "','" . $this->escape($afterJson) . "','UPDATE','ACCEPTED',NOW()," . intval($adminId) . ",NOW())");
+            }
+            Db_commit($connection); Db_autocommit(true, $connection);
+            if ($remoteFile && is_file($remoteFile)) @unlink($remoteFile);
+            return array('item_id' => $itemId, 'changed' => $beforeJson !== $afterJson);
+        } catch (Throwable $error) {
+            Db_rollback($connection); Db_autocommit(true, $connection);
+            if ($writtenFile && is_file($writtenFile)) @unlink($writtenFile);
+            if ($remoteFile && is_file($remoteFile)) @unlink($remoteFile);
+            if ($connection->errno === 1062 || strpos($error->getMessage(), 'Duplicate entry') !== false) throw new ParabdException('DUPLICATE_EXACT', 'Cet identifiant appartient déjà à une autre fiche.');
+            throw $error;
         }
     }
 
@@ -784,7 +1181,7 @@ class ParabdService
     {
         $patch = json_decode($revision['PATCH_BEFORE'], true);
         if (!is_array($patch) || !$patch || isset($patch['_operation'])) return;
-        $allowed = array('TITLE','TITLE_NORMALIZED','DESCRIPTION','MATERIAL','COLOR','WIDTH_MM','HEIGHT_MM','DEPTH_MM','WEIGHT_G','SCALE','RELEASE_DATE','DATE_PRECISION','PRINT_RUN','IS_NUMBERED','IS_SIGNED','HAS_CERTIFICATE','IS_LIMITED','MANUFACTURER','MANUFACTURER_NORMALIZED','PUBLISHER','LICENSE_NAME','RANGE_NAME','UNIVERSE_NAME','TYPE_ID','SUBTYPE_ID');
+        $allowed = array('TITLE','TITLE_NORMALIZED','DESCRIPTION','MATERIAL','COLOR','WIDTH_MM','HEIGHT_MM','DEPTH_MM','WEIGHT_G','SCALE','RELEASE_DATE','DATE_PRECISION','PRINT_RUN','IS_NUMBERED','IS_SIGNED','HAS_CERTIFICATE','IS_LIMITED','IS_EXPLICIT','MANUFACTURER','MANUFACTURER_NORMALIZED','PUBLISHER','LICENSE_NAME','RANGE_NAME','UNIVERSE_NAME','TYPE_ID','SUBTYPE_ID');
         $sets = array();
         foreach ($patch as $field => $value) {
             if (!in_array($field, $allowed, true)) throw new RuntimeException('Champ de restauration Para-BD invalide.');
@@ -802,7 +1199,7 @@ class ParabdService
             $locked = $this->rows($this->query("SELECT * FROM parabd_item WHERE ID_ITEM IN (" . intval($low) . ',' . intval($high) . ") FOR UPDATE"));
             if (count($locked) !== 2) throw new ParabdException('NOT_FOUND', 'Une fiche à fusionner est introuvable.');
             foreach ($preferredFields as $field => $value) {
-                if (in_array($field, array('TITLE','DESCRIPTION','MATERIAL','COLOR','WIDTH_MM','HEIGHT_MM','DEPTH_MM','WEIGHT_G','SCALE','RELEASE_DATE','DATE_PRECISION','PRINT_RUN','MANUFACTURER','PUBLISHER','LICENSE_NAME','RANGE_NAME','UNIVERSE_NAME'), true)) {
+                if (in_array($field, array('TITLE','DESCRIPTION','MATERIAL','COLOR','WIDTH_MM','HEIGHT_MM','DEPTH_MM','WEIGHT_G','SCALE','RELEASE_DATE','DATE_PRECISION','PRINT_RUN','IS_EXPLICIT','MANUFACTURER','PUBLISHER','LICENSE_NAME','RANGE_NAME','UNIVERSE_NAME'), true)) {
                     $this->query("UPDATE parabd_item SET `$field`=" . $this->sqlItemValue($field, $value) . " WHERE ID_ITEM=" . intval($targetId));
                 }
             }

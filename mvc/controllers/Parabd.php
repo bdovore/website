@@ -78,26 +78,50 @@ class Parabd extends Bdo_Controller
 
     public function Index()
     {
-        if (!$this->enabled()) return;
+        if (!$this->enabled(true)) return;
         $this->view->addCssFile('style/parabd.css');
+        $this->view->addJavascriptFile('script/parabd.js');
+        $search = getVal('q', '');
+        $filterType = getVal('filter_type', '');
+        $filterId = getValInteger('filter_id', 0);
+        $filterValue = getVal('filter_value', '');
         $this->view->set_var(array(
             'PAGETITLE' => 'Catalogue Para-BD', 'ROBOTS' => 'noindex,nofollow',
-            'items' => $this->service()->getCatalogue(getVal('q', '')), 'search' => getVal('q', ''),
-            'csrf_token' => parabdCsrfToken('parabd-write')
+            'items' => $this->service()->getCatalogue($search, $filterType, $filterId, $filterValue), 'search' => $search,
+            'filter_type' => $filterType, 'filter_id' => $filterId, 'filter_value' => $filterValue,
+            'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit')
         ));
         $this->view->render();
     }
 
     public function Fiche()
     {
-        if (!$this->enabled()) return;
+        if (!$this->enabled(true)) return;
         $this->view->addCssFile('style/parabd.css');
+        $this->view->addJavascriptFile('script/parabd.js');
         $item = $this->service()->getItem(getValInteger('id', 0));
         if (!$item) { http_response_code(404); die('Objet Para-BD introuvable.'); }
         if (!empty($item['REDIRECT_ID'])) { header('Location: ' . BDO_URL . 'parabd/fiche?id=' . intval($item['REDIRECT_ID']), true, 301); return; }
+        $canContribute = $this->userId() && User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1);
         $this->view->set_var(array('PAGETITLE' => $item['TITLE'] . ' - Para-BD', 'ROBOTS' => 'noindex,nofollow', 'item' => $item,
-            'copies' => $this->service()->getUserCopies($this->userId()), 'revisions' => $this->service()->getRevisionsForItem(intval($item['ID_ITEM'])),
-            'csrf_token' => parabdCsrfToken('parabd-write'), 'trusted' => $this->service()->isTrusted($this->userId()), 'charter_version' => BDO_PARABD_CHARTER_VERSION));
+            'copies' => $canContribute ? $this->service()->getUserCopies($this->userId()) : array(), 'revisions' => $this->service()->getRevisionsForItem(intval($item['ID_ITEM'])),
+            'csrf_token' => $canContribute ? parabdCsrfToken('parabd-write') : '', 'can_contribute' => $canContribute,
+            'trusted' => $canContribute ? $this->service()->isTrusted($this->userId()) : false, 'charter_version' => BDO_PARABD_CHARTER_VERSION,
+            'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'), 'can_admin' => $this->userId() && User::minAccesslevel(1)));
+        $this->view->render();
+    }
+
+    public function Autocomplete()
+    {
+        if (!$this->enabled(true)) return;
+        $this->handle(function () { return array('suggestions' => $this->service()->autocompleteCatalogue(getVal('term', ''))); });
+    }
+
+    public function Charte()
+    {
+        if (!$this->enabled(true)) return;
+        $this->view->addCssFile('style/parabd.css');
+        $this->view->set_var(array('PAGETITLE' => 'Charte de contribution Para-BD', 'ROBOTS' => 'noindex,nofollow', 'charter_version' => BDO_PARABD_CHARTER_VERSION));
         $this->view->render();
     }
 
@@ -128,7 +152,12 @@ class Parabd extends Bdo_Controller
         if (!$this->requireMutation('parabd-write')) return;
         $this->handle(function () {
             if (!empty($_POST['accept_charter'])) $this->service()->acceptCharter($this->userId(), true);
-            return $this->service()->createItem($this->userId(), $_POST, isset($_FILES['visual']) ? $_FILES['visual'] : null);
+            $result = $this->service()->createItem($this->userId(), $_POST, isset($_FILES['visual']) ? $_FILES['visual'] : null);
+            $action = isset($_POST['collection_action']) ? $_POST['collection_action'] : 'none';
+            $result['redirect_url'] = in_array($action, array('OWNED','WISHLIST'), true)
+                ? BDO_URL . 'macollection/parabd?list=' . ($action === 'WISHLIST' ? 'wishlist' : 'owned') . '&created=' . intval($result['item_id'])
+                : BDO_URL . 'parabd/fiche?id=' . intval($result['item_id']);
+            return $result;
         });
     }
 
@@ -170,7 +199,7 @@ class Parabd extends Bdo_Controller
         if (!$this->enabled() || !$this->requireMutation('parabd-write')) return;
         $this->handle(function () {
             if (!empty($_POST['accept_charter'])) $this->service()->acceptCharter($this->userId(), true);
-            return array('media_id' => $this->service()->addMedia($this->userId(), postValInteger('item_id', 0), isset($_FILES['visual']) ? $_FILES['visual'] : null, postVal('media_type', 'GALLERY')));
+            return array('media_id' => $this->service()->addMedia($this->userId(), postValInteger('item_id', 0), isset($_FILES['visual']) ? $_FILES['visual'] : null, postVal('media_type', 'GALLERY'), postVal('visual_url', '')));
         });
     }
 }

@@ -1205,7 +1205,9 @@ class Macollection extends Bdo_Controller {
             'ROBOTS' => 'noindex,nofollow',
             'copies' => $this->ParabdService->getUserCopies(intval($_SESSION['userConnect']->user_id), $state),
             'state' => $state,
-            'csrf_token' => parabdCsrfToken('parabd-write')
+            'created_item_id' => getValInteger('created', 0),
+            'csrf_token' => parabdCsrfToken('parabd-write'),
+            'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit')
         ));
         $this->view->render();
     }

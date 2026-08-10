@@ -1,64 +1,186 @@
-<?php $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }; $item = $view->item; ?>
+<?php
+$h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); };
+$formatRevision = function ($json) {
+    $patch = json_decode($json, true);
+    if (!is_array($patch)) return 'Détail de la modification indisponible.';
+    $labels = array('TITLE'=>'Titre','DESCRIPTION'=>'Description','MATERIAL'=>'Matière','COLOR'=>'Couleur','MANUFACTURER'=>'Fabricant','PUBLISHER'=>'Éditeur','RELEASE_DATE'=>'Date','IS_EXPLICIT'=>'Contenu explicite','DELETE_AUTHOR'=>'Retrait de l’auteur','DELETE_SERIES'=>'Retrait de la série','DELETE_TOME'=>'Retrait de l’album');
+    if (isset($patch['_operation'])) return (isset($labels[$patch['_operation']]) ? $labels[$patch['_operation']] : 'Modification d’un rattachement') . ' #' . intval($patch['_id']);
+    $parts = array();
+    foreach ($patch as $field => $value) {
+        if (substr($field, -11) === '_NORMALIZED' || $field === 'DATE_PRECISION') continue;
+        if ($field === 'IS_EXPLICIT') $display = intval($value) === 1 ? 'oui' : 'non';
+        else $display = ($value === null || $value === '') ? 'non renseigné' : (is_scalar($value) ? (string) $value : 'valeur structurée');
+        $parts[] = (isset($labels[$field]) ? $labels[$field] : $field) . ' : ' . $display;
+    }
+    return $parts ? implode(' · ', $parts) : 'Modification technique de la fiche.';
+};
+$item = $view->item;
+$itemCopies = array_filter($view->copies, function ($copy) use ($item) { return intval($copy['ITEM_ID']) === intval($item['ID_ITEM']); });
+$ownedCopies = array_filter($itemCopies, function ($copy) { return $copy['STATE'] === 'OWNED'; });
+$wishlistCopies = array_filter($itemCopies, function ($copy) { return $copy['STATE'] === 'WISHLIST'; });
+$wishlistCopy = $wishlistCopies ? reset($wishlistCopies) : null;
+$conditions = array('UNKNOWN'=>'Non renseigné','MINT'=>'Neuf','NEAR_MINT'=>'Comme neuf','VERY_GOOD'=>'Très bon','GOOD'=>'Bon','FAIR'=>'Correct','POOR'=>'Usé');
+$triOptions = function ($current) {
+    $options = array(''=>'Inconnu','1'=>'Oui','0'=>'Non');
+    $html = '';
+    foreach ($options as $value => $label) $html .= '<option value="' . $value . '"' . ((string) $current === (string) $value ? ' selected' : '') . '>' . $label . '</option>';
+    return $html;
+};
+?>
 <div class="cadre1 parabd-page">
-    <p><a href="<?php echo BDO_URL; ?>parabd">← Catalogue Para-BD</a></p>
+    <p><a href="<?php echo BDO_URL; ?>parabd">← Catalogue Para-BD</a><?php if ($view->can_admin) { ?> · <a class="button" href="<?php echo BDO_URL; ?>adminparabd/edit?id=<?php echo intval($item['ID_ITEM']); ?>"><span class="fa fa-edit" aria-hidden="true"></span> Modifier la fiche commune</a><?php } ?></p>
     <div class="parabd-detail">
         <div class="parabd-gallery"><?php foreach ($item['media'] as $media) { ?><img src="<?php echo $h(BDO_URL_PARABD . $media['FILE_PATH']); ?>" alt="<?php echo $h($item['TITLE']); ?>"><?php } ?></div>
-        <div><small><?php echo $h($item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL']); ?></small><h1><?php echo $h($item['TITLE']); ?></h1>
+        <div class="parabd-summary">
+            <small><?php echo $h($item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL']); ?></small>
+            <?php if ($item['IS_EXPLICIT']) { ?><p><span class="parabd-explicit-badge">Contenu explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Le visuel est flouté selon vos préférences.</small><?php } ?></p><?php } ?>
+            <h1><?php echo $h($item['TITLE']); ?></h1>
             <?php if ($item['DESCRIPTION']) { ?><p><?php echo nl2br($h($item['DESCRIPTION'])); ?></p><?php } ?>
             <dl class="parabd-data">
                 <?php foreach (array('MANUFACTURER'=>'Fabricant','PUBLISHER'=>'Éditeur','MATERIAL'=>'Matière','COLOR'=>'Couleur','SCALE'=>'Échelle','PRINT_RUN'=>'Tirage') as $field=>$label) if ($item[$field] !== null && $item[$field] !== '') { ?><dt><?php echo $label; ?></dt><dd><?php echo $h($item[$field]); ?></dd><?php } ?>
                 <?php if ($item['RELEASE_DATE']) { ?><dt>Date</dt><dd><?php echo $h(ParabdService::displayPartialDate($item['RELEASE_DATE'], $item['DATE_PRECISION'])); ?></dd><?php } ?>
+                <?php if ($item['WIDTH_MM'] || $item['HEIGHT_MM'] || $item['DEPTH_MM']) { ?><dt>Dimensions</dt><dd><?php echo $h(($item['WIDTH_MM'] ?: '–') . ' × ' . ($item['HEIGHT_MM'] ?: '–') . ' × ' . ($item['DEPTH_MM'] ?: '–') . ' mm'); ?></dd><?php } ?>
             </dl>
+
             <?php if ($item['identifiers']) { ?><h2>Identifiants</h2><ul><?php foreach ($item['identifiers'] as $identifier) { ?><li><?php echo $h($identifier['SCHEME'] . ' : ' . $identifier['VALUE']); ?></li><?php } ?></ul><?php } ?>
-            <?php if ($item['authors'] || $item['series'] || $item['tomes']) { ?><h2>Rattachements BD</h2><ul>
-                <?php foreach ($item['authors'] as $link) { ?><li>Auteur : <?php echo $h($link['LABEL']); ?> <form class="inline parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>"><input type="hidden" name="field" value="DELETE_AUTHOR"><input type="hidden" name="value" value="<?php echo intval($link['AUTHOR_ID']); ?>"><button type="submit">Proposer le retrait</button></form></li><?php } ?>
-                <?php foreach ($item['series'] as $link) { ?><li>Série : <?php echo $h($link['LABEL']); ?> <form class="inline parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>"><input type="hidden" name="field" value="DELETE_SERIES"><input type="hidden" name="value" value="<?php echo intval($link['SERIES_ID']); ?>"><button type="submit">Proposer le retrait</button></form></li><?php } ?>
-                <?php foreach ($item['tomes'] as $link) { ?><li>Album : <?php echo $h($link['LABEL']); ?><?php if ($link['PAGE_NO']) echo ' p. ' . intval($link['PAGE_NO']); ?><?php if ($link['PANEL_NO']) echo ', case ' . intval($link['PANEL_NO']); ?> <form class="inline parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>"><input type="hidden" name="field" value="DELETE_TOME"><input type="hidden" name="value" value="<?php echo intval($link['TOME_ID']); ?>"><button type="submit">Proposer le retrait</button></form></li><?php } ?>
-            </ul><?php } ?>
+            <?php if ($item['authors'] || $item['series'] || $item['tomes']) { ?>
+                <h2>Rattachements BD</h2>
+                <ul class="parabd-references">
+                    <?php foreach ($item['authors'] as $link) { ?><li>Auteur : <a href="<?php echo BDO_URL . 'auteur-bd-' . intval($link['AUTHOR_ID']) . '-' . clean_url($link['LABEL']); ?>">#<?php echo intval($link['AUTHOR_ID']); ?> — <?php echo $h($link['LABEL']); ?></a></li><?php } ?>
+                    <?php foreach ($item['series'] as $link) { ?><li>Série : <a href="<?php echo BDO_URL . 'serie-bd-' . intval($link['SERIES_ID']) . '-' . clean_url($link['LABEL']); ?>">#<?php echo intval($link['SERIES_ID']); ?> — <?php echo $h($link['LABEL']); ?></a></li><?php } ?>
+                    <?php foreach ($item['tomes'] as $link) { ?><li>Album : <a href="<?php echo BDO_URL; ?>Album?id_tome=<?php echo intval($link['TOME_ID']); ?>">#<?php echo intval($link['TOME_ID']); ?> — <?php echo $h($link['LABEL']); ?></a><?php if ($link['PAGE_NO']) echo ' p. ' . intval($link['PAGE_NO']); ?><?php if ($link['PANEL_NO']) echo ', case ' . intval($link['PANEL_NO']); ?></li><?php } ?>
+                </ul>
+            <?php } ?>
+            <?php if ($item['sources']) { ?><h2>Sources</h2><ul><?php foreach ($item['sources'] as $source) { ?><li><a href="<?php echo $h($source['URL']); ?>" target="_blank" rel="noopener noreferrer"><?php echo $h($source['LABEL'] ?: $source['URL']); ?></a></li><?php } ?></ul><?php } ?>
         </div>
     </div>
-    <section><h2>Mes exemplaires</h2>
-        <?php $own = array_filter($view->copies, function ($copy) use ($item) { return intval($copy['ITEM_ID']) === intval($item['ID_ITEM']); }); ?>
-        <?php if ($own) { ?><p>Cet objet figure déjà dans votre collection. Modifiez un exemplaire ci-dessous ou ajoutez-en un nouveau.</p><?php foreach ($own as $copy) { ?>
-            <form class="parabd-json-form" action="<?php echo BDO_URL; ?>parabd/savecopy" method="post">
-                <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="copy_id" value="<?php echo intval($copy['ID_COPY']); ?>">
-                <strong>Exemplaire #<?php echo intval($copy['ID_COPY']); ?></strong>
-                <select name="state"><option value="OWNED"<?php if ($copy['STATE']==='OWNED') echo ' selected'; ?>>Collection</option><option value="WISHLIST"<?php if ($copy['STATE']==='WISHLIST') echo ' selected'; ?>>Envies</option></select>
-                <label>Numéro <input name="copy_number" value="<?php echo $h($copy['COPY_NUMBER']); ?>"></label><label>Prix <input name="price" value="<?php echo $h($copy['PRICE']); ?>"></label><input name="currency" value="<?php echo $h($copy['CURRENCY'] ?: 'EUR'); ?>" size="3">
-                <label><input type="checkbox" name="is_price_public" value="1"<?php if ($copy['IS_PRICE_PUBLIC']) echo ' checked'; ?>> Prix public</label><label><input type="hidden" name="is_public" value="0"><input type="checkbox" name="is_public" value="1"<?php if ($copy['IS_PUBLIC']) echo ' checked'; ?>> Exemplaire public</label>
-                <button type="submit">Enregistrer</button> <span class="parabd-form-status"></span>
-            </form>
-        <?php } } ?>
-        <form class="parabd-json-form" action="<?php echo BDO_URL; ?>parabd/savecopy" method="post">
-            <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>">
-            <label>Liste <select name="state"><option value="OWNED">Collection</option><option value="WISHLIST">Envies</option></select></label>
-            <label>Numéro d’exemplaire <input name="copy_number"></label><label>Prix <input name="price" inputmode="decimal"></label><input name="currency" value="EUR" size="3">
-            <label><input type="checkbox" name="is_price_public" value="1"> Prix public</label><label><input type="hidden" name="is_public" value="0"><input type="checkbox" name="is_public" value="1" checked> Exemplaire public</label>
-            <button type="submit">Ajouter un exemplaire</button><span class="parabd-form-status"></span>
-        </form>
-    </section>
-    <section><h2>Améliorer cette fiche</h2>
-        <form class="parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post">
-            <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>">
-            <label>Champ <select name="field"><option value="DESCRIPTION">Description</option><option value="MATERIAL">Matière</option><option value="COLOR">Couleur</option><option value="MANUFACTURER">Fabricant</option><option value="PUBLISHER">Éditeur</option><option value="RELEASE_DATE">Date</option></select></label>
-            <label>Nouvelle valeur <textarea name="value" rows="2" required></textarea></label>
-            <label><input type="checkbox" name="accept_charter" value="1"> J’accepte la charte v<?php echo $h($view->charter_version); ?> si ce n’est pas déjà fait.</label>
-            <button type="submit">Proposer</button> <span class="parabd-form-status"></span>
-        </form>
-        <form class="parabd-file-form" action="<?php echo BDO_URL; ?>parabd/media" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>">
-            <label>Ajouter un visuel <input type="file" name="visual" accept="image/jpeg,image/png,image/webp" required></label>
-            <select name="media_type"><option value="GALLERY">Galerie</option><option value="DETAIL">Détail</option><option value="BOX">Boîte</option><option value="CERTIFICATE">Certificat</option></select>
-            <label><input type="checkbox" name="accept_charter" value="1"> Accepter la charte si nécessaire</label><button type="submit">Envoyer</button> <span class="parabd-form-status"></span>
-        </form>
-        <form class="parabd-json-form" action="<?php echo BDO_URL; ?>parabd/report" method="post">
-            <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="target_type" value="ITEM"><input type="hidden" name="target_id" value="<?php echo intval($item['ID_ITEM']); ?>">
-            <label>Signaler un problème <input name="reason" required placeholder="Doublon, erreur, image…"></label><label>Détails <input name="details"></label><button type="submit">Signaler</button> <span class="parabd-form-status"></span>
-        </form>
-    </section>
-    <?php if ($view->revisions) { ?><section><h2>Contributions à confirmer</h2><?php foreach ($view->revisions as $revision) { ?>
-        <article class="parabd-admin-row"><div><strong>#<?php echo intval($revision['ID_REVISION']); ?> — <?php echo $h($revision['CHANGE_KIND']); ?></strong><br><small><?php echo $h($revision['PATCH_AFTER']); ?></small></div>
-        <form class="parabd-json-form" action="<?php echo BDO_URL; ?>parabd/vote" method="post"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="revision_id" value="<?php echo intval($revision['ID_REVISION']); ?>"><button name="vote" value="CONFIRM">Confirmer</button> <button name="vote" value="CONTEST">Contester</button><span class="parabd-form-status"></span></form></article>
-    <?php } ?></section><?php } ?>
+
+    <?php if ($view->can_contribute) { ?>
+        <section class="parabd-copy-section">
+            <h2>Ma collection</h2>
+            <?php if (!$ownedCopies) { ?>
+                <?php if ($wishlistCopy) { ?>
+                    <div class="collection-status collection-status-wishlist">
+                        <span class="collection-status-badge"><span class="far fa-heart" aria-hidden="true"></span>Dans ma wishlist</span>
+                        <span class="collection-status-date">Depuis le <?php echo $h(date('d/m/Y', strtotime($wishlistCopy['CREATED_AT']))); ?></span>
+                    </div>
+                <?php } ?>
+                <div class="parabd-collection-actions" data-csrf-token="<?php echo $h($view->csrf_token); ?>" data-item-id="<?php echo intval($item['ID_ITEM']); ?>">
+                    <div class="button-simple"><a href="#" class="parabd-quick-copy" data-url="<?php echo BDO_URL; ?>parabd/savecopy" data-state="OWNED"<?php if ($wishlistCopy) { ?> data-copy-id="<?php echo intval($wishlistCopy['ID_COPY']); ?>"<?php } ?> title="Ajouter cet objet dans votre collection"><span class="fas fa-check fa-border button-collection" aria-hidden="true"></span><span class="for-big-screen">J'ai</span></a></div>
+                    <?php if (!$wishlistCopy) { ?><div class="button-simple"><a href="#" class="parabd-quick-copy" data-url="<?php echo BDO_URL; ?>parabd/savecopy" data-state="WISHLIST" title="Ajouter cet objet à votre wishlist"><span class="far fa-heart fa-border button-collection" aria-hidden="true"></span><span class="for-big-screen">Je veux</span></a></div><?php } ?>
+                    <?php if ($wishlistCopy) { ?><div class="button-simple"><a href="#" class="parabd-quick-copy" data-url="<?php echo BDO_URL; ?>parabd/removecopy" data-action="remove" data-copy-id="<?php echo intval($wishlistCopy['ID_COPY']); ?>" title="Retirer cet objet de votre wishlist"><span class="far fa-trash-alt fa-border button-collection" aria-hidden="true"></span><span class="for-big-screen">Supprimer</span></a></div><?php } ?>
+                    <span class="parabd-quick-status" aria-live="polite"></span>
+                </div>
+            <?php } else { ?>
+                <div class="collection-status collection-status-owned"><span class="collection-status-badge"><span class="fas fa-check" aria-hidden="true"></span>Dans ma collection</span></div>
+                <p class="parabd-privacy-help">Les exemplaires Para-BD sont toujours visibles sur votre page publique lorsque votre collection est ouverte. Vous choisissez uniquement si votre prix d’achat y apparaît.</p>
+                <p>Modifiez vos informations personnelles ci-dessous ou ajoutez un autre exemplaire.</p>
+                <?php foreach ($ownedCopies as $copy) { ?>
+                <details class="parabd-copy-editor" open>
+                    <summary>Exemplaire #<?php echo intval($copy['ID_COPY']); ?><?php if ($copy['COPY_NUMBER']) echo ' — n° ' . $h($copy['COPY_NUMBER']); ?></summary>
+                    <form class="parabd-json-form parabd-copy-form" action="<?php echo BDO_URL; ?>parabd/savecopy" method="post">
+                        <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="copy_id" value="<?php echo intval($copy['ID_COPY']); ?>">
+                        <input type="hidden" name="state" value="OWNED">
+                        <label>Quantité<input type="number" name="quantity" min="1" max="65535" value="<?php echo max(1, intval($copy['QUANTITY'])); ?>"></label>
+                        <label>Numéro d’exemplaire<input name="copy_number" maxlength="80" value="<?php echo $h($copy['COPY_NUMBER']); ?>"></label>
+                        <label>État de conservation<select name="condition_code"><?php foreach ($conditions as $code=>$label) { ?><option value="<?php echo $code; ?>"<?php if ($copy['CONDITION_CODE']===$code) echo ' selected'; ?>><?php echo $label; ?></option><?php } ?></select></label>
+                        <label>Date d’achat<input type="date" name="purchase_date" value="<?php echo $h($copy['PURCHASE_DATE']); ?>"></label>
+                        <label>Prix d’achat<input name="price" inputmode="decimal" value="<?php echo $h($copy['PRICE']); ?>"></label>
+                        <label>Devise<input name="currency" value="<?php echo $h($copy['CURRENCY'] ?: 'EUR'); ?>" maxlength="3"></label>
+                        <label>Vendeur<input name="seller" maxlength="255" value="<?php echo $h($copy['SELLER']); ?>"></label>
+                        <label>Valeur estimée<input name="estimated_value" inputmode="decimal" value="<?php echo $h($copy['ESTIMATED_VALUE']); ?>"></label>
+                        <label>Signé ?<select name="copy_is_signed"><?php echo $triOptions($copy['COPY_IS_SIGNED']); ?></select></label>
+                        <label>Dédicacé ?<select name="copy_is_dedicated"><?php echo $triOptions($copy['COPY_IS_DEDICATED']); ?></select></label>
+                        <label>Boîte présente ?<select name="has_box"><?php echo $triOptions($copy['HAS_BOX']); ?></select></label>
+                        <label>Certificat présent ?<select name="copy_has_certificate"><?php echo $triOptions($copy['HAS_CERTIFICATE']); ?></select></label>
+                        <label class="parabd-copy-check"><input type="checkbox" name="is_gift" value="1"<?php if ($copy['IS_GIFT']) echo ' checked'; ?>> Reçu en cadeau</label>
+                        <label class="parabd-copy-check"><input type="checkbox" name="is_price_public" value="1"<?php if ($copy['IS_PRICE_PUBLIC']) echo ' checked'; ?>> Afficher mon prix d’achat sur ma page publique</label>
+                        <label class="wide">Notes personnelles<textarea name="personal_notes" rows="3"><?php echo $h($copy['PERSONAL_NOTES']); ?></textarea><small>Ces notes restent privées.</small></label>
+                        <div class="wide parabd-copy-actions">
+                            <button type="submit">Enregistrer mes informations</button>
+                            <button type="button" class="parabd-remove-copy" data-url="<?php echo BDO_URL; ?>parabd/removecopy" data-copy-id="<?php echo intval($copy['ID_COPY']); ?>" title="Retirer cet exemplaire de ma collection"><span class="far fa-trash-alt" aria-hidden="true"></span> Supprimer de ma collection</button>
+                            <span class="parabd-form-status" aria-live="polite"></span>
+                        </div>
+                    </form>
+                </details>
+            <?php } ?>
+            <details class="parabd-copy-editor">
+                <summary>Ajouter un exemplaire</summary>
+                <form class="parabd-json-form parabd-copy-form" action="<?php echo BDO_URL; ?>parabd/savecopy" method="post">
+                    <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="state" value="OWNED">
+                    <label>Quantité<input type="number" name="quantity" min="1" max="65535" value="1"></label>
+                    <label>Numéro d’exemplaire<input name="copy_number" maxlength="80"></label>
+                    <label>État de conservation<select name="condition_code"><?php foreach ($conditions as $code=>$label) { ?><option value="<?php echo $code; ?>"><?php echo $label; ?></option><?php } ?></select></label>
+                    <label>Date d’achat<input type="date" name="purchase_date"></label>
+                    <label>Prix d’achat<input name="price" inputmode="decimal"></label>
+                    <label>Devise<input name="currency" value="EUR" maxlength="3"></label>
+                    <label>Vendeur<input name="seller" maxlength="255"></label>
+                    <label>Valeur estimée<input name="estimated_value" inputmode="decimal"></label>
+                    <label>Signé ?<select name="copy_is_signed"><?php echo $triOptions(''); ?></select></label>
+                    <label>Dédicacé ?<select name="copy_is_dedicated"><?php echo $triOptions(''); ?></select></label>
+                    <label>Boîte présente ?<select name="has_box"><?php echo $triOptions(''); ?></select></label>
+                    <label>Certificat présent ?<select name="copy_has_certificate"><?php echo $triOptions(''); ?></select></label>
+                    <label class="parabd-copy-check"><input type="checkbox" name="is_gift" value="1"> Reçu en cadeau</label>
+                    <label class="parabd-copy-check"><input type="checkbox" name="is_price_public" value="1"> Afficher mon prix d’achat sur ma page publique</label>
+                    <label class="wide">Notes personnelles<textarea name="personal_notes" rows="3"></textarea><small>Ces notes restent privées.</small></label>
+                    <div class="wide parabd-copy-actions"><button type="submit">Ajouter l’exemplaire</button> <span class="parabd-form-status"></span></div>
+                </form>
+            </details>
+            <?php } ?>
+        </section>
+
+        <details class="parabd-edit-panel">
+            <summary>Proposer une modification</summary>
+            <div class="parabd-edit-content">
+                <h2>Corriger une information</h2>
+                <form class="parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post">
+                    <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>">
+                    <label>Champ <select name="field"><option value="DESCRIPTION">Description</option><option value="MATERIAL">Matière</option><option value="COLOR">Couleur</option><option value="MANUFACTURER">Fabricant</option><option value="PUBLISHER">Éditeur</option><option value="RELEASE_DATE">Date</option></select></label>
+                    <label>Nouvelle valeur <textarea name="value" rows="2" required></textarea></label>
+                    <label><input type="checkbox" name="accept_charter" value="1"> J’accepte la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte de contribution</a> si ce n’est pas déjà fait.</label>
+                    <button type="submit">Proposer</button> <span class="parabd-form-status"></span>
+                </form>
+
+                <h2>Contenu explicite</h2>
+                <form class="parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post">
+                    <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>"><input type="hidden" name="field" value="IS_EXPLICIT"><input type="hidden" name="value" value="0">
+                    <label class="parabd-explicit-choice"><span><input type="checkbox" name="value" value="1"<?php if ($item['IS_EXPLICIT']) echo ' checked'; ?>> Le visuel comporte un contenu sexuel ou érotique</span><small>Les images signalées sont floutées pour les visiteurs qui n’ont pas autorisé les contenus explicites.</small></label>
+                    <label><input type="checkbox" name="accept_charter" value="1"> J’accepte la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte de contribution</a> si ce n’est pas déjà fait.</label>
+                    <button type="submit">Mettre à jour le signalement</button> <span class="parabd-form-status"></span>
+                </form>
+
+                <h2>Ajouter un visuel</h2>
+                <form class="parabd-file-form" action="<?php echo BDO_URL; ?>parabd/media" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>">
+                    <label>Depuis mon appareil <input type="file" name="visual" accept="image/jpeg,image/png,image/webp"></label>
+                    <label>ou depuis une URL <input type="url" name="visual_url" placeholder="https://exemple.fr/image.jpg"></label>
+                    <select name="media_type"><option value="GALLERY">Galerie</option><option value="DETAIL">Détail</option><option value="BOX">Boîte</option><option value="CERTIFICATE">Certificat</option></select>
+                    <label><input type="checkbox" name="accept_charter" value="1"> Accepter la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte</a> si nécessaire</label>
+                    <button type="submit">Envoyer</button> <span class="parabd-form-status"></span>
+                </form>
+
+                <?php if ($item['authors'] || $item['series'] || $item['tomes']) { ?><h2>Retirer un rattachement</h2><ul class="parabd-relation-actions">
+                    <?php foreach ($item['authors'] as $link) { ?><li>#<?php echo intval($link['AUTHOR_ID']); ?> — <?php echo $h($link['LABEL']); ?> <form class="inline parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>"><input type="hidden" name="field" value="DELETE_AUTHOR"><input type="hidden" name="value" value="<?php echo intval($link['AUTHOR_ID']); ?>"><button type="submit">Proposer le retrait</button><span class="parabd-form-status"></span></form></li><?php } ?>
+                    <?php foreach ($item['series'] as $link) { ?><li>#<?php echo intval($link['SERIES_ID']); ?> — <?php echo $h($link['LABEL']); ?> <form class="inline parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>"><input type="hidden" name="field" value="DELETE_SERIES"><input type="hidden" name="value" value="<?php echo intval($link['SERIES_ID']); ?>"><button type="submit">Proposer le retrait</button><span class="parabd-form-status"></span></form></li><?php } ?>
+                    <?php foreach ($item['tomes'] as $link) { ?><li>#<?php echo intval($link['TOME_ID']); ?> — <?php echo $h($link['LABEL']); ?> <form class="inline parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>"><input type="hidden" name="field" value="DELETE_TOME"><input type="hidden" name="value" value="<?php echo intval($link['TOME_ID']); ?>"><button type="submit">Proposer le retrait</button><span class="parabd-form-status"></span></form></li><?php } ?>
+                </ul><?php } ?>
+
+                <h2>Signaler un problème</h2>
+                <form class="parabd-json-form" action="<?php echo BDO_URL; ?>parabd/report" method="post">
+                    <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="target_type" value="ITEM"><input type="hidden" name="target_id" value="<?php echo intval($item['ID_ITEM']); ?>">
+                    <label>Motif <input name="reason" required placeholder="Doublon, erreur, image…"></label><label>Détails <input name="details"></label><button type="submit">Signaler</button> <span class="parabd-form-status"></span>
+                </form>
+            </div>
+        </details>
+    <?php } else { ?>
+        <p class="parabd-login-note">Connectez-vous pour ajouter cet objet à votre collection ou proposer une modification.</p>
+    <?php } ?>
+
+    <?php if ($view->revisions) { ?>
+        <section class="parabd-revisions"><h2>Contributions à confirmer</h2><?php foreach ($view->revisions as $revision) { ?>
+            <article class="parabd-admin-row"><div><strong>Proposition #<?php echo intval($revision['ID_REVISION']); ?></strong><br><small class="parabd-revision-patch"><?php echo $h($formatRevision($revision['PATCH_AFTER'])); ?></small></div>
+            <?php if ($view->can_contribute) { ?><form class="parabd-json-form" action="<?php echo BDO_URL; ?>parabd/vote" method="post"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="revision_id" value="<?php echo intval($revision['ID_REVISION']); ?>"><button name="vote" value="CONFIRM">Confirmer</button> <button name="vote" value="CONTEST">Contester</button><span class="parabd-form-status"></span></form><?php } ?></article>
+        <?php } ?></section>
+    <?php } ?>
 </div>
-<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260809a" type="text/javascript"></script>
+<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260809b" type="text/javascript"></script>

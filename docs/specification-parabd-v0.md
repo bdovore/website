@@ -105,6 +105,7 @@ Un enregistrement correspond à une variante réellement distinguable : autre fa
 | `LIMITED_RUN_COUNT` | nombre total annoncé, facultatif |
 | `RUN_IS_NUMBERED`, `RUN_IS_SIGNED` | caractéristiques du tirage, distinctes de l'exemplaire du membre |
 | `BOX_INCLUDED`, `CERTIFICATE_INCLUDED` | contenu normal de la référence, si connu |
+| `IS_EXPLICIT` | signale un visuel à caractère sexuel ou érotique ; la fiche reste dans le catalogue commun |
 | `STATUS` | `ACTIVE`, `HIDDEN` ou `MERGED` |
 | `MERGED_INTO_ID` | cible si la fiche a été fusionnée ; permet une redirection durable |
 | `REVISION_NO` | compteur pour éviter qu'une correction écrase une modification concurrente |
@@ -113,6 +114,8 @@ Un enregistrement correspond à une variante réellement distinguable : autre fa
 Le type est une table de référence ou un code configurable, pas un `ENUM` fermé, afin d'ajouter ultérieurement sérigraphies, portfolios, objets publicitaires, etc.
 
 Tous les indicateurs factuels utilisent trois états (oui, non, inconnu) : une absence d'information ne doit jamais être transformée en « non ».
+
+Toute fiche créée par un membre est ajoutée au catalogue commun avec le statut `ACTIVE`. Le contributeur ne dispose d'aucun réglage pour la masquer ; `HIDDEN` reste réservé aux opérations techniques de modération.
 
 ### 4.2 Identifiants externes
 
@@ -164,7 +167,9 @@ Les champs proposent les valeurs déjà saisies afin de limiter les variantes or
 
 Champs principaux : objet, fichier local, rôle du média, légende, auteur de l'envoi, date, statut. L'image principale est désignée explicitement.
 
-`parabd_source` conserve les pages qui étayent une information : site fabricant, éditeur, catalogue, photographie personnelle, etc. L'interface privilégie l'envoi d'un fichier. Le serveur ne doit pas télécharger une URL arbitraire fournie par le membre sans protections contre les accès réseau internes ; une URL peut simplement être conservée comme source.
+Une fiche commune peut être signalée `IS_EXPLICIT`. Dans ce cas, ses visuels sont servis floutés tant que le visiteur n'a pas activé l'option existante « Afficher le contenu explicite » dans son compte. Le signalement ne masque ni la fiche ni ses rattachements.
+
+`parabd_source` conserve les pages qui étayent une information : site fabricant, éditeur, catalogue, photographie personnelle, etc. Un visuel peut être envoyé comme fichier ou importé depuis une URL HTTP(S). Dans ce second cas, le serveur bloque les adresses locales, privées et réservées, contrôle chaque redirection, limite le téléchargement à 5 Mo, vérifie le MIME et copie l'image dans le stockage local ; l'URL d'origine est conservée comme source.
 
 ### 4.6 `users_parabd` - exemplaire personnel
 
@@ -172,21 +177,22 @@ Une ligne représente un exemplaire ou un lot homogène. Il n'y a pas de clé un
 
 | Champ | Visibilité par défaut |
 |---|---|
-| `ID_USER_PARABD`, `USER_ID`, `ID_PARABD_ITEM` | technique |
-| `LIST_TYPE` : `OWNED` ou `WISHLIST` | publique si collection ouverte |
+| `ID_COPY`, `USER_ID`, `ITEM_ID` | technique |
+| `STATE` : `OWNED` ou `WISHLIST` | publique si collection ouverte |
 | `QUANTITY` | publique |
-| `IS_PUBLIC` | choix du membre, vrai par défaut |
-| `DATE_ADDED` | publique |
-| `ACQUISITION_DATE` | privée |
-| `ACQUISITION_PRICE`, `CURRENCY` | visibilité choisie par le membre, privée par défaut |
-| `PRICE_IS_PUBLIC` | choix explicite du membre, faux par défaut |
-| `SELLER_NAME`, `ESTIMATED_VALUE` | privée |
-| `CONDITION_CODE`, `PERSONAL_NOTE` | privée |
-| `COPY_NUMBER` | publique sur la page `guest` si l'exemplaire est public |
-| `COPY_IS_SIGNED`, `COPY_IS_DEDICATED` | publique, désactivable via `IS_PUBLIC` |
+| `CREATED_AT` | publique |
+| `PURCHASE_DATE` | privée |
+| `PRICE`, `CURRENCY` | visibilité choisie par le membre, privée par défaut |
+| `IS_PRICE_PUBLIC` | choix explicite du membre, faux par défaut |
+| `SELLER`, `ESTIMATED_VALUE` | privée |
+| `CONDITION_CODE`, `PERSONAL_NOTES` | privée |
+| `COPY_NUMBER` | publique sur la page `guest` |
+| `COPY_IS_SIGNED`, `COPY_IS_DEDICATED` | publique |
 | `HAS_BOX`, `HAS_CERTIFICATE`, `IS_GIFT` | privée |
 
-Pour le MVP, le réglage existant `users.OPEN_COLLEC` gouverne aussi le Para-BD. La page publique n'affiche que les lignes `IS_PUBLIC = 1`. Le numéro d'exemplaire y est affiché. Le prix d'acquisition n'y apparaît que si le membre a activé `PRICE_IS_PUBLIC` ; le vendeur, la cote et les notes personnelles restent toujours privés.
+Pour le MVP, le réglage global existant `users.OPEN_COLLEC` gouverne aussi le Para-BD. Lorsque la collection est ouverte, tous les exemplaires et toutes les envies Para-BD du membre sont visibles : il n'existe ni champ ni réglage de masquage objet par objet. Le numéro d'exemplaire y est affiché. Le prix d'acquisition n'y apparaît que si le membre a activé `IS_PRICE_PUBLIC` ; le vendeur, la cote et les notes personnelles restent toujours privés.
+
+Depuis la fiche commune, le propriétaire peut ouvrir le formulaire de chacun de ses exemplaires et modifier l'ensemble de ces informations personnelles. Elles ne passent pas par le système de contributions communautaires.
 
 ### 4.7 Contributions et historique
 
@@ -237,7 +243,7 @@ Un index `FULLTEXT` peut compléter la recherche, mais la détection de doublons
 
 ### 5.1 Recherche avant création
 
-Le bouton « Créer un nouvel objet » n'apparaît qu'après une recherche. La recherche porte sur :
+La création d'un nouvel objet est proposée uniquement depuis « Ma Collection > Para-BD ». Le contrôle de doublons se lance automatiquement après la première étape du formulaire et porte sur :
 
 - identifiant externe ;
 - titre ;
@@ -246,7 +252,7 @@ Le bouton « Créer un nouvel objet » n'apparaît qu'après une recherche. La r
 - auteur, série et album liés ;
 - année, tirage et dimensions.
 
-Les résultats indiquent clairement « ajouter cette fiche à ma collection » ou « ce n'est pas le même objet ».
+S'il n'existe aucun candidat, l'étape de rapprochement est sautée. Sinon, les résultats indiquent clairement la fiche existante à consulter et permettent d'expliquer pourquoi l'objet est différent.
 
 ### 5.2 Niveaux de rapprochement
 
@@ -270,13 +276,17 @@ Ajouter un onglet **Para-BD** dans « Ma Collection ». Il présente :
 - un affichage grille et tableau ;
 - les actions « Ajouter un objet existant » et « Créer un objet ».
 
+Le menu principal comporte également un onglet **Para-BD** public. Il donne accès au catalogue et à une recherche avec autocomplétion par auteur, série, album, titre, fabricant et éditeur, sans bouton de création.
+
 ### 6.2 Ajouter un objet existant
 
 Depuis un résultat ou une fiche :
 
-1. choisir « Dans ma collection » ou « Dans ma liste d'envies » ;
-2. enregistrer immédiatement ;
-3. proposer ensuite, sans obligation, les données privées de l'exemplaire.
+1. cliquer sur la coche « J'ai » pour ajouter immédiatement un exemplaire possédé, ou sur le cœur « Je veux » pour l'ajouter à la wishlist ;
+2. n'afficher le formulaire d'informations personnelles qu'après un ajout avec « J'ai » ;
+3. depuis la wishlist, permettre de basculer vers « J'ai » sans créer une seconde ligne ;
+4. permettre de retirer l'objet de la wishlist ou de supprimer séparément chacun de ses exemplaires possédés ;
+5. proposer ensuite, sans obligation, les données privées de l'exemplaire.
 
 La saisie du prix, du vendeur, du numéro d'exemplaire ou du certificat ne doit jamais gêner l'ajout rapide.
 
@@ -285,7 +295,7 @@ La saisie du prix, du vendeur, du numéro d'exemplaire ou du certificat ne doit 
 Le formulaire est progressif, pas une grille de 25 champs :
 
 1. **Identifier** : type, sous-type pour les impressions, titre et visuel principal obligatoires ; l'identifiant, le fabricant/référence et les liens auteur/série/album restent facultatifs.
-2. **Vérifier** : candidats doublons classés et différences visibles.
+2. **Vérifier si nécessaire** : candidats doublons classés et différences visibles ; cette étape n'est pas affichée lorsqu'aucun candidat n'est trouvé.
 3. **Préciser** : champs adaptés au type, tous facultatifs hors minimum précédent.
 4. **Ajouter** : choix collection/liste d'envies/ne rien faire, puis publication immédiate.
 
@@ -305,22 +315,37 @@ Le membre est encouragé à compléter une petite information à la fois. Les ba
 
 ### 6.5 Page publique `guest`
 
-Ajouter un onglet `guest/parabd`. Il affiche les exemplaires publics du membre avec filtres et pagination. La fiche publique montre les données communes et, pour cet exemplaire, uniquement les attributs explicitement publics.
+Ajouter un onglet `guest/parabd`. Il affiche tous les exemplaires du membre lorsque sa collection est ouverte, avec filtres et pagination. La fiche publique montre les données communes et, pour cet exemplaire, les attributs publics ; seul le prix d'achat reste soumis à un choix explicite.
 
 La page d'accueil `guest` peut afficher le nombre d'objets Para-BD et les quatre derniers ajouts. Le numéro d'exemplaire est public. Le prix d'achat est affiché uniquement sur décision explicite du membre ; vendeur, cote et commentaire personnel ne sont jamais exposés.
 
 Au lancement, aucun travail d'indexation spécifique n'est prévu : pas de page publique dédiée à chaque objet, pas d'ajout au sitemap et pas de référencement dans le `Browser` ou l'autocomplétion globale. Cette étape viendra avec une future recherche publique, les pages publiques d'objets et leur intégration au `Browser`.
 
-## 7. Administration minimale
+## 7. Administration
 
-Créer un contrôleur/écran `Adminparabd` avec quatre files, par priorité :
+`Adminparabd` est séparé en deux espaces.
+
+### 7.1 Gestion des fiches communes
+
+L'entrée principale liste toutes les fiches, y compris les fiches masquées ou fusionnées, avec recherche par ID, titre, fabricant ou éditeur et filtre par statut. L'administrateur peut :
+
+- créer directement une fiche complète pour la communauté, sans créer d'exemplaire dans sa collection ni dans sa wishlist ;
+- modifier directement tous les champs communs, identifiants, rattachements auteur/série/album, sources et visuels ;
+- consulter l'intégralité de l'historique, y compris les valeurs avant/après, l'auteur, le validateur, le statut et les votes ;
+- consulter une fiche fusionnée en lecture seule et rejoindre la fiche conservée.
+
+Chaque création ou modification administrative est immédiatement validée et historisée. Aucune écriture de cet écran ne doit modifier `users_parabd`.
+
+### 7.2 Files d'attente
+
+Un onglet distinct conserve les quatre files, par priorité :
 
 1. **Doublons probables** : comparaison côte à côte et fusion assistée.
 2. **Signalements** : contenu illicite, image, vandalisme ou mauvaise catégorie.
 3. **Conflits** : corrections contradictoires que la communauté n'a pas résolues.
 4. **Qualité** : fiches actives très incomplètes ou sans aucun rattachement, uniquement pour animation communautaire.
 
-Il n'existe pas de file « nouvelles fiches à valider ». Le tableau de bord affiche le nombre de cas, leur ancienneté et le nombre de propriétaires concernés afin de traiter d'abord les fusions à fort impact.
+Il n'existe pas de file « nouvelles fiches à valider ». La logique détaillée et les actions de ces files font l'objet d'une étape de conception séparée.
 
 Actions disponibles : fusionner, masquer/restaurer, trancher une correction, annuler une contribution, marquer « pas un doublon », protéger temporairement une fiche. Toutes les actions sont historisées.
 
@@ -430,9 +455,9 @@ La cible fonctionnelle est que l'immense majorité des créations et enrichissem
 ## 14. Décisions actées pour le lancement
 
 1. Un visuel est obligatoire pour créer une fiche, y compris lorsqu'un identifiant ou un rattachement existe.
-2. Le numéro d'exemplaire est affiché sur la page publique `guest` lorsque l'exemplaire lui-même est public.
+2. Le numéro d'exemplaire est affiché sur la page publique `guest` dès lors que la collection du membre est ouverte.
 3. Le membre décide si son prix d'acquisition est visible dans sa collection publique ; il reste privé par défaut.
-4. Les objets Para-BD ne font pas l'objet d'une indexation spécifique au lancement. La recherche publique, le `Browser`, l'autocomplétion, les pages publiques dédiées et le sitemap seront traités ensemble dans une évolution ultérieure.
+4. Le catalogue et les fiches Para-BD sont consultables publiquement depuis le menu principal. Leur recherche dédiée couvre les titres, auteurs, séries, albums, fabricants et éditeurs avec autocomplétion ; l'intégration au `Browser`, au moteur global et au sitemap reste une évolution ultérieure.
 5. Un contributeur devient « de confiance » après au moins un an d'ancienneté et cinq contributions validées. Ce seuil simple pourra être révisé à l'usage.
 6. Ex-libris, tiré à part et impression sont trois sous-types distincts de la famille `PRINT` dès le MVP.
 

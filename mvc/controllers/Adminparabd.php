@@ -30,12 +30,70 @@ class Adminparabd extends Bdo_Controller
         }
     }
 
+    private function adminId()
+    {
+        return intval($_SESSION['userConnect']->user_id);
+    }
+
+    private function renderEditor($item, $mode, $error = '')
+    {
+        $this->view->addPhtmlFile('adminparabd/edit', 'BODY');
+        $this->view->addCssFile('style/parabd.css');
+        $this->view->addJavascriptFile('script/parabd-admin.js');
+        $this->view->set_var(array(
+            'PAGETITLE' => $mode === 'create' ? 'Créer une fiche Para-BD' : 'Modifier la fiche Para-BD #' . intval($item['ID_ITEM']),
+            'ROBOTS' => 'noindex,nofollow', 'types' => $this->service()->getTypes(), 'item' => $item, 'mode' => $mode,
+            'history' => $item ? $this->service()->getAdminItemHistory(intval($item['ID_ITEM'])) : array(),
+            'csrf_token' => parabdCsrfToken('parabd-admin'), 'form_error' => $error, 'saved' => getValInteger('saved', 0)
+        ));
+        $this->view->render();
+    }
+
     public function Index()
     {
         $this->guard();
         $this->view->addCssFile('style/parabd.css');
-        $this->view->set_var(array('PAGETITLE' => 'Administration Para-BD', 'ROBOTS' => 'noindex,nofollow', 'queues' => $this->service()->adminQueues(), 'csrf_token' => parabdCsrfToken('parabd-admin')));
+        $search = getVal('q', ''); $status = getVal('status', '');
+        $this->view->set_var(array('PAGETITLE' => 'Fiches Para-BD — Administration', 'ROBOTS' => 'noindex,nofollow',
+            'items' => $this->service()->getAdminCatalogue($search, $status), 'search' => $search, 'status' => $status));
         $this->view->render();
+    }
+
+    public function Queues()
+    {
+        $this->guard();
+        $this->view->addCssFile('style/parabd.css');
+        $this->view->set_var(array('PAGETITLE' => 'Files d’attente Para-BD', 'ROBOTS' => 'noindex,nofollow', 'queues' => $this->service()->adminQueues(), 'csrf_token' => parabdCsrfToken('parabd-admin')));
+        $this->view->render();
+    }
+
+    public function Create()
+    {
+        $this->guard($_SERVER['REQUEST_METHOD'] === 'POST');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { $this->renderEditor(null, 'create'); return; }
+        try {
+            $result = $this->service()->adminCreateItem($this->adminId(), $_POST, isset($_FILES['visual']) ? $_FILES['visual'] : null);
+            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . intval($result['item_id']) . '&saved=1');
+        } catch (Throwable $error) {
+            http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422);
+            $this->renderEditor(null, 'create', $error->getMessage());
+        }
+    }
+
+    public function Edit()
+    {
+        $this->guard($_SERVER['REQUEST_METHOD'] === 'POST');
+        $itemId = $_SERVER['REQUEST_METHOD'] === 'POST' ? postValInteger('item_id', 0) : getValInteger('id', 0);
+        $item = $this->service()->getAdminItem($itemId);
+        if (!$item) { http_response_code(404); die('Objet Para-BD introuvable.'); }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { $this->renderEditor($item, 'edit'); return; }
+        try {
+            $this->service()->adminUpdateItem($this->adminId(), $itemId, $_POST, isset($_FILES['visual']) ? $_FILES['visual'] : null);
+            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . $itemId . '&saved=1');
+        } catch (Throwable $error) {
+            http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422);
+            $this->renderEditor($this->service()->getAdminItem($itemId), 'edit', $error->getMessage());
+        }
     }
 
     public function Merge()

@@ -364,7 +364,8 @@ class Guest extends Bdo_Controller
             'state' => $state,
             'IDUSER' => intval($user->user_id),
             'USERNAME' => $user->username,
-            'is_authenticated' => User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1)
+            'is_authenticated' => User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1),
+            'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit')
         ));
         $this->view->render();
     }

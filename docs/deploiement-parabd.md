@@ -3,7 +3,7 @@
 Le module est livré désactivé par défaut. L’ordre de déploiement recommandé est le suivant :
 
 1. déployer le code et sauvegarder la base ;
-2. appliquer `sql/2026-08-09-create-parabd.sql` sur MySQL 5.7 ;
+2. appliquer `sql/2026-08-09-create-parabd.sql` pour créer et initialiser les tables de la fonctionnalité ;
 3. créer le répertoire défini par `BDO_DIR_PARABD`, accessible en écriture par PHP ;
 4. supprimer les fichiers de cache de schéma `cache/*_schema.serial` ;
 5. définir `BDO_PARABD_ENABLED` à `true` dans la configuration d’environnement ;
