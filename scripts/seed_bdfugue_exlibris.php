@@ -62,7 +62,8 @@ if (!class_exists('User')) {
 
 Bdo_Cfg::setVar('connexion', $db);
 require_once dirname(__DIR__) . '/inc/mysql.inc.php';
-require_once dirname(__DIR__) . '/mvc/models/ParabdService.php';
+require_once dirname(__DIR__) . '/mvc/models/ParabdRules.php';
+require_once dirname(__DIR__) . '/mvc/models/ParabdImageStorage.php';
 
 $categoryUrl = 'https://www.bdfugue.com/exclusivites/ex-libris-bandes-dessinees';
 $items = array(
@@ -166,8 +167,8 @@ foreach ($items as $fixture) {
     list($ownerId, $ean, $albumTitle, $credits, $artistName, $albumPublisher, $releaseDate, $color, $productUrl) = $fixture;
     $title = 'Ex-libris ' . $albumTitle . ' – exclusivité BDfugue';
     $externalValue = 'EXLIBRIS-' . $ean;
-    $externalNormalized = ParabdService::normalizeIdentifier('EXTERNAL_DB', $externalValue);
-    $issuerNormalized = ParabdService::normalizeText('BDfugue');
+    $externalNormalized = ParabdRules::normalizeIdentifier('EXTERNAL_DB', $externalValue);
+    $issuerNormalized = ParabdRules::normalizeText('BDfugue');
     $imageUrl = 'https://www.bdfugue.com/media/bdfugue_marketing/image/' . $ean . '_xl.jpg';
     $imagePath = $imageDir . DIRECTORY_SEPARATOR . 'bdfugue-' . $ean . '.jpg';
     $writtenFile = null;
@@ -177,7 +178,7 @@ foreach ($items as $fixture) {
         bdfugueDownloadImage($imageUrl, $imagePath);
         bdfugueValidateUser($db, $ownerId);
         $album = bdfugueAlbum($db, $ean);
-        $date = ParabdService::parsePartialDate($releaseDate);
+        $date = ParabdRules::parsePartialDate($releaseDate);
         $description = "Ex-libris exclusif BDfugue associé à l’album « $albumTitle ». Illustration : $artistName. Crédits de l’album : $credits. Éditeur de l’album : $albumPublisher. EAN de l’album associé : $ean.";
 
         $db->begin_transaction();
@@ -188,7 +189,7 @@ foreach ($items as $fixture) {
 
         if (!$itemId) {
             $columns = array('TYPE_ID','SUBTYPE_ID','TITLE','TITLE_NORMALIZED','DESCRIPTION','MATERIAL','COLOR','RELEASE_DATE','DATE_PRECISION','IS_LIMITED','PUBLISHER','RANGE_NAME','UNIVERSE_NAME','CREATED_BY','UPDATED_BY');
-            $values = array($printTypeId, $exlibrisTypeId, $title, ParabdService::normalizeText($title), $description, 'Papier d’art', $color, $date['date'], $date['precision'], 1, 'BDfugue', 'Ex-libris exclusifs BDfugue', $album['SERIES_NAME'], $ownerId, $ownerId);
+            $values = array($printTypeId, $exlibrisTypeId, $title, ParabdRules::normalizeText($title), $description, 'Papier d’art', $color, $date['date'], $date['precision'], 1, 'BDfugue', 'Ex-libris exclusifs BDfugue', $album['SERIES_NAME'], $ownerId, $ownerId);
             bdfugueExecute($db, 'INSERT INTO parabd_item (' . implode(',', $columns) . ') VALUES (' . implode(',', array_map(function ($value) use ($db) {
                 return bdfugueSqlValue($db, $value);
             }, $values)) . ')');
@@ -203,8 +204,8 @@ foreach ($items as $fixture) {
             bdfugueExecute($db, "INSERT INTO parabd_item_series (ITEM_ID,SERIES_ID,RELATION_TYPE,CREATED_BY) VALUES ($itemId," . intval($album['ID_SERIE']) . ",'RELATED'," . intval($ownerId) . ')');
             bdfugueExecute($db, "INSERT INTO parabd_item_tome (ITEM_ID,TOME_ID,RELATION_TYPE,CREATED_BY) VALUES ($itemId," . intval($album['ID_TOME']) . ",'RELATED'," . intval($ownerId) . ')');
 
-            $service = new ParabdService();
-            $image = $service->storeImage(array('tmp_name' => $imagePath, 'name' => basename($imagePath), 'size' => filesize($imagePath), 'error' => UPLOAD_ERR_OK), $itemId, 1);
+            $imageStorage = new ParabdImageStorage();
+            $image = $imageStorage->store(array('tmp_name' => $imagePath, 'name' => basename($imagePath), 'size' => filesize($imagePath), 'error' => UPLOAD_ERR_OK), $itemId, 1);
             $writtenFile = $image['absolute_path'];
             bdfugueExecute($db, "INSERT INTO parabd_media (ITEM_ID,MEDIA_TYPE,FILE_PATH,MIME_TYPE,WIDTH_PX,HEIGHT_PX,IS_PRIMARY,CREATED_BY) VALUES ($itemId,'PRIMARY',"
                 . bdfugueSqlValue($db, $image['relative_path']) . ',' . bdfugueSqlValue($db, $image['mime']) . ',' . intval($image['width']) . ',' . intval($image['height']) . ',1,' . intval($ownerId) . ')');

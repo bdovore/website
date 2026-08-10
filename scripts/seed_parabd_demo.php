@@ -54,7 +54,8 @@ if (!class_exists('User')) {
 
 Bdo_Cfg::setVar('connexion', $db);
 require_once dirname(__DIR__) . '/inc/mysql.inc.php';
-require_once dirname(__DIR__) . '/mvc/models/ParabdService.php';
+require_once dirname(__DIR__) . '/mvc/models/ParabdRules.php';
+require_once dirname(__DIR__) . '/mvc/models/ParabdImageStorage.php';
 
 $items = array(
     array(
@@ -216,10 +217,10 @@ function validateLegacyTarget($db, $table, $column, $id)
 foreach ($items as $item) {
     $identifier = $item['identifier'];
     $scheme = strtoupper($identifier['scheme']);
-    $valueNormalized = ParabdService::normalizeIdentifier($scheme, $identifier['value']);
+    $valueNormalized = ParabdRules::normalizeIdentifier($scheme, $identifier['value']);
     $issuerNormalized = in_array($scheme, array('EAN13', 'UPCA', 'ISBN10', 'ISBN13'), true)
-        ? '' : ParabdService::normalizeText($identifier['issuer']);
-    if (!ParabdService::isValidIdentifier($scheme, $identifier['value'])) {
+        ? '' : ParabdRules::normalizeText($identifier['issuer']);
+    if (!ParabdRules::isValidIdentifier($scheme, $identifier['value'])) {
         throw new RuntimeException("Identifiant invalide pour {$item['title']}");
     }
 
@@ -234,7 +235,7 @@ foreach ($items as $item) {
         if (!$itemId) {
             $typeId = typeId($db, $item['type']);
             $subtypeId = typeId($db, $item['subtype'], $typeId);
-            $date = ParabdService::parsePartialDate($item['release_date']);
+            $date = ParabdRules::parsePartialDate($item['release_date']);
             validateLegacyTarget($db, 'users', 'user_id', $item['owner_id']);
             validateLegacyTarget($db, 'bd_auteur', 'ID_AUTEUR', $item['author_id']);
             validateLegacyTarget($db, 'bd_serie', 'ID_SERIE', $item['series_id']);
@@ -242,10 +243,10 @@ foreach ($items as $item) {
 
             $columns = array('TYPE_ID','SUBTYPE_ID','TITLE','TITLE_NORMALIZED','DESCRIPTION','MATERIAL','COLOR','WIDTH_MM','HEIGHT_MM','DEPTH_MM','WEIGHT_G','SCALE','RELEASE_DATE','DATE_PRECISION','PRINT_RUN','IS_NUMBERED','IS_SIGNED','HAS_CERTIFICATE','IS_LIMITED','MANUFACTURER','MANUFACTURER_NORMALIZED','PUBLISHER','LICENSE_NAME','RANGE_NAME','UNIVERSE_NAME','CREATED_BY','UPDATED_BY');
             $values = array(
-                $typeId, $subtypeId, $item['title'], ParabdService::normalizeText($item['title']), $item['description'],
+                $typeId, $subtypeId, $item['title'], ParabdRules::normalizeText($item['title']), $item['description'],
                 $item['material'], $item['color'], $item['width_mm'], $item['height_mm'], $item['depth_mm'], $item['weight_g'],
                 $item['scale'], $date['date'], $date['precision'], $item['print_run'], $item['is_numbered'], $item['is_signed'],
-                $item['has_certificate'], $item['is_limited'], $item['manufacturer'], ParabdService::normalizeText($item['manufacturer']),
+                $item['has_certificate'], $item['is_limited'], $item['manufacturer'], ParabdRules::normalizeText($item['manufacturer']),
                 $item['publisher'], $item['license'], $item['range'], $item['universe'], $item['owner_id'], $item['owner_id']
             );
             executeSql($db, 'INSERT INTO parabd_item (' . implode(',', $columns) . ') VALUES ('
@@ -262,8 +263,8 @@ foreach ($items as $item) {
 
             $imagePath = $imageDir . DIRECTORY_SEPARATOR . $item['image'];
             if (!is_file($imagePath)) throw new RuntimeException("Visuel absent : $imagePath");
-            $service = new ParabdService();
-            $image = $service->storeImage(array(
+            $imageStorage = new ParabdImageStorage();
+            $image = $imageStorage->store(array(
                 'tmp_name' => $imagePath, 'name' => basename($imagePath),
                 'size' => filesize($imagePath), 'error' => UPLOAD_ERR_OK
             ), $itemId, 1);

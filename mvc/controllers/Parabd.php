@@ -102,12 +102,19 @@ class Parabd extends Bdo_Controller
         $item = $this->service()->getItem(getValInteger('id', 0));
         if (!$item) { http_response_code(404); die('Objet Para-BD introuvable.'); }
         if (!empty($item['REDIRECT_ID'])) { header('Location: ' . BDO_URL . 'parabd/fiche?id=' . intval($item['REDIRECT_ID']), true, 301); return; }
-        $canContribute = $this->userId() && User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1);
+        $userId = $this->userId();
+        $canContribute = $userId && User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1);
+        $revisionsToVote = array();
+        $ownRevisions = array();
+        foreach ($this->service()->getRevisionsForItem(intval($item['ID_ITEM'])) as $revision) {
+            if ($userId && intval($revision['AUTHOR_ID']) === $userId) $ownRevisions[] = $revision;
+            else $revisionsToVote[] = $revision;
+        }
         $this->view->set_var(array('PAGETITLE' => $item['TITLE'] . ' - Para-BD', 'ROBOTS' => 'noindex,nofollow', 'item' => $item,
-            'copies' => $canContribute ? $this->service()->getUserCopies($this->userId()) : array(), 'revisions' => $this->service()->getRevisionsForItem(intval($item['ID_ITEM'])),
+            'copies' => $canContribute ? $this->service()->getUserCopies($userId) : array(), 'revisions_to_vote' => $revisionsToVote, 'own_revisions' => $ownRevisions,
             'csrf_token' => $canContribute ? parabdCsrfToken('parabd-write') : '', 'can_contribute' => $canContribute,
-            'trusted' => $canContribute ? $this->service()->isTrusted($this->userId()) : false, 'charter_version' => BDO_PARABD_CHARTER_VERSION,
-            'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'), 'can_admin' => $this->userId() && User::minAccesslevel(1)));
+            'trusted' => $canContribute ? $this->service()->isTrusted($userId) : false, 'charter_version' => BDO_PARABD_CHARTER_VERSION,
+            'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'), 'can_admin' => $userId && User::minAccesslevel(1)));
         $this->view->render();
     }
 
@@ -199,7 +206,7 @@ class Parabd extends Bdo_Controller
         if (!$this->enabled() || !$this->requireMutation('parabd-write')) return;
         $this->handle(function () {
             if (!empty($_POST['accept_charter'])) $this->service()->acceptCharter($this->userId(), true);
-            return array('media_id' => $this->service()->addMedia($this->userId(), postValInteger('item_id', 0), isset($_FILES['visual']) ? $_FILES['visual'] : null, postVal('media_type', 'GALLERY'), postVal('visual_url', '')));
+            return array('media_id' => $this->service()->addMedia($this->userId(), postValInteger('item_id', 0), isset($_FILES['visual']) ? $_FILES['visual'] : null, postVal('media_type', 'GALLERY'), postVal('visual_url', ''), postValInteger('is_explicit', 0) === 1));
         });
     }
 }

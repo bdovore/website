@@ -43,17 +43,53 @@ try {
 
     if (!defined('DEBUG')) define('DEBUG', false);
     if (!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
+    if (!defined('BDO_DIR')) define('BDO_DIR', dirname(__DIR__) . DS);
     if (!defined('BDO_DIR_PARABD')) define('BDO_DIR_PARABD', $imageRoot . DS);
     if (!defined('BDO_PARABD_CHARTER_VERSION')) define('BDO_PARABD_CHARTER_VERSION', '1');
     if (!defined('BDO_PARABD_MAX_UPLOAD_BYTES')) define('BDO_PARABD_MAX_UPLOAD_BYTES', 5242880);
     if (!defined('BDO_PARABD_MAX_IMAGE_PIXELS')) define('BDO_PARABD_MAX_IMAGE_PIXELS', 30000000);
     if (!defined('BDO_PARABD_CREATIONS_PER_HOUR')) define('BDO_PARABD_CREATIONS_PER_HOUR', 10);
     if (!defined('BDO_PARABD_UPLOADS_PER_HOUR')) define('BDO_PARABD_UPLOADS_PER_HOUR', 20);
-    class Bdo_Cfg { private static $values = array(); public static function getVar($key) { return isset(self::$values[$key]) ? self::$values[$key] : null; } public static function setVar($key, $value) { self::$values[$key] = $value; } }
+    class Bdo_Cfg {
+        private static $values = array();
+        public static function getVar($key) { return isset(self::$values[$key]) ? self::$values[$key] : null; }
+        public static function setVar($key, $value) { self::$values[$key] = $value; }
+        public static function schema() { return self::getVar('schema'); }
+    }
+    class ParabdTestSchema {
+        public $schema;
+        public $dbColumn = array();
+        public $dbConstraint = array();
+
+        public function __construct($connection, $schema) {
+            $this->schema = $schema;
+            $escaped = $connection->real_escape_string($schema);
+            $columns = $connection->query("SELECT TABLE_NAME,COLUMN_NAME,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,COLUMN_TYPE,COLUMN_KEY,EXTRA FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='$escaped'");
+            while ($column = $columns->fetch_object()) {
+                $column->TITRE_CHAMP = $column->COLUMN_NAME;
+                $column->EXTRA_CHAMP = '';
+                if (in_array($column->DATA_TYPE, array('enum', 'set'), true)) {
+                    $values = preg_replace("#(?:enum|set)\\('([^\\)].*)'\\)$#i", '$1', $column->COLUMN_TYPE);
+                    $column->TAB_CHECK_VALUE = explode("','", $values);
+                }
+                $this->dbColumn[$column->TABLE_NAME][$column->COLUMN_NAME] = $column;
+            }
+            $constraints = $connection->query("SELECT k.TABLE_NAME,k.COLUMN_NAME,k.CONSTRAINT_NAME,c.CONSTRAINT_TYPE,k.REFERENCED_TABLE_NAME,k.REFERENCED_COLUMN_NAME FROM information_schema.TABLE_CONSTRAINTS c JOIN information_schema.KEY_COLUMN_USAGE k USING (TABLE_NAME,CONSTRAINT_NAME,CONSTRAINT_SCHEMA) WHERE c.CONSTRAINT_SCHEMA='$escaped'");
+            while ($constraint = $constraints->fetch_object()) {
+                $this->dbConstraint[$constraint->TABLE_NAME][$constraint->CONSTRAINT_NAME][$constraint->COLUMN_NAME] = $constraint;
+            }
+            foreach ($this->dbColumn as $table => $unused) if (!isset($this->dbConstraint[$table])) $this->dbConstraint[$table] = array();
+        }
+
+        public function is_table($table) { return !empty($this->dbColumn[$table]); }
+    }
     class User { public static function minAccesslevel($level = 5) { return isset($_SESSION['userConnect']->level) && $_SESSION['userConnect']->level <= $level; } }
     Bdo_Cfg::setVar('connexion', $server);
+    Bdo_Cfg::setVar('schema', new ParabdTestSchema($server, $database));
     $_SESSION['userConnect'] = (object) array('user_id' => 1, 'level' => 2);
     require_once dirname(__DIR__) . '/inc/mysql.inc.php';
+    require_once dirname(__DIR__) . '/inc/util.inc.php';
+    require_once dirname(__DIR__) . '/library/Bdo/Security.php';
     require_once dirname(__DIR__) . '/mvc/models/ParabdService.php';
     $service = new ParabdService();
     foreach (range(1, 5) as $userId) $service->acceptCharter($userId, true);
@@ -73,10 +109,27 @@ try {
     Bdo_Cfg::setVar('explicit', 1);
     $visibleItem = $service->getItem($itemId); dbAssert(strpos($visibleItem['media'][0]['FILE_PATH'], '?source=') !== 0, 'visuel explicite affiché après autorisation');
     Bdo_Cfg::setVar('explicit', 0);
+    $plainMediaId = $service->addMedia(1, $itemId, $validUpload, 'DETAIL', '', false);
+    $mixedMediaItem = $service->getItem($itemId); $mixedPaths = array(); foreach ($mixedMediaItem['media'] as $media) $mixedPaths[intval($media['ID_MEDIA'])] = $media['FILE_PATH'];
+    dbAssert(strpos($mixedPaths[intval($mixedMediaItem['media'][0]['ID_MEDIA'])], '?source=') === 0 && strpos($mixedPaths[$plainMediaId], '?source=') !== 0, 'floutage limité au seul visuel marqué explicite');
+    $itemExplicitColumn = $server->query("SELECT COUNT(*) total FROM information_schema.columns WHERE table_schema='" . $server->real_escape_string($database) . "' AND table_name='parabd_item' AND column_name='IS_EXPLICIT'")->fetch_assoc();
+    $mediaExplicitColumn = $server->query("SELECT COUNT(*) total FROM information_schema.columns WHERE table_schema='" . $server->real_escape_string($database) . "' AND table_name='parabd_media' AND column_name='IS_EXPLICIT'")->fetch_assoc();
+    dbAssert(intval($itemExplicitColumn['total']) === 0 && intval($mediaExplicitColumn['total']) === 1, 'contenu explicite stocké sur chaque média et non sur la fiche');
     try { $service->createItem(2, array('title' => 'Copie', 'type_code' => 'STATUETTE', 'identifier_scheme' => 'EAN13', 'identifier_value' => '4006381333931'), $validUpload); dbAssert(false, 'doublon exact bloqué'); } catch (ParabdException $expected) { dbAssert($expected->errorCode === 'DUPLICATE_EXACT', 'doublon exact bloqué'); }
     try { $service->createItem(2, array('title' => 'Statuette test', 'type_code' => 'STATUETTE', 'manufacturer' => 'Pixi', 'release_date' => '2025', 'width_mm' => '102'), $validUpload); dbAssert(false, 'doublon fort exigeant un motif'); } catch (ParabdException $expected) { dbAssert($expected->errorCode === 'VALIDATION_ERROR', 'doublon fort exigeant un motif'); }
     $distinct = $service->createItem(2, array('title' => 'Statuette test', 'type_code' => 'STATUETTE', 'manufacturer' => 'Pixi', 'release_date' => '2025', 'width_mm' => '102', 'duplicate_reviewed' => 1, 'duplicate_reason' => 'Variante collector vérifiée'), $validUpload);
     dbAssert($distinct['item_id'] > 0, 'doublon fort contournable avec motif et sans identifiant');
+    $duplicateRow = $server->query('SELECT ID_DUPLICATE FROM parabd_duplicate WHERE STATUS=\'OPEN\' LIMIT 1')->fetch_assoc();
+    $service->resolveDuplicate(1, intval($duplicateRow['ID_DUPLICATE']), 'IGNORED');
+    $duplicateStatus = $server->query('SELECT STATUS FROM parabd_duplicate WHERE ID_DUPLICATE=' . intval($duplicateRow['ID_DUPLICATE']))->fetch_assoc();
+    dbAssert($duplicateStatus['STATUS'] === 'IGNORED', 'résolution de doublon déléguée au modèle');
+    $reportId = $service->report(2, 'ITEM', $itemId, 'Information à vérifier', 'Test de signalement');
+    $service->resolveReport(1, $reportId, 'RESOLVED');
+    $reportStatus = $server->query('SELECT STATUS FROM parabd_report WHERE ID_REPORT=' . intval($reportId))->fetch_assoc();
+    dbAssert($reportStatus['STATUS'] === 'RESOLVED', 'création et résolution de signalement déléguées au modèle');
+    $service->moderateItem(1, $distinct['item_id'], 'HIDDEN');
+    $service->moderateItem(1, $distinct['item_id'], 'ACTIVE');
+    dbAssert($service->getItem($distinct['item_id'])['STATUS'] === 'ACTIVE', 'modération de fiche déléguée au modèle');
 
     $firstCopy = $service->saveCopy(1, array('item_id' => $itemId, 'state' => 'OWNED', 'quantity' => 2, 'copy_number' => '12/100', 'condition_code' => 'GOOD', 'copy_is_signed' => '1', 'copy_is_dedicated' => '0', 'has_box' => '1', 'copy_has_certificate' => '1', 'is_gift' => '1', 'purchase_date' => '09/08/2026', 'price' => '42.50', 'currency' => 'EUR', 'seller' => 'Privé', 'estimated_value' => '70', 'personal_notes' => 'Secret'));
     $service->saveCopy(1, array('item_id' => $itemId, 'state' => 'OWNED', 'copy_number' => '13/100'));
@@ -93,24 +146,38 @@ try {
 
     $copiesBeforeAdminEdit = count($service->getUserCopies(1));
     $adminItem = $service->getAdminItem($itemId); $primaryMediaId = intval($adminItem['media'][0]['ID_MEDIA']);
-    $service->adminUpdateItem(1, $itemId, array('type_code' => 'STATUETTE', 'title' => 'Statuette administrée', 'description' => 'Fiche commune modifiée directement', 'manufacturer' => 'Pixi', 'publisher' => 'Éditeur admin', 'release_date' => '2026', 'status' => 'ACTIVE', 'is_explicit' => 1, 'primary_media_id' => $primaryMediaId, 'identifiers' => array(array('scheme' => 'EAN13', 'issuer' => '', 'value' => '4006381333931')), 'authors' => array(array('id' => 10, 'role' => 'ARTIST')), 'series' => array(array('id' => 20, 'relation_type' => 'RELATED')), 'tomes' => array(array('id' => 30, 'relation_type' => 'RELATED', 'page_no' => 4, 'panel_no' => 2)), 'sources' => array(array('url' => 'https://example.test/catalogue', 'label' => 'Catalogue admin', 'notes' => 'Vérifié'))));
+    $service->adminUpdateItem(1, $itemId, array('type_code' => 'STATUETTE', 'title' => 'Statuette administrée', 'description' => 'Fiche commune modifiée directement', 'manufacturer' => 'Pixi', 'publisher' => 'Éditeur admin', 'release_date' => '2026', 'status' => 'ACTIVE', 'primary_media_id' => $primaryMediaId, 'media_explicit' => array($primaryMediaId => 1), 'identifiers' => array(array('scheme' => 'EAN13', 'issuer' => '', 'value' => '4006381333931')), 'authors' => array(array('id' => 10, 'role' => 'ARTIST')), 'series' => array(array('id' => 20, 'relation_type' => 'RELATED')), 'tomes' => array(array('id' => 30, 'relation_type' => 'RELATED', 'page_no' => 4, 'panel_no' => 2)), 'sources' => array(array('url' => 'https://example.test/catalogue', 'label' => 'Catalogue admin', 'notes' => 'Vérifié'))));
     $adminEdited = $service->getAdminItem($itemId); $adminHistory = $service->getAdminItemHistory($itemId);
-    dbAssert($adminEdited['TITLE'] === 'Statuette administrée' && $adminEdited['PUBLISHER'] === 'Éditeur admin' && count($adminEdited['authors']) === 1 && count($adminEdited['series']) === 1 && count($adminEdited['tomes']) === 1 && count($adminEdited['sources']) === 1, 'édition admin directe de toute la fiche commune');
+    dbAssert($adminEdited['TITLE'] === 'Statuette administrée' && $adminEdited['PUBLISHER'] === 'Éditeur admin' && count($adminEdited['authors']) === 1 && count($adminEdited['series']) === 1 && count($adminEdited['tomes']) === 1 && count($adminEdited['sources']) === 1 && intval($adminEdited['media'][0]['IS_EXPLICIT']) === 1, 'édition admin directe de toute la fiche commune et du statut explicite par média');
     dbAssert(count($service->getUserCopies(1)) === $copiesBeforeAdminEdit, 'édition admin sans impact sur la collection personnelle');
     dbAssert($adminHistory[0]['STATUS'] === 'ACCEPTED' && $adminHistory[0]['CHANGE_KIND'] === 'UPDATE' && !empty($adminHistory[0]['PATCH_BEFORE']) && !empty($adminHistory[0]['PATCH_AFTER']), 'édition admin ajoutée à l’historique complet');
 
-    $adminCreated = $service->adminCreateItem(1, array('title' => 'Création administrative', 'type_code' => 'STATUETTE', 'description' => 'Fiche créée pour la communauté', 'manufacturer' => 'Admin', 'status' => 'HIDDEN', 'collection_action' => 'OWNED', 'authors' => array(array('id' => 10, 'role' => 'ARTIST'))), $validUpload);
+    $mediaCountBeforeAdminAdd = count($adminEdited['media']);
+    $historyCountBeforeAdminAdd = count($adminHistory);
+    $firstAdminMedia = $service->adminAddMedia(1, $itemId, array('media_type' => 'BOX', 'is_explicit' => 1), $validUpload);
+    $secondAdminMedia = $service->adminAddMedia(1, $itemId, array('media_type' => 'DETAIL', 'is_primary' => 1), $validUpload);
+    $afterAdminMedia = $service->getAdminItem($itemId); $addedMedia = array(); foreach ($afterAdminMedia['media'] as $media) $addedMedia[intval($media['ID_MEDIA'])] = $media;
+    $historyAfterAdminMedia = $service->getAdminItemHistory($itemId);
+    dbAssert(count($afterAdminMedia['media']) === $mediaCountBeforeAdminAdd + 2 && isset($addedMedia[$firstAdminMedia['media_id']]) && isset($addedMedia[$secondAdminMedia['media_id']]), 'plusieurs visuels admin ajoutés successivement');
+    dbAssert($addedMedia[$firstAdminMedia['media_id']]['MEDIA_TYPE'] === 'BOX' && intval($addedMedia[$firstAdminMedia['media_id']]['IS_EXPLICIT']) === 1 && intval($addedMedia[$secondAdminMedia['media_id']]['IS_PRIMARY']) === 1, 'options du formulaire visuel enregistrées indépendamment');
+    dbAssert($afterAdminMedia['TITLE'] === $adminEdited['TITLE'] && $afterAdminMedia['DESCRIPTION'] === $adminEdited['DESCRIPTION'] && count($afterAdminMedia['authors']) === count($adminEdited['authors']) && count($afterAdminMedia['sources']) === count($adminEdited['sources']), 'ajout de visuel sans modification des autres informations de la fiche');
+    dbAssert(count($historyAfterAdminMedia) === $historyCountBeforeAdminAdd + 2 && $historyAfterAdminMedia[0]['STATUS'] === 'ACCEPTED', 'chaque ajout de visuel historisé séparément');
+
+    $adminCreated = $service->adminCreateItem(1, array('title' => 'Création administrative', 'type_code' => 'STATUETTE', 'description' => 'Fiche créée pour la communauté', 'manufacturer' => 'Admin', 'status' => 'HIDDEN', 'is_explicit' => 1, 'collection_action' => 'OWNED', 'authors' => array(array('id' => 10, 'role' => 'ARTIST'))), $validUpload);
     $adminCreatedHistory = $service->getAdminItemHistory($adminCreated['item_id']);
     $adminCopyCount = $server->query('SELECT COUNT(*) total FROM users_parabd WHERE ITEM_ID=' . intval($adminCreated['item_id']))->fetch_assoc();
     dbAssert(intval($adminCopyCount['total']) === 0, 'création admin indépendante de la collection même si une action personnelle est envoyée');
-    dbAssert(count($adminCreatedHistory) === 1 && $adminCreatedHistory[0]['CHANGE_KIND'] === 'CREATE' && $adminCreatedHistory[0]['STATUS'] === 'ACCEPTED' && $service->getAdminItem($adminCreated['item_id'])['STATUS'] === 'HIDDEN', 'création admin directement validée, historisée et respectant le statut choisi');
+    $adminCreatedItem = $service->getAdminItem($adminCreated['item_id']);
+    dbAssert(count($adminCreatedHistory) === 1 && $adminCreatedHistory[0]['CHANGE_KIND'] === 'CREATE' && $adminCreatedHistory[0]['STATUS'] === 'ACCEPTED' && $adminCreatedItem['STATUS'] === 'HIDDEN' && intval($adminCreatedItem['media'][0]['IS_EXPLICIT']) === 1, 'création admin historisée avec statut de fiche et statut explicite du visuel');
 
     $revision = $service->contribute(2, $itemId, intval($service->getItem($itemId)['REVISION_NO']), 'DESCRIPTION', 'Corrigée');
     dbAssert($revision['status'] === 'PENDING', 'remplacement non fiable en attente');
-    $service->vote(3, $revision['revision_id'], 'CONFIRM'); $vote = $service->vote(4, $revision['revision_id'], 'CONFIRM');
+    try { $service->vote(2, $revision['revision_id'], 'CONFIRM'); dbAssert(false, 'auteur ne validant pas sa propre proposition'); } catch (ParabdException $expected) { dbAssert($expected->errorCode === 'VALIDATION_ERROR', 'auteur ne validant pas sa propre proposition'); }
+    $service->vote(1, $revision['revision_id'], 'CONFIRM'); $vote = $service->vote(3, $revision['revision_id'], 'CONFIRM');
     $item = $service->getItem($itemId); dbAssert($vote['status'] === 'ACCEPTED' && $item['DESCRIPTION'] === 'Corrigée', 'correction appliquée après deux votes');
     $conflict = $service->contribute(2, $itemId, intval($item['REVISION_NO']), 'DESCRIPTION', 'Contestée');
-    $vote = $service->vote(3, $conflict['revision_id'], 'CONTEST'); dbAssert($vote['status'] === 'CONFLICT', 'contestation envoyée en conflit');
+    try { $service->vote(2, $conflict['revision_id'], 'CONTEST'); dbAssert(false, 'auteur ne contestant pas sa propre proposition'); } catch (ParabdException $expected) { dbAssert($expected->errorCode === 'VALIDATION_ERROR', 'auteur ne contestant pas sa propre proposition'); }
+    $vote = $service->vote(1, $conflict['revision_id'], 'CONTEST'); dbAssert($vote['status'] === 'CONFLICT', 'créateur de la fiche autorisé à contester la proposition d’un tiers');
 
     $source = $service->createItem(2, array('title' => 'Autre objet', 'type_code' => 'STATUETTE', 'manufacturer' => 'Autre', 'collection_action' => 'none'), $validUpload);
     $removableCopy = $service->saveCopy(4, array('item_id' => $source['item_id'], 'state' => 'OWNED'));

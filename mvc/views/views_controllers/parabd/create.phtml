@@ -24,9 +24,9 @@ foreach ($view->types as $type) {
                     <span class="parabd-choice-separator">ou</span>
                     <label>Depuis une URL d’image<input type="url" name="visual_url" placeholder="https://exemple.fr/image.jpg"></label>
                     <small>JPEG, PNG ou WebP, 5 Mo maximum. L’image est copiée dans le catalogue.</small>
+                    <label class="parabd-media-explicit-option"><input type="checkbox" name="is_explicit" value="1"> Contenu explicite <small>Rare : uniquement si ce visuel comporte un contenu sexuel ou érotique.</small></label>
                     <span class="parabd-image-error parabd-error" aria-live="assertive"></span>
                 </fieldset>
-                <label class="wide parabd-explicit-choice"><span><input type="checkbox" name="is_explicit" value="1"> Contenu explicite</span><small>Cochez cette case si le visuel comporte un contenu sexuel ou érotique. L’image sera floutée pour les visiteurs qui n’ont pas autorisé ce type de contenu.</small></label>
             </div>
             <button type="button" class="parabd-next">Continuer</button>
         </section>

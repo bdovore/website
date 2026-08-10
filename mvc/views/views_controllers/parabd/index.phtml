@@ -17,7 +17,7 @@
             <article class="parabd-card">
                 <?php if ($item['PRIMARY_IMAGE']) { ?><img src="<?php echo $h(BDO_URL_PARABD . $item['PRIMARY_IMAGE']); ?>" alt=""><?php } ?>
                 <div><small><?php echo $h($item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL']); ?></small>
-                    <?php if ($item['IS_EXPLICIT']) { ?><p><span class="parabd-explicit-badge">Contenu explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Image floutée</small><?php } ?></p><?php } ?>
+                    <?php if ($item['PRIMARY_IMAGE_IS_EXPLICIT']) { ?><p><span class="parabd-explicit-badge">Visuel explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Image floutée</small><?php } ?></p><?php } ?>
                     <h2><a href="<?php echo BDO_URL; ?>parabd/fiche?id=<?php echo intval($item['ID_ITEM']); ?>"><?php echo $h($item['TITLE']); ?></a></h2>
                     <?php if ($item['MANUFACTURER']) { ?><p><?php echo $h($item['MANUFACTURER']); ?></p><?php } ?>
                 </div>

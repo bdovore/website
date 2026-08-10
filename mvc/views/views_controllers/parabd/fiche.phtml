@@ -3,13 +3,12 @@ $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'U
 $formatRevision = function ($json) {
     $patch = json_decode($json, true);
     if (!is_array($patch)) return 'Détail de la modification indisponible.';
-    $labels = array('TITLE'=>'Titre','DESCRIPTION'=>'Description','MATERIAL'=>'Matière','COLOR'=>'Couleur','MANUFACTURER'=>'Fabricant','PUBLISHER'=>'Éditeur','RELEASE_DATE'=>'Date','IS_EXPLICIT'=>'Contenu explicite','DELETE_AUTHOR'=>'Retrait de l’auteur','DELETE_SERIES'=>'Retrait de la série','DELETE_TOME'=>'Retrait de l’album');
+    $labels = array('TITLE'=>'Titre','DESCRIPTION'=>'Description','MATERIAL'=>'Matière','COLOR'=>'Couleur','MANUFACTURER'=>'Fabricant','PUBLISHER'=>'Éditeur','RELEASE_DATE'=>'Date','DELETE_AUTHOR'=>'Retrait de l’auteur','DELETE_SERIES'=>'Retrait de la série','DELETE_TOME'=>'Retrait de l’album');
     if (isset($patch['_operation'])) return (isset($labels[$patch['_operation']]) ? $labels[$patch['_operation']] : 'Modification d’un rattachement') . ' #' . intval($patch['_id']);
     $parts = array();
     foreach ($patch as $field => $value) {
         if (substr($field, -11) === '_NORMALIZED' || $field === 'DATE_PRECISION') continue;
-        if ($field === 'IS_EXPLICIT') $display = intval($value) === 1 ? 'oui' : 'non';
-        else $display = ($value === null || $value === '') ? 'non renseigné' : (is_scalar($value) ? (string) $value : 'valeur structurée');
+        $display = ($value === null || $value === '') ? 'non renseigné' : (is_scalar($value) ? (string) $value : 'valeur structurée');
         $parts[] = (isset($labels[$field]) ? $labels[$field] : $field) . ' : ' . $display;
     }
     return $parts ? implode(' · ', $parts) : 'Modification technique de la fiche.';
@@ -30,10 +29,9 @@ $triOptions = function ($current) {
 <div class="cadre1 parabd-page">
     <p><a href="<?php echo BDO_URL; ?>parabd">← Catalogue Para-BD</a><?php if ($view->can_admin) { ?> · <a class="button" href="<?php echo BDO_URL; ?>adminparabd/edit?id=<?php echo intval($item['ID_ITEM']); ?>"><span class="fa fa-edit" aria-hidden="true"></span> Modifier la fiche commune</a><?php } ?></p>
     <div class="parabd-detail">
-        <div class="parabd-gallery"><?php foreach ($item['media'] as $media) { ?><img src="<?php echo $h(BDO_URL_PARABD . $media['FILE_PATH']); ?>" alt="<?php echo $h($item['TITLE']); ?>"><?php } ?></div>
+        <div class="parabd-gallery"><?php foreach ($item['media'] as $media) { ?><figure><img src="<?php echo $h(BDO_URL_PARABD . $media['FILE_PATH']); ?>" alt="<?php echo $h($item['TITLE']); ?>"><?php if ($media['IS_EXPLICIT']) { ?><figcaption><span class="parabd-explicit-badge">Visuel explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Image floutée selon vos préférences</small><?php } ?></figcaption><?php } ?></figure><?php } ?></div>
         <div class="parabd-summary">
             <small><?php echo $h($item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL']); ?></small>
-            <?php if ($item['IS_EXPLICIT']) { ?><p><span class="parabd-explicit-badge">Contenu explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Le visuel est flouté selon vos préférences.</small><?php } ?></p><?php } ?>
             <h1><?php echo $h($item['TITLE']); ?></h1>
             <?php if ($item['DESCRIPTION']) { ?><p><?php echo nl2br($h($item['DESCRIPTION'])); ?></p><?php } ?>
             <dl class="parabd-data">
@@ -141,20 +139,13 @@ $triOptions = function ($current) {
                     <button type="submit">Proposer</button> <span class="parabd-form-status"></span>
                 </form>
 
-                <h2>Contenu explicite</h2>
-                <form class="parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post">
-                    <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>"><input type="hidden" name="field" value="IS_EXPLICIT"><input type="hidden" name="value" value="0">
-                    <label class="parabd-explicit-choice"><span><input type="checkbox" name="value" value="1"<?php if ($item['IS_EXPLICIT']) echo ' checked'; ?>> Le visuel comporte un contenu sexuel ou érotique</span><small>Les images signalées sont floutées pour les visiteurs qui n’ont pas autorisé les contenus explicites.</small></label>
-                    <label><input type="checkbox" name="accept_charter" value="1"> J’accepte la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte de contribution</a> si ce n’est pas déjà fait.</label>
-                    <button type="submit">Mettre à jour le signalement</button> <span class="parabd-form-status"></span>
-                </form>
-
                 <h2>Ajouter un visuel</h2>
                 <form class="parabd-file-form" action="<?php echo BDO_URL; ?>parabd/media" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>">
                     <label>Depuis mon appareil <input type="file" name="visual" accept="image/jpeg,image/png,image/webp"></label>
                     <label>ou depuis une URL <input type="url" name="visual_url" placeholder="https://exemple.fr/image.jpg"></label>
                     <select name="media_type"><option value="GALLERY">Galerie</option><option value="DETAIL">Détail</option><option value="BOX">Boîte</option><option value="CERTIFICATE">Certificat</option></select>
+                    <label class="parabd-media-explicit-option"><input type="checkbox" name="is_explicit" value="1"> Contenu explicite <small>Rare : uniquement si ce visuel comporte un contenu sexuel ou érotique.</small></label>
                     <label><input type="checkbox" name="accept_charter" value="1"> Accepter la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte</a> si nécessaire</label>
                     <button type="submit">Envoyer</button> <span class="parabd-form-status"></span>
                 </form>
@@ -176,10 +167,15 @@ $triOptions = function ($current) {
         <p class="parabd-login-note">Connectez-vous pour ajouter cet objet à votre collection ou proposer une modification.</p>
     <?php } ?>
 
-    <?php if ($view->revisions) { ?>
-        <section class="parabd-revisions"><h2>Contributions à confirmer</h2><?php foreach ($view->revisions as $revision) { ?>
+    <?php if ($view->revisions_to_vote) { ?>
+        <section class="parabd-revisions"><h2>Contributions à confirmer</h2><?php foreach ($view->revisions_to_vote as $revision) { ?>
             <article class="parabd-admin-row"><div><strong>Proposition #<?php echo intval($revision['ID_REVISION']); ?></strong><br><small class="parabd-revision-patch"><?php echo $h($formatRevision($revision['PATCH_AFTER'])); ?></small></div>
             <?php if ($view->can_contribute) { ?><form class="parabd-json-form" action="<?php echo BDO_URL; ?>parabd/vote" method="post"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="revision_id" value="<?php echo intval($revision['ID_REVISION']); ?>"><button name="vote" value="CONFIRM">Confirmer</button> <button name="vote" value="CONTEST">Contester</button><span class="parabd-form-status"></span></form><?php } ?></article>
+        <?php } ?></section>
+    <?php } ?>
+    <?php if ($view->own_revisions) { ?>
+        <section class="parabd-revisions parabd-own-revisions"><h2>Vos propositions en cours</h2><p>Ces propositions attendent l’avis d’autres membres.</p><?php foreach ($view->own_revisions as $revision) { ?>
+            <article class="parabd-admin-row"><div><strong>Proposition #<?php echo intval($revision['ID_REVISION']); ?></strong><br><small class="parabd-revision-patch"><?php echo $h($formatRevision($revision['PATCH_AFTER'])); ?></small></div></article>
         <?php } ?></section>
     <?php } ?>
 </div>

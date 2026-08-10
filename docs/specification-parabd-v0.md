@@ -105,7 +105,6 @@ Un enregistrement correspond à une variante réellement distinguable : autre fa
 | `LIMITED_RUN_COUNT` | nombre total annoncé, facultatif |
 | `RUN_IS_NUMBERED`, `RUN_IS_SIGNED` | caractéristiques du tirage, distinctes de l'exemplaire du membre |
 | `BOX_INCLUDED`, `CERTIFICATE_INCLUDED` | contenu normal de la référence, si connu |
-| `IS_EXPLICIT` | signale un visuel à caractère sexuel ou érotique ; la fiche reste dans le catalogue commun |
 | `STATUS` | `ACTIVE`, `HIDDEN` ou `MERGED` |
 | `MERGED_INTO_ID` | cible si la fiche a été fusionnée ; permet une redirection durable |
 | `REVISION_NO` | compteur pour éviter qu'une correction écrase une modification concurrente |
@@ -165,9 +164,9 @@ Les champs proposent les valeurs déjà saisies afin de limiter les variantes or
 
 `parabd_media` stocke un nombre non limité arbitrairement à deux : vue principale, dos, détail, boîte et certificat. Le certificat ne remplace donc pas la seconde vue de l'objet. Toute création exige au moins un visuel, désigné comme image principale.
 
-Champs principaux : objet, fichier local, rôle du média, légende, auteur de l'envoi, date, statut. L'image principale est désignée explicitement.
+Champs principaux : objet, fichier local, rôle du média, légende, auteur de l'envoi, date, statut et `IS_EXPLICIT`. L'image principale est désignée explicitement.
 
-Une fiche commune peut être signalée `IS_EXPLICIT`. Dans ce cas, ses visuels sont servis floutés tant que le visiteur n'a pas activé l'option existante « Afficher le contenu explicite » dans son compte. Le signalement ne masque ni la fiche ni ses rattachements.
+Le signalement `IS_EXPLICIT` appartient à un visuel précis, jamais à l'objet entier. Seuls les médias concernés sont servis floutés tant que le visiteur n'a pas activé l'option existante « Afficher le contenu explicite » dans son compte. Une même fiche peut donc présenter des images ordinaires et un visuel explicite. Le signalement ne masque ni la fiche ni ses rattachements.
 
 `parabd_source` conserve les pages qui étayent une information : site fabricant, éditeur, catalogue, photographie personnelle, etc. Un visuel peut être envoyé comme fichier ou importé depuis une URL HTTP(S). Dans ce second cas, le serveur bloque les adresses locales, privées et réservées, contrôle chaque redirection, limite le téléchargement à 5 Mo, vérifie le MIME et copie l'image dans le stockage local ; l'URL d'origine est conservée comme source.
 
@@ -331,6 +330,7 @@ L'entrée principale liste toutes les fiches, y compris les fiches masquées ou 
 
 - créer directement une fiche complète pour la communauté, sans créer d'exemplaire dans sa collection ni dans sa wishlist ;
 - modifier directement tous les champs communs, identifiants, rattachements auteur/série/album, sources et visuels ;
+- ajouter plusieurs visuels successivement via un formulaire et une sauvegarde dédiés, sans enregistrer ni modifier les autres informations de la fiche ;
 - consulter l'intégralité de l'historique, y compris les valeurs avant/après, l'auteur, le validateur, le statut et les votes ;
 - consulter une fiche fusionnée en lecture seule et rejoindre la fiche conservée.
 
@@ -364,9 +364,12 @@ Actions disponibles : fusionner, masquer/restaurer, trancher une correction, ann
 
 Le nouveau domaine doit rester séparé du catalogue album afin de ne pas fragiliser `bd_tome`, `bd_edition` et `users_album`.
 
-Structure proposée :
+Structure retenue pour l’implémentation :
 
-- modèles `Parabd_item`, `Parabd_identifier`, `Parabd_media`, `Userparabd`, `Parabd_revision`, `Parabd_duplicate` dans `mvc/models/` ;
+- un modèle `Bdo_Db_Line` par table Para-BD dans `mvc/models/` : `Parabdtype`, `Parabditem`, `Parabdidentifier`, `Parabditemauthor`, `Parabditemseries`, `Parabditemtome`, `Parabdmedia`, `Parabdsource`, `Userparabd`, `Parabdrevision`, `Parabdrevisionvote`, `Parabdduplicate`, `Parabdreport` et `Parabduserprofile` ;
+- les lectures jointes et écritures spécialisées restent dans le modèle de la table qui les porte ;
+- `ParabdService` conserve uniquement les cas d’usage impliquant plusieurs tables et leurs transactions, sans recréer de couche générique de connexion ou de requêtes ;
+- `ParabdRules` regroupe les règles pures testables sans base et `ParabdImageStorage` le pipeline de validation/réencodage des visuels ;
 - contrôleur `Parabd.php` pour recherche, fiche, création et contributions ;
 - actions `Macollection::Parabd` et `Guest::Parabd` pour les listes personnelles ;
 - contrôleur `Adminparabd.php` pour les exceptions ;

@@ -50,6 +50,21 @@
             if (selected.val() && selected.prop('hidden')) $('#parabd-admin-subtype').val('');
         }).trigger('change');
 
+        $('.parabd-toggle-media-form').on('click', function () {
+            var button = $(this);
+            var panel = $('#' + button.attr('aria-controls'));
+            var expanded = button.attr('aria-expanded') === 'true';
+            if (expanded) {
+                var mediaForm = document.getElementById('parabd-admin-media-form');
+                if (mediaForm) mediaForm.reset();
+                panel.find('.parabd-image-error').empty();
+            }
+            panel.prop('hidden', expanded);
+            button.attr('aria-expanded', expanded ? 'false' : 'true');
+            button.find('.parabd-toggle-media-label').text(expanded ? 'Ajouter un visuel' : 'Annuler');
+            if (!expanded) panel.find('input:visible, select:visible').first().trigger('focus');
+        });
+
         $('.parabd-add-row').on('click', function () {
             var container = $('.parabd-repeat[data-repeat="' + $(this).data('target') + '"]');
             var row = container.children('.parabd-repeat-row').last().clone(false, false);

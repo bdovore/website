@@ -35,7 +35,7 @@ class Adminparabd extends Bdo_Controller
         return intval($_SESSION['userConnect']->user_id);
     }
 
-    private function renderEditor($item, $mode, $error = '')
+    private function renderEditor($item, $mode, $error = '', $mediaError = '')
     {
         $this->view->addPhtmlFile('adminparabd/edit', 'BODY');
         $this->view->addCssFile('style/parabd.css');
@@ -44,7 +44,8 @@ class Adminparabd extends Bdo_Controller
             'PAGETITLE' => $mode === 'create' ? 'Créer une fiche Para-BD' : 'Modifier la fiche Para-BD #' . intval($item['ID_ITEM']),
             'ROBOTS' => 'noindex,nofollow', 'types' => $this->service()->getTypes(), 'item' => $item, 'mode' => $mode,
             'history' => $item ? $this->service()->getAdminItemHistory(intval($item['ID_ITEM'])) : array(),
-            'csrf_token' => parabdCsrfToken('parabd-admin'), 'form_error' => $error, 'saved' => getValInteger('saved', 0)
+            'csrf_token' => parabdCsrfToken('parabd-admin'), 'form_error' => $error, 'media_error' => $mediaError,
+            'saved' => getValInteger('saved', 0), 'media_saved' => getValInteger('media_saved', 0)
         ));
         $this->view->render();
     }
@@ -88,11 +89,26 @@ class Adminparabd extends Bdo_Controller
         if (!$item) { http_response_code(404); die('Objet Para-BD introuvable.'); }
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') { $this->renderEditor($item, 'edit'); return; }
         try {
-            $this->service()->adminUpdateItem($this->adminId(), $itemId, $_POST, isset($_FILES['visual']) ? $_FILES['visual'] : null);
+            $this->service()->adminUpdateItem($this->adminId(), $itemId, $_POST);
             header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . $itemId . '&saved=1');
         } catch (Throwable $error) {
             http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422);
             $this->renderEditor($this->service()->getAdminItem($itemId), 'edit', $error->getMessage());
+        }
+    }
+
+    public function Media()
+    {
+        $this->guard(true);
+        $itemId = postValInteger('item_id', 0);
+        $item = $this->service()->getAdminItem($itemId);
+        if (!$item) { http_response_code(404); die('Objet Para-BD introuvable.'); }
+        try {
+            $this->service()->adminAddMedia($this->adminId(), $itemId, $_POST, isset($_FILES['visual']) ? $_FILES['visual'] : null);
+            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . $itemId . '&media_saved=1');
+        } catch (Throwable $error) {
+            http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422);
+            $this->renderEditor($this->service()->getAdminItem($itemId), 'edit', '', $error->getMessage());
         }
     }
 
