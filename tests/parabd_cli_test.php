@@ -59,6 +59,7 @@ if (!defined('BDO_URL')) define('BDO_URL', '/');
 if (!defined('BDO_PARABD_ENABLED')) define('BDO_PARABD_ENABLED', true);
 require_once dirname(__DIR__) . '/mvc/views/helpers/pagination.php';
 $pagination = new Pagination();
+$_SESSION['userConnect'] = (object) array('level' => 1);
 foreach (array('/adminparabd/edit?id=1', '/adminparabd/queues?status=pending') as $adminParabdUrl) {
     $_SERVER['REQUEST_URI'] = $adminParabdUrl;
     $adminMenu = $pagination->menuAdmin();
@@ -67,6 +68,10 @@ foreach (array('/adminparabd/edit?id=1', '/adminparabd/queues?status=pending') a
 $_SERVER['REQUEST_URI'] = '/admin/user?id=1';
 $adminMenu = $pagination->menuAdmin();
 parabdAssert(strpos($adminMenu, '<li class="active"><a href="/admin/user">Utilisateurs</a>') !== false && substr_count($adminMenu, 'class="active"') === 1, 'sous-page admin la plus précise active');
+$_SESSION['userConnect']->level = 2;
+parabdAssert(!parabdMenuVisible() && strpos($pagination->menuCollection(), '>Para-BD</a>') === false, 'menu Para-BD masqué au-delà de BDO_PARABD_MIN_LEVEL');
+unset($_SESSION['userConnect']);
+parabdAssert(!parabdMenuVisible(), 'menu Para-BD masqué aux visiteurs');
 
 if (extension_loaded('gd') && extension_loaded('fileinfo')) {
     $tmpRoot = sys_get_temp_dir() . '/bdovore-parabd-test-' . getmypid();

@@ -162,7 +162,7 @@ class Pagination{
         // tableaux contenant les liens d'accès et le texte à afficher
         $tab_menu_lien = array( "macollection", "macollection/mesetageres", "macollection/messeries", "macollection/mesauteurs", "macollection/futursachats", "macollection/monactu", "macollection/seriecomplete", "macollection/addition", "macollection/proposition","macollection/statistiques");
         $tab_menu_texte = array( "Accueil", "Mes Albums", "Mes Séries", "Mes Auteurs", "Wishlist", "Mon Actu", "A compléter", "L'Addition","Propositions", "Stats" );
-        if (defined('BDO_PARABD_ENABLED') && BDO_PARABD_ENABLED) {
+        if (parabdMenuVisible()) {
             $tab_menu_lien[] = 'macollection/parabd';
             $tab_menu_texte[] = 'Para-BD';
         }
@@ -231,7 +231,7 @@ class Pagination{
          // tableaux contenant les liens d'accès et le texte à afficher
         $tab_menu_lien = array( "guest", "guest/collection", "guest/avis", "guest/wishlist" );
         $tab_menu_texte = array( "Accueil","Tous les albums","Avis de lecture","Wish-list");
-        if (defined('BDO_PARABD_ENABLED') && BDO_PARABD_ENABLED) {
+        if (parabdMenuVisible()) {
             $tab_menu_lien[] = 'guest/parabd';
             $tab_menu_texte[] = 'Para-BD';
         }
@@ -267,7 +267,7 @@ class Pagination{
         // tableaux contenant les liens d'accès et le texte à afficher
         $tab_menu_lien = array( "admin", "adminproposition", "adminauteur", "controle", "admin/ajout", "adminnews", "admin/user");
         $tab_menu_texte = array( "Tableau de bord", "Propositions", "Auteurs", "Contrôles", "Ajout",  "News","Utilisateurs" );
-        if (defined('BDO_PARABD_ENABLED') && BDO_PARABD_ENABLED) {
+        if (parabdMenuVisible()) {
             $tab_menu_lien[] = 'adminparabd';
             $tab_menu_texte[] = 'Para-BD';
         }

@@ -8,7 +8,7 @@ Le module est livré désactivé par défaut. L’ordre de déploiement recomman
 4. supprimer les fichiers de cache de schéma `cache/*_schema.serial` ;
 5. définir `BDO_PARABD_ENABLED` à `true` dans la configuration d’environnement ;
 6. conserver `BDO_PARABD_MIN_LEVEL` à `1` pour le pilote administrateurs/modérateurs ;
-7. passer `BDO_PARABD_MIN_LEVEL` à `2` pour ouvrir le module aux membres.
+7. passer `BDO_PARABD_MIN_LEVEL` à `2` pour ouvrir ensuite le module et ses menus aux membres.
 
 Les constantes documentées dans `config/constante.php.sample` permettent aussi d’ajuster la charte, les limites horaires et les contraintes d’image.
 

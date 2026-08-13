@@ -8,13 +8,13 @@ class Parabd extends Bdo_Controller
         return $this->ParabdService;
     }
 
-    private function enabled($public = false)
+    private function enabled()
     {
         if (!defined('BDO_PARABD_ENABLED') || !BDO_PARABD_ENABLED) {
             http_response_code(404);
             die('Fonctionnalité Para-BD indisponible.');
         }
-        if (!$public && !User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1)) {
+        if (!User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1)) {
             $this->jsonError('AUTH_REQUIRED', 'Vous devez être authentifié pour accéder à Para-BD.', array(), 401);
             return false;
         }
@@ -78,7 +78,7 @@ class Parabd extends Bdo_Controller
 
     public function Index()
     {
-        if (!$this->enabled(true)) return;
+        if (!$this->enabled()) return;
         $this->view->addCssFile('style/parabd.css?v=20260813b');
         $this->view->addJavascriptFile('script/parabd.js');
         $search = getVal('q', '');
@@ -96,7 +96,7 @@ class Parabd extends Bdo_Controller
 
     public function Fiche()
     {
-        if (!$this->enabled(true)) return;
+        if (!$this->enabled()) return;
         $this->view->addCssFile('style/parabd.css?v=20260813b');
         $this->view->addJavascriptFile('script/parabd.js');
         $item = $this->service()->getItem(getValInteger('id', 0));
@@ -123,13 +123,13 @@ class Parabd extends Bdo_Controller
 
     public function Autocomplete()
     {
-        if (!$this->enabled(true)) return;
+        if (!$this->enabled()) return;
         $this->handle(function () { return array('suggestions' => $this->service()->autocompleteCatalogue(getVal('term', ''))); });
     }
 
     public function Charte()
     {
-        if (!$this->enabled(true)) return;
+        if (!$this->enabled()) return;
         $this->view->addCssFile('style/parabd.css?v=20260813b');
         $this->view->set_var(array('PAGETITLE' => 'Charte de contribution Para-BD', 'ROBOTS' => 'noindex,nofollow', 'charter_version' => BDO_PARABD_CHARTER_VERSION));
         $this->view->render();

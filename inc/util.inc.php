@@ -481,6 +481,15 @@ function parabdValidateCsrf ($scope, $token)
     return is_string($token) && $expected !== '' && hash_equals($expected, $token);
 }
 
+/** Affiche les entrées de menu aux utilisateurs autorisés à accéder à Para-BD. */
+function parabdMenuVisible ()
+{
+    $level = defined('BDO_PARABD_MIN_LEVEL') ? intval(BDO_PARABD_MIN_LEVEL) : 1;
+    return defined('BDO_PARABD_ENABLED') && BDO_PARABD_ENABLED
+        && isset($_SESSION['userConnect']->level)
+        && intval($_SESSION['userConnect']->level) <= $level;
+}
+
 function var_dump_pre ($var)
 {
     echo "<pre>";

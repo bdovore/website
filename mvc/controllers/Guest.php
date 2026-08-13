@@ -344,6 +344,10 @@ class Guest extends Bdo_Controller
             http_response_code(404);
             die('Fonctionnalité Para-BD indisponible.');
         }
+        if (!User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1)) {
+            http_response_code(401);
+            die('Vous devez vous authentifier pour accéder à cette page.');
+        }
         $user = $this->getUserInfo();
         // Contrairement aux autres écrans guest, Para-BD reste fermé tant que
         // OPEN_COLLEC n'est pas explicitement activé, y compris pour le propriétaire.
