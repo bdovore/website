@@ -95,5 +95,18 @@
                 event.preventDefault(); error.text('Le visuel principal ne peut pas être masqué.');
             }
         });
+
+        $('.parabd-comment-revision').on('click', function () {
+            var details = $('#discussion').prop('open', true);
+            var revisionId = $(this).data('revision-id');
+            var form = details.find('.parabd-discussion-form');
+            form.find('[name="revision_id"]').val(revisionId);
+            form.find('.parabd-comment-context').prop('hidden', false).find('span').text(revisionId);
+            form.find('textarea').trigger('focus');
+        });
+        $('.parabd-clear-comment-context').on('click', function () {
+            var form = $(this).closest('form'); form.find('[name="revision_id"]').val(''); $(this).closest('.parabd-comment-context').prop('hidden', true);
+        });
+        if (window.location.hash === '#discussion') $('#discussion').prop('open', true);
     });
 })(jQuery);

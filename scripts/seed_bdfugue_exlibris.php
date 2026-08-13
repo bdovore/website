@@ -223,8 +223,8 @@ foreach ($items as $fixture) {
 
         $copy = bdfugueFetchOne($db, 'SELECT ID_COPY FROM users_parabd WHERE USER_ID=' . intval($ownerId) . ' AND ITEM_ID=' . intval($itemId) . ' LIMIT 1');
         if (!$copy) {
-            bdfugueExecute($db, "INSERT INTO users_parabd (USER_ID,ITEM_ID,STATE,QUANTITY,IS_PRICE_PUBLIC,IS_PUBLIC,PERSONAL_NOTES) VALUES ("
-                . intval($ownerId) . ',' . intval($itemId) . ",'OWNED',1,0,1,'Jeu de test des ex-libris BDfugue')");
+            bdfugueExecute($db, "INSERT INTO users_parabd (USER_ID,ITEM_ID,STATE,QUANTITY,PERSONAL_NOTES) VALUES ("
+                . intval($ownerId) . ',' . intval($itemId) . ",'OWNED',1,'Jeu de test des ex-libris BDfugue')");
         }
         $db->commit();
         echo ($created ? 'Créé' : 'Réutilisé') . " #$itemId — $title → utilisateur $ownerId\n";

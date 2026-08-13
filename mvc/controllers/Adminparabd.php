@@ -37,15 +37,25 @@ class Adminparabd extends Bdo_Controller
 
     private function renderEditor($item, $mode, $error = '', $mediaError = '')
     {
+        $history = $item ? $this->service()->getAdminItemHistory(intval($item['ID_ITEM'])) : array();
+        $pendingRevisions = array_values(array_filter($history, function ($revision) {
+            return in_array($revision['STATUS'], array('PENDING', 'CONFLICT'), true) && $revision['CHANGE_KIND'] !== 'CREATE';
+        }));
         $this->view->addPhtmlFile('adminparabd/edit', 'BODY');
-        $this->view->addCssFile('style/parabd.css');
+        $this->view->addCssFile('style/parabd.css?v=20260813b');
         $this->view->addJavascriptFile('script/parabd-admin.js');
+        $itemId = $item ? intval($item['ID_ITEM']) : 0;
+        $reportId = getValInteger('report_id', postValInteger('report_id', 0));
         $this->view->set_var(array(
             'PAGETITLE' => $mode === 'create' ? 'Créer une fiche Para-BD' : 'Modifier la fiche Para-BD #' . intval($item['ID_ITEM']),
             'ROBOTS' => 'noindex,nofollow', 'types' => $this->service()->getTypes(), 'item' => $item, 'mode' => $mode,
-            'history' => $item ? $this->service()->getAdminItemHistory(intval($item['ID_ITEM'])) : array(),
+            'history' => $history, 'pending_revisions' => $pendingRevisions,
+            'discussion' => $item ? $this->service()->getDiscussion($itemId, true) : array('entries' => array(), 'comment_count' => 0),
+            'report' => $item ? $this->service()->getOpenReportForItem($reportId, $itemId) : null,
+            'report_id' => $reportId,
             'csrf_token' => parabdCsrfToken('parabd-admin'), 'form_error' => $error, 'media_error' => $mediaError,
-            'saved' => getValInteger('saved', 0), 'media_saved' => getValInteger('media_saved', 0)
+            'saved' => getValInteger('saved', 0), 'media_saved' => getValInteger('media_saved', 0),
+            'revision_decision' => getVal('revision_decision', '')
         ));
         $this->view->render();
     }
@@ -53,7 +63,7 @@ class Adminparabd extends Bdo_Controller
     public function Index()
     {
         $this->guard();
-        $this->view->addCssFile('style/parabd.css');
+        $this->view->addCssFile('style/parabd.css?v=20260813b');
         $search = getVal('q', ''); $status = getVal('status', '');
         $this->view->set_var(array('PAGETITLE' => 'Fiches Para-BD — Administration', 'ROBOTS' => 'noindex,nofollow',
             'items' => $this->service()->getAdminCatalogue($search, $status), 'search' => $search, 'status' => $status));
@@ -63,8 +73,8 @@ class Adminparabd extends Bdo_Controller
     public function Queues()
     {
         $this->guard();
-        $this->view->addCssFile('style/parabd.css');
-        $this->view->set_var(array('PAGETITLE' => 'Files d’attente Para-BD', 'ROBOTS' => 'noindex,nofollow', 'queues' => $this->service()->adminQueues(), 'csrf_token' => parabdCsrfToken('parabd-admin')));
+        $this->view->addCssFile('style/parabd.css?v=20260813b');
+        $this->view->set_var(array('PAGETITLE' => 'À traiter — Para-BD', 'ROBOTS' => 'noindex,nofollow', 'queues' => $this->service()->adminQueues(), 'csrf_token' => parabdCsrfToken('parabd-admin')));
         $this->view->render();
     }
 
@@ -90,7 +100,7 @@ class Adminparabd extends Bdo_Controller
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') { $this->renderEditor($item, 'edit'); return; }
         try {
             $this->service()->adminUpdateItem($this->adminId(), $itemId, $_POST);
-            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . $itemId . '&saved=1');
+            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . $itemId . '&saved=1' . ($this->reportQuery() ?: ''));
         } catch (Throwable $error) {
             http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422);
             $this->renderEditor($this->service()->getAdminItem($itemId), 'edit', $error->getMessage());
@@ -105,7 +115,7 @@ class Adminparabd extends Bdo_Controller
         if (!$item) { http_response_code(404); die('Objet Para-BD introuvable.'); }
         try {
             $this->service()->adminAddMedia($this->adminId(), $itemId, $_POST, isset($_FILES['visual']) ? $_FILES['visual'] : null);
-            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . $itemId . '&media_saved=1');
+            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . $itemId . '&media_saved=1' . ($this->reportQuery() ?: ''));
         } catch (Throwable $error) {
             http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422);
             $this->renderEditor($this->service()->getAdminItem($itemId), 'edit', '', $error->getMessage());
@@ -119,7 +129,7 @@ class Adminparabd extends Bdo_Controller
             $source = $this->service()->getItem(getValInteger('source_id', 0), true);
             $target = $this->service()->getItem(getValInteger('target_id', 0), true);
             if (!$source || !$target) { http_response_code(404); die('Fiche à fusionner introuvable.'); }
-            $this->view->addCssFile('style/parabd.css');
+            $this->view->addCssFile('style/parabd.css?v=20260813b');
             $this->view->set_var(array('PAGETITLE' => 'Fusion Para-BD', 'ROBOTS' => 'noindex,nofollow', 'source' => $source, 'target' => $target, 'csrf_token' => parabdCsrfToken('parabd-admin')));
             $this->view->render();
             return;
@@ -139,21 +149,64 @@ class Adminparabd extends Bdo_Controller
 
     public function Revision()
     {
-        $this->mutate(function () { $this->service()->resolveRevision(intval($_SESSION['userConnect']->user_id), postValInteger('revision_id', 0), postVal('decision', '') === 'accept'); });
+        $this->guard(true);
+        $decision = postVal('decision', '');
+        if (!in_array($decision, array('accept', 'reject'), true)) { http_response_code(422); die('Décision de validation invalide.'); }
+        try {
+            $result = $this->service()->resolveRevision($this->adminId(), postValInteger('revision_id', 0), $decision === 'accept');
+            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . intval($result['item_id']) . '&revision_decision=' . ($decision === 'accept' ? 'accepted' : 'rejected'));
+        } catch (Throwable $error) {
+            http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422);
+            die(htmlspecialchars($error->getMessage(), ENT_QUOTES, 'UTF-8'));
+        }
     }
 
     public function Report()
     {
-        $this->mutate(function () { $this->service()->resolveReport(intval($_SESSION['userConnect']->user_id), postValInteger('report_id', 0), postVal('decision', '') === 'dismiss' ? 'DISMISSED' : 'RESOLVED'); });
+        $this->guard(true);
+        try {
+            $result = $this->service()->resolveReport($this->adminId(), postValInteger('report_id', 0), 'RESOLVED');
+            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . intval($result['item_id']) . '&report_resolved=1');
+        } catch (Throwable $error) { http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422); die(htmlspecialchars($error->getMessage(), ENT_QUOTES, 'UTF-8')); }
     }
 
     public function Duplicate()
     {
-        $this->mutate(function () { $this->service()->resolveDuplicate(intval($_SESSION['userConnect']->user_id), postValInteger('duplicate_id', 0), postVal('decision', '') === 'collision' ? 'COLLISION' : 'IGNORED'); });
+        $this->mutate(function () { $this->service()->resolveDuplicate(intval($_SESSION['userConnect']->user_id), postValInteger('duplicate_id', 0), 'IGNORED'); });
     }
 
     public function Visibility()
     {
-        $this->mutate(function () { $this->service()->moderateItem(intval($_SESSION['userConnect']->user_id), postValInteger('item_id', 0), postVal('status', '') === 'ACTIVE' ? 'ACTIVE' : 'HIDDEN'); });
+        $this->guard(true);
+        try {
+            $result = $this->service()->moderateItem($this->adminId(), postValInteger('item_id', 0), postVal('status', '') === 'ACTIVE' ? 'ACTIVE' : 'HIDDEN');
+            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . intval($result['item_id']) . '&visibility=' . strtolower($result['status']));
+        } catch (Throwable $error) { http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422); die(htmlspecialchars($error->getMessage(), ENT_QUOTES, 'UTF-8')); }
+    }
+
+    public function Comment()
+    {
+        $this->guard(true);
+        try {
+            $itemId = postValInteger('item_id', 0);
+            $this->service()->addDiscussionComment($this->adminId(), $itemId, postValInteger('revision_id', 0), postVal('body', ''), true);
+            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . $itemId . '#discussion');
+        } catch (Throwable $error) { http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422); die(htmlspecialchars($error->getMessage(), ENT_QUOTES, 'UTF-8')); }
+    }
+
+    public function Discussion()
+    {
+        $this->guard(true);
+        try {
+            $itemId = postValInteger('item_id', 0);
+            $this->service()->hideDiscussionComment($this->adminId(), postValInteger('discussion_id', 0));
+            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . $itemId . '#discussion');
+        } catch (Throwable $error) { http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422); die(htmlspecialchars($error->getMessage(), ENT_QUOTES, 'UTF-8')); }
+    }
+
+    private function reportQuery()
+    {
+        $reportId = postValInteger('report_id', 0);
+        return $reportId ? '&report_id=' . $reportId : '';
     }
 }

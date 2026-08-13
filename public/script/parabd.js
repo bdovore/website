@@ -8,7 +8,7 @@
     }
 
     function enhanceButtons() {
-        $('.parabd-page button, .parabd-page .button, .parabd-page summary').addClass('ui-button ui-widget ui-state-default ui-corner-all');
+        $('.parabd-page button:not(.parabd-icon-delete), .parabd-page .button, .parabd-page summary:not(.parabd-copy-toggle)').addClass('ui-button ui-widget ui-state-default ui-corner-all');
     }
 
     function renderDuplicates(rows) {
@@ -265,6 +265,11 @@
             event.preventDefault();
             var current = $(this);
             if (current.data('confirm') && !window.confirm(current.data('confirm'))) return;
+            if (current.data('submit-name') === 'vote' && current.data('submit-value') === 'CONTEST' && !$.trim(current.find('[name="reason"]').val())) {
+                current.find('.parabd-form-status').text('Expliquez brièvement votre opposition.');
+                current.find('[name="reason"]').trigger('focus');
+                return;
+            }
             var payload = current.serializeArray();
             if (current.data('submit-name')) payload.push({name: current.data('submit-name'), value: current.data('submit-value')});
             $.post(current.attr('action'), payload, null, 'json').done(function (response) {
@@ -285,5 +290,18 @@
                     current.find('.parabd-form-status').text(xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error.message : 'Envoi impossible.');
                 });
         });
+
+        $('.parabd-comment-revision').on('click', function () {
+            var details = $('#discussion').prop('open', true);
+            var revisionId = $(this).data('revision-id');
+            var form = details.find('.parabd-discussion-form');
+            form.find('[name="revision_id"]').val(revisionId);
+            form.find('.parabd-comment-context').prop('hidden', false).find('span').text(revisionId);
+            form.find('textarea').trigger('focus');
+        });
+        $('.parabd-clear-comment-context').on('click', function () {
+            var form = $(this).closest('form'); form.find('[name="revision_id"]').val(''); $(this).closest('.parabd-comment-context').prop('hidden', true);
+        });
+        if (window.location.hash === '#discussion') $('#discussion').prop('open', true);
     });
 })(jQuery);

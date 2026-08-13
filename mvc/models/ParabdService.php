@@ -17,6 +17,7 @@ require_once __DIR__ . '/Parabdrevision.php';
 require_once __DIR__ . '/Parabdrevisionvote.php';
 require_once __DIR__ . '/Parabdduplicate.php';
 require_once __DIR__ . '/Parabdreport.php';
+require_once __DIR__ . '/Parabddiscussion.php';
 require_once __DIR__ . '/Parabduserprofile.php';
 
 /**
@@ -133,6 +134,14 @@ class ParabdService
     public function getAdminItemHistory($itemId)
     {
         return $this->model('Parabdrevision')->adminHistory($itemId);
+    }
+
+    public function getDiscussion($itemId, $includeHidden = false)
+    {
+        return array(
+            'entries' => $this->model('Parabddiscussion')->forItem($itemId, $includeHidden, 100),
+            'comment_count' => $this->model('Parabddiscussion')->visibleCommentCount($itemId)
+        );
     }
 
     public function searchDuplicates($input, $limit = 20)
@@ -291,8 +300,8 @@ class ParabdService
             foreach ($input['series'] as $row) if (!empty($row['id'])) $relations['series'][] = array('id' => intval($row['id']), 'relation_type' => trim(isset($row['relation_type']) ? $row['relation_type'] : 'RELATED') ?: 'RELATED');
         } elseif (!empty($input['series_id'])) $relations['series'][] = array('id' => intval($input['series_id']), 'relation_type' => 'RELATED');
         if (isset($input['tomes']) && is_array($input['tomes'])) {
-            foreach ($input['tomes'] as $row) if (!empty($row['id'])) $relations['tomes'][] = array('id' => intval($row['id']), 'relation_type' => trim(isset($row['relation_type']) ? $row['relation_type'] : 'RELATED') ?: 'RELATED', 'page_no' => $this->positiveInt(isset($row['page_no']) ? $row['page_no'] : null), 'panel_no' => $this->positiveInt(isset($row['panel_no']) ? $row['panel_no'] : null));
-        } elseif (!empty($input['tome_id'])) $relations['tomes'][] = array('id' => intval($input['tome_id']), 'relation_type' => 'RELATED', 'page_no' => $this->positiveInt(isset($input['page_no']) ? $input['page_no'] : null), 'panel_no' => $this->positiveInt(isset($input['panel_no']) ? $input['panel_no'] : null));
+            foreach ($input['tomes'] as $row) if (!empty($row['id'])) $relations['tomes'][] = array('id' => intval($row['id']), 'relation_type' => trim(isset($row['relation_type']) ? $row['relation_type'] : 'RELATED') ?: 'RELATED');
+        } elseif (!empty($input['tome_id'])) $relations['tomes'][] = array('id' => intval($input['tome_id']), 'relation_type' => 'RELATED');
         return $relations;
     }
 
@@ -378,6 +387,7 @@ class ParabdService
     public function adminCreateItem($adminId, $input, $file)
     {
         $input['collection_action'] = 'none';
+        $input['status'] = 'ACTIVE';
         return $this->createItem($adminId, $input, $file, true);
     }
 
@@ -424,6 +434,11 @@ class ParabdService
         return $this->model('Userparabd')->copies($userId, $state, $publicOnly);
     }
 
+    public function getPublicUserCollection($userId)
+    {
+        return $this->model('Userparabd')->publicCollection($userId);
+    }
+
     public function saveCopy($userId, $input, $insideTransaction = false)
     {
         $connection = $this->connection();
@@ -459,6 +474,7 @@ class ParabdService
             if (!$relation->existsForItem($itemId, $value)) throw new ParabdException('NOT_FOUND', 'Lien Para-BD introuvable.');
             $patch = json_encode(array('_operation' => $field, '_id' => intval($value)), JSON_UNESCAPED_UNICODE);
             $revisionId = $this->model('Parabdrevision')->createRevision(array('ITEM_ID' => intval($itemId), 'AUTHOR_ID' => intval($userId), 'BASE_REVISION_NO' => intval($baseRevision), 'PATCH_BEFORE' => $patch, 'PATCH_AFTER' => $patch, 'CHANGE_KIND' => 'DELETE_LINK', 'STATUS' => 'PENDING'));
+            $this->model('Parabddiscussion')->addProposal($itemId, $revisionId, $userId);
             Db_commit($connection); Db_autocommit(true, $connection);
             return array('revision_id' => $revisionId, 'status' => 'PENDING');
         }
@@ -478,7 +494,7 @@ class ParabdService
         }
         $before = $item[$field];
         $protected = in_array($field, array('TYPE_ID','SUBTYPE_ID'), true);
-        $apply = !$protected && (($before === null || $before === '') || $this->isTrusted($userId));
+        $apply = !$protected && ($before === null || $before === '');
         $kind = $protected ? 'TYPE_CHANGE' : 'UPDATE';
         $beforePatch = array_merge(array($field => $before), $extraBefore);
         $afterPatch = array_merge(array($field => $value), $extraAfter);
@@ -490,37 +506,47 @@ class ParabdService
         $revisionData = array('ITEM_ID' => intval($itemId), 'AUTHOR_ID' => intval($userId), 'BASE_REVISION_NO' => intval($baseRevision), 'PATCH_BEFORE' => $beforeJson, 'PATCH_AFTER' => $afterJson, 'CHANGE_KIND' => $kind, 'STATUS' => $apply ? 'APPLIED' : 'PENDING');
         if ($apply) $revisionData['APPLIED_AT'] = date('d/m/Y H:i:s');
         $revisionId = $this->model('Parabdrevision')->createRevision($revisionData);
+        $this->model('Parabddiscussion')->addProposal($itemId, $revisionId, $userId);
         Db_commit($connection); Db_autocommit(true, $connection);
         return array('revision_id' => $revisionId, 'status' => $apply ? 'APPLIED' : 'PENDING');
         } catch (Throwable $error) { Db_rollback($connection); Db_autocommit(true, $connection); throw $error; }
     }
 
-    public function vote($userId, $revisionId, $vote)
+    public function vote($userId, $revisionId, $vote, $reason = '')
     {
         $vote = strtoupper($vote);
         if (!in_array($vote, array('CONFIRM','CONTEST'), true)) throw new ParabdException('VALIDATION_ERROR', 'Vote invalide.');
+        $reason = trim((string) $reason);
+        if ($vote === 'CONTEST' && (mb_strlen($reason, 'UTF-8') < 1 || mb_strlen($reason, 'UTF-8') > 2000)) throw new ParabdException('VALIDATION_ERROR', 'Expliquez votre opposition en 2 000 caractères maximum.');
         $connection = $this->connection(); Db_autocommit(false, $connection);
         try {
             $revision = $this->model('Parabdrevision')->findForUpdate($revisionId);
             if (!$revision) throw new ParabdException('NOT_FOUND', 'Contribution introuvable.');
-            if (!in_array($revision['STATUS'], array('PENDING','APPLIED'), true)) throw new ParabdException('REVISION_CONFLICT', 'Les votes sont clos.');
+            if (!in_array($revision['STATUS'], array('PENDING','CONFLICT'), true)) throw new ParabdException('REVISION_CONFLICT', 'Les votes sont clos.');
             if (intval($revision['AUTHOR_ID']) === intval($userId)) throw new ParabdException('VALIDATION_ERROR', 'Vous ne pouvez pas voter sur votre propre proposition.');
             $this->model('Parabdrevisionvote')->castVote($revisionId, $userId, $vote);
+            if ($vote === 'CONTEST') $this->model('Parabddiscussion')->addComment($revision['ITEM_ID'], $revisionId, $userId, $reason);
             $counts = $this->model('Parabdrevisionvote')->counts($revisionId);
-            $status = $revision['STATUS'];
+            $status = 'PENDING';
+            $intervention = false;
             if (intval($counts['contests']) > 0) {
-                $status = 'CONFLICT';
-                $this->model('Parabdrevision')->setConflict($revisionId);
+                $this->model('Parabdrevision')->setPending($revisionId);
             } elseif (intval($counts['confirms']) >= 2) {
-                if ($revision['STATUS'] === 'PENDING') {
+                try {
                     $this->applyRevision($revision, $userId);
                     $this->model('Parabdrevision')->markApplied($revisionId);
+                    $status = 'ACCEPTED';
+                    $this->model('Parabdrevision')->decide($revisionId, 'ACCEPTED', $userId);
+                } catch (ParabdException $error) {
+                    if ($error->errorCode !== 'REVISION_CONFLICT') throw $error;
+                    $intervention = true;
+                    $this->model('Parabdrevision')->setPending($revisionId);
                 }
-                $status = 'ACCEPTED';
-                $this->model('Parabdrevision')->decide($revisionId, 'ACCEPTED', $userId);
+            } else {
+                $this->model('Parabdrevision')->setPending($revisionId);
             }
             Db_commit($connection); Db_autocommit(true, $connection);
-            return array('status' => $status, 'confirms' => intval($counts['confirms']), 'contests' => intval($counts['contests']));
+            return array('status' => $status, 'confirms' => intval($counts['confirms']), 'contests' => intval($counts['contests']), 'admin_intervention' => $intervention || intval($counts['contests']) > 0);
         } catch (Throwable $error) {
             Db_rollback($connection); Db_autocommit(true, $connection); throw $error;
         }
@@ -531,16 +557,19 @@ class ParabdService
         return $this->model('Parabdrevision')->forItem($itemId);
     }
 
-    private function applyRevision($revision, $validatorId)
+    private function applyRevision($revision, $validatorId, $force = false)
     {
-        $item = $this->model('Parabditem')->revisionNoForUpdate($revision['ITEM_ID']);
-        if (!$item || intval($item['REVISION_NO']) !== intval($revision['BASE_REVISION_NO'])) throw new ParabdException('REVISION_CONFLICT', 'La fiche a changé depuis cette proposition.');
+        $item = $this->model('Parabditem')->rowForUpdate($revision['ITEM_ID']);
+        if (!$item) throw new ParabdException('NOT_FOUND', 'Objet Para-BD introuvable.');
         $patch = json_decode($revision['PATCH_AFTER'], true);
+        $before = json_decode($revision['PATCH_BEFORE'], true);
         if (!is_array($patch) || !$patch) throw new RuntimeException('Patch de contribution invalide.');
         if (isset($patch['_operation'])) {
             $relations = array('DELETE_AUTHOR' => 'Parabditemauthor', 'DELETE_SERIES' => 'Parabditemseries', 'DELETE_TOME' => 'Parabditemtome');
             if (!isset($relations[$patch['_operation']])) throw new RuntimeException('Opération de lien Para-BD invalide.');
-            $this->model($relations[$patch['_operation']])->removeForItem($revision['ITEM_ID'], $patch['_id']);
+            $exists = $this->model($relations[$patch['_operation']])->existsForItem($revision['ITEM_ID'], $patch['_id']);
+            if (!$exists && !$force) throw new ParabdException('REVISION_CONFLICT', 'Le rattachement visé a changé depuis cette proposition. Une décision administrative est nécessaire.');
+            if ($exists) $this->model($relations[$patch['_operation']])->removeForItem($revision['ITEM_ID'], $patch['_id']);
             $this->model('Parabditem')->incrementRevision($revision['ITEM_ID'], $validatorId);
             return;
         }
@@ -548,13 +577,34 @@ class ParabdService
         foreach ($patch as $field => $value) {
             if (!in_array($field, $allowed, true)) throw new RuntimeException('Champ de patch Para-BD invalide.');
         }
+        if (!is_array($before)) throw new RuntimeException('Valeur initiale de contribution invalide.');
+        if (!$force) foreach ($before as $field => $value) {
+            if (!array_key_exists($field, $item) || !$this->sameRevisionValue($item[$field], $value)) throw new ParabdException('REVISION_CONFLICT', 'La valeur concernée a changé depuis cette proposition. Une décision administrative est nécessaire.');
+        }
         $this->model('Parabditem')->updateFields($revision['ITEM_ID'], $patch, $validatorId, true);
+    }
+
+    private function sameRevisionValue($current, $expected)
+    {
+        if ($current === null || $current === '') return $expected === null || $expected === '';
+        return (string) $current === (string) $expected;
+    }
+
+    public function addDiscussionComment($userId, $itemId, $revisionId, $body, $includeHidden = false)
+    {
+        $body = trim((string) $body);
+        if (mb_strlen($body, 'UTF-8') < 1 || mb_strlen($body, 'UTF-8') > 2000) throw new ParabdException('VALIDATION_ERROR', 'Le commentaire doit contenir entre 1 et 2 000 caractères.');
+        $item = $includeHidden ? $this->model('Parabditem')->findBase($itemId, true) : $this->model('Parabditem')->findActive($itemId);
+        if (!$item || (!$includeHidden && $item['STATUS'] !== 'ACTIVE')) throw new ParabdException('NOT_FOUND', 'Objet Para-BD introuvable.');
+        $revisionId = intval($revisionId);
+        if ($revisionId && !$this->model('Parabddiscussion')->revisionBelongsToItem($revisionId, $itemId)) throw new ParabdException('VALIDATION_ERROR', 'Cette proposition n’appartient pas à la fiche.');
+        return $this->model('Parabddiscussion')->addComment($itemId, $revisionId, $userId, $body);
     }
 
     public function report($userId, $targetType, $targetId, $reason, $details)
     {
         $targetType = strtoupper($targetType);
-        if (!in_array($targetType, array('ITEM','MEDIA','REVISION'), true) || intval($targetId) < 1 || trim($reason) === '') throw new ParabdException('VALIDATION_ERROR', 'Signalement invalide.');
+        if ($targetType !== 'ITEM' || intval($targetId) < 1 || trim($reason) === '') throw new ParabdException('VALIDATION_ERROR', 'Signalement invalide.');
         if (!$this->model('Parabdreport')->targetExists($targetType, $targetId)) throw new ParabdException('NOT_FOUND', 'Cible du signalement introuvable.');
         return $this->model('Parabdreport')->createReport($userId, $targetType, $targetId, $reason, $details);
     }
@@ -575,10 +625,18 @@ class ParabdService
         }
         $connection = $this->connection(); Db_autocommit(false, $connection); $path = null;
         try {
+            $locked = $this->model('Parabditem')->rowForUpdate($itemId);
+            if (!$locked || $locked['STATUS'] !== 'ACTIVE') throw new ParabdException('NOT_FOUND', 'Objet Para-BD introuvable.');
+            $before = $this->adminSnapshot($itemId);
             $count = $this->model('Parabdmedia')->countForItem($itemId);
             $image = $this->storeImage($file, intval($itemId), $count + 1); $path = $image['absolute_path'];
             $mediaId = $this->model('Parabdmedia')->addImage($itemId, $mediaType, $image, $userId, false, $isExplicit);
             if (!$hasUpload) $this->addSource(intval($itemId), $userId, $visualUrl, 'Source du visuel');
+            $after = $this->adminSnapshot($itemId);
+            $this->model('Parabditem')->incrementRevision($itemId, $userId);
+            $now = date('d/m/Y H:i:s');
+            $revisionId = $this->model('Parabdrevision')->createRevision(array('ITEM_ID' => intval($itemId), 'AUTHOR_ID' => intval($userId), 'BASE_REVISION_NO' => intval($locked['REVISION_NO']), 'PATCH_BEFORE' => json_encode($before, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 'PATCH_AFTER' => json_encode($after, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 'CHANGE_KIND' => 'UPDATE', 'STATUS' => 'APPLIED', 'APPLIED_AT' => $now));
+            $this->model('Parabddiscussion')->addProposal($itemId, $revisionId, $userId);
             Db_commit($connection); Db_autocommit(true, $connection); if ($remoteFile && is_file($remoteFile)) @unlink($remoteFile); return intval($mediaId);
         } catch (Throwable $error) {
             Db_rollback($connection); Db_autocommit(true, $connection); if ($path && is_file($path)) @unlink($path); if ($remoteFile && is_file($remoteFile)) @unlink($remoteFile); throw $error;
@@ -606,9 +664,6 @@ class ParabdService
         $identifiers = $this->identifiersFromInput($input);
         $relations = $this->relationsFromInput($input);
         $sources = $this->sourcesFromInput($input);
-        $status = strtoupper(trim(isset($input['status']) ? $input['status'] : 'ACTIVE'));
-        if (!in_array($status, array('ACTIVE','HIDDEN'), true)) throw new ParabdException('VALIDATION_ERROR', 'Statut de fiche invalide.');
-
         $connection = $this->connection();
         Db_autocommit(false, $connection);
         try {
@@ -617,7 +672,6 @@ class ParabdService
             if ($locked['STATUS'] === 'MERGED') throw new ParabdException('VALIDATION_ERROR', 'Une fiche fusionnée est consultable mais ne peut plus être modifiée.');
             $before = $this->adminSnapshot($itemId);
 
-            $data['STATUS'] = $status;
             $this->model('Parabditem')->updateFields($itemId, $data, $adminId);
             $this->model('Parabdidentifier')->replaceForItem($itemId, $identifiers, $adminId);
             $this->model('Parabditemauthor')->replaceForItem($itemId, $relations['authors'], $adminId);
@@ -712,28 +766,48 @@ class ParabdService
         return array(
             'duplicates' => $this->model('Parabdduplicate')->openQueue(),
             'reports' => $this->model('Parabdreport')->openQueue(),
-            'conflicts' => $this->model('Parabdrevision')->conflictQueue(),
-            'incomplete' => $this->model('Parabditem')->incompleteQueue(),
-            'hidden' => $this->model('Parabditem')->hiddenQueue()
+            'modifications' => $this->model('Parabdrevision')->pendingQueue()
         );
     }
 
     public function resolveDuplicate($adminId, $duplicateId, $status)
     {
-        if (!in_array($status, array('IGNORED','COLLISION'), true)) throw new ParabdException('VALIDATION_ERROR', 'Résolution de doublon invalide.');
+        if ($status !== 'IGNORED') throw new ParabdException('VALIDATION_ERROR', 'Résolution de doublon invalide.');
         if (!$this->model('Parabdduplicate')->resolve($duplicateId, $status, $adminId)) throw new ParabdException('NOT_FOUND', 'Doublon introuvable.');
     }
 
     public function moderateItem($adminId, $itemId, $status)
     {
         if (!in_array($status, array('ACTIVE','HIDDEN'), true)) throw new ParabdException('VALIDATION_ERROR', 'Statut invalide.');
-        if (!$this->model('Parabditem')->moderate($itemId, $status, $adminId)) throw new ParabdException('NOT_FOUND', 'Objet introuvable.');
+        $connection = $this->connection(); Db_autocommit(false, $connection);
+        try {
+            $item = $this->model('Parabditem')->rowForUpdate($itemId);
+            if (!$item || $item['STATUS'] === 'MERGED') throw new ParabdException('NOT_FOUND', 'Objet introuvable.');
+            if ($item['STATUS'] === $status) { Db_commit($connection); Db_autocommit(true, $connection); return array('item_id' => intval($itemId), 'status' => $status); }
+            if (!$this->model('Parabditem')->moderate($itemId, $status, $adminId)) throw new ParabdException('NOT_FOUND', 'Objet introuvable.');
+            $now = date('d/m/Y H:i:s');
+            $this->model('Parabdrevision')->createRevision(array('ITEM_ID' => intval($itemId), 'AUTHOR_ID' => intval($adminId), 'BASE_REVISION_NO' => intval($item['REVISION_NO']), 'PATCH_BEFORE' => json_encode(array('STATUS' => $item['STATUS'])), 'PATCH_AFTER' => json_encode(array('STATUS' => $status)), 'CHANGE_KIND' => 'MODERATION', 'STATUS' => 'ACCEPTED', 'APPLIED_AT' => $now, 'VALIDATED_BY' => intval($adminId), 'VALIDATED_AT' => $now));
+            Db_commit($connection); Db_autocommit(true, $connection);
+            return array('item_id' => intval($itemId), 'status' => $status);
+        } catch (Throwable $error) { Db_rollback($connection); Db_autocommit(true, $connection); throw $error; }
     }
 
     public function resolveReport($adminId, $reportId, $status)
     {
         if (!in_array($status, array('RESOLVED','DISMISSED'), true)) throw new ParabdException('VALIDATION_ERROR', 'Résolution invalide.');
-        if (!$this->model('Parabdreport')->resolve($reportId, $status, $adminId)) throw new ParabdException('NOT_FOUND', 'Signalement introuvable.');
+        $row = null; foreach ($this->model('Parabdreport')->openQueue() as $candidate) if (intval($candidate['ID_REPORT']) === intval($reportId)) { $row = $candidate; break; }
+        if (!$row || !$this->model('Parabdreport')->resolve($reportId, $status, $adminId)) throw new ParabdException('NOT_FOUND', 'Signalement introuvable.');
+        return array('item_id' => intval($row['ID_ITEM']), 'status' => $status);
+    }
+
+    public function getOpenReportForItem($reportId, $itemId)
+    {
+        return $reportId ? $this->model('Parabdreport')->openForItem($reportId, $itemId) : null;
+    }
+
+    public function hideDiscussionComment($adminId, $discussionId)
+    {
+        if (!$this->model('Parabddiscussion')->hideComment($discussionId, $adminId)) throw new ParabdException('NOT_FOUND', 'Commentaire visible introuvable.');
     }
 
     public function resolveRevision($adminId, $revisionId, $accept)
@@ -741,15 +815,16 @@ class ParabdService
         $connection = $this->connection(); Db_autocommit(false, $connection);
         try {
             $revision = $this->model('Parabdrevision')->findForUpdate($revisionId);
-            if (!$revision || !in_array($revision['STATUS'], array('PENDING','CONFLICT'), true)) throw new ParabdException('NOT_FOUND', 'Contribution à résoudre introuvable.');
+            if (!$revision || !in_array($revision['STATUS'], array('PENDING','APPLIED','CONFLICT'), true)) throw new ParabdException('NOT_FOUND', 'Contribution à résoudre introuvable.');
             if ($accept && empty($revision['APPLIED_AT'])) {
-                $this->applyRevision($revision, $adminId);
+                $this->applyRevision($revision, $adminId, true);
                 $this->model('Parabdrevision')->markApplied($revisionId);
             } elseif (!$accept && !empty($revision['APPLIED_AT']) && $revision['CHANGE_KIND'] !== 'CREATE') {
                 $this->revertRevision($revision, $adminId);
             }
             $this->model('Parabdrevision')->decide($revisionId, $accept ? 'ACCEPTED' : 'REJECTED', $adminId);
             Db_commit($connection); Db_autocommit(true, $connection);
+            return array('item_id' => intval($revision['ITEM_ID']), 'status' => $accept ? 'ACCEPTED' : 'REJECTED');
         } catch (Throwable $error) { Db_rollback($connection); Db_autocommit(true, $connection); throw $error; }
     }
 
@@ -783,6 +858,7 @@ class ParabdService
             $this->model('Parabdmedia')->moveToItem($sourceId, $targetId);
             $this->model('Parabdsource')->moveToItem($sourceId, $targetId);
             $this->model('Parabdrevision')->moveToItem($sourceId, $targetId);
+            $this->model('Parabddiscussion')->moveToItem($sourceId, $targetId);
             $this->model('Userparabd')->moveItem($sourceId, $targetId);
             if ($primaryMediaId) $this->model('Parabdmedia')->selectPrimary($targetId, $primaryMediaId);
             $this->model('Parabditem')->markMerged($sourceId, $targetId, $adminId);

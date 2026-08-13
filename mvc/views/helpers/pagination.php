@@ -276,9 +276,15 @@ class Pagination{
 
         $menu = "\n<div id=\"menu\">\n    <ul id=\"onglets\">\n";
 
-        $a_request_uri = explode('?',$_SERVER['REQUEST_URI']);
-
-        $onglet = $a_request_uri[0];
+        $request_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $request_path = '/' . trim($request_path, '/');
+        $onglet_actif = null;
+        foreach ($tab_menu_lien as $lien) {
+            $link_path = '/' . trim($lien, '/');
+            if ($request_path === $link_path || strpos($request_path, $link_path . '/') === 0) {
+                if ($onglet_actif === null || strlen($lien) > strlen($onglet_actif)) $onglet_actif = $lien;
+            }
+        }
 
         // boucle qui parcours les deux tableaux
         foreach($tab_menu_lien as $cle=>$lien)
@@ -286,8 +292,8 @@ class Pagination{
             $menu .= "    <li";
 
 
-            // si le nom du fichier correspond à celui pointé par l'indice, alors on l'active
-            if( $onglet == "/".$lien )
+            // La sous-page la plus précise détermine l'onglet actif.
+            if ($onglet_actif === $lien)
                 $menu .= " class=\"active\"";
 
             $menu .= "><a href=\"" . BDO_URL.$lien . "\">" . $tab_menu_texte[$cle] . "</a></li>\n";

@@ -10,7 +10,7 @@ class Parabdrevision extends ParabdDbLine
     public function forItem($itemId)
     {
         return $this->fetchAllQuery("SELECT r.*,SUM(v.VOTE='CONFIRM') CONFIRMS,SUM(v.VOTE='CONTEST') CONTESTS FROM parabd_revision r
-            LEFT JOIN parabd_revision_vote v ON v.REVISION_ID=r.ID_REVISION WHERE r.ITEM_ID=" . intval($itemId) . " AND r.STATUS IN ('PENDING','APPLIED') AND r.CHANGE_KIND<>'CREATE'
+            LEFT JOIN parabd_revision_vote v ON v.REVISION_ID=r.ID_REVISION WHERE r.ITEM_ID=" . intval($itemId) . " AND r.STATUS IN ('PENDING','CONFLICT') AND r.CHANGE_KIND<>'CREATE'
             GROUP BY r.ID_REVISION ORDER BY r.CREATED_AT DESC");
     }
 
@@ -21,9 +21,13 @@ class Parabdrevision extends ParabdDbLine
             LEFT JOIN parabd_revision_vote v ON v.REVISION_ID=r.ID_REVISION WHERE r.ITEM_ID=" . intval($itemId) . ' GROUP BY r.ID_REVISION ORDER BY r.CREATED_AT DESC,r.ID_REVISION DESC');
     }
 
-    public function conflictQueue()
+    public function pendingQueue()
     {
-        return $this->fetchAllQuery("SELECT r.*,i.TITLE FROM parabd_revision r JOIN parabd_item i ON i.ID_ITEM=r.ITEM_ID WHERE r.STATUS='CONFLICT' ORDER BY r.CREATED_AT");
+        return $this->fetchAllQuery("SELECT r.*,i.TITLE,u.username AUTHOR_NAME,SUM(v.VOTE='CONFIRM') CONFIRMS,SUM(v.VOTE='CONTEST') CONTESTS
+            FROM parabd_revision r JOIN parabd_item i ON i.ID_ITEM=r.ITEM_ID LEFT JOIN users u ON u.user_id=r.AUTHOR_ID
+            LEFT JOIN parabd_revision_vote v ON v.REVISION_ID=r.ID_REVISION
+            WHERE r.STATUS IN ('PENDING','CONFLICT') AND r.CHANGE_KIND<>'CREATE'
+            GROUP BY r.ID_REVISION ORDER BY r.ITEM_ID,r.CREATED_AT");
     }
 
     public function createRevision(array $data)
@@ -37,6 +41,7 @@ class Parabdrevision extends ParabdDbLine
     }
 
     public function setConflict($revisionId) { $this->executeQuery("UPDATE parabd_revision SET STATUS='CONFLICT' WHERE ID_REVISION=" . intval($revisionId)); }
+    public function setPending($revisionId) { $this->executeQuery("UPDATE parabd_revision SET STATUS='PENDING' WHERE ID_REVISION=" . intval($revisionId)); }
     public function markApplied($revisionId) { $this->executeQuery('UPDATE parabd_revision SET APPLIED_AT=NOW() WHERE ID_REVISION=' . intval($revisionId)); }
     public function decide($revisionId, $status, $userId) { $this->executeQuery("UPDATE parabd_revision SET STATUS='" . $this->escape($status) . "',VALIDATED_BY=" . intval($userId) . ',VALIDATED_AT=NOW() WHERE ID_REVISION=' . intval($revisionId)); }
     public function moveToItem($sourceId, $targetId) { $this->executeQuery('UPDATE parabd_revision SET ITEM_ID=' . intval($targetId) . ' WHERE ITEM_ID=' . intval($sourceId)); }

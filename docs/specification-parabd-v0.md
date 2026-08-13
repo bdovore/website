@@ -144,9 +144,9 @@ Trois tables de liaison indépendantes permettent plusieurs rattachements et auc
 
 - `parabd_item_author(ID_PARABD_ITEM, ID_AUTEUR, ROLE_CODE, POSITION)` ; rôles initiaux : illustrateur, sculpteur, designer, signataire, autre ;
 - `parabd_item_serie(ID_PARABD_ITEM, ID_SERIE, RELATION_CODE)` ;
-- `parabd_item_tome(ID_PARABD_ITEM, ID_TOME, RELATION_CODE, PAGE_NO, PANEL_NO)`.
+- `parabd_item_tome(ID_PARABD_ITEM, ID_TOME, RELATION_CODE)`.
 
-`PAGE_NO` et `PANEL_NO` décrivent notamment un tiré à part reproduisant une case d'album. Il ne faut pas rattacher un auteur « indéterminé » : l'absence de lien exprime déjà que l'information est inconnue.
+Il ne faut pas rattacher un auteur « indéterminé » : l'absence de lien exprime déjà que l'information est inconnue.
 
 ### 4.4 Fabricant, éditeur, licence et gamme
 
@@ -176,20 +176,14 @@ Une ligne représente un exemplaire ou un lot homogène. Il n'y a pas de clé un
 
 | Champ | Visibilité par défaut |
 |---|---|
-| `ID_COPY`, `USER_ID`, `ITEM_ID` | technique |
-| `STATE` : `OWNED` ou `WISHLIST` | publique si collection ouverte |
-| `QUANTITY` | publique |
-| `CREATED_AT` | publique |
-| `PURCHASE_DATE` | privée |
-| `PRICE`, `CURRENCY` | visibilité choisie par le membre, privée par défaut |
-| `IS_PRICE_PUBLIC` | choix explicite du membre, faux par défaut |
-| `SELLER`, `ESTIMATED_VALUE` | privée |
-| `CONDITION_CODE`, `PERSONAL_NOTES` | privée |
-| `COPY_NUMBER` | publique sur la page `guest` |
-| `COPY_IS_SIGNED`, `COPY_IS_DEDICATED` | publique |
-| `HAS_BOX`, `HAS_CERTIFICATE`, `IS_GIFT` | privée |
+| `ID_COPY`, `USER_ID`, `ITEM_ID` | technique, non affichée |
+| `STATE` : `OWNED` ou `WISHLIST` | seule la présence d'un objet `OWNED` est publique si la collection est ouverte |
+| `QUANTITY`, `CREATED_AT`, `PURCHASE_DATE` | privée |
+| `PRICE`, `CURRENCY`, `SELLER`, `ESTIMATED_VALUE` | privée |
+| `CONDITION_CODE`, `PERSONAL_NOTES`, `COPY_NUMBER` | privée |
+| `COPY_IS_SIGNED`, `COPY_IS_DEDICATED`, `HAS_BOX`, `HAS_CERTIFICATE`, `IS_GIFT` | privée |
 
-Pour le MVP, le réglage global existant `users.OPEN_COLLEC` gouverne aussi le Para-BD. Lorsque la collection est ouverte, tous les exemplaires et toutes les envies Para-BD du membre sont visibles : il n'existe ni champ ni réglage de masquage objet par objet. Le numéro d'exemplaire y est affiché. Le prix d'acquisition n'y apparaît que si le membre a activé `IS_PRICE_PUBLIC` ; le vendeur, la cote et les notes personnelles restent toujours privés.
+Pour le MVP, le réglage global existant `users.OPEN_COLLEC` gouverne aussi le Para-BD. Lorsque la collection est ouverte, la page `guest` indique seulement quels objets sont possédés. La wishlist Para-BD reste privée. Les exemplaires multiples sont regroupés par objet et aucune information personnelle saisie par le membre n'est exposée.
 
 Depuis la fiche commune, le propriétaire peut ouvrir le formulaire de chacun de ses exemplaires et modifier l'ensemble de ces informations personnelles. Elles ne passent pas par le système de contributions communautaires.
 
@@ -200,29 +194,45 @@ Depuis la fiche commune, le propriétaire peut ouvrir le formulaire de chacun de
 Règles proposées :
 
 - création : appliquée immédiatement ;
-- ajout d'un champ vide, d'un lien, d'une source ou d'un média : appliqué immédiatement et réversible ;
+- ajout d'un champ vide et ajout non destructif : appliqué immédiatement ;
 - remplacement d'une valeur non vide : contribution `PENDING` ;
-- correction conflictuelle : appliquée après deux confirmations indépendantes, ou immédiatement par un contributeur de confiance ;
-- suppression de lien, changement de type et fusion : opérations protégées ;
-- toute opération appliquée reste réversible.
+- suppression de lien et changement de type : contribution `PENDING` ;
+- deux confirmations de membres distincts, hors auteur, appliquent automatiquement une demande en l'absence d'opposition ;
+- une opposition motivée suspend l'application automatique et laisse la demande à l'arbitrage administratif ;
+- si la valeur concernée a changé depuis la proposition, l'application automatique est suspendue même après deux confirmations ; l'administrateur voit les valeurs initiale, actuelle et proposée et peut trancher ;
+- le membre peut modifier son vote, mais chaque passage en opposition exige un nouveau motif.
 
 `parabd_revision_vote` enregistre une confirmation ou une contestation par membre. Un membre ne vote pas sur sa propre contribution.
 
-Pour le MVP, le statut de « contributeur de confiance » est obtenu automatiquement lorsque les deux conditions simples suivantes sont remplies : compte créé depuis au moins un an et au moins cinq contributions validées. Aucun score plus complexe n'est nécessaire au lancement. L'équipe conserve la possibilité de retirer ce statut en cas d'abus.
+Pour le MVP, le statut de « contributeur de confiance » est obtenu automatiquement lorsque le compte a au moins un an et cinq contributions validées. Il permet uniquement d'assouplir les limitations de fréquence et ne contourne jamais la validation d'un remplacement ou d'une suppression.
 
-### 4.8 Doublons et fusions
+### 4.8 Discussion
+
+`parabd_discussion` porte une discussion chronologique plate par fiche. Elle est visible uniquement des membres connectés et des administrateurs, dans un accordéon fermé par défaut en bas des fiches publique et administrative.
+
+- chaque contribution communautaire crée dans la même transaction une entrée `PROPOSAL` liée à sa révision ; son texte, son statut et ses votes sont calculés depuis la révision ;
+- les modifications directes de l'éditeur administratif restent dans l'historique et ne créent pas de proposition ;
+- une entrée `COMMENT` contient un texte de 1 à 2 000 caractères et peut viser la discussion générale ou une révision de la fiche ;
+- le motif obligatoire d'une opposition est enregistré comme commentaire contextuel dans la même transaction que le vote ;
+- l'administrateur peut masquer un commentaire sans le supprimer ;
+- les échanges suivent la fiche conservée lors d'une fusion et leurs auteurs sont anonymisés si un compte est supprimé ;
+- seules les cent entrées les plus récentes sont chargées dans le MVP.
+
+Il n'y a ni réponses imbriquées, ni page Discussion séparée, ni notification, mention, réaction ou édition de commentaire. Les anciennes révisions ne sont pas rétroalimentées dans cette table.
+
+### 4.9 Doublons et fusions
 
 `parabd_duplicate` stocke les paires suspectes, leur score, la raison, leur état et l'éventuel décideur. Elle alimente à la fois le rappel communautaire et la file administrative.
 
 Lors d'une fusion :
 
 - les exemplaires personnels sont rattachés à la fiche conservée sans être dédupliqués ;
-- identifiants, liens, médias, sources et historique sont regroupés ;
+- identifiants, liens, médias, sources, historique et discussion sont regroupés ;
 - les conflits de valeurs sont présentés à l'opérateur ;
 - l'ancienne fiche passe à `MERGED` et redirige durablement vers la cible ;
 - l'action est historisée et réversible tant qu'aucune donnée incompatible n'a été supprimée.
 
-### 4.9 Contraintes physiques et index
+### 4.10 Contraintes physiques et index
 
 Les nouvelles tables gagneraient à utiliser InnoDB et `utf8mb4`, après vérification de la version de MySQL en production. Cela permet de rendre atomique l'opération « créer la fiche + ajouter mon exemplaire + écrire l'historique », sans imposer une refonte des tables historiques en MyISAM. Les liens vers `users`, `bd_auteur`, `bd_serie` et `bd_tome` sont alors contrôlés par l'application, car une clé étrangère InnoDB ne peut pas cibler ces tables MyISAM actuelles.
 
@@ -287,6 +297,8 @@ Depuis un résultat ou une fiche :
 4. permettre de retirer l'objet de la wishlist ou de supprimer séparément chacun de ses exemplaires possédés ;
 5. proposer ensuite, sans obligation, les données privées de l'exemplaire.
 
+Avec un seul exemplaire possédé, son formulaire est affiché directement. Avec plusieurs exemplaires, ils sont numérotés de 1 à n pour l'utilisateur et chaque formulaire est repliable par un chevron ; l'identifiant technique de base n'est jamais affiché. La suppression utilise uniquement l'icône poubelle de la collection, en rouge BDovore au survol.
+
 La saisie du prix, du vendeur, du numéro d'exemplaire ou du certificat ne doit jamais gêner l'ajout rapide.
 
 ### 6.3 Créer une fiche
@@ -314,9 +326,9 @@ Le membre est encouragé à compléter une petite information à la fois. Les ba
 
 ### 6.5 Page publique `guest`
 
-Ajouter un onglet `guest/parabd`. Il affiche tous les exemplaires du membre lorsque sa collection est ouverte, avec filtres et pagination. La fiche publique montre les données communes et, pour cet exemplaire, les attributs publics ; seul le prix d'achat reste soumis à un choix explicite.
+Ajouter un onglet `guest/parabd`. Lorsque la collection est ouverte, il liste uniquement les objets possédés avec leurs données communes de catalogue. La wishlist et toutes les informations propres aux exemplaires restent privées.
 
-La page d'accueil `guest` peut afficher le nombre d'objets Para-BD et les quatre derniers ajouts. Le numéro d'exemplaire est public. Le prix d'achat est affiché uniquement sur décision explicite du membre ; vendeur, cote et commentaire personnel ne sont jamais exposés.
+La page d'accueil `guest` peut afficher le nombre d'objets Para-BD et les quatre derniers ajouts. Aucune information propre aux exemplaires, notamment numéro, prix, vendeur, cote ou commentaire personnel, n'est exposée.
 
 Au lancement, aucun travail d'indexation spécifique n'est prévu : pas de page publique dédiée à chaque objet, pas d'ajout au sitemap et pas de référencement dans le `Browser` ou l'autocomplétion globale. Cette étape viendra avec une future recherche publique, les pages publiques d'objets et leur intégration au `Browser`.
 
@@ -331,23 +343,25 @@ L'entrée principale liste toutes les fiches, y compris les fiches masquées ou 
 - créer directement une fiche complète pour la communauté, sans créer d'exemplaire dans sa collection ni dans sa wishlist ;
 - modifier directement tous les champs communs, identifiants, rattachements auteur/série/album, sources et visuels ;
 - ajouter plusieurs visuels successivement via un formulaire et une sauvegarde dédiés, sans enregistrer ni modifier les autres informations de la fiche ;
-- consulter l'intégralité de l'historique, y compris les valeurs avant/après, l'auteur, le validateur, le statut et les votes ;
+- consulter les modifications encore à arbitrer (`PENDING` et anciens `CONFLICT`) et valider ou invalider chacune d’elles ;
+- consulter l'intégralité de l'historique dans un accordéon fermé par défaut, y compris les valeurs avant/après, l'auteur, le validateur, le statut et les votes ;
+- lire, commenter et modérer la discussion dans un accordéon séparé ;
+- masquer ou restaurer une fiche avec une action explicite et historisée, distincte du formulaire d'édition ;
 - consulter une fiche fusionnée en lecture seule et rejoindre la fiche conservée.
 
 Chaque création ou modification administrative est immédiatement validée et historisée. Aucune écriture de cet écran ne doit modifier `users_parabd`.
 
-### 7.2 Files d'attente
+### 7.2 À traiter
 
-Un onglet distinct conserve les quatre files, par priorité :
+Un onglet distinct contient trois listes seulement :
 
-1. **Doublons probables** : comparaison côte à côte et fusion assistée.
-2. **Signalements** : contenu illicite, image, vandalisme ou mauvaise catégorie.
-3. **Conflits** : corrections contradictoires que la communauté n'a pas résolues.
-4. **Qualité** : fiches actives très incomplètes ou sans aucun rattachement, uniquement pour animation communautaire.
+1. **Signalements** : un clic ouvre la fiche administrative avec le signalement mis en exergue dans un bandeau persistant après sauvegarde ; l'unique issue est « Marquer comme traité ».
+2. **Modifications** : demandes `PENDING` groupées par fiche ; les oppositions, valeurs devenues obsolètes et anciens `CONFLICT` portent le libellé « Intervention admin ».
+3. **Doublons potentiels** : comparaison côte à côte, fusion assistée ou « Ce ne sont pas des doublons ».
 
-Il n'existe pas de file « nouvelles fiches à valider ». La logique détaillée et les actions de ces files font l'objet d'une étape de conception séparée.
+Il n'existe ni file « nouvelles fiches », ni file « fiches incomplètes », ni file « fiches masquées ». Les fiches masquées sont retrouvées dans le catalogue administratif au moyen du filtre de statut.
 
-Actions disponibles : fusionner, masquer/restaurer, trancher une correction, annuler une contribution, marquer « pas un doublon », protéger temporairement une fiche. Toutes les actions sont historisées.
+Actions disponibles : fusionner, trancher une correction, marquer un signalement comme traité et marquer « pas un doublon ». Le masquage/restauration se fait depuis la fiche et est historisé.
 
 ## 8. Garde-fous et modération communautaire
 
@@ -356,7 +370,7 @@ Actions disponibles : fusionner, masquer/restaurer, trancher une correction, ann
 - validation MIME réelle, redimensionnement et suppression des métadonnées sensibles des images ;
 - texte échappé à l'affichage et longueurs bornées ;
 - contrôle anti-CSRF sur les écritures ;
-- signalement simple et masquage automatique possible après plusieurs signalements indépendants ;
+- signalement simple transmis à l'administration, sans masquage automatique ;
 - journal d'audit non modifiable par l'interface courante ;
 - absence totale de fonctions de transaction entre membres.
 
@@ -366,7 +380,7 @@ Le nouveau domaine doit rester séparé du catalogue album afin de ne pas fragil
 
 Structure retenue pour l’implémentation :
 
-- un modèle `Bdo_Db_Line` par table Para-BD dans `mvc/models/` : `Parabdtype`, `Parabditem`, `Parabdidentifier`, `Parabditemauthor`, `Parabditemseries`, `Parabditemtome`, `Parabdmedia`, `Parabdsource`, `Userparabd`, `Parabdrevision`, `Parabdrevisionvote`, `Parabdduplicate`, `Parabdreport` et `Parabduserprofile` ;
+- un modèle `Bdo_Db_Line` par table Para-BD dans `mvc/models/` : `Parabdtype`, `Parabditem`, `Parabdidentifier`, `Parabditemauthor`, `Parabditemseries`, `Parabditemtome`, `Parabdmedia`, `Parabdsource`, `Userparabd`, `Parabdrevision`, `Parabdrevisionvote`, `Parabdduplicate`, `Parabdreport`, `Parabddiscussion` et `Parabduserprofile` ;
 - les lectures jointes et écritures spécialisées restent dans le modèle de la table qui les porte ;
 - `ParabdService` conserve uniquement les cas d’usage impliquant plusieurs tables et leurs transactions, sans recréer de couche générique de connexion ou de requêtes ;
 - `ParabdRules` regroupe les règles pures testables sans base et `ParabdImageStorage` le pipeline de validation/réencodage des visuels ;
@@ -389,7 +403,7 @@ Avant tout import :
 
 - convertir les dates Excel en dates réelles avec leur précision ;
 - distinguer UPC-A, EAN-13, ISBN et référence fabricant au lieu d'un champ unique « Référence » ;
-- distinguer prix public indicatif et prix d'acquisition privé, avec devise et source ;
+- distinguer une éventuelle valeur indicative commune du catalogue du prix d'acquisition personnel, qui reste toujours privé ;
 - résoudre l'incohérence d'ordre des dimensions entre `L x P x H`, les sous-colonnes `L/H/P` et le guide ; la présente spécification fixe `L x H x P` ;
 - ne pas transformer les libellés « Marvel/DC/Tintin Para-BD » en fausses séries BD ;
 - ne pas créer de lien vers l'auteur générique « indéterminé » ;
@@ -436,11 +450,13 @@ Il est possible de livrer le lot 1 avec un historique simple, mais il ne faut pa
 - une ressemblance forte affiche les candidats et permet de confirmer une variante différente ;
 - un objet peut être lié à plusieurs auteurs/séries/albums ou à aucun ;
 - deux exemplaires du même objet peuvent avoir des informations personnelles différentes ;
-- le numéro d'exemplaire est affiché sur `guest` ;
-- le prix d'acquisition n'est visible sur `guest` que sur choix explicite du membre ; vendeur, cote et notes personnelles restent privés ;
+- la page `guest` liste uniquement les objets possédés, sans wishlist ni information personnelle sur leurs exemplaires ;
 - une fusion conserve tous les exemplaires personnels et redirige l'ancien identifiant ;
 - un enrichissement d'un champ vide ne demande pas d'administrateur ;
 - une modification conflictuelle est historisée et confirmable par la communauté ;
+- les membres connectés peuvent discuter d'une proposition ; une opposition exige un motif visible dans cette discussion ;
+- les visiteurs anonymes ne voient pas la discussion ;
+- l'administration travaille depuis trois listes seulement : modifications, signalements et doublons potentiels ;
 - un administrateur peut traiter un doublon sans éditer manuellement toutes les collections concernées.
 
 ## 13. Indicateurs de réussite
@@ -458,10 +474,10 @@ La cible fonctionnelle est que l'immense majorité des créations et enrichissem
 ## 14. Décisions actées pour le lancement
 
 1. Un visuel est obligatoire pour créer une fiche, y compris lorsqu'un identifiant ou un rattachement existe.
-2. Le numéro d'exemplaire est affiché sur la page publique `guest` dès lors que la collection du membre est ouverte.
-3. Le membre décide si son prix d'acquisition est visible dans sa collection publique ; il reste privé par défaut.
+2. La page publique `guest` liste uniquement les objets possédés ; la wishlist et toutes les informations propres aux exemplaires restent privées.
+3. Le prix d'acquisition et sa devise sont toujours privés pour cette première version.
 4. Le catalogue et les fiches Para-BD sont consultables publiquement depuis le menu principal. Leur recherche dédiée couvre les titres, auteurs, séries, albums, fabricants et éditeurs avec autocomplétion ; l'intégration au `Browser`, au moteur global et au sitemap reste une évolution ultérieure.
-5. Un contributeur devient « de confiance » après au moins un an d'ancienneté et cinq contributions validées. Ce seuil simple pourra être révisé à l'usage.
+5. Un contributeur devient « de confiance » après au moins un an d'ancienneté et cinq contributions validées. Ce statut assouplit uniquement les limitations de fréquence et ne contourne pas la validation des remplacements ou suppressions.
 6. Ex-libris, tiré à part et impression sont trois sous-types distincts de la famille `PRINT` dès le MVP.
 
 ## 15. Sources de cette version

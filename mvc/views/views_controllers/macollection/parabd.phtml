@@ -11,7 +11,7 @@
         <?php if (isset($conditions[$copy['CONDITION_CODE']])) { ?><p><?php echo $conditions[$copy['CONDITION_CODE']]; ?></p><?php } ?>
         <?php if ($copy['PURCHASE_DATE']) { ?><p>Acheté le <?php echo $h(date('d/m/Y', strtotime($copy['PURCHASE_DATE']))); ?></p><?php } ?>
         <?php if ($copy['COPY_IS_SIGNED']) { ?><span class="parabd-copy-badge">Signé</span><?php } ?> <?php if ($copy['COPY_IS_DEDICATED']) { ?><span class="parabd-copy-badge">Dédicacé</span><?php } ?> <?php if ($copy['IS_GIFT']) { ?><span class="parabd-copy-badge">Cadeau</span><?php } ?>
-        <?php if ($copy['PRICE'] !== null) { ?><p>Prix d’achat : <?php echo $h($copy['PRICE'] . ' ' . $copy['CURRENCY']); ?> <small><?php echo $copy['IS_PRICE_PUBLIC'] ? 'visible sur ma page publique' : 'privé'; ?></small></p><?php } ?>
+        <?php if ($copy['PRICE'] !== null) { ?><p>Prix d’achat : <?php echo $h($copy['PRICE'] . ' ' . $copy['CURRENCY']); ?> <small>privé</small></p><?php } ?>
         <form class="parabd-json-form" action="<?php echo BDO_URL; ?>parabd/removecopy" method="post" data-confirm="Retirer cet exemplaire ?"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="copy_id" value="<?php echo intval($copy['ID_COPY']); ?>"><button type="submit">Retirer</button></form></div>
     </article><?php } ?></div><?php if (!$view->copies) { ?><p>Cette liste est vide.</p><?php } ?>
 </div>

@@ -476,6 +476,8 @@ FROM " . $this->table_name . "
         Db_query("UPDATE `parabd_item_tome` SET `CREATED_BY`=NULL WHERE `CREATED_BY`='" . $user_id . "'");
         Db_query("UPDATE `parabd_revision` SET `AUTHOR_ID`=NULL WHERE `AUTHOR_ID`='" . $user_id . "'");
         Db_query("UPDATE `parabd_revision` SET `VALIDATED_BY`=NULL WHERE `VALIDATED_BY`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_discussion` SET `AUTHOR_ID`=NULL WHERE `AUTHOR_ID`='" . $user_id . "'");
+        Db_query("UPDATE `parabd_discussion` SET `HIDDEN_BY`=NULL WHERE `HIDDEN_BY`='" . $user_id . "'");
         Db_query("UPDATE `parabd_duplicate` SET `RESOLVED_BY`=NULL WHERE `RESOLVED_BY`='" . $user_id . "'");
         Db_query("UPDATE `parabd_report` SET `RESOLVED_BY`=NULL WHERE `RESOLVED_BY`='" . $user_id . "'");
         Db_query("UPDATE `parabd_user_profile` SET `TRUST_OVERRIDE_BY`=NULL WHERE `TRUST_OVERRIDE_BY`='" . $user_id . "'");

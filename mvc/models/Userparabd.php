@@ -14,16 +14,25 @@ class Userparabd extends ParabdDbLine
 
     public function copies($userId, $state = null, $publicOnly = false)
     {
+        if ($publicOnly) return $this->publicCollection($userId);
         $where = 'c.USER_ID=' . intval($userId) . " AND i.STATUS='ACTIVE'";
         if ($state) $where .= " AND c.STATE='" . $this->escape($state) . "'";
         $mediaPath = Bdo_Cfg::getVar('explicit') ? 'm.FILE_PATH' : "IF(m.IS_EXPLICIT=1,CONCAT('?source=',m.FILE_PATH),m.FILE_PATH)";
-        $fields = $publicOnly
-            ? "c.ID_COPY,c.USER_ID,c.ITEM_ID,c.STATE,c.QUANTITY,c.COPY_NUMBER,c.COPY_IS_SIGNED,c.COPY_IS_DEDICATED,c.IS_PRICE_PUBLIC,IF(c.IS_PRICE_PUBLIC=1,c.PRICE,NULL) PRICE,IF(c.IS_PRICE_PUBLIC=1,c.CURRENCY,NULL) CURRENCY,c.CREATED_AT,c.UPDATED_AT"
-            : 'c.*';
+        $fields = 'c.*';
         return $this->fetchAllQuery("SELECT $fields,i.TITLE,i.TYPE_ID,t.LABEL TYPE_LABEL,st.LABEL SUBTYPE_LABEL,$mediaPath PRIMARY_IMAGE,m.IS_EXPLICIT PRIMARY_IMAGE_IS_EXPLICIT
             FROM users_parabd c JOIN parabd_item i ON i.ID_ITEM=c.ITEM_ID JOIN parabd_type t ON t.ID_TYPE=i.TYPE_ID
             LEFT JOIN parabd_type st ON st.ID_TYPE=i.SUBTYPE_ID LEFT JOIN parabd_media m ON m.ITEM_ID=i.ID_ITEM AND m.IS_PRIMARY=1 AND m.IS_HIDDEN=0
             WHERE $where ORDER BY c.CREATED_AT DESC");
+    }
+
+    public function publicCollection($userId)
+    {
+        $mediaPath = Bdo_Cfg::getVar('explicit') ? 'm.FILE_PATH' : "IF(m.IS_EXPLICIT=1,CONCAT('?source=',m.FILE_PATH),m.FILE_PATH)";
+        return $this->fetchAllQuery("SELECT c.ITEM_ID,i.TITLE,i.TYPE_ID,t.LABEL TYPE_LABEL,st.LABEL SUBTYPE_LABEL,$mediaPath PRIMARY_IMAGE,m.IS_EXPLICIT PRIMARY_IMAGE_IS_EXPLICIT
+            FROM (SELECT USER_ID,ITEM_ID,MAX(CREATED_AT) CREATED_AT FROM users_parabd WHERE USER_ID=" . intval($userId) . " AND STATE='OWNED' GROUP BY USER_ID,ITEM_ID) c
+            JOIN parabd_item i ON i.ID_ITEM=c.ITEM_ID JOIN parabd_type t ON t.ID_TYPE=i.TYPE_ID
+            LEFT JOIN parabd_type st ON st.ID_TYPE=i.SUBTYPE_ID LEFT JOIN parabd_media m ON m.ITEM_ID=i.ID_ITEM AND m.IS_PRIMARY=1 AND m.IS_HIDDEN=0
+            WHERE i.STATUS='ACTIVE' ORDER BY c.CREATED_AT DESC");
     }
 
     public function saveForUser($userId, array $input)
@@ -58,7 +67,6 @@ class Userparabd extends ParabdDbLine
             'PURCHASE_DATE' => $purchaseDate,
             'PRICE' => $price,
             'CURRENCY' => $price === null ? null : $currency,
-            'IS_PRICE_PUBLIC' => !empty($input['is_price_public']) ? 1 : 0,
             'SELLER' => $seller,
             'ESTIMATED_VALUE' => ParabdRules::decimal(isset($input['estimated_value']) ? $input['estimated_value'] : null),
             'PERSONAL_NOTES' => trim(isset($input['personal_notes']) ? $input['personal_notes'] : '')

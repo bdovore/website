@@ -55,6 +55,19 @@ parabdAssert(!ParabdImageStorage::isPublicRemoteIp('192.168.1.10'), 'URL image p
 parabdAssert(!ParabdImageStorage::isPublicRemoteIp('::1'), 'URL image locale IPv6 refusée');
 parabdAssert(ParabdImageStorage::isPublicRemoteIp('8.8.8.8'), 'URL image publique acceptée');
 
+if (!defined('BDO_URL')) define('BDO_URL', '/');
+if (!defined('BDO_PARABD_ENABLED')) define('BDO_PARABD_ENABLED', true);
+require_once dirname(__DIR__) . '/mvc/views/helpers/pagination.php';
+$pagination = new Pagination();
+foreach (array('/adminparabd/edit?id=1', '/adminparabd/queues?status=pending') as $adminParabdUrl) {
+    $_SERVER['REQUEST_URI'] = $adminParabdUrl;
+    $adminMenu = $pagination->menuAdmin();
+    parabdAssert(strpos($adminMenu, '<li class="active"><a href="/adminparabd">Para-BD</a>') !== false && substr_count($adminMenu, 'class="active"') === 1, 'onglet Para-BD actif sur ' . $adminParabdUrl);
+}
+$_SERVER['REQUEST_URI'] = '/admin/user?id=1';
+$adminMenu = $pagination->menuAdmin();
+parabdAssert(strpos($adminMenu, '<li class="active"><a href="/admin/user">Utilisateurs</a>') !== false && substr_count($adminMenu, 'class="active"') === 1, 'sous-page admin la plus précise active');
+
 if (extension_loaded('gd') && extension_loaded('fileinfo')) {
     $tmpRoot = sys_get_temp_dir() . '/bdovore-parabd-test-' . getmypid();
     if (!defined('DS')) define('DS', DIRECTORY_SEPARATOR);

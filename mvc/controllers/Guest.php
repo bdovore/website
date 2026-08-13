@@ -354,14 +354,12 @@ class Guest extends Bdo_Controller
             $this->view->render();
             return;
         }
-        $state = strtolower(getVal('list', 'owned')) === 'wishlist' ? 'WISHLIST' : 'OWNED';
         $this->loadModel('ParabdService');
         $this->view->addCssFile('style/parabd.css');
         $this->view->set_var(array(
             'PAGETITLE' => 'Para-BD de ' . $user->username,
             'ROBOTS' => 'noindex,follow',
-            'copies' => $this->ParabdService->getUserCopies(intval($user->user_id), $state, true),
-            'state' => $state,
+            'copies' => $this->ParabdService->getPublicUserCollection(intval($user->user_id)),
             'IDUSER' => intval($user->user_id),
             'USERNAME' => $user->username,
             'is_authenticated' => User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1),

@@ -107,6 +107,11 @@ class Parabditem extends ParabdDbLine
         return $this->fetchOneQuery('SELECT REVISION_NO FROM parabd_item WHERE ID_ITEM=' . intval($itemId) . ' FOR UPDATE');
     }
 
+    public function rowForUpdate($itemId)
+    {
+        return $this->fetchOneQuery('SELECT * FROM parabd_item WHERE ID_ITEM=' . intval($itemId) . ' FOR UPDATE');
+    }
+
     public function snapshotFields($itemId)
     {
         return $this->fetchOneQuery('SELECT TYPE_ID,SUBTYPE_ID,TITLE,DESCRIPTION,MATERIAL,COLOR,WIDTH_MM,HEIGHT_MM,DEPTH_MM,WEIGHT_G,SCALE,RELEASE_DATE,DATE_PRECISION,PRINT_RUN,IS_NUMBERED,IS_SIGNED,HAS_CERTIFICATE,IS_LIMITED,MANUFACTURER,PUBLISHER,LICENSE_NAME,RANGE_NAME,UNIVERSE_NAME,STATUS,MERGED_INTO_ID FROM parabd_item WHERE ID_ITEM=' . intval($itemId));

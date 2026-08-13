@@ -2,14 +2,9 @@
 <div class="cadre1 parabd-page">
     <?php echo $page->menuGuest(encodeUserId($view->IDUSER)); ?>
     <h1>Para-BD de <?php echo $h($view->USERNAME); ?></h1>
-    <nav class="parabd-lists"><a href="?user=<?php echo urlencode(encodeUserId($view->IDUSER)); ?>&amp;list=owned">Collection</a><a href="?user=<?php echo urlencode(encodeUserId($view->IDUSER)); ?>&amp;list=wishlist">Liste d’envies</a></nav>
     <div class="parabd-grid"><?php foreach ($view->copies as $copy) { ?><article class="parabd-card">
         <?php if ($copy['PRIMARY_IMAGE']) { ?><img src="<?php echo $h(BDO_URL_PARABD . $copy['PRIMARY_IMAGE']); ?>" alt=""><?php } ?><div><small><?php echo $h($copy['SUBTYPE_LABEL'] ?: $copy['TYPE_LABEL']); ?></small>
         <?php if ($copy['PRIMARY_IMAGE_IS_EXPLICIT']) { ?><p><span class="parabd-explicit-badge">Visuel explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Image floutée</small><?php } ?></p><?php } ?>
         <h2><?php if ($view->is_authenticated) { ?><a href="<?php echo BDO_URL; ?>parabd/fiche?id=<?php echo intval($copy['ITEM_ID']); ?>"><?php echo $h($copy['TITLE']); ?></a><?php } else echo $h($copy['TITLE']); ?></h2>
-        <?php if (intval($copy['QUANTITY']) > 1) { ?><p>Quantité : <?php echo intval($copy['QUANTITY']); ?></p><?php } ?>
-        <?php if ($copy['COPY_NUMBER']) { ?><p>Exemplaire n° <?php echo $h($copy['COPY_NUMBER']); ?></p><?php } ?>
-        <?php if ($copy['COPY_IS_SIGNED']) { ?><span class="parabd-copy-badge">Signé</span><?php } ?> <?php if ($copy['COPY_IS_DEDICATED']) { ?><span class="parabd-copy-badge">Dédicacé</span><?php } ?>
-        <?php if ($copy['IS_PRICE_PUBLIC'] && $copy['PRICE'] !== null) { ?><p>Prix d’achat déclaré : <?php echo $h($copy['PRICE'] . ' ' . $copy['CURRENCY']); ?></p><?php } ?>
         </div></article><?php } ?></div><?php if (!$view->copies) { ?><p>Cette liste est vide.</p><?php } ?>
 </div>

@@ -284,10 +284,10 @@ foreach ($items as $item) {
 
         $copy = fetchOne($db, 'SELECT ID_COPY FROM users_parabd WHERE USER_ID=' . intval($item['owner_id']) . ' AND ITEM_ID=' . intval($itemId) . ' LIMIT 1');
         if (!$copy) {
-            executeSql($db, "INSERT INTO users_parabd (USER_ID,ITEM_ID,STATE,QUANTITY,COPY_NUMBER,PRICE,CURRENCY,IS_PRICE_PUBLIC,IS_PUBLIC,PERSONAL_NOTES) VALUES ("
+            executeSql($db, "INSERT INTO users_parabd (USER_ID,ITEM_ID,STATE,QUANTITY,COPY_NUMBER,PRICE,CURRENCY,PERSONAL_NOTES) VALUES ("
                 . intval($item['owner_id']) . ',' . intval($itemId) . ",'OWNED',1,"
                 . sqlValue($db, $item['copy_number']) . ',' . sqlValue($db, $item['price']) . ','
-                . ($item['price'] === null ? 'NULL' : "'EUR'") . ",0,1,'Jeu de démonstration Para-BD')");
+                . ($item['price'] === null ? 'NULL' : "'EUR'") . ",'Jeu de démonstration Para-BD')");
         }
         $db->commit();
         echo ($existing ? 'Réutilisé' : 'Créé') . " #$itemId — {$item['title']} → utilisateur {$item['owner_id']}\n";

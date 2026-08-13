@@ -1,0 +1,18 @@
+-- Discussion Para-BD et modération simplifiée - migration additive MySQL 5.7.
+CREATE TABLE IF NOT EXISTS `parabd_discussion` (
+    `ID_DISCUSSION` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `ITEM_ID` INT UNSIGNED NOT NULL,
+    `REVISION_ID` BIGINT UNSIGNED NULL,
+    `AUTHOR_ID` MEDIUMINT UNSIGNED NULL,
+    `MESSAGE_TYPE` ENUM('PROPOSAL','COMMENT') NOT NULL,
+    `BODY` TEXT NULL,
+    `STATUS` ENUM('VISIBLE','HIDDEN') NOT NULL DEFAULT 'VISIBLE',
+    `HIDDEN_BY` MEDIUMINT UNSIGNED NULL,
+    `HIDDEN_AT` DATETIME NULL,
+    `CREATED_AT` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`ID_DISCUSSION`),
+    KEY `idx_parabd_discussion_revision` (`REVISION_ID`),
+    KEY `idx_parabd_discussion_item` (`ITEM_ID`, `CREATED_AT`),
+    CONSTRAINT `fk_parabd_discussion_item` FOREIGN KEY (`ITEM_ID`) REFERENCES `parabd_item` (`ID_ITEM`),
+    CONSTRAINT `fk_parabd_discussion_revision` FOREIGN KEY (`REVISION_ID`) REFERENCES `parabd_revision` (`ID_REVISION`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
