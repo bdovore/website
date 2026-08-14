@@ -18,12 +18,12 @@ class Adminparabd extends Bdo_Controller
         return true;
     }
 
-    private function mutate(callable $callback)
+    private function mutate(callable $callback, $redirect = 'adminparabd')
     {
         $this->guard(true);
         try {
             $callback();
-            header('Location: ' . BDO_URL . 'adminparabd');
+            header('Location: ' . BDO_URL . $redirect);
         } catch (Throwable $error) {
             http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422);
             die(htmlspecialchars($error->getMessage(), ENT_QUOTES, 'UTF-8'));
@@ -172,7 +172,7 @@ class Adminparabd extends Bdo_Controller
 
     public function Duplicate()
     {
-        $this->mutate(function () { $this->service()->resolveDuplicate(intval($_SESSION['userConnect']->user_id), postValInteger('duplicate_id', 0), 'IGNORED'); });
+        $this->mutate(function () { $this->service()->resolveDuplicate(intval($_SESSION['userConnect']->user_id), postValInteger('duplicate_id', 0), 'IGNORED'); }, 'adminparabd/queues#doublons-potentiels');
     }
 
     public function Visibility()
