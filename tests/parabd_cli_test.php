@@ -37,7 +37,10 @@ $duplicate = ParabdRules::duplicateLevel($candidate, $input);
 parabdAssert($duplicate && $duplicate['level'] === 'STRONG', 'seuil doublon fort');
 $input['TITLE'] = 'Chat'; $input['MANUFACTURER'] = 'Autre'; $input['common_relation'] = true;
 $duplicate = ParabdRules::duplicateLevel($candidate, $input);
-parabdAssert($duplicate && $duplicate['level'] === 'POSSIBLE', 'rattachement commun possible');
+parabdAssert($duplicate === null, 'rattachement commun seul insuffisant');
+$input['TITLE'] = 'Statuette du Chat';
+$duplicate = ParabdRules::duplicateLevel($candidate, $input);
+parabdAssert($duplicate && $duplicate['level'] === 'POSSIBLE', 'titre proche possible');
 
 $now = strtotime('2026-08-09 12:00:00');
 parabdAssert(ParabdRules::calculateTrust('2025-08-09 11:59:59', 5, 'NONE', $now), 'contributeur fiable');

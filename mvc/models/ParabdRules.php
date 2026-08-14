@@ -95,7 +95,7 @@ class ParabdRules
         if ($sameType && $similarity >= 85 && $sameManufacturer && ($year || $dimensions || $sameRelation)) {
             return array('level' => 'STRONG', 'score' => $similarity, 'reasons' => array('Titre très proche', 'Même fabricant', $year ? 'Même année' : ($dimensions ? 'Dimensions proches' : 'Rattachement commun')));
         }
-        if ($similarity >= 70 || $sameRelation) return array('level' => 'POSSIBLE', 'score' => $similarity, 'reasons' => array($sameRelation ? 'Rattachement commun' : 'Titre proche'));
+        if ($similarity >= 70) return array('level' => 'POSSIBLE', 'score' => $similarity, 'reasons' => array('Titre proche'));
         return null;
     }
 
