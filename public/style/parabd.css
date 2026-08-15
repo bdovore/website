@@ -19,9 +19,23 @@
 .parabd-card img.parabd-admin-edit-icon { background: transparent; height: 16px; vertical-align: middle; width: 16px; }
 .parabd-card h2 { font-size: 1.05rem; margin: .25rem 0; overflow-wrap: anywhere; }
 .parabd-detail { display: grid; grid-template-columns: minmax(250px, 38%) 1fr; gap: 2rem; }
-.parabd-gallery { display: grid; gap: .75rem; }
-.parabd-gallery figure { margin: 0; text-align: center; }.parabd-gallery figcaption { font-size: .8rem; margin-top: .3rem; }
-.parabd-gallery img { display: block; max-width: 100%; max-height: 560px; margin: auto; }
+.parabd-gallery { min-width: 0; }
+.parabd-gallery-stage { position: relative; }
+.parabd-gallery figure { margin: 0 0 .75rem; text-align: center; }.parabd-gallery figcaption { font-size: .8rem; margin-top: .3rem; }
+.parabd-gallery-slide > img { display: block; max-width: 100%; max-height: 560px; margin: auto; }
+.parabd-gallery.is-enhanced .parabd-gallery-stage { background: #f7f7f7; border: 1px solid #e1e1e1; border-radius: 5px; box-sizing: border-box; height: 420px; height: min(420px, 55vh); overflow: hidden; }
+.parabd-gallery.is-enhanced .parabd-gallery-slide { display: none; height: 100%; margin: 0; min-height: 0; }
+.parabd-gallery.is-enhanced .parabd-gallery-slide.is-active { display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+.parabd-gallery.is-enhanced .parabd-gallery-slide > img { align-self: center; max-height: 100%; object-fit: contain; }
+.parabd-gallery.is-enhanced .parabd-gallery-slide figcaption { background: rgba(255,255,255,.92); margin: 0; padding: .35rem; }
+.parabd-gallery-button { align-items: center; background: rgba(255,255,255,.92); border: 1px solid #ccc; border-radius: 50%; color: #650000; cursor: pointer; display: flex; height: 38px; justify-content: center; margin: -19px 0 0; padding: 0; position: absolute; top: 50%; width: 38px; z-index: 2; }
+.parabd-gallery-button:hover, .parabd-gallery-button:focus { background: #650000; border-color: #650000; color: #fff; outline: none; }
+.parabd-gallery-previous { left: .65rem; }.parabd-gallery-next { right: .65rem; }
+.parabd-gallery-status { background: rgba(35,35,35,.78); border-radius: 12px; bottom: .65rem; color: #fff; font-size: .75rem; padding: .2rem .55rem; pointer-events: none; position: absolute; right: .65rem; z-index: 2; }
+.parabd-gallery-thumbnails { display: flex; gap: .5rem; margin-top: .65rem; overflow-x: auto; padding: 2px 2px .35rem; }
+.parabd-gallery-thumb { background: #fff; border: 2px solid transparent; border-radius: 4px; box-sizing: border-box; cursor: pointer; flex: 0 0 64px; height: 64px; margin: 0; padding: 3px; }
+.parabd-gallery-thumb:hover, .parabd-gallery-thumb:focus { border-color: #aaa; outline: none; }.parabd-gallery-thumb.is-active { border-color: #650000; }
+.parabd-gallery-thumb img { display: block; height: 100%; object-fit: contain; width: 100%; }
 .parabd-data { display: grid; grid-template-columns: auto 1fr; gap: .35rem 1rem; }
 .parabd-data dt { font-weight: bold; }.parabd-data dd { margin: 0; }
 .parabd-step { border: 1px solid #ddd; border-radius: 5px; padding: 1rem; margin: 1rem 0; }
@@ -134,6 +148,7 @@ button.parabd-icon-delete:hover, button.parabd-icon-delete:focus { background: #
 @media (max-width: 700px) {
     .parabd-heading, .parabd-admin-row { align-items: stretch; flex-direction: column; }
     .parabd-search, .parabd-fields, .parabd-detail { grid-template-columns: 1fr; }
+    .parabd-gallery.is-enhanced .parabd-gallery-stage { height: 380px; height: min(380px, 52vh); }
     .parabd-fields .wide { grid-column: auto; }
     .parabd-image-choice { grid-template-columns: 1fr; }.parabd-image-choice small { grid-column: auto; }.parabd-choice-separator { padding: 0; text-align: center; }
     .parabd-card img { width: 80px; height: 105px; }

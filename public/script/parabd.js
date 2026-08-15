@@ -8,7 +8,49 @@
     }
 
     function enhanceButtons() {
-        $('.parabd-page button:not(.parabd-icon-delete), .parabd-page .button, .parabd-page summary:not(.parabd-copy-toggle)').addClass('ui-button ui-widget ui-state-default ui-corner-all');
+        $('.parabd-page button:not(.parabd-icon-delete):not(.parabd-gallery-button):not(.parabd-gallery-thumb), .parabd-page .button, .parabd-page summary:not(.parabd-copy-toggle)').addClass('ui-button ui-widget ui-state-default ui-corner-all');
+    }
+
+    function initGalleries() {
+        $('.parabd-gallery[data-parabd-carousel]').each(function () {
+            var gallery = $(this);
+            var slides = gallery.find('.parabd-gallery-slide');
+            var count = slides.length;
+            if (count < 2) return;
+
+            var thumbnails = gallery.find('.parabd-gallery-thumb');
+            var status = gallery.find('.parabd-gallery-status');
+            var current = 0;
+            var touchStartX = null;
+
+            function showSlide(index) {
+                current = (index + count) % count;
+                slides.removeClass('is-active').attr('aria-hidden', 'true');
+                slides.eq(current).addClass('is-active').removeAttr('aria-hidden');
+                thumbnails.removeClass('is-active').removeAttr('aria-current');
+                thumbnails.eq(current).addClass('is-active').attr('aria-current', 'true');
+                status.text((current + 1) + ' / ' + count);
+            }
+
+            gallery.addClass('is-enhanced');
+            showSlide(0);
+            gallery.find('.parabd-gallery-previous').on('click', function () { showSlide(current - 1); });
+            gallery.find('.parabd-gallery-next').on('click', function () { showSlide(current + 1); });
+            thumbnails.on('click', function () { showSlide(parseInt($(this).attr('data-slide'), 10)); });
+            gallery.on('keydown', function (event) {
+                if (event.key === 'ArrowLeft') { event.preventDefault(); showSlide(current - 1); }
+                if (event.key === 'ArrowRight') { event.preventDefault(); showSlide(current + 1); }
+            });
+            gallery.on('touchstart', '.parabd-gallery-stage', function (event) {
+                touchStartX = event.originalEvent.touches[0].clientX;
+            }).on('touchend', '.parabd-gallery-stage', function (event) {
+                if (touchStartX === null) return;
+                var distance = event.originalEvent.changedTouches[0].clientX - touchStartX;
+                touchStartX = null;
+                if (Math.abs(distance) < 45) return;
+                showSlide(current + (distance < 0 ? 1 : -1));
+            });
+        });
     }
 
     function renderDuplicates(rows) {
@@ -197,6 +239,7 @@
     }
 
     $(function () {
+        initGalleries();
         enhanceButtons();
         initReferenceAutocomplete();
         initCatalogueAutocomplete();

@@ -18,6 +18,8 @@ $itemCopies = array_filter($view->copies, function ($copy) use ($item) { return 
 $ownedCopies = array_values(array_filter($itemCopies, function ($copy) { return $copy['STATE'] === 'OWNED'; }));
 $wishlistCopies = array_filter($itemCopies, function ($copy) { return $copy['STATE'] === 'WISHLIST'; });
 $wishlistCopy = $wishlistCopies ? reset($wishlistCopies) : null;
+$mediaCount = count($item['media']);
+$mediaLabels = array('PRIMARY'=>'Visuel principal','GALLERY'=>'Galerie','DETAIL'=>'Détail','BOX'=>'Boîte','CERTIFICATE'=>'Certificat');
 $conditions = array('UNKNOWN'=>'Non renseigné','MINT'=>'Neuf','NEAR_MINT'=>'Comme neuf','VERY_GOOD'=>'Très bon','GOOD'=>'Bon','FAIR'=>'Correct','POOR'=>'Usé');
 $triOptions = function ($current) {
     $options = array(''=>'Inconnu','1'=>'Oui','0'=>'Non');
@@ -29,7 +31,28 @@ $triOptions = function ($current) {
 <div class="cadre1 parabd-page">
     <p><a href="<?php echo BDO_URL; ?>parabd">← Catalogue Para-BD</a></p>
     <div class="parabd-detail">
-        <div class="parabd-gallery"><?php foreach ($item['media'] as $media) { ?><figure><img src="<?php echo $h(BDO_URL_PARABD . $media['FILE_PATH']); ?>" alt="<?php echo $h($item['TITLE']); ?>"><?php if ($media['IS_EXPLICIT']) { ?><figcaption><span class="parabd-explicit-badge">Visuel explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Image floutée selon vos préférences</small><?php } ?></figcaption><?php } ?></figure><?php } ?></div>
+        <div class="parabd-gallery" data-parabd-carousel role="region" aria-roledescription="carrousel" aria-label="Visuels de <?php echo $h($item['TITLE']); ?>">
+            <div class="parabd-gallery-stage" id="parabd-gallery-<?php echo intval($item['ID_ITEM']); ?>"<?php if ($mediaCount > 1) { ?> tabindex="0"<?php } ?>>
+                <?php foreach ($item['media'] as $mediaIndex => $media) { $mediaLabel = isset($mediaLabels[$media['MEDIA_TYPE']]) ? $mediaLabels[$media['MEDIA_TYPE']] : 'Visuel'; ?>
+                    <figure class="parabd-gallery-slide<?php if ($mediaIndex === 0) echo ' is-active'; ?>" role="group" aria-roledescription="diapositive" aria-label="<?php echo intval($mediaIndex + 1); ?> sur <?php echo intval($mediaCount); ?>">
+                        <img src="<?php echo $h(BDO_URL_PARABD . $media['FILE_PATH']); ?>" alt="<?php echo $h($item['TITLE'] . ' — ' . $mediaLabel); ?>"<?php if ($mediaIndex > 0) { ?> loading="lazy"<?php } ?> decoding="async">
+                        <?php if ($media['IS_EXPLICIT']) { ?><figcaption><span class="parabd-explicit-badge">Visuel explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Image floutée selon vos préférences</small><?php } ?></figcaption><?php } ?>
+                    </figure>
+                <?php } ?>
+                <?php if ($mediaCount > 1) { ?>
+                    <button type="button" class="parabd-gallery-button parabd-gallery-previous" aria-label="Afficher le visuel précédent"><span class="fas fa-chevron-left" aria-hidden="true"></span></button>
+                    <button type="button" class="parabd-gallery-button parabd-gallery-next" aria-label="Afficher le visuel suivant"><span class="fas fa-chevron-right" aria-hidden="true"></span></button>
+                    <span class="parabd-gallery-status" aria-live="polite" aria-atomic="true">1 / <?php echo intval($mediaCount); ?></span>
+                <?php } ?>
+            </div>
+            <?php if ($mediaCount > 1) { ?>
+                <div class="parabd-gallery-thumbnails" aria-label="Choisir un visuel">
+                    <?php foreach ($item['media'] as $mediaIndex => $media) { $mediaLabel = isset($mediaLabels[$media['MEDIA_TYPE']]) ? $mediaLabels[$media['MEDIA_TYPE']] : 'Visuel'; ?>
+                        <button type="button" class="parabd-gallery-thumb<?php if ($mediaIndex === 0) echo ' is-active'; ?>" data-slide="<?php echo intval($mediaIndex); ?>" aria-label="Afficher <?php echo $h(strtolower($mediaLabel)); ?>, visuel <?php echo intval($mediaIndex + 1); ?> sur <?php echo intval($mediaCount); ?>"<?php if ($mediaIndex === 0) { ?> aria-current="true"<?php } ?> aria-controls="parabd-gallery-<?php echo intval($item['ID_ITEM']); ?>"><img src="<?php echo $h(BDO_URL_PARABD . $media['FILE_PATH']); ?>" alt="" loading="lazy" decoding="async"></button>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+        </div>
         <div class="parabd-summary">
             <small><?php echo $h($item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL']); ?></small>
             <h1><?php echo $h($item['TITLE']); ?> <?php if ($view->can_admin) { ?> · <a href="<?php echo BDO_URL; ?>adminparabd/edit?id=<?php echo intval($item['ID_ITEM']); ?>"> <img src="<?php echo BDO_URL_IMAGE; ?>/edit.gif"></a><?php } ?></h1>
@@ -176,4 +199,4 @@ $triOptions = function ($current) {
         <form class="parabd-json-form parabd-discussion-form" method="post" action="<?php echo BDO_URL; ?>parabd/comment"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="revision_id" value=""><p class="parabd-comment-context" hidden>Commentaire lié à la proposition #<span></span> · <button type="button" class="parabd-clear-comment-context">retirer le lien</button></p><label>Ajouter un commentaire<textarea name="body" rows="4" maxlength="2000" required></textarea></label><button>Publier</button><span class="parabd-form-status"></span></form>
     </div></details><?php } ?>
 </div>
-<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260813b" type="text/javascript"></script>
+<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260815c" type="text/javascript"></script>
