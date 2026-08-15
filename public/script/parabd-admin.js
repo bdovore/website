@@ -1,6 +1,61 @@
 (function ($) {
     'use strict';
 
+    var editorState = null;
+    var unsavedMessage = "Des changements n'ont pas été enregistrés. Quitter quand même ?";
+
+    function updateEditorState() {
+        if (!editorState) return;
+        var dirty = editorState.initialDirty || editorState.form.serialize() !== editorState.initialSnapshot;
+        editorState.dirty = dirty;
+        editorState.button.prop('disabled', !dirty).toggleClass('is-dirty', dirty);
+    }
+
+    function initEditorState(form) {
+        if (!form.length || form.data('create') === 1 || form.data('dirty-tracking-initialized')) return;
+        form.data('dirty-tracking-initialized', true);
+        editorState = {
+            form: form,
+            button: form.find('.parabd-admin-save-button'),
+            initialSnapshot: form.serialize(),
+            initialDirty: form.data('initial-dirty') === 1,
+            dirty: false,
+            submitting: false,
+            allowLeave: false
+        };
+        form.on('input.parabdEditorDirty change.parabdEditorDirty', ':input', updateEditorState);
+        updateEditorState();
+
+        $(document).off('click.parabdEditorDirty', 'a[href]').on('click.parabdEditorDirty', 'a[href]', function (event) {
+            if (!editorState.dirty || editorState.submitting || editorState.allowLeave || event.ctrlKey || event.metaKey || event.shiftKey || event.which === 2) return;
+            var link = $(this);
+            var href = link.attr('href') || '';
+            if (link.attr('target') === '_blank' || href.charAt(0) === '#') return;
+            if (!window.confirm(unsavedMessage)) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                return;
+            }
+            editorState.allowLeave = true;
+        });
+
+        $('.parabd-admin-page').off('submit.parabdEditorDirty', 'form:not(#parabd-admin-editor)').on('submit.parabdEditorDirty', 'form:not(#parabd-admin-editor)', function (event) {
+            if (!editorState.dirty || editorState.allowLeave) return;
+            if (!window.confirm(unsavedMessage)) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                return;
+            }
+            editorState.allowLeave = true;
+        });
+
+        $(window).off('beforeunload.parabdEditorDirty').on('beforeunload.parabdEditorDirty', function (event) {
+            if (!editorState.dirty || editorState.submitting || editorState.allowLeave) return;
+            event.originalEvent.returnValue = unsavedMessage;
+            return unsavedMessage;
+        });
+    }
+
     function enhanceButtons(context) {
         $(context || document).find('.parabd-admin-page button, .parabd-admin-page .button, .parabd-admin-page summary').addClass('ui-button ui-widget ui-state-default ui-corner-all');
     }
@@ -22,11 +77,11 @@
                     }).fail(function () { response([]); });
                 },
                 select: function (event, ui) {
-                    hidden.val(ui.item.id); selectedValue = ui.item.value;
+                    hidden.val(ui.item.id).trigger('change'); selectedValue = ui.item.value;
                     status.text('#' + ui.item.id + ' — ' + ui.item.plainLabel).addClass('selected');
                 }
             }).on('input', function () {
-                if (input.val() !== selectedValue) { hidden.val(''); status.text('Sélectionnez une proposition.').removeClass('selected'); }
+                if (input.val() !== selectedValue) { hidden.val('').trigger('change'); status.text('Sélectionnez une proposition.').removeClass('selected'); }
             });
         });
     }
@@ -49,6 +104,8 @@
             var selected = $('#parabd-admin-subtype option:selected');
             if (selected.val() && selected.prop('hidden')) $('#parabd-admin-subtype').val('');
         }).trigger('change');
+
+        initEditorState($('#parabd-admin-editor'));
 
         $('.parabd-toggle-media-form').on('click', function () {
             var button = $(this);
@@ -73,7 +130,7 @@
             row.find('select').prop('selectedIndex', 0);
             row.find('.parabd-reference-status').text('Sélectionnez une proposition.').removeClass('selected');
             row.find('.parabd-admin-reference').removeClass('ui-autocomplete-input').removeAttr('autocomplete').removeAttr('aria-autocomplete').removeAttr('aria-controls');
-            container.append(row); renumber(container); initReferences(row); enhanceButtons(row);
+            container.append(row); renumber(container); initReferences(row); enhanceButtons(row); updateEditorState();
         });
 
         $('.parabd-repeat').on('click', '.parabd-remove-row', function () {
@@ -81,7 +138,7 @@
             if (container.children('.parabd-repeat-row').length === 1) {
                 var row = $(this).closest('.parabd-repeat-row'); row.find('input').val('').prop('checked', false); row.find('select').prop('selectedIndex', 0);
             } else $(this).closest('.parabd-repeat-row').remove();
-            renumber(container);
+            renumber(container); updateEditorState();
         });
 
         $('#parabd-admin-editor').on('submit', function (event) {
@@ -92,8 +149,9 @@
             }
             var primary = form.find('[name="primary_media_id"]:checked').val();
             if (primary && form.find('[name="media_hidden[' + primary + ']"]').prop('checked')) {
-                event.preventDefault(); error.text('Le visuel principal ne peut pas être masqué.');
+                event.preventDefault(); error.text('Le visuel principal ne peut pas être masqué.'); return;
             }
+            if (editorState) editorState.submitting = true;
         });
 
         $('.parabd-comment-revision').on('click', function () {

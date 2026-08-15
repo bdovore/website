@@ -79,7 +79,7 @@ class Parabd extends Bdo_Controller
     public function Index()
     {
         if (!$this->enabled()) return;
-        $this->view->addCssFile('style/parabd.css?v=20260813b');
+        $this->view->addCssFile('style/parabd.css?v=20260815b');
         $this->view->addJavascriptFile('script/parabd.js');
         $search = getVal('q', '');
         $filterType = getVal('filter_type', '');
@@ -89,7 +89,8 @@ class Parabd extends Bdo_Controller
             'PAGETITLE' => 'Catalogue Para-BD', 'ROBOTS' => 'noindex,nofollow',
             'items' => $this->service()->getCatalogue($search, $filterType, $filterId, $filterValue), 'search' => $search,
             'filter_type' => $filterType, 'filter_id' => $filterId, 'filter_value' => $filterValue,
-            'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit')
+            'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'),
+            'can_admin' => User::minAccesslevel(1)
         ));
         $this->view->render();
     }

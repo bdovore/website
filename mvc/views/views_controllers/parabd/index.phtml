@@ -18,7 +18,7 @@
                 <?php if ($item['PRIMARY_IMAGE']) { ?><img src="<?php echo $h(BDO_URL_PARABD . $item['PRIMARY_IMAGE']); ?>" alt=""><?php } ?>
                 <div><small><?php echo $h($item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL']); ?></small>
                     <?php if ($item['PRIMARY_IMAGE_IS_EXPLICIT']) { ?><p><span class="parabd-explicit-badge">Visuel explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Image floutée</small><?php } ?></p><?php } ?>
-                    <h2><a href="<?php echo BDO_URL; ?>parabd/fiche?id=<?php echo intval($item['ID_ITEM']); ?>"><?php echo $h($item['TITLE']); ?></a></h2>
+                    <h2><a href="<?php echo BDO_URL; ?>parabd/fiche?id=<?php echo intval($item['ID_ITEM']); ?>"><?php echo $h($item['TITLE']); ?></a><?php if ($view->can_admin) { ?> · <a href="<?php echo BDO_URL; ?>adminparabd/edit?id=<?php echo intval($item['ID_ITEM']); ?>" title="Modifier la fiche commune"><img class="parabd-admin-edit-icon" src="<?php echo BDO_URL_IMAGE; ?>/edit.gif" alt="Modifier"></a><?php } ?></h2>
                     <?php if ($item['MANUFACTURER']) { ?><p><?php echo $h($item['MANUFACTURER']); ?></p><?php } ?>
                 </div>
             </article>

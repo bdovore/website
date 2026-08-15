@@ -54,7 +54,7 @@ $samePatch = function ($left, $right) {
 
     <?php if ($view->mode === 'edit') { ?><form id="parabd-admin-media-form" method="post" enctype="multipart/form-data" action="<?php echo BDO_URL; ?>adminparabd/media"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="media_form_open" value="1"><?php if ($view->report_id) { ?><input type="hidden" name="report_id" value="<?php echo intval($view->report_id); ?>"><?php } ?></form><?php } ?>
 
-    <form id="parabd-admin-editor" method="post" enctype="multipart/form-data" action="<?php echo BDO_URL; ?>adminparabd/<?php echo $view->mode === 'create' ? 'create' : 'edit'; ?>" data-create="<?php echo $view->mode === 'create' ? '1' : '0'; ?>">
+    <form id="parabd-admin-editor" method="post" enctype="multipart/form-data" action="<?php echo BDO_URL; ?>adminparabd/<?php echo $view->mode === 'create' ? 'create' : 'edit'; ?>" data-create="<?php echo $view->mode === 'create' ? '1' : '0'; ?>" data-initial-dirty="<?php echo $view->mode === 'edit' && $view->form_error ? '1' : '0'; ?>">
         <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><?php if ($view->mode === 'edit') { ?><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><?php if ($view->report_id) { ?><input type="hidden" name="report_id" value="<?php echo intval($view->report_id); ?>"><?php } ?><?php } ?>
         <fieldset<?php if ($readOnly) echo ' disabled'; ?>>
 
@@ -100,7 +100,7 @@ $samePatch = function ($left, $right) {
 
             <section class="parabd-admin-section"><div class="parabd-section-heading"><h2>Sources</h2><button type="button" class="parabd-add-row" data-target="sources">Ajouter une source</button></div><div class="parabd-repeat" data-repeat="sources"><?php foreach ($sources as $index=>$row) { ?><div class="parabd-repeat-row"><label class="wide">URL<input type="url" name="sources[<?php echo $index; ?>][url]" value="<?php echo $h($row['url'] ?? ''); ?>"></label><label>Libellé<input name="sources[<?php echo $index; ?>][label]" value="<?php echo $h($row['label'] ?? ''); ?>"></label><label>Notes<input name="sources[<?php echo $index; ?>][notes]" value="<?php echo $h($row['notes'] ?? ''); ?>"></label><button type="button" class="parabd-remove-row"><span class="fa fa-times"></span></button></div><?php } ?></div></section>
 
-            <div class="parabd-admin-save"><button type="submit"><span class="fa fa-save" aria-hidden="true"></span> <?php echo $view->mode === 'create' ? 'Créer la fiche commune' : 'Enregistrer la fiche commune'; ?></button></div>
+            <div class="parabd-admin-save"><button type="submit" class="parabd-admin-save-button<?php if ($view->mode === 'edit' && $view->form_error) echo ' is-dirty'; ?>"<?php if ($view->mode === 'edit' && !$view->form_error) echo ' disabled'; ?>><span class="fa fa-save" aria-hidden="true"></span> <?php echo $view->mode === 'create' ? 'Créer la fiche commune' : 'Enregistrer la fiche commune'; ?></button></div>
         </fieldset>
     </form>
 
@@ -122,4 +122,4 @@ $samePatch = function ($left, $right) {
         </div></details>
     <?php } ?>
 </div>
-<script src="<?php echo BDO_URL; ?>script/parabd-admin.js?v=20260813b" type="text/javascript"></script>
+<script src="<?php echo BDO_URL; ?>script/parabd-admin.js?v=20260815a" type="text/javascript"></script>

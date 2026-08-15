@@ -16,6 +16,7 @@
 .parabd-card { display: flex; gap: .8rem; border: 1px solid #ddd; border-radius: 5px; background: #fff; padding: .75rem; min-width: 0; }
 .parabd-card.newly-created { border-color: #7b9e42; box-shadow: 0 0 0 2px rgba(123,158,66,.18); }
 .parabd-card img { width: 96px; height: 120px; object-fit: contain; flex: 0 0 auto; background: #f4f4f4; }
+.parabd-card img.parabd-admin-edit-icon { background: transparent; height: 16px; vertical-align: middle; width: 16px; }
 .parabd-card h2 { font-size: 1.05rem; margin: .25rem 0; overflow-wrap: anywhere; }
 .parabd-detail { display: grid; grid-template-columns: minmax(250px, 38%) 1fr; gap: 2rem; }
 .parabd-gallery { display: grid; gap: .75rem; }
@@ -106,7 +107,9 @@ button.parabd-icon-delete:hover, button.parabd-icon-delete:focus { background: #
 .parabd-admin-media { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); margin-bottom: 1rem; }
 .parabd-admin-media article { border: 1px solid #ddd; display: flex; flex-direction: column; gap: .45rem; padding: .6rem; }.parabd-admin-media img { background: #f3f3f3; height: 170px; object-fit: contain; width: 100%; }
 .parabd-new-media-form { margin-top: .8rem; }.parabd-new-media-form[hidden] { display: none; }.parabd-new-media-actions { margin-top: .8rem; text-align: right; }
-.parabd-admin-save { background: #f6f3ef; border-top: 1px solid #ddd; bottom: 0; padding: .8rem; position: sticky; text-align: right; z-index: 5; }
+.parabd-admin-save { background: #f6f3ef; border-top: 1px solid #ddd; bottom: 0; padding: .8rem; position: sticky; text-align: left; z-index: 5; }
+.parabd-admin-save .parabd-admin-save-button.is-dirty, .parabd-admin-save .parabd-admin-save-button.is-dirty:hover, .parabd-admin-save .parabd-admin-save-button.is-dirty:focus { background: #900; border-color: #650000; color: #fff; }
+.parabd-admin-save .parabd-admin-save-button[disabled] { background: #ddd; border-color: #c5c5c5; color: #777; cursor: not-allowed; opacity: 1; }
 .parabd-admin-pending > article { border: 1px solid #d8bd72; border-radius: 4px; margin: .75rem 0; padding: .8rem; }.parabd-revision-comparison { display: grid; gap: .8rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .parabd-revision-comparison pre, .parabd-admin-history pre { background: #252525; color: #eee; max-height: 360px; overflow: auto; padding: .8rem; white-space: pre-wrap; word-break: break-word; }.parabd-revision-actions { display: flex; gap: .5rem; justify-content: flex-end; }
 .parabd-admin-history { border-top: 2px solid #aaa; margin-top: 2rem; padding-top: 1rem; }.parabd-admin-history > summary { cursor: pointer; list-style: none; }.parabd-admin-history > summary::-webkit-details-marker { display: none; }
