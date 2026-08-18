@@ -74,7 +74,7 @@ foreach ($view->types as $type) {
             <h2>4. Finaliser</h2>
             <label>Après création<select name="collection_action"><option value="OWNED">Ajouter à ma collection</option><option value="WISHLIST">Ajouter à mes envies</option><option value="none">Créer seulement la fiche</option></select></label>
             <p>Après l’ajout à votre collection, vous pourrez compléter les informations de votre exemplaire depuis sa fiche.</p>
-            <label class="parabd-charter"><input type="checkbox" name="accept_charter" value="1" required> J’accepte la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte de contribution Para-BD</a>, version <?php echo $h($view->charter_version); ?>.</label>
+            <label class="parabd-charter"><input type="checkbox" name="accept_charter" value="1"<?php if ($view->charter_accepted) { ?> checked<?php } ?> required> J’accepte la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte de contribution Para-BD</a>, version <?php echo $h($view->charter_version); ?>.</label>
             <div id="parabd-form-error" class="parabd-error" aria-live="assertive"></div>
             <button type="button" class="parabd-prev">Retour</button> <button type="submit">Créer l’objet</button>
         </section>

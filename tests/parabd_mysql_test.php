@@ -95,6 +95,19 @@ try {
     require_once dirname(__DIR__) . '/mvc/models/ParabdService.php';
     $service = new ParabdService();
     foreach (range(1, 5) as $userId) $service->acceptCharter($userId, true);
+    dbAssert($service->hasAcceptedCharter(1), 'charte courante reconnue comme acceptée');
+    $server->query("UPDATE parabd_user_profile SET CHARTER_VERSION='ancienne' WHERE USER_ID=1");
+    dbAssert(!$service->hasAcceptedCharter(1), 'nouvelle version de charte à accepter de nouveau');
+    $service->acceptCharter(1, true);
+    dbAssert($service->hasAcceptedCharter(1), 'acceptation de la nouvelle version mémorisée');
+    $charter = $service->getCharterAcceptance(1);
+    dbAssert($charter['accepted'] && $charter['accepted_version'] === BDO_PARABD_CHARTER_VERSION && !empty($charter['accepted_at']), 'statut et date de la charte disponibles pour le profil');
+    $service->setCharterAcceptance(1, false);
+    $charter = $service->getCharterAcceptance(1);
+    dbAssert(!$charter['accepted'] && $charter['accepted_version'] === null && $charter['accepted_at'] === null, 'acceptation de la charte révocable depuis le profil');
+    try { $service->requireCharter(1); dbAssert(false, 'contribution bloquée après retrait de la charte'); }
+    catch (ParabdException $expected) { dbAssert($expected->errorCode === 'VALIDATION_ERROR', 'contribution bloquée après retrait de la charte'); }
+    $service->setCharterAcceptance(1, true);
 
     mkdir($imageRoot, 0775, true);
     $validPath = $imageRoot . '/valid.jpg';

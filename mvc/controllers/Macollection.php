@@ -39,6 +39,24 @@ class Macollection extends Bdo_Controller {
             $user_prop_alb =  $prop_stat["user_prop_alb"];
             $user_prop_corr = $prop_stat["user_prop_corr"];
 
+            $parabd_available = parabdMenuVisible();
+            $parabd_charter = null;
+            $parabd_charter_message = '';
+            $parabd_charter_error = '';
+            if ($parabd_available) {
+                $this->loadModel('ParabdService');
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && postVal('parabd_charter_form', '') === '1') {
+                    if (!parabdValidateCsrf('parabd-profile', postVal('csrf_token', ''))) {
+                        $parabd_charter_error = 'Le formulaire a expiré. Rechargez la page puis réessayez.';
+                    } else {
+                        $accepted = postValInteger('parabd_charter_accepted', 0) === 1;
+                        $this->ParabdService->setCharterAcceptance($user_id, $accepted);
+                        $parabd_charter_message = $accepted ? 'Acceptation de la charte Para-BD enregistrée.' : 'Acceptation de la charte Para-BD retirée.';
+                    }
+                }
+                $parabd_charter = $this->ParabdService->getCharterAcceptance($user_id);
+            }
+
            
         }
         else {
@@ -55,7 +73,9 @@ class Macollection extends Bdo_Controller {
                 "a_carre" => $this->Useralbum->carre($this->getUserInfo()),
                 "user_id" => $user_id,
                 "carre_type" => $user->CARRE_TYPE,
-                "open_collec" => $user->OPEN_COLLEC
+                "open_collec" => $user->OPEN_COLLEC,
+                "parabd_available" => $parabd_available,
+                "parabd_charter" => $parabd_charter
                 )));
             $this->view->render();
         } else {
@@ -66,7 +86,12 @@ class Macollection extends Bdo_Controller {
                 "a_carre" => $this->Useralbum->carre($this->getUserInfo()),
                 "user_id" => $user_id,
                 "carre_type" => $user->CARRE_TYPE,
-                "open_collec" => $user->OPEN_COLLEC
+                "open_collec" => $user->OPEN_COLLEC,
+                "parabd_available" => $parabd_available,
+                "parabd_charter" => $parabd_charter,
+                "parabd_charter_csrf" => $parabd_available ? parabdCsrfToken('parabd-profile') : '',
+                "parabd_charter_message" => $parabd_charter_message,
+                "parabd_charter_error" => $parabd_charter_error
                 ));
             $this->view->set_var("PAGETITLE","Ma Collection de sur Bdovore");
             $this->view->render();

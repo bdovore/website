@@ -26,9 +26,19 @@ class Parabduserprofile extends ParabdDbLine
             ON DUPLICATE KEY UPDATE CHARTER_VERSION=VALUES(CHARTER_VERSION),CHARTER_ACCEPTED_AT=NOW()");
     }
 
+    public function revokeCharter($userId)
+    {
+        $this->executeQuery('UPDATE parabd_user_profile SET CHARTER_VERSION=NULL,CHARTER_ACCEPTED_AT=NULL WHERE USER_ID=' . intval($userId));
+    }
+
+    public function charterAcceptance($userId)
+    {
+        return $this->fetchOneQuery('SELECT CHARTER_VERSION,CHARTER_ACCEPTED_AT FROM parabd_user_profile WHERE USER_ID=' . intval($userId));
+    }
+
     public function charterVersion($userId)
     {
-        $row = $this->fetchOneQuery('SELECT CHARTER_VERSION FROM parabd_user_profile WHERE USER_ID=' . intval($userId));
+        $row = $this->charterAcceptance($userId);
         return $row ? $row['CHARTER_VERSION'] : null;
     }
 
@@ -43,4 +53,3 @@ class Parabduserprofile extends ParabdDbLine
         $this->executeQuery("UPDATE parabd_user_profile SET $columnAt=" . ($fresh ? 'NOW()' : $columnAt) . ",$columnCount=" . ($fresh ? '1' : "$columnCount+1") . ' WHERE USER_ID=' . intval($userId));
     }
 }
-

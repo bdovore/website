@@ -199,13 +199,38 @@ class ParabdService
     public function acceptCharter($userId, $accepted)
     {
         if (!$accepted) throw new ParabdException('VALIDATION_ERROR', 'Vous devez accepter la charte de contribution.', array('charter' => 'Acceptation obligatoire.'));
-        $this->model('Parabduserprofile')->acceptCharter($userId, defined('BDO_PARABD_CHARTER_VERSION') ? BDO_PARABD_CHARTER_VERSION : '1');
+        if (!$this->hasAcceptedCharter($userId)) {
+            $this->model('Parabduserprofile')->acceptCharter($userId, defined('BDO_PARABD_CHARTER_VERSION') ? BDO_PARABD_CHARTER_VERSION : '1');
+        }
+    }
+
+    public function hasAcceptedCharter($userId)
+    {
+        $version = defined('BDO_PARABD_CHARTER_VERSION') ? BDO_PARABD_CHARTER_VERSION : '1';
+        return $this->model('Parabduserprofile')->charterVersion($userId) === $version;
+    }
+
+    public function getCharterAcceptance($userId)
+    {
+        $version = defined('BDO_PARABD_CHARTER_VERSION') ? BDO_PARABD_CHARTER_VERSION : '1';
+        $row = $this->model('Parabduserprofile')->charterAcceptance($userId);
+        return array(
+            'accepted' => $row && $row['CHARTER_VERSION'] === $version,
+            'current_version' => $version,
+            'accepted_version' => $row ? $row['CHARTER_VERSION'] : null,
+            'accepted_at' => $row ? $row['CHARTER_ACCEPTED_AT'] : null
+        );
+    }
+
+    public function setCharterAcceptance($userId, $accepted)
+    {
+        if ($accepted) $this->acceptCharter($userId, true);
+        else $this->model('Parabduserprofile')->revokeCharter($userId);
     }
 
     public function requireCharter($userId)
     {
-        $version = defined('BDO_PARABD_CHARTER_VERSION') ? BDO_PARABD_CHARTER_VERSION : '1';
-        if ($this->model('Parabduserprofile')->charterVersion($userId) !== $version) throw new ParabdException('VALIDATION_ERROR', 'La charte Para-BD doit être acceptée.', array('charter' => 'Acceptation obligatoire.'));
+        if (!$this->hasAcceptedCharter($userId)) throw new ParabdException('VALIDATION_ERROR', 'La charte Para-BD doit être acceptée.', array('charter' => 'Acceptation obligatoire.'));
     }
 
     public function consumeRate($userId, $kind)

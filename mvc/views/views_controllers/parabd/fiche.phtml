@@ -157,7 +157,7 @@ $triOptions = function ($current) {
                     <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>">
                     <label>Champ <select name="field" style="width: 220px;"><option value="DESCRIPTION">Description</option><option value="MATERIAL">Matière</option><option value="COLOR">Couleur</option><option value="MANUFACTURER">Fabricant</option><option value="PUBLISHER">Éditeur</option><option value="RELEASE_DATE">Date</option></select></label>
                     <label>Nouvelle valeur <textarea name="value" rows="2" style="width: 220px;" required></textarea></label>
-                    <label><input type="checkbox" name="accept_charter" value="1"> J’accepte la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte de contribution</a> si ce n’est pas déjà fait.</label>
+                    <?php if (!$view->charter_accepted) { ?><label><input type="checkbox" name="accept_charter" value="1" required> J’accepte la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte de contribution</a>, version <?php echo $h($view->charter_version); ?>.</label><?php } ?>
                     <button type="submit">Proposer</button> <span class="parabd-form-status"></span>
                 </form>
 
@@ -168,7 +168,7 @@ $triOptions = function ($current) {
                     <label>ou depuis une URL <input type="url" name="visual_url" placeholder="https://exemple.fr/image.jpg"></label>
                     <select name="media_type"><option value="GALLERY">Galerie</option><option value="DETAIL">Détail</option><option value="BOX">Boîte</option><option value="CERTIFICATE">Certificat</option></select>
                     <label class="parabd-media-explicit-option"><input type="checkbox" name="is_explicit" value="1"> Contenu explicite <small>si ce visuel comporte un contenu sexuel ou érotique explicite</small></label>
-                    <label><input type="checkbox" name="accept_charter" value="1"> Accepter la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte</a> si nécessaire</label>
+                    <?php if (!$view->charter_accepted) { ?><label><input type="checkbox" name="accept_charter" value="1" required> J’accepte la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte de contribution</a>, version <?php echo $h($view->charter_version); ?>.</label><?php } ?>
                     <button type="submit">Envoyer</button> <span class="parabd-form-status"></span>
                 </form>
 

@@ -118,6 +118,7 @@ class Parabd extends Bdo_Controller
             'user_id' => $userId,
             'csrf_token' => $canContribute ? parabdCsrfToken('parabd-write') : '', 'can_contribute' => $canContribute,
             'trusted' => $canContribute ? $this->service()->isTrusted($userId) : false, 'charter_version' => BDO_PARABD_CHARTER_VERSION,
+            'charter_accepted' => $canContribute ? $this->service()->hasAcceptedCharter($userId) : false,
             'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'), 'can_admin' => $userId && User::minAccesslevel(1)));
         $this->view->render();
     }
@@ -157,7 +158,8 @@ class Parabd extends Bdo_Controller
             $this->view->addCssFile('style/parabd.css?v=20260813b');
             $this->view->addJavascriptFile('script/parabd.js');
             $this->view->set_var(array('PAGETITLE' => 'Créer un objet Para-BD', 'ROBOTS' => 'noindex,nofollow', 'types' => $this->service()->getTypes(),
-                'csrf_token' => parabdCsrfToken('parabd-write'), 'charter_version' => BDO_PARABD_CHARTER_VERSION));
+                'csrf_token' => parabdCsrfToken('parabd-write'), 'charter_version' => BDO_PARABD_CHARTER_VERSION,
+                'charter_accepted' => $this->service()->hasAcceptedCharter($this->userId())));
             $this->view->render();
             return;
         }
