@@ -31,16 +31,28 @@ $date = ParabdRules::parsePartialDate('2026-08-09');
 parabdAssert($date['precision'] === 'DAY', 'date jour');
 try { ParabdRules::parsePartialDate('2026-02-30'); parabdAssert(false, 'date invalide refusée'); } catch (ParabdException $expected) { parabdAssert(true, 'date invalide refusée'); }
 
-$candidate = array('TITLE' => 'Statuette Le Chat', 'TYPE_ID' => 1, 'MANUFACTURER' => 'Pixi', 'RELEASE_DATE' => '2025-01-01', 'WIDTH_MM' => 100, 'HEIGHT_MM' => 200, 'DEPTH_MM' => 80);
-$input = array('TITLE' => 'Statuette Le Chat', 'TYPE_ID' => 1, 'MANUFACTURER' => 'Pixi', 'RELEASE_DATE' => '2025-01-01', 'WIDTH_MM' => 103, 'HEIGHT_MM' => 198, 'DEPTH_MM' => 80);
+$candidate = array('TITLE' => 'Statuette Le Chat', 'TYPE_ID' => 1, 'MANUFACTURER' => 'Pixi', 'PUBLISHER' => 'Dupuis', 'RELEASE_DATE' => '2025-01-01', 'WIDTH_MM' => 100, 'HEIGHT_MM' => 200, 'DEPTH_MM' => 80);
+$input = array('TITLE' => 'Statuette Le Chat', 'TYPE_ID' => 1, 'MANUFACTURER' => 'Pixi', 'PUBLISHER' => 'Dupuis', 'RELEASE_DATE' => '2025-01-01', 'WIDTH_MM' => 103, 'HEIGHT_MM' => 198, 'DEPTH_MM' => 80, 'common_relation' => true);
 $duplicate = ParabdRules::duplicateLevel($candidate, $input);
 parabdAssert($duplicate && $duplicate['level'] === 'STRONG', 'seuil doublon fort');
 $input['TITLE'] = 'Chat'; $input['MANUFACTURER'] = 'Autre'; $input['common_relation'] = true;
 $duplicate = ParabdRules::duplicateLevel($candidate, $input);
 parabdAssert($duplicate === null, 'rattachement commun seul insuffisant');
 $input['TITLE'] = 'Statuette du Chat';
+$input['common_relation'] = false;
 $duplicate = ParabdRules::duplicateLevel($candidate, $input);
-parabdAssert($duplicate && $duplicate['level'] === 'POSSIBLE', 'titre proche possible');
+parabdAssert($duplicate && $duplicate['level'] === 'POSSIBLE', 'titre proche, même type et même éditeur possible');
+$input['TITLE'] = 'Statuette Le Chat'; $input['PUBLISHER'] = 'Autre';
+$duplicate = ParabdRules::duplicateLevel($candidate, $input);
+parabdAssert($duplicate === null, 'titre identique sans éditeur ni rattachement commun insuffisant');
+$candidateExlibris = array('TITLE' => 'Ex-libris Spider-man (exclusivité BDfugue)', 'TYPE_ID' => 2, 'PUBLISHER' => '');
+$inputExlibris = array('TITLE' => 'Ex-libris Astérix (exclusifivté BDFugue)', 'TYPE_ID' => 2, 'PUBLISHER' => '', 'common_relation' => false);
+parabdAssert(ParabdRules::duplicateLevel($candidateExlibris, $inputExlibris) === null, 'termes génériques de titres insuffisants');
+$candidateBoundary = array('TITLE' => 'abcdefghij', 'TYPE_ID' => 3, 'PUBLISHER' => 'Delcourt');
+$inputBoundary = array('TITLE' => 'abcdefghiX', 'TYPE_ID' => 3, 'PUBLISHER' => 'Autre', 'common_relation' => true);
+parabdAssert(ParabdRules::duplicateLevel($candidateBoundary, $inputBoundary)['level'] === 'STRONG', 'seuil fort inclusif à 90');
+$candidateBoundary['TITLE'] = 'abcde'; $inputBoundary['TITLE'] = 'abcdf'; $inputBoundary['PUBLISHER'] = 'Delcourt'; $inputBoundary['common_relation'] = false;
+parabdAssert(ParabdRules::duplicateLevel($candidateBoundary, $inputBoundary) === null, 'seuil possible strictement supérieur à 80');
 
 $now = strtotime('2026-08-09 12:00:00');
 parabdAssert(ParabdRules::calculateTrust('2025-08-09 11:59:59', 5, 'NONE', $now), 'contributeur fiable');

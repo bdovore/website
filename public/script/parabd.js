@@ -69,6 +69,7 @@
             title: $('#parabd-title').val(),
             type_id: $('#parabd-type').find(':selected').data('id') || '',
             manufacturer: form.find('[name="manufacturer"]').val(),
+            publisher: form.find('[name="publisher"]').val(),
             release_date: form.find('[name="release_date"]').val(),
             width_mm: form.find('[name="width_mm"]').val(),
             height_mm: form.find('[name="height_mm"]').val(),

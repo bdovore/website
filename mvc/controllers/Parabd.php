@@ -141,6 +141,7 @@ class Parabd extends Bdo_Controller
         if (!$this->enabled()) return;
         $input = array(
             'TITLE' => getVal('title', getVal('q', '')), 'TYPE_ID' => getValInteger('type_id', 0), 'MANUFACTURER' => getVal('manufacturer', ''),
+            'PUBLISHER' => getVal('publisher', ''),
             'RELEASE_DATE' => getVal('release_date', ''), 'WIDTH_MM' => getVal('width_mm', ''), 'HEIGHT_MM' => getVal('height_mm', ''), 'DEPTH_MM' => getVal('depth_mm', ''),
             'AUTHOR_ID' => getValInteger('author_id', 0), 'SERIES_ID' => getValInteger('series_id', 0), 'TOME_ID' => getValInteger('tome_id', 0)
         );

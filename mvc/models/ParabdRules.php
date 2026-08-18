@@ -87,28 +87,16 @@ class ParabdRules
         $similarity = self::titleSimilarity($candidate['TITLE'], $input['TITLE']);
         $sameRelation = !empty($input['common_relation']);
         $sameType = intval($candidate['TYPE_ID']) === intval($input['TYPE_ID']);
-        $sameManufacturer = self::normalizeText($candidate['MANUFACTURER']) !== ''
-            && self::normalizeText($candidate['MANUFACTURER']) === self::normalizeText(isset($input['MANUFACTURER']) ? $input['MANUFACTURER'] : '');
-        $year = !empty($candidate['RELEASE_DATE']) && !empty($input['RELEASE_DATE'])
-            && substr($candidate['RELEASE_DATE'], 0, 4) === substr($input['RELEASE_DATE'], 0, 4);
-        $dimensions = self::dimensionsMatch($candidate, $input);
-        if ($sameType && $similarity >= 85 && $sameManufacturer && ($year || $dimensions || $sameRelation)) {
-            return array('level' => 'STRONG', 'score' => $similarity, 'reasons' => array('Titre très proche', 'Même fabricant', $year ? 'Même année' : ($dimensions ? 'Dimensions proches' : 'Rattachement commun')));
+        $candidatePublisher = self::normalizeText(isset($candidate['PUBLISHER']) ? $candidate['PUBLISHER'] : '');
+        $samePublisher = $candidatePublisher !== ''
+            && $candidatePublisher === self::normalizeText(isset($input['PUBLISHER']) ? $input['PUBLISHER'] : '');
+        if ($sameType && $similarity >= 90 && $sameRelation) {
+            return array('level' => 'STRONG', 'score' => $similarity, 'reasons' => array('Titre très proche', 'Rattachement commun'));
         }
-        if ($similarity >= 70) return array('level' => 'POSSIBLE', 'score' => $similarity, 'reasons' => array('Titre proche'));
+        if ($sameType && $similarity > 80 && ($samePublisher || $sameRelation)) {
+            return array('level' => 'POSSIBLE', 'score' => $similarity, 'reasons' => array('Titre proche', $samePublisher ? 'Même éditeur' : 'Rattachement commun'));
+        }
         return null;
-    }
-
-    private static function dimensionsMatch($left, $right)
-    {
-        $checked = 0;
-        foreach (array('WIDTH_MM', 'HEIGHT_MM', 'DEPTH_MM') as $field) {
-            if (!empty($left[$field]) && !empty($right[$field])) {
-                $checked++;
-                if (abs(floatval($left[$field]) - floatval($right[$field])) / max(floatval($left[$field]), 1) > 0.05) return false;
-            }
-        }
-        return $checked > 0;
     }
 
     public static function calculateTrust($createdAt, $validatedContributions, $override = 'NONE', $now = null)
