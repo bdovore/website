@@ -38,6 +38,8 @@ try {
     if (!$server->multi_query($migration)) throw new RuntimeException($server->error); drainMulti($server);
     $discussionMigration = file_get_contents(dirname(__DIR__) . '/sql/2026-08-13-add-parabd-discussion.sql');
     if (!$server->multi_query($discussionMigration)) throw new RuntimeException($server->error); drainMulti($server);
+    $measurementMigration = file_get_contents(dirname(__DIR__) . '/sql/2026-08-18-change-parabd-measurements-to-unsigned-int.sql');
+    if (!$server->multi_query($measurementMigration)) throw new RuntimeException($server->error); drainMulti($server);
     $server->query("INSERT INTO users (user_id,username,level,OPEN_COLLEC,CREATED_AT) VALUES (1,'creator',2,'Y','2020-01-01'),(2,'contributor',2,'Y','2020-01-01'),(3,'voter1',2,'Y','2020-01-01'),(4,'voter2',2,'Y','2020-01-01'),(5,'collector',2,'Y','2020-01-01')");
     $server->query("INSERT INTO bd_auteur (ID_AUTEUR,PSEUDO) VALUES (10,'Auteur admin')");
     $server->query("INSERT INTO bd_serie (ID_SERIE,NOM) VALUES (20,'Série admin')");
@@ -109,6 +111,11 @@ try {
     catch (ParabdException $expected) { dbAssert($expected->errorCode === 'VALIDATION_ERROR', 'contribution bloquée après retrait de la charte'); }
     $service->setCharterAcceptance(1, true);
 
+    foreach (array('WIDTH_MM', 'HEIGHT_MM', 'DEPTH_MM', 'WEIGHT_G') as $measurementColumn) {
+        $definition = $server->query("SELECT DATA_TYPE,COLUMN_TYPE FROM information_schema.columns WHERE table_schema='" . $server->real_escape_string($database) . "' AND table_name='parabd_item' AND column_name='$measurementColumn'")->fetch_assoc();
+        dbAssert($definition && $definition['DATA_TYPE'] === 'int' && strpos($definition['COLUMN_TYPE'], 'unsigned') !== false, "$measurementColumn stockée en entier non signé");
+    }
+
     mkdir($imageRoot, 0775, true);
     $validPath = $imageRoot . '/valid.jpg';
     $image = imagecreatetruecolor(120, 80); imagejpeg($image, $validPath, 90); imagedestroy($image);
@@ -117,6 +124,8 @@ try {
     $badUpload = array('tmp_name' => $badPath, 'name' => 'bad.jpg', 'size' => filesize($badPath), 'error' => UPLOAD_ERR_OK);
     try { $service->createItem(1, array('title' => 'Invalide', 'type_code' => 'STATUETTE'), $badUpload); dbAssert(false, 'upload invalide refusé'); } catch (ParabdException $expected) { dbAssert($expected->errorCode === 'VALIDATION_ERROR', 'upload invalide refusé'); }
     $row = $server->query('SELECT COUNT(*) total FROM parabd_item')->fetch_assoc(); dbAssert(intval($row['total']) === 0, 'transaction annulée sur upload invalide');
+    try { $service->createItem(1, array('title' => 'Dimension invalide', 'type_code' => 'STATUETTE', 'width_mm' => '100.5'), $validUpload); dbAssert(false, 'dimension décimale refusée'); } catch (ParabdException $expected) { dbAssert($expected->errorCode === 'VALIDATION_ERROR', 'dimension décimale refusée'); }
+    try { $service->createItem(1, array('title' => 'Poids invalide', 'type_code' => 'STATUETTE', 'weight_g' => '100.5'), $validUpload); dbAssert(false, 'poids décimal refusé'); } catch (ParabdException $expected) { dbAssert($expected->errorCode === 'VALIDATION_ERROR', 'poids décimal refusé'); }
 
     $created = $service->createItem(1, array('title' => 'Statuette test', 'type_code' => 'STATUETTE', 'description' => 'Initiale', 'manufacturer' => 'Pixi', 'release_date' => '2025', 'width_mm' => '100', 'identifier_scheme' => 'EAN13', 'identifier_value' => '4006381333931', 'is_explicit' => 1, 'collection_action' => 'none'), $validUpload);
     $itemId = $created['item_id']; dbAssert($itemId > 0, 'création sans rattachement BD');

@@ -31,6 +31,9 @@ $date = ParabdRules::parsePartialDate('2026-08-09');
 parabdAssert($date['precision'] === 'DAY', 'date jour');
 try { ParabdRules::parsePartialDate('2026-02-30'); parabdAssert(false, 'date invalide refusée'); } catch (ParabdException $expected) { parabdAssert(true, 'date invalide refusée'); }
 
+parabdAssert(ParabdRules::positiveInt('356') === 356, 'dimension entière valide');
+try { ParabdRules::positiveInt('356.5'); parabdAssert(false, 'dimension décimale refusée'); } catch (ParabdException $expected) { parabdAssert(true, 'dimension décimale refusée'); }
+
 $candidate = array('TITLE' => 'Statuette Le Chat', 'TYPE_ID' => 1, 'MANUFACTURER' => 'Pixi', 'PUBLISHER' => 'Dupuis', 'RELEASE_DATE' => '2025-01-01', 'WIDTH_MM' => 100, 'HEIGHT_MM' => 200, 'DEPTH_MM' => 80);
 $input = array('TITLE' => 'Statuette Le Chat', 'TYPE_ID' => 1, 'MANUFACTURER' => 'Pixi', 'PUBLISHER' => 'Dupuis', 'RELEASE_DATE' => '2025-01-01', 'WIDTH_MM' => 103, 'HEIGHT_MM' => 198, 'DEPTH_MM' => 80, 'common_relation' => true);
 $duplicate = ParabdRules::duplicateLevel($candidate, $input);

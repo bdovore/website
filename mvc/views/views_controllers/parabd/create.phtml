@@ -44,8 +44,8 @@ foreach ($view->types as $type) {
                 <label class="wide">Description<textarea name="description" rows="4"></textarea></label>
                 <label>Fabricant<input name="manufacturer"></label><label>Éditeur<input name="publisher"></label>
                 <label>Matière<input name="material"></label><label>Couleur<input name="color"></label>
-                <label>Largeur (mm)<input name="width_mm" inputmode="decimal"></label><label>Hauteur (mm)<input name="height_mm" inputmode="decimal"></label>
-                <label>Profondeur (mm)<input name="depth_mm" inputmode="decimal"></label><label>Poids (g)<input name="weight_g" inputmode="decimal"></label>
+                <label>Largeur (mm)<input type="number" name="width_mm" min="0" step="1"></label><label>Hauteur (mm)<input type="number" name="height_mm" min="0" step="1"></label>
+                <label>Profondeur (mm)<input type="number" name="depth_mm" min="0" step="1"></label><label>Poids (g)<input type="number" name="weight_g" min="0" step="1"></label>
                 <label>Échelle<input name="scale" placeholder="1/6"></label><label>Date<input name="release_date" placeholder="AAAA, AAAA-MM ou AAAA-MM-JJ"></label>
                 <label>Tirage<input name="print_run" inputmode="numeric"></label>
                 <label>Numéroté ?<select name="is_numbered"><option value="unknown">Inconnu</option><option value="1">Oui</option><option value="0">Non</option></select></label>

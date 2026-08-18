@@ -258,9 +258,9 @@ class ParabdService
         $data = array(
             'TYPE_ID' => $typeId, 'SUBTYPE_ID' => $subtypeId, 'TITLE' => $title, 'TITLE_NORMALIZED' => self::normalizeText($title),
             'DESCRIPTION' => trim(isset($input['description']) ? $input['description'] : ''), 'MATERIAL' => trim(isset($input['material']) ? $input['material'] : ''),
-            'COLOR' => trim(isset($input['color']) ? $input['color'] : ''), 'WIDTH_MM' => $this->decimal(isset($input['width_mm']) ? $input['width_mm'] : null),
-            'HEIGHT_MM' => $this->decimal(isset($input['height_mm']) ? $input['height_mm'] : null), 'DEPTH_MM' => $this->decimal(isset($input['depth_mm']) ? $input['depth_mm'] : null),
-            'WEIGHT_G' => $this->decimal(isset($input['weight_g']) ? $input['weight_g'] : null), 'SCALE' => trim(isset($input['scale']) ? $input['scale'] : ''),
+            'COLOR' => trim(isset($input['color']) ? $input['color'] : ''), 'WIDTH_MM' => $this->positiveInt(isset($input['width_mm']) ? $input['width_mm'] : null),
+            'HEIGHT_MM' => $this->positiveInt(isset($input['height_mm']) ? $input['height_mm'] : null), 'DEPTH_MM' => $this->positiveInt(isset($input['depth_mm']) ? $input['depth_mm'] : null),
+            'WEIGHT_G' => $this->positiveInt(isset($input['weight_g']) ? $input['weight_g'] : null), 'SCALE' => trim(isset($input['scale']) ? $input['scale'] : ''),
             'RELEASE_DATE' => $date['date'], 'DATE_PRECISION' => $date['precision'], 'PRINT_RUN' => $this->positiveInt(isset($input['print_run']) ? $input['print_run'] : null),
             'IS_NUMBERED' => $this->tri(isset($input['is_numbered']) ? $input['is_numbered'] : ''), 'IS_SIGNED' => $this->tri(isset($input['is_signed']) ? $input['is_signed'] : ''),
             'HAS_CERTIFICATE' => $this->tri(isset($input['has_certificate']) ? $input['has_certificate'] : ''), 'IS_LIMITED' => $this->tri(isset($input['is_limited']) ? $input['is_limited'] : ''),
@@ -270,11 +270,6 @@ class ParabdService
         );
         $data['MANUFACTURER_NORMALIZED'] = self::normalizeText($data['MANUFACTURER']);
         return $data;
-    }
-
-    private function decimal($value)
-    {
-        return ParabdRules::decimal($value);
     }
 
     private function positiveInt($value)
@@ -505,7 +500,7 @@ class ParabdService
         }
         $extraAfter = array();
         $extraBefore = array();
-        if (in_array($field, array('WIDTH_MM','HEIGHT_MM','DEPTH_MM','WEIGHT_G'), true)) $value = $this->decimal($value);
+        if (in_array($field, array('WIDTH_MM','HEIGHT_MM','DEPTH_MM','WEIGHT_G'), true)) $value = $this->positiveInt($value);
         elseif ($field === 'PRINT_RUN') $value = $this->positiveInt($value);
         elseif (in_array($field, array('IS_NUMBERED','IS_SIGNED','HAS_CERTIFICATE','IS_LIMITED'), true)) $value = $this->tri($value);
         elseif ($field === 'RELEASE_DATE') {

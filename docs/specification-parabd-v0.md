@@ -98,8 +98,8 @@ Un enregistrement correspond à une variante réellement distinguable : autre fa
 | `DESCRIPTION` | description factuelle commune, pas de note personnelle |
 | `MATERIAL` | matière libre avec suggestions existantes |
 | `COLOR_MODE` | monochrome, noir et blanc, polychrome/multicolore ou inconnu |
-| `WIDTH_MM`, `HEIGHT_MM`, `DEPTH_MM` | valeurs numériques facultatives, ordre stable L x H x P |
-| `WEIGHT_G` | valeur numérique facultative |
+| `WIDTH_MM`, `HEIGHT_MM`, `DEPTH_MM` | entiers non signés facultatifs en millimètres, ordre stable L x H x P |
+| `WEIGHT_G` | entier non signé facultatif en grammes |
 | `SCALE_TEXT` | échelle telle que `1/10`, facultative |
 | `RELEASE_DATE`, `RELEASE_DATE_PRECISION` | jour, mois, année ou inconnue sans fabriquer un faux jour |
 | `LIMITED_RUN_COUNT` | nombre total annoncé, facultatif |
