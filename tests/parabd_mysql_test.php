@@ -198,6 +198,21 @@ try {
     dbAssert($afterAdminMedia['TITLE'] === $adminEdited['TITLE'] && $afterAdminMedia['DESCRIPTION'] === $adminEdited['DESCRIPTION'] && count($afterAdminMedia['authors']) === count($adminEdited['authors']) && count($afterAdminMedia['sources']) === count($adminEdited['sources']), 'ajout de visuel sans modification des autres informations de la fiche');
     dbAssert(count($historyAfterAdminMedia) === $historyCountBeforeAdminAdd + 2 && $historyAfterAdminMedia[0]['STATUS'] === 'ACCEPTED', 'chaque ajout de visuel historisé séparément');
 
+    $deletedMediaPath = $imageRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $addedMedia[$firstAdminMedia['media_id']]['FILE_PATH']);
+    dbAssert(is_file($deletedMediaPath), 'fichier du visuel présent avant suppression admin');
+    $service->adminDeleteMedia(1, $itemId, $firstAdminMedia['media_id']);
+    $afterAdminDelete = $service->getAdminItem($itemId); $remainingMedia = array(); foreach ($afterAdminDelete['media'] as $media) $remainingMedia[intval($media['ID_MEDIA'])] = $media;
+    dbAssert(!isset($remainingMedia[$firstAdminMedia['media_id']]) && !is_file($deletedMediaPath), 'suppression admin retirant le visuel de la base et du disque');
+    dbAssert(count($service->getAdminItemHistory($itemId)) === count($historyAfterAdminMedia) + 1, 'suppression de visuel historisée');
+
+    $replacementMedia = $service->adminAddMedia(1, $itemId, array('media_type' => 'GALLERY'), $validUpload);
+    $afterReplacement = $service->getAdminItem($itemId); $replacementRows = array(); foreach ($afterReplacement['media'] as $media) $replacementRows[intval($media['ID_MEDIA'])] = $media;
+    dbAssert($replacementRows[$replacementMedia['media_id']]['FILE_PATH'] !== $replacementRows[$secondAdminMedia['media_id']]['FILE_PATH'], 'nouvel ajout après suppression sans écraser un fichier existant');
+    $deletedPrimaryPath = $imageRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $replacementRows[$secondAdminMedia['media_id']]['FILE_PATH']);
+    $service->adminDeleteMedia(1, $itemId, $secondAdminMedia['media_id']);
+    $afterPrimaryDelete = $service->getAdminItem($itemId); $primaryAfterDelete = array_values(array_filter($afterPrimaryDelete['media'], function ($media) { return intval($media['IS_PRIMARY']) === 1; }));
+    dbAssert(!is_file($deletedPrimaryPath) && count($primaryAfterDelete) === 1 && intval($primaryAfterDelete[0]['ID_MEDIA']) !== intval($secondAdminMedia['media_id']), 'suppression du visuel principal avec sélection automatique d’un remplaçant visible');
+
     $adminCreated = $service->adminCreateItem(1, array('title' => 'Création administrative', 'type_code' => 'STATUETTE', 'description' => 'Fiche créée pour la communauté', 'manufacturer' => 'Admin', 'status' => 'HIDDEN', 'is_explicit' => 1, 'collection_action' => 'OWNED', 'authors' => array(array('id' => 10, 'role' => 'ARTIST'))), $validUpload);
     $adminCreatedHistory = $service->getAdminItemHistory($adminCreated['item_id']);
     $adminCopyCount = $server->query('SELECT COUNT(*) total FROM users_parabd WHERE ITEM_ID=' . intval($adminCreated['item_id']))->fetch_assoc();

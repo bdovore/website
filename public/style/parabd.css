@@ -120,6 +120,8 @@ button.parabd-icon-delete:hover, button.parabd-icon-delete:focus { background: #
 .parabd-repeat-row-author { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto; }.parabd-repeat-row-reference { grid-template-columns: minmax(0, 1fr) auto; }
 .parabd-admin-media { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); margin-bottom: 1rem; }
 .parabd-admin-media article { border: 1px solid #ddd; display: flex; flex-direction: column; gap: .45rem; padding: .6rem; }.parabd-admin-media img { background: #f3f3f3; height: 170px; object-fit: contain; width: 100%; }
+.parabd-admin-media .parabd-admin-delete-media { align-self: flex-start; color: #8b1010; margin-top: .35rem; }
+.parabd-admin-media .parabd-admin-delete-media:hover, .parabd-admin-media .parabd-admin-delete-media:focus { background: #8b1010; border-color: #650000; color: #fff; }
 .parabd-new-media-form { margin-top: .8rem; }.parabd-new-media-form[hidden] { display: none; }.parabd-new-media-actions { margin-top: .8rem; text-align: right; }
 .parabd-admin-save { background: #f6f3ef; border-top: 1px solid #ddd; bottom: 0; padding: .8rem; position: sticky; text-align: left; z-index: 5; }
 .parabd-admin-save .parabd-admin-save-button.is-dirty, .parabd-admin-save .parabd-admin-save-button.is-dirty:hover, .parabd-admin-save .parabd-admin-save-button.is-dirty:focus { background: #900; border-color: #650000; color: #fff; }

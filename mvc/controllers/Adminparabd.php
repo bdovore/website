@@ -42,7 +42,7 @@ class Adminparabd extends Bdo_Controller
             return in_array($revision['STATUS'], array('PENDING', 'CONFLICT'), true) && $revision['CHANGE_KIND'] !== 'CREATE';
         }));
         $this->view->addPhtmlFile('adminparabd/edit', 'BODY');
-        $this->view->addCssFile('style/parabd.css?v=20260815a');
+        $this->view->addCssFile('style/parabd.css?v=20260818b');
         $this->view->addJavascriptFile('script/parabd-admin.js?v=20260815a');
         $itemId = $item ? intval($item['ID_ITEM']) : 0;
         $reportId = getValInteger('report_id', postValInteger('report_id', 0));
@@ -54,7 +54,7 @@ class Adminparabd extends Bdo_Controller
             'report' => $item ? $this->service()->getOpenReportForItem($reportId, $itemId) : null,
             'report_id' => $reportId,
             'csrf_token' => parabdCsrfToken('parabd-admin'), 'form_error' => $error, 'media_error' => $mediaError,
-            'saved' => getValInteger('saved', 0), 'media_saved' => getValInteger('media_saved', 0),
+            'saved' => getValInteger('saved', 0), 'media_saved' => getValInteger('media_saved', 0), 'media_deleted' => getValInteger('media_deleted', 0),
             'revision_decision' => getVal('revision_decision', '')
         ));
         $this->view->render();
@@ -119,6 +119,19 @@ class Adminparabd extends Bdo_Controller
         } catch (Throwable $error) {
             http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422);
             $this->renderEditor($this->service()->getAdminItem($itemId), 'edit', '', $error->getMessage());
+        }
+    }
+
+    public function DeleteMedia()
+    {
+        $this->guard(true);
+        $itemId = postValInteger('item_id', 0);
+        try {
+            $this->service()->adminDeleteMedia($this->adminId(), $itemId, postValInteger('media_id', 0));
+            header('Location: ' . BDO_URL . 'adminparabd/edit?id=' . $itemId . '&media_deleted=1' . ($this->reportQuery() ?: '') . '#visuels');
+        } catch (Throwable $error) {
+            http_response_code($error instanceof ParabdException && $error->errorCode === 'NOT_FOUND' ? 404 : 422);
+            die(htmlspecialchars($error->getMessage(), ENT_QUOTES, 'UTF-8'));
         }
     }
 

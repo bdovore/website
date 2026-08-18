@@ -39,13 +39,35 @@ class ParabdImageStorage
         $shard = sprintf('%03d', intval($itemId / 1000));
         $folder = rtrim(BDO_DIR_PARABD, DS) . DS . $shard . DS . intval($itemId) . DS;
         if (!is_dir($folder) && !mkdir($folder, 0775, true) && !is_dir($folder)) throw new RuntimeException('Impossible de créer le répertoire Para-BD.');
-        $filename = sprintf('PBD-%06d-%02d.%s', $itemId, $sequence, $allowed[$mime]);
-        $absolute = $folder . $filename;
+        do {
+            $filename = sprintf('PBD-%06d-%02d.%s', $itemId, $sequence++, $allowed[$mime]);
+            $absolute = $folder . $filename;
+        } while (file_exists($absolute));
         if ($mime === 'image/webp' && !function_exists('imagewebp')) throw new ParabdException('VALIDATION_ERROR', 'Le support WebP est indisponible sur ce serveur.');
         $ok = $mime === 'image/png' ? imagepng($target, $absolute, 6) : ($mime === 'image/webp' ? imagewebp($target, $absolute, 85) : imagejpeg($target, $absolute, 85));
         imagedestroy($source); imagedestroy($target);
         if (!$ok) throw new RuntimeException('Impossible d’enregistrer le visuel Para-BD.');
         return array('absolute_path' => $absolute, 'relative_path' => $shard . '/' . intval($itemId) . '/' . $filename, 'mime' => $mime, 'width' => $width, 'height' => $height);
+    }
+
+    public function remove($relativePath)
+    {
+        $relativePath = str_replace('\\', '/', trim((string) $relativePath));
+        $parts = explode('/', $relativePath);
+        if ($relativePath === '' || $relativePath[0] === '/' || strpos($relativePath, "\0") !== false || in_array('', $parts, true) || in_array('.', $parts, true) || in_array('..', $parts, true)) {
+            throw new RuntimeException('Chemin de visuel Para-BD invalide.');
+        }
+
+        $root = realpath(rtrim(BDO_DIR_PARABD, DS));
+        if ($root === false) return false;
+        $absolute = $root . DS . str_replace('/', DS, $relativePath);
+        if (!file_exists($absolute) && !is_link($absolute)) return false;
+        if (is_link($absolute)) throw new RuntimeException('Le visuel Para-BD ne peut pas être un lien symbolique.');
+        $resolved = realpath($absolute);
+        if ($resolved === false || strpos($resolved, $root . DS) !== 0 || !is_file($resolved)) throw new RuntimeException('Chemin de visuel Para-BD invalide.');
+        if (!unlink($resolved)) throw new RuntimeException('Impossible de supprimer le fichier du visuel Para-BD.');
+        @rmdir(dirname($resolved));
+        return true;
     }
 
     public static function orient($image, $orientation)
@@ -140,4 +162,3 @@ class ParabdImageStorage
         throw new ParabdException('VALIDATION_ERROR', 'L’image distante effectue trop de redirections.');
     }
 }
-

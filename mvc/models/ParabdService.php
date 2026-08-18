@@ -781,6 +781,43 @@ class ParabdService
         }
     }
 
+    public function adminDeleteMedia($adminId, $itemId, $mediaId)
+    {
+        $itemId = intval($itemId);
+        $mediaId = intval($mediaId);
+        $connection = $this->connection();
+        Db_autocommit(false, $connection);
+        try {
+            $locked = $this->model('Parabditem')->findBase($itemId, true, true);
+            if (!$locked) throw new ParabdException('NOT_FOUND', 'Objet Para-BD introuvable.');
+            if ($locked['STATUS'] === 'MERGED') throw new ParabdException('VALIDATION_ERROR', 'Une fiche fusionnée est consultable mais ne peut plus être modifiée.');
+            $media = $this->model('Parabdmedia')->findForItem($itemId, $mediaId, true);
+            if (!$media) throw new ParabdException('NOT_FOUND', 'Visuel Para-BD introuvable.');
+
+            $before = $this->adminSnapshot($itemId);
+            if (!$this->model('Parabdmedia')->deleteForItem($itemId, $mediaId)) throw new ParabdException('NOT_FOUND', 'Visuel Para-BD introuvable.');
+            if (!empty($media['IS_PRIMARY'])) {
+                $replacement = $this->model('Parabdmedia')->firstVisibleForItem($itemId);
+                if ($replacement) $this->model('Parabdmedia')->selectPrimary($itemId, intval($replacement['ID_MEDIA']));
+            }
+
+            $after = $this->adminSnapshot($itemId);
+            $beforeJson = json_encode($before, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $afterJson = json_encode($after, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $baseRevision = intval($locked['REVISION_NO']);
+            $this->model('Parabditem')->incrementRevision($itemId, $adminId);
+            $now = date('d/m/Y H:i:s');
+            $this->model('Parabdrevision')->createRevision(array('ITEM_ID' => $itemId, 'AUTHOR_ID' => intval($adminId), 'BASE_REVISION_NO' => $baseRevision, 'PATCH_BEFORE' => $beforeJson, 'PATCH_AFTER' => $afterJson, 'CHANGE_KIND' => 'UPDATE', 'STATUS' => 'ACCEPTED', 'APPLIED_AT' => $now, 'VALIDATED_BY' => intval($adminId), 'VALIDATED_AT' => $now));
+
+            $this->imageStorage()->remove($media['FILE_PATH']);
+            Db_commit($connection); Db_autocommit(true, $connection);
+            return array('item_id' => $itemId, 'media_id' => $mediaId);
+        } catch (Throwable $error) {
+            Db_rollback($connection); Db_autocommit(true, $connection);
+            throw $error;
+        }
+    }
+
     public function adminQueues()
     {
         return array(
