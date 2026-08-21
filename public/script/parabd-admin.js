@@ -86,6 +86,24 @@
         });
     }
 
+    function initFreeAutocomplete(context) {
+        $(context || document).find('.parabd-free-autocomplete').each(function () {
+            var input = $(this);
+            if (input.hasClass('ui-autocomplete-input')) return;
+            var minLength = parseInt(input.attr('data-min-length'), 10);
+            if (isNaN(minLength)) minLength = 2;
+            input.autocomplete({
+                minLength: minLength,
+                source: function (request, response) {
+                    $.getJSON(input.data('source'), request).done(function (payload) {
+                        response(payload.ok ? $.map(payload.data.suggestions || [], function (row) { return row.label; }) : []);
+                    }).fail(function () { response([]); });
+                }
+            });
+            if (minLength === 0) input.on('focus', function () { input.autocomplete('search', input.val()); });
+        });
+    }
+
     function renumber(container) {
         container.children('.parabd-repeat-row').each(function (index) {
             $(this).find('[name]').each(function () { this.name = this.name.replace(/\[\d+\]/, '[' + index + ']'); });
@@ -102,7 +120,7 @@
     }
 
     $(function () {
-        enhanceButtons(document); initReferences(document); updateIdentifierIssuers(document);
+        enhanceButtons(document); initReferences(document); initFreeAutocomplete(document); updateIdentifierIssuers(document);
 
         $('.parabd-repeat[data-repeat="identifiers"]').on('change', 'select[name$="[scheme]"]', function () {
             updateIdentifierIssuers($(this).closest('.parabd-repeat-row').parent());

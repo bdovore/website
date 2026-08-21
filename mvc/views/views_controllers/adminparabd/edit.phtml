@@ -79,9 +79,9 @@ $samePatch = function ($left, $right) {
             </div></section>
 
             <section class="parabd-admin-section"><h2>Caractéristiques communes</h2><div class="parabd-fields">
-                <label>Fabricant<input name="manufacturer" value="<?php echo $h($value('manufacturer', 'MANUFACTURER')); ?>"></label><label>Éditeur<input name="publisher" value="<?php echo $h($value('publisher', 'PUBLISHER')); ?>"></label>
+                <label>Fabricant<input name="manufacturer" class="parabd-free-autocomplete" data-source="<?php echo BDO_URL; ?>parabd/fieldautocomplete?field=manufacturer" value="<?php echo $h($value('manufacturer', 'MANUFACTURER')); ?>" autocomplete="off"></label><label>Éditeur<input name="publisher" class="parabd-free-autocomplete" data-source="<?php echo BDO_URL; ?>parabd/fieldautocomplete?field=publisher" value="<?php echo $h($value('publisher', 'PUBLISHER')); ?>" autocomplete="off"></label>
                 <label>Licence<input name="license_name" value="<?php echo $h($value('license_name', 'LICENSE_NAME')); ?>"></label><label>Gamme<input name="range_name" value="<?php echo $h($value('range_name', 'RANGE_NAME')); ?>"></label>
-                <label>Univers<input name="universe_name" value="<?php echo $h($value('universe_name', 'UNIVERSE_NAME')); ?>"></label><label>Matière<input name="material" value="<?php echo $h($value('material', 'MATERIAL')); ?>"></label>
+                <label>Univers<input name="universe_name" class="parabd-free-autocomplete" data-source="<?php echo BDO_URL; ?>parabd/fieldautocomplete?field=universe" value="<?php echo $h($value('universe_name', 'UNIVERSE_NAME')); ?>" autocomplete="off"></label><label>Matière<input name="material" class="parabd-free-autocomplete" data-source="<?php echo BDO_URL; ?>parabd/fieldautocomplete?field=material" data-min-length="0" value="<?php echo $h($value('material', 'MATERIAL')); ?>" autocomplete="off"></label>
                 <label>Couleur<input name="color" value="<?php echo $h($value('color', 'COLOR')); ?>"></label><label>Échelle<input name="scale" value="<?php echo $h($value('scale', 'SCALE')); ?>" placeholder="1/6"></label>
                 <label>Date<input name="release_date" value="<?php echo $h($dateValue); ?>" placeholder="AAAA, AAAA-MM ou AAAA-MM-JJ"></label><label>Tirage<input name="print_run" inputmode="numeric" value="<?php echo $h($value('print_run', 'PRINT_RUN')); ?>"></label>
                 <label>Largeur (mm)<input type="number" name="width_mm" min="0" step="1" value="<?php echo $h($value('width_mm', 'WIDTH_MM')); ?>"></label><label>Hauteur (mm)<input type="number" name="height_mm" min="0" step="1" value="<?php echo $h($value('height_mm', 'HEIGHT_MM')); ?>"></label>
@@ -124,4 +124,4 @@ $samePatch = function ($left, $right) {
         </div></details>
     <?php } ?>
 </div>
-<script src="<?php echo BDO_URL; ?>script/parabd-admin.js?v=20260821" type="text/javascript"></script>
+<script src="<?php echo BDO_URL; ?>script/parabd-admin.js?v=20260821c" type="text/javascript"></script>
