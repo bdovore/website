@@ -105,6 +105,11 @@ class ParabdService
         return $this->model('Parabditem')->autocomplete($term, $limitPerCategory);
     }
 
+    public function autocompleteField($field, $term, $limit = 15)
+    {
+        return $this->model('Parabditem')->autocompleteField(strtolower(trim((string) $field)), $term, $limit);
+    }
+
     public function getItem($itemId, $includeHidden = false)
     {
         $item = $this->model('Parabditem')->findBase($itemId, $includeHidden);
@@ -150,7 +155,10 @@ class ParabdService
         foreach ($identifiers as $identifier) {
             $scheme = isset($identifier['scheme']) ? strtoupper($identifier['scheme']) : '';
             $value = self::normalizeIdentifier($scheme, isset($identifier['value']) ? $identifier['value'] : '');
-            $issuer = in_array($scheme, explode(',', self::GLOBAL_SCHEMES), true) ? '' : self::normalizeText(isset($identifier['issuer']) ? $identifier['issuer'] : '');
+            if ($scheme === 'MANUFACTURER_REF') $issuer = self::normalizeText(isset($input['MANUFACTURER']) ? $input['MANUFACTURER'] : (isset($input['manufacturer']) ? $input['manufacturer'] : ''));
+            elseif ($scheme === 'PUBLISHER_REF') $issuer = self::normalizeText(isset($input['PUBLISHER']) ? $input['PUBLISHER'] : (isset($input['publisher']) ? $input['publisher'] : ''));
+            elseif ($scheme === 'EXTERNAL_DB') $issuer = self::normalizeText(isset($identifier['issuer']) ? $identifier['issuer'] : '');
+            else $issuer = '';
             if ($value === '') continue;
             $existing = $this->model('Parabdidentifier')->findExact($scheme, $issuer, $value);
             if ($existing && !empty($input['ID_ITEM']) && intval($existing['ID_ITEM']) === intval($input['ID_ITEM'])) continue;
@@ -302,9 +310,13 @@ class ParabdService
             if (!in_array($scheme, $allowed, true)) throw new ParabdException('VALIDATION_ERROR', 'Schéma d’identifiant invalide.');
             $value = self::normalizeIdentifier($scheme, isset($identifier['value']) ? $identifier['value'] : '');
             if (!self::isValidIdentifier($scheme, $value)) throw new ParabdException('VALIDATION_ERROR', 'Clé ' . $scheme . ' invalide.', array('identifier_value' => 'Clé invalide.'));
-            $issuer = in_array($scheme, explode(',', self::GLOBAL_SCHEMES), true) ? '' : trim(isset($identifier['issuer']) ? $identifier['issuer'] : '');
-            if ($scheme === 'MANUFACTURER_REF' && $issuer === '' && !empty($input['manufacturer'])) $issuer = $input['manufacturer'];
-            if (!in_array($scheme, explode(',', self::GLOBAL_SCHEMES), true) && $issuer === '') throw new ParabdException('VALIDATION_ERROR', 'L’émetteur de cette référence est obligatoire.');
+            if ($scheme === 'MANUFACTURER_REF') $issuer = trim(isset($input['manufacturer']) ? $input['manufacturer'] : '');
+            elseif ($scheme === 'PUBLISHER_REF') $issuer = trim(isset($input['publisher']) ? $input['publisher'] : '');
+            elseif ($scheme === 'EXTERNAL_DB') $issuer = trim(isset($identifier['issuer']) ? $identifier['issuer'] : '');
+            else $issuer = '';
+            if ($scheme === 'MANUFACTURER_REF' && $issuer === '') throw new ParabdException('VALIDATION_ERROR', 'Le fabricant est obligatoire pour une référence du fabricant.');
+            if ($scheme === 'PUBLISHER_REF' && $issuer === '') throw new ParabdException('VALIDATION_ERROR', 'L’éditeur est obligatoire pour une référence de l’éditeur.');
+            if ($scheme === 'EXTERNAL_DB' && $issuer === '') throw new ParabdException('VALIDATION_ERROR', 'L’émetteur de cette référence est obligatoire.');
             $clean[] = array('scheme' => $scheme, 'issuer' => $issuer, 'issuer_normalized' => self::normalizeText($issuer), 'value' => trim($identifier['value']), 'value_normalized' => $value);
         }
         return $clean;
@@ -314,8 +326,16 @@ class ParabdService
     {
         $relations = array('authors' => array(), 'series' => array(), 'tomes' => array());
         if (isset($input['authors']) && is_array($input['authors'])) {
-            foreach ($input['authors'] as $row) if (!empty($row['id'])) $relations['authors'][] = array('id' => intval($row['id']), 'role' => trim(isset($row['role']) ? $row['role'] : 'ARTIST') ?: 'ARTIST');
-        } elseif (!empty($input['author_id'])) $relations['authors'][] = array('id' => intval($input['author_id']), 'role' => trim(isset($input['author_role']) ? $input['author_role'] : 'ARTIST') ?: 'ARTIST');
+            foreach ($input['authors'] as $row) if (!empty($row['id'])) {
+                $role = strtoupper(trim(isset($row['role']) ? $row['role'] : ''));
+                if (!in_array($role, array('ARTIST','DESIGNER','PAINTER','SCULPTOR','ILLUSTRATOR'), true)) throw new ParabdException('VALIDATION_ERROR', 'Le rôle de l’auteur est invalide.');
+                $relations['authors'][] = array('id' => intval($row['id']), 'role' => $role);
+            }
+        } elseif (!empty($input['author_id'])) {
+            $role = strtoupper(trim(isset($input['author_role']) ? $input['author_role'] : 'ARTIST')) ?: 'ARTIST';
+            if (!in_array($role, array('ARTIST','DESIGNER','PAINTER','SCULPTOR','ILLUSTRATOR'), true)) throw new ParabdException('VALIDATION_ERROR', 'Le rôle de l’auteur est invalide.');
+            $relations['authors'][] = array('id' => intval($input['author_id']), 'role' => $role);
+        }
         if (isset($input['series']) && is_array($input['series'])) {
             foreach ($input['series'] as $row) if (!empty($row['id'])) $relations['series'][] = array('id' => intval($row['id']), 'relation_type' => trim(isset($row['relation_type']) ? $row['relation_type'] : 'RELATED') ?: 'RELATED');
         } elseif (!empty($input['series_id'])) $relations['series'][] = array('id' => intval($input['series_id']), 'relation_type' => 'RELATED');

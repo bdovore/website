@@ -9,6 +9,8 @@
 .parabd-fields input, .parabd-fields select, .parabd-fields textarea, .parabd-search input { width: 100%; box-sizing: border-box; padding: .55rem; }
 .parabd-fields input[type="checkbox"] { width: auto; }
 .parabd-fields label > span { display: flex; align-items: center; gap: .45rem; }
+.parabd-identifier-issuer[hidden] { display: none; }
+.parabd-form-help { color: #555; font-size: .9em; line-height: 1.45; }
 .parabd-page input, .parabd-page select, .parabd-page textarea { border: 1px solid #bbb; border-radius: 3px; }
 .parabd-page .ui-button { cursor: pointer; font-size: .95rem; margin: .15rem; padding: .45rem .8rem; text-decoration: none; }
 .parabd-page .ui-button[disabled] { cursor: wait; opacity: .65; }
@@ -40,6 +42,9 @@
 .parabd-data dt { font-weight: bold; }.parabd-data dd { margin: 0; }
 .parabd-step { border: 1px solid #ddd; border-radius: 5px; padding: 1rem; margin: 1rem 0; }
 .parabd-step[hidden] { display: none; }
+.parabd-form-section { background: #fafafa; border: 1px solid #ddd; border-radius: 5px; margin: 1rem 0; padding: 1rem; }
+.parabd-form-section > h3 { color: #650000; font-size: 1.1rem; margin: 0; }
+.parabd-form-section > .parabd-fields { margin-bottom: 0; }
 .parabd-image-choice { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: .75rem; border: 1px solid #ddd; border-radius: 4px; padding: .8rem; }
 .parabd-image-choice legend { font-weight: bold; padding: 0 .35rem; }
 .parabd-image-choice label { display: flex; flex-direction: column; gap: .3rem; }

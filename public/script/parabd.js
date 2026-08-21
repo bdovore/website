@@ -85,6 +85,12 @@
         };
     }
 
+    function updateIdentifierIssuer(form) {
+        var external = form.find('[name="identifier_scheme"]').val() === 'EXTERNAL_DB';
+        form.find('.parabd-identifier-issuer').prop('hidden', !external)
+            .find('input').prop('disabled', !external).prop('required', external);
+    }
+
     function checkDuplicates(form, callback) {
         var output = $('#parabd-duplicates').text('Recherche en cours…');
         var buttons = form.find('.parabd-next, #parabd-check-duplicates').prop('disabled', true);
@@ -152,6 +158,23 @@
                     status.text('Sélectionnez une proposition pour associer l’ID et le libellé.').removeClass('selected');
                 }
             });
+        });
+    }
+
+    function initFreeAutocomplete() {
+        $('.parabd-free-autocomplete').each(function () {
+            var input = $(this);
+            var minLength = parseInt(input.attr('data-min-length'), 10);
+            if (isNaN(minLength)) minLength = 2;
+            input.autocomplete({
+                minLength: minLength,
+                source: function (request, response) {
+                    $.getJSON(input.data('source'), request).done(function (payload) {
+                        response(payload.ok ? $.map(payload.data.suggestions || [], function (row) { return row.label; }) : []);
+                    }).fail(function () { response([]); });
+                }
+            });
+            if (minLength === 0) input.on('focus', function () { input.autocomplete('search', input.val()); });
         });
     }
 
@@ -243,11 +266,14 @@
         initGalleries();
         enhanceButtons();
         initReferenceAutocomplete();
+        initFreeAutocomplete();
         initCatalogueAutocomplete();
         initQuickCollectionActions();
         initOwnedCopyRemoval();
 
         var form = $('#parabd-create-form');
+        form.on('change', '[name="identifier_scheme"]', function () { updateIdentifierIssuer(form); });
+        updateIdentifierIssuer(form);
         form.on('click', '.parabd-next', function () {
             var section = $(this).closest('.parabd-step');
             var current = parseInt(section.data('step'), 10);

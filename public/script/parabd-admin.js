@@ -92,8 +92,21 @@
         });
     }
 
+    function updateIdentifierIssuers(context) {
+        $(context || document).find('.parabd-identifier-issuer').each(function () {
+            var issuer = $(this);
+            var row = issuer.closest('.parabd-repeat-row');
+            var external = row.find('select[name$="[scheme]"]').val() === 'EXTERNAL_DB';
+            issuer.prop('hidden', !external).find('input').prop('disabled', !external).prop('required', external);
+        });
+    }
+
     $(function () {
-        enhanceButtons(document); initReferences(document);
+        enhanceButtons(document); initReferences(document); updateIdentifierIssuers(document);
+
+        $('.parabd-repeat[data-repeat="identifiers"]').on('change', 'select[name$="[scheme]"]', function () {
+            updateIdentifierIssuers($(this).closest('.parabd-repeat-row').parent());
+        });
 
         $('#parabd-admin-type').on('change', function () {
             var parent = $(this).find(':selected').data('id');
@@ -130,7 +143,7 @@
             row.find('select').prop('selectedIndex', 0);
             row.find('.parabd-reference-status').text('Sélectionnez une proposition.').removeClass('selected');
             row.find('.parabd-admin-reference').removeClass('ui-autocomplete-input').removeAttr('autocomplete').removeAttr('aria-autocomplete').removeAttr('aria-controls');
-            container.append(row); renumber(container); initReferences(row); enhanceButtons(row); updateEditorState();
+            container.append(row); renumber(container); initReferences(row); updateIdentifierIssuers(container); enhanceButtons(row); updateEditorState();
         });
 
         $('.parabd-repeat').on('click', '.parabd-remove-row', function () {
@@ -138,7 +151,7 @@
             if (container.children('.parabd-repeat-row').length === 1) {
                 var row = $(this).closest('.parabd-repeat-row'); row.find('input').val('').prop('checked', false); row.find('select').prop('selectedIndex', 0);
             } else $(this).closest('.parabd-repeat-row').remove();
-            renumber(container); updateEditorState();
+            renumber(container); updateIdentifierIssuers(container); updateEditorState();
         });
 
         $('#parabd-admin-editor').on('submit', function (event) {

@@ -83,6 +83,47 @@ class Parabditem extends ParabdDbLine
         return $result;
     }
 
+    public function autocompleteField($field, $term, $limit = 15)
+    {
+        $columns = array('manufacturer' => 'MANUFACTURER', 'publisher' => 'PUBLISHER', 'material' => 'MATERIAL', 'universe' => 'UNIVERSE_NAME');
+        if (!isset($columns[$field])) return array();
+        $term = trim((string) $term);
+        $normalizedTerm = ParabdRules::normalizeText($term);
+        $limit = max(1, min(30, intval($limit)));
+        $suggestions = array();
+
+        if ($field === 'material') {
+            foreach (array('Bois', 'Carton', 'Céramique', 'Cuir', 'Métal', 'Papier', 'Plastique', 'Plâtre', 'Porcelaine', 'Résine', 'Textile', 'Verre', 'Vinyle') as $material) {
+                if ($normalizedTerm === '' || strpos(ParabdRules::normalizeText($material), $normalizedTerm) !== false) $suggestions[] = $material;
+            }
+        }
+
+        $column = $columns[$field];
+        $like = $this->escape($term);
+        $where = "STATUS='ACTIVE' AND $column IS NOT NULL AND $column<>''";
+        if ($term !== '') $where .= " AND $column LIKE '%$like%'";
+        foreach ($this->fetchAllQuery("SELECT DISTINCT $column label FROM parabd_item WHERE $where ORDER BY ($column='$like') DESC,($column LIKE '$like%') DESC,$column LIMIT $limit") as $row) {
+            $suggestions[] = $row['label'];
+        }
+
+        if ($field === 'manufacturer' || $field === 'publisher') {
+            $publisherWhere = "NOM IS NOT NULL AND NOM<>''";
+            if ($term !== '') $publisherWhere .= " AND NOM LIKE '%$like%'";
+            foreach ($this->fetchAllQuery("SELECT DISTINCT NOM label FROM bd_editeur WHERE $publisherWhere ORDER BY (NOM='$like') DESC,(NOM LIKE '$like%') DESC,NOM LIMIT $limit") as $row) {
+                $suggestions[] = $row['label'];
+            }
+        }
+
+        $result = array(); $seen = array();
+        foreach ($suggestions as $label) {
+            $key = ParabdRules::normalizeText($label);
+            if ($key === '' || isset($seen[$key])) continue;
+            $seen[$key] = true; $result[] = array('label' => $label);
+            if (count($result) >= $limit) break;
+        }
+        return $result;
+    }
+
     public function findBase($itemId, $includeHidden = false, $lock = false)
     {
         return $this->fetchOneQuery("SELECT i.*,t.CODE TYPE_CODE,t.LABEL TYPE_LABEL,st.CODE SUBTYPE_CODE,st.LABEL SUBTYPE_LABEL

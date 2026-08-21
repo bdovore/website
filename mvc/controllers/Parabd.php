@@ -129,6 +129,12 @@ class Parabd extends Bdo_Controller
         $this->handle(function () { return array('suggestions' => $this->service()->autocompleteCatalogue(getVal('term', ''))); });
     }
 
+    public function Fieldautocomplete()
+    {
+        if (!$this->enabled()) return;
+        $this->handle(function () { return array('suggestions' => $this->service()->autocompleteField(getVal('field', ''), getVal('term', ''))); });
+    }
+
     public function Charte()
     {
         if (!$this->enabled()) return;
@@ -155,8 +161,8 @@ class Parabd extends Bdo_Controller
     {
         if (!$this->enabled()) return;
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $this->view->addCssFile('style/parabd.css?v=20260813b');
-            $this->view->addJavascriptFile('script/parabd.js');
+            $this->view->addCssFile('style/parabd.css?v=20260821a');
+            $this->view->addJavascriptFile('script/parabd.js?v=20260821b');
             $this->view->set_var(array('PAGETITLE' => 'Créer un objet Para-BD', 'ROBOTS' => 'noindex,nofollow', 'types' => $this->service()->getTypes(),
                 'csrf_token' => parabdCsrfToken('parabd-write'), 'charter_version' => BDO_PARABD_CHARTER_VERSION,
                 'charter_accepted' => $this->service()->hasAcceptedCharter($this->userId())));
