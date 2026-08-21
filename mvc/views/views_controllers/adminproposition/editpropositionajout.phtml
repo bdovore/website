@@ -221,6 +221,16 @@
                                             <input name="txtISBN" type="text" value="<?php echo $view->ISBN;?>" size="10" maxlength="10" /><?php echo $view->ISISBN;?>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="2" align="center">
+                                            <label for="FLAG_SANS_ISBN_EAN">Sans ISBN ou EAN <input name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" value="1" <?php echo $view->CHKFLAG_SANS_ISBN_EAN;?> /></label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" align="center">
+                                            <label for="FLAG_EAN_ISBN_IDENTIQUE">EAN / ISBN identique <input name="FLAG_EAN_ISBN_IDENTIQUE" type="checkbox" id="FLAG_EAN_ISBN_IDENTIQUE" value="1" <?php echo $view->CHKFLAG_EAN_ISBN_IDENTIQUE;?> /></label>
+                                        </td>
+                                    </tr>
                                 </table>
                             </td>
                         </tr>
@@ -555,4 +565,3 @@
         }
 
 </script>
-

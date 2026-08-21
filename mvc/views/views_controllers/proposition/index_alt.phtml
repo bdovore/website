@@ -287,6 +287,10 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
       <label for="txtISBN">ISBN</label>
       <input type="text" id="txtISBN" name="txtISBN" size="10" maxlength="10" /><br />
 
+      <label for="FLAG_SANS_ISBN_EAN">
+        <input name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" value="1" /> Sans ISBN ou EAN
+      </label><br />
+
       <label for="txtDateParution">Date de parution</label>
       <input type="date" id="txtDateParution" name="txtDateParution" onchange="checkDate()" /><br />
       <small id="warnDate" class="warn-message">⚠️ N'oubliez pas de renseigner une date !<br></small>

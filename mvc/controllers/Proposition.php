@@ -106,6 +106,7 @@ class Proposition extends Bdo_Controller {
     private function addProposition() {
 
         $type = postVal("type","ALBUM");
+        $isbnEanFormData = $this->getIsbnEanFormData();
         if ($type == "EDITION") {
             $this->loadModel("Edition");
             $this->Edition->set_dataPaste((array(
@@ -118,8 +119,9 @@ class Proposition extends Bdo_Controller {
                 "USER_ID" => $_SESSION['userConnect']->user_id,
                 "PROP_DTE" => date('d/m/Y H:i:s'),
                 "PROP_STATUS" => "0",
-                "ISBN" => postVal("txtISBN"),
-                "EAN" => postVal("txtEAN")
+                "ISBN" => $isbnEanFormData['ISBN'],
+                "EAN" => $isbnEanFormData['EAN'],
+                "FLAG_SANS_ISBN_EAN" => $isbnEanFormData['FLAG_SANS_ISBN_EAN']
             )));
             $this->Edition->update();
             $lid = $this->Edition->ID_EDITION;
@@ -161,8 +163,9 @@ class Proposition extends Bdo_Controller {
                 "COLOR_ALT" => postVal("txtColorAlt"),
                 "ID_COLLECTION" => postValInteger("txtCollecId"),
                 "COLLECTION" => postVal("txtCollec"),
-                "EAN" => postVal("txtEAN"),
-                "ISBN" => postVal("txtISBN"),
+                "EAN" => $isbnEanFormData['EAN'],
+                "ISBN" => $isbnEanFormData['ISBN'],
+                "FLAG_SANS_ISBN_EAN" => $isbnEanFormData['FLAG_SANS_ISBN_EAN'],
                 "HISTOIRE" => postVal("txtHistoire"),
                 "DESCRIB_EDITION" => postVal("txtCommentaireEdition"),
                 "COMMENTAIRE" => postVal("txtCommentaire"),
@@ -317,6 +320,24 @@ class Proposition extends Bdo_Controller {
             return $this->User_album_prop->error;
         }
     }
+
+    private function getIsbnEanFormData() {
+        $ean = trim(postVal('txtEAN'));
+        $isbn = trim(postVal('txtISBN'));
+        $sansIsbnEan = postVal('FLAG_SANS_ISBN_EAN') == "1";
+
+        if ($sansIsbnEan && ($ean !== '' || $isbn !== '')) {
+            echo "Erreur : la case « Sans ISBN ou EAN » ne peut être cochée que si les champs ISBN et EAN sont vides.";
+            exit();
+        }
+
+        return array(
+            'FLAG_SANS_ISBN_EAN' => $sansIsbnEan ? "1" : "",
+            'EAN' => $ean,
+            'ISBN' => $isbn
+        );
+    }
+
     public function Listpropal(){
         /* fonction pour lister les propositons en cours et informer les utilisateurs
          *

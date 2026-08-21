@@ -64,6 +64,7 @@ class Edition extends Bdo_Db_Line
                 bd_edition.DTE_PARUTION as DATE_PARUTION_EDITION,
                 bd_edition.FLAG_DTE_PARUTION,
                 bd_edition.FLAG_SANS_ISBN_EAN,
+                bd_edition.FLAG_EAN_ISBN_IDENTIQUE,
                 bd_edition.COMMENT as COMMENT_EDITION,
                 bd_tome.id_edition as ID_EDITION_DEFAULT,
                 c.ID_COLLECTION,

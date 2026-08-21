@@ -473,6 +473,15 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
                             <span class="texte">ISBN à 10 chiffres <u>sans</u> trait d'union ni espace (obsolète depuis janvier 2007)</span>
                         </td>
                     </tr>
+                    <?php if (($view->TYPE ?? "") == "EDITION") { ?>
+                    <tr bordercolor="#DAC1B3">
+                        <td bordercolor="#DAC1B3" class="label"><strong>Sans ISBN ou EAN</strong></td>
+                        <td><div align="left"></div></td>
+                        <td colspan="3">
+                            <label for="FLAG_SANS_ISBN_EAN"><input name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" value="1" <?php echo (($view->edition->FLAG_SANS_ISBN_EAN ?? null) == 1) ? "checked" : ""; ?> /> Cet album ne possède ni ISBN ni EAN</label>
+                        </td>
+                    </tr>
+                    <?php } ?>
 
                     <tr bordercolor="#DAC1B3">
 
@@ -588,5 +597,4 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
             
     }
 </script>
-
 

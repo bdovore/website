@@ -282,6 +282,8 @@ private function getDateBeforeValid() {
                 "URLEAN" => "http://www.bdnet.com/" . $this->User_album_prop->EAN . "/alb.htm",
                 "ISEAN" => check_EAN($this->User_album_prop->EAN) ? "" : "*",
                 "ISBN" => $this->User_album_prop->ISBN,
+                "CHKFLAG_SANS_ISBN_EAN" => (($this->User_album_prop->FLAG_SANS_ISBN_EAN == 1) ? 'checked' : ''),
+                "CHKFLAG_EAN_ISBN_IDENTIQUE" => (($this->User_album_prop->FLAG_EAN_ISBN_IDENTIQUE == 1) ? 'checked' : ''),
                 "URLISBN" => BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . $this->User_album_prop->ISBN,
                 "ISISBN" => check_ISBN($this->User_album_prop->ISBN) ? "" : "*",
                 "PRIX" => $this->User_album_prop->PRIX,
@@ -426,6 +428,7 @@ private function getDateBeforeValid() {
     public function appendProposition() {
         if (User::minAccesslevel(1)) {
 
+            $isbnEanFormData = $this->getIsbnEanFormData();
             $id = getValInteger("ID"); // id de la proposition
             $this->loadModel("User_album_prop");
 
@@ -468,8 +471,10 @@ private function getDateBeforeValid() {
                     "EDITEUR" => postVal("txtEditeur"),
                     "ID_COLLECTION" => postVal("txtCollecId"),
                     "COLLECTION" => postVal("txtCollec"),
-                    "ISBN" => postVal("txtISBN"),
-                    "EAN" => postVal("txtEAN"),
+                    "ISBN" => $isbnEanFormData['ISBN'],
+                    "EAN" => $isbnEanFormData['EAN'],
+                    "FLAG_SANS_ISBN_EAN" => $isbnEanFormData['FLAG_SANS_ISBN_EAN'],
+                    "FLAG_EAN_ISBN_IDENTIQUE" => $isbnEanFormData['FLAG_EAN_ISBN_IDENTIQUE'],
                     "DTE_PARUTION" => postVal("txtDateParution"),
                     "FLG_TT" => ((postVal("chkTT") == "checkbox") ? "O" : "N"),
                     "DESCRIB_EDITION" => postVal("txtCommentEdition"),
@@ -539,8 +544,10 @@ private function getDateBeforeValid() {
                     "ID_COLLECTION" => postValInteger('txtCollecId'),
                     "DTE_PARUTION" => $txtDateParution,
                     "FLG_TT" => ((postVal('chkTT') == "checkbox") ? "O" : "N"),
-                    "EAN" => postVal('txtEAN'),
-                    "ISBN" => postVal('txtISBN'),
+                    "EAN" => $isbnEanFormData['EAN'],
+                    "ISBN" => $isbnEanFormData['ISBN'],
+                    "FLAG_SANS_ISBN_EAN" => $isbnEanFormData['FLAG_SANS_ISBN_EAN'],
+                    "FLAG_EAN_ISBN_IDENTIQUE" => $isbnEanFormData['FLAG_EAN_ISBN_IDENTIQUE'],
                     "COMMENT" => postVal('txtCommentEdition'),
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
                     "VALID_DTE" => date('d/m/Y H:i:s'),
@@ -1070,6 +1077,8 @@ private function getDateBeforeValid() {
                 "CLEAN" => ($this->User_album_prop->EAN == $this->Edition->EAN_EDITION ? "flat" : "has_changed"),
                 "ORIISBN" => ($this->Tome->ISBN_EDITION == "") ? "&nbsp;" : $this->Edition->ISBN_EDITION,
                 "CLISBN" => ($this->User_album_prop->ISBN == $this->Edition->ISBN_EDITION ? "flat" : "has_changed"),
+                "SHOW_FLAG_EAN_ISBN_IDENTIQUE" => ($edition_id != 0),
+                "CHKFLAG_EAN_ISBN_IDENTIQUE" => (($edition_id != 0 && $this->Edition->FLAG_EAN_ISBN_IDENTIQUE == 1) ? 'checked' : ''),
                 "ORIDTPAR" => $this->Edition->DATE_PARUTION_EDITION,
                 "CLDTPAR" => ($this->User_album_prop->DTE_PARUTION == $this->Edition->DATE_PARUTION_EDITION ? "flat" : "has_changed"),
                 "ORIHISTOIRE" => stripslashes($this->Edition->HISTOIRE_TOME),
@@ -1238,6 +1247,7 @@ private function getDateBeforeValid() {
                         "ID_COLLECTION" => postVal('txtCollecId'),
                         "EAN" => postVal('txtEAN'),
                         "ISBN" => postVal('txtISBN'),
+                        "FLAG_EAN_ISBN_IDENTIQUE" => ((postVal('FLAG_EAN_ISBN_IDENTIQUE') == "1") ? "1" : ""),
                         "DTE_PARUTION" => postVal('txtDateParution')
                     ));
 
@@ -1356,6 +1366,24 @@ private function getDateBeforeValid() {
 
             echo GetMetaTag(2, "L'album a été mis a jour", $next_url);
         }
+    }
+
+    private function getIsbnEanFormData() {
+        $ean = trim(postVal('txtEAN'));
+        $isbn = trim(postVal('txtISBN'));
+        $sansIsbnEan = postVal('FLAG_SANS_ISBN_EAN') == "1";
+
+        if ($sansIsbnEan && ($ean !== '' || $isbn !== '')) {
+            echo "Erreur : la case « Sans ISBN ou EAN » ne peut être cochée que si les champs ISBN et EAN sont vides.";
+            exit();
+        }
+
+        return array(
+            'FLAG_SANS_ISBN_EAN' => $sansIsbnEan ? "1" : "",
+            'FLAG_EAN_ISBN_IDENTIQUE' => (postVal('FLAG_EAN_ISBN_IDENTIQUE') == "1") ? "1" : "",
+            'EAN' => $ean,
+            'ISBN' => $isbn
+        );
     }
 
 }

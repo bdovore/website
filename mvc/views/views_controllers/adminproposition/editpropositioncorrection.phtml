@@ -309,10 +309,17 @@
                                     <td align="center"><a href="<?php echo $view->URLISBN ?? "";?>" title="Teste le code ISBN sur Amazon" target="_blank">ISBN</a> :
                                     <input name="txtISBN" type="text" value="<?php echo $view->ISBN;?>" size="10" class="<?php echo $view->CLISBN;?>" /><?php echo $view->ISISBN;?></td>
                                 </tr>
-                        <tr>
+                                                <tr>
                                                     <td class="original" align="center"><?php echo $view->ORIEAN;?></td>
                                                     <td class="original" align="center"><?php echo $view->ORIISBN;?></td>
                                                 </tr>
+                                                <?php if ($view->SHOW_FLAG_EAN_ISBN_IDENTIQUE ?? false) { ?>
+                                                <tr>
+                                                    <td colspan="2" align="center">
+                                                        <label for="FLAG_EAN_ISBN_IDENTIQUE">EAN / ISBN identique <input name="FLAG_EAN_ISBN_IDENTIQUE" type="checkbox" id="FLAG_EAN_ISBN_IDENTIQUE" value="1" <?php echo $view->CHKFLAG_EAN_ISBN_IDENTIQUE ?? "";?> /></label>
+                                                    </td>
+                                                </tr>
+                                                <?php } ?>
                             </table>
                         </td>
                     </tr>

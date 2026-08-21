@@ -43,6 +43,7 @@ class Controle extends Bdo_Controller
             WHERE
                     `EAN` IS NOT NULL
                                     AND TRIM(`EAN`)<>''
+            AND `FLAG_EAN_ISBN_IDENTIQUE` IS NULL
             AND (`DTE_PARUTION` > '1973-01-01' OR `DTE_PARUTION` IS NULL )
             GROUP BY `EAN`
             HAVING COUNT(DISTINCT(`ID_TOME`))>1
@@ -62,6 +63,7 @@ class Controle extends Bdo_Controller
             WHERE
                     `ISBN` IS NOT NULL
                     AND TRIM(`ISBN`)<>''
+            AND `FLAG_EAN_ISBN_IDENTIQUE` IS NULL
             AND (`DTE_PARUTION` > '1973-12-31' OR `DTE_PARUTION` IS NULL)
 
             GROUP BY `ISBN`
