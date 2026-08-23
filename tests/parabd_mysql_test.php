@@ -108,6 +108,8 @@ try {
     dbAssert($automaticRelations['authors'][0]['role'] === 'ILLUSTRATOR', 'rôle auteur complété côté serveur selon les flags');
     try { $relationsFromInput->invoke($service, array('author_id' => 11, 'author_role' => '')); dbAssert(false, 'choix du rôle exigé sans flag auteur'); }
     catch (ParabdException $expected) { dbAssert($expected->errorCode === 'VALIDATION_ERROR', 'choix du rôle exigé sans flag auteur'); }
+    $defaultColors = array_column($service->autocompleteField('color', ''), 'label');
+    dbAssert(array_slice($defaultColors, 0, 3) === array('Polychrome', 'Monochrome', 'Noir & blanc'), 'couleurs proposées par défaut avec saisie libre');
     foreach (range(1, 5) as $userId) $service->acceptCharter($userId, true);
     dbAssert($service->hasAcceptedCharter(1), 'charte courante reconnue comme acceptée');
     $server->query("UPDATE parabd_user_profile SET CHARTER_VERSION='ancienne' WHERE USER_ID=1");

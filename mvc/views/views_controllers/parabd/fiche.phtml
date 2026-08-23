@@ -59,7 +59,7 @@ $triOptions = function ($current) {
             <h1><?php echo $h($item['TITLE']); ?> <?php if ($view->can_admin) { ?> · <a href="<?php echo BDO_URL; ?>adminparabd/edit?id=<?php echo intval($item['ID_ITEM']); ?>"> <img src="<?php echo BDO_URL_IMAGE; ?>/edit.gif"></a><?php } ?></h1>
             <?php if ($item['DESCRIPTION']) { ?><p><?php echo nl2br($h($item['DESCRIPTION'])); ?></p><?php } ?>
             <dl class="parabd-data">
-                <?php foreach (array('MANUFACTURER'=>'Fabricant','PUBLISHER'=>'Éditeur','MATERIAL'=>'Matière','COLOR'=>'Couleur','SCALE'=>'Échelle','PRINT_RUN'=>'Tirage') as $field=>$label) if ($item[$field] !== null && $item[$field] !== '') { ?><dt><?php echo $label; ?></dt><dd><?php echo $h($item[$field]); ?></dd><?php } ?>
+                <?php foreach (array('MANUFACTURER'=>'Fabricant','PUBLISHER'=>'Éditeur','UNIVERSE_NAME'=>'Univers','MATERIAL'=>'Matière','COLOR'=>'Couleur','SCALE'=>'Échelle','PRINT_RUN'=>'Tirage') as $field=>$label) if ($item[$field] !== null && $item[$field] !== '') { ?><dt><?php echo $label; ?></dt><dd><?php echo $h($item[$field]); ?></dd><?php } ?>
                 <?php if ($item['RELEASE_DATE']) { ?><dt>Date</dt><dd><?php echo $h(ParabdService::displayPartialDate($item['RELEASE_DATE'], $item['DATE_PRECISION'])); ?></dd><?php } ?>
                 <?php if ($item['WIDTH_MM'] || $item['HEIGHT_MM'] || $item['DEPTH_MM']) { ?><dt>Dimensions</dt><dd><?php echo $h(($item['WIDTH_MM'] ?: '–') . ' × ' . ($item['HEIGHT_MM'] ?: '–') . ' × ' . ($item['DEPTH_MM'] ?: '–') . ' mm'); ?></dd><?php } ?>
             </dl>

@@ -85,7 +85,7 @@ class Parabditem extends ParabdDbLine
 
     public function autocompleteField($field, $term, $limit = 15)
     {
-        $columns = array('manufacturer' => 'MANUFACTURER', 'publisher' => 'PUBLISHER', 'material' => 'MATERIAL', 'universe' => 'UNIVERSE_NAME');
+        $columns = array('manufacturer' => 'MANUFACTURER', 'publisher' => 'PUBLISHER', 'material' => 'MATERIAL', 'color' => 'COLOR', 'universe' => 'UNIVERSE_NAME');
         if (!isset($columns[$field])) return array();
         $term = trim((string) $term);
         $normalizedTerm = ParabdRules::normalizeText($term);
@@ -95,6 +95,11 @@ class Parabditem extends ParabdDbLine
         if ($field === 'material') {
             foreach (array('Bois', 'Carton', 'Céramique', 'Cuir', 'Métal', 'Papier', 'Plastique', 'Plâtre', 'Porcelaine', 'Résine', 'Textile', 'Verre', 'Vinyle') as $material) {
                 if ($normalizedTerm === '' || strpos(ParabdRules::normalizeText($material), $normalizedTerm) !== false) $suggestions[] = $material;
+            }
+        }
+        if ($field === 'color') {
+            foreach (array('Polychrome', 'Monochrome', 'Noir & blanc') as $color) {
+                if ($normalizedTerm === '' || strpos(ParabdRules::normalizeText($color), $normalizedTerm) !== false) $suggestions[] = $color;
             }
         }
 
