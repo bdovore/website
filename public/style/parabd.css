@@ -114,7 +114,7 @@ button.parabd-icon-delete:hover, button.parabd-icon-delete:focus { background: #
 .parabd-admin-table th, .parabd-admin-table td { border-bottom: 1px solid #ddd; padding: .65rem; text-align: left; vertical-align: middle; }
 .parabd-status { background: #eee; border-radius: 3px; display: inline-block; font-size: .75rem; font-weight: bold; padding: .2rem .45rem; }
 .parabd-status-active, .parabd-status-accepted, .parabd-status-applied { background: #e5f4dc; color: #2e641c; }
-.parabd-status-hidden, .parabd-status-rejected { background: #eee; color: #555; }.parabd-status-merged { background: #e8e4f5; color: #4b387e; }
+.parabd-status-hidden { background: #eee; color: #555; }.parabd-status-rejected { background: #f8d9d9; color: #a40000; }.parabd-status-merged { background: #e8e4f5; color: #4b387e; }
 .parabd-status-pending { background: #fff1c9; color: #715100; }.parabd-status-conflict { background: #f8d9d9; color: #8b1010; }
 .parabd-admin-success, .parabd-admin-warning, .parabd-admin-error { border-left: 4px solid; padding: .75rem .9rem; }
 .parabd-admin-success { background: #edf8e8; border-color: #679b45; color: #315d1f; }.parabd-admin-warning { background: #fff5db; border-color: #d99a00; }.parabd-admin-error { background: #fdeaea; border-color: #a40000; }

@@ -42,7 +42,7 @@ class Adminparabd extends Bdo_Controller
             return in_array($revision['STATUS'], array('PENDING', 'CONFLICT'), true) && $revision['CHANGE_KIND'] !== 'CREATE';
         }));
         $this->view->addPhtmlFile('adminparabd/edit', 'BODY');
-        $this->view->addCssFile('style/parabd.css?v=20260821');
+        $this->view->addCssFile('style/parabd.css?v=20260823b');
         $this->view->addJavascriptFile('script/parabd-admin.js?v=20260823a');
         $itemId = $item ? intval($item['ID_ITEM']) : 0;
         $reportId = getValInteger('report_id', postValInteger('report_id', 0));
@@ -63,7 +63,7 @@ class Adminparabd extends Bdo_Controller
     public function Index()
     {
         $this->guard();
-        $this->view->addCssFile('style/parabd.css?v=20260813b');
+        $this->view->addCssFile('style/parabd.css?v=20260823b');
         $search = getVal('q', ''); $status = getVal('status', '');
         $this->view->set_var(array('PAGETITLE' => 'Fiches Para-BD — Administration', 'ROBOTS' => 'noindex,nofollow',
             'items' => $this->service()->getAdminCatalogue($search, $status), 'search' => $search, 'status' => $status));
@@ -73,7 +73,7 @@ class Adminparabd extends Bdo_Controller
     public function Queues()
     {
         $this->guard();
-        $this->view->addCssFile('style/parabd.css?v=20260813b');
+        $this->view->addCssFile('style/parabd.css?v=20260823b');
         $this->view->set_var(array('PAGETITLE' => 'À traiter — Para-BD', 'ROBOTS' => 'noindex,nofollow', 'queues' => $this->service()->adminQueues(), 'csrf_token' => parabdCsrfToken('parabd-admin')));
         $this->view->render();
     }
@@ -142,7 +142,7 @@ class Adminparabd extends Bdo_Controller
             $source = $this->service()->getItem(getValInteger('source_id', 0), true);
             $target = $this->service()->getItem(getValInteger('target_id', 0), true);
             if (!$source || !$target) { http_response_code(404); die('Fiche à fusionner introuvable.'); }
-            $this->view->addCssFile('style/parabd.css?v=20260813b');
+            $this->view->addCssFile('style/parabd.css?v=20260823b');
             $this->view->set_var(array('PAGETITLE' => 'Fusion Para-BD', 'ROBOTS' => 'noindex,nofollow', 'source' => $source, 'target' => $target, 'csrf_token' => parabdCsrfToken('parabd-admin')));
             $this->view->render();
             return;
