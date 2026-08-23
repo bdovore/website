@@ -72,16 +72,21 @@
                 source: function (request, response) {
                     $.getJSON(input.data('source'), request).done(function (rows) {
                         response($.map(rows || [], function (row) {
-                            return {label: '#' + row.id + ' — ' + row.label, value: row.label, id: row.id, plainLabel: row.label};
+                            return {label: '#' + row.id + ' — ' + row.label, value: row.label, id: row.id, plainLabel: row.label, defaultRole: row.default_role || ''};
                         }));
                     }).fail(function () { response([]); });
                 },
                 select: function (event, ui) {
                     hidden.val(ui.item.id).trigger('change'); selectedValue = ui.item.value;
+                    if (input.closest('.parabd-repeat-row').hasClass('parabd-repeat-row-author')) input.closest('.parabd-repeat-row').find('select[name$="[role]"]').val(ui.item.defaultRole).prop('required', true).trigger('change');
                     status.text('#' + ui.item.id + ' — ' + ui.item.plainLabel).addClass('selected');
                 }
             }).on('input', function () {
-                if (input.val() !== selectedValue) { hidden.val('').trigger('change'); status.text('Sélectionnez une proposition.').removeClass('selected'); }
+                if (input.val() !== selectedValue) {
+                    hidden.val('').trigger('change');
+                    if (input.closest('.parabd-repeat-row').hasClass('parabd-repeat-row-author')) input.closest('.parabd-repeat-row').find('select[name$="[role]"]').val('').prop('required', false).trigger('change');
+                    status.text('Sélectionnez une proposition.').removeClass('selected');
+                }
             });
         });
     }
@@ -159,6 +164,7 @@
             row.find('.ui-helper-hidden-accessible').remove();
             row.find('input').val('').prop('checked', false);
             row.find('select').prop('selectedIndex', 0);
+            row.find('select[name$="[role]"]').prop('required', false);
             row.find('.parabd-reference-status').text('Sélectionnez une proposition.').removeClass('selected');
             row.find('.parabd-admin-reference').removeClass('ui-autocomplete-input').removeAttr('autocomplete').removeAttr('aria-autocomplete').removeAttr('aria-controls');
             container.append(row); renumber(container); initReferences(row); updateIdentifierIssuers(container); enhanceButtons(row); updateEditorState();
@@ -167,7 +173,7 @@
         $('.parabd-repeat').on('click', '.parabd-remove-row', function () {
             var container = $(this).closest('.parabd-repeat');
             if (container.children('.parabd-repeat-row').length === 1) {
-                var row = $(this).closest('.parabd-repeat-row'); row.find('input').val('').prop('checked', false); row.find('select').prop('selectedIndex', 0);
+                var row = $(this).closest('.parabd-repeat-row'); row.find('input').val('').prop('checked', false); row.find('select').prop('selectedIndex', 0); row.find('select[name$="[role]"]').prop('required', false);
             } else $(this).closest('.parabd-repeat-row').remove();
             renumber(container); updateIdentifierIssuers(container); updateEditorState();
         });

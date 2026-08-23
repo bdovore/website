@@ -66,7 +66,7 @@ class Parabditem extends ParabdDbLine
         $result = array();
 
         foreach ($this->fetchAllQuery("SELECT ID_AUTEUR id,COALESCE(NULLIF(PSEUDO,''),TRIM(CONCAT_WS(' ',PRENOM,NOM))) label FROM bd_auteur WHERE PSEUDO LIKE '%$like%' OR NOM LIKE '%$like%' OR PRENOM LIKE '%$like%' ORDER BY (PSEUDO='$like') DESC,PSEUDO LIMIT $limit") as $row) {
-            $result[] = array('category' => 'Auteurs', 'type' => 'author', 'id' => intval($row['id']), 'label' => $row['label']);
+            $result[] = array('category' => 'Artistes', 'type' => 'author', 'id' => intval($row['id']), 'label' => $row['label']);
         }
         foreach ($this->fetchAllQuery("SELECT ID_SERIE id,NOM label FROM bd_serie WHERE NOM LIKE '%$like%' ORDER BY (NOM='$like') DESC,NOM LIMIT $limit") as $row) {
             $result[] = array('category' => 'Séries', 'type' => 'series', 'id' => intval($row['id']), 'label' => $row['label']);

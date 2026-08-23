@@ -162,7 +162,7 @@ class Parabd extends Bdo_Controller
         if (!$this->enabled()) return;
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $this->view->addCssFile('style/parabd.css?v=20260821a');
-            $this->view->addJavascriptFile('script/parabd.js?v=20260821b');
+            $this->view->addJavascriptFile('script/parabd.js?v=20260823a');
             $this->view->set_var(array('PAGETITLE' => 'Créer un objet Para-BD', 'ROBOTS' => 'noindex,nofollow', 'types' => $this->service()->getTypes(),
                 'csrf_token' => parabdCsrfToken('parabd-write'), 'charter_version' => BDO_PARABD_CHARTER_VERSION,
                 'charter_accepted' => $this->service()->hasAcceptedCharter($this->userId())));

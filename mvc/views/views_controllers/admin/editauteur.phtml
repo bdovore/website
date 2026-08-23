@@ -70,7 +70,7 @@ function valider(){
             <?php if (isset($view->WIKINATIONALITY)) echo $view->WIKINATIONALITY[0]; ?> </td>
           </tr>
           <tr bordercolor="#FFFFCC">
-            <td height="28">&nbsp;</td>
+            <td height="28">R&ocirc;les BD</td>
             <td width="12%"> <div align="center">Sc&eacute;nariste</div></td>
             <td width="16%"> <div align="center">Dessinateur</div></td>
             <td width="13%"> <div align="center">Coloriste</div></td>
@@ -86,6 +86,26 @@ function valider(){
               </div></td>
             <td> <div align="center">
                 <input name="chkColor" type="checkbox" id="chkColor" value="checked" <?php echo $view->ISCOLOR;?>>
+              </div></td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr bordercolor="#FFFFCC">
+            <td height="28">R&ocirc;les Para-BD</td>
+            <td><div align="center">Sculpteur</div></td>
+            <td><div align="center">Designer</div></td>
+            <td><div align="center">Peintre</div></td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr bordercolor="#FFFFCC">
+            <td height="28">&nbsp;</td>
+            <td><div align="center">
+                <input name="chkSculpt" type="checkbox" id="chkSculpt" value="checked" <?php echo $view->ISSCULPT;?>>
+              </div></td>
+            <td><div align="center">
+                <input name="chkDesign" type="checkbox" id="chkDesign" value="checked" <?php echo $view->ISDESIGN;?>>
+              </div></td>
+            <td><div align="center">
+                <input name="chkPeint" type="checkbox" id="chkPeint" value="checked" <?php echo $view->ISPEINT;?>>
               </div></td>
             <td>&nbsp;</td>
           </tr>

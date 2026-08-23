@@ -99,6 +99,23 @@ class ParabdRules
         return null;
     }
 
+    public static function defaultAuthorRole($author)
+    {
+        $rolesByFlag = array(
+            'FLG_DESSIN' => 'ILLUSTRATOR',
+            'FLG_DESIGN' => 'DESIGNER',
+            'FLG_SCULPT' => 'SCULPTOR',
+            'FLG_PEINT' => 'PAINTER'
+        );
+        foreach ($rolesByFlag as $flag => $role) {
+            $value = is_array($author)
+                ? (isset($author[$flag]) ? $author[$flag] : null)
+                : (isset($author->$flag) ? $author->$flag : null);
+            if (intval($value) === 1) return $role;
+        }
+        return '';
+    }
+
     public static function calculateTrust($createdAt, $validatedContributions, $override = 'NONE', $now = null)
     {
         if ($override === 'REVOKE') return false;

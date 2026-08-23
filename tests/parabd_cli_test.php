@@ -17,6 +17,12 @@ parabdAssert(ParabdRules::normalizeText('  L’Épée—des Étoiles! ') === 'l 
 parabdAssert(ParabdRules::normalizeIdentifier('EAN13', '400-638 133393-1') === '4006381333931', 'normalisation EAN');
 parabdAssert(ParabdRules::normalizeIdentifier('MANUFACTURER_REF', ' ref. AB-12 ') === 'REFAB12', 'normalisation référence fabricant');
 
+parabdAssert(ParabdRules::defaultAuthorRole(array('FLG_DESSIN'=>1,'FLG_DESIGN'=>1,'FLG_SCULPT'=>1,'FLG_PEINT'=>1)) === 'ILLUSTRATOR', 'priorité du rôle dessinateur');
+parabdAssert(ParabdRules::defaultAuthorRole(array('FLG_DESSIN'=>0,'FLG_DESIGN'=>1,'FLG_SCULPT'=>1,'FLG_PEINT'=>1)) === 'DESIGNER', 'priorité du rôle designer');
+parabdAssert(ParabdRules::defaultAuthorRole(array('FLG_DESSIN'=>0,'FLG_DESIGN'=>0,'FLG_SCULPT'=>1,'FLG_PEINT'=>1)) === 'SCULPTOR', 'priorité du rôle sculpteur');
+parabdAssert(ParabdRules::defaultAuthorRole(array('FLG_DESSIN'=>0,'FLG_DESIGN'=>0,'FLG_SCULPT'=>0,'FLG_PEINT'=>1)) === 'PAINTER', 'rôle peintre');
+parabdAssert(ParabdRules::defaultAuthorRole(array()) === '', 'absence de rôle automatique sans flag');
+
 parabdAssert(ParabdRules::isValidIdentifier('EAN13', '4006381333931'), 'EAN13 valide');
 parabdAssert(!ParabdRules::isValidIdentifier('EAN13', '4006381333932'), 'EAN13 invalide');
 parabdAssert(ParabdRules::isValidIdentifier('UPCA', '036000291452'), 'UPC-A valide');

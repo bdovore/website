@@ -5,7 +5,7 @@
     </div>
     <form method="get" action="<?php echo BDO_URL; ?>parabd" class="parabd-search" id="parabd-catalog-search" data-autocomplete-url="<?php echo BDO_URL; ?>parabd/autocomplete">
         <label for="parabd-q">Rechercher</label>
-        <input id="parabd-q" name="q" value="<?php echo $h($view->search); ?>" placeholder="Auteur, série, album, titre, fabricant, éditeur…" autocomplete="off">
+        <input id="parabd-q" name="q" value="<?php echo $h($view->search); ?>" placeholder="Artiste, série, album, titre, fabricant, éditeur…" autocomplete="off">
         <input type="hidden" name="filter_type" value="<?php echo $h($view->filter_type); ?>">
         <input type="hidden" name="filter_id" value="<?php echo intval($view->filter_id); ?>">
         <input type="hidden" name="filter_value" value="<?php echo $h($view->filter_value); ?>">

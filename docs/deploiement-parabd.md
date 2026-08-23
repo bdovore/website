@@ -4,7 +4,7 @@ Le module est livré désactivé par défaut. L’ordre de déploiement recomman
 
 1. déployer le code et sauvegarder la base ;
 2. appliquer `sql/2026-08-09-create-parabd.sql` pour créer et initialiser les tables de la fonctionnalité ;
-3. sur une installation Para-BD existante, appliquer les migrations additives ultérieures dans l’ordre de leur date, dont `sql/2026-08-18-change-parabd-measurements-to-unsigned-int.sql` ;
+3. sur une installation Para-BD existante, appliquer les migrations additives ultérieures dans l’ordre de leur date, dont `sql/2026-08-18-change-parabd-measurements-to-unsigned-int.sql` et `sql/2026-08-23-add-parabd-author-flags.sql` ;
 4. créer le répertoire défini par `BDO_DIR_PARABD`, accessible en écriture par PHP ;
 5. supprimer les fichiers de cache de schéma `cache/*_schema.serial` ;
 6. définir `BDO_PARABD_ENABLED` à `true` dans la configuration d’environnement ;

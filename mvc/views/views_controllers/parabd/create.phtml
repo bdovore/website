@@ -66,12 +66,18 @@ foreach ($view->types as $type) {
                 </div>
             </section>
             <section class="parabd-form-section">
-                <h3>Rattachements BD</h3>
+                <h3>Artiste(s)</h3>
                 <div class="parabd-fields">
-                    <label>Auteur BD
-                        <input id="parabd-author-label" class="parabd-reference-input" data-source="<?php echo BDO_URL; ?>getjson?data=Auteur" placeholder="Saisir un nom d’auteur" autocomplete="off">
+                    <label>Artiste
+                        <input id="parabd-author-label" class="parabd-reference-input" data-source="<?php echo BDO_URL; ?>getjson?data=Auteur" placeholder="Saisir un nom d’artiste" autocomplete="off">
                         <input type="hidden" name="author_id" id="parabd-author-id"><small class="parabd-reference-status">Sélectionnez une proposition pour associer l’ID et le nom.</small>
                     </label>
+                    <label>Rôle de l’artiste<select name="author_role" id="parabd-author-role"><option value="">Choisir…</option><option value="ILLUSTRATOR">Dessinateur</option><option value="DESIGNER">Designer</option><option value="SCULPTOR">Sculpteur</option><option value="PAINTER">Peintre</option></select></label>
+                </div>
+            </section>
+            <section class="parabd-form-section">
+                <h3>Rattachements BD</h3>
+                <div class="parabd-fields">
                     <label>Série BD
                         <input id="parabd-series-label" class="parabd-reference-input" data-source="<?php echo BDO_URL; ?>getjson?data=Serie" placeholder="Saisir un nom de série" autocomplete="off">
                         <input type="hidden" name="series_id" id="parabd-series-id"><small class="parabd-reference-status">Sélectionnez une proposition pour associer l’ID et le nom.</small>
@@ -98,4 +104,4 @@ foreach ($view->types as $type) {
         </section>
     </form>
 </div>
-<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260821b" type="text/javascript"></script>
+<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260823a" type="text/javascript"></script>

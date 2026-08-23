@@ -28,7 +28,7 @@ try {
         CREATE TABLE users_album (user_id MEDIUMINT UNSIGNED NOT NULL, date_ajout DATETIME NULL) ENGINE=MyISAM;
         CREATE TABLE users_alb_prop (USER_ID MEDIUMINT UNSIGNED NOT NULL, PROP_DTE DATETIME NOT NULL, STATUS TINYINT NOT NULL DEFAULT 0) ENGINE=MyISAM;
         CREATE TABLE users_comment (USER_ID MEDIUMINT UNSIGNED NOT NULL, DTE_POST DATETIME NOT NULL) ENGINE=MyISAM;
-        CREATE TABLE bd_auteur (ID_AUTEUR MEDIUMINT UNSIGNED NOT NULL PRIMARY KEY, PSEUDO VARCHAR(100), PRENOM VARCHAR(100), NOM VARCHAR(100)) ENGINE=MyISAM;
+        CREATE TABLE bd_auteur (ID_AUTEUR MEDIUMINT UNSIGNED NOT NULL PRIMARY KEY, PSEUDO VARCHAR(100), PRENOM VARCHAR(100), NOM VARCHAR(100), FLG_SCENAR CHAR(1), FLG_DESSIN CHAR(1), FLG_COLOR CHAR(1)) ENGINE=MyISAM;
         CREATE TABLE bd_serie (ID_SERIE MEDIUMINT UNSIGNED NOT NULL PRIMARY KEY, NOM VARCHAR(150)) ENGINE=MyISAM;
         CREATE TABLE bd_tome (ID_TOME MEDIUMINT UNSIGNED NOT NULL PRIMARY KEY, TITRE VARCHAR(150)) ENGINE=MyISAM;
         CREATE TABLE bd_edition (ID_EDITION MEDIUMINT UNSIGNED NOT NULL PRIMARY KEY, USER_ID MEDIUMINT UNSIGNED NULL, PROP_STATUS TINYINT NOT NULL DEFAULT 0) ENGINE=MyISAM;
@@ -40,8 +40,12 @@ try {
     if (!$server->multi_query($discussionMigration)) throw new RuntimeException($server->error); drainMulti($server);
     $measurementMigration = file_get_contents(dirname(__DIR__) . '/sql/2026-08-18-change-parabd-measurements-to-unsigned-int.sql');
     if (!$server->multi_query($measurementMigration)) throw new RuntimeException($server->error); drainMulti($server);
+    $authorFlagsMigration = file_get_contents(dirname(__DIR__) . '/sql/2026-08-23-add-parabd-author-flags.sql');
+    if (!$server->multi_query($authorFlagsMigration)) throw new RuntimeException($server->error); drainMulti($server);
+    $authorFlagColumns = $server->query("SELECT COUNT(*) total FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='" . $server->real_escape_string($database) . "' AND TABLE_NAME='bd_auteur' AND COLUMN_NAME IN ('FLG_SCULPT','FLG_DESIGN','FLG_PEINT')")->fetch_assoc();
+    dbAssert(intval($authorFlagColumns['total']) === 3, 'migration des rôles Para-BD sur les auteurs');
     $server->query("INSERT INTO users (user_id,username,level,OPEN_COLLEC,CREATED_AT) VALUES (1,'creator',2,'Y','2020-01-01'),(2,'contributor',2,'Y','2020-01-01'),(3,'voter1',2,'Y','2020-01-01'),(4,'voter2',2,'Y','2020-01-01'),(5,'collector',2,'Y','2020-01-01')");
-    $server->query("INSERT INTO bd_auteur (ID_AUTEUR,PSEUDO) VALUES (10,'Auteur admin')");
+    $server->query("INSERT INTO bd_auteur (ID_AUTEUR,PSEUDO,FLG_DESSIN,FLG_DESIGN,FLG_SCULPT,FLG_PEINT) VALUES (10,'Auteur admin',1,1,1,1),(11,'Auteur sans rôle',0,0,0,0)");
     $server->query("INSERT INTO bd_serie (ID_SERIE,NOM) VALUES (20,'Série admin')");
     $server->query("INSERT INTO bd_tome (ID_TOME,TITRE) VALUES (30,'Album admin')");
 
@@ -96,6 +100,14 @@ try {
     require_once dirname(__DIR__) . '/library/Bdo/Security.php';
     require_once dirname(__DIR__) . '/mvc/models/ParabdService.php';
     $service = new ParabdService();
+    $authorRoleModel = new Parabditemauthor();
+    dbAssert($authorRoleModel->defaultRoleForAuthor(10) === 'ILLUSTRATOR' && $authorRoleModel->defaultRoleForAuthor(11) === '', 'rôle Para-BD calculé depuis les flags auteur');
+    $relationsFromInput = new ReflectionMethod('ParabdService', 'relationsFromInput');
+    $relationsFromInput->setAccessible(true);
+    $automaticRelations = $relationsFromInput->invoke($service, array('author_id' => 10, 'author_role' => ''));
+    dbAssert($automaticRelations['authors'][0]['role'] === 'ILLUSTRATOR', 'rôle auteur complété côté serveur selon les flags');
+    try { $relationsFromInput->invoke($service, array('author_id' => 11, 'author_role' => '')); dbAssert(false, 'choix du rôle exigé sans flag auteur'); }
+    catch (ParabdException $expected) { dbAssert($expected->errorCode === 'VALIDATION_ERROR', 'choix du rôle exigé sans flag auteur'); }
     foreach (range(1, 5) as $userId) $service->acceptCharter($userId, true);
     dbAssert($service->hasAcceptedCharter(1), 'charte courante reconnue comme acceptée');
     $server->query("UPDATE parabd_user_profile SET CHARTER_VERSION='ancienne' WHERE USER_ID=1");
@@ -179,9 +191,9 @@ try {
     $copiesBeforeAdminEdit = count($service->getUserCopies(1));
     $discussionBeforeAdminEdit = $service->getDiscussion($itemId, true);
     $adminItem = $service->getAdminItem($itemId); $primaryMediaId = intval($adminItem['media'][0]['ID_MEDIA']);
-    $service->adminUpdateItem(1, $itemId, array('type_code' => 'STATUETTE', 'title' => 'Statuette administrée', 'description' => 'Fiche commune modifiée directement', 'manufacturer' => 'Pixi', 'publisher' => 'Éditeur admin', 'release_date' => '2026', 'status' => 'ACTIVE', 'primary_media_id' => $primaryMediaId, 'media_explicit' => array($primaryMediaId => 1), 'identifiers' => array(array('scheme' => 'EAN13', 'issuer' => '', 'value' => '4006381333931')), 'authors' => array(array('id' => 10, 'role' => 'ARTIST')), 'series' => array(array('id' => 20, 'relation_type' => 'RELATED')), 'tomes' => array(array('id' => 30, 'relation_type' => 'RELATED')), 'sources' => array(array('url' => 'https://example.test/catalogue', 'label' => 'Catalogue admin', 'notes' => 'Vérifié'))));
+    $service->adminUpdateItem(1, $itemId, array('type_code' => 'STATUETTE', 'title' => 'Statuette administrée', 'description' => 'Fiche commune modifiée directement', 'manufacturer' => 'Pixi', 'publisher' => 'Éditeur admin', 'release_date' => '2026', 'status' => 'ACTIVE', 'primary_media_id' => $primaryMediaId, 'media_explicit' => array($primaryMediaId => 1), 'identifiers' => array(array('scheme' => 'EAN13', 'issuer' => '', 'value' => '4006381333931')), 'authors' => array(array('id' => 10, 'role' => '')), 'series' => array(array('id' => 20, 'relation_type' => 'RELATED')), 'tomes' => array(array('id' => 30, 'relation_type' => 'RELATED')), 'sources' => array(array('url' => 'https://example.test/catalogue', 'label' => 'Catalogue admin', 'notes' => 'Vérifié'))));
     $adminEdited = $service->getAdminItem($itemId); $adminHistory = $service->getAdminItemHistory($itemId);
-    dbAssert($adminEdited['TITLE'] === 'Statuette administrée' && $adminEdited['PUBLISHER'] === 'Éditeur admin' && count($adminEdited['authors']) === 1 && count($adminEdited['series']) === 1 && count($adminEdited['tomes']) === 1 && count($adminEdited['sources']) === 1 && intval($adminEdited['media'][0]['IS_EXPLICIT']) === 1, 'édition admin directe de toute la fiche commune et du statut explicite par média');
+    dbAssert($adminEdited['TITLE'] === 'Statuette administrée' && $adminEdited['PUBLISHER'] === 'Éditeur admin' && count($adminEdited['authors']) === 1 && $adminEdited['authors'][0]['ROLE'] === 'ILLUSTRATOR' && count($adminEdited['series']) === 1 && count($adminEdited['tomes']) === 1 && count($adminEdited['sources']) === 1 && intval($adminEdited['media'][0]['IS_EXPLICIT']) === 1, 'édition admin directe avec rôle auteur automatique et toutes les données communes');
     dbAssert(!array_key_exists('PAGE_NO', $adminEdited['tomes'][0]) && !array_key_exists('PANEL_NO', $adminEdited['tomes'][0]), 'rattachement album sans notion de page ni de case');
     dbAssert(count($service->getUserCopies(1)) === $copiesBeforeAdminEdit, 'édition admin sans impact sur la collection personnelle');
     dbAssert($adminHistory[0]['STATUS'] === 'ACCEPTED' && $adminHistory[0]['CHANGE_KIND'] === 'UPDATE' && !empty($adminHistory[0]['PATCH_BEFORE']) && !empty($adminHistory[0]['PATCH_AFTER']), 'édition admin ajoutée à l’historique complet');

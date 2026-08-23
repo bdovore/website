@@ -136,6 +136,7 @@
             var input = $(this);
             var hidden = input.siblings('input[type="hidden"]');
             var status = input.siblings('.parabd-reference-status');
+            var authorRole = hidden.attr('name') === 'author_id' ? input.closest('.parabd-fields').find('[name="author_role"]') : $();
             var selectedValue = '';
             input.autocomplete({
                 minLength: 2,
@@ -143,18 +144,20 @@
                     $.getJSON(input.data('source'), request).done(function (rows) {
                         response($.map(rows || [], function (row) {
                             var display = '#' + row.id + ' — ' + row.label;
-                            return {label: display, value: display, id: row.id, plainLabel: row.label};
+                            return {label: display, value: display, id: row.id, plainLabel: row.label, defaultRole: row.default_role || ''};
                         }));
                     }).fail(function () { response([]); });
                 },
                 select: function (event, ui) {
                     hidden.val(ui.item.id);
+                    if (authorRole.length) authorRole.val(ui.item.defaultRole).prop('required', true).trigger('change');
                     selectedValue = ui.item.value;
                     status.text('Sélection : #' + ui.item.id + ' — ' + ui.item.plainLabel).addClass('selected');
                 }
             }).on('input', function () {
                 if (input.val() !== selectedValue) {
                     hidden.val('');
+                    if (authorRole.length) authorRole.val('').prop('required', false).trigger('change');
                     status.text('Sélectionnez une proposition pour associer l’ID et le libellé.').removeClass('selected');
                 }
             });

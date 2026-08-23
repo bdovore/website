@@ -25,8 +25,9 @@ class Adminauteur extends Bdo_Controller {
             $query .= " AND (COMMENT = '' OR COMMENT IS NULL ) ";
         }
         if ($filter == "2") {
-            $query .= " AND (FLG_SCENAR <> 1 AND"
-                    . " FLG_DESSIN <> 1 AND FLG_COLOR <> 1  ) ";
+            $query .= " AND (COALESCE(FLG_SCENAR, 0) <> 1 AND"
+                    . " COALESCE(FLG_DESSIN, 0) <> 1 AND COALESCE(FLG_COLOR, 0) <> 1 AND"
+                    . " COALESCE(FLG_SCULPT, 0) <> 1 AND COALESCE(FLG_DESIGN, 0) <> 1 AND COALESCE(FLG_PEINT, 0) <> 1) ";
         }
        
         $query .= " ORDER BY VALID_DTE DESC LIMIT 0, 100";

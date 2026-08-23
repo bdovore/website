@@ -52,7 +52,7 @@
                 <?php foreach ($view->dbs_auteur->a_dataQuery as $auteur) { ?>
                 <tr>
                     <td><a href="<?php echo $ficheAlbum->getURLAuteur($auteur) ?>" target="_blank"><?php echo $auteur->PSEUDO;?> </a> <a class="fancybox fancybox.iframe {width:600,height:600}" href="admin/editauteur?auteur_id=<?php echo $auteur->ID_AUTEUR; ?>"> <img src="<?php echo BDO_URL_IMAGE; ?>edit.gif" /></a></td>
-                    <td><?php echo ($auteur->FLG_SCENAR ? "S/" : "" ).($auteur->FLG_DESSIN ? "D/" : "" ).($auteur->FLG_COLOR ? "C/" : "" ); ?></td>
+                    <td><?php echo ($auteur->FLG_SCENAR ? "S/" : "" ).($auteur->FLG_DESSIN ? "D/" : "" ).($auteur->FLG_COLOR ? "C/" : "" ).($auteur->FLG_SCULPT ? "Sc/" : "" ).($auteur->FLG_DESIGN ? "De/" : "" ).($auteur->FLG_PEINT ? "P/" : "" ); ?></td>
                     <td><?php echo $auteur->VALID_DTE; ?></td>
                     <td><?php echo $auteur->VALIDATOR_USERNAME; ?></td>
                 </tr>

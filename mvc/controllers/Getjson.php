@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__DIR__) . '/models/ParabdRules.php';
+
 /*
  * @author : Tom
  *
@@ -110,7 +112,8 @@ class GetJSON extends Bdo_Controller {
 
                 $arr[] = (object) array(
                             'label' => $obj->PSEUDO,
-                            'id' => $obj->ID_AUTEUR
+                            'id' => $obj->ID_AUTEUR,
+                            'default_role' => ParabdRules::defaultAuthorRole($obj)
                 );
             }
             $this->view->set_var('json', json_encode($arr));

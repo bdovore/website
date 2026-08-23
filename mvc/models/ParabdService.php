@@ -328,12 +328,16 @@ class ParabdService
         if (isset($input['authors']) && is_array($input['authors'])) {
             foreach ($input['authors'] as $row) if (!empty($row['id'])) {
                 $role = strtoupper(trim(isset($row['role']) ? $row['role'] : ''));
-                if (!in_array($role, array('ARTIST','DESIGNER','PAINTER','SCULPTOR','ILLUSTRATOR'), true)) throw new ParabdException('VALIDATION_ERROR', 'Le rôle de l’auteur est invalide.');
+                if ($role === '') $role = $this->model('Parabditemauthor')->defaultRoleForAuthor($row['id']);
+                if ($role === '') throw new ParabdException('VALIDATION_ERROR', 'Choisissez le rôle de l’artiste.');
+                if (!in_array($role, array('ARTIST','DESIGNER','PAINTER','SCULPTOR','ILLUSTRATOR'), true)) throw new ParabdException('VALIDATION_ERROR', 'Le rôle de l’artiste est invalide.');
                 $relations['authors'][] = array('id' => intval($row['id']), 'role' => $role);
             }
         } elseif (!empty($input['author_id'])) {
-            $role = strtoupper(trim(isset($input['author_role']) ? $input['author_role'] : 'ARTIST')) ?: 'ARTIST';
-            if (!in_array($role, array('ARTIST','DESIGNER','PAINTER','SCULPTOR','ILLUSTRATOR'), true)) throw new ParabdException('VALIDATION_ERROR', 'Le rôle de l’auteur est invalide.');
+            $role = strtoupper(trim(isset($input['author_role']) ? $input['author_role'] : ''));
+            if ($role === '') $role = $this->model('Parabditemauthor')->defaultRoleForAuthor($input['author_id']);
+            if ($role === '') throw new ParabdException('VALIDATION_ERROR', 'Choisissez le rôle de l’artiste.', array('author_role' => 'Rôle obligatoire.'));
+            if (!in_array($role, array('ARTIST','DESIGNER','PAINTER','SCULPTOR','ILLUSTRATOR'), true)) throw new ParabdException('VALIDATION_ERROR', 'Le rôle de l’artiste est invalide.');
             $relations['authors'][] = array('id' => intval($input['author_id']), 'role' => $role);
         }
         if (isset($input['series']) && is_array($input['series'])) {

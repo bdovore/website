@@ -38,6 +38,9 @@ class Auteur extends Bdo_Db_Line
             `FLG_SCENAR` ,
             `FLG_DESSIN` ,
             `FLG_COLOR` ,
+            `FLG_SCULPT` ,
+            `FLG_DESIGN` ,
+            `FLG_PEINT` ,
             `COMMENT` ,
             `DTE_NAIS` ,
             `DTE_DECES` ,
@@ -62,6 +65,9 @@ class Auteur extends Bdo_Db_Line
             $a_data['ch_FLG_SCENAR'] = "checked";
             $a_data['ch_FLG_DESSIN'] = "checked";
             $a_data['ch_FLG_COLOR'] = "checked";
+            $a_data['ch_FLG_SCULPT'] = "checked";
+            $a_data['ch_FLG_DESIGN'] = "checked";
+            $a_data['ch_FLG_PEINT'] = "checked";
             $a_data['ch_DTE_NAIS'] = "checked";
             $a_data['ch_DTE_DECES'] = "checked";
             $a_data['ch_NATIONALITE'] = "checked";
@@ -78,6 +84,9 @@ class Auteur extends Bdo_Db_Line
             `FLG_SCENAR` ,
             `FLG_DESSIN` ,
             `FLG_COLOR` ,
+            `FLG_SCULPT` ,
+            `FLG_DESIGN` ,
+            `FLG_PEINT` ,
             `COMMENT` ,
             `DTE_NAIS` ,
             `DTE_DECES` ,

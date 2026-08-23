@@ -3,7 +3,7 @@ $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'U
 $formatRevision = function ($json) {
     $patch = json_decode($json, true);
     if (!is_array($patch)) return 'Détail de la modification indisponible.';
-    $labels = array('TITLE'=>'Titre','DESCRIPTION'=>'Description','MATERIAL'=>'Matière','COLOR'=>'Couleur','MANUFACTURER'=>'Fabricant','PUBLISHER'=>'Éditeur','RELEASE_DATE'=>'Date','DELETE_AUTHOR'=>'Retrait de l’auteur','DELETE_SERIES'=>'Retrait de la série','DELETE_TOME'=>'Retrait de l’album');
+    $labels = array('TITLE'=>'Titre','DESCRIPTION'=>'Description','MATERIAL'=>'Matière','COLOR'=>'Couleur','MANUFACTURER'=>'Fabricant','PUBLISHER'=>'Éditeur','RELEASE_DATE'=>'Date','DELETE_AUTHOR'=>'Retrait de l’artiste','DELETE_SERIES'=>'Retrait de la série','DELETE_TOME'=>'Retrait de l’album');
     if (isset($patch['_operation'])) return (isset($labels[$patch['_operation']]) ? $labels[$patch['_operation']] : 'Modification d’un rattachement') . ' #' . intval($patch['_id']);
     $parts = array();
     foreach ($patch as $field => $value) {
@@ -20,6 +20,7 @@ $wishlistCopies = array_filter($itemCopies, function ($copy) { return $copy['STA
 $wishlistCopy = $wishlistCopies ? reset($wishlistCopies) : null;
 $mediaCount = count($item['media']);
 $mediaLabels = array('PRIMARY'=>'Visuel principal','GALLERY'=>'Galerie','DETAIL'=>'Détail','BOX'=>'Boîte','CERTIFICATE'=>'Certificat');
+$authorRoleLabels = array('ARTIST'=>'Artiste','DESIGNER'=>'Designer','PAINTER'=>'Peintre','SCULPTOR'=>'Sculpteur','ILLUSTRATOR'=>'Dessinateur');
 $conditions = array('UNKNOWN'=>'Non renseigné','MINT'=>'Neuf','NEAR_MINT'=>'Comme neuf','VERY_GOOD'=>'Très bon','GOOD'=>'Bon','FAIR'=>'Correct','POOR'=>'Usé');
 $triOptions = function ($current) {
     $options = array(''=>'Inconnu','1'=>'Oui','0'=>'Non');
@@ -64,10 +65,15 @@ $triOptions = function ($current) {
             </dl>
 
             <?php if ($item['identifiers']) { ?><h2>Identifiants</h2><ul><?php foreach ($item['identifiers'] as $identifier) { ?><li><?php echo $h($identifier['SCHEME'] . ' : ' . $identifier['VALUE']); ?></li><?php } ?></ul><?php } ?>
-            <?php if ($item['authors'] || $item['series'] || $item['tomes']) { ?>
+            <?php if ($item['authors']) { ?>
+                <h2>Artiste(s)</h2>
+                <ul class="parabd-references">
+                    <?php foreach ($item['authors'] as $link) { ?><li><a href="<?php echo BDO_URL . 'auteur-bd-' . intval($link['AUTHOR_ID']) . '-' . clean_url($link['LABEL']); ?>">#<?php echo intval($link['AUTHOR_ID']); ?> — <?php echo $h($link['LABEL']); ?></a><?php if (!empty($link['ROLE'])) { ?> (<?php echo $h(isset($authorRoleLabels[$link['ROLE']]) ? $authorRoleLabels[$link['ROLE']] : $link['ROLE']); ?>)<?php } ?></li><?php } ?>
+                </ul>
+            <?php } ?>
+            <?php if ($item['series'] || $item['tomes']) { ?>
                 <h2>Rattachements BD</h2>
                 <ul class="parabd-references">
-                    <?php foreach ($item['authors'] as $link) { ?><li>Auteur : <a href="<?php echo BDO_URL . 'auteur-bd-' . intval($link['AUTHOR_ID']) . '-' . clean_url($link['LABEL']); ?>">#<?php echo intval($link['AUTHOR_ID']); ?> — <?php echo $h($link['LABEL']); ?></a></li><?php } ?>
                     <?php foreach ($item['series'] as $link) { ?><li>Série : <a href="<?php echo BDO_URL . 'serie-bd-' . intval($link['SERIES_ID']) . '-' . clean_url($link['LABEL']); ?>">#<?php echo intval($link['SERIES_ID']); ?> — <?php echo $h($link['LABEL']); ?></a></li><?php } ?>
                     <?php foreach ($item['tomes'] as $link) { ?><li>Album : <a href="<?php echo BDO_URL; ?>Album?id_tome=<?php echo intval($link['TOME_ID']); ?>">#<?php echo intval($link['TOME_ID']); ?> — <?php echo $h($link['LABEL']); ?></a></li><?php } ?>
                 </ul>
@@ -172,8 +178,10 @@ $triOptions = function ($current) {
                     <button type="submit">Envoyer</button> <span class="parabd-form-status"></span>
                 </form>
 
-                <?php if ($item['authors'] || $item['series'] || $item['tomes']) { ?><h2>Retirer un rattachement</h2><ul class="parabd-relation-actions">
+                <?php if ($item['authors']) { ?><h2>Retirer un artiste</h2><ul class="parabd-relation-actions">
                     <?php foreach ($item['authors'] as $link) { ?><li>#<?php echo intval($link['AUTHOR_ID']); ?> — <?php echo $h($link['LABEL']); ?> <form class="inline parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>"><input type="hidden" name="field" value="DELETE_AUTHOR"><input type="hidden" name="value" value="<?php echo intval($link['AUTHOR_ID']); ?>"><button type="submit">Proposer le retrait</button><span class="parabd-form-status"></span></form></li><?php } ?>
+                </ul><?php } ?>
+                <?php if ($item['series'] || $item['tomes']) { ?><h2>Retirer un rattachement BD</h2><ul class="parabd-relation-actions">
                     <?php foreach ($item['series'] as $link) { ?><li>#<?php echo intval($link['SERIES_ID']); ?> — <?php echo $h($link['LABEL']); ?> <form class="inline parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>"><input type="hidden" name="field" value="DELETE_SERIES"><input type="hidden" name="value" value="<?php echo intval($link['SERIES_ID']); ?>"><button type="submit">Proposer le retrait</button><span class="parabd-form-status"></span></form></li><?php } ?>
                     <?php foreach ($item['tomes'] as $link) { ?><li>#<?php echo intval($link['TOME_ID']); ?> — <?php echo $h($link['LABEL']); ?> <form class="inline parabd-json-form" action="<?php echo BDO_URL; ?>parabd/contribute" method="post"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="base_revision_no" value="<?php echo intval($item['REVISION_NO']); ?>"><input type="hidden" name="field" value="DELETE_TOME"><input type="hidden" name="value" value="<?php echo intval($link['TOME_ID']); ?>"><button type="submit">Proposer le retrait</button><span class="parabd-form-status"></span></form></li><?php } ?>
                 </ul><?php } ?>
@@ -199,4 +207,4 @@ $triOptions = function ($current) {
         <form class="parabd-json-form parabd-discussion-form" method="post" action="<?php echo BDO_URL; ?>parabd/comment"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="revision_id" value=""><p class="parabd-comment-context" hidden>Commentaire lié à la proposition #<span></span> · <button type="button" class="parabd-clear-comment-context">retirer le lien</button></p><label>Ajouter un commentaire<textarea name="body" rows="4" maxlength="2000" required></textarea></label><button>Publier</button><span class="parabd-form-status"></span></form>
     </div></details><?php } ?>
 </div>
-<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260815c" type="text/javascript"></script>
+<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260823a" type="text/javascript"></script>

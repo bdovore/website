@@ -43,7 +43,7 @@ class Adminparabd extends Bdo_Controller
         }));
         $this->view->addPhtmlFile('adminparabd/edit', 'BODY');
         $this->view->addCssFile('style/parabd.css?v=20260821');
-        $this->view->addJavascriptFile('script/parabd-admin.js?v=20260821c');
+        $this->view->addJavascriptFile('script/parabd-admin.js?v=20260823a');
         $itemId = $item ? intval($item['ID_ITEM']) : 0;
         $reportId = getValInteger('report_id', postValInteger('report_id', 0));
         $this->view->set_var(array(
