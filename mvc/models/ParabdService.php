@@ -178,6 +178,29 @@ class ParabdService
         return array_slice($result, 0, $limit);
     }
 
+    public function searchDuplicatesForItem($itemId, $limit = 20)
+    {
+        $item = $this->getAdminItem(intval($itemId));
+        if (!$item) throw new ParabdException('NOT_FOUND', 'Objet Para-BD introuvable.');
+        return $this->searchDuplicates($this->duplicateInputForItem($item), $limit);
+    }
+
+    private function duplicateInputForItem(array $item)
+    {
+        $item['ID_ITEM'] = intval($item['ID_ITEM']);
+        $item['identifiers'] = array_map(function ($identifier) {
+            return array(
+                'scheme' => isset($identifier['SCHEME']) ? $identifier['SCHEME'] : (isset($identifier['scheme']) ? $identifier['scheme'] : ''),
+                'issuer' => isset($identifier['ISSUER']) ? $identifier['ISSUER'] : (isset($identifier['issuer']) ? $identifier['issuer'] : ''),
+                'value' => isset($identifier['VALUE']) ? $identifier['VALUE'] : (isset($identifier['value']) ? $identifier['value'] : '')
+            );
+        }, isset($item['identifiers']) ? $item['identifiers'] : array());
+        $item['AUTHOR_IDS'] = array_values(array_unique(array_map(function ($row) { return intval($row['AUTHOR_ID']); }, isset($item['authors']) ? $item['authors'] : array())));
+        $item['SERIES_IDS'] = array_values(array_unique(array_map(function ($row) { return intval($row['SERIES_ID']); }, isset($item['series']) ? $item['series'] : array())));
+        $item['TOME_IDS'] = array_values(array_unique(array_map(function ($row) { return intval($row['TOME_ID']); }, isset($item['tomes']) ? $item['tomes'] : array())));
+        return $item;
+    }
+
     private function primaryImage($itemId)
     {
         return $this->model('Parabdmedia')->primaryPath($itemId, (bool) Bdo_Cfg::getVar('explicit'));
@@ -185,10 +208,16 @@ class ParabdService
 
     private function hasCommonRelation($itemId, $input)
     {
-        $map = array('AUTHOR_ID' => array('parabd_item_author', 'AUTHOR_ID'), 'SERIES_ID' => array('parabd_item_series', 'SERIES_ID'), 'TOME_ID' => array('parabd_item_tome', 'TOME_ID'));
+        $map = array(
+            'AUTHOR_ID' => array('parabd_item_author', 'AUTHOR_ID', 'AUTHOR_IDS'),
+            'SERIES_ID' => array('parabd_item_series', 'SERIES_ID', 'SERIES_IDS'),
+            'TOME_ID' => array('parabd_item_tome', 'TOME_ID', 'TOME_IDS')
+        );
         foreach ($map as $key => $meta) {
-            if (!empty($input[$key])) {
-                if ($this->model('Parabditem')->hasRelation($itemId, $meta[0], $meta[1], $input[$key])) return true;
+            $values = !empty($input[$meta[2]]) && is_array($input[$meta[2]]) ? $input[$meta[2]] : array();
+            if (!empty($input[$key])) $values[] = $input[$key];
+            foreach (array_unique(array_map('intval', $values)) as $value) {
+                if ($value && $this->model('Parabditem')->hasRelation($itemId, $meta[0], $meta[1], $value)) return true;
             }
         }
         return false;
@@ -946,12 +975,7 @@ class ParabdService
             $this->model('Parabdduplicate')->markMergedForItem($sourceId, $adminId);
             $audit = json_encode(array('source_id' => intval($sourceId), 'target_id' => intval($targetId)), JSON_UNESCAPED_UNICODE);
             $this->model('Parabdrevision')->addMergeAudit($targetId, $adminId, $audit);
-            $target = $this->getItem($targetId, true);
-            if ($target) {
-                $target['identifiers'] = array_map(function ($identifier) { return array('scheme' => $identifier['SCHEME'], 'issuer' => $identifier['ISSUER'], 'value' => $identifier['VALUE']); }, $target['identifiers']);
-                $target['ID_ITEM'] = intval($targetId);
-                foreach ($this->searchDuplicates($target) as $duplicate) $this->recordDuplicate($targetId, intval($duplicate['ID_ITEM']), $duplicate);
-            }
+            foreach ($this->searchDuplicatesForItem($targetId) as $duplicate) $this->recordDuplicate($targetId, intval($duplicate['ID_ITEM']), $duplicate);
             Db_commit($connection); Db_autocommit(true, $connection);
         } catch (Throwable $error) { Db_rollback($connection); Db_autocommit(true, $connection); throw $error; }
     }

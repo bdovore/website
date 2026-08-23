@@ -81,10 +81,56 @@ class ParabdRules
         return round($percent, 2);
     }
 
+    private static function titleWordComparison($left, $right)
+    {
+        $ignored = array_flip(array(
+            'a', 'au', 'aux', 'avec', 'ce', 'ces', 'dans', 'de', 'des', 'du', 'en', 'et', 'ex', 'la', 'le', 'les',
+            'ou', 'par', 'pour', 'sans', 'sur', 'un', 'une',
+            'buste', 'collector', 'collection', 'diorama', 'edition', 'editions', 'exclusif', 'exclusive', 'exclusivite',
+            'figurine', 'impression', 'libris', 'objet', 'statue', 'statuette', 'tirage'
+        ));
+        $parse = function ($title) use ($ignored) {
+            $tokens = array(); $numbers = array();
+            foreach (explode(' ', self::normalizeText($title)) as $word) {
+                if ($word === '') continue;
+                if (ctype_digit($word)) {
+                    $number = ltrim($word, '0');
+                    $numbers[$number === '' ? '0' : $number] = true;
+                } elseif (strlen($word) >= 3 && !isset($ignored[$word])) {
+                    $tokens[$word] = true;
+                }
+            }
+            $tokens = array_keys($tokens); $numbers = array_keys($numbers);
+            sort($tokens); sort($numbers);
+            return array($tokens, $numbers);
+        };
+        list($leftTokens, $leftNumbers) = $parse($left);
+        list($rightTokens, $rightNumbers) = $parse($right);
+        if (!$leftTokens || !$rightTokens) return array('close' => false, 'score' => 0.0, 'numbers_differ' => $leftNumbers !== $rightNumbers);
+
+        $intersection = array_values(array_intersect($leftTokens, $rightTokens));
+        $union = array_values(array_unique(array_merge($leftTokens, $rightTokens)));
+        $sharedCount = count($intersection);
+        $coverage = $sharedCount / min(count($leftTokens), count($rightTokens)) * 100;
+        $jaccard = $sharedCount / count($union) * 100;
+        $longestShared = 0;
+        foreach ($intersection as $word) $longestShared = max($longestShared, strlen($word));
+        $distinctive = $sharedCount >= 2 || $longestShared >= 7;
+        $close = $distinctive && ($coverage >= 100 || ($coverage >= 75 && $jaccard >= 50));
+        $score = round(($coverage + $jaccard) / 2, 2);
+        if ($leftNumbers !== $rightNumbers) $score = min($score, 90.0);
+        return array(
+            'close' => $close,
+            'score' => $score,
+            'numbers_differ' => $leftNumbers !== $rightNumbers
+        );
+    }
+
     public static function duplicateLevel($candidate, $input)
     {
         if (!empty($input['exact_identifier'])) return array('level' => 'CERTAIN', 'score' => 100, 'reasons' => array('Identifiant exact'));
         $similarity = self::titleSimilarity($candidate['TITLE'], $input['TITLE']);
+        $wordComparison = self::titleWordComparison($candidate['TITLE'], $input['TITLE']);
         $sameRelation = !empty($input['common_relation']);
         $sameType = intval($candidate['TYPE_ID']) === intval($input['TYPE_ID']);
         $candidatePublisher = self::normalizeText(isset($candidate['PUBLISHER']) ? $candidate['PUBLISHER'] : '');
@@ -95,6 +141,14 @@ class ParabdRules
         }
         if ($sameType && $similarity > 80 && ($samePublisher || $sameRelation)) {
             return array('level' => 'POSSIBLE', 'score' => $similarity, 'reasons' => array('Titre proche', $samePublisher ? 'Même éditeur' : 'Rattachement commun'));
+        }
+        if ($sameType && $wordComparison['close']) {
+            $reasons = array('Noyau du titre commun');
+            if ($wordComparison['numbers_differ']) $reasons[] = 'Numérotation différente';
+            return array('level' => 'POSSIBLE', 'score' => max($similarity, $wordComparison['score']), 'reasons' => $reasons);
+        }
+        if ($sameType && $similarity >= 85) {
+            return array('level' => 'POSSIBLE', 'score' => $similarity, 'reasons' => array('Titre presque identique'));
         }
         return null;
     }

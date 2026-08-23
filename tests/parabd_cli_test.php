@@ -53,10 +53,32 @@ $duplicate = ParabdRules::duplicateLevel($candidate, $input);
 parabdAssert($duplicate && $duplicate['level'] === 'POSSIBLE', 'titre proche, même type et même éditeur possible');
 $input['TITLE'] = 'Statuette Le Chat'; $input['PUBLISHER'] = 'Autre';
 $duplicate = ParabdRules::duplicateLevel($candidate, $input);
-parabdAssert($duplicate === null, 'titre identique sans éditeur ni rattachement commun insuffisant');
+parabdAssert($duplicate && $duplicate['level'] === 'POSSIBLE', 'titre identique et même type possibles sans information complémentaire');
+$input['TYPE_ID'] = 2;
+parabdAssert(ParabdRules::duplicateLevel($candidate, $input) === null, 'titre identique mais type différent insuffisant');
 $candidateExlibris = array('TITLE' => 'Ex-libris Spider-man (exclusivité BDfugue)', 'TYPE_ID' => 2, 'PUBLISHER' => '');
 $inputExlibris = array('TITLE' => 'Ex-libris Astérix (exclusifivté BDFugue)', 'TYPE_ID' => 2, 'PUBLISHER' => '', 'common_relation' => false);
 parabdAssert(ParabdRules::duplicateLevel($candidateExlibris, $inputExlibris) === null, 'termes génériques de titres insuffisants');
+$fourreuxTitles = array('le fourreux', 'Loisel - le Le fourreux', 'le fourreux de loisel', 'Fourreux');
+foreach ($fourreuxTitles as $leftIndex => $leftTitle) {
+    foreach (array_slice($fourreuxTitles, $leftIndex + 1) as $rightTitle) {
+        $fourreuxDuplicate = ParabdRules::duplicateLevel(
+            array('TITLE' => $leftTitle, 'TYPE_ID' => 1, 'PUBLISHER' => ''),
+            array('TITLE' => $rightTitle, 'TYPE_ID' => 1, 'PUBLISHER' => '', 'common_relation' => false)
+        );
+        parabdAssert($fourreuxDuplicate && $fourreuxDuplicate['level'] === 'POSSIBLE', 'noyau Fourreux commun : ' . $leftTitle . ' / ' . $rightTitle);
+    }
+}
+$numberedDuplicate = ParabdRules::duplicateLevel(
+    array('TITLE' => 'Test fusion 1', 'TYPE_ID' => 1, 'PUBLISHER' => ''),
+    array('TITLE' => 'Test fusion 37', 'TYPE_ID' => 1, 'PUBLISHER' => '', 'common_relation' => false)
+);
+parabdAssert($numberedDuplicate && $numberedDuplicate['level'] === 'POSSIBLE' && in_array('Numérotation différente', $numberedDuplicate['reasons'], true), 'noyau commun avec numérotation différente');
+$genericDuplicate = ParabdRules::duplicateLevel(
+    array('TITLE' => 'Statuette Astérix', 'TYPE_ID' => 1, 'PUBLISHER' => ''),
+    array('TITLE' => 'Statuette Tintin', 'TYPE_ID' => 1, 'PUBLISHER' => '', 'common_relation' => false)
+);
+parabdAssert($genericDuplicate === null, 'type générique commun insuffisant');
 $candidateBoundary = array('TITLE' => 'abcdefghij', 'TYPE_ID' => 3, 'PUBLISHER' => 'Delcourt');
 $inputBoundary = array('TITLE' => 'abcdefghiX', 'TYPE_ID' => 3, 'PUBLISHER' => 'Autre', 'common_relation' => true);
 parabdAssert(ParabdRules::duplicateLevel($candidateBoundary, $inputBoundary)['level'] === 'STRONG', 'seuil fort inclusif à 90');

@@ -156,9 +156,14 @@ try {
     $tomePositionColumns = $server->query("SELECT COUNT(*) total FROM information_schema.columns WHERE table_schema='" . $server->real_escape_string($database) . "' AND table_name='parabd_item_tome' AND column_name IN ('PAGE_NO','PANEL_NO')")->fetch_assoc();
     dbAssert(intval($tomePositionColumns['total']) === 0, 'schéma de rattachement album sans page ni case');
     try { $service->createItem(2, array('title' => 'Copie', 'type_code' => 'STATUETTE', 'identifier_scheme' => 'EAN13', 'identifier_value' => '4006381333931'), $validUpload); dbAssert(false, 'doublon exact bloqué'); } catch (ParabdException $expected) { dbAssert($expected->errorCode === 'DUPLICATE_EXACT', 'doublon exact bloqué'); }
-    try { $service->createItem(2, array('title' => 'Statuette test', 'type_code' => 'STATUETTE', 'manufacturer' => 'Pixi', 'release_date' => '2025', 'width_mm' => '102'), $validUpload); dbAssert(false, 'doublon fort exigeant un motif'); } catch (ParabdException $expected) { dbAssert($expected->errorCode === 'VALIDATION_ERROR', 'doublon fort exigeant un motif'); }
-    $distinct = $service->createItem(2, array('title' => 'Statuette test', 'type_code' => 'STATUETTE', 'manufacturer' => 'Pixi', 'release_date' => '2025', 'width_mm' => '102', 'duplicate_reviewed' => 1, 'duplicate_reason' => 'Variante collector vérifiée'), $validUpload);
-    dbAssert($distinct['item_id'] > 0, 'doublon fort contournable avec motif et sans identifiant');
+    $distinct = $service->createItem(2, array('title' => 'Statuette test', 'type_code' => 'STATUETTE', 'manufacturer' => 'Pixi', 'release_date' => '2025', 'width_mm' => '102'), $validUpload);
+    dbAssert($distinct['item_id'] > 0, 'doublon potentiel sans rattachement signalé sans bloquer la création');
+    $duplicateCountBeforeCheck = intval($server->query('SELECT COUNT(*) total FROM parabd_duplicate')->fetch_assoc()['total']);
+    $manualDuplicates = $service->searchDuplicatesForItem($distinct['item_id']);
+    $manualDuplicateIds = array_map(function ($duplicate) { return intval($duplicate['ID_ITEM']); }, $manualDuplicates);
+    dbAssert(in_array(intval($itemId), $manualDuplicateIds, true), 'revérification manuelle des doublons depuis une fiche enregistrée');
+    $duplicateCountAfterCheck = intval($server->query('SELECT COUNT(*) total FROM parabd_duplicate')->fetch_assoc()['total']);
+    dbAssert($duplicateCountAfterCheck === $duplicateCountBeforeCheck, 'revérification manuelle sans écriture dans la file des doublons');
     $duplicateRow = $server->query('SELECT ID_DUPLICATE FROM parabd_duplicate WHERE STATUS=\'OPEN\' LIMIT 1')->fetch_assoc();
     $service->resolveDuplicate(1, intval($duplicateRow['ID_DUPLICATE']), 'IGNORED');
     $duplicateStatus = $server->query('SELECT STATUS FROM parabd_duplicate WHERE ID_DUPLICATE=' . intval($duplicateRow['ID_DUPLICATE']))->fetch_assoc();

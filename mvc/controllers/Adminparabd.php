@@ -42,10 +42,11 @@ class Adminparabd extends Bdo_Controller
             return in_array($revision['STATUS'], array('PENDING', 'CONFLICT'), true) && $revision['CHANGE_KIND'] !== 'CREATE';
         }));
         $this->view->addPhtmlFile('adminparabd/edit', 'BODY');
-        $this->view->addCssFile('style/parabd.css?v=20260823b');
+        $this->view->addCssFile('style/parabd.css?v=20260823c');
         $this->view->addJavascriptFile('script/parabd-admin.js?v=20260823a');
         $itemId = $item ? intval($item['ID_ITEM']) : 0;
         $reportId = getValInteger('report_id', postValInteger('report_id', 0));
+        $duplicateCheckPerformed = $mode === 'edit' && getValInteger('check_duplicates', 0) === 1;
         $this->view->set_var(array(
             'PAGETITLE' => $mode === 'create' ? 'Créer une fiche Para-BD' : 'Modifier la fiche Para-BD #' . intval($item['ID_ITEM']),
             'ROBOTS' => 'noindex,nofollow', 'types' => $this->service()->getTypes(), 'item' => $item, 'mode' => $mode,
@@ -53,6 +54,8 @@ class Adminparabd extends Bdo_Controller
             'discussion' => $item ? $this->service()->getDiscussion($itemId, true) : array('entries' => array(), 'comment_count' => 0),
             'report' => $item ? $this->service()->getOpenReportForItem($reportId, $itemId) : null,
             'report_id' => $reportId,
+            'duplicate_check_performed' => $duplicateCheckPerformed,
+            'duplicate_candidates' => $duplicateCheckPerformed ? $this->service()->searchDuplicatesForItem($itemId) : array(),
             'csrf_token' => parabdCsrfToken('parabd-admin'), 'form_error' => $error, 'media_error' => $mediaError,
             'saved' => getValInteger('saved', 0), 'media_saved' => getValInteger('media_saved', 0), 'media_deleted' => getValInteger('media_deleted', 0),
             'revision_decision' => getVal('revision_decision', '')

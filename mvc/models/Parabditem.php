@@ -200,9 +200,17 @@ class Parabditem extends ParabdDbLine
         usort($words, function ($left, $right) { return strlen($right) <=> strlen($left); });
         $where = "STATUS='ACTIVE'"; $clauses = array();
         foreach (array_slice($words, 0, 3) as $word) $clauses[] = "TITLE_NORMALIZED LIKE '%" . $this->escape($word) . "%'";
-        if (!empty($relations['AUTHOR_ID'])) $clauses[] = 'ID_ITEM IN (SELECT ITEM_ID FROM parabd_item_author WHERE AUTHOR_ID=' . intval($relations['AUTHOR_ID']) . ')';
-        if (!empty($relations['SERIES_ID'])) $clauses[] = 'ID_ITEM IN (SELECT ITEM_ID FROM parabd_item_series WHERE SERIES_ID=' . intval($relations['SERIES_ID']) . ')';
-        if (!empty($relations['TOME_ID'])) $clauses[] = 'ID_ITEM IN (SELECT ITEM_ID FROM parabd_item_tome WHERE TOME_ID=' . intval($relations['TOME_ID']) . ')';
+        foreach (array(
+            array('AUTHOR_ID', 'AUTHOR_IDS', 'parabd_item_author'),
+            array('SERIES_ID', 'SERIES_IDS', 'parabd_item_series'),
+            array('TOME_ID', 'TOME_IDS', 'parabd_item_tome')
+        ) as $relation) {
+            $values = !empty($relations[$relation[1]]) && is_array($relations[$relation[1]]) ? $relations[$relation[1]] : array();
+            if (!empty($relations[$relation[0]])) $values[] = $relations[$relation[0]];
+            foreach (array_unique(array_map('intval', $values)) as $value) {
+                if ($value) $clauses[] = 'ID_ITEM IN (SELECT ITEM_ID FROM ' . $relation[2] . ' WHERE ' . $relation[0] . '=' . $value . ')';
+            }
+        }
         if ($clauses) $where .= ' AND (' . implode(' OR ', $clauses) . ')';
         elseif ($typeId) $where .= ' AND TYPE_ID=' . intval($typeId);
         return $this->fetchAllQuery("SELECT * FROM parabd_item WHERE $where ORDER BY UPDATED_AT DESC LIMIT 200");
