@@ -1224,7 +1224,7 @@ class Macollection extends Bdo_Controller {
         }
         $this->loadModel('ParabdService');
         $state = strtoupper(getVal('list', 'OWNED')) === 'WISHLIST' ? 'WISHLIST' : 'OWNED';
-        $this->view->addCssFile('style/parabd.css?v=20260815b');
+        $this->view->addCssFile('style/parabd.css?v=20260823d');
         $this->view->set_var(array(
             'PAGETITLE' => 'Ma collection Para-BD',
             'ROBOTS' => 'noindex,nofollow',

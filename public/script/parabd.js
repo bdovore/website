@@ -221,7 +221,7 @@
             var link = $(this);
             var container = link.closest('.parabd-collection-actions');
             if (container.data('busy')) return;
-            if (link.data('action') === 'remove' && !window.confirm('Retirer cet objet de votre wishlist ?')) return;
+            if (link.data('action') === 'remove' && !window.confirm(link.data('confirm') || 'Retirer cet objet de votre wishlist ?')) return;
             container.data('busy', true).addClass('loading');
             container.find('.parabd-quick-copy').attr('aria-disabled', 'true');
             var payload = {

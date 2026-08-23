@@ -15,10 +15,11 @@
 .parabd-page .ui-button { cursor: pointer; font-size: .95rem; margin: .15rem; padding: .45rem .8rem; text-decoration: none; }
 .parabd-page .ui-button[disabled] { cursor: wait; opacity: .65; }
 .parabd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; margin-top: 1rem; }
-.parabd-card { display: flex; gap: .8rem; border: 1px solid #ddd; border-radius: 5px; background: #fff; padding: .75rem; min-width: 0; }
+.parabd-card { align-items: flex-start; display: flex; flex-wrap: wrap; gap: .8rem; border: 1px solid #ddd; border-radius: 5px; background: #fff; padding: .75rem; min-width: 0; }
 .parabd-card.newly-created { border-color: #7b9e42; box-shadow: 0 0 0 2px rgba(123,158,66,.18); }
 .parabd-card img { width: 96px; height: 120px; object-fit: contain; flex: 0 0 auto; background: #f4f4f4; }
 .parabd-card img.parabd-admin-edit-icon { background: transparent; height: 16px; vertical-align: middle; width: 16px; }
+.parabd-card-content { flex: 1 1 110px; min-width: 0; }
 .parabd-card h2 { font-size: 1.05rem; margin: .25rem 0; overflow-wrap: anywhere; }
 .parabd-detail { display: grid; grid-template-columns: minmax(250px, 38%) 1fr; gap: 2rem; }
 .parabd-gallery { min-width: 0; }
@@ -74,6 +75,9 @@
 .parabd-collection-actions .button-simple a { align-items: center; display: inline-flex; flex-direction: column; text-decoration: none; }
 .parabd-collection-actions.loading { opacity: .65; }
 .parabd-quick-status { align-self: center; color: #666; }
+.parabd-status-actions { align-items: center; flex-wrap: wrap; gap: .45rem; min-height: 0; }
+.parabd-card > .parabd-status-actions { flex: 1 0 100%; margin: .25rem 0 0; }
+.parabd-status-actions .button-collection { margin-bottom: 0; }
 .parabd-copy-editor { margin: .75rem 0; }
 .parabd-copy-editor > summary { display: inline-block; list-style: none; }
 .parabd-copy-editor > summary::-webkit-details-marker { display: none; }

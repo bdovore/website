@@ -98,7 +98,7 @@ class Parabd extends Bdo_Controller
     public function Fiche()
     {
         if (!$this->enabled()) return;
-        $this->view->addCssFile('style/parabd.css?v=20260815c');
+        $this->view->addCssFile('style/parabd.css?v=20260823d');
         $this->view->addJavascriptFile('script/parabd.js');
         $item = $this->service()->getItem(getValInteger('id', 0));
         if (!$item) { http_response_code(404); die('Objet Para-BD introuvable.'); }

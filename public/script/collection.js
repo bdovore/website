@@ -220,10 +220,10 @@ function addAlbum(id_serie, id_tome, id_edition, exclu, flg_achat) {
   );
 }
 
-// Bouton "Supprimer" sur un album
+// Bouton "Retirer" sur un album
 function deleteEdition(id_serie, id_tome, id_edition, exclu) {
   bdovoreModal.confirm({
-    message: "Supprimer l'édition de votre collection ?"
+    message: "Retirer l'édition de votre collection ?"
   }).done(function() {
       $("#addAlbum" + id_edition).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
       var url = $.bdovore.URL + "macollection/deleteAlbum?api_version=2&id_edition=" + id_edition;
@@ -347,8 +347,8 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly
                + '     title="Ajouter cet album dans votre collection">' 
                + '  <span class="fas fa-check fa-border button-collection"></span><span class="for-big-screen">J\'ai</span></a></div>'
                 + ' <div class="button-simple">'
-               + '  <a  title="Supprimer ?"  onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">'
-               + '   <span class="far fa-trash-alt fa-border button-collection"></span><span class="for-big-screen">Supprimer</span></a></div>'
+               + '  <a title="Retirer cet album de votre wishlist" onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">'
+               + '   <span class="far fa-trash-alt fa-border button-collection"></span><span class="for-big-screen">Retirer</span></a></div>'
                + '</div>';
       } else {
         // on l'a réellement
@@ -356,7 +356,7 @@ function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly
                 + '<span class="collection-status-badge"><span class="fas fa-check" aria-hidden="true"></span>Dans ma collection</span>'
                 + '<span class="collection-status-date">Ajouté le ' + $dte + '</span>'
                + '  <a class="far fa-trash-alt fa-border button-collection" '
-               + '     title="Supprimer l\' édition de ma collection ?"'
+               + '     title="Retirer l\'édition de ma collection ?"'
                + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">'
                + '  </a>'
                + '</div>';
@@ -383,9 +383,9 @@ function getInfoCollectionFromEdition(id_tome, id_edition) {
             // on récupère la date d'ajout de l'album dans la collection
            var dte = data.data[0].DATE_AJOUT.substring(8,10) + "/" +   data.data[0].DATE_AJOUT.substring(5,7) + "/" +  data.data[0].DATE_AJOUT.substring(0,4);
             if (data.data[0].FLG_ACHAT === "O") {
-                $("#infoCollection" + id_tome).html('<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">ajouté à vos futurs achats le ' +dte + '<br><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(' + id_tome + ', ' + id_edition + ',\'N\')" title="Ajouter cet album dans votre collection">Dans ma collection</a> - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(' + id_edition + ')">Supprimer</a></div>');
+                $("#infoCollection" + id_tome).html('<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">ajouté à vos futurs achats le ' +dte + '<br><a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="javascript:addAlbum(' + id_tome + ', ' + id_edition + ',\'N\')" title="Ajouter cet album dans votre collection">Dans ma collection</a> - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Retirer l\'édition de ma collection" onclick="deleteEdition(' + id_edition + ')">Retirer</a></div>');
             } else {
-                $("#infoCollection" + id_tome).html('<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">ajouté à votre collection le ' + dte + ' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Supprimer l\' édition de ma collection" onclick="deleteEdition(' + id_edition + ')">Supprimer</a></div>');
+                $("#infoCollection" + id_tome).html('<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">ajouté à votre collection le ' + dte + ' - <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" title="Retirer l\'édition de ma collection" onclick="deleteEdition(' + id_edition + ')">Retirer</a></div>');
             }
         }
 
