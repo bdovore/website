@@ -230,5 +230,5 @@ $triOptions = function ($current) {
         <form class="parabd-json-form parabd-discussion-form" method="post" action="<?php echo BDO_URL; ?>parabd/comment"><input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>"><input type="hidden" name="item_id" value="<?php echo intval($item['ID_ITEM']); ?>"><input type="hidden" name="revision_id" value=""><p class="parabd-comment-context" hidden>Commentaire lié à la proposition #<span></span> · <button type="button" class="parabd-clear-comment-context">retirer le lien</button></p><label>Ajouter un commentaire<textarea name="body" rows="4" maxlength="2000" required></textarea></label><button>Publier</button><span class="parabd-form-status"></span></form>
     </div></details><?php } ?>
 </div>
-<script src="<?php echo BDO_URL; ?>script/parabd-datefield.js?v=20260831" type="text/javascript"></script>
+<script src="<?php echo BDO_URL; ?>script/parabd-datefield.js?v=20260831b" type="text/javascript"></script>
 <script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260831d" type="text/javascript"></script>

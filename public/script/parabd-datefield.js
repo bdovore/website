@@ -199,7 +199,15 @@
                 if (precision === 'year') commit({ y: state.viewYear, mo: null, d: null, precision: 'year' });
                 else if (precision === 'month') commit({ y: state.viewYear, mo: state.viewMonth, d: null, precision: 'month' });
             })
-            .on('click', '.parabd-dp-clear', function () { commit(null); });
+            .on('click', '.parabd-dp-clear', function () { commit(null); })
+            .on('click', function (e) {
+                // Les boutons internes peuvent re-render le popup (goPrev/goNext/titre),
+                // ce qui détache e.target avant que le handler "clic extérieur" sur
+                // document ne s'exécute. On stoppe donc la propagation ici pour que
+                // les clics de navigation n'atteignent jamais document (qui fermerait
+                // le calendrier par erreur).
+                e.stopPropagation();
+            });
     }
 
     $(function () {
