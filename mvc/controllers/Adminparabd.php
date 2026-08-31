@@ -42,7 +42,7 @@ class Adminparabd extends Bdo_Controller
             return in_array($revision['STATUS'], array('PENDING', 'CONFLICT'), true) && $revision['CHANGE_KIND'] !== 'CREATE';
         }));
         $this->view->addPhtmlFile('adminparabd/edit', 'BODY');
-        $this->view->addCssFile('style/parabd.css?v=20260823c');
+        $this->view->addCssFile('style/parabd.css?v=20260831a');
         $this->view->addJavascriptFile('script/parabd-admin.js?v=20260823a');
         $itemId = $item ? intval($item['ID_ITEM']) : 0;
         $reportId = getValInteger('report_id', postValInteger('report_id', 0));

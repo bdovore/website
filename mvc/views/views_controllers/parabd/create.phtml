@@ -50,7 +50,7 @@ foreach ($view->types as $type) {
                     <label>Couleur<input name="color" class="parabd-free-autocomplete" data-source="<?php echo BDO_URL; ?>parabd/fieldautocomplete?field=color" data-min-length="0" autocomplete="off"></label><label>Échelle<input name="scale" placeholder="1/6"></label>
                     <label>Largeur (mm)<input type="number" name="width_mm" min="0" step="1"></label><label>Hauteur (mm)<input type="number" name="height_mm" min="0" step="1"></label>
                     <label>Profondeur (mm)<input type="number" name="depth_mm" min="0" step="1"></label><label>Poids (g)<input type="number" name="weight_g" min="0" step="1"></label>
-                    <label>Date<input name="release_date" placeholder="AAAA, AAAA-MM ou AAAA-MM-JJ"></label><label>Tirage<input name="print_run" inputmode="numeric"></label>
+                    <label>Date<span class="parabd-datefield"><input type="text" class="parabd-datefield-display" placeholder="Date inconnue" readonly aria-label="Choisir une date"><input type="hidden" name="release_date" class="parabd-datefield-value" value=""><button type="button" class="parabd-datefield-btn" aria-label="Ouvrir le calendrier" aria-expanded="false"><span class="fa fa-calendar" aria-hidden="true"></span></button><button type="button" class="parabd-datefield-clear" aria-label="Effacer la date" hidden><span class="fa fa-times" aria-hidden="true"></span></button></span></label><label>Tirage<input name="print_run" inputmode="numeric"></label>
                     <label>Numéroté ?<select name="is_numbered"><option value="unknown">Inconnu</option><option value="1">Oui</option><option value="0">Non</option></select></label>
                     <label>Signé ?<select name="is_signed"><option value="unknown">Inconnu</option><option value="1">Oui</option><option value="0">Non</option></select></label>
                     <label>Certificat ?<select name="has_certificate"><option value="unknown">Inconnu</option><option value="1">Oui</option><option value="0">Non</option></select></label>
@@ -110,4 +110,5 @@ foreach ($view->types as $type) {
         </section>
     </form>
 </div>
+<script src="<?php echo BDO_URL; ?>script/parabd-datefield.js?v=20260831" type="text/javascript"></script>
 <script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260831c" type="text/javascript"></script>

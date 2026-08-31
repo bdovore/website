@@ -161,6 +161,25 @@ button.parabd-icon-delete:hover, button.parabd-icon-delete:focus { background: #
 .parabd-discussion-form { background: #f7f7f7; border: 1px solid #ddd; display: grid; gap: .55rem; margin-top: 1rem; padding: .8rem; }
 .parabd-discussion-form label { display: flex; flex-direction: column; gap: .3rem; }.parabd-discussion-form textarea { box-sizing: border-box; width: 100%; }
 .parabd-comment-context { background: #fff3ce; margin: 0; padding: .45rem; }
+.parabd-datefield { align-items: stretch; display: flex; gap: .3rem; position: relative; }
+.parabd-datefield-display { background: #fff; cursor: pointer; flex: 1 1 auto; }
+.parabd-datefield-btn, .parabd-datefield-clear { align-items: center; background: #f6f3ef; border: 1px solid #bbb; border-radius: 3px; color: #650000; cursor: pointer; display: inline-flex; flex: 0 0 auto; padding: 0 .55rem; }
+.parabd-datefield-btn:hover, .parabd-datefield-clear:hover { background: #650000; border-color: #650000; color: #fff; }
+.parabd-datefield-clear[hidden] { display: none; }
+.parabd-dp { background: #fff; border: 1px solid #cfc8c0; border-radius: 6px; box-shadow: 0 6px 20px rgba(0,0,0,.15); left: 0; margin-top: .25rem; padding: .5rem; position: absolute; top: 100%; width: 280px; z-index: 100; }
+.parabd-dp[hidden] { display: none; }
+.parabd-dp-header { align-items: center; display: flex; justify-content: space-between; margin-bottom: .35rem; }
+.parabd-dp-nav { background: transparent; border: 0; color: #650000; cursor: pointer; font-size: 1.2rem; line-height: 1; padding: .2rem .5rem; }.parabd-dp-nav:hover { color: #900; }
+.parabd-dp-title { background: transparent; border: 0; color: #333; cursor: pointer; font-weight: bold; font-size: .95rem; padding: .2rem; }.parabd-dp-title:hover { color: #650000; }
+.parabd-dp-dow { color: #777; display: grid; font-size: .72rem; grid-template-columns: repeat(7, 1fr); margin-bottom: .2rem; text-align: center; }
+.parabd-dp-grid { display: grid; gap: 2px; }
+.parabd-dp-grid-days { grid-template-columns: repeat(7, 1fr); }.parabd-dp-grid-months, .parabd-dp-grid-years { grid-template-columns: repeat(4, 1fr); }
+.parabd-dp-cell { background: #f7f5f2; border: 1px solid transparent; border-radius: 4px; color: #333; cursor: pointer; font-size: .85rem; padding: .35rem 0; text-align: center; }
+.parabd-dp-cell:hover { background: #efe7df; border-color: #d4c8b8; }
+.parabd-dp-cell.is-selected { background: #650000; border-color: #650000; color: #fff; font-weight: bold; }
+.parabd-dp-footer { display: flex; gap: .35rem; margin-top: .4rem; }
+.parabd-dp-validate { background: #7b9e42; border: 0; border-radius: 4px; color: #fff; cursor: pointer; flex: 1 1 auto; font-size: .82rem; padding: .4rem; }.parabd-dp-validate:hover { background: #5f7d31; }
+.parabd-dp-clear { background: #eee; border: 0; border-radius: 4px; color: #650000; cursor: pointer; flex: 0 0 auto; font-size: .82rem; padding: .4rem .6rem; }.parabd-dp-clear:hover { background: #650000; color: #fff; }
 @media (max-width: 700px) {
     .parabd-heading, .parabd-admin-row { align-items: stretch; flex-direction: column; }
     .parabd-search, .parabd-fields, .parabd-detail { grid-template-columns: 1fr; }
