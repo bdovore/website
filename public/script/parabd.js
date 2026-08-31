@@ -202,7 +202,13 @@
         var form = $('#parabd-catalog-search');
         var input = $('#parabd-q');
         if (!form.length || !input.length) return;
-        var selectedText = input.val();
+        var fieldMap = {
+            author: ['author_id', 'author_label'],
+            series: ['series_id', 'series_label'],
+            tome: ['tome_id', 'tome_label'],
+            manufacturer: ['manufacturer'],
+            publisher: ['publisher']
+        };
         input.autocomplete({
             minLength: 2,
             source: function (request, response) {
@@ -221,14 +227,18 @@
                 }).fail(function () { response([]); });
             },
             select: function (event, ui) {
-                form.find('[name="filter_type"]').val(ui.item.type);
-                form.find('[name="filter_id"]').val(ui.item.id || '');
-                form.find('[name="filter_value"]').val(ui.item.filterValue);
-                selectedText = ui.item.value;
+                event.preventDefault();
+                var fields = fieldMap[ui.item.type];
+                if (fields) {
+                    for (var i = 0; i < fields.length; i++) {
+                        var field = form.find('[name="' + fields[i] + '"]');
+                        if (!field.length) continue;
+                        field.val(fields[i].indexOf('_id') === fields[i].length - 3 ? (ui.item.id || '') : ui.item.filterValue);
+                    }
+                }
+                input.val('');
                 window.setTimeout(function () { form.submit(); }, 0);
             }
-        }).on('input', function () {
-            if (input.val() !== selectedText) form.find('[name^="filter_"]').val('');
         });
     }
 

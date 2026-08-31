@@ -18,27 +18,61 @@ class Parabditem extends ParabdDbLine
         return "IF($mediaAlias.IS_EXPLICIT=1,CONCAT('?source=',$mediaAlias.FILE_PATH),$mediaAlias.FILE_PATH)";
     }
 
-    public function catalogue($search = '', $filterType = '', $filterId = 0, $filterValue = '', $limit = 60)
+    private function catalogueWhere($search, $filters)
     {
         $where = "i.STATUS='ACTIVE'";
-        $filterType = strtolower(trim((string) $filterType)); $filterId = intval($filterId); $filterValue = trim((string) $filterValue);
-        if ($filterType === 'author' && $filterId) $where .= " AND EXISTS (SELECT 1 FROM parabd_item_author ia WHERE ia.ITEM_ID=i.ID_ITEM AND ia.AUTHOR_ID=$filterId)";
-        elseif ($filterType === 'series' && $filterId) $where .= " AND EXISTS (SELECT 1 FROM parabd_item_series isa WHERE isa.ITEM_ID=i.ID_ITEM AND isa.SERIES_ID=$filterId)";
-        elseif ($filterType === 'tome' && $filterId) $where .= " AND EXISTS (SELECT 1 FROM parabd_item_tome it WHERE it.ITEM_ID=i.ID_ITEM AND it.TOME_ID=$filterId)";
-        elseif ($filterType === 'manufacturer' && $filterValue !== '') $where .= " AND i.MANUFACTURER_NORMALIZED='" . $this->escape(ParabdRules::normalizeText($filterValue)) . "'";
-        elseif ($filterType === 'publisher' && $filterValue !== '') $where .= " AND i.PUBLISHER='" . $this->escape($filterValue) . "'";
-        elseif (trim($search) !== '') {
+        $filters = is_array($filters) ? $filters : array();
+        $typeId = intval(isset($filters['type_id']) ? $filters['type_id'] : 0);
+        $authorId = intval(isset($filters['author_id']) ? $filters['author_id'] : 0);
+        $seriesId = intval(isset($filters['series_id']) ? $filters['series_id'] : 0);
+        $tomeId = intval(isset($filters['tome_id']) ? $filters['tome_id'] : 0);
+        $manufacturer = trim((string) (isset($filters['manufacturer']) ? $filters['manufacturer'] : ''));
+        $publisher = trim((string) (isset($filters['publisher']) ? $filters['publisher'] : ''));
+        if ($typeId) $where .= " AND i.TYPE_ID=$typeId";
+        if ($authorId) $where .= " AND EXISTS (SELECT 1 FROM parabd_item_author ia WHERE ia.ITEM_ID=i.ID_ITEM AND ia.AUTHOR_ID=$authorId)";
+        if ($seriesId) $where .= " AND EXISTS (SELECT 1 FROM parabd_item_series isa WHERE isa.ITEM_ID=i.ID_ITEM AND isa.SERIES_ID=$seriesId)";
+        if ($tomeId) $where .= " AND EXISTS (SELECT 1 FROM parabd_item_tome it WHERE it.ITEM_ID=i.ID_ITEM AND it.TOME_ID=$tomeId)";
+        if ($manufacturer !== '') $where .= " AND i.MANUFACTURER_NORMALIZED='" . $this->escape(ParabdRules::normalizeText($manufacturer)) . "'";
+        if ($publisher !== '') $where .= " AND i.PUBLISHER='" . $this->escape($publisher) . "'";
+        if (trim($search) !== '') {
             $raw = $this->escape(trim($search)); $normalized = $this->escape(ParabdRules::normalizeText($search));
             $where .= " AND (i.TITLE_NORMALIZED LIKE '%$normalized%' OR i.MANUFACTURER_NORMALIZED LIKE '%$normalized%' OR i.PUBLISHER LIKE '%$raw%'
                 OR EXISTS (SELECT 1 FROM parabd_item_author ia JOIN bd_auteur a ON a.ID_AUTEUR=ia.AUTHOR_ID WHERE ia.ITEM_ID=i.ID_ITEM AND (a.PSEUDO LIKE '%$raw%' OR a.NOM LIKE '%$raw%'))
                 OR EXISTS (SELECT 1 FROM parabd_item_series isa JOIN bd_serie s ON s.ID_SERIE=isa.SERIES_ID WHERE isa.ITEM_ID=i.ID_ITEM AND s.NOM LIKE '%$raw%')
                 OR EXISTS (SELECT 1 FROM parabd_item_tome it JOIN bd_tome bt ON bt.ID_TOME=it.TOME_ID WHERE it.ITEM_ID=i.ID_ITEM AND bt.TITRE LIKE '%$raw%'))";
         }
+        return $where;
+    }
+
+    public function catalogue($search = '', $filters = array(), $page = 1, $perPage = 20)
+    {
+        $where = $this->catalogueWhere($search, $filters);
         $mediaPath = $this->mediaPathSql();
+        $page = max(1, intval($page)); $perPage = max(1, min(100, intval($perPage)));
+        $offset = ($page - 1) * $perPage;
         return $this->fetchAllQuery("SELECT i.*,t.LABEL TYPE_LABEL,st.LABEL SUBTYPE_LABEL,$mediaPath PRIMARY_IMAGE,m.IS_EXPLICIT PRIMARY_IMAGE_IS_EXPLICIT
             FROM parabd_item i JOIN parabd_type t ON t.ID_TYPE=i.TYPE_ID LEFT JOIN parabd_type st ON st.ID_TYPE=i.SUBTYPE_ID
             LEFT JOIN parabd_media m ON m.ITEM_ID=i.ID_ITEM AND m.IS_PRIMARY=1 AND m.IS_HIDDEN=0
-            WHERE $where ORDER BY i.UPDATED_AT DESC LIMIT " . max(1, min(200, intval($limit))));
+            WHERE $where ORDER BY i.UPDATED_AT DESC LIMIT $perPage OFFSET $offset");
+    }
+
+    public function countCatalogue($search = '', $filters = array())
+    {
+        $where = $this->catalogueWhere($search, $filters);
+        return intval($this->fetchOneQuery("SELECT COUNT(*) n FROM parabd_item i JOIN parabd_type t ON t.ID_TYPE=i.TYPE_ID LEFT JOIN parabd_type st ON st.ID_TYPE=i.SUBTYPE_ID
+            WHERE $where")['n']);
+    }
+
+    public function recentByType($typeId, $limit = 5)
+    {
+        $typeId = intval($typeId);
+        if (!$typeId) return array();
+        $mediaPath = $this->mediaPathSql();
+        $limit = max(1, min(60, intval($limit)));
+        return $this->fetchAllQuery("SELECT i.*,t.LABEL TYPE_LABEL,st.LABEL SUBTYPE_LABEL,$mediaPath PRIMARY_IMAGE,m.IS_EXPLICIT PRIMARY_IMAGE_IS_EXPLICIT
+            FROM parabd_item i JOIN parabd_type t ON t.ID_TYPE=i.TYPE_ID LEFT JOIN parabd_type st ON st.ID_TYPE=i.SUBTYPE_ID
+            LEFT JOIN parabd_media m ON m.ITEM_ID=i.ID_ITEM AND m.IS_PRIMARY=1 AND m.IS_HIDDEN=0
+            WHERE i.STATUS='ACTIVE' AND i.TYPE_ID=$typeId ORDER BY i.UPDATED_AT DESC LIMIT $limit");
     }
 
     public function adminCatalogue($search = '', $status = '', $limit = 200)

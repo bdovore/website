@@ -76,21 +76,125 @@ class Parabd extends Bdo_Controller
         }
     }
 
+    private function filterRemoveUrl($params, $unsetKeys)
+    {
+        $p = $params;
+        foreach ($unsetKeys as $k) unset($p[$k]);
+        unset($p['page']);
+        $qs = http_build_query($p, '', '&');
+        return BDO_URL . 'parabd' . ($qs !== '' ? '?' . $qs : '');
+    }
+
     public function Index()
     {
         if (!$this->enabled()) return;
-        $this->view->addCssFile('style/parabd.css?v=20260815b');
+        $this->view->addCssFile('style/parabd.css?v=20260831b');
         $this->view->addJavascriptFile('script/parabd.js');
         $search = getVal('q', '');
-        $filterType = getVal('filter_type', '');
-        $filterId = getValInteger('filter_id', 0);
-        $filterValue = getVal('filter_value', '');
+
+        $filters = array(
+            'type_id' => getValInteger('type_id', 0),
+            'author_id' => getValInteger('author_id', 0),
+            'series_id' => getValInteger('series_id', 0),
+            'tome_id' => getValInteger('tome_id', 0),
+            'manufacturer' => trim(getVal('manufacturer', '')),
+            'publisher' => trim(getVal('publisher', '')),
+        );
+        $labels = array(
+            'type' => getVal('type_label', ''),
+            'author' => getVal('author_label', ''),
+            'series' => getVal('series_label', ''),
+            'tome' => getVal('tome_label', ''),
+        );
+
+        // Legacy single-filter compat (filter_type / filter_id / filter_value)
+        $legacyType = strtolower(getVal('filter_type', ''));
+        $legacyId = getValInteger('filter_id', 0);
+        $legacyValue = getVal('filter_value', '');
+        if ($legacyType !== '') {
+            $idMap = array('type' => 'type_id', 'author' => 'author_id', 'series' => 'series_id', 'tome' => 'tome_id');
+            if (isset($idMap[$legacyType]) && $legacyId && !$filters[$idMap[$legacyType]]) {
+                $filters[$idMap[$legacyType]] = $legacyId;
+                if ($labels[$legacyType] === '' && $legacyValue !== '') $labels[$legacyType] = $legacyValue;
+            } elseif ($legacyType === 'manufacturer' && $legacyValue !== '' && $filters['manufacturer'] === '') {
+                $filters['manufacturer'] = $legacyValue;
+            } elseif ($legacyType === 'publisher' && $legacyValue !== '' && $filters['publisher'] === '') {
+                $filters['publisher'] = $legacyValue;
+            }
+        }
+
+        // Preserved params (hidden fields + chip remove URLs)
+        $preserved = array();
+        if (trim($search) !== '') $preserved['q'] = $search;
+        $idDims = array(
+            'type' => array('type_id', 'type_label'),
+            'author' => array('author_id', 'author_label'),
+            'series' => array('series_id', 'series_label'),
+            'tome' => array('tome_id', 'tome_label'),
+        );
+        foreach ($idDims as $dim => $keys) {
+            if (!empty($filters[$keys[0]])) {
+                $preserved[$keys[0]] = $filters[$keys[0]];
+                $preserved[$keys[1]] = $labels[$dim] !== '' ? $labels[$dim] : ('#' . $filters[$keys[0]]);
+            }
+        }
+        foreach (array('manufacturer', 'publisher') as $dim) {
+            if ($filters[$dim] !== '') $preserved[$dim] = $filters[$dim];
+        }
+
+        // Active filter chips
+        $dimNames = array('type' => 'Type', 'author' => 'Auteur', 'series' => 'Série', 'tome' => 'Album', 'manufacturer' => 'Fabricant', 'publisher' => 'Éditeur');
+        $activeFilters = array();
+        foreach ($idDims as $dim => $keys) {
+            if (!empty($filters[$keys[0]])) {
+                $label = $labels[$dim] !== '' ? $labels[$dim] : ('#' . $filters[$keys[0]]);
+                $activeFilters[] = array('name' => $dimNames[$dim], 'label' => $label, 'remove_url' => $this->filterRemoveUrl($preserved, $keys));
+            }
+        }
+        foreach (array('manufacturer', 'publisher') as $dim) {
+            if ($filters[$dim] !== '') {
+                $activeFilters[] = array('name' => $dimNames[$dim], 'label' => $filters[$dim], 'remove_url' => $this->filterRemoveUrl($preserved, array($dim)));
+            }
+        }
+
+        $isSearching = (trim($search) !== '' || !empty($activeFilters));
+        $perPage = 20;
+        $page = getValInteger('page', 1);
+        $total = 0; $maxPage = 1; $items = array();
+        if ($isSearching) {
+            $total = $this->service()->countCatalogue($search, $filters);
+            $maxPage = max(1, (int) ceil($total / $perPage));
+            $page = min(max(1, $page), $maxPage);
+            $items = $this->service()->getCatalogue($search, $filters, $page, $perPage);
+        }
+        $paginateBase = $preserved;
+        unset($paginateBase['page']);
+        $paginateQs = http_build_query($paginateBase, '', '&');
+        $paginateUrl = BDO_URL . 'parabd' . ($paginateQs !== '' ? '?' . $paginateQs : '');
+        $paginateLink = ($paginateQs !== '' ? '&page=' : '?page=');
+        $recentSections = array();
+        if (!$isSearching) {
+            foreach ($this->service()->getParentTypes() as $type) {
+                $items = $this->service()->getRecentByType(intval($type['ID_TYPE']), 8);
+                if (!$items) continue;
+                $recentSections[] = array(
+                    'id' => intval($type['ID_TYPE']),
+                    'label' => $type['LABEL'],
+                    'items' => $items,
+                    'filter_url' => BDO_URL . 'parabd?type_id=' . intval($type['ID_TYPE']) . '&type_label=' . urlencode($type['LABEL']),
+                );
+            }
+        }
         $this->view->set_var(array(
             'PAGETITLE' => 'Catalogue Para-BD', 'ROBOTS' => 'noindex,nofollow',
-            'items' => $this->service()->getCatalogue($search, $filterType, $filterId, $filterValue), 'search' => $search,
-            'filter_type' => $filterType, 'filter_id' => $filterId, 'filter_value' => $filterValue,
+            'items' => $items, 'search' => $search,
+            'filters' => $filters, 'preserved_params' => $preserved, 'active_filters' => $activeFilters,
+            'page' => $page, 'per_page' => $perPage, 'total' => $total, 'max_page' => $maxPage,
+            'paginate_url' => $paginateUrl, 'paginate_link' => $paginateLink,
             'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'),
-            'can_admin' => User::minAccesslevel(1)
+            'can_admin' => User::minAccesslevel(1),
+            'is_searching' => $isSearching,
+            'recent_sections' => $recentSections
         ));
         $this->view->render();
     }

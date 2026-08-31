@@ -1,4 +1,15 @@
-<?php $h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }; ?>
+<?php
+$h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); };
+$card = function ($item) use ($h, $view) { ?>
+    <article class="parabd-card">
+        <?php if ($item['PRIMARY_IMAGE']) { ?><img src="<?php echo $h(BDO_URL_PARABD . $item['PRIMARY_IMAGE']); ?>" alt=""><?php } ?>
+        <div class="parabd-card-content"><small><?php echo $h($item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL']); ?></small>
+            <?php if ($item['PRIMARY_IMAGE_IS_EXPLICIT']) { ?><p><span class="parabd-explicit-badge">Visuel explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Image floutée</small><?php } ?></p><?php } ?>
+            <h2><a href="<?php echo BDO_URL; ?>parabd/fiche?id=<?php echo intval($item['ID_ITEM']); ?>"><?php echo $h($item['TITLE']); ?></a><?php if ($view->can_admin) { ?> · <a href="<?php echo BDO_URL; ?>adminparabd/edit?id=<?php echo intval($item['ID_ITEM']); ?>" title="Modifier la fiche commune"><img class="parabd-admin-edit-icon" src="<?php echo BDO_URL_IMAGE; ?>/edit.gif" alt="Modifier"></a><?php } ?></h2>
+            <?php if ($item['MANUFACTURER']) { ?><p><?php echo $h($item['MANUFACTURER']); ?></p><?php } ?>
+        </div>
+    </article>
+<?php }; ?>
 <div class="cadre1 parabd-page">
     <div class="parabd-heading">
         <div><h1>Catalogue Para-BD</h1><p>Objets partagés par les collectionneurs.</p></div>
@@ -6,24 +17,54 @@
     <form method="get" action="<?php echo BDO_URL; ?>parabd" class="parabd-search" id="parabd-catalog-search" data-autocomplete-url="<?php echo BDO_URL; ?>parabd/autocomplete">
         <label for="parabd-q">Rechercher</label>
         <input id="parabd-q" name="q" value="<?php echo $h($view->search); ?>" placeholder="Artiste, série, album, titre, fabricant, éditeur…" autocomplete="off">
-        <input type="hidden" name="filter_type" value="<?php echo $h($view->filter_type); ?>">
-        <input type="hidden" name="filter_id" value="<?php echo intval($view->filter_id); ?>">
-        <input type="hidden" name="filter_value" value="<?php echo $h($view->filter_value); ?>">
+        <?php
+        $hiddenFields = array(
+            'type_id' => '', 'type_label' => '', 'author_id' => '', 'author_label' => '',
+            'series_id' => '', 'series_label' => '', 'tome_id' => '', 'tome_label' => '',
+            'manufacturer' => '', 'publisher' => '',
+        );
+        foreach ($hiddenFields as $name => $default) {
+            $value = isset($view->preserved_params[$name]) ? $view->preserved_params[$name] : $default;
+            ?><input type="hidden" name="<?php echo $h($name); ?>" value="<?php echo $h($value); ?>"><?php
+        }
+        ?>
         <button type="submit">Rechercher</button>
     </form>
-    <?php if ($view->filter_type) { ?><p class="parabd-active-filter">Filtre actif : <strong><?php echo $h(($view->filter_id ? '#' . intval($view->filter_id) . ' — ' : '') . $view->filter_value); ?></strong> <a href="<?php echo BDO_URL; ?>parabd">Effacer</a></p><?php } ?>
-    <div class="parabd-grid">
-        <?php foreach ($view->items as $item) { ?>
-            <article class="parabd-card">
-                <?php if ($item['PRIMARY_IMAGE']) { ?><img src="<?php echo $h(BDO_URL_PARABD . $item['PRIMARY_IMAGE']); ?>" alt=""><?php } ?>
-                <div><small><?php echo $h($item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL']); ?></small>
-                    <?php if ($item['PRIMARY_IMAGE_IS_EXPLICIT']) { ?><p><span class="parabd-explicit-badge">Visuel explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Image floutée</small><?php } ?></p><?php } ?>
-                    <h2><a href="<?php echo BDO_URL; ?>parabd/fiche?id=<?php echo intval($item['ID_ITEM']); ?>"><?php echo $h($item['TITLE']); ?></a><?php if ($view->can_admin) { ?> · <a href="<?php echo BDO_URL; ?>adminparabd/edit?id=<?php echo intval($item['ID_ITEM']); ?>" title="Modifier la fiche commune"><img class="parabd-admin-edit-icon" src="<?php echo BDO_URL_IMAGE; ?>/edit.gif" alt="Modifier"></a><?php } ?></h2>
-                    <?php if ($item['MANUFACTURER']) { ?><p><?php echo $h($item['MANUFACTURER']); ?></p><?php } ?>
-                </div>
-            </article>
+    <?php if ($view->active_filters) { ?>
+        <div class="parabd-active-filters">
+            <?php foreach ($view->active_filters as $chip) { ?>
+                <span class="parabd-filter-chip"><?php echo $h($chip['name']); ?> : <strong><?php echo $h($chip['label']); ?></strong> <a class="parabd-filter-remove" href="<?php echo $h($chip['remove_url']); ?>" title="Retirer ce filtre">×</a></span>
+            <?php } ?>
+            <a class="parabd-filter-clear" href="<?php echo BDO_URL; ?>parabd">Tout effacer</a>
+        </div>
+    <?php } ?>
+
+    <?php if ($view->is_searching) {
+        $pager = $view->getHelper('pagination');
+        $paginateHtml = $view->max_page > 1 ? $pager->paginate($view->paginate_url, $view->paginate_link, $view->max_page, $view->page) : '';
+    ?>
+        <?php if ($paginateHtml) { ?><div class="parabd-pagination-top"><?php echo $paginateHtml; ?></div><?php } ?>
+        <div class="parabd-grid">
+            <?php foreach ($view->items as $item) { $card($item); } ?>
+        </div>
+        <?php if (!$view->items) { ?><p>Aucun objet ne correspond à cette recherche.</p><?php } ?>
+        <?php if ($paginateHtml) { ?><div class="parabd-pagination-bottom"><?php echo $paginateHtml; ?></div><?php } ?>
+    <?php } else { ?>
+        <div class="parabd-intro">
+            <p>Le catalogue Para-BD référence les <strong>statuettes et images imprimées</strong> que possèdent les membres de BDovore. Il n'existe pas d'inventaire officiel exhaustif pour ce type d'objets : la communauté le construit elle-même, fiche après fiche.</p>
+            <p>Chaque fiche est créée par un collectionneur — photo, éditeur ou fabricant, tirage, année. <strong>Vous possédez une pièce qui manque au catalogue ?</strong> Ajoutez-la en quelques minutes.</p>
+            <p><a class="parabd-add-link" href="<?php echo BDO_URL; ?>parabd/create">Ajouter un objet</a></p>
+        </div>
+        <?php foreach ($view->recent_sections as $section) { ?>
+            <div class="parabd-section-head">
+                <h2>Derniers ajouts — <?php echo $h($section['label']); ?></h2>
+                <a class="parabd-see-all" href="<?php echo $h($section['filter_url']); ?>">Voir tout</a>
+            </div>
+            <div class="parabd-grid">
+                <?php foreach ($section['items'] as $item) { $card($item); } ?>
+            </div>
         <?php } ?>
-    </div>
-    <?php if (!$view->items) { ?><p>Aucun objet ne correspond à cette recherche.</p><?php } ?>
+        <?php if (!$view->recent_sections) { ?><p>Aucun objet n'a encore été référencé dans le catalogue.</p><?php } ?>
+    <?php } ?>
 </div>
-<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260809b" type="text/javascript"></script>
+<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260831b" type="text/javascript"></script>

@@ -90,9 +90,24 @@ class ParabdService
         return $this->model('Parabdtype')->active();
     }
 
-    public function getCatalogue($search = '', $filterType = '', $filterId = 0, $filterValue = '', $limit = 60)
+    public function getParentTypes()
     {
-        return $this->model('Parabditem')->catalogue($search, $filterType, $filterId, $filterValue, $limit);
+        return $this->model('Parabdtype')->parentTypes();
+    }
+
+    public function getCatalogue($search = '', $filters = array(), $page = 1, $perPage = 20)
+    {
+        return $this->model('Parabditem')->catalogue($search, $filters, $page, $perPage);
+    }
+
+    public function countCatalogue($search = '', $filters = array())
+    {
+        return $this->model('Parabditem')->countCatalogue($search, $filters);
+    }
+
+    public function getRecentByType($typeId, $limit = 5)
+    {
+        return $this->model('Parabditem')->recentByType($typeId, $limit);
     }
 
     public function getAdminCatalogue($search = '', $status = '', $limit = 200)

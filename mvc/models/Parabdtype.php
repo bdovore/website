@@ -16,6 +16,11 @@ class Parabdtype extends ParabdDbLine
         return $this->fetchAllQuery("SELECT * FROM parabd_type WHERE IS_ACTIVE=1 ORDER BY PARENT_ID IS NOT NULL,SORT_ORDER,LABEL");
     }
 
+    public function parentTypes()
+    {
+        return $this->fetchAllQuery("SELECT * FROM parabd_type WHERE IS_ACTIVE=1 AND PARENT_ID IS NULL ORDER BY SORT_ORDER,LABEL");
+    }
+
     public function resolveCodes($typeCode, $subtypeCode)
     {
         $type = $this->fetchOneQuery("SELECT * FROM parabd_type WHERE CODE='" . $this->escape(strtoupper($typeCode)) . "' AND PARENT_ID IS NULL AND IS_ACTIVE=1");
