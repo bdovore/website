@@ -180,6 +180,13 @@ button.parabd-icon-delete:hover, button.parabd-icon-delete:focus { background: #
 .parabd-dp-footer { display: flex; gap: .35rem; margin-top: .4rem; }
 .parabd-dp-validate { background: #7b9e42; border: 0; border-radius: 4px; color: #fff; cursor: pointer; flex: 1 1 auto; font-size: .82rem; padding: .4rem; }.parabd-dp-validate:hover { background: #5f7d31; }
 .parabd-dp-clear { background: #eee; border: 0; border-radius: 4px; color: #650000; cursor: pointer; flex: 0 0 auto; font-size: .82rem; padding: .4rem .6rem; }.parabd-dp-clear:hover { background: #650000; color: #fff; }
+.parabd-datefield[hidden] { display: none; }
+.parabd-contribute-form .parabd-contribute-field { max-width: 260px; padding: .45rem; }
+.parabd-contribute-value { align-items: center; display: flex; flex-wrap: wrap; gap: .4rem; }
+.parabd-contribute-value > .parabd-contribute-unit[hidden] { display: none; }
+.parabd-contribute-value > .parabd-contribute-unit:not(.parabd-datefield) { box-sizing: border-box; flex: 1 1 240px; max-width: 360px; padding: .45rem; }
+.parabd-contribute-value > .parabd-contribute-unit.parabd-datefield { flex: 1 1 240px; max-width: 360px; }
+.parabd-contribute-value > .parabd-contribute-unit[type="number"] { flex: 0 1 160px; }
 @media (max-width: 700px) {
     .parabd-heading, .parabd-admin-row { align-items: stretch; flex-direction: column; }
     .parabd-search, .parabd-fields, .parabd-detail { grid-template-columns: 1fr; }

@@ -380,6 +380,24 @@
         $('.parabd-json-form button[name]').on('click', function () {
             $(this).closest('form').data('submit-name', this.name).data('submit-value', this.value);
         });
+        $('.parabd-contribute-form').each(function () {
+            var form = $(this);
+            var fieldSelect = form.find('.parabd-contribute-field');
+            var units = form.find('.parabd-contribute-unit');
+            var valueInputs = form.find('.parabd-contribute-value-input');
+            function switchContributeInput() {
+                var field = fieldSelect.val();
+                units.prop('hidden', true);
+                valueInputs.prop('disabled', true).prop('required', false);
+                var unit = units.filter('[data-for-field="' + field + '"]');
+                unit.prop('hidden', false);
+                var valueInput = unit.is('.parabd-contribute-value-input') ? unit : unit.find('.parabd-contribute-value-input').first();
+                valueInput.prop('disabled', false);
+                if (field === 'TITLE') valueInput.prop('required', true);
+                valueInput.trigger('focus');
+            }
+            fieldSelect.on('change', switchContributeInput).trigger('change');
+        });
         $('.parabd-json-form').on('submit', function (event) {
             event.preventDefault();
             var current = $(this);
