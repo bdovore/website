@@ -1,14 +1,21 @@
 (function ($) {
     'use strict';
 
+    function displayStepNumber(dataStep, hasDuplicates) {
+        if (hasDuplicates) return dataStep;
+        return dataStep === 1 ? 1 : dataStep - 1;
+    }
+
     function showStep(form, step) {
         form.find('.parabd-step').attr('hidden', true);
-        form.find('.parabd-step[data-step="' + step + '"]').removeAttr('hidden');
+        var section = form.find('.parabd-step[data-step="' + step + '"]');
+        section.removeAttr('hidden');
+        section.find('.parabd-step-number').text(displayStepNumber(step, !!form.data('has-duplicates')));
         form.attr('data-current-step', step);
     }
 
-    function enhanceButtons() {
-        $('.parabd-page button:not(.parabd-icon-delete):not(.parabd-gallery-button):not(.parabd-gallery-thumb), .parabd-page .button, .parabd-page summary:not(.parabd-copy-toggle)').addClass('ui-button ui-widget ui-state-default ui-corner-all');
+    function enhanceButtons(context) {
+        $(context || document).find('.parabd-page button:not(.parabd-icon-delete):not(.parabd-gallery-button):not(.parabd-gallery-thumb), .parabd-page .button, .parabd-page summary:not(.parabd-copy-toggle)').addClass('ui-button ui-widget ui-state-default ui-corner-all');
     }
 
     function initGalleries() {
@@ -74,7 +81,7 @@
             width_mm: form.find('[name="width_mm"]').val(),
             height_mm: form.find('[name="height_mm"]').val(),
             depth_mm: form.find('[name="depth_mm"]').val(),
-            author_id: form.find('[name="author_id"]').val(),
+            author_id: form.find('[name^="authors["][name$="][id]"]').first().val() || 0,
             series_id: form.find('[name="series_id"]').val(),
             tome_id: form.find('[name="tome_id"]').val(),
             identifiers: JSON.stringify([{
@@ -89,6 +96,12 @@
         var external = form.find('[name="identifier_scheme"]').val() === 'EXTERNAL_DB';
         form.find('.parabd-identifier-issuer').prop('hidden', !external)
             .find('input').prop('disabled', !external).prop('required', external);
+    }
+
+    function renumber(container) {
+        container.children('.parabd-repeat-row').each(function (index) {
+            $(this).find('[name]').each(function () { this.name = this.name.replace(/\[\d+\]/, '[' + index + ']'); });
+        });
     }
 
     function checkDuplicates(form, callback) {
@@ -131,12 +144,16 @@
         return true;
     }
 
-    function initReferenceAutocomplete() {
-        $('.parabd-reference-input').each(function () {
+    function initReferenceAutocomplete(context) {
+        $(context || document).find('.parabd-reference-input').each(function () {
             var input = $(this);
+            if (input.hasClass('ui-autocomplete-input')) return;
             var hidden = input.siblings('input[type="hidden"]');
             var status = input.siblings('.parabd-reference-status');
-            var authorRole = hidden.attr('name') === 'author_id' ? input.closest('.parabd-fields').find('[name="author_role"]') : $();
+            var row = input.closest('.parabd-repeat-row');
+            var authorRole = row.length && row.hasClass('parabd-repeat-row-author')
+                ? row.find('select[name$="[role]"]')
+                : $();
             var selectedValue = '';
             input.autocomplete({
                 minLength: 2,
@@ -296,15 +313,44 @@
             showStep(form, current === 3 && !form.data('has-duplicates') ? 1 : current - 1);
         });
         $('#parabd-title, #parabd-type').on('change input', function () { $('#duplicate-reviewed').val('0'); });
+        var subtypeSelect = $('#parabd-subtype');
+        var subtypePlaceholder = subtypeSelect.find('option').first().detach();
+        var subtypeGroups = {};
+        subtypeSelect.find('option[data-parent]').each(function () {
+            var group = $(this).data('parent');
+            (subtypeGroups[group] = subtypeGroups[group] || []).push(this);
+        }).detach();
         $('#parabd-type').on('change', function () {
             var parent = $(this).find(':selected').data('id');
-            $('#parabd-subtype option').each(function () {
-                var optionParent = $(this).data('parent');
-                $(this).toggle(!optionParent || optionParent === parent);
-            });
-            $('#parabd-subtype').val('');
+            subtypeSelect.empty().append(subtypePlaceholder);
+            if (parent && subtypeGroups[parent]) {
+                subtypeSelect.append(subtypeGroups[parent]);
+            }
+            subtypeSelect.val('');
         }).trigger('change');
         $('#parabd-check-duplicates').on('click', function () { checkDuplicates(form); });
+        form.on('click', '.parabd-add-row', function () {
+            var container = form.find('.parabd-repeat[data-repeat="' + $(this).data('target') + '"]');
+            var row = container.children('.parabd-repeat-row').last().clone(false, false);
+            row.find('.ui-helper-hidden-accessible').remove();
+            row.find('input').val('').prop('checked', false);
+            row.find('select').prop('selectedIndex', 0);
+            row.find('select[name$="[role]"]').prop('required', false);
+            row.find('.parabd-reference-status').text('Sélectionnez une proposition pour associer l’ID et le libellé.').removeClass('selected');
+            row.find('.parabd-reference-input').removeClass('ui-autocomplete-input').removeAttr('autocomplete').removeAttr('aria-autocomplete').removeAttr('aria-controls');
+            container.append(row); renumber(container); initReferenceAutocomplete(row); enhanceButtons(row);
+        });
+        form.on('click', '.parabd-remove-row', function () {
+            var container = $(this).closest('.parabd-repeat');
+            if (container.children('.parabd-repeat-row').length === 1) {
+                var row = $(this).closest('.parabd-repeat-row');
+                row.find('input').val('').prop('checked', false);
+                row.find('select').prop('selectedIndex', 0);
+                row.find('select[name$="[role]"]').prop('required', false);
+                row.find('.parabd-reference-status').text('Sélectionnez une proposition pour associer l’ID et le libellé.').removeClass('selected');
+            } else $(this).closest('.parabd-repeat-row').remove();
+            renumber(container);
+        });
         form.on('submit', function (event) {
             event.preventDefault();
             var button = form.find('[type="submit"]').prop('disabled', true);

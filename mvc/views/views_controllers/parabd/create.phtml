@@ -13,7 +13,7 @@ foreach ($view->types as $type) {
         <input type="hidden" name="csrf_token" value="<?php echo $h($view->csrf_token); ?>">
         <input type="hidden" name="duplicate_reviewed" id="duplicate-reviewed" value="0">
         <section class="parabd-step" data-step="1">
-            <h2>1. Identifier l’objet</h2>
+            <h2><span class="parabd-step-number">1</span>. Identifier l’objet</h2>
             <div class="parabd-fields">
                 <label>Type *<select name="type_code" id="parabd-type" required><option value="">Choisir…</option><?php foreach ($parents as $type) { ?><option value="<?php echo $h($type['CODE']); ?>" data-id="<?php echo intval($type['ID_TYPE']); ?>"><?php echo $h($type['LABEL']); ?></option><?php } ?></select></label>
                 <label>Sous-type<select name="subtype_code" id="parabd-subtype"><option value="">Non précisé</option><?php foreach ($children as $parentId => $types) foreach ($types as $type) { ?><option value="<?php echo $h($type['CODE']); ?>" data-parent="<?php echo intval($parentId); ?>"><?php echo $h($type['LABEL']); ?></option><?php } ?></select></label>
@@ -31,7 +31,7 @@ foreach ($view->types as $type) {
             <button type="button" class="parabd-next">Continuer</button>
         </section>
         <section class="parabd-step" data-step="2" hidden>
-            <h2>2. Vérifier les doublons</h2>
+            <h2><span class="parabd-step-number">2</span>. Vérifier les doublons</h2>
             <p>Des objets ressemblants ont été trouvés. Consultez-les avant de continuer.</p>
             <button type="button" id="parabd-check-duplicates">Relancer la recherche</button>
             <div id="parabd-duplicates" aria-live="polite"></div>
@@ -39,7 +39,8 @@ foreach ($view->types as $type) {
             <button type="button" class="parabd-prev">Retour</button> <button type="button" class="parabd-next">Continuer</button>
         </section>
         <section class="parabd-step" data-step="3" hidden>
-            <h2>3. Compléter la fiche</h2>
+            <h2><span class="parabd-step-number">3</span>. Compléter la fiche</h2>
+            <p class="parabd-info-note">Merci de compléter ce formulaire avec toutes les informations dont vous disposez. Plus les informations sont fiables, plus la base de données commune est utile à tous. Vérifiez bien chaque information, prenez le temps de chercher sur internet si besoin, et n’hésitez pas à fournir vos sources.</p>
             <section class="parabd-form-section">
                 <h3>Caractéristiques de l’objet</h3>
                 <div class="parabd-fields">
@@ -66,14 +67,15 @@ foreach ($view->types as $type) {
                 </div>
             </section>
             <section class="parabd-form-section">
-                <h3>Artiste(s)</h3>
-                <div class="parabd-fields">
+                <div class="parabd-section-heading"><h3>Artiste(s)</h3><button type="button" class="parabd-add-row" data-target="authors">Ajouter un artiste</button></div>
+                <div class="parabd-repeat" data-repeat="authors"><div class="parabd-repeat-row parabd-repeat-row-author">
                     <label>Artiste
-                        <input id="parabd-author-label" class="parabd-reference-input" data-source="<?php echo BDO_URL; ?>getjson?data=Auteur" placeholder="Saisir un nom d’artiste" autocomplete="off">
-                        <input type="hidden" name="author_id" id="parabd-author-id"><small class="parabd-reference-status">Sélectionnez une proposition pour associer l’ID et le nom.</small>
+                        <input class="parabd-reference-input" data-source="<?php echo BDO_URL; ?>getjson?data=Auteur" placeholder="Saisir un nom d’artiste" autocomplete="off">
+                        <input type="hidden" name="authors[0][id]"><small class="parabd-reference-status">Sélectionnez une proposition pour associer l’ID et le nom.</small>
                     </label>
-                    <label>Rôle de l’artiste<select name="author_role" id="parabd-author-role"><option value="">Choisir…</option><option value="ILLUSTRATOR">Dessinateur</option><option value="DESIGNER">Designer</option><option value="SCULPTOR">Sculpteur</option><option value="PAINTER">Peintre</option></select></label>
-                </div>
+                    <label>Rôle<select name="authors[0][role]"><option value="">Choisir…</option><option value="ILLUSTRATOR">Dessinateur</option><option value="DESIGNER">Designer</option><option value="SCULPTOR">Sculpteur</option><option value="PAINTER">Peintre</option></select></label>
+                    <button type="button" class="parabd-remove-row" title="Retirer cette ligne"><span class="fa fa-times"></span></button>
+                </div></div>
             </section>
             <section class="parabd-form-section">
                 <h3>Rattachements BD</h3>
@@ -89,13 +91,17 @@ foreach ($view->types as $type) {
                 </div>
             </section>
             <section class="parabd-form-section">
-                <h3>Source</h3>
-                <div class="parabd-fields"><label class="wide">Adresse de la source externe<input type="url" name="source_url" placeholder="https://…"></label></div>
+                <div class="parabd-section-heading"><h3>Sources</h3><button type="button" class="parabd-add-row" data-target="sources">Ajouter une source</button></div>
+                <div class="parabd-repeat" data-repeat="sources"><div class="parabd-repeat-row">
+                    <label class="wide">URL<input type="url" name="sources[0][url]" placeholder="https://…"></label>
+                    <label>Libellé<input name="sources[0][label]"></label><label>Notes<input name="sources[0][notes]"></label>
+                    <button type="button" class="parabd-remove-row" title="Retirer cette ligne"><span class="fa fa-times"></span></button>
+                </div></div>
             </section>
             <button type="button" class="parabd-prev">Retour</button> <button type="button" class="parabd-next">Continuer</button>
         </section>
         <section class="parabd-step" data-step="4" hidden>
-            <h2>4. Finaliser</h2>
+            <h2><span class="parabd-step-number">4</span>. Finaliser</h2>
             <label>Après création<select name="collection_action"><option value="OWNED">Ajouter à ma collection</option><option value="WISHLIST">Ajouter à mes envies</option><option value="none">Créer seulement la fiche</option></select></label>
             <p>Après l’ajout à votre collection, vous pourrez compléter les informations de votre exemplaire depuis sa fiche.</p>
             <label class="parabd-charter"><input type="checkbox" name="accept_charter" value="1"<?php if ($view->charter_accepted) { ?> checked<?php } ?> required> J’accepte la <a href="<?php echo BDO_URL; ?>parabd/charte" target="_blank" rel="noopener">charte de contribution Para-BD</a>, version <?php echo $h($view->charter_version); ?>.</label>
@@ -104,4 +110,4 @@ foreach ($view->types as $type) {
         </section>
     </form>
 </div>
-<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260823a" type="text/javascript"></script>
+<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260831c" type="text/javascript"></script>
