@@ -72,22 +72,26 @@ class Parabditem extends ParabdDbLine
         return $this->fetchAllQuery("SELECT i.*,t.LABEL TYPE_LABEL,st.LABEL SUBTYPE_LABEL,$mediaPath PRIMARY_IMAGE,m.IS_EXPLICIT PRIMARY_IMAGE_IS_EXPLICIT
             FROM parabd_item i JOIN parabd_type t ON t.ID_TYPE=i.TYPE_ID LEFT JOIN parabd_type st ON st.ID_TYPE=i.SUBTYPE_ID
             LEFT JOIN parabd_media m ON m.ITEM_ID=i.ID_ITEM AND m.IS_PRIMARY=1 AND m.IS_HIDDEN=0
-            WHERE i.STATUS='ACTIVE' AND i.TYPE_ID=$typeId ORDER BY i.UPDATED_AT DESC LIMIT $limit");
+            WHERE i.STATUS='ACTIVE' AND i.TYPE_ID=$typeId ORDER BY i.CREATED_AT DESC LIMIT $limit");
     }
 
-    public function adminCatalogue($search = '', $status = '', $limit = 200)
+    public function adminCatalogue($search = '', $status = '', $sort = 'updated', $dir = 'DESC', $limit = 100)
     {
-        $where = '1=1'; $search = trim((string) $search); $status = strtoupper(trim((string) $status));
+        $where = '1=1'; $search = ltrim(trim((string) $search), '#'); $status = strtoupper(trim((string) $status));
         if ($search !== '') {
             if (ctype_digit($search)) $where .= ' AND (i.ID_ITEM=' . intval($search) . " OR i.TITLE LIKE '%" . $this->escape($search) . "%')";
             else $where .= " AND (i.TITLE_NORMALIZED LIKE '%" . $this->escape(ParabdRules::normalizeText($search)) . "%' OR i.MANUFACTURER LIKE '%" . $this->escape($search) . "%' OR i.PUBLISHER LIKE '%" . $this->escape($search) . "%')";
         }
         if (in_array($status, array('ACTIVE','HIDDEN','MERGED'), true)) $where .= " AND i.STATUS='$status'";
+        $sortMap = array('id'=>'i.ID_ITEM','title'=>'i.TITLE','status'=>'i.STATUS','copies'=>'COPY_COUNT','history'=>'HISTORY_COUNT','updated'=>'i.UPDATED_AT');
+        $orderCol = isset($sortMap[$sort]) ? $sortMap[$sort] : 'i.UPDATED_AT';
+        $orderDir = (strtoupper($dir) === 'ASC') ? 'ASC' : 'DESC';
+        $cap = max(1, min(100, intval($limit)));
         return $this->fetchAllQuery("SELECT i.*,t.LABEL TYPE_LABEL,st.LABEL SUBTYPE_LABEL,
             (SELECT COUNT(*) FROM users_parabd up WHERE up.ITEM_ID=i.ID_ITEM) COPY_COUNT,
             (SELECT COUNT(*) FROM parabd_revision r WHERE r.ITEM_ID=i.ID_ITEM) HISTORY_COUNT
             FROM parabd_item i JOIN parabd_type t ON t.ID_TYPE=i.TYPE_ID LEFT JOIN parabd_type st ON st.ID_TYPE=i.SUBTYPE_ID
-            WHERE $where ORDER BY i.UPDATED_AT DESC LIMIT " . max(1, min(500, intval($limit))));
+            WHERE $where ORDER BY $orderCol $orderDir LIMIT $cap");
     }
 
     public function autocomplete($term, $limitPerCategory = 6)

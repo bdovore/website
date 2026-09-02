@@ -66,10 +66,24 @@ class Adminparabd extends Bdo_Controller
     public function Index()
     {
         $this->guard();
-        $this->view->addCssFile('style/parabd.css?v=20260823b');
+        $this->view->addCssFile('style/parabd.css?v=20260902a');
         $search = getVal('q', ''); $status = getVal('status', '');
+        $perPage = getValInteger('per_page', 20);
+        if (!in_array($perPage, array(10, 20, 50), true)) $perPage = 20;
+        $sort = getVal('sort', 'updated');
+        if (!in_array($sort, array('id','title','status','copies','history','updated'), true)) $sort = 'updated';
+        $dir = (strtoupper(getVal('dir', 'DESC')) === 'ASC') ? 'ASC' : 'DESC';
+        $page = max(1, getValInteger('page', 1));
+        $rows = $this->service()->getAdminCatalogue($search, $status, $sort, $dir);
+        $totalRows = count($rows);
+        $totalPages = max(1, (int) ceil($totalRows / $perPage));
+        if ($page > $totalPages) $page = $totalPages;
+        $offset = ($page - 1) * $perPage;
+        $items = $totalRows ? array_slice($rows, $offset, $perPage) : array();
         $this->view->set_var(array('PAGETITLE' => 'Fiches Para-BD — Administration', 'ROBOTS' => 'noindex,nofollow',
-            'items' => $this->service()->getAdminCatalogue($search, $status), 'search' => $search, 'status' => $status));
+            'items' => $items, 'search' => $search, 'status' => $status,
+            'page' => $page, 'per_page' => $perPage, 'sort' => $sort, 'dir' => $dir,
+            'total_rows' => $totalRows, 'total_pages' => $totalPages));
         $this->view->render();
     }
 

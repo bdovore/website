@@ -35,7 +35,7 @@ $card = function ($item) use ($h, $view) { ?>
             <?php foreach ($view->active_filters as $chip) { ?>
                 <span class="parabd-filter-chip"><?php echo $h($chip['name']); ?> : <strong><?php echo $h($chip['label']); ?></strong> <a class="parabd-filter-remove" href="<?php echo $h($chip['remove_url']); ?>" title="Retirer ce filtre">×</a></span>
             <?php } ?>
-            <a class="parabd-filter-clear" href="<?php echo BDO_URL; ?>parabd">Tout effacer</a>
+            <a class="parabd-filter-clear" href="<?php echo BDO_URL; ?>parabd">Effacer les filtres</a>
         </div>
     <?php } ?>
 
@@ -53,7 +53,7 @@ $card = function ($item) use ($h, $view) { ?>
         <div class="parabd-intro">
             <p>Le catalogue Para-BD référence les <strong>statuettes et images imprimées</strong> que possèdent les membres de BDovore. Il n'existe pas d'inventaire officiel exhaustif pour ce type d'objets : la communauté le construit elle-même, fiche après fiche.</p>
             <p>Chaque fiche est créée par un collectionneur — photo, éditeur ou fabricant, tirage, année. <strong>Vous possédez une pièce qui manque au catalogue ?</strong> Ajoutez-la en quelques minutes.</p>
-            <p><a class="parabd-add-link" href="<?php echo BDO_URL; ?>parabd/create">Ajouter un objet</a></p>
+            <p><a class="parabd-add-link" href="<?php echo BDO_URL; ?>parabd/create">Créer un objet</a></p>
         </div>
         <?php foreach ($view->recent_sections as $section) { ?>
             <div class="parabd-section-head">

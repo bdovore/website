@@ -110,9 +110,9 @@ class ParabdService
         return $this->model('Parabditem')->recentByType($typeId, $limit);
     }
 
-    public function getAdminCatalogue($search = '', $status = '', $limit = 200)
+    public function getAdminCatalogue($search = '', $status = '', $sort = 'updated', $dir = 'DESC')
     {
-        return $this->model('Parabditem')->adminCatalogue($search, $status, $limit);
+        return $this->model('Parabditem')->adminCatalogue($search, $status, $sort, $dir, 100);
     }
 
     public function autocompleteCatalogue($term, $limitPerCategory = 6)
