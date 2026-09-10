@@ -551,7 +551,7 @@ private function getDateBeforeValid() {
                     "COMMENT" => postVal('txtCommentEdition'),
                     "VALIDATOR" => $_SESSION["userConnect"]->user_id,
                     "VALID_DTE" => date('d/m/Y H:i:s'),
-                    "FLG_EXPLICIT" => (postVal("chkExplicit") == "checked" ? 1 : 0),
+                    "FLG_EXPLICIT" => $explicit,
                     "PROP_DTE" => $this->User_album_prop->PROP_DTE
                 ));
                 $this->Edition->update();
