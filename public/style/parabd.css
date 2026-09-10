@@ -83,8 +83,6 @@
 .parabd-status-actions { align-items: center; flex-wrap: wrap; gap: .45rem; min-height: 0; }
 .parabd-card > .parabd-status-actions { flex: 1 0 100%; margin: .25rem 0 0; }
 .parabd-status-actions .button-collection { margin-bottom: 0; }
-.parabd-card-actions { flex-wrap: wrap; gap: .5rem; min-height: 0; margin: .55rem 0 0; align-items: center; }
-.parabd-card-actions .collection-status-badge { white-space: nowrap; }
 .parabd-copy-editor { margin: .75rem 0; }
 .parabd-copy-editor > summary { display: inline-block; list-style: none; }
 .parabd-copy-editor > summary::-webkit-details-marker { display: none; }

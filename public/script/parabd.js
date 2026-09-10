@@ -321,7 +321,7 @@
             var removeUrl = $.bdovore.URL + 'parabd/removecopy';
             var state = info ? info.state : null;
             var wishlistId = info && info.wishlist_copy_id ? info.wishlist_copy_id : null;
-            var html = '<div class="parabd-collection-actions parabd-card-actions"'
+            var html = '<div class="parabd-collection-actions parabd-status-actions"'
                 + ' data-csrf-token="' + token + '" data-item-id="' + itemId + '">';
             if (state === 'OWNED') {
                 html += '<div class="collection-status collection-status-owned">'
