@@ -85,10 +85,22 @@ class Parabd extends Bdo_Controller
         return BDO_URL . 'parabd' . ($qs !== '' ? '?' . $qs : '');
     }
 
+    private function tabUrl($params, $typeId, $typeLabel)
+    {
+        $p = $params;
+        unset($p['type_id'], $p['type_label'], $p['page']);
+        if ($typeId) {
+            $p['type_id'] = $typeId;
+            $p['type_label'] = $typeLabel;
+        }
+        $qs = http_build_query($p, '', '&');
+        return BDO_URL . 'parabd' . ($qs !== '' ? '?' . $qs : '');
+    }
+
     public function Index()
     {
         if (!$this->enabled()) return;
-        $this->view->addCssFile('style/parabd.css?v=20260909a');
+        $this->view->addCssFile('style/parabd.css?v=20260909b');
         $this->view->addJavascriptFile('script/parabd.js');
         $search = getVal('q', '');
 
@@ -142,10 +154,11 @@ class Parabd extends Bdo_Controller
             if ($filters[$dim] !== '') $preserved[$dim] = $filters[$dim];
         }
 
-        // Active filter chips
+        // Active filter chips (le type est géré par les onglets, pas par un chip)
         $dimNames = array('type' => 'Type', 'author' => 'Auteur', 'series' => 'Série', 'tome' => 'Album', 'manufacturer' => 'Fabricant', 'publisher' => 'Éditeur');
         $activeFilters = array();
         foreach ($idDims as $dim => $keys) {
+            if ($dim === 'type') continue;
             if (!empty($filters[$keys[0]])) {
                 $label = $labels[$dim] !== '' ? $labels[$dim] : ('#' . $filters[$keys[0]]);
                 $activeFilters[] = array('name' => $dimNames[$dim], 'label' => $label, 'remove_url' => $this->filterRemoveUrl($preserved, $keys));
@@ -157,7 +170,16 @@ class Parabd extends Bdo_Controller
             }
         }
 
-        $isSearching = (trim($search) !== '' || !empty($activeFilters));
+        // Onglets de résultats par type (Tous + types parents)
+        $parentTypes = $this->service()->getParentTypes();
+        $currentTypeId = intval($filters['type_id']);
+        $tabs = array(array('id' => 0, 'label' => 'Tous', 'url' => $this->tabUrl($preserved, 0, ''), 'active' => $currentTypeId === 0));
+        foreach ($parentTypes as $type) {
+            $tid = intval($type['ID_TYPE']);
+            $tabs[] = array('id' => $tid, 'label' => $type['LABEL'], 'url' => $this->tabUrl($preserved, $tid, $type['LABEL']), 'active' => $currentTypeId === $tid);
+        }
+
+        $isSearching = (trim($search) !== '' || !empty($activeFilters) || $currentTypeId > 0);
         $perPage = 20;
         $page = getValInteger('page', 1);
         $total = 0; $maxPage = 1; $items = array();
@@ -174,14 +196,14 @@ class Parabd extends Bdo_Controller
         $paginateLink = ($paginateQs !== '' ? '&page=' : '?page=');
         $recentSections = array();
         if (!$isSearching) {
-            foreach ($this->service()->getParentTypes() as $type) {
+            foreach ($parentTypes as $type) {
                 $items = $this->service()->getRecentByType(intval($type['ID_TYPE']), 8);
                 if (!$items) continue;
                 $recentSections[] = array(
                     'id' => intval($type['ID_TYPE']),
                     'label' => $type['LABEL'],
                     'items' => $items,
-                    'filter_url' => BDO_URL . 'parabd?type_id=' . intval($type['ID_TYPE']) . '&type_label=' . urlencode($type['LABEL']),
+                    'filter_url' => $this->tabUrl($preserved, intval($type['ID_TYPE']), $type['LABEL']),
                 );
             }
         }
@@ -191,6 +213,7 @@ class Parabd extends Bdo_Controller
             'PAGETITLE' => 'Catalogue Para-BD', 'ROBOTS' => 'noindex,nofollow',
             'items' => $items, 'search' => $search,
             'filters' => $filters, 'preserved_params' => $preserved, 'active_filters' => $activeFilters,
+            'tabs' => $tabs,
             'page' => $page, 'per_page' => $perPage, 'total' => $total, 'max_page' => $maxPage,
             'paginate_url' => $paginateUrl, 'paginate_link' => $paginateLink,
             'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'),

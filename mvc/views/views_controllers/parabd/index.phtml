@@ -31,6 +31,13 @@ $card = function ($item) use ($h, $view) { ?>
         ?>
         <button type="submit">Rechercher</button>
     </form>
+    <?php if ($view->tabs) { ?>
+    <nav class="parabd-tabs" aria-label="Filtrer par type d'objet">
+        <?php foreach ($view->tabs as $tab) { ?>
+            <a class="parabd-tab<?php echo $tab['active'] ? ' active' : ''; ?>" href="<?php echo $h($tab['url']); ?>"><?php echo $h($tab['label']); ?></a>
+        <?php } ?>
+    </nav>
+    <?php } ?>
     <?php if ($view->active_filters) { ?>
         <div class="parabd-active-filters">
             <?php foreach ($view->active_filters as $chip) { ?>

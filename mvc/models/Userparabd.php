@@ -12,11 +12,12 @@ class Userparabd extends ParabdDbLine
         parent::__construct($this->table_name, is_array($id) ? $id : array('ID_COPY' => $id));
     }
 
-    public function copies($userId, $state = null, $publicOnly = false)
+    public function copies($userId, $state = null, $publicOnly = false, $typeId = 0)
     {
         if ($publicOnly) return $this->publicCollection($userId);
         $where = 'c.USER_ID=' . intval($userId) . " AND i.STATUS='ACTIVE'";
         if ($state) $where .= " AND c.STATE='" . $this->escape($state) . "'";
+        if ($typeId) $where .= ' AND i.TYPE_ID=' . intval($typeId);
         $mediaPath = Bdo_Cfg::getVar('explicit') ? 'm.FILE_PATH' : "IF(m.IS_EXPLICIT=1,CONCAT('?source=',m.FILE_PATH),m.FILE_PATH)";
         $fields = 'c.*';
         return $this->fetchAllQuery("SELECT $fields,i.TITLE,i.TYPE_ID,t.LABEL TYPE_LABEL,st.LABEL SUBTYPE_LABEL,$mediaPath PRIMARY_IMAGE,m.IS_EXPLICIT PRIMARY_IMAGE_IS_EXPLICIT

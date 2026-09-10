@@ -14,6 +14,10 @@
 .parabd-page input, .parabd-page select, .parabd-page textarea { border: 1px solid #bbb; border-radius: 3px; }
 .parabd-page .ui-button { cursor: pointer; font-size: .95rem; margin: .15rem; padding: .45rem .8rem; text-decoration: none; }
 .parabd-page .ui-button[disabled] { cursor: wait; opacity: .65; }
+.parabd-tabs { display: flex; gap: .15rem; border-bottom: 1px solid #e2d8d0; margin: .35rem 0 .9rem; overflow-x: auto; }
+.parabd-tab { border-bottom: 3px solid transparent; color: #555; font-size: .95rem; padding: .5rem .85rem .4rem; text-decoration: none; white-space: nowrap; }
+.parabd-tab:hover { color: #650000; text-decoration: none; }
+.parabd-tab.active { border-bottom-color: #990000; color: #990000; font-weight: bold; }
 .parabd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; margin-top: 1rem; }
 .parabd-card { align-items: flex-start; display: flex; flex-wrap: wrap; gap: .8rem; border: 1px solid #ddd; border-radius: 5px; background: #fff; padding: .75rem; min-width: 0; }
 .parabd-card.newly-created { border-color: #7b9e42; box-shadow: 0 0 0 2px rgba(123,158,66,.18); }

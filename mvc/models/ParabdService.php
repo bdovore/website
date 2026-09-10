@@ -517,9 +517,9 @@ class ParabdService
         $this->model('Parabdduplicate')->record($itemId, $otherId, $duplicate);
     }
 
-    public function getUserCopies($userId, $state = null, $publicOnly = false)
+    public function getUserCopies($userId, $state = null, $publicOnly = false, $typeId = 0)
     {
-        return $this->model('Userparabd')->copies($userId, $state, $publicOnly);
+        return $this->model('Userparabd')->copies($userId, $state, $publicOnly, $typeId);
     }
 
     /**

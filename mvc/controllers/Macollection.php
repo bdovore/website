@@ -1224,12 +1224,23 @@ class Macollection extends Bdo_Controller {
         }
         $this->loadModel('ParabdService');
         $state = strtoupper(getVal('list', 'OWNED')) === 'WISHLIST' ? 'WISHLIST' : 'OWNED';
-        $this->view->addCssFile('style/parabd.css?v=20260823d');
+        $typeId = getValInteger('type_id', 0);
+
+        $parentTypes = $this->ParabdService->getParentTypes();
+        $tabs = array(array('id' => 0, 'label' => 'Tous', 'url' => BDO_URL . 'macollection/parabd?list=' . strtolower($state), 'active' => $typeId === 0));
+        foreach ($parentTypes as $type) {
+            $tid = intval($type['ID_TYPE']);
+            $tabUrl = BDO_URL . 'macollection/parabd?list=' . strtolower($state) . '&type_id=' . $tid . '&type_label=' . urlencode($type['LABEL']);
+            $tabs[] = array('id' => $tid, 'label' => $type['LABEL'], 'url' => $tabUrl, 'active' => $typeId === $tid);
+        }
+
+        $this->view->addCssFile('style/parabd.css?v=20260909b');
         $this->view->set_var(array(
             'PAGETITLE' => 'Ma collection Para-BD',
             'ROBOTS' => 'noindex,nofollow',
-            'copies' => $this->ParabdService->getUserCopies(intval($_SESSION['userConnect']->user_id), $state),
+            'copies' => $this->ParabdService->getUserCopies(intval($_SESSION['userConnect']->user_id), $state, false, $typeId),
             'state' => $state,
+            'tabs' => $tabs,
             'created_item_id' => getValInteger('created', 0),
             'csrf_token' => parabdCsrfToken('parabd-write'),
             'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'),
