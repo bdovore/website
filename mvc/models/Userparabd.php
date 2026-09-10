@@ -25,6 +25,36 @@ class Userparabd extends ParabdDbLine
             WHERE $where ORDER BY c.CREATED_AT DESC");
     }
 
+    /**
+     * Pour un utilisateur et une liste d'items, renvoie l'état de collection
+     * de chaque item : 'OWNED' (prioritaire), 'WISHLIST' ou null.
+     * Utilisé par le lazy loading des cartes du catalogue (batch).
+     */
+    public function statesForItems($userId, array $itemIds)
+    {
+        $userId = intval($userId);
+        if (!$userId || !$itemIds) return array();
+        $idList = implode(',', array_map('intval', $itemIds));
+        $rows = $this->fetchAllQuery(
+            "SELECT ITEM_ID, STATE, ID_COPY FROM users_parabd"
+            . " WHERE USER_ID=" . $userId . " AND ITEM_ID IN (" . $idList . ")"
+            . " ORDER BY FIELD(STATE, 'OWNED', 'WISHLIST')"
+        );
+        $states = array();
+        foreach ($itemIds as $id) $states[intval($id)] = array('state' => null, 'wishlist_copy_id' => null);
+        foreach ($rows as $row) {
+            $itemId = intval($row['ITEM_ID']);
+            if (!isset($states[$itemId])) continue;
+            if ($row['STATE'] === 'OWNED' && $states[$itemId]['state'] !== 'OWNED') {
+                $states[$itemId]['state'] = 'OWNED';
+            } elseif ($row['STATE'] === 'WISHLIST' && $states[$itemId]['state'] === null) {
+                $states[$itemId]['state'] = 'WISHLIST';
+                $states[$itemId]['wishlist_copy_id'] = intval($row['ID_COPY']);
+            }
+        }
+        return $states;
+    }
+
     public function publicCollection($userId)
     {
         $mediaPath = Bdo_Cfg::getVar('explicit') ? 'm.FILE_PATH' : "IF(m.IS_EXPLICIT=1,CONCAT('?source=',m.FILE_PATH),m.FILE_PATH)";

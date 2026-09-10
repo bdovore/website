@@ -7,10 +7,11 @@ $card = function ($item) use ($h, $view) { ?>
             <?php if ($item['PRIMARY_IMAGE_IS_EXPLICIT']) { ?><p><span class="parabd-explicit-badge">Visuel explicite</span><?php if (!$view->explicit_allowed) { ?> <small>Image floutée</small><?php } ?></p><?php } ?>
             <h2><a href="<?php echo BDO_URL; ?>parabd/fiche?id=<?php echo intval($item['ID_ITEM']); ?>"><?php echo $h($item['TITLE']); ?></a><?php if ($view->can_admin) { ?> · <a href="<?php echo BDO_URL; ?>adminparabd/edit?id=<?php echo intval($item['ID_ITEM']); ?>" title="Modifier la fiche commune"><img class="parabd-admin-edit-icon" src="<?php echo BDO_URL_IMAGE; ?>/edit.gif" alt="Modifier"></a><?php } ?></h2>
             <?php if ($item['MANUFACTURER']) { ?><p><?php echo $h($item['MANUFACTURER']); ?></p><?php } ?>
+            <?php if ($view->can_contribute) { ?><div class="parabd-copy-lazy" data-item-id="<?php echo intval($item['ID_ITEM']); ?>"></div><?php } ?>
         </div>
     </article>
 <?php }; ?>
-<div class="cadre1 parabd-page">
+<div class="cadre1 parabd-page" id="parabd-catalog"<?php if ($view->can_contribute) { ?> data-csrf-token="<?php echo $h($view->csrf_token); ?>"<?php } ?>>
     <div class="parabd-heading">
         <div><h1>Catalogue Para-BD</h1><p>Objets partagés par les collectionneurs.</p></div>
     </div>
@@ -67,4 +68,4 @@ $card = function ($item) use ($h, $view) { ?>
         <?php if (!$view->recent_sections) { ?><p>Aucun objet n'a encore été référencé dans le catalogue.</p><?php } ?>
     <?php } ?>
 </div>
-<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260831b" type="text/javascript"></script>
+<script src="<?php echo BDO_URL; ?>script/parabd.js?v=20260909a" type="text/javascript"></script>

@@ -404,3 +404,55 @@ function isValidEmailAddress(emailAddress) {
  * - fonction setInfoCollection pour envoyer mise à jour des infos d'un album de la collection
  *
  */
+
+/*
+ * Lazy loading des infos de collection.
+ * Les divs .info-collection-lazy portent les paramètres en data-* et ne
+ * déclenchent getInfoCollectionFromTome que lorsqu'elles entrent dans le
+ * viewport, ce qui évite une salve d'appels AJAX pour tous les albums d'une
+ * page de liste.
+ */
+var lazyInfoCollection = (function($) {
+  var SELECTOR = ".info-collection-lazy";
+  var observer = null;
+
+  function loadNode(el) {
+    var $el = $(el);
+    if ($el.hasClass("info-collection-loaded")) return;
+    $el.addClass("info-collection-loaded");
+    getInfoCollectionFromTome(
+      $el.data("id-serie"),
+      $el.data("id-tome"),
+      $el.data("id-edition"),
+      $el.data("exclu") == 1,
+      $el.data("tomeonly") == 1
+    );
+  }
+
+  function init() {
+    var $nodes = $(SELECTOR).not(".info-collection-loaded");
+    if (!$nodes.length) return;
+
+    if (!("IntersectionObserver" in window)) {
+      // Navigateurs legacy : on charge tout, comme avant.
+      $nodes.each(function() { loadNode(this); });
+      return;
+    }
+
+    if (!observer) {
+      observer = new IntersectionObserver(function(entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) {
+            observer.unobserve(entries[i].target);
+            loadNode(entries[i].target);
+          }
+        }
+      }, { rootMargin: "200px 0px" });
+    }
+
+    $nodes.each(function() { observer.observe(this); });
+  }
+
+  $(init);
+  return { init: init };
+})(jQuery);

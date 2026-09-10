@@ -522,6 +522,15 @@ class ParabdService
         return $this->model('Userparabd')->copies($userId, $state, $publicOnly);
     }
 
+    /**
+     * État de collection (par lot) pour les cartes du catalogue.
+     * Retourne une map itemId => array('state', 'wishlist_copy_id').
+     */
+    public function copyStatesForItems($userId, array $itemIds)
+    {
+        return $this->model('Userparabd')->statesForItems($userId, $itemIds);
+    }
+
     public function getPublicUserCollection($userId)
     {
         return $this->model('Userparabd')->publicCollection($userId);

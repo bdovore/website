@@ -88,7 +88,7 @@ class Parabd extends Bdo_Controller
     public function Index()
     {
         if (!$this->enabled()) return;
-        $this->view->addCssFile('style/parabd.css?v=20260831b');
+        $this->view->addCssFile('style/parabd.css?v=20260909a');
         $this->view->addJavascriptFile('script/parabd.js');
         $search = getVal('q', '');
 
@@ -185,6 +185,8 @@ class Parabd extends Bdo_Controller
                 );
             }
         }
+        $userId = $this->userId();
+        $canContribute = $userId && User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1);
         $this->view->set_var(array(
             'PAGETITLE' => 'Catalogue Para-BD', 'ROBOTS' => 'noindex,nofollow',
             'items' => $items, 'search' => $search,
@@ -194,7 +196,9 @@ class Parabd extends Bdo_Controller
             'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'),
             'can_admin' => User::minAccesslevel(1),
             'is_searching' => $isSearching,
-            'recent_sections' => $recentSections
+            'recent_sections' => $recentSections,
+            'can_contribute' => $canContribute,
+            'csrf_token' => $canContribute ? parabdCsrfToken('parabd-write') : ''
         ));
         $this->view->render();
     }
@@ -231,6 +235,26 @@ class Parabd extends Bdo_Controller
     {
         if (!$this->enabled()) return;
         $this->handle(function () { return array('suggestions' => $this->service()->autocompleteCatalogue(getVal('term', ''))); });
+    }
+
+    /**
+     * AJAX (GET) : état de collection par lot pour les cartes du catalogue.
+     * Paramètre item_ids : liste d'ID séparés par des virgules.
+     * Retourne une map itemId => {state, wishlist_copy_id}.
+     */
+    public function Copystatus()
+    {
+        if (!$this->enabled()) return;
+        $this->handle(function () {
+            $ids = array();
+            foreach (explode(',', getVal('item_ids', '')) as $raw) {
+                $id = intval(trim($raw));
+                if ($id) $ids[$id] = $id;
+            }
+            $userId = $this->userId();
+            $states = $userId && $ids ? $this->service()->copyStatesForItems($userId, array_values($ids)) : array();
+            return array('items' => $states);
+        });
     }
 
     public function Fieldautocomplete()

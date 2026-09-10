@@ -410,7 +410,14 @@ class FicheAlbum {
 //
 //            $html.= "</div>";
             $id_source = "infoCollection" . $o_tome->ID_TOME;
-            $html= "<div id='".$id_source."'></div><script>getInfoCollectionFromTome(".$o_tome->ID_SERIE.",".$o_tome->ID_TOME.",".$o_tome->ID_EDITION.",".($exclu ? "true" : "false").",true)</script>";
+            // Lazy loading : les infos de collection ne sont chargées que lorsque
+            // la div devient visible (voir collection.js, IntersectionObserver).
+            $html= "<div id='".$id_source."' class='info-collection-lazy'"
+                 . " data-id-serie='".$o_tome->ID_SERIE."'"
+                 . " data-id-tome='".$o_tome->ID_TOME."'"
+                 . " data-id-edition='".$o_tome->ID_EDITION."'"
+                 . " data-exclu='".($exclu ? "1" : "0")."'"
+                 . " data-tomeonly='1'></div>";
 
         } else {
             $html = "<i>Connectez vous pour ajouter cet album dans votre collection !</i>";

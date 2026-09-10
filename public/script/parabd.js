@@ -243,7 +243,7 @@
     }
 
     function initQuickCollectionActions() {
-        $('.parabd-collection-actions').on('click', '.parabd-quick-copy', function (event) {
+        $(document).on('click', '.parabd-collection-actions .parabd-quick-copy', function (event) {
             event.preventDefault();
             var link = $(this);
             var container = link.closest('.parabd-collection-actions');
@@ -262,7 +262,11 @@
             }
             container.find('.parabd-quick-status').text('Enregistrement…');
             $.post(link.data('url'), payload, null, 'json').done(function (response) {
-                if (response.ok) window.location.reload();
+                if (response.ok) {
+                    var lazy = container.closest('.parabd-copy-lazy');
+                    if (lazy.length && parabdCopyStatus.refresh) parabdCopyStatus.refresh(lazy);
+                    else window.location.reload();
+                }
                 else container.find('.parabd-quick-status').text(response.error.message);
             }).fail(function (xhr) {
                 container.find('.parabd-quick-status').text(xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error.message : 'Enregistrement impossible.');
@@ -291,6 +295,121 @@
             }).always(function () { button.prop('disabled', false); });
         });
     }
+
+    /*
+     * Lazy loading de l'état de collection sur les cartes du catalogue.
+     * Observe les divs .parabd-copy-lazy et, lorsqu'elles entrent dans le
+     * viewport, déclenche un seul appel AJAX par lot (parabd/copystatus) pour
+     * récupérer l'état de tous les items visibles, puis y rend les boutons.
+     */
+    var parabdCopyStatus = (function ($) {
+        var SELECTOR = '.parabd-copy-lazy';
+        var observer = null;
+        var pending = [];
+        var timer = null;
+
+        function csrfToken() {
+            return $('#parabd-catalog').data('csrf-token') || '';
+        }
+
+        function esc(s) { return $('<div>').text(s == null ? '' : '' + s).html(); }
+
+        function renderState($container, info) {
+            var itemId = $container.data('item-id');
+            var token = esc(csrfToken());
+            var saveUrl = $.bdovore.URL + 'parabd/savecopy';
+            var removeUrl = $.bdovore.URL + 'parabd/removecopy';
+            var state = info ? info.state : null;
+            var wishlistId = info && info.wishlist_copy_id ? info.wishlist_copy_id : null;
+            var html = '<div class="parabd-collection-actions parabd-card-actions"'
+                + ' data-csrf-token="' + token + '" data-item-id="' + itemId + '">';
+            if (state === 'OWNED') {
+                html += '<div class="collection-status collection-status-owned">'
+                    + '<span class="collection-status-badge"><span class="fas fa-check" aria-hidden="true"></span>Dans ma collection</span>'
+                    + '</div>';
+            } else if (state === 'WISHLIST') {
+                html += '<div class="collection-status collection-status-wishlist">'
+                    + '<span class="collection-status-badge"><span class="far fa-heart" aria-hidden="true"></span>Dans ma wishlist</span>'
+                    + '</div>'
+                    + '<div class="button-simple"><a href="#" class="parabd-quick-copy" data-url="' + saveUrl
+                    + '" data-state="OWNED"' + (wishlistId ? ' data-copy-id="' + wishlistId + '"' : '')
+                    + ' title="Ajouter à ma collection"><span class="fas fa-check fa-border button-collection" aria-hidden="true"></span><span class="for-big-screen">J\'ai</span></a></div>'
+                    + ' <div class="button-simple"><a href="#" class="parabd-quick-copy" data-url="' + removeUrl
+                    + '" data-action="remove"' + (wishlistId ? ' data-copy-id="' + wishlistId + '"' : '')
+                    + ' title="Retirer de ma wishlist"><span class="far fa-trash-alt fa-border button-collection" aria-hidden="true"></span><span class="for-big-screen">Retirer</span></a></div>';
+            } else {
+                html += '<div class="button-simple"><a href="#" class="parabd-quick-copy" data-url="' + saveUrl
+                    + '" data-state="OWNED" title="Ajouter à ma collection"><span class="fas fa-check fa-border button-collection" aria-hidden="true"></span><span class="for-big-screen">J\'ai</span></a></div>'
+                    + ' <div class="button-simple"><a href="#" class="parabd-quick-copy" data-url="' + saveUrl
+                    + '" data-state="WISHLIST" title="Ajouter à ma wishlist"><span class="far fa-heart fa-border button-collection" aria-hidden="true"></span><span class="for-big-screen">Je veux</span></a></div>';
+            }
+            html += '<span class="parabd-quick-status" aria-live="polite"></span></div>';
+            $container.html(html);
+        }
+
+        function applyStates(map) {
+            $.each(map, function (itemId, info) {
+                var $c = $(SELECTOR + '[data-item-id="' + itemId + '"]');
+                $c.each(function () { renderState($(this), info); });
+            });
+        }
+
+        function flush() {
+            timer = null;
+            if (!pending.length) return;
+            var ids = pending.slice();
+            pending = [];
+            $.getJSON($.bdovore.URL + 'parabd/copystatus', { item_ids: ids.join(',') })
+                .done(function (response) {
+                    if (response.ok && response.data && response.data.items) applyStates(response.data.items);
+                });
+        }
+
+        function queue($el) {
+            if ($el.hasClass('parabd-copy-loaded')) return;
+            $el.addClass('parabd-copy-loaded');
+            var id = $el.data('item-id');
+            if (id) pending.push(id);
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(flush, 80);
+        }
+
+        function refresh($container) {
+            var id = $container.data('item-id');
+            if (!id) return;
+            $container.removeClass('parabd-copy-loaded');
+            $.getJSON($.bdovore.URL + 'parabd/copystatus', { item_ids: '' + id })
+                .done(function (response) {
+                    if (response.ok && response.data && response.data.items) {
+                        var info = response.data.items[id] || { state: null, wishlist_copy_id: null };
+                        renderState($container, info);
+                    }
+                });
+        }
+
+        function init() {
+            var $nodes = $(SELECTOR).not('.parabd-copy-loaded');
+            if (!$nodes.length) return;
+            if (!('IntersectionObserver' in window)) {
+                $nodes.each(function () { queue($(this)); });
+                return;
+            }
+            if (!observer) {
+                observer = new IntersectionObserver(function (entries) {
+                    for (var i = 0; i < entries.length; i++) {
+                        if (entries[i].isIntersecting) {
+                            observer.unobserve(entries[i].target);
+                            queue($(entries[i].target));
+                        }
+                    }
+                }, { rootMargin: '250px 0px' });
+            }
+            $nodes.each(function () { observer.observe(this); });
+        }
+
+        $(init);
+        return { init: init, refresh: refresh };
+    })(jQuery);
 
     $(function () {
         initGalleries();
