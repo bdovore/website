@@ -30,7 +30,7 @@ $triOptions = function ($current) {
 };
 ?>
 <div class="cadre1 parabd-page">
-    <p><a href="<?php echo BDO_URL; ?>parabd">← Catalogue Para-BD</a></p>
+    <p><a href="<?php echo $h($view->back_url); ?>"><?php echo $h($view->back_label); ?></a></p>
     <div class="parabd-detail">
         <div class="parabd-gallery" data-parabd-carousel role="region" aria-roledescription="carrousel" aria-label="Visuels de <?php echo $h($item['TITLE']); ?>">
             <div class="parabd-gallery-stage" id="parabd-gallery-<?php echo intval($item['ID_ITEM']); ?>"<?php if ($mediaCount > 1) { ?> tabindex="0"<?php } ?>>

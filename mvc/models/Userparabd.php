@@ -12,18 +12,40 @@ class Userparabd extends ParabdDbLine
         parent::__construct($this->table_name, is_array($id) ? $id : array('ID_COPY' => $id));
     }
 
-    public function copies($userId, $state = null, $publicOnly = false, $typeId = 0)
+    private function copiesWhere($userId, $state, $typeId, $search)
     {
-        if ($publicOnly) return $this->publicCollection($userId);
         $where = 'c.USER_ID=' . intval($userId) . " AND i.STATUS='ACTIVE'";
         if ($state) $where .= " AND c.STATE='" . $this->escape($state) . "'";
         if ($typeId) $where .= ' AND i.TYPE_ID=' . intval($typeId);
+        $search = trim((string) $search);
+        if ($search !== '') {
+            $raw = $this->escape($search); $normalized = $this->escape(ParabdRules::normalizeText($search));
+            $where .= " AND (i.TITLE_NORMALIZED LIKE '%$normalized%' OR i.MANUFACTURER_NORMALIZED LIKE '%$normalized%' OR i.PUBLISHER LIKE '%$raw%'
+                OR EXISTS (SELECT 1 FROM parabd_item_author ia JOIN bd_auteur a ON a.ID_AUTEUR=ia.AUTHOR_ID WHERE ia.ITEM_ID=i.ID_ITEM AND (a.PSEUDO LIKE '%$raw%' OR a.NOM LIKE '%$raw%'))
+                OR EXISTS (SELECT 1 FROM parabd_item_series isa JOIN bd_serie s ON s.ID_SERIE=isa.SERIES_ID WHERE isa.ITEM_ID=i.ID_ITEM AND s.NOM LIKE '%$raw%')
+                OR EXISTS (SELECT 1 FROM parabd_item_tome it JOIN bd_tome bt ON bt.ID_TOME=it.TOME_ID WHERE it.ITEM_ID=i.ID_ITEM AND bt.TITRE LIKE '%$raw%'))";
+        }
+        return $where;
+    }
+
+    public function copies($userId, $state = null, $publicOnly = false, $typeId = 0, $search = '', $page = 1, $perPage = 20)
+    {
+        if ($publicOnly) return $this->publicCollection($userId);
+        $where = $this->copiesWhere($userId, $state, $typeId, $search);
         $mediaPath = Bdo_Cfg::getVar('explicit') ? 'm.FILE_PATH' : "IF(m.IS_EXPLICIT=1,CONCAT('?source=',m.FILE_PATH),m.FILE_PATH)";
         $fields = 'c.*';
+        $page = max(1, intval($page)); $perPage = max(1, min(100, intval($perPage)));
+        $offset = ($page - 1) * $perPage;
         return $this->fetchAllQuery("SELECT $fields,i.TITLE,i.TYPE_ID,t.LABEL TYPE_LABEL,st.LABEL SUBTYPE_LABEL,$mediaPath PRIMARY_IMAGE,m.IS_EXPLICIT PRIMARY_IMAGE_IS_EXPLICIT
             FROM users_parabd c JOIN parabd_item i ON i.ID_ITEM=c.ITEM_ID JOIN parabd_type t ON t.ID_TYPE=i.TYPE_ID
             LEFT JOIN parabd_type st ON st.ID_TYPE=i.SUBTYPE_ID LEFT JOIN parabd_media m ON m.ITEM_ID=i.ID_ITEM AND m.IS_PRIMARY=1 AND m.IS_HIDDEN=0
-            WHERE $where ORDER BY c.CREATED_AT DESC");
+            WHERE $where ORDER BY c.CREATED_AT DESC LIMIT $perPage OFFSET $offset");
+    }
+
+    public function countCopies($userId, $state = null, $typeId = 0, $search = '')
+    {
+        $where = $this->copiesWhere($userId, $state, $typeId, $search);
+        return intval($this->fetchOneQuery("SELECT COUNT(*) n FROM users_parabd c JOIN parabd_item i ON i.ID_ITEM=c.ITEM_ID WHERE $where")['n']);
     }
 
     /**

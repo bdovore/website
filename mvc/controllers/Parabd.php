@@ -242,6 +242,14 @@ class Parabd extends Bdo_Controller
             if ($userId && intval($revision['AUTHOR_ID']) === $userId) $ownRevisions[] = $revision;
             else $revisionsToVote[] = $revision;
         }
+        $from = getVal('from', '');
+        if ($from === 'collection') {
+            $backUrl = BDO_URL . 'macollection/parabd';
+            $backLabel = '← Ma collection Para-BD';
+        } else {
+            $backUrl = BDO_URL . 'parabd';
+            $backLabel = '← Catalogue Para-BD';
+        }
         $discussion = $canContribute ? $this->service()->getDiscussion(intval($item['ID_ITEM'])) : array('entries' => array(), 'comment_count' => 0);
         $this->view->set_var(array('PAGETITLE' => $item['TITLE'] . ' - Para-BD', 'ROBOTS' => 'noindex,nofollow', 'item' => $item,
             'copies' => $canContribute ? $this->service()->getUserCopies($userId) : array(), 'revisions_to_vote' => $revisionsToVote, 'own_revisions' => $ownRevisions,
@@ -250,7 +258,8 @@ class Parabd extends Bdo_Controller
             'csrf_token' => $canContribute ? parabdCsrfToken('parabd-write') : '', 'can_contribute' => $canContribute,
             'trusted' => $canContribute ? $this->service()->isTrusted($userId) : false, 'charter_version' => BDO_PARABD_CHARTER_VERSION,
             'charter_accepted' => $canContribute ? $this->service()->hasAcceptedCharter($userId) : false,
-            'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'), 'can_admin' => $userId && User::minAccesslevel(1)));
+            'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'), 'can_admin' => $userId && User::minAccesslevel(1),
+            'back_url' => $backUrl, 'back_label' => $backLabel));
         $this->view->render();
     }
 

@@ -1225,26 +1225,54 @@ class Macollection extends Bdo_Controller {
         $this->loadModel('ParabdService');
         $state = strtoupper(getVal('list', 'OWNED')) === 'WISHLIST' ? 'WISHLIST' : 'OWNED';
         $typeId = getValInteger('type_id', 0);
+        $typeLabel = getVal('type_label', '');
+        $search = trim(getVal('q', ''));
+        $perPage = 20;
+        $page = getValInteger('page', 1);
+        $userId = intval($_SESSION['userConnect']->user_id);
+
+        $preserved = array('list' => strtolower($state));
+        if ($typeId) { $preserved['type_id'] = $typeId; $preserved['type_label'] = $typeLabel; }
+        if ($search !== '') $preserved['q'] = $search;
 
         $parentTypes = $this->ParabdService->getParentTypes();
-        $tabs = array(array('id' => 0, 'label' => 'Tous', 'url' => BDO_URL . 'macollection/parabd?list=' . strtolower($state), 'active' => $typeId === 0));
+        $tabExtra = $search !== '' ? '&q=' . urlencode($search) : '';
+        $tabs = array(array('id' => 0, 'label' => 'Tous', 'url' => BDO_URL . 'macollection/parabd?list=' . strtolower($state) . $tabExtra, 'active' => $typeId === 0));
         foreach ($parentTypes as $type) {
             $tid = intval($type['ID_TYPE']);
-            $tabUrl = BDO_URL . 'macollection/parabd?list=' . strtolower($state) . '&type_id=' . $tid . '&type_label=' . urlencode($type['LABEL']);
+            $tabUrl = BDO_URL . 'macollection/parabd?list=' . strtolower($state) . '&type_id=' . $tid . '&type_label=' . urlencode($type['LABEL']) . $tabExtra;
             $tabs[] = array('id' => $tid, 'label' => $type['LABEL'], 'url' => $tabUrl, 'active' => $typeId === $tid);
         }
+
+        $total = $this->ParabdService->countUserCopies($userId, $state, $typeId, $search);
+        $maxPage = max(1, (int) ceil($total / $perPage));
+        $page = min(max(1, $page), $maxPage);
+        $copies = $this->ParabdService->getUserCopies($userId, $state, false, $typeId, $search, $page, $perPage);
+
+        $paginateBase = $preserved; unset($paginateBase['page']);
+        $paginateQs = http_build_query($paginateBase, '', '&');
+        $paginateUrl = BDO_URL . 'macollection/parabd' . ($paginateQs !== '' ? '?' . $paginateQs : '');
+        $paginateLink = ($paginateQs !== '' ? '&page=' : '?page=');
 
         $this->view->addCssFile('style/parabd.css?v=20260909b');
         $this->view->set_var(array(
             'PAGETITLE' => 'Ma collection Para-BD',
             'ROBOTS' => 'noindex,nofollow',
-            'copies' => $this->ParabdService->getUserCopies(intval($_SESSION['userConnect']->user_id), $state, false, $typeId),
+            'copies' => $copies,
             'state' => $state,
             'tabs' => $tabs,
+            'search' => $search,
+            'preserved_params' => $preserved,
             'created_item_id' => getValInteger('created', 0),
             'csrf_token' => parabdCsrfToken('parabd-write'),
             'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'),
-            'can_admin' => User::minAccesslevel(1)
+            'can_admin' => User::minAccesslevel(1),
+            'page' => $page,
+            'per_page' => $perPage,
+            'total' => $total,
+            'max_page' => $maxPage,
+            'paginate_url' => $paginateUrl,
+            'paginate_link' => $paginateLink
         ));
         $this->view->render();
     }
