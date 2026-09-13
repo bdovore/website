@@ -246,6 +246,24 @@ $(document).ready(function() {
             onChange: function(contents, $editable) {
                 // Update textarea value
                 $('#txtcontent').val(contents);
+            },
+            // Force une largeur de 100% sur les images insérées par URL
+            onImageLinkInsert: function(url) {
+                var $img = $('<img>').attr('src', url).css('width', '100%');
+                $('#txtcontent').summernote('insertNode', $img[0]);
+            },
+            // Force une largeur de 100% sur les images insérées depuis un fichier
+            onImageUpload: function(files) {
+                for (var i = 0; i < files.length; i++) {
+                    (function(file) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            var $img = $('<img>').attr('src', e.target.result).css('width', '100%');
+                            $('#txtcontent').summernote('insertNode', $img[0]);
+                        };
+                        reader.readAsDataURL(file);
+                    })(files[i]);
+                }
             }
         }
     });
