@@ -1,6 +1,7 @@
 <script src="<?php echo BDO_URL;?>jquery/jquery.mask.min" type="text/javascript"></script>
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
 <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
+    <?php echo adminCsrfField(); ?>
     <input name="txtFlgDef" type="hidden" value="<?php echo $view->FLGDEF;?>" />
     <input name="txtEditionId" type="hidden" value="<?php echo $view->IDEDITION;?>" />
     <table class="fond_admin">
@@ -147,7 +148,7 @@
                             <p><?php echo $view->NBUSERS ?? 0;?> utilisateur(s) ont cette edition dans leur collection <?php echo $view->VIEWUSEREDITION ?? "";?></p>
                             <p class="b">Menu Express</p>
                             <p>
-                                <?php echo $view->ACTIONAUTORIZE ?? "";?> <?php echo $view->CONTACTUSER ?? "";?>
+                                <?php echo $view->CONTACTUSER ?? "";?>
                                 <ul>
                                     <a href="<?php echo BDO_URL.'admin/editalbum?alb_id='.$view->IDTOME ?>" target='_blank'><li>Afficher l'album</li></a>
                                     <a href="<?php echo $view->URLFUSIONEDITION ?? "";?>"><li>Fusionner cette édition</li></a>
@@ -159,6 +160,7 @@
                     </tr>
                 </table>
 </form>
+<?php echo $view->ACTIONAUTORIZE ?? "";?>
 <script>
     /*
      * On remplit les champs de saisie par l'autocompletion

@@ -55,6 +55,7 @@ function Chargement() {
         </table>
       </form>
       <br> <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
+        <?php echo adminCsrfField(); ?>
         <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
           <tr bordercolor="#FFFFCC">
             <td width="24%">Nouveau titre</td>

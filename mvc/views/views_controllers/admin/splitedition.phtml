@@ -24,6 +24,7 @@ function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
   <tr>
     <td width="66%">
 <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" onsubmit="return confirm('Voulez-vous vraiment continuer ?');" name="myform" target="_self" id="myform">
+        <?php echo adminCsrfField(); ?>
         <table width="100%" border="1" cellpadding="2" cellspacing="0" bordercolor="#333333" bgcolor="#FFFFCC">
         <!--DWLayoutTable-->
         <tr bordercolor="#CCCCCC" bgcolor="#CCCCCC">
