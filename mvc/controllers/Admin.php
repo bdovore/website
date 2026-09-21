@@ -1322,16 +1322,56 @@ class Admin extends Bdo_Controller {
 // AFFICHER UN ALBUM
         elseif ($act == "") {
 
+            // valeurs par défaut, utilisées quand un album n'est pas renseigné ou introuvable
+            $this->view->set_var(array(
+                "TOMEID1" => "", "TOMEID2" => "",
+                "TITRE1" => "", "TITRE2" => "",
+                "IDSERIE1" => "", "IDSERIE2" => "",
+                "SERIE1" => "", "SERIE2" => "",
+                "TOME1" => "", "TOME2" => "",
+                "IDGENRE1" => "", "IDGENRE2" => "",
+                "GENRE1" => "", "GENRE2" => "",
+                "IDSCENAR1" => "", "IDSCENAR2" => "",
+                "SCENAR1" => "", "SCENAR2" => "",
+                "IDSCENARALT1" => "", "IDSCENARALT2" => "",
+                "SCENARALT1" => "", "SCENARALT2" => "",
+                "IDEDIT1" => "", "IDEDIT2" => "",
+                "EDIT1" => "", "EDIT2" => "",
+                "IDDESS1" => "", "IDDESS2" => "",
+                "DESS1" => "", "DESS2" => "",
+                "IDDESSALT1" => "", "IDDESSALT2" => "",
+                "DESSALT1" => "", "DESSALT2" => "",
+                "IDCOLOR1" => "", "IDCOLOR2" => "",
+                "COLOR1" => "", "COLOR2" => "",
+                "IDCOLORALT1" => "", "IDCOLORALT2" => "",
+                "COLORALT1" => "", "COLORALT2" => "",
+                "IDCOLL1" => "", "IDCOLL2" => "",
+                "COLL1" => "", "COLL2" => "",
+                "DTEPAR1" => "", "DTEPAR2" => "",
+                "URLIMAGE1" => BDO_URL_COUV . "default.png",
+                "URLIMAGE2" => BDO_URL_COUV . "default.png",
+                "HISTOIRE1" => "", "HISTOIRE2" => "",
+                "SOURCEID" => "", "DESTID" => "",
+                "NBUSERS1" => "0", "NBCOMMENT1" => "0",
+                "NBUSERS2" => "0", "NBCOMMENT2" => "0",
+                "ERRORMESSAGE" => ""
+            ));
+
             // REMPLISSAGE PARTIE GAUCHE
-            if ((!is_null($source_id)) & ($source_id != '')) {
+            $tome1_loaded = false;
+            if ($source_id > 0) {
                 $this->loadModel("Tome");
                 $this->Tome->add_dataPaste("ID_TOME", $source_id);
                 $this->Tome->load();
+                $tome1_loaded = (1 == $this->Tome->dbSelect->nbLineResult);
+            }
+
+            if ($tome1_loaded) {
                 // récupère le nombre d'utilisateurs
                 $nb_comments1 = $this->Tome->NB_NOTE_TOME;
 
                 // Determine l'URL image
-                if (is_null($this->Tome->IMG_COUV) | ($this->Tome->IMG_COUV == '')) {
+                if (empty($this->Tome->IMG_COUV)) {
                     $url_image1 = BDO_URL_COUV . "default.png";
                 } else {
                     $url_image1 = BDO_URL_COUV . $this->Tome->IMG_COUV;
@@ -1367,22 +1407,20 @@ class Admin extends Bdo_Controller {
                     "NBUSERS1" => $this->Tome->NBR_USER_ID_TOME,
                     "NBCOMMENT1" => $nb_comments1
                 ));
-            } else {
-                $this->view->set_var(array(
-                    "NBUSERS1" => "0",
-                    "NBCOMMENT1" => "0"
-                ));
             }
 
             //REMPLISSAGE DE LA PARTIE DROITE
-            if ((!is_null($dest_id)) & ($dest_id != '')) {
+            $tome2_loaded = false;
+            if ($dest_id > 0) {
                 $this->loadModel("Tome");
                 $this->Tome->add_dataPaste("ID_TOME", $dest_id);
                 $this->Tome->load();
+                $tome2_loaded = (1 == $this->Tome->dbSelect->nbLineResult);
+            }
 
-
+            if ($tome2_loaded) {
                 // Determine l'URL image
-                if (is_null($this->Tome->IMG_COUV) | ($this->Tome->IMG_COUV == '')) {
+                if (empty($this->Tome->IMG_COUV)) {
                     $url_image2 = BDO_URL_COUV . "default.png";
                 } else {
                     $url_image2 = BDO_URL_COUV . $this->Tome->IMG_COUV;
@@ -1418,15 +1456,10 @@ class Admin extends Bdo_Controller {
                     "NBUSERS2" => $this->Tome->NBR_USER_ID_TOME,
                     "NBCOMMENT2" => $this->Tome->NB_NOTE_TOME
                 ));
-            } else {
-                $this->view->set_var(array(
-                    "NBUSERS2" => "0",
-                    "NBCOMMENT2" => "0"
-                ));
             }
             $error = getVal("error", "");
             // Message d'erreur
-            if ($error) {
+            if (isset($error_msg[$error])) {
                 $this->view->set_var("ERRORMESSAGE", $error_msg[$error]);
             }
             // variables mises à jour dans tous les cas
@@ -1522,12 +1555,53 @@ class Admin extends Bdo_Controller {
 // AFFICHER L'INTERFACE DE FUSION DES EDITIONS
         elseif ($act == "") {
 
+            // valeurs par défaut, utilisées quand une édition n'est pas renseignée ou introuvable
+            $this->view->set_var(array(
+                "EDITIONID1" => "", "EDITIONID2" => "",
+                "EAN1" => "", "EAN2" => "",
+                "ISBN1" => "", "ISBN2" => "",
+                "TOMEID1" => "", "TOMEID2" => "",
+                "TITRE1" => "", "TITRE2" => "",
+                "IDSERIE1" => "", "IDSERIE2" => "",
+                "SERIE1" => "", "SERIE2" => "",
+                "TOME1" => "", "TOME2" => "",
+                "IDGENRE1" => "", "IDGENRE2" => "",
+                "GENRE1" => "", "GENRE2" => "",
+                "IDSCENAR1" => "", "IDSCENAR2" => "",
+                "SCENAR1" => "", "SCENAR2" => "",
+                "IDSCENARALT1" => "", "IDSCENARALT2" => "",
+                "SCENARALT1" => "", "SCENARALT2" => "",
+                "IDEDIT1" => "", "IDEDIT2" => "",
+                "EDIT1" => "", "EDIT2" => "",
+                "IDDESS1" => "", "IDDESS2" => "",
+                "DESS1" => "", "DESS2" => "",
+                "IDDESSALT1" => "", "IDDESSALT2" => "",
+                "DESSALT1" => "", "DESSALT2" => "",
+                "IDCOLOR1" => "", "IDCOLOR2" => "",
+                "COLOR1" => "", "COLOR2" => "",
+                "IDCOLORALT1" => "", "IDCOLORALT2" => "",
+                "COLORALT1" => "", "COLORALT2" => "",
+                "IDCOLL1" => "", "IDCOLL2" => "",
+                "COLL1" => "", "COLL2" => "",
+                "DTEPAR1" => "", "DTEPAR2" => "",
+                "URLIMAGE1" => BDO_URL_IMAGE . "couv/default.png",
+                "URLIMAGE2" => BDO_URL_IMAGE . "couv/default.png",
+                "HISTOIRE1" => "", "HISTOIRE2" => "",
+                "DESCRIPTED1" => "", "DESCRIPTED2" => "",
+                "SOURCEID" => "", "DESTID" => "",
+                "NBUSERS1" => "0", "NBUSERS2" => "0",
+                "ERRORMESSAGE" => ""
+            ));
 
             // REMPLISSAGE PARTIE GAUCHE
-            if ((!is_null($source_id)) & ($source_id != '')) {
-
+            $edition1_loaded = false;
+            if ($source_id > 0) {
                 $this->Edition->add_dataPaste("ID_EDITION", $source_id);
                 $this->Edition->load();
+                $edition1_loaded = (1 == $this->Edition->dbSelect->nbLineResult);
+            }
+
+            if ($edition1_loaded) {
                 // r�cup�re le nombre d'utilisateurs
                 $nb_users1 = $this->Edition->NBR_USER_ID;
 
@@ -1571,16 +1645,19 @@ class Admin extends Bdo_Controller {
                     "SOURCEID" => $this->Edition->ID_EDITION,
                     "NBUSERS1" => $nb_users1,
                 ));
-            } else {
-                $this->view->set_var("NBUSERS1", "0");
             }
 
             //REMPLISSAGE DE LA PARTIE DROITE
-            if ((!is_null($dest_id)) & ($dest_id != '')) {
+            $edition2_loaded = false;
+            if ($dest_id > 0) {
                 // r�cup�re le nombre d'utilisateurs
 
                 $this->Edition->add_dataPaste("ID_EDITION", $dest_id);
                 $this->Edition->load();
+                $edition2_loaded = (1 == $this->Edition->dbSelect->nbLineResult);
+            }
+
+            if ($edition2_loaded) {
                 $nb_users2 = $this->Edition->NBR_USER_ID;
 
 
@@ -1624,14 +1701,13 @@ class Admin extends Bdo_Controller {
                     "DESTID" => $this->Edition->ID_EDITION,
                     "NBUSERS2" => $nb_users2,
                 ));
-            } else {
-                $this->view->set_var("NBUSERS2", "0");
             }
+            $error = getVal("error", "");
             // Message d'erreur
-            if (!is_null($error)) {
+            if (isset($error_msg[$error])) {
                 $this->view->set_var("ERRORMESSAGE", $error_msg[$error]);
             }
-            // variables mises � jour dans tous les cas
+            // variables mises� jour dans tous les cas
             $this->view->set_var(array(
                 "URLEDITION1" => BDO_URL . "admin/editedition?edition_id=" . $source_id,
                 "URLEDITION2" => BDO_URL . "admin/editedition?edition_id=" . $dest_id,
@@ -2385,14 +2461,31 @@ class Admin extends Bdo_Controller {
         elseif ($act == "") {
             $this->loadModel("User");
 
+            // valeurs par défaut, utilisées quand un éditeur n'est pas renseigné ou introuvable
+            $this->view->set_var(array(
+                "EDITEURID1" => "", "EDITEURID2" => "",
+                "EDITEUR1" => "", "EDITEUR2" => "",
+                "URLEDITEDIT1" => "javascript:alert('D&eacute;sactiv&eacute;')",
+                "URLEDITEDIT2" => "javascript:alert('D&eacute;sactiv&eacute;')",
+                "URLSITE1" => "", "URLSITE2" => "",
+                "SOURCEID" => "", "DESTID" => "",
+                "NBUSERS1" => "0", "NBUSERS2" => "0",
+                "ERRORMESSAGE" => ""
+            ));
+
             // REMPLISSAGE PARTIE GAUCHE
-            if ((!is_null($source_id)) & ($source_id != '')) {
+            $editeur1_loaded = false;
+            if ($source_id > 0) {
                 // r�cup�re le nombre d'utilisateurs
                 $nb_users1 = $this->User->countUserBy("editeur", $source_id);
 
                 // r�cup�re les donn�es principales
                 $this->Editeur->add_dataPaste("ID_EDITEUR", intval($source_id));
                 $this->Editeur->load();
+                $editeur1_loaded = (1 == $this->Editeur->dbSelect->nbLineResult);
+            }
+
+            if ($editeur1_loaded) {
                 $this->view->set_var(array
                     ("EDITEURID1" => $this->Editeur->ID_EDITEUR,
                     "URLEDITEDIT1" => BDO_URL . "admin/adminediteurs?editeur_id=" . $this->Editeur->ID_EDITEUR,
@@ -2401,22 +2494,21 @@ class Admin extends Bdo_Controller {
                     "SOURCEID" => $this->Editeur->ID_EDITEUR,
                     "NBUSERS1" => $nb_users1
                 ));
-            } else {
-                $t->set_var(array
-                    ("NBUSERS1" => "0",
-                    "URLEDITEDIT1" => "javascript:alert('D&eacute;sactiv&eacute;')"
-                ));
             }
 
             //REMPLISSAGE DE LA PARTIE DROITE
-            if ($dest_id) {
+            $editeur2_loaded = false;
+            if ($dest_id > 0) {
                 // r�cup�re le nombre d'utilisateurs
                 $nb_users2 = $this->User->countUserBy("editeur", $dest_id);
 
                 // r�cup�re les donn�es principales
                 $this->Editeur->add_dataPaste("ID_EDITEUR", intval($dest_id));
                 $this->Editeur->load();
+                $editeur2_loaded = (1 == $this->Editeur->dbSelect->nbLineResult);
+            }
 
+            if ($editeur2_loaded) {
                 $this->view->set_var(array
                     ("EDITEURID2" => $this->Editeur->ID_EDITEUR,
                     "URLEDITEDIT2" => BDO_URL . "admin/adminediteurs?editeur_id=" . $this->Editeur->ID_EDITEUR,
@@ -2425,14 +2517,10 @@ class Admin extends Bdo_Controller {
                     "DESTID" => $this->Editeur->ID_EDITEUR,
                     "NBUSERS2" => $nb_users2
                 ));
-            } else {
-                $this->view->set_var(array
-                    ("NBUSERS2" => "0",
-                    "URLEDITEDIT2" => "javascript:alert('D&eacute;sactiv&eacute;')"
-                ));
             }
+            $error = getVal("error", "");
             // Message d'erreur
-            if (!is_null($error)) {
+            if (isset($error_msg[$error])) {
                 $this->view->set_var("ERRORMESSAGE", $error_msg[$error]);
             }
 
@@ -2487,11 +2575,11 @@ class Admin extends Bdo_Controller {
                 echo '<META http-equiv="refresh" content="4; URL=' . $redirection . '">Les auteurs ont été fusionnés.';
             } else {
                 // Demande de confirmation : vérifie que source_id et dest_id ont été defini
-                if ((is_null($dest_id)) || ($dest_id == "")) {
+                if ($dest_id == 0) {
                     header("Location:" . BDO_URL . "admin/mergeauteurs?source_id=$source_id&error=1");
                     exit();
                 }
-                if ((is_null($source_id)) || ($source_id == "")) {
+                if ($source_id == 0) {
                     header("Location:" . BDO_URL . "admin/mergeauteurs?dest_id=$dest_id&error=0");
                     exit();
                 }
@@ -2520,8 +2608,20 @@ class Admin extends Bdo_Controller {
         // AFFICHER
         elseif ($act == "") {
 
+            // valeurs par défaut, utilisées quand un auteur n'est pas renseigné ou introuvable
+            $this->view->set_var(array(
+                "AUTEUR1" => null,
+                "AUTEUR2" => null,
+                "NBALBUM1" => "0",
+                "NBALBUM2" => "0",
+                "URLEDIT1" => "javascript:alert('Désactivé')",
+                "URLEDIT2" => "javascript:alert('Désactivé')",
+                "ERRORMESSAGE" => ""
+            ));
+
             // REMPLISSAGE PARTIE GAUCHE
-            if ((!is_null($source_id)) & ($source_id != '')) {
+            $auteur1_loaded = false;
+            if ($source_id > 0) {
                 // récupère le nombre d'utilisateurs
                 $nb_album = $this->Auteur->getNbAlbumForAuteur($source_id);
 
@@ -2530,47 +2630,43 @@ class Admin extends Bdo_Controller {
                     "ID_AUTEUR" => $source_id
                 ));
                 $auteur1 = $this->Auteur->load();
+                $auteur1_loaded = (1 == $auteur1->nbLineResult);
+            }
 
+            if ($auteur1_loaded) {
                 $this->view->set_var(array
                     (
                     "AUTEUR1" => $auteur1->a_dataQuery[0],
                     "NBALBUM1" => $nb_album,
                     "URLEDIT1" => BDO_URL."admin/editauteur?auteur_id=".$source_id
                 ));
-            } else {
-                $this->view->set_var(array
-                    ("NBUSERS1" => "0",
-                    "URLEDIT1" => "javascript:alert('Désactivé')"
-                ));
             }
 
             //REMPLISSAGE DE LA PARTIE DROITE
-            if ((!is_null($dest_id)) & ($dest_id != '')) {
+            $auteur2_loaded = false;
+            if ($dest_id > 0) {
                 // récupère le nombre d'utilisateurs
-
                 $nb_album2 = $this->Auteur->getNbAlbumForAuteur($dest_id);
 
-                // récupère les données principales
                 // récupère les données principales
                 $this->Auteur->set_dataPaste(array(
                     "ID_AUTEUR" => $dest_id
                 ));
-                $this->Auteur->load();
+                $auteur2 = $this->Auteur->load();
+                $auteur2_loaded = (1 == $auteur2->nbLineResult);
+            }
 
+            if ($auteur2_loaded) {
                 $this->view->set_var(array
                     (
-                    "AUTEUR2" => $this->Auteur,
+                    "AUTEUR2" => $auteur2->a_dataQuery[0],
                     "NBALBUM2" => $nb_album2,
                     "URLEDIT2" => BDO_URL."admin/editauteur?auteur_id=".$dest_id
                 ));
-            } else {
-                $this->view->set_var(array
-                    ("NBALBUM2" => "0",
-                    "URLEDITEDIT2" => "javascript:alert('Désactivé')"
-                ));
             }
+            $error = getVal("error", "");
             // Message d'erreur
-            if (!is_null($error)) {
+            if (isset($error_msg[$error])) {
                 $this->view->set_var("ERRORMESSAGE", $error_msg[$error]);
             }
 
