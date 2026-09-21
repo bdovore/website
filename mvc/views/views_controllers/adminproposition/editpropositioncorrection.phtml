@@ -7,7 +7,8 @@
     <table width="100%">
         <tr>
             <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" onsubmit="return validerProposition(event);">
-
+                <?php echo adminCsrfField('admin-proposition'); ?>
+                <input type="hidden" name="ID" value="<?php echo $view->PROPID; ?>">
                 <!--Debut colonne gauche -->
                 <td width="65%" valign="top">
                      <table class="tableaux_admin">
@@ -434,6 +435,7 @@
         </td>
         <td width="435">
             <form action="<?php echo $view->URLDELETE;?>" method="post">
+                            <?php echo adminCsrfField('admin-proposition'); ?>
                             <input type="hidden" name="ID" id="ID" value="<?php echo $view->PROPID; ?>">
                             <input type="hidden" id="type" name="type" value="CORRECTION">
                             <input type="submit" value="Supprimer">

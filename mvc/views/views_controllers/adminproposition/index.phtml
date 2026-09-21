@@ -29,16 +29,23 @@
 <script>
 
 function deleteProposition(idpropale,typeprop){
-    var url = "<?php echo BDO_URL ?>adminproposition/deleteproposition?src=list&ID="+idpropale+"&type="+typeprop;
-    $.getJSON(url, function(data){
-        if (data.length == 0) {
-            alert("Proposition supprimée !");
-            window.location.reload();
+    var url = "<?php echo BDO_URL ?>adminproposition/deleteproposition";
+    $.post(url, {
+            src: "list",
+            ID: idpropale,
+            type: typeprop,
+            csrf_token: "<?php echo adminCsrfToken('admin-proposition'); ?>"
+        }, function(data){
+            if (data.length == 0) {
+                alert("Proposition supprimée !");
+                window.location.reload();
 
-        } else
-            {
-                alert("Erreur lors de la suppression !");
-            }
+            } else
+                {
+                    alert("Erreur lors de la suppression !");
+                }
+    }, "json").fail(function(){
+        alert("Erreur lors de la suppression !");
     });
 }
 </script>
