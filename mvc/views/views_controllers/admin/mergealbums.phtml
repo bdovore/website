@@ -188,6 +188,25 @@ function urldest(){
       <p><?php echo $view->NBUSERS2;?> utilisateur(s) ont cet album dans leur collection.<br>
         Il existe <?php echo $view->NBCOMMENT2;?> commentaire(s) sur cet album.</p></td>
   </tr>
+  <?php if (!empty($view->MERGE_IMPACT)) { ?>
+  <tr>
+    <td colspan="2" bgcolor="#F0F0F0">
+      <p><strong>Impacts de la fusion</strong> (informatifs, recalcul&eacute;s apr&egrave;s confirmation) :</p>
+      <ul>
+        <?php foreach ($view->MERGE_IMPACT as $impactLine) { ?>
+          <li><?php echo $impactLine; ?></li>
+        <?php } ?>
+      </ul>
+      <p style="color: #990000; font-weight: bold;">Album n&deg;<?php echo $view->SOURCEID; ?> = Supprim&eacute; ;
+        Album n&deg;<?php echo $view->DESTID; ?> = Conserv&eacute;.</p>
+    </td>
+  </tr>
+  <?php } ?>
+  <?php if (!empty($view->MERGE_REFUSAL)) { ?>
+  <tr>
+    <td colspan="2" style="color: #990000; font-weight: bold;">Fusion refus&eacute;e : <?php echo $view->MERGE_REFUSAL; ?></td>
+  </tr>
+  <?php } ?>
   <tr>
     <td colspan="2" align="center"><p><a href="<?php echo $view->URLECHANGE;?>">Inverser la sélection</a><br>
         <a href="<?php echo $view->URLFUSION;?>" onClick="return valider()">Fusionner les deux albums</a></p></td>

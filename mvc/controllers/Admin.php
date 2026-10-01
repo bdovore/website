@@ -67,6 +67,7 @@ class Admin extends Bdo_Controller {
             "CONFIRM_TITLE" => $a_params['title'],
             "CONFIRM_QUESTION" => $a_params['question'],
             "CONFIRM_WARNING" => isset($a_params['warning']) ? $a_params['warning'] : '',
+            "CONFIRM_DETAILS" => isset($a_params['details']) ? $a_params['details'] : array(),
             "CONFIRM_FIELDS" => isset($a_params['fields']) ? $a_params['fields'] : array(),
             "CONFIRM_ACTION" => $a_params['action'],
             "CONFIRM_CANCEL" => $a_params['cancel'],
@@ -1250,72 +1251,78 @@ class Admin extends Bdo_Controller {
         $dest_id = getValInteger("dest_id", 0);
         $source_id = getValInteger("source_id", 0);
 // Fusionne les albums
-        if ($act == "merge") {
-            if ($conf == "ok") {
-                $this->guardAdminMutation();
-                $source_id = postValInteger("source_id", 0);
-                $dest_id = postValInteger("dest_id", 0);
-                if (($dest_id <= 0) or ($source_id <= 0)) {
-                    $this->refuseAdminMutation('Album &agrave; supprimer ou album &agrave; garder non d&eacute;fini.');
-                }
-                if ($source_id == $dest_id) {
-                    $this->refuseAdminMutation('Album &agrave; garder et album &agrave; supprimer identiques.');
-                }
-
-                // Récupère la valeur de l'album à mettre à jour
-                // Met à jour les commentaires
-                $this->loadModel("Comment");
-                $nb = $this->Comment->replaceIdTome($source_id, $dest_id);
-                echo "Nombre de records modifi&eacute;s dans la table users_comment : " . $nb . "<br />";
-
-                // Met à jour les carres
-                $this->loadModel("Users_list_carre");
-                $nb = $this->Users_list_carre->replaceIdTome($source_id, $dest_id);
-                echo "Nombre de records modifi&eacute;s dans la table users_list_carre : " . $nb . "<br />";
-
-                // Met à jour les exclusions
-                $this->loadModel("Users_exclusions");
-                $nb = $this->Users_exclusions->replaceIdTome($source_id, $dest_id);
-                echo "Nombre de records modifi&eacute;es dans la table users_exclusions : " . $nb . "<br />";
-
-                // Fusionne les albums (restera ensuite à fusionner les éditions redondantes, cf. mergeeditions)
-                $this->loadModel("Edition");
-                $nb = $this->Edition->replaceIdTome($source_id, $dest_id);
-                echo "Nombre de records modifi&eacute;es dans la table bd_edition : " . $nb . "<br />";
-
-                $this->loadModel("Tome");
-                $this->Tome->add_dataPaste("ID_TOME", $source_id);
-                $this->Tome->delete();
-                echo 'R&eacute;f&eacute;rence(s) &agrave; l\'album supprim&eacute;e(s) dans la table bd_tome<br />';
-
-                echo GetMetaTag(4, "Fusion effectu&eacute;e.", (BDO_URL . "admin/editalbum?alb_id=" . $dest_id));
-            } else {
-                // Demande de confirmation : vérifie que source_id et dest_id ont été definis
-                if ($dest_id == 0) {
-                    header("Location:" . BDO_URL . "admin/mergealbums?source_id=$source_id&error=1");
+        if ($act == "merge" && $conf == "ok") {
+            // EXECUTION : verrou applicatif, preflight rejoue, etapes journalisees,
+            // puis redirection vers la page de l'operation (POST-Redirect-GET)
+            $this->guardAdminMutation();
+            $source_id = postValInteger("source_id", 0);
+            $dest_id = postValInteger("dest_id", 0);
+            $this->runMergeAlbums($source_id, $dest_id);
+        }
+        elseif ($act == "merge") {
+            // Demande de confirmation : preflight et impacts annonces
+            if ($dest_id == 0) {
+                header("Location:" . BDO_URL . "admin/mergealbums?source_id=$source_id&error=1");
+                exit();
+            }
+            if ($source_id == 0) {
+                header("Location:" . BDO_URL . "admin/mergealbums?dest_id=$dest_id&error=0");
+                exit();
+            }
+            if ($source_id == $dest_id) {
+                header("Location:" . BDO_URL . "admin/mergealbums?source_id=$source_id&dest_id=$dest_id&error=2");
+                exit();
+            }
+            $this->loadModel('AdminMergeAlbumsService');
+            $service = $this->AdminMergeAlbumsService;
+            try {
+                $preflight = $service->preflight($source_id, $dest_id);
+            }
+            catch (AdminOperationException $e) {
+                http_response_code($e->httpStatus());
+                die($e->getMessage());
+            }
+            $this->renderAdminConfirmation(array(
+                'title' => 'Fusion d\'albums',
+                'question' => 'Fusionner l\'album n&deg;' . $source_id . ' (supprim&eacute;) dans l\'album n&deg;' . $dest_id . ' (conserv&eacute;) ?',
+                'warning' => 'L\'album n&deg;' . $source_id . ' sera supprim&eacute; et ses donn&eacute;es rattach&eacute;es &agrave; l\'album n&deg;' . $dest_id . '. Cette op&eacute;ration est irr&eacute;versible.',
+                'details' => $this->mergeAlbumsImpactLines($preflight),
+                'fields' => array(
+                    'conf' => 'ok',
+                    'source_id' => $source_id,
+                    'dest_id' => $dest_id
+                ),
+                'action' => BDO_URL . "admin/mergealbums?act=merge",
+                'cancel' => BDO_URL . "admin/mergealbums?source_id=$source_id&dest_id=$dest_id",
+                'button' => 'Fusionner'
+            ));
+        }
+        elseif ($act == "resume") {
+            // Reprise explicite d'une operation en echec, journalisee
+            $this->guardAdminMutation();
+            $this->loadModel('AdminMergeAlbumsService');
+            $service = $this->AdminMergeAlbumsService;
+            $op_id = postValInteger("op_id", 0);
+            if (!$service->acquireLock()) {
+                http_response_code(409);
+                die('Une autre op&eacute;ration administrative est en cours.');
+            }
+            $userId = isset($_SESSION['userConnect']->user_id) ? intval($_SESSION['userConnect']->user_id) : 0;
+            try {
+                $op = $service->resume($op_id, $userId);
+                header("Location: " . BDO_URL . "admin/operation?op_id=" . intval($op->ID_ADMIN_OPERATION));
+                exit();
+            }
+            catch (AdminOperationException $e) {
+                if ($e->operationId()) {
+                    header("Location: " . BDO_URL . "admin/operation?op_id=" . $e->operationId());
                     exit();
                 }
-                if ($source_id == 0) {
-                    header("Location:" . BDO_URL . "admin/mergealbums?dest_id=$dest_id&error=0");
-                    exit();
-                }
-                if ($source_id == $dest_id) {
-                    header("Location:" . BDO_URL . "admin/mergealbums?source_id=$source_id&dest_id=$dest_id&error=2");
-                    exit();
-                }
-                $this->renderAdminConfirmation(array(
-                    'title' => 'Fusion d\'albums',
-                    'question' => 'Fusionner l\'album n&deg;' . $source_id . ' (supprim&eacute;) dans l\'album n&deg;' . $dest_id . ' (conserv&eacute;) ?',
-                    'warning' => 'L\'album n&deg;' . $source_id . ' sera supprim&eacute; et ses donn&eacute;es rattach&eacute;es &agrave; l\'album n&deg;' . $dest_id . '. Cette op&eacute;ration est irr&eacute;versible.',
-                    'fields' => array(
-                        'conf' => 'ok',
-                        'source_id' => $source_id,
-                        'dest_id' => $dest_id
-                    ),
-                    'action' => BDO_URL . "admin/mergealbums?act=merge",
-                    'cancel' => BDO_URL . "admin/mergealbums?source_id=$source_id&dest_id=$dest_id",
-                    'button' => 'Fusionner'
-                ));
+                http_response_code($e->httpStatus());
+                die($e->getMessage());
+            }
+            finally {
+                $service->releaseLock();
             }
         }
 
@@ -1462,6 +1469,25 @@ class Admin extends Bdo_Controller {
             if (isset($error_msg[$error])) {
                 $this->view->set_var("ERRORMESSAGE", $error_msg[$error]);
             }
+            // Impacts annonces sur l'ecran de comparaison : informatifs,
+            // recalcules a la confirmation puis rejoues a l'execution
+            $a_impacts = array();
+            $merge_refusal = '';
+            if ($tome1_loaded && $tome2_loaded) {
+                $this->loadModel('AdminMergeAlbumsService');
+                $service = $this->AdminMergeAlbumsService;
+                try {
+                    $preflight = $service->preflight($source_id, $dest_id);
+                    $a_impacts = $this->mergeAlbumsImpactLines($preflight);
+                }
+                catch (AdminOperationException $e) {
+                    $merge_refusal = $e->getMessage();
+                }
+            }
+            $this->view->set_var(array(
+                "MERGE_IMPACT" => $a_impacts,
+                "MERGE_REFUSAL" => $merge_refusal
+            ));
             // variables mises à jour dans tous les cas
             $this->view->set_var(array(
                 "URLREFRESH" => BDO_URL . "admin/mergealbums",
@@ -1470,6 +1496,133 @@ class Admin extends Bdo_Controller {
             ));
             $this->view->render();
         }
+    }
+
+    /**
+     * Execute la fusion d'albums sous verrou applicatif puis redirige vers la
+     * page de l'operation (POST-Redirect-GET). Les erreurs metier renvoient
+     * vers l'operation journalisee, sans detail technique.
+     */
+    private function runMergeAlbums($source_id, $dest_id) {
+        if (($dest_id <= 0) or ($source_id <= 0)) {
+            $this->refuseAdminMutation('Album &agrave; supprimer ou album &agrave; garder non d&eacute;fini.');
+        }
+        if ($source_id == $dest_id) {
+            $this->refuseAdminMutation('Album &agrave; garder et album &agrave; supprimer identiques.');
+        }
+        $this->loadModel('AdminMergeAlbumsService');
+        $service = $this->AdminMergeAlbumsService;
+        if (!$service->acquireLock()) {
+            http_response_code(409);
+            die('Une autre op&eacute;ration administrative est en cours.');
+        }
+        $userId = isset($_SESSION['userConnect']->user_id) ? intval($_SESSION['userConnect']->user_id) : 0;
+        try {
+            $op = $service->execute($source_id, $dest_id, $userId);
+            header("Location: " . BDO_URL . "admin/operation?op_id=" . intval($op->ID_ADMIN_OPERATION));
+            exit();
+        }
+        catch (AdminOperationException $e) {
+            if ($e->operationId()) {
+                header("Location: " . BDO_URL . "admin/operation?op_id=" . $e->operationId());
+                exit();
+            }
+            http_response_code($e->httpStatus());
+            die($e->getMessage());
+        }
+        finally {
+            $service->releaseLock();
+        }
+    }
+
+    /**
+     * Lignes d'impacts affichees avant confirmation, calculees par le preflight.
+     */
+    private function mergeAlbumsImpactLines($preflight) {
+        $impacts = $preflight['impacts'];
+        $conflicts = $preflight['conflicts'];
+        $a_lines = array(
+            '&Eacute;ditions &agrave; d&eacute;placer : ' . intval($impacts['editions']),
+            'Commentaires &agrave; d&eacute;placer : ' . intval($impacts['comments'])
+            . ' (dont ' . intval($conflicts['comments']) . ' en doublon, l\'album conserv&eacute; prime)',
+            'S&eacute;lections &agrave; d&eacute;placer : ' . intval($impacts['selections'])
+            . ' (dont ' . intval($conflicts['selections']) . ' en doublon)',
+            'Exclusions &agrave; d&eacute;placer : ' . intval($impacts['exclusions'])
+            . ' (dont ' . intval($conflicts['exclusions']) . ' en doublon)',
+            'R&eacute;f&eacute;rences dans les collections : ' . intval($impacts['collection_refs'])
+            . ' (les &eacute;ditions conserv&eacute;es gardent leur identifiant)',
+            '&Eacute;dition par d&eacute;faut de l\'album conserv&eacute; : n&deg;' . intval($preflight['default_edition'])
+        );
+        return $a_lines;
+    }
+
+    /**
+     * Page protegee de consultation d'une operation sensible a partir de son
+     * identifiant : statut, impacts appliques, reprise explicite si FAILED,
+     * message de succes avec lien vers l'album conserve.
+     */
+    public function Operation() {
+        if (!User::minAccesslevel(1)) {
+            adminDenyAccess();
+        }
+        $op_id = getValInteger("op_id", 0);
+        if ($op_id <= 0) {
+            http_response_code(404);
+            die('Op&eacute;ration introuvable.');
+        }
+        $this->loadModel('AdminMergeAlbumsService');
+        $service = $this->AdminMergeAlbumsService;
+        $op = $service->getOperation($op_id);
+        if (!$op) {
+            http_response_code(404);
+            die('Op&eacute;ration introuvable.');
+        }
+
+        $snapshot = json_decode((string) $op->SNAPSHOT, true);
+        if (!is_array($snapshot)) $snapshot = array();
+        $progression = json_decode((string) $op->PROGRESSION, true);
+        if (!is_array($progression)) $progression = array();
+
+        $sourceTitre = isset($snapshot['source']['titre']) ? $snapshot['source']['titre'] : '';
+        $destTitre = isset($snapshot['target']['titre']) ? $snapshot['target']['titre'] : '';
+
+        $a_stepLines = array();
+        if (isset($progression['steps']) && is_array($progression['steps'])) {
+            foreach ($progression['steps'] as $step => $result) {
+                $line = $step;
+                if (isset($result['moved'])) $line .= ' : ' . intval($result['moved']) . ' d&eacute;plac&eacute;(s)';
+                if (isset($result['deduplicated'])) $line .= ', ' . intval($result['deduplicated']) . ' d&eacute;dupliqu&eacute;(s)';
+                if (!empty($result['skipped'])) $line .= ' (d&eacute;j&agrave; appliqu&eacute;e)';
+                $a_stepLines[] = $line;
+            }
+        }
+
+        $statusMessages = array(
+            'PREPARED' => 'Op&eacute;ration pr&eacute;par&eacute;e, aucune donn&eacute;e modifi&eacute;e &agrave; ce stade.',
+            'APPLIED' => 'Mutations appliqu&eacute;es, finalisation en cours.',
+            'VERIFIED' => 'Fusion termin&eacute;e avec succ&egrave;s : l\'album source a &eacute;t&eacute; supprim&eacute; et ses donn&eacute;es rattach&eacute;es &agrave; l\'album conserv&eacute;.',
+            'FAILED' => 'La fusion a &eacute;chou&eacute;. Aucune &eacute;tape destructive ult&eacute;rieure n\'a &eacute;t&eacute; ex&eacute;cut&eacute;e ; la reprise est possible apr&egrave;s contr&ocirc;le.'
+        );
+
+        $this->view->set_var(array(
+            "PAGETITLE" => "Administration Bdovore - Op&eacute;ration n&deg;" . intval($op->ID_ADMIN_OPERATION),
+            "OP_ID" => intval($op->ID_ADMIN_OPERATION),
+            "OP_TYPE" => strval($op->OP_TYPE),
+            "OP_STATUS" => strval($op->STATUS),
+            "OP_STATUS_MESSAGE" => isset($statusMessages[$op->STATUS]) ? $statusMessages[$op->STATUS] : '',
+            "OP_SOURCE_LABEL" => 'Album n&deg;' . intval($op->SOURCE_ID) . ($sourceTitre !== '' ? ' - ' . htmlspecialchars($sourceTitre) : '') . ' (supprim&eacute;)',
+            "OP_TARGET_ID" => intval($op->TARGET_ID),
+            "OP_TARGET_LABEL" => 'Album n&deg;' . intval($op->TARGET_ID) . ($destTitre !== '' ? ' - ' . htmlspecialchars($destTitre) : '') . ' (conserv&eacute;)',
+            "OP_STEP_LINES" => $a_stepLines,
+            "OP_CAN_RESUME" => ($op->STATUS === 'FAILED' && $op->OP_TYPE === AdminMergeAlbumsService::OP_TYPE),
+            "OP_TARGET_URL" => BDO_URL . "admin/editalbum?alb_id=" . intval($op->TARGET_ID),
+            "OP_CANCEL_URL" => BDO_URL . "admin/mergealbums",
+            "OP_RESUME_URL" => BDO_URL . "admin/mergealbums?act=resume",
+            "OP_CREATED" => strval($op->CREATED_DTE),
+            "OP_FINISHED" => (string) $op->FINISHED_DTE,
+            "OP_ID_USER" => intval($op->ID_USER)
+        ));
+        $this->view->render();
     }
 
     public function mergeEditions() {

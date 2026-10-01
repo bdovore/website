@@ -1,0 +1,40 @@
+<div class="cadre1">
+    <h2>Op&eacute;ration administrative n&deg;<?php echo $view->OP_ID; ?></h2>
+
+    <p>
+        <b>Type :</b> <?php echo $view->OP_TYPE; ?><br>
+        <b>Source :</b> <?php echo $view->OP_SOURCE_LABEL; ?><br>
+        <b>Cible :</b> <?php echo $view->OP_TARGET_LABEL; ?><br>
+        <b>Statut :</b> <?php echo $view->OP_STATUS; ?><br>
+        <b>Cr&eacute;&eacute;e le :</b> <?php echo $view->OP_CREATED; ?>
+        <?php if ($view->OP_FINISHED !== '') { ?>
+            <br><b>Termin&eacute;e le :</b> <?php echo $view->OP_FINISHED; ?>
+        <?php } ?>
+    </p>
+
+    <p><?php echo $view->OP_STATUS_MESSAGE; ?></p>
+
+    <?php if ($view->OP_STATUS === 'VERIFIED') { ?>
+        <p><a href="<?php echo $view->OP_TARGET_URL; ?>">Voir l'album conserv&eacute;</a></p>
+    <?php } ?>
+
+    <?php if (!empty($view->OP_STEP_LINES)) { ?>
+        <p><b>Etapes appliqu&eacute;es :</b></p>
+        <ul>
+            <?php foreach ($view->OP_STEP_LINES as $stepLine) { ?>
+                <li><?php echo $stepLine; ?></li>
+            <?php } ?>
+        </ul>
+    <?php } ?>
+
+    <?php if ($view->OP_CAN_RESUME) { ?>
+        <form method="post" action="<?php echo $view->OP_RESUME_URL; ?>"
+              onsubmit="var b = this.getElementsByTagName('button')[0]; if (b) { b.disabled = true; }">
+            <?php echo adminCsrfField(); ?>
+            <input type="hidden" name="op_id" value="<?php echo $view->OP_ID; ?>">
+            <button type="submit">Reprendre la fusion</button>
+        </form>
+    <?php } ?>
+
+    <p><a href="<?php echo $view->OP_CANCEL_URL; ?>">Retour &agrave; la fusion d'albums</a></p>
+</div>
