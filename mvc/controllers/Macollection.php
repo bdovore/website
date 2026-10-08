@@ -1218,7 +1218,7 @@ class Macollection extends Bdo_Controller {
             http_response_code(404);
             die('Fonctionnalité Para-BD indisponible.');
         }
-        if (!User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1)) {
+        if (!isset($_SESSION['userConnect']->user_id) || empty($_SESSION['userConnect']->user_id)) {
             http_response_code(401);
             die('Vous devez vous authentifier pour accéder à cette page.');
         }

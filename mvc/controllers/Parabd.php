@@ -14,8 +14,13 @@ class Parabd extends Bdo_Controller
             http_response_code(404);
             die('Fonctionnalité Para-BD indisponible.');
         }
-        if (!User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1)) {
-            $this->jsonError('AUTH_REQUIRED', 'Vous devez être authentifié pour accéder à Para-BD.', array(), 401);
+        return true;
+    }
+
+    private function requireLogin()
+    {
+        if (!$this->userId()) {
+            $this->jsonError('AUTH_REQUIRED', 'Vous devez être authentifié pour effectuer cette action.', array(), 401);
             return false;
         }
         return true;
@@ -208,7 +213,7 @@ class Parabd extends Bdo_Controller
             }
         }
         $userId = $this->userId();
-        $canContribute = $userId && User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1);
+        $canContribute = (bool) $userId;
         $this->view->set_var(array(
             'PAGETITLE' => 'Catalogue Para-BD', 'ROBOTS' => 'noindex,nofollow',
             'items' => $items, 'search' => $search,
@@ -235,7 +240,7 @@ class Parabd extends Bdo_Controller
         if (!$item) { http_response_code(404); die('Objet Para-BD introuvable.'); }
         if (!empty($item['REDIRECT_ID'])) { header('Location: ' . BDO_URL . 'parabd/fiche?id=' . intval($item['REDIRECT_ID']), true, 301); return; }
         $userId = $this->userId();
-        $canContribute = $userId && User::minAccesslevel(defined('BDO_PARABD_MIN_LEVEL') ? BDO_PARABD_MIN_LEVEL : 1);
+        $canContribute = (bool) $userId;
         $revisionsToVote = array();
         $ownRevisions = array();
         foreach ($this->service()->getRevisionsForItem(intval($item['ID_ITEM'])) as $revision) {
@@ -320,6 +325,7 @@ class Parabd extends Bdo_Controller
     public function Create()
     {
         if (!$this->enabled()) return;
+        if (!$this->requireLogin()) return;
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $this->view->addCssFile('style/parabd.css?v=20260831c');
             $this->view->addJavascriptFile('script/parabd.js?v=20260831c');

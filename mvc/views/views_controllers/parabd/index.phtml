@@ -61,7 +61,7 @@ $card = function ($item) use ($h, $view) { ?>
         <div class="parabd-intro">
             <p>Le catalogue Para-BD référence les <strong>statuettes et images imprimées</strong> que possèdent les membres de BDovore. Il n'existe pas d'inventaire officiel exhaustif pour ce type d'objets : la communauté le construit elle-même, fiche après fiche.</p>
             <p>Chaque fiche est créée par un collectionneur — photo, éditeur ou fabricant, tirage, année. <strong>Vous possédez une pièce qui manque au catalogue ?</strong> Ajoutez-la en quelques minutes.</p>
-            <p><a class="parabd-add-link" href="<?php echo BDO_URL; ?>parabd/create">Créer un objet</a></p>
+            <?php if ($view->can_contribute) { ?><p><a class="parabd-add-link" href="<?php echo BDO_URL; ?>parabd/create">Créer un objet</a></p><?php } ?>
         </div>
         <?php foreach ($view->recent_sections as $section) { ?>
             <div class="parabd-section-head">
