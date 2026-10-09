@@ -96,11 +96,14 @@ class GetJSON extends Bdo_Controller {
             $this->Auteur->set_dataPaste(array("ID_AUTEUR" => $id_auteur));
             $this->Auteur->load();
         } else if ($term <> "") {
-            
+
+            $idSearch = $this->idSearchTerm($term);
             //$where = " WHERE PSEUDO like '%" . Db_Escape_String($term) . "%' ORDER BY PSEUDO";
             $where = " WHERE MATCH(search_field) AGAINST( '" . Db_Escape_String($term) . "' IN NATURAL LANGUAGE MODE) "
                     . " OR PSEUDO like '%" . Db_Escape_String($term) . "%' "
-                    . "ORDER BY CASE WHEN pseudo = '" . Db_Escape_String($term) . "' THEN 1 ELSE 0 END DESC, "
+                    . ($idSearch ? " OR ID_AUTEUR = " . $idSearch . " " : "")
+                    . "ORDER BY " . ($idSearch ? "CASE WHEN ID_AUTEUR = " . $idSearch . " THEN 1 ELSE 0 END DESC, " : "")
+                    . "CASE WHEN pseudo = '" . Db_Escape_String($term) . "' THEN 1 ELSE 0 END DESC, "
                     . "MATCH(search_field) AGAINST( '" . Db_Escape_String($term) . "') DESC, pseudo LIMIT 0, 10";
             $this->Auteur->load("c", $where);
         } else {
@@ -168,6 +171,18 @@ class GetJSON extends Bdo_Controller {
         
         return $term;
     }
+
+    private function idSearchTerm($term)
+    {
+        /*
+         * Quand le terme saisi est un nombre entier, on recherche aussi par identifiant,
+         * pour retrouver un auteur, une série ou un album malgré les titres homonymes.
+         */
+        $term = trim((string) $term);
+        if ($term === '' || !ctype_digit($term)) return 0;
+        return intval($term);
+    }
+
     private function Album() {
         $ID_TOME = getValInteger('id_tome', 0);
         $id_edition = getValInteger('id_edition', 0);
@@ -230,7 +245,10 @@ class GetJSON extends Bdo_Controller {
                 $where = " WHERE (c.id_collection = $id_collection) " ;
             } 
             else {
-                $where = " WHERE bd_tome.TITRE like '" . Db_Escape_String($term) . "%' ". $addfilter ." limit 0,10";
+                $idSearch = $this->idSearchTerm($term);
+                $where = " WHERE (bd_tome.TITRE like '" . Db_Escape_String($term) . "%'".($idSearch ? " OR bd_tome.ID_TOME = " . $idSearch : "").") ". $addfilter
+                        .($idSearch ? " ORDER BY CASE WHEN bd_tome.ID_TOME = " . $idSearch . " THEN 1 ELSE 0 END DESC" : "")
+                        ." limit 0,10";
             }
             
             
@@ -385,14 +403,15 @@ class GetJSON extends Bdo_Controller {
                 
                 
             }
+            $idSearch = $this->idSearchTerm($term);
             if ($mode == 2) {
                 $termc = str_replace("'", " ", $term);
-                $this->Serie->load('c'," WHERE  MATCH (NOM) AGAINST ( '.$termc.' IN NATURAL LANGUAGE MODE)  ".$addfilter ." GROUP BY ID_SERIE ORDER BY (LOG(NBR_USER_ID_SERIE +2) + IF('".$termc."' = NOM, 1000, MATCH (NOM) AGAINST ( '".$termc."' IN NATURAL LANGUAGE MODE))) desc, NOM LIMIT 0,30");
+                $this->Serie->load('c'," WHERE (MATCH (NOM) AGAINST ( '".$termc."' IN NATURAL LANGUAGE MODE) ".($idSearch ? " OR bd_serie.ID_SERIE = " . $idSearch : "").") ".$addfilter ." GROUP BY ID_SERIE ORDER BY ".($idSearch ? "CASE WHEN bd_serie.ID_SERIE = " . $idSearch . " THEN 1 ELSE 0 END DESC, " : "")."(LOG(NBR_USER_ID_SERIE +2) + IF('".$termc."' = NOM, 1000, MATCH (NOM) AGAINST ( '".$termc."' IN NATURAL LANGUAGE MODE))) desc, NOM LIMIT 0,30");
                  
             } 
             if ($mode != 2 || count($this->Serie->dbSelect->a_dataQuery) == 0)
             {
-                $this->Serie->load("c", " WHERE bd_serie.nom like '" . Db_Escape_String($term) . "%' ".$addfilter ." group by id_serie");
+                $this->Serie->load("c", " WHERE (bd_serie.nom like '" . Db_Escape_String($term) . "%'".($idSearch ? " OR bd_serie.ID_SERIE = " . $idSearch : "").") ".$addfilter ." group by id_serie".($idSearch ? " ORDER BY CASE WHEN bd_serie.ID_SERIE = " . $idSearch . " THEN 1 ELSE 0 END DESC, bd_serie.NOM" : ""));
 
             }
         }
