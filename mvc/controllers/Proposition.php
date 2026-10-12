@@ -481,8 +481,9 @@ class Proposition extends Bdo_Controller {
             $data = [];
 
             // Traitement de la réponse
-            if ($response->getSearchResult()->getItems() != null) {
-                foreach ($response->getSearchResult()->getItems() as $item) {
+            $searchResult = $response->getSearchResult();
+            if ($searchResult !== null && $searchResult->getItems() !== null) {
+                foreach ($searchResult->getItems() as $item) {
                     if ($item !== null) {
                         $data[] = $this->getItemInfo($item);
                     }
