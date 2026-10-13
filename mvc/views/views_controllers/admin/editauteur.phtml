@@ -24,6 +24,7 @@ function valider(){
 </script>
 
 <form action="<?php echo $view->URLACTION;?>" method="post" name="input_form" enctype="multipart/form-data" onSubmit="return valider()">
+    <?php echo adminCsrfField(); ?>
 
     <table width="100%" border="1" bgcolor="#FFFFCC">
           <tr bordercolor="#FFFFCC">

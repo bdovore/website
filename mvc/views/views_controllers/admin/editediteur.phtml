@@ -15,6 +15,7 @@ function valider(){
 </script>
 <h2>Modification/ajout d'un éditeur</h2>
 <form action="<?php echo $view->URLACTION;?>" method="post" name="input_form" onSubmit="return valider()">
+    <?php echo adminCsrfField(); ?>
     <div class="cadre1">
         <table width="100%" border="1" bgcolor="#FFFFCC" valign="top">
           <tr bordercolor="#FFFFCC">

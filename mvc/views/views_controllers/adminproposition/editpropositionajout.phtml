@@ -7,7 +7,8 @@
     <table width="100%">
         <tr>
             <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" onsubmit="return validerProposition(event);">
-
+                <?php echo adminCsrfField('admin-proposition'); ?>
+                <input type="hidden" name="ID" value="<?php echo $view->PROPID; ?>">
                 <!--Debut colonne gauche -->
                 <td width="65%" valign="top">
                      <table class="tableaux_admin">
@@ -373,6 +374,8 @@
                             <td>
                                 <div class="b">Bla bla des correcteurs</div>
                                 <form action="<?php echo $view->URLCOMMENTCORR;?>" method="post" name="formcorr">
+                                    <?php echo adminCsrfField('admin-proposition'); ?>
+                                    <input type="hidden" name="ID" value="<?php echo $view->PROPID; ?>">
                                     <p class="texte">
                                         Statut courant de la proposition :
                                         <select name="cmbStatus" size="1" style="background-color: <?php echo $view->COLOR_STATUS;?>;"><?php echo $view->OPTIONSTATUS;?></select>
@@ -404,6 +407,8 @@
                     </table>
                     <table class="cadre_texte-admin">
                         <form action="<?php echo $view->URLUTILVALID;?>" method="post" name="subform" id="subform" onsubmit="return verifAddExisting(document.subform.txtFutAlbId.value, document.subform.PropAction.value)">
+                            <?php echo adminCsrfField('admin-proposition'); ?>
+                            <input type="hidden" name="ID" value="<?php echo $view->PROPID; ?>">
                             <tr>
                                 <td>
                                     <p class="texte"><b>Ajout d'un album existant</b></p>
@@ -467,6 +472,7 @@
     </table>
     <table width="64%">
         <form action="<?php echo $view->URLDELETE;?>" method="post" name="subform2">
+             <?php echo adminCsrfField('admin-proposition'); ?>
              <input type="hidden" id="type" name="type" value="AJOUT">
              <input type="hidden" name="ID" id="ID" value="<?php echo $view->PROPID; ?>">
             <tr align="center">

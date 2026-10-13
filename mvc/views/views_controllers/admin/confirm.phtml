@@ -1,0 +1,30 @@
+<div class="cadre1">
+    <h2><?php echo $view->CONFIRM_TITLE; ?></h2>
+
+    <p><b><?php echo $view->CONFIRM_QUESTION; ?></b></p>
+
+    <?php if (!empty($view->CONFIRM_WARNING)) { ?>
+        <p style="color: #990000; font-weight: bold;"><?php echo $view->CONFIRM_WARNING; ?></p>
+    <?php } ?>
+
+    <?php if (!empty($view->CONFIRM_DETAILS)) { ?>
+        <p><b>Impacts de l'op&eacute;ration (informatifs, recalcul&eacute;s apr&egrave;s confirmation) :</b></p>
+        <ul>
+            <?php foreach ($view->CONFIRM_DETAILS as $line) { ?>
+                <li><?php echo $line; ?></li>
+            <?php } ?>
+        </ul>
+    <?php } ?>
+
+    <form method="post" action="<?php echo $view->CONFIRM_ACTION; ?>"
+          onsubmit="var b = this.getElementsByTagName('button')[0]; if (b) { b.disabled = true; }">
+        <?php echo adminCsrfField(); ?>
+        <?php foreach ($view->CONFIRM_FIELDS as $name => $value) { ?>
+            <input type="hidden" name="<?php echo htmlspecialchars($name, ENT_QUOTES); ?>"
+                   value="<?php echo htmlspecialchars((string) $value, ENT_QUOTES); ?>">
+        <?php } ?>
+        <button type="submit"><?php echo $view->CONFIRM_BUTTON; ?></button>
+    </form>
+
+    <p><a href="<?php echo $view->CONFIRM_CANCEL; ?>">Annuler</a></p>
+</div>

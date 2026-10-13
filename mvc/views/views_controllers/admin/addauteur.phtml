@@ -1,4 +1,5 @@
 <form action="<?php echo $view->URLACTION;?>" method="post" name="input_form" onSubmit="return valider()">
+  <?php echo adminCsrfField(); ?>
   <table width="100%" border="1" bgcolor="#FFFFCC">
     <tr bordercolor="#FFFFCC">
       <td width="7%">Pseudo</td>

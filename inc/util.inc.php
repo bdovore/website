@@ -481,6 +481,55 @@ function parabdValidateCsrf ($scope, $token)
     return is_string($token) && $expected !== '' && hash_equals($expected, $token);
 }
 
+/**
+ * Jeton CSRF lié à la session, dédié aux mutations de l'administration du catalogue.
+ * Un périmètre (scope) distinct isole l'admin catalogue des autres domaines (Para-BD, etc.).
+ */
+function adminCsrfToken ($scope = 'admin-catalogue')
+{
+    if (!isset($_SESSION['admin_csrf']) || !is_array($_SESSION['admin_csrf'])) {
+        $_SESSION['admin_csrf'] = array();
+    }
+    if (empty($_SESSION['admin_csrf'][$scope])) {
+        $_SESSION['admin_csrf'][$scope] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['admin_csrf'][$scope];
+}
+
+function adminValidateCsrf ($scope, $token)
+{
+    $expected = isset($_SESSION['admin_csrf'][$scope]) ? $_SESSION['admin_csrf'][$scope] : '';
+    return is_string($token) && $expected !== '' && hash_equals($expected, $token);
+}
+
+/** Champ caché à insérer dans chaque formulaire de mutation de l'admin. */
+function adminCsrfField ($scope = 'admin-catalogue')
+{
+    return '<input type="hidden" name="csrf_token" value="' . adminCsrfToken($scope) . '">';
+}
+
+/**
+ * Statut HTTP refusant une mutation de l'admin : 405 si la méthode n'est pas POST,
+ * 403 si le jeton CSRF est absent ou invalide, null si la mutation est autorisée.
+ */
+function adminMutationHttpStatus ($method, $token, $scope = 'admin-catalogue')
+{
+    if (strcasecmp($method, 'POST') !== 0) {
+        return 405;
+    }
+    if (!adminValidateCsrf($scope, $token)) {
+        return 403;
+    }
+    return null;
+}
+
+/** Refus d'accès à l'admin : statut 403 et message français, sans autre sortie. */
+function adminDenyAccess ()
+{
+    http_response_code(403);
+    die('Accès refusé.');
+}
+
 /** Affiche les entrées de menu Para-BD (module public). */
 function parabdMenuVisible ()
 {

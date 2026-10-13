@@ -8,6 +8,40 @@ require_once BDO_DIR . "inc" . DS . "mail.php";
 class Adminproposition extends Bdo_Controller {
 
     /**
+     * Garde commune des mutations de l'admin des propositions :
+     * POST obligatoire (405 sinon) et jeton CSRF valide (403 sinon).
+     * A appeler au debut de toute action de mutation, avant la moindre ecriture.
+     */
+    private function guardAdminMutation() {
+        $status = adminMutationHttpStatus($_SERVER['REQUEST_METHOD'], postVal('csrf_token', ''), 'admin-proposition');
+        if ($status !== null) {
+            http_response_code($status);
+            if ($status == 405) {
+                die('Cette op&eacute;ration doit &ecirc;tre confirm&eacute;e via le formulaire d&eacute;di&eacute;.');
+            }
+            die('Jeton de s&eacute;curit&eacute; invalide. Rechargez la page puis r&eacute;essayez.');
+        }
+    }
+
+    /**
+     * Refuse une mutation pour cause d'incoherence metier (422 par defaut).
+     */
+    private function refuseAdminMutation($message, $status = 422) {
+        http_response_code($status);
+        die($message);
+    }
+
+    /**
+     * Erreur technique pendant une mutation : detail journalise cote serveur,
+     * message fonctionnel sans detail technique a l'administrateur (500).
+     */
+    private function failAdminMutation($context, $error) {
+        error_log('Adminproposition - ' . $context . ' : ' . print_r($error, true));
+        http_response_code(500);
+        die('Une erreur technique a interrompu le traitement. V&eacute;rifiez l\'&eacute;tat des donn&eacute;es avant de recommencer.');
+    }
+
+    /**
      */
     public function Index() {
         $this->view->set_var(array("PAGETITLE" => "Proposition : liste"));
@@ -80,7 +114,7 @@ class Adminproposition extends Bdo_Controller {
             $this->view->set_var("PAGETITLE", "Administration des propositions");
             $this->view->render();
         } else {
-            die("Vous n'avez pas acc&egrave;s à cette page.");
+            adminDenyAccess();
         }
     }
 
@@ -98,82 +132,87 @@ private function getDateBeforeValid() {
          * La suppression fait simplement changer le statut, et envoie éventuellement un mail à l'utilisateur
          *
          */
-        if (User::minAccesslevel(1)) {
-            $src = getVal("src", "");
+        if (!User::minAccesslevel(1)) {
+            adminDenyAccess();
+        }
+        $this->guardAdminMutation();
 
-            if ($src == "list") {
-                // supppression depuis la liste : mode AJAX, on récupère l'id via GET et pas de mail
-                $this->view->layout = "ajax";
-                $id = getValInteger("ID", 0);
-                $type = getVal("type", "");
-                $mail = "";
-            } else {
-                /*
-                 * Depuis la fiche d'édition : accès via POST, on récupère un email
-                 */
-                $id = postValInteger("ID", 0);
+        $src = postVal("src", "");
 
-                $type = postVal("type", "");
-                $mail = postVal("txtMailRefus", "");
-            }
-            if ($id > 0) {
-                /*
-                 * On a bien un id en paramètre, on met à jour le statut
-                 */
-                if ($type == "AJOUT" or $type == "CORRECTION") {
-                    $this->loadModel("User_album_prop");
-                    $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $id));
-                    // on charge la proposition à supprimer
-                    $this->User_album_prop->load();
-                    // modification du statut
-                    $this->User_album_prop->set_dataPaste(array("STATUS" => '99'));
-                    // mise à jour
-                    $this->User_album_prop->update();
-                    $this->view->set_var(array("json" => json_encode($this->User_album_prop->error)));
-                    // on garde en mémoire les valeurs des champs
-                    $prop_user = $this->User_album_prop->USER_ID;
-                    $prop_img = $this->User_album_prop->IMG_COUV;
-                    $prop_action = $this->User_album_prop->ACTION;
-                    $prop_titre = $this->User_album_prop->TITRE;
-                    $notif_mail = $this->User_album_prop->EMAIL;
-                } else {
-                    // edition
-                    $this->loadModel("Edition");
-                    $this->Edition->set_dataPaste(array("ID_EDITION" => $id));
-                    $this->Edition->load();
-                    $this->Edition->set_dataPaste(array("PROP_STATUS" => '99'));
-                    $this->Edition->update();
-                    $this->view->set_var(array("json" => json_encode($this->Edition->error)));
-                    $prop_user = $this->Edition->USER_ID;
-                    $prop_img = $this->Edition->IMG_COUV;
-                    $prop_action = "";
-                    $prop_titre = $this->Edition->TITRE_TOME;
-                    $notif_mail = $this->Edition->EMAIL;
-                }
-                // on supprime l'image si nécessaire
-                if ($prop_img != '') {
-
-                    if (file_exists(BDO_DIR_UPLOAD . $prop_img)) {
-                        @unlink(BDO_DIR_UPLOAD . $prop_img);
-                    }
-                }
-                if ($mail <> "") {
-
-                    $mail_sujet = "Votre proposition d'ajout dans la base BDOVORE";
-                    $mail_entete = "From: no-reply@bdovore.com";
-                    $mail_text = stripslashes($mail) . "\n\n";
-                    bdovoreMail($notif_mail, $mail_sujet, $mail_text, $mail_entete);
-                }
-                if ($src == "list") {
-                    $this->view->render();
-                } else {
-                    // on charge la fiche suivante
-                    $next_url = BDO_URL . "Adminproposition";
-                    echo GetMetaTag(1, "La proposition a été supprimé", $next_url);
-                }
-            }
+        if ($src == "list") {
+            // supppression depuis la liste : mode AJAX, on récupère l'id via POST et pas de mail
+            $this->view->layout = "ajax";
+            $id = postValInteger("ID", 0);
+            $type = postVal("type", "");
+            $mail = "";
         } else {
-            die("Vous n'avez pas acc&egrave;s à cette page.");
+            /*
+             * Depuis la fiche d'édition : accès via POST, on récupère un email
+             */
+            $id = postValInteger("ID", 0);
+
+            $type = postVal("type", "");
+            $mail = postVal("txtMailRefus", "");
+        }
+        if ($id <= 0) {
+            $this->refuseAdminMutation('Identifiant de proposition invalide.');
+        }
+        if (!in_array($type, array("AJOUT", "CORRECTION", "EDITION"), true)) {
+            $this->refuseAdminMutation('Type de proposition invalide.');
+        }
+        /*
+         * On a bien un id en paramètre, on met à jour le statut
+         */
+        if ($type == "AJOUT" or $type == "CORRECTION") {
+            $this->loadModel("User_album_prop");
+            $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $id));
+            // on charge la proposition à supprimer
+            $this->User_album_prop->load();
+            // modification du statut
+            $this->User_album_prop->set_dataPaste(array("STATUS" => '99'));
+            // mise à jour
+            $this->User_album_prop->update();
+            $this->view->set_var(array("json" => json_encode($this->User_album_prop->error)));
+            // on garde en mémoire les valeurs des champs
+            $prop_user = $this->User_album_prop->USER_ID;
+            $prop_img = $this->User_album_prop->IMG_COUV;
+            $prop_action = $this->User_album_prop->ACTION;
+            $prop_titre = $this->User_album_prop->TITRE;
+            $notif_mail = $this->User_album_prop->EMAIL;
+        } else {
+            // edition
+            $this->loadModel("Edition");
+            $this->Edition->set_dataPaste(array("ID_EDITION" => $id));
+            $this->Edition->load();
+            $this->Edition->set_dataPaste(array("PROP_STATUS" => '99'));
+            $this->Edition->update();
+            $this->view->set_var(array("json" => json_encode($this->Edition->error)));
+            $prop_user = $this->Edition->USER_ID;
+            $prop_img = $this->Edition->IMG_COUV;
+            $prop_action = "";
+            $prop_titre = $this->Edition->TITRE_TOME;
+            $notif_mail = $this->Edition->EMAIL;
+        }
+        // on supprime l'image si nécessaire
+        if ($prop_img != '') {
+
+            if (file_exists(BDO_DIR_UPLOAD . $prop_img)) {
+                @unlink(BDO_DIR_UPLOAD . $prop_img);
+            }
+        }
+        if ($mail <> "") {
+
+            $mail_sujet = "Votre proposition d'ajout dans la base BDOVORE";
+            $mail_entete = "From: no-reply@bdovore.com";
+            $mail_text = stripslashes($mail) . "\n\n";
+            bdovoreMail($notif_mail, $mail_sujet, $mail_text, $mail_entete);
+        }
+        if ($src == "list") {
+            $this->view->render();
+        } else {
+            // on retourne à la liste des propositions
+            header("Location: " . BDO_URL . "Adminproposition");
+            exit();
         }
     }
 
@@ -421,15 +460,19 @@ private function getDateBeforeValid() {
 
             $this->view->render();
         } else {
-            die("Vous n'avez pas acc&egrave;s à cette page.");
+            adminDenyAccess();
         }
     }
 
     public function appendProposition() {
         if (User::minAccesslevel(1)) {
+            $this->guardAdminMutation();
 
             $isbnEanFormData = $this->getIsbnEanFormData();
-            $id = getValInteger("ID"); // id de la proposition
+            $id = postValInteger("ID", 0); // id de la proposition
+            if ($id <= 0) {
+                $this->refuseAdminMutation('Identifiant de proposition invalide.');
+            }
             $this->loadModel("User_album_prop");
 
             // Récupère l'utilisateur et l'image de couv
@@ -482,8 +525,7 @@ private function getDateBeforeValid() {
                 ));
                 $this->User_album_prop->update();
                 if (issetNotEmpty($this->User_album_prop->error)) {
-                    var_dump($this->User_album_prop->error);
-                    exit();
+                    $this->failAdminMutation('mise a jour de la proposition', $this->User_album_prop->error);
                 }
                 // Retourne sur la page proposition
                 header("Location:" . BDO_URL . "adminproposition/editPropositionAjout?ID=$id");
@@ -493,8 +535,7 @@ private function getDateBeforeValid() {
                 // n'insère dans bd_tome que s'il s'agit d'une nouvelle édition
                 $txtDateParution = completeDate(postVal('txtDateParution'));
                 if (!validateDate($txtDateParution)) {
-                     echo "Erreur : la date fournie est invalide et risque de générer un album fantome :D";
-                     exit();
+                     $this->refuseAdminMutation('La date de parution fournie est invalide. Corrigez-la avant de valider.');
                 }
                 if (postVal('txtExistingTomeId', '') == '') {
                     // Récupère le genre de la série
@@ -523,10 +564,8 @@ private function getDateBeforeValid() {
                     // Insère l'information dans la table bd_tome
                     $this->Tome->update();
                     if (issetNotEmpty($this->Tome->error)) {
-                        var_dump($this->Tome->error);
-                        exit();
+                        $this->failAdminMutation('creation de l\'album', $this->Tome->error);
                     }
-                    echo "Album ajouté dans la table bd_tome<br />";
 
                     // récupère la valeur de la dernière insertion
                     $lid_tome = $this->Tome->ID_TOME;
@@ -556,10 +595,8 @@ private function getDateBeforeValid() {
                 ));
                 $this->Edition->update();
                 if (issetNotEmpty($this->Edition->error)) {
-                    var_dump($this->Edition->error);
-                    exit();
+                    $this->failAdminMutation('insertion de l\'edition', $this->Edition->error);
                 }
-                echo "Nouvelle édition insérée dans la table id_edition<br />";
 
                 // récupère la valeur de la dernière insertion
                 $lid_edition = $this->Edition->ID_EDITION;
@@ -587,8 +624,6 @@ private function getDateBeforeValid() {
                     $this->Edition->set_dataPaste(array("IMG_COUV" => $img_couv));
                     $this->Edition->update();
 
-
-                    echo "Nouvelle image insér&eactue;e dans la base<br />";
                 } else {
                     // vérifie si une image a été proposée
                     if (($prop_img != '') && (postVal('chkDelete') != 'checked')) {// copie l'image dans les couvertures
@@ -613,8 +648,6 @@ private function getDateBeforeValid() {
                         $this->Edition->set_dataPaste(array("IMG_COUV" => $newfilename));
                         $this->Edition->update();
 
-
-                        echo "Image proposée insérée dans la base<br />";
                     }
                 }
 
@@ -633,7 +666,7 @@ private function getDateBeforeValid() {
                         $imagehauteur = $imageproperties[1];
 
                         //Détermine s'il y a lieu de redimensionner l'image
-                        if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $maxsize)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
+                        if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $max_size)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
 
                             if ($imagelargeur < $imagehauteur) {
                                 // image de type panorama : on limite la largeur à 128
@@ -671,7 +704,8 @@ private function getDateBeforeValid() {
                                 $source = imagecreatefromwebp(BDO_DIR_COUV . $newfilename);
                                 break;
                             default:
-                                die("Format d'image non supporté : $imagetype");
+                                http_response_code(500);
+                                die('Format d\'image non support&eacute;.');
                         }
 
                         imagecopyresampled($new_image, $source, 0, 0, 0, 0, $new_w, $new_h, $imagelargeur, $imagehauteur);
@@ -697,8 +731,6 @@ private function getDateBeforeValid() {
                         }
                     }
 
-                    echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
-                    echo "Image redimensionnée<br />";
                 }
                 // Ajoute l'album à la collection de l'utilisateur
                 if ($prop_action != 2) {
@@ -711,10 +743,8 @@ private function getDateBeforeValid() {
                     ));
                     $this->Useralbum->update();
                     if (issetNotEmpty($this->Useralbum->error)) {
-                        var_dump($this->Useralbum->error);
-                        exit();
+                        $this->failAdminMutation('ajout dans la collection de l\'utilisateur', $this->Useralbum->error);
                     }
-                    echo "Album ajouté dans la collection de l'utilisateur<br />";
                 }
 
                 //Efface le fichier de la base et passe le status de l'album à validé
@@ -743,7 +773,6 @@ private function getDateBeforeValid() {
                     $mail_text .="Merci pour votre participation\n\n";
                     $mail_text .="L'équipe BDOVORE";
                     bdovoreMail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
-                    echo "Email de confirmation envoyé<br />";
                 }
 
                 $this->User_album_prop->load("c", " WHERE
@@ -759,14 +788,25 @@ private function getDateBeforeValid() {
                     $next_url = BDO_URL . "admin/editAlbum?alb_id=" . $lid_tome;
                 }
 
-                echo GetMetaTag(1, "L'album a été ajouté", $next_url);
+                header("Location: " . $next_url);
+                exit();
             }
+        } else {
+            adminDenyAccess();
         }
     }
 
     public function mergeProposition() {
-        $idtome = postValInteger('txtFutAlbId');
-        $id = getValInteger("ID"); // id de la proposition
+        if (!User::minAccesslevel(1)) {
+            adminDenyAccess();
+        }
+        $this->guardAdminMutation();
+
+        $idtome = postValInteger('txtFutAlbId', 0);
+        $id = postValInteger("ID", 0); // id de la proposition
+        if ($id <= 0 or $idtome <= 0) {
+            $this->refuseAdminMutation('Identifiants de proposition ou d\'album invalides.');
+        }
         // Récupère l'utilisateur et l'image de couv
         $this->loadModel("User_album_prop");
         $this->User_album_prop->set_dataPaste(array("ID_PROPOSAL" => $id));
@@ -783,7 +823,8 @@ private function getDateBeforeValid() {
         $this->Useralbum->load("c", " WHERE ua.user_id = " . $prop_user . " and bd_tome.ID_TOME =" . $idtome);
 
         if ($this->Useralbum->dbSelect->nbLineResult > 0) {
-            echo GetMetaTag(1, "Cet album est déjà présent dans la collection de l'utilisateur", BDO_URL . "admin/adminproposals.php?act=valid&propid=" . $propid);
+            // Album deja present dans la collection : on retourne a la proposition sans rien modifier
+            header("Location: " . BDO_URL . "adminproposition/editPropositionAjout?ID=" . $id);
             exit();
         } else { // Ajoute l'album
             // on récupère l'id édition par défaut
@@ -803,10 +844,8 @@ private function getDateBeforeValid() {
                 "id_edition" => $id_edition));
             $this->Useralbum->update();
             if (issetNotEmpty($this->Useralbum->error)) {
-                var_dump($this->Useralbum->error);
-                exit();
+                $this->failAdminMutation('ajout dans la collection de l\'utilisateur', $this->Useralbum->error);
             }
-            echo "L'album sélectionné a été ajouté à la collection de l'utilisateur<br />";
 
             // Archive la proposition
             $this->User_album_prop->set_dataPaste(array(
@@ -816,8 +855,7 @@ private function getDateBeforeValid() {
             ));
             $this->User_album_prop->update();
             if (issetNotEmpty($this->User_album_prop->error)) {
-                var_dump($this->User_album_prop->error);
-                exit();
+                $this->failAdminMutation('archivage de la proposition', $this->User_album_prop->error);
             }
             // Envoie un mail si nécessaire pour prévenir l'utilisateur
             if ($notif_mail == 1) {
@@ -840,7 +878,6 @@ private function getDateBeforeValid() {
                             menu déroulant.\n\n";
                 $mail_text .="L'équipe BDOVORE";
                 bdovoreMail($mail_adress, $mail_sujet, $mail_text, $mail_entete);
-                echo "Email d'information envoyé à l'utilisateur<br />";
             }
 
             // Prépare la redirection vers la proposition suivante
@@ -852,19 +889,28 @@ private function getDateBeforeValid() {
                     ");
 
             if ($this->User_album_prop->ID_PROPOSAL > $id) {
-                $next_url = BDO_URL . "adminproposition/editProposition?ID=" . $this->User_album_prop->ID_PROPOSAL;
+                $next_url = BDO_URL . "adminproposition/editPropositionAjout?ID=" . $this->User_album_prop->ID_PROPOSAL;
             } else {
                 $next_url = BDO_URL . "admin/editAlbum?alb_id=" . $idtome;
             }
         }
-        echo GetMetaTag(1, "Bien joué !", $next_url);
+        header("Location: " . $next_url);
+        exit();
     }
 
     public function commentProposition() {
         if (User::minAccesslevel(1)) {
+            $this->guardAdminMutation();
+
             $comment = postVal("txtCommentCorr");
-            $id = getValInteger("ID");
-            $status = postVal("cmbStatus");
+            $id = postValInteger("ID", 0);
+            if ($id <= 0) {
+                $this->refuseAdminMutation('Identifiant de proposition invalide.');
+            }
+            $status = postVal("cmbStatus", "");
+            if (!in_array($status, array("0", "2", "3", "4"), true)) {
+                $this->refuseAdminMutation('Statut de proposition invalide.');
+            }
 
             // Met à jour la case commentaire
 
@@ -880,12 +926,13 @@ private function getDateBeforeValid() {
             ));
             $this->User_album_prop->update();
             if (issetNotEmpty($this->User_album_prop->error)) {
-                var_dump($this->User_album_prop->error);
-                exit();
+                $this->failAdminMutation('enregistrement du commentaire', $this->User_album_prop->error);
             }
             // Retourne sur la page proposition
             header("Location:" . BDO_URL . "adminproposition/editPropositionAjout?ID=$id");
             exit();
+        } else {
+            adminDenyAccess();
         }
     }
 
@@ -1138,6 +1185,8 @@ private function getDateBeforeValid() {
 
             $this->view->set_var('PAGETITLE', "Validation d'une correction ");
             $this->view->render();
+        } else {
+            adminDenyAccess();
         }
     }
 
@@ -1147,7 +1196,12 @@ private function getDateBeforeValid() {
          */
         // Récupère l'utilisateur et l'image de couv
         if (User::minAccesslevel(1)) {
-            $id = getValInteger("ID"); // id de la proposition
+            $this->guardAdminMutation();
+
+            $id = postValInteger("ID", 0); // id de la proposition
+            if ($id <= 0) {
+                $this->refuseAdminMutation('Identifiant de proposition invalide.');
+            }
             $this->loadModel("User_album_prop");
 
             // Récupère l'utilisateur et l'image de couv
@@ -1155,7 +1209,7 @@ private function getDateBeforeValid() {
             $this->User_album_prop->load();
             $prop_user = $this->User_album_prop->USER_ID;
             $prop_img = $this->User_album_prop->IMG_COUV;
-            $prop_action = $this->User_album_prop->IMG_COUV;
+            $prop_action = $this->User_album_prop->ACTION;
             $notif_mail = $this->User_album_prop->NOTIF_MAIL;
 
             $prop_img = $this->User_album_prop->IMG_COUV;
@@ -1185,15 +1239,12 @@ private function getDateBeforeValid() {
             ));
             $this->Tome->update();
             if (issetNotEmpty($this->Tome->error)) {
-                var_dump($this->Tome->error);
-                exit();
+                $this->failAdminMutation('mise a jour de l\'album', $this->Tome->error);
             }
-            echo 'Info album : base bd_tome mise a jour.<br />';
 
 
             // Met à jour les informations série dans la table bd_tome
             $this->Tome->updateGenreForSerie(postVal("txtSerieId"), postVal("txtGenreId"));
-            echo 'Info série : base bd_tome mise a jour.<br>';
 
             $this->loadModel("Serie");
             $this->Serie->set_dataPaste(array("ID_SERIE" => postVal("txtSerieId")));
@@ -1206,10 +1257,8 @@ private function getDateBeforeValid() {
             // Enfin, met à jour la table série
             $this->Serie->update();
             if (issetNotEmpty($this->Serie->error)) {
-                var_dump($this->Serie->error);
-                exit();
+                $this->failAdminMutation('mise a jour de la serie', $this->Serie->error);
             }
-            echo 'Info série : base bd_serie mise a jour.<br />';
 
             // copie l'image dans les couvertures
             if (($prop_img != '') && (postVal('chkDelete') != 'checked') && $edition != 0) {
@@ -1257,10 +1306,8 @@ private function getDateBeforeValid() {
                     }
                     $this->Edition->update();
                     if (issetNotEmpty($this->Edition->error)) {
-                        var_dump($this->Edition->error);
-                        exit();
+                        $this->failAdminMutation('mise a jour de l\'edition', $this->Edition->error);
                     }
-                    echo 'Info édition : base bd_edition mise à jour.<br>';
                 }
             }
 
@@ -1284,7 +1331,7 @@ private function getDateBeforeValid() {
                     $imagehauteur = $imageproperties[1];
 
                     //Détermine s'il y a lieu de redimensionner l'image
-                    if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $maxsize)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
+                    if ((($imagelargeur > $imagehauteur) && ($imagehauteur > $max_size)) || (($imagelargeur <= $imagehauteur) & ($imagelargeur > $max_size))) {
 
                         if ($imagelargeur < $imagehauteur) {
                             // image de type panorama : on limite la largeur à 128
@@ -1341,11 +1388,7 @@ private function getDateBeforeValid() {
                             $this->Edition->update();
                     }
                 }
-
-                echo "$new_w, $new_h, $imagelargeur, $imagehauteur<br />";
-                echo "Image redimensionnée<br />";
             }
-
 
             $this->User_album_prop->set_dataPaste(array("STATUS" => 1, "VALIDATOR" => $_SESSION["userConnect"]->user_id));
             $this->User_album_prop->update();
@@ -1359,12 +1402,15 @@ private function getDateBeforeValid() {
 
             if ($this->User_album_prop->ID_PROPOSAL > $id) {
 
-                $next_url = BDO_URL . "admin/editPropositionCorrection?ID=" . $this->User_album_prop->ID_PROPOSAL;
+                $next_url = BDO_URL . "adminproposition/editPropositionCorrection?ID=" . $this->User_album_prop->ID_PROPOSAL;
             } else {
                 $next_url = BDO_URL . "admin/editAlbum?alb_id=" . $lid;
             }
 
-            echo GetMetaTag(2, "L'album a été mis a jour", $next_url);
+            header("Location: " . $next_url);
+            exit();
+        } else {
+            adminDenyAccess();
         }
     }
 
@@ -1374,8 +1420,7 @@ private function getDateBeforeValid() {
         $sansIsbnEan = postVal('FLAG_SANS_ISBN_EAN') == "1";
 
         if ($sansIsbnEan && ($ean !== '' || $isbn !== '')) {
-            echo "Erreur : la case « Sans ISBN ou EAN » ne peut être cochée que si les champs ISBN et EAN sont vides.";
-            exit();
+            $this->refuseAdminMutation('La case « Sans ISBN ou EAN » ne peut &ecirc;tre coch&eacute;e que si les champs ISBN et EAN sont vides.');
         }
 
         return array(

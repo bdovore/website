@@ -3,6 +3,7 @@
 <script src="<?php echo BDO_URL; ?>jquery/jQuery-TE_v.1.4.0/jquery-te-1.4.0.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo BDO_URL;?>jquery/jQuery-TE_v.1.4.0/jquery-te-1.4.0.css" />
 <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform">
+    <?php echo adminCsrfField(); ?>
     <table class="fond_admin">
         <!--DWLayoutTable-->
         <tr>
