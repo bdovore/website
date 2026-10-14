@@ -1,0 +1,73 @@
+/* Catalogue admin: same burgundy actions and warm panels as ParaBD.
+   Scoped to these views so legacy admin pages retain their own styles. */
+.admin-catalogue { background: #fff; border-radius: 5px; margin: 1rem 0; padding: 1rem; box-sizing: border-box; color: #333; width: 100%; }
+.admin-catalogue.cadre1 { padding: 1rem !important; max-width: none; width: 100%; }
+.admin-heading { align-items: center; border-bottom: 1px solid #ddd; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; margin: 1rem 0; padding-bottom: 1rem; }
+.admin-heading h1 { color: #650000; font-size: 1.5rem; padding: 0; text-align: left; margin: 0 0 .3rem; }
+.admin-help { color: #666; font-size: .9rem; line-height: 1.5; margin: 0; }
+.admin-heading-actions { align-items: center; display: flex; flex-wrap: wrap; gap: .6rem; }
+.admin-heading-actions form { margin: 0; }
+.admin-catalogue .admin-button,
+.admin-catalogue input.admin-button { align-items: center; background: #fff; border: 1px solid #bbb; border-radius: 4px; box-sizing: border-box; color: #650000; cursor: pointer; display: inline-flex; font: bold .95rem/1.4 Arial, sans-serif; gap: .5rem; justify-content: center; margin: 0; min-height: 44px; padding: .65rem 1rem; text-align: center; text-decoration: none; vertical-align: middle; white-space: normal; }
+.admin-catalogue .admin-button-primary { background: #900; border-color: #650000; color: #fff; }
+.admin-catalogue .admin-button:hover { background: #f6f3ef; border-color: #650000; color: #650000; text-decoration: none; }
+.admin-catalogue .admin-button-primary:hover { background: #650000; color: #fff; }
+.admin-catalogue input.admin-button-danger { background: #fff; border-color: #b55; color: #900; }
+.admin-catalogue input.admin-button-danger:hover { background: #900; color: #fff; }
+.admin-catalogue .admin-button:focus-visible { outline: 3px solid #bd88fe; outline-offset: 3px; }
+.admin-catalogue .admin-button:disabled { background: #ddd; border-color: #ccc; color: #777; cursor: not-allowed; opacity: .7; }
+.admin-editor-grid { align-items: start; display: grid; gap: 1rem; grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr); }
+.admin-editor-main, .admin-editor-side { min-width: 0; }
+.admin-catalogue .tableaux_admin,
+.admin-catalogue .cadre_texte-admin,
+.admin-catalogue .admin-panel { background: #fff; border: 1px solid #ddd; border-radius: 5px; border-spacing: 0; font-size: .9rem; table-layout: fixed; box-sizing: border-box; margin: 0 0 1rem; padding: .65rem; width: 100%; }
+.admin-catalogue .tableaux_admin td { border: 0; overflow-wrap: anywhere; padding: .4rem; }
+.admin-catalogue .tableaux_admin td.entete,
+.admin-catalogue .tableaux_admin td.data:not(.original):not(.to_be_corrected):not(.has_changed) { background: #f6f3ef; }
+.admin-catalogue input[size="5"], .admin-catalogue input[size="4"] { font-size: .85rem; padding: .35rem .2rem; }
+.admin-catalogue .tableaux_admin td > input[size="5"],
+.admin-catalogue .tableaux_admin td > div > input[size="5"] { width: 100%; }
+.admin-merge input[size="5"] { width: 8ch; }
+.admin-catalogue .tableaux_admin_sans-bord td { padding: .3rem; }
+.admin-catalogue .tableaux_admin td.label { background: #f6f3ef; }
+.admin-catalogue .cadre_texte-admin td { background: transparent; padding: .6rem; }
+.admin-catalogue .cadre_texte-admin td a,
+.admin-catalogue .cadre_texte-admin td a:hover { color: #900 !important; }
+.admin-catalogue input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.admin-catalogue select, .admin-catalogue textarea { border: 1px solid #bbb; border-radius: 3px; box-sizing: border-box; font-size: .9rem; max-width: 100%; padding: .45rem; }
+.admin-catalogue input[type="checkbox"], .admin-catalogue input[type="radio"] { accent-color: #900; }
+.admin-catalogue textarea { line-height: 1.5; }
+.admin-catalogue .champ_form_desactive,
+.admin-catalogue .champ_form_desactive_newfserie { background: #f6f3ef; }
+.admin-catalogue .tableaux_admin img { max-width: 100%; object-fit: contain; }
+.admin-savebar { align-items: center; background: #f6f3ef; border: 1px solid #ddd; border-radius: 5px; bottom: 0; box-shadow: 0 -3px 12px rgba(0,0,0,.06); display: flex; flex-wrap: wrap; gap: .75rem; justify-content: space-between; margin: 1rem 0; padding: .8rem 1rem; position: sticky; z-index: 5; }
+.admin-savebar form { margin: 0; }
+.admin-update-choice { align-items: center; display: flex; gap: .5rem; line-height: 1.5; }
+.admin-navigation { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; margin: 1rem 0; }
+.admin-proposition .date_before_valid { color: #666; margin: 0 0 1rem; text-align: left; }
+/* Validation colours remain owned by .to_be_corrected / .has_changed / .original. */
+.admin-merge-table { border: 0; border-collapse: separate; border-spacing: .5rem; table-layout: fixed; }
+.admin-merge-table > tbody > tr > td { background: #fff; border: 1px solid #ddd; border-radius: 5px; padding: .8rem; vertical-align: top; overflow-wrap: anywhere; }
+.admin-merge-table > tbody > tr > td:first-child:not([colspan]) { border-top: 3px solid #b76a6a; }
+.admin-merge-table > tbody > tr > td:nth-child(2) { border-top: 3px solid #679b45; }
+.admin-merge-table table { border: 0; border-collapse: collapse; table-layout: fixed; }
+.admin-merge-table table td { background: #f6f3ef; border: 0; border-bottom: 1px solid #ddd; padding: .4rem; overflow-wrap: anywhere; }
+.admin-merge-table table img { height: auto; max-width: 100%; }
+.admin-merge-table input[type="text"] { margin-bottom: .4rem; }
+.admin-merge-table .admin-button { margin: .4rem 0; }
+.admin-confirm { padding: 1rem; }
+.admin-confirm h2 { color: #650000; }
+.admin-confirm li { line-height: 1.5; margin-bottom: .4rem; }
+@media (max-width: 850px) {
+    .admin-editor-grid { grid-template-columns: minmax(0, 1fr); }
+    .admin-heading { align-items: flex-start; }
+    .admin-heading-actions { width: 100%; }
+}
+@media (max-width: 600px) {
+    .admin-savebar { align-items: stretch; padding: .75rem; }
+    .admin-savebar > .admin-button, .admin-savebar > form, .admin-savebar > form .admin-button { width: 100%; }
+    .admin-merge-table, .admin-merge-table > tbody, .admin-merge-table > tbody > tr, .admin-merge-table > tbody > tr > td { box-sizing: border-box; display: block; width: 100%; }
+    .admin-merge-table > tbody > tr > td { margin-bottom: .75rem; }
+    .admin-catalogue .tableaux_admin { padding: .25rem; }
+    .admin-catalogue .tableaux_admin td { padding: .25rem; }
+}

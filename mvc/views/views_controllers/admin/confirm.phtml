@@ -1,4 +1,5 @@
-<div class="cadre1">
+<link rel="stylesheet" href="<?php echo BDO_URL; ?>style/admin-catalogue.css?v=20261014a" />
+<div class="cadre1 admin-catalogue admin-confirm">
     <h2><?php echo $view->CONFIRM_TITLE; ?></h2>
 
     <p><b><?php echo $view->CONFIRM_QUESTION; ?></b></p>
@@ -16,6 +17,7 @@
         </ul>
     <?php } ?>
 
+    <div class="admin-savebar">
     <form method="post" action="<?php echo $view->CONFIRM_ACTION; ?>"
           onsubmit="var b = this.getElementsByTagName('button')[0]; if (b) { b.disabled = true; }">
         <?php echo adminCsrfField(); ?>
@@ -23,8 +25,9 @@
             <input type="hidden" name="<?php echo htmlspecialchars($name, ENT_QUOTES); ?>"
                    value="<?php echo htmlspecialchars((string) $value, ENT_QUOTES); ?>">
         <?php } ?>
-        <button type="submit"><?php echo $view->CONFIRM_BUTTON; ?></button>
+        <button type="submit" class="admin-button admin-button-primary"><?php echo $view->CONFIRM_BUTTON; ?></button>
     </form>
 
-    <p><a href="<?php echo $view->CONFIRM_CANCEL; ?>">Annuler</a></p>
+    <a class="admin-button admin-button-secondary" href="<?php echo $view->CONFIRM_CANCEL; ?>">Annuler</a>
+    </div>
 </div>

@@ -1,4 +1,5 @@
-<div class="cadre1">
+<link rel="stylesheet" href="<?php echo BDO_URL; ?>style/admin-catalogue.css?v=20261014a" />
+<div class="cadre1 admin-catalogue admin-confirm">
     <h2>Op&eacute;ration administrative n&deg;<?php echo $view->OP_ID; ?></h2>
 
     <p>
@@ -32,7 +33,7 @@
               onsubmit="var b = this.getElementsByTagName('button')[0]; if (b) { b.disabled = true; }">
             <?php echo adminCsrfField(); ?>
             <input type="hidden" name="op_id" value="<?php echo $view->OP_ID; ?>">
-            <button type="submit">Reprendre la fusion</button>
+            <button type="submit" class="admin-button admin-button-primary">Reprendre la fusion</button>
         </form>
     <?php } ?>
 

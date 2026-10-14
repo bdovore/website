@@ -1,16 +1,20 @@
+<link rel="stylesheet" href="<?php echo BDO_URL; ?>style/admin-catalogue.css?v=20261014a" />
 <script src="<?php echo BDO_URL;?>jquery/jquery.mask.min" type="text/javascript"></script>
 
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
-<div class="fond_admin">
-    <div class="titre_admin">Traitement des albums en attente</div>
+<div class="admin-catalogue admin-proposition">
+    <header class="admin-heading"><div><h1>Traitement des albums en attente</h1><p class="admin-help">Proposition n°<?php echo $view->PROPID; ?></p></div><button type="submit" form="myform" class="admin-button admin-button-primary"><span class="fa fa-check" aria-hidden="true"></span> <?php echo $view->ACTIONNAME; ?></button></header>
     <div class="date_before_valid"><?php echo $view->DATEBEFOREVALID;?></div>
-    <table width="100%">
-        <tr>
-            <form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" onsubmit="return validerProposition(event);">
-                <?php echo adminCsrfField('admin-proposition'); ?>
-                <input type="hidden" name="ID" value="<?php echo $view->PROPID; ?>">
+<!-- Champs associés explicitement pour garder les formulaires secondaires indépendants. -->
+<form action="<?php echo $view->URLACTION;?>" method="post" enctype="multipart/form-data" name="myform" target="_self" id="myform" onsubmit="return validerProposition(event);">
+<?php echo adminCsrfField('admin-proposition'); ?>
+</form>
+    <div class="admin-editor-grid">
+
+
+                <input form="myform" type="hidden" name="ID" value="<?php echo $view->PROPID; ?>">
                 <!--Debut colonne gauche -->
-                <td width="65%" valign="top">
+                <section class="admin-editor-main">
                      <table class="tableaux_admin">
                         <tr >
                             <td class="label" width="15%">Commentaire de l'utilisateur :</td>
@@ -18,14 +22,14 @@
                                 <?php echo nl2br(htmlspecialchars($view->USERCOMMENT));?>
                             </td>
                         </tr>
-                        
+
                     </table>
                     <table class="tableaux_admin">
                         <tr>
                             <td width="15%" class="label" align="center">Album</td>
-                            <input name="txtPropId" type="hidden" id="txtPropId" value="<?php echo $view->PROPID;?>" />
+                            <input form="myform" name="txtPropId" type="hidden" id="txtPropId" value="<?php echo $view->PROPID;?>" />
                             <td width="85%">
-                                <input name="txtTitre" type="text" id="txtTitre" value="<?php echo $view->TITRE;?>" size="65%" class="<?php echo $view->CLTITRE;?>" />
+                                <input form="myform" name="txtTitre" type="text" id="txtTitre" value="<?php echo $view->TITRE;?>" size="65%" class="<?php echo $view->CLTITRE;?>" />
                             </td>
                         </tr>
                         <tr bordercolor="#FFFFCC">
@@ -43,11 +47,11 @@
                                     </tr>
                                     <tr>
                                         <td align="center">
-                                            <select name="lstType" size="1"><?php echo $view->OPTTYPE;?></select>
+                                            <select form="myform" name="lstType" size="1"><?php echo $view->OPTTYPE;?></select>
                                         </td>
-                                        <td align="center"><input name="txtNumTome" type="text" id="txtNumTome" value="<?php echo $view->TOME;?>" size="2" class="<?php echo $view->CLTOME;?>" /></td>
-                                        <td align="center"><input type="checkbox" name="chkIntegrale" value="checkbox" <?php echo $view->ISINT;?> /></td>
-                                        <td align="center"><input name="txtPrixVente" type="text" id="txtPrixVente" value="<?php echo $view->PRIX_VENTE;?>" size="3" style="text-align: center;" /></td>
+                                        <td align="center"><input form="myform" name="txtNumTome" type="text" id="txtNumTome" value="<?php echo $view->TOME;?>" size="2" class="<?php echo $view->CLTOME;?>" /></td>
+                                        <td align="center"><input form="myform" type="checkbox" name="chkIntegrale" value="checkbox" <?php echo $view->ISINT;?> /></td>
+                                        <td align="center"><input form="myform" name="txtPrixVente" type="text" id="txtPrixVente" value="<?php echo $view->PRIX_VENTE;?>" size="3" style="text-align: center;" /></td>
                                     </tr>
                                 </table>
                             </td>
@@ -55,7 +59,7 @@
                         <tr bordercolor="#FFFFCC">
                             <td class="label">Intro Tome</td>
                             <td valign="top">
-                                <textarea name="txtHistoire" class="champ_commentaire"><?php echo $view->HISTOIRE;?></textarea>
+                                <textarea form="myform" name="txtHistoire" class="champ_commentaire"><?php echo $view->HISTOIRE;?></textarea>
                             </td>
                         </tr>
                     </table>
@@ -65,11 +69,11 @@
                             <td class="label" align="center">Serie</td>
                             <td>
                                 <div align="center">
-                                    <input name="txtSerieId" type="text" id="txtSerieId2" value="<?php echo $view->IDSERIE;?>" size="3" class="<?php echo $view->CLIDSERIE;?>" />
+                                    <input form="myform" name="txtSerieId" type="text" id="txtSerieId2" value="<?php echo $view->IDSERIE;?>" size="3" class="<?php echo $view->CLIDSERIE;?>" />
                                 </div>
                             </td>
                             <td>
-                                <input name="txtSerie" type="text" id="txtSerie3" value="<?php echo $view->SERIE;?>" size="40" class="<?php echo $view->CLSERIE;?>" /> <?php echo if_null_quote($view->LIENEDITSERIE);?>
+                                <input form="myform" name="txtSerie" type="text" id="txtSerie3" value="<?php echo $view->SERIE;?>" size="40" class="<?php echo $view->CLSERIE;?>" /> <?php echo if_null_quote($view->LIENEDITSERIE);?>
                             </td>
                             <td>
                                 <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('serie',document.myform.txtSerie.value,'myform','txtSerie',true)" />
@@ -84,11 +88,11 @@
                             <td width="15%" class="label" align="center">Genre</td>
                             <td width="14%">
                                 <div align="center">
-                                    <input name="txtGenreId" id="txtGenreId" type="text" value="<?php echo $view->IDGENRE;?>" size="1" class="<?php echo $view->CLIDGENRE;?>" />
+                                    <input form="myform" name="txtGenreId" id="txtGenreId" type="text" value="<?php echo $view->IDGENRE;?>" size="1" class="<?php echo $view->CLIDGENRE;?>" />
                                 </div>
                             </td>
                             <td width="65%">
-                                <input name="txtGenre" id="txtGenre" type="text" value="<?php echo $view->GENRE;?>" size="30"class="<?php echo $view->CLGENRE;?>" />
+                                <input form="myform" name="txtGenre" id="txtGenre" type="text" value="<?php echo $view->GENRE;?>" size="30"class="<?php echo $view->CLGENRE;?>" />
                             </td>
                             <td width="6%">
                                 <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('genre',document.myform.txtGenre.value,'myform','txtGenre',false)" />
@@ -107,10 +111,10 @@
                                 Scenariste
                             </td>
                             <td width="10%">
-                                <input name="txtScenarId" id="txtScenarId" type="text" value="<?php echo $view->IDSCEN;?>" size="4" class="<?php echo $view->CLIDSCEN;?>" />
+                                <input form="myform" name="txtScenarId" id="txtScenarId" type="text" value="<?php echo $view->IDSCEN;?>" size="4" class="<?php echo $view->CLIDSCEN;?>" />
                             </td>
                             <td width="59%">
-                                <input name="txtScenar" id="txtScenar" type="text" value="<?php echo $view->SCENARISTE;?>" size="33"class="<?php echo $view->CLSCENARISTE;?>" />
+                                <input form="myform" name="txtScenar" id="txtScenar" type="text" value="<?php echo $view->SCENARISTE;?>" size="33"class="<?php echo $view->CLSCENARISTE;?>" />
                             </td>
                             <td width="13%">
                                 <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenar.value,'myform','txtScenar',true)" />
@@ -126,10 +130,10 @@
                                 Scenariste #2
                             </td>
                             <td width="10%">
-                                <input name="txtScenarAltId" id="txtScenarAltId" type="text" value="<?php echo $view->IDSCENALT;?>" size="4" class="<?php echo $view->CLIDSCENALT;?>" />
+                                <input form="myform" name="txtScenarAltId" id="txtScenarAltId" type="text" value="<?php echo $view->IDSCENALT;?>" size="4" class="<?php echo $view->CLIDSCENALT;?>" />
                             </td>
                             <td width="59%">
-                                <input name="txtScenarAlt" id="txtScenarAlt" type="text" value="<?php echo $view->SCENARISTEALT;?>" size="33"class="<?php echo $view->CLSCENARISTEALT;?>" />
+                                <input form="myform" name="txtScenarAlt" id="txtScenarAlt" type="text" value="<?php echo $view->SCENARISTEALT;?>" size="33"class="<?php echo $view->CLSCENARISTEALT;?>" />
                             </td>
                             <td width="13%">
                                 <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtScenarAlt.value,'myform','txtScenarAlt',true)" />
@@ -142,8 +146,8 @@
                         </tr>
                         <tr>
                             <td class="label">Dessinateur</td>
-                            <td> <input name="txtDessiId" id="txtDessiId" type="text" value="<?php echo $view->IDDESS;?>" size="4" class="<?php echo $view->CLIDDESS;?>"></td>
-                            <td> <input name="txtDessi" id="txtDessi" type="text" value="<?php echo $view->DESSINATEUR;?>" size="33" class="<?php echo $view->CLDESSINATEUR;?>"></td>
+                            <td> <input form="myform" name="txtDessiId" id="txtDessiId" type="text" value="<?php echo $view->IDDESS;?>" size="4" class="<?php echo $view->CLIDDESS;?>"></td>
+                            <td> <input form="myform" name="txtDessi" id="txtDessi" type="text" value="<?php echo $view->DESSINATEUR;?>" size="33" class="<?php echo $view->CLDESSINATEUR;?>"></td>
                             <td> <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessi.value,'myform','txtDessi',true)"></td>
                         </tr>
                         <tr>
@@ -153,8 +157,8 @@
                         </tr>
                         <tr>
                             <td class="label">Dessinateur #2</td>
-                            <td> <input name="txtDessiAltId" id="txtDessiAltId" type="text" value="<?php echo $view->IDDESSALT;?>" size="4" class="<?php echo $view->CLIDDESSALT;?>"></td>
-                            <td> <input name="txtDessiAlt" id="txtDessiAlt" type="text" value="<?php echo $view->DESSINATEURALT;?>" size="33" class="<?php echo $view->CLDESSINATEURALT;?>"></td>
+                            <td> <input form="myform" name="txtDessiAltId" id="txtDessiAltId" type="text" value="<?php echo $view->IDDESSALT;?>" size="4" class="<?php echo $view->CLIDDESSALT;?>"></td>
+                            <td> <input form="myform" name="txtDessiAlt" id="txtDessiAlt" type="text" value="<?php echo $view->DESSINATEURALT;?>" size="33" class="<?php echo $view->CLDESSINATEURALT;?>"></td>
                             <td> <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtDessiAlt.value,'myform','txtDessiAlt',true)"></td>
                         </tr>
                         <tr>
@@ -164,8 +168,8 @@
                         </tr>
                         <tr>
                             <td class="label">Coloriste</td>
-                            <td> <input name="txtColorId" id="txtColorId" type="text" value="<?php echo $view->IDCOLOR;?>" size="4" class="<?php echo $view->CLIDCOLOR;?>"></td>
-                            <td> <input name="txtColor" id="txtColor" type="text" value="<?php echo $view->COLORISTE;?>" size="33" class="<?php echo $view->CLCOLORISTE;?>"></td>
+                            <td> <input form="myform" name="txtColorId" id="txtColorId" type="text" value="<?php echo $view->IDCOLOR;?>" size="4" class="<?php echo $view->CLIDCOLOR;?>"></td>
+                            <td> <input form="myform" name="txtColor" id="txtColor" type="text" value="<?php echo $view->COLORISTE;?>" size="33" class="<?php echo $view->CLCOLORISTE;?>"></td>
                             <td> <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColor.value,'myform','txtColor',true)"></td>
                         </tr>
                         <tr>
@@ -175,8 +179,8 @@
                         </tr>
                         <tr>
                             <td class="label">Coloriste #2</td>
-                            <td> <input name="txtColorAltId" id="txtColorAltId" type="text" value="<?php echo $view->IDCOLORALT;?>" size="4" class="<?php echo $view->CLIDCOLORALT;?>"></td>
-                            <td> <input name="txtColorAlt" id="txtColorAlt" type="text" value="<?php echo $view->COLORISTEALT;?>" size="33" class="<?php echo $view->CLCOLORISTEALT;?>"></td>
+                            <td> <input form="myform" name="txtColorAltId" id="txtColorAltId" type="text" value="<?php echo $view->IDCOLORALT;?>" size="4" class="<?php echo $view->CLIDCOLORALT;?>"></td>
+                            <td> <input form="myform" name="txtColorAlt" id="txtColorAlt" type="text" value="<?php echo $view->COLORISTEALT;?>" size="33" class="<?php echo $view->CLCOLORISTEALT;?>"></td>
                             <td> <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('auteur',document.myform.txtColorAlt.value,'myform','txtColorAlt',true)"></td>
                         </tr>
                         <tr>
@@ -189,8 +193,8 @@
                     <table class="tableaux_admin">
                         <tr>
                             <td width="16%" class="label">Editeur</td>
-                            <td width="12%" align="center"><input name="txtEditeurId" id="txtEditeurId" type="text" value="<?php echo $view->IDEDIT;?>" size="3" class="<?php echo $view->CLIDEDIT;?>" /></td>
-                            <td width="58%"><input name="txtEditeur" id="txtEditeur" type="text" value="<?php echo $view->EDITEUR;?>" size="33"class="<?php echo $view->CLEDITEUR;?>" onchange="changeEditeur();" /></td>
+                            <td width="12%" align="center"><input form="myform" name="txtEditeurId" id="txtEditeurId" type="text" value="<?php echo $view->IDEDIT;?>" size="3" class="<?php echo $view->CLIDEDIT;?>" /></td>
+                            <td width="58%"><input form="myform" name="txtEditeur" id="txtEditeur" type="text" value="<?php echo $view->EDITEUR;?>" size="33"class="<?php echo $view->CLEDITEUR;?>" onchange="changeEditeur();" /></td>
                             <td width="14%"><img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('editeur',document.myform.txtEditeur.value,'myform','txtEditeur',true)"></td>
                         </tr>
                         <tr>
@@ -200,8 +204,8 @@
                         </tr>
                         <tr>
                             <td class="label">Collection</td>
-                            <td align="center"><input name="txtCollecId" id="txtCollecId" type="text" value="<?php echo $view->IDCOLLEC;?>" size="3" class="<?php echo $view->CLIDCOLLEC;?>" /></td>
-                            <td><select name="txtCollec" id="txtCollec" class="<?php echo $view->CLCOLLECTION;?>" onchange="$('#txtCollecId').val($('#txtCollec').val());"></select></td>
+                            <td align="center"><input form="myform" name="txtCollecId" id="txtCollecId" type="text" value="<?php echo $view->IDCOLLEC;?>" size="3" class="<?php echo $view->CLIDCOLLEC;?>" /></td>
+                            <td><select form="myform" name="txtCollec" id="txtCollec" class="<?php echo $view->CLCOLLECTION;?>" onchange="$('#txtCollecId').val($('#txtCollec').val());"></select></td>
                             <td><img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('collection',document.myform.txtCollec.value,'myform','txtCollec',false,document.myform.txtEditeurId.value)"></td>
                         </tr>
                         <tr>
@@ -215,21 +219,21 @@
                                     <tr>
                                         <td align="center">
                                             <a href="<?php echo $view->URLEAN;?>" title="Teste le code EAN sur BDNet" target="_blank">EAN</a> :
-                                            <input name="txtEAN" type="text" value="<?php echo $view->EAN;?>" size="14" maxlength="14" /><?php echo $view->ISEAN;?>
+                                            <input form="myform" name="txtEAN" type="text" value="<?php echo $view->EAN;?>" size="14" maxlength="14" /><?php echo $view->ISEAN;?>
                                         </td>
                                         <td align="center">
                                             <a href="<?php echo $view->URLISBN;?>" title="Teste le code ISBN sur Amazon" target="_blank">ISBN</a> :
-                                            <input name="txtISBN" type="text" value="<?php echo $view->ISBN;?>" size="10" maxlength="10" /><?php echo $view->ISISBN;?>
+                                            <input form="myform" name="txtISBN" type="text" value="<?php echo $view->ISBN;?>" size="10" maxlength="10" /><?php echo $view->ISISBN;?>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" align="center">
-                                            <label for="FLAG_SANS_ISBN_EAN">Sans ISBN ou EAN <input name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" value="1" <?php echo $view->CHKFLAG_SANS_ISBN_EAN;?> /></label>
+                                            <label for="FLAG_SANS_ISBN_EAN">Sans ISBN ou EAN <input form="myform" name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" value="1" <?php echo $view->CHKFLAG_SANS_ISBN_EAN;?> /></label>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" align="center">
-                                            <label for="FLAG_EAN_ISBN_IDENTIQUE">EAN / ISBN identique <input name="FLAG_EAN_ISBN_IDENTIQUE" type="checkbox" id="FLAG_EAN_ISBN_IDENTIQUE" value="1" <?php echo $view->CHKFLAG_EAN_ISBN_IDENTIQUE;?> /></label>
+                                            <label for="FLAG_EAN_ISBN_IDENTIQUE">EAN / ISBN identique <input form="myform" name="FLAG_EAN_ISBN_IDENTIQUE" type="checkbox" id="FLAG_EAN_ISBN_IDENTIQUE" value="1" <?php echo $view->CHKFLAG_EAN_ISBN_IDENTIQUE;?> /></label>
                                         </td>
                                     </tr>
                                 </table>
@@ -242,17 +246,17 @@
                                         <td width="22%" align="center">
                                             Date Parution
                                             <div class="petite_police" style="margin-bottom: 10px;">(aaaa-mm-jj)</div>
-                                            <input name="txtDateParution" type="text" id="txtDateParution" value="<?php echo $view->DTPAR;?>" size="10" />
+                                            <input form="myform" name="txtDateParution" type="text" id="txtDateParution" value="<?php echo $view->DTPAR;?>" size="10" />
                                         </td>
                                         <td width="1%" align="center"></td>
                                         <td width="8%" align="center">
                                             <div>Tirage de t&ecirc;te</div>
-                                            <input type="checkbox" name="chkTT" value="checkbox" <?php echo $view->ISTT;?> />
+                                            <input form="myform" type="checkbox" name="chkTT" value="checkbox" <?php echo $view->ISTT;?> />
                                         </td>
                                         <td width="1%" align="center"></td>
                                         <td width="68%" align="center">
                                             Description de l'édition<br />
-                                            <textarea name="txtCommentEdition" class="textarea_description_edition"><?php echo $view->DESCRIB_EDITION;?></textarea>
+                                            <textarea form="myform" name="txtCommentEdition" class="textarea_description_edition"><?php echo $view->DESCRIB_EDITION;?></textarea>
                                         </td>
                                     </tr>
                                 </table>
@@ -272,45 +276,18 @@
                             <td width="14%" class="label"><div align="center">Album</div></td>
                             <td width="13%">
                                 <div align="left">
-                                    <input name="txtExistingTomeId" type="text" id="txtExistingTomeId" value="" size="5" />
+                                    <input form="myform" name="txtExistingTomeId" type="text" id="txtExistingTomeId" value="" size="5" />
                                 </div>
                             </td>
-                            <td width="62%"><input name="txtExistingTome" type="text" id="txtExistingTome" value="" size="40" /></td>
+                            <td width="62%"><input form="myform" name="txtExistingTome" type="text" id="txtExistingTome" value="" size="40" /></td>
                             <td width="11%"><img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('album',document.myform.txtExistingTome.value,'myform','txtExistingTome',true)"></td>
                         </tr>
                     </table>
-                    <div align="center">
-                        <p></p>
-                        <div style="float: left;">Simple mise à jour de la proposition :</div>
-                        <div align="center" style="width: 20px; margin: auto; text-align: center;"><input type="checkbox" id="chkUpdate" name="chkUpdate" value="O" /></div>
-                        <br />
-                        <input type="submit" name="Submit" value="<?php echo $view->ACTIONNAME;?>" />
-                        <br />
-                        <br />
-                        <br />
-                        <table width="100%">
-                            <tr align="center">
-                                <td width="35%">
-                                    <?php echo $view->BOUTONPRECEDENT;?>
-                                </td>
-                                <td width="30%">
-                                    &nbsp;
-                                </td>
-                                <td width="35%">
-                                    <?php echo $view->BOUTONSUIVANT;?>
-                                </td>
-                            </tr>
-                            <tr><td colspan="3">&nbsp;</td></tr>
-
-                        </table>
-                    </div>
+                    <nav class="admin-navigation" aria-label="Parcourir les propositions"><?php echo $view->BOUTONPRECEDENT; ?><?php echo $view->BOUTONSUIVANT; ?></nav>
                 <!--Fin colonne gauche -->
-                </td>
-
-
-                <!--Debut colonne droite -->
-                <td width="35%" valign="top">
-                    <table width="100%" cellpadding="5" bgcolor="#D35E5E" style="font-size: 0.9em;">
+                </section>
+                <aside class="admin-editor-side">
+                    <table class="tableaux_admin admin-validation-legend">
                         <tr>
                             <td width="25%" align="center" class="to_be_corrected">
                                 rouge
@@ -339,36 +316,36 @@
                         <tr>
                             <td class="label">
                                 Redimensionner la couverture :
-                                <input type="checkbox" name="chkResize" value="checked" />
+                                <input form="myform" type="checkbox" name="chkResize" value="checked" />
                             </td>
                         </tr>
                         <tr>
                             <td class="label">
                                 Envoyer depuis un fichier local :
-                                <br /><input name="txtFileLoc" type="file" id="txtFileLoc2" style="width: 100%;" class="flat" />
+                                <br /><input form="myform" name="txtFileLoc" type="file" id="txtFileLoc2" style="width: 100%;" class="flat" />
                             </td>
                         </tr>
                         <tr>
                             <td class="label">
                                 Envoyer depuis une URL :
-                                <br /><input name="txtFileURL" type="text" id="txtFileURL2" style="width: 100%;" class="flat" />
+                                <br /><input form="myform" name="txtFileURL" type="text" id="txtFileURL2" style="width: 100%;" class="flat" />
                             </td>
                         </tr>
                         <tr>
                             <td class="label">
                                 Effacer cette couverture :
-                                <input type="checkbox" name="chkDelete" value="checked" />
+                                <input form="myform" type="checkbox" name="chkDelete" value="checked" />
                             </td>
                         </tr>
                         <tr>
                             <td class="label">
                                 Contenu explicite :
-                                <input type="checkbox" name="chkExplicite" value="checked" <?php echo $view->EXPLICIT_CHECKED; ?>/>
+                                <input form="myform" type="checkbox" name="chkExplicite" value="checked" <?php echo $view->EXPLICIT_CHECKED; ?>/>
                             </td>
                         </tr>
                     </table>
-                   
-            </form>
+
+
                     <table class="cadre_texte-admin">
                         <tr>
                             <td>
@@ -384,7 +361,7 @@
                                     <textarea name="txtCommentCorr" class="textarea_description_edition" style="background-color: <?php echo $view->COLOR_STATUS;?>; border: 1px dotted #FFFFFF;"><?php echo $view->CORRCOMMENT;?></textarea>
                                     <br />
                                     <?php echo isset($view->CURRENTSTATUS) ? $view->CURRENTSTATUS : "" ;?>
-                                    <input name="txtComBut" value="Valider" type="submit" />
+                                    <input name="txtComBut" value="Enregistrer le commentaire" type="submit" class="admin-button admin-button-secondary" />
                                 </form>
                             </td>
                         </tr>
@@ -405,8 +382,8 @@
                             </td>
                         </tr>
                     </table>
-                    <table class="cadre_texte-admin">
-                        <form action="<?php echo $view->URLUTILVALID;?>" method="post" name="subform" id="subform" onsubmit="return verifAddExisting(document.subform.txtFutAlbId.value, document.subform.PropAction.value)">
+                    <form action="<?php echo $view->URLUTILVALID;?>" method="post" name="subform" id="subform" onsubmit="return verifAddExisting(document.subform.txtFutAlbId.value, document.subform.PropAction.value)">
+<table class="cadre_texte-admin">
                             <?php echo adminCsrfField('admin-proposition'); ?>
                             <input type="hidden" name="ID" value="<?php echo $view->PROPID; ?>">
                             <tr>
@@ -422,7 +399,7 @@
                                         <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('album',document.subform.txtFutAlb.value,'subform','txtFutAlb',true)">
                                     </p>
                                     <p>
-                                        <input name="txtFutButton" value="Valider" type="submit" />
+                                        <input name="txtFutButton" value="Valider l’album existant" type="submit" class="admin-button admin-button-secondary" />
                                     </p>
                                     <p class="texte">
                                         Aide : Si l'album propos&eacute; existe d&eacute;j&agrave;
@@ -432,8 +409,8 @@
                                     </p>
                                 </td>
                             </tr>
-                        </form>
-                    </table>
+                        </table>
+</form>
                     <table class="cadre_texte-admin">
                         <tr>
                             <td>
@@ -465,13 +442,11 @@
                             </td>
                         </tr>
                     </table>
-                </td>
-                <!--Fin colonne droite -->
-            <!--Fermeture du form plus haut -->
-        </tr>
-    </table>
-    <table width="64%">
-        <form action="<?php echo $view->URLDELETE;?>" method="post" name="subform2">
+                </aside>
+    </div>
+    <div class="admin-savebar"><label class="admin-update-choice"><input type="checkbox" form="myform" id="chkUpdate" name="chkUpdate" value="O" /> Simple mise à jour de la proposition</label><button type="submit" form="myform" name="Submit" class="admin-button admin-button-primary"><span class="fa fa-check" aria-hidden="true"></span> <?php echo $view->ACTIONNAME; ?></button></div>
+    <form action="<?php echo $view->URLDELETE;?>" method="post" name="subform2">
+<table width="100%">
              <?php echo adminCsrfField('admin-proposition'); ?>
              <input type="hidden" id="type" name="type" value="AJOUT">
              <input type="hidden" name="ID" id="ID" value="<?php echo $view->PROPID; ?>">
@@ -482,11 +457,11 @@
                     <div class="b">Sujet : <?php echo $view->SUJET_EMAIL;?></div>
                     <textarea name="txtMailRefus" class="textarea_description_edition" style="height: 12em;"><?php echo $view->CORPS_EMAIL;?></textarea>
                     <br />
-                    <input type="submit" value="Supprimer" name="subform2" />
+                    <input class="admin-button admin-button-danger" type="submit" value="Supprimer" name="subform2" />
                 </td>
             </tr>
-        </form>
-    </table>
+        </table>
+</form>
 </div>
 <script>
     /*

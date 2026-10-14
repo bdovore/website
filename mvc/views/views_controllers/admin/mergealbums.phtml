@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?php echo BDO_URL; ?>style/admin-catalogue.css?v=20261014a" />
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
 <script type="text/javascript">
 function newWindow(myCategory,myText,myForm,myElement,isMandatory,myEditeur) {
@@ -46,11 +47,14 @@ function urldest(){
 }
 
 </script>
-<div class="cadre1">
-<table width="100%" border="1">
+<div class="cadre1 admin-catalogue admin-merge">
+<header class="admin-heading"><div><h1>Fusion d’albums</h1><p class="admin-help">Comparer la fiche à supprimer avec celle à conserver avant de confirmer.</p></div></header>
+<table class="admin-merge-table" width="100%" border="1">
+  <?php if (!empty($view->ERRORMESSAGE)) { ?>
   <tr>
     <td colspan="2" align="center"><font color="#FF0000" face="Arial, Helvetica, sans-serif"><strong><?php echo $view->ERRORMESSAGE;?></strong></font></td>
   </tr>
+  <?php } ?>
   <tr bgcolor="#FFFFCC">
     <td width="50%" bordercolor="#CCCCCC" bgcolor="#CCCCCC"> <p><strong>ALBUM
         A SUPPRIMER</strong></p>
@@ -58,14 +62,14 @@ function urldest(){
         <input name="txtTome1Id" type="text" id="txtTome1Id" value="<?php echo $view->TOMEID1;?>" size="5">
         <input name="txtTome1" type="text" id="txtTome1" value="<?php echo $view->TITRE1;?>" size="40">
         <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('album',document.form1.txtTome1.value,'form1','txtTome1',true)"><br>
-        <input name="Submit1" type="submit" id="Submit1" value="Rafraichir">
+        <input name="Submit1" type="submit" id="Submit1" value="Actualiser" class="admin-button admin-button-secondary">
       </form></td>
     <td width="50%"> <p><strong>ALBUM A GARDER</strong></p>
       <form name="form2" method="post" action="" onSubmit="return urldest()">
         <input name="txtTome2Id" type="text" id="txtTome2Id" value="<?php echo $view->TOMEID2;?>" size="5">
         <input name="txtTome2" type="text" id="txtTome2" value="<?php echo $view->TITRE2;?>" size="40">
         <img src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif" width="24" height="14" onClick="newWindow('album',document.form2.txtTome2.value,'form2','txtTome2',true)"><br>
-        <input name="Submit1" type="submit" id="Submit1" value="Rafraichir">
+        <input name="Submit1" type="submit" id="Submit1" value="Actualiser" class="admin-button admin-button-secondary">
       </form></td>
   </tr>
   <tr>
@@ -207,11 +211,9 @@ function urldest(){
     <td colspan="2" style="color: #990000; font-weight: bold;">Fusion refus&eacute;e : <?php echo $view->MERGE_REFUSAL; ?></td>
   </tr>
   <?php } ?>
-  <tr>
-    <td colspan="2" align="center"><p><a href="<?php echo $view->URLECHANGE;?>">Inverser la sélection</a><br>
-        <a href="<?php echo $view->URLFUSION;?>" onClick="return valider()">Fusionner les deux albums</a></p></td>
-  </tr>
+
 </table>
+<div class="admin-savebar"><a class="admin-button admin-button-secondary" href="<?php echo $view->URLECHANGE;?>"><span class="fa fa-exchange-alt" aria-hidden="true"></span> Inverser la sélection</a><a class="admin-button admin-button-primary" href="<?php echo $view->URLFUSION;?>" onclick="return valider()"><span class="fa fa-compress" aria-hidden="true"></span> Fusionner les deux albums</a></div>
 </div>
 
 <script>

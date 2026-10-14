@@ -526,10 +526,10 @@ class Admin extends Bdo_Controller {
                     }
                     // Activation de l'edition
                     if ($this->Edition->PROP_STATUS == 0) {
-                        $actionautorise = "<form method=\"post\" action=\"" . BDO_URL . "admin/editedition?act=autorize\" style=\"display:inline\">"
+                        $actionautorise = "<form method=\"post\" action=\"" . BDO_URL . "admin/editedition?act=autorize\" class=\"admin-activation-form\">"
                                 . adminCsrfField()
                                 . "<input type=\"hidden\" name=\"edition_id\" value=\"" . $edition_id . "\">"
-                                . "<button type=\"submit\">Activer cette &eacute;dition</button></form>";
+                                . "<button type=\"submit\" class=\"admin-button admin-button-primary\"><span class=\"fa fa-check\" aria-hidden=\"true\"></span> Activer cette &eacute;dition</button></form>";
                         $contactuser = "propos&eacute;e par <a href=\"mailto:" . $mail_adress . "?subject=" . $mailsubject . "\" style=\"font-weight: bold;\">" . $pseudo . "</a> (" . $mail_adress . ")<br />";
                     } else {
                         $actionautorise = "";
@@ -1793,7 +1793,7 @@ class Admin extends Bdo_Controller {
                     "COLL1" => $this->Edition->NOM_COLLECTION,
                     "DTEPAR1" => $this->Edition->DATE_PARUTION_EDITION,
                     "URLIMAGE1" => $url_image1,
-                    "HISTOIRE1" => $this->Edition->HISTOIRE,
+                    "HISTOIRE1" => $this->Edition->HISTOIRE ?? "",
                     "DESCRIPTED1" => $this->Edition->COMMENT_EDITION,
                     "SOURCEID" => $this->Edition->ID_EDITION,
                     "NBUSERS1" => $nb_users1,
@@ -1849,7 +1849,7 @@ class Admin extends Bdo_Controller {
                     "COLL2" => $this->Edition->NOM_COLLECTION,
                     "DTEPAR2" => $this->Edition->DATE_PARUTION_EDITION,
                     "URLIMAGE2" => $url_image2,
-                    "HISTOIRE2" => $this->Edition->HISTOIRE,
+                    "HISTOIRE2" => $this->Edition->HISTOIRE ?? "",
                     "DESCRIPTED2" => $this->Edition->COMMENT_EDITION,
                     "DESTID" => $this->Edition->ID_EDITION,
                     "NBUSERS2" => $nb_users2,
