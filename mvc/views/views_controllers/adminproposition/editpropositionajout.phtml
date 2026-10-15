@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="<?php echo BDO_URL; ?>style/admin-catalogue.css?v=20261014a" />
-<script src="<?php echo BDO_URL;?>jquery/jquery.mask.min" type="text/javascript"></script>
+<script src="<?php echo BDO_URL;?>jquery/jquery.mask.min.js" type="text/javascript"></script>
 
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
 <div class="admin-catalogue admin-proposition">
@@ -228,7 +228,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" align="center">
-                                            <label for="FLAG_SANS_ISBN_EAN">Sans ISBN ou EAN <input form="myform" name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" value="1" <?php echo $view->CHKFLAG_SANS_ISBN_EAN;?> /></label>
+                                            <label for="FLAG_SANS_ISBN_EAN">Sans ISBN ou EAN <input form="myform" name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" data-isbn-ean-default-url="<?php echo BDO_URL; ?>getjson?data=SansIsbnEan" data-serie-id="#txtSerieId2" data-serie-input="#txtSerie3" data-album-id="#txtExistingTomeId" data-album-input="#txtExistingTome" value="1" <?php echo $view->CHKFLAG_SANS_ISBN_EAN;?> /></label>
                                         </td>
                                     </tr>
                                     <tr>
@@ -546,3 +546,5 @@
         }
 
 </script>
+
+<script src="<?php echo BDO_URL; ?>script/isbn-ean-defaults.js?v=20261014a"></script>

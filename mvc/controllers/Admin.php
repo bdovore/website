@@ -369,6 +369,8 @@ class Admin extends Bdo_Controller {
                     $alb_id = '';
                 }
 
+                $this->loadModel('Serie');
+                $sansIsbnEan = $this->Serie->isAlbumSansIsbnEan($alb_id);
                 $url_image = BDO_URL_COUV . "default.png";
                 // Creation d'un nouveau Template
                 $this->view->set_var(array(
@@ -376,7 +378,7 @@ class Admin extends Bdo_Controller {
                     "NBUSERS" => "0",
                     "IDTOME" => $alb_id,
                     "TITRE" => $alb_titre,
-                    "CHKFLAG_SANS_ISBN_EAN" => "",
+                    "CHKFLAG_SANS_ISBN_EAN" => ($sansIsbnEan ? 'checked' : ''),
                     "CHKFLAG_EAN_ISBN_IDENTIQUE" => "",
                     "URLDELETE" => "javascript:alert('D&eactue;sactiv&eacute;');",
                     "ACTIONNAME" => "Enregistrer",
@@ -777,6 +779,7 @@ class Admin extends Bdo_Controller {
 
 
                 $id_serie = getValInteger("id_serie");
+                $this->loadModel('Serie');
                 $this->Tome->load("c", " WHERE bd_tome.id_serie =" . $id_serie . " ORDER BY bd_tome.num_tome DESC LIMIT 1");
                 
                 // on met me flag explicit automaitquement si la série est dnas un genre erotique
@@ -830,7 +833,7 @@ class Admin extends Bdo_Controller {
                     "URLEDITCOLLALT" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
                     "URLACTION" => BDO_URL . "admin/editalbum?act=append",
                     "EXPLICIT_CHECKED" => $explicit,
-                    "CHKFLAG_SANS_ISBN_EAN" => "",
+                    "CHKFLAG_SANS_ISBN_EAN" => ($this->Serie->isSansIsbnEan($id_serie) ? 'checked' : ''),
                     "CHKFLAG_EAN_ISBN_IDENTIQUE" => ""
                 ));
 
@@ -2084,6 +2087,37 @@ class Admin extends Bdo_Controller {
         }
     }
 
+    private function confirmSerieSansIsbnEan($act, $serie_id, $impact = null) {
+        if (postVal('confirm_sans_isbn_ean') === 'ok') return;
+        $fields = array('confirm_sans_isbn_ean' => 'ok', 'FLAG_SANS_ISBN_EAN' => '1');
+        foreach (array('txtSerieId', 'txtSerie', 'txtGenreId', 'chkFini', 'txtNbTome', 'txtTri', 'txtSerieHist') as $name) {
+            $value = postVal($name);
+            if (!is_scalar($value)) $this->refuseAdminMutation('Données de série invalides.');
+            $fields[$name] = $value;
+        }
+        $linkedSeries = postVal('idSerie', array());
+        if (!is_array($linkedSeries)) $this->refuseAdminMutation('Liens de série invalides.');
+        foreach (array_values($linkedSeries) as $index => $id) {
+            if (!is_scalar($id)) $this->refuseAdminMutation('Lien de série invalide.');
+            $fields['idSerie[' . $index . ']'] = intval($id);
+        }
+        $this->view->layout = 'iframe';
+        $this->renderAdminConfirmation(array(
+            'title' => 'Série sans EAN / ISBN',
+            'question' => 'Confirmer le réglage « Sans ean / isbn » pour cette série ?',
+            'warning' => 'Attention, tous les albums de cette série seront tagués « sans ean / isbn ».',
+            'details' => array(
+                ($impact ? intval($impact->NB_ALBUMS) : 0) . ' album(s), soit ' . ($impact ? intval($impact->NB_EDITIONS) : 0) . ' édition(s) concernée(s).',
+                'Toutes les éditions seront marquées, y compris les éditions en attente. Les ISBN/EAN déjà saisis seront conservés.',
+                'La case sera précochée pour les prochaines éditions ajoutées dans cette série.'
+            ),
+            'fields' => $fields,
+            'action' => BDO_URL . 'admin/editserie?act=' . $act,
+            'cancel' => BDO_URL . 'admin/editserie?' . ($serie_id ? 'serie_id=' . $serie_id : 'act=new'),
+            'button' => 'Confirmer et enregistrer'
+        ));
+    }
+
     public function editSerie() {
         if (User::minAccesslevel(1)) {
 
@@ -2105,6 +2139,13 @@ class Admin extends Bdo_Controller {
 // Mettre à jour les informations
             if ($act == "update") {
                 $this->guardAdminMutation();
+                $serie_id = postValInteger('txtSerieId');
+                if ($serie_id <= 0 || !($impact = $this->Serie->getSansIsbnEanImpact($serie_id))) {
+                    $this->refuseAdminMutation('Identifiant de série invalide.');
+                }
+                $sansIsbnEan = postVal('FLAG_SANS_ISBN_EAN') === '1';
+                $applyToEditions = $sansIsbnEan && intval($impact->FLAG_SANS_ISBN_EAN) !== 1;
+                if ($applyToEditions) $this->confirmSerieSansIsbnEan('update', $serie_id, $impact);
                 $this->Serie->set_dataPaste(array(
                     "ID_SERIE" => postVal("txtSerieId"),
                     "NOM" => postVal("txtSerie"),
@@ -2119,6 +2160,7 @@ class Admin extends Bdo_Controller {
                     var_dump($this->Serie->error);
                     exit();
                 }
+                $this->Serie->setSansIsbnEan($serie_id, $sansIsbnEan, $applyToEditions);
                 $this->Tome->updateGenreForSerie(postValInteger("txtSerieId"), postValInteger('txtGenreId'));
                 
                 // mise à jour des liens entre séries
@@ -2183,6 +2225,7 @@ class Admin extends Bdo_Controller {
                     "OPTSTATUS" => GetOptionValue($opt_status, 1),
                     "URLDELETE" => "javascript:alert('Déeactue;sactiv&eactue;');",
                     "ACTIONNAME" => "Enregistrer",
+                    "CHKFLAG_SANS_ISBN_EAN" => "",
                     "URLEDITGENRE" => "javascript:alert('Veuillez d\'abord enregistrer vos modifications');",
                     "URLACTION" => BDO_URL . "admin/editserie?act=append",
                     "IDSERIE" => "",
@@ -2212,6 +2255,8 @@ class Admin extends Bdo_Controller {
 // INSERE UNE NOUVELLE SERIE DANS LA BASE
             elseif ($act == "append") {
                 $this->guardAdminMutation();
+                $sansIsbnEan = postVal('FLAG_SANS_ISBN_EAN') === '1';
+                if ($sansIsbnEan) $this->confirmSerieSansIsbnEan('append', 0);
                 if (postVal('txtTri') == '') {
                     $tri = substr(trim(clean_article(stripslashes(postVal('txtSerie')))), 0, 3);
                 } else {
@@ -2227,6 +2272,7 @@ class Admin extends Bdo_Controller {
                 ));
                 $this->Serie->update();
                 $lid = $this->Serie->ID_SERIE;
+                $this->Serie->setSansIsbnEan($lid, $sansIsbnEan);
                 echo GetMetaTag(2, "La s&eacute;rie a &eacute;t&eacute; ajout&eacute;e", (BDO_URL . "admin/editserie?serie_id=" . $lid));
             }
 
@@ -2275,6 +2321,7 @@ class Admin extends Bdo_Controller {
                     "NBAUTEURS" => $nb_auteur,
                     "URLDELETE" => BDO_URL . "admin/editserie?act=delete&idserie=" . $this->Serie->ID_SERIE,
                     "ACTIONNAME" => "Valider les Modifications",
+                    "CHKFLAG_SANS_ISBN_EAN" => ($this->Serie->FLAG_SANS_ISBN_EAN == 1 ? 'checked' : ''),
                     "URLEDITGENRE" => BDO_URL . "admin/editgenre?genre_id=" . $this->Serie->ID_GENRE,
                     "URLMASSDETAIL" => BDO_URL . "admin/mu_detail.php?serie=" . $this->Serie->ID_SERIE,
                     "URLMASSUPDATE" => BDO_URL . "admin/mu_serie.php?serie=" . $this->Serie->ID_SERIE,

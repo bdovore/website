@@ -55,6 +55,13 @@ function valider(){
                         <td colspan="4"><input name="txtNbTome" type="text" id="txtNbTome" value="<?php echo $view->NBTOME; ?>" size="3" class="<?php echo $view->CHAMPFORMSTYLE ?? ""; ?>" style="text-align: center;" /> tomes</td>
                     </tr>
                     <tr>
+                        <td>ISBN / EAN</td>
+                        <td colspan="4">
+                            <label><input type="checkbox" name="FLAG_SANS_ISBN_EAN" value="1" <?php echo $view->CHKFLAG_SANS_ISBN_EAN ?? ''; ?> /> Sans ean / isbn</label>
+                            <p class="petite_police">À l’activation, toutes les éditions de la série seront marquées après confirmation. La case sera ensuite précochée pour les nouvelles éditions. Décocher ce réglage ne modifie pas les éditions existantes.</p>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>Intro Série</td>
                         <td colspan="4"><textarea name="txtSerieHist" id="txtSerieHist" class="<?php echo $view->CHAMPFORMSTYLE ?? ""; ?>champ_commentaire"><?php echo nl2br(if_null_quote($view->HISTOIRE_SERIE)); ?></textarea></td>
                     </tr>

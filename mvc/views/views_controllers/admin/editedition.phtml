@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="<?php echo BDO_URL; ?>style/admin-catalogue.css?v=20261014a" />
-<script src="<?php echo BDO_URL;?>jquery/jquery.mask.min" type="text/javascript"></script>
+<script src="<?php echo BDO_URL;?>jquery/jquery.mask.min.js" type="text/javascript"></script>
 <script src="<?php echo BDO_URL;?>script/genautocomplete.js" type="text/javascript"></script>
 <div class="admin-catalogue">
 <header class="admin-heading"><div><h1>Édition</h1><p class="admin-help">Ajout et correction de la fiche catalogue</p></div><div class="admin-heading-actions"><?php echo $view->ACTIONAUTORIZE ?? ""; ?><button type="submit" form="myform" class="admin-button admin-button-primary"><span class="fa fa-save" aria-hidden="true"></span> Enregistrer</button></div></header>
@@ -61,7 +61,7 @@
                 </tr>
                 <tr>
                     <td colspan="2" align="center">
-                        <label for="FLAG_SANS_ISBN_EAN">Sans ISBN ou EAN <input name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" value="1" <?php echo $view->CHKFLAG_SANS_ISBN_EAN ?? "";?> /></label>
+                        <label for="FLAG_SANS_ISBN_EAN">Sans ISBN ou EAN <input name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" <?php if (strpos($view->URLACTION, '?act=append') !== false) { ?>data-isbn-ean-default-url="<?php echo BDO_URL; ?>getjson?data=SansIsbnEan" data-album-id="#txtTomeId"<?php } ?> value="1" <?php echo $view->CHKFLAG_SANS_ISBN_EAN ?? "";?> /></label>
                     </td>
                 </tr>
                 <tr>
@@ -176,3 +176,5 @@
   $('#txtDateParution').mask('0000-00-00', {placeholder: "0000-00-00"});
 });
 </script>
+
+<script src="<?php echo BDO_URL; ?>script/isbn-ean-defaults.js?v=20261014a"></script>

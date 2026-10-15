@@ -275,6 +275,9 @@ private function getDateBeforeValid() {
                 $dim_image = imgdim(BDO_DIR_UPLOAD . $this->User_album_prop->IMG_COUV);
             }
 
+            $this->loadModel('Serie');
+            $sansIsbnEanDefault = $this->Serie->isSansIsbnEan($this->User_album_prop->ID_SERIE);
+
             $this->view->set_var(array(
                 "DATEBEFOREVALID" => $this->getDateBeforeValid(),
                 "PROPID" => stripslashes(if_null_quote($this->User_album_prop->ID_PROPOSAL)),
@@ -321,7 +324,7 @@ private function getDateBeforeValid() {
                 "URLEAN" => "http://www.bdnet.com/" . $this->User_album_prop->EAN . "/alb.htm",
                 "ISEAN" => check_EAN($this->User_album_prop->EAN) ? "" : "*",
                 "ISBN" => $this->User_album_prop->ISBN,
-                "CHKFLAG_SANS_ISBN_EAN" => (($this->User_album_prop->FLAG_SANS_ISBN_EAN == 1) ? 'checked' : ''),
+                "CHKFLAG_SANS_ISBN_EAN" => (($this->User_album_prop->FLAG_SANS_ISBN_EAN == 1 || $sansIsbnEanDefault) ? 'checked' : ''),
                 "CHKFLAG_EAN_ISBN_IDENTIQUE" => (($this->User_album_prop->FLAG_EAN_ISBN_IDENTIQUE == 1) ? 'checked' : ''),
                 "URLISBN" => BDO_PROTOCOL . "://www.amazon.fr/exec/obidos/ASIN/" . $this->User_album_prop->ISBN,
                 "ISISBN" => check_ISBN($this->User_album_prop->ISBN) ? "" : "*",

@@ -54456,7 +54456,8 @@ CREATE TABLE `bd_serie` (
   `NB_TOME` tinyint(3) UNSIGNED DEFAULT NULL,
   `NB_NOTE` mediumint(8) UNSIGNED NOT NULL DEFAULT '0',
   `TRI` char(3) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `HISTOIRE` mediumtext COLLATE utf8_unicode_ci
+  `HISTOIRE` mediumtext COLLATE utf8_unicode_ci,
+  `FLAG_SANS_ISBN_EAN` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --

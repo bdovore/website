@@ -67,6 +67,7 @@ class Serie extends Bdo_Db_Line
                     `bd_serie`.`NOM` as `NOM_SERIE` ,
 
                     `bd_serie`.`FLG_FINI` as `FLG_FINI_SERIE`,
+                    `bd_serie`.`FLAG_SANS_ISBN_EAN`,
 
                     CASE bd_serie.FLG_FINI WHEN 0 then 'Fini' when 1 then 'En cours' when 2 then 'One Shot' when 3 then 'Interrompue' ELSE '?' end LIB_FLG_FINI_SERIE,
 
@@ -111,6 +112,47 @@ class Serie extends Bdo_Db_Line
     }
 
 
+
+    /** Réglage de série utilisé comme valeur par défaut lors des ajouts. */
+    public function isSansIsbnEan($serie_id) {
+        $serie_id = intval($serie_id);
+        if ($serie_id <= 0) return false;
+        $result = Db_query('SELECT FLAG_SANS_ISBN_EAN FROM bd_serie WHERE ID_SERIE = ' . $serie_id);
+        $serie = Db_fetch_object($result);
+        return $serie && intval($serie->FLAG_SANS_ISBN_EAN) === 1;
+    }
+
+    public function isAlbumSansIsbnEan($tome_id) {
+        $tome_id = intval($tome_id);
+        if ($tome_id <= 0) return false;
+        $result = Db_query('SELECT s.FLAG_SANS_ISBN_EAN FROM bd_tome t INNER JOIN bd_serie s ON s.ID_SERIE = t.ID_SERIE WHERE t.ID_TOME = ' . $tome_id);
+        $serie = Db_fetch_object($result);
+        return $serie && intval($serie->FLAG_SANS_ISBN_EAN) === 1;
+    }
+
+    public function getSansIsbnEanImpact($serie_id) {
+        $result = Db_query('SELECT s.FLAG_SANS_ISBN_EAN, COUNT(DISTINCT t.ID_TOME) AS NB_ALBUMS, COUNT(e.ID_EDITION) AS NB_EDITIONS
+            FROM bd_serie s LEFT JOIN bd_tome t ON t.ID_SERIE = s.ID_SERIE
+            LEFT JOIN bd_edition e ON e.ID_TOME = t.ID_TOME
+            WHERE s.ID_SERIE = ' . intval($serie_id) . ' GROUP BY s.ID_SERIE, s.FLAG_SANS_ISBN_EAN');
+        return Db_fetch_object($result);
+    }
+
+    /** Une seule requête applique le réglage et, si confirmé, marque toutes les éditions.
+     * Aucun ISBN/EAN n'est effacé. Désactiver le défaut ne modifie pas les éditions.
+     */
+    public function setSansIsbnEan($serie_id, $enabled, $applyToEditions = false) {
+        $serie_id = intval($serie_id);
+        if ($serie_id <= 0) throw new InvalidArgumentException('Identifiant de série invalide.');
+        if ($enabled && $applyToEditions) {
+            $query = 'UPDATE bd_serie s LEFT JOIN bd_tome t ON t.ID_SERIE = s.ID_SERIE
+                LEFT JOIN bd_edition e ON e.ID_TOME = t.ID_TOME
+                SET s.FLAG_SANS_ISBN_EAN = 1, e.FLAG_SANS_ISBN_EAN = 1 WHERE s.ID_SERIE = ' . $serie_id;
+        } else {
+            $query = 'UPDATE bd_serie SET FLAG_SANS_ISBN_EAN = ' . ($enabled ? '1' : '0') . ' WHERE ID_SERIE = ' . $serie_id;
+        }
+        if (!Db_query($query)) throw new RuntimeException('Impossible de mettre à jour le réglage ISBN/EAN de la série.');
+    }
 
     public function browseSerie ($filter) {
         $this->select = "  SELECT 

@@ -42,6 +42,14 @@ class GetJSON extends Bdo_Controller {
             case "Album" :
                 $this->Album();
                 break;
+            case "SansIsbnEan" :
+                $this->loadModel('Serie');
+                $tome_id = getValInteger('id_tome');
+                $default = $tome_id > 0 ? $this->Serie->isAlbumSansIsbnEan($tome_id) : $this->Serie->isSansIsbnEan(getValInteger('id_serie'));
+                $this->view->set_var('json', json_encode(array('sans_isbn_ean' => $default)));
+                $this->view->layout = 'ajax';
+                $this->view->render();
+                break;
             case "Serie" :
                 $this->Serie();
                 break;

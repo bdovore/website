@@ -213,7 +213,7 @@
                 </tr>
                 <tr>
                     <td colspan="2" align="center">
-                        <label for="FLAG_SANS_ISBN_EAN">Sans ISBN ou EAN <input name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" value="1" <?php echo $view->CHKFLAG_SANS_ISBN_EAN ?? "";?> /></label>
+                        <label for="FLAG_SANS_ISBN_EAN">Sans ISBN ou EAN <input name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" <?php if (notIssetOrEmpty($view->dbs_edition ?? "")) { ?> data-isbn-ean-default-url="<?php echo BDO_URL; ?>getjson?data=SansIsbnEan" data-serie-id="#txtSerieId" data-serie-input="#txtSerie"<?php } ?> value="1" <?php echo $view->CHKFLAG_SANS_ISBN_EAN ?? "";?> /></label>
                     </td>
                 </tr>
                 <tr>
@@ -366,3 +366,5 @@ $(document).ready(function(){
   $('#txtDateParution').mask('0000-00-00', {placeholder: "0000-00-00"});
 });
 </script>
+
+<script src="<?php echo BDO_URL; ?>script/isbn-ean-defaults.js?v=20261014a"></script>

@@ -56,6 +56,8 @@ class Proposition extends Bdo_Controller {
                 if ($type == "EDITION") {
                     $this->loadModel("Edition");
                     $this->Edition->load();
+                    $this->loadModel('Serie');
+                    $this->Edition->FLAG_SANS_ISBN_EAN = $this->Serie->isAlbumSansIsbnEan(getValInteger('id_tome')) ? 1 : null;
                     $this->view->set_var("edition",$this->Edition);
                     $this->view->set_var("ID_TOME",getValInteger("id_tome"));
                     $this->view->set_var('PAGETITLE',"Proposer l'ajout d'une édition ");

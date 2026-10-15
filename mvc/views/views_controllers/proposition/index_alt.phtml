@@ -288,7 +288,7 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
       <input type="text" id="txtISBN" name="txtISBN" size="10" maxlength="10" /><br />
 
       <label for="FLAG_SANS_ISBN_EAN">
-        <input name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" value="1" /> Sans ISBN ou EAN
+        <input name="FLAG_SANS_ISBN_EAN" type="checkbox" id="FLAG_SANS_ISBN_EAN" data-isbn-ean-default-url="<?php echo BDO_URL; ?>getjson?data=SansIsbnEan" data-serie-id="#txtSerieId" data-serie-input="#txtSerie" value="1" /> Sans ISBN ou EAN
       </label><br />
 
       <label for="txtDateParution">Date de parution</label>
@@ -646,3 +646,5 @@ $ficheAlbum = $view->getHelper('ficheAlbum');
 
 
 </style>
+
+<script src="<?php echo BDO_URL; ?>script/isbn-ean-defaults.js?v=20261014a"></script>
