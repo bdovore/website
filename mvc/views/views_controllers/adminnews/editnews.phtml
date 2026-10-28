@@ -1,4 +1,24 @@
-<?php $news_levels = array(2 => "Archivé", 1 => "Brouillon", 5 => "Publié") ?>
+<?php
+$news_levels = array(2 => "Archivé", 1 => "Brouillon", 5 => "Publié");
+
+// Icônes identiques à celles affichées pour chaque type sur la page d'accueil
+$a_type_icones = array(
+    1 => "📢",
+    2 => "👓",
+    3 => "🎟️",
+    4 => "📅",
+    5 => "🎭",
+);
+
+// Descriptions affichées dans l'écran de choix de la catégorie éditoriale
+$a_type_descriptions = array(
+    1 => "Pour tout ce qui touche à la vie interne de BDovore et à ses fonctionnalités.",
+    2 => "Pour les newsletters, les revues et les recommandations d'albums.",
+    3 => "Pour les news à propos de festivals BD ou d'expositions en rapport avec la BD.",
+    4 => "Pour les évènements à venir ou dates clés autour de la BD, qui ne sont ni des festivals ni des expositions.",
+    5 => "Pour tout le reste : le monde de la BD, les auteurs, les scénaristes et tout ce qui gravite autour.",
+);
+?>
 
 <!-- Summernote CSS via CDN -->
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
@@ -106,6 +126,61 @@
         border-radius: 3px;
         font-size: 12px;
     }
+
+    /* Styles du choix de catégorie éditoriale avant publication */
+    .catmodal-overlay {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); z-index: 3000; justify-content: center; align-items: center;
+    }
+    .catmodal-overlay.active { display: flex; }
+    .catmodal-box {
+        background: white; border-radius: 8px; padding: 25px; width: 90%; max-width: 640px;
+        max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    .catmodal-header { margin-bottom: 20px; }
+    .catmodal-header h3 {
+        margin: 0 0 8px 0; color: #8F1204; font-size: 22px;
+    }
+    .catmodal-subtitle {
+        margin: 0; color: #666; font-size: 14px; line-height: 1.5;
+    }
+    .catmodal-list { margin-bottom: 20px; }
+    .catmodal-option {
+        display: flex; align-items: flex-start; gap: 12px;
+        border: 2px solid #e0d5d3; border-radius: 8px;
+        padding: 14px 16px; margin-bottom: 10px;
+        cursor: pointer; transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .catmodal-option:hover { border-color: #C8857C; }
+    .catmodal-option.selected {
+        border-color: #8F1204; background-color: #fdf6f5;
+    }
+    .catmodal-option input[type="radio"] {
+        margin-top: 4px; flex-shrink: 0; width: 16px; height: 16px; accent-color: #8F1204; cursor: pointer;
+    }
+    .catmodal-option-title {
+        display: block; font-weight: bold; color: #333; font-size: 15px; margin-bottom: 4px;
+    }
+    .catmodal-option-icon {
+        font-size: 18px; margin-right: 8px;
+    }
+    .catmodal-option.selected .catmodal-option-title { color: #8F1204; }
+    .catmodal-option-desc {
+        display: block; color: #666; font-size: 13px; line-height: 1.5;
+    }
+    .catmodal-actions { text-align: right; border-top: 1px solid #eee; padding-top: 15px; }
+    .catmodal-actions button {
+        padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; border: none;
+    }
+    .catmodal-btn-cancel {
+        background: #f8f9fa; color: #666; border: 1px solid #ddd !important;
+    }
+    .catmodal-btn-confirm {
+        background-color: #990000; color: white; margin-left: 8px;
+    }
+    .catmodal-btn-confirm:disabled {
+        background-color: #ccc; cursor: not-allowed;
+    }
 </style>
 
 <!-- Header avec bouton de retour -->
@@ -117,11 +192,11 @@
 </div>
 
 <div class="cadre1" style="max-width: 1200px; margin: 0 auto; padding: 25px;">
-    <form method="post" action="?status=ok" onsubmit="return validateForm()">
+    <form id="newsForm" method="post" action="?status=ok" onsubmit="return validateForm()">
         <!-- Metadonnées organisées -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
             <div>
-                <label for="news-type" style="display: block; margin-bottom: 5px; font-weight: bold; color: #8F1204;">Type de news :</label>
+                <label for="news-type" style="display: block; margin-bottom: 5px; font-weight: bold; color: #8F1204;">Type éditorial :</label>
                 <select id="news-type" name="news-type" style="width: 100%; padding: 10px; border: 1px solid #C8857C; border-radius: 4px; background-color: white; font-size: 14px; color: #333;">
                     <option value="0" disabled style="color: #999;">Sélectionnez un type</option>
                     <?php foreach ($view->dbs_newstype->a_dataQuery as $el): ?>
@@ -227,6 +302,31 @@
     </div>
 </div>
 
+<!-- Modal de choix de la catégorie éditoriale avant publication -->
+<div class="catmodal-overlay" id="categoryModal">
+    <div class="catmodal-box">
+        <div class="catmodal-header">
+            <h3>Choisissez la catégorie éditoriale</h3>
+            <p class="catmodal-subtitle">Vous êtes sur le point de publier cette news. Indiquez la rubrique dans laquelle elle apparaîtra sur le site :</p>
+        </div>
+        <div class="catmodal-list">
+            <?php foreach ($view->dbs_newstype->a_dataQuery as $el): ?>
+                <label class="catmodal-option" for="cat-type-<?php echo $el->ID_NEWS_TYPE; ?>">
+                    <input type="radio" name="cat-type" id="cat-type-<?php echo $el->ID_NEWS_TYPE; ?>" value="<?php echo $el->ID_NEWS_TYPE; ?>" onchange="updateCatSelection()" />
+                    <span>
+                        <span class="catmodal-option-title"><span class="catmodal-option-icon"><?php echo $a_type_icones[$el->ID_NEWS_TYPE] ?? ''; ?></span><?php echo $el->label_news_type; ?></span>
+                        <span class="catmodal-option-desc"><?php echo $a_type_descriptions[$el->ID_NEWS_TYPE] ?? "Sélectionnez cette rubrique si elle correspond au contenu de votre news."; ?></span>
+                    </span>
+                </label>
+            <?php endforeach; ?>
+        </div>
+        <div class="catmodal-actions">
+            <button type="button" class="catmodal-btn-cancel" onclick="closeCategoryModal()">Annuler</button>
+            <button type="button" class="catmodal-btn-confirm" id="catConfirmBtn" onclick="confirmCategory()" disabled>Publier la news</button>
+        </div>
+    </div>
+</div>
+
 <script>
 // Initialize Summernote editor
 $(document).ready(function() {
@@ -269,12 +369,70 @@ $(document).ready(function() {
     });
 });
 
+// Indique que la catégorie éditoriale a été explicitement validée
+// dans l'écran de choix avant publication
+var typeChosen = false;
+
 function validateForm() {
     if (document.getElementById('txttitre').value.trim() === '') {
         alert('Le titre est obligatoire.');
         return false;
     }
+    // Publication : on impose systématiquement le passage par l'écran
+    // de choix de la catégorie éditoriale (brouillon et archive : non)
+    var level = document.getElementById('news-level').value;
+    if (level == '5' && !typeChosen) {
+        openCategoryModal();
+        return false;
+    }
     return true;
+}
+
+function openCategoryModal() {
+    // Réinitialise la sélection pour forcer un choix explicite
+    var radios = document.getElementsByName('cat-type');
+    for (var i = 0; i < radios.length; i++) {
+        radios[i].checked = false;
+    }
+    updateCatSelection();
+    document.getElementById('categoryModal').classList.add('active');
+}
+
+function closeCategoryModal() {
+    document.getElementById('categoryModal').classList.remove('active');
+}
+
+function updateCatSelection() {
+    var radios = document.getElementsByName('cat-type');
+    var checked = false;
+    for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+            radios[i].parentNode.classList.add('selected');
+            checked = true;
+        } else {
+            radios[i].parentNode.classList.remove('selected');
+        }
+    }
+    document.getElementById('catConfirmBtn').disabled = !checked;
+}
+
+function confirmCategory() {
+    var radios = document.getElementsByName('cat-type');
+    var typeId = null;
+    for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+            typeId = radios[i].value;
+            break;
+        }
+    }
+    if (typeId === null) {
+        return;
+    }
+    // Reporte le choix dans le formulaire puis enregistre la news
+    document.getElementById('news-type').value = typeId;
+    typeChosen = true;
+    closeCategoryModal();
+    document.getElementById('newsForm').submit();
 }
 
 function openAlbumModal() {
