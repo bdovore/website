@@ -34,3 +34,4 @@ vendor/composer/InstalledVersions.php
 vendor/composer/platform_check.php
 nbproject/project.properties
 .vscode/launch.json
+docs/compatibilite-php-8.4-8.5.md
