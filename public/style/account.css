@@ -1,0 +1,211 @@
+.account-page {
+    margin: 0;
+    background: #f6f4f0;
+    color: #292420;
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    min-height: 100vh;
+    padding: 36px 20px;
+    box-sizing: border-box;
+}
+.account-page * {
+    box-sizing: border-box;
+}
+.account-brand {
+    text-align: center;
+    margin-bottom: 28px;
+}
+.account-brand a {
+    font-size: 31px;
+    font-weight: 800;
+    text-decoration: none;
+    color: #990000;
+    letter-spacing: -1px;
+}
+.account-brand span {
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    color: #6e625b;
+}
+.account-card {
+    background: #fff;
+    max-width: 470px;
+    margin: 0 auto;
+    border: 1px solid #e7e0d9;
+    border-radius: 18px;
+    padding: 34px;
+    box-shadow: 0 12px 40px #44301d0a;
+}
+.account-card h1 {
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.6px;
+    margin: 0 0 12px;
+}
+.account-card h2 {
+    font-size: 19px;
+    margin-top: 25px;
+}
+.account-eyebrow {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #990000;
+    font-weight: 700;
+    margin: 0 0 12px;
+}
+.account-intro {
+    color: #74675f;
+    margin: 0 0 25px;
+}
+.account-form {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+.account-form label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 7px;
+}
+.account-form input {
+    width: 100%;
+    font: inherit;
+    min-height: 46px;
+    border: 1px solid #cfc5bc;
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: #fff;
+    color: #292420;
+}
+.account-form input:focus {
+    outline: 3px solid #99000022;
+    border-color: #990000;
+}
+.account-page button {
+    font: inherit;
+    cursor: pointer;
+    min-height: 46px;
+    border-radius: 8px;
+    padding: 11px 16px;
+    font-weight: 650;
+    width: 100%;
+}
+.account-primary {
+    color: #fff;
+    background: #990000;
+    border: 1px solid #990000;
+    margin-top: 12px;
+}
+.account-primary:hover {
+    background: #780000;
+}
+.account-page a {
+    color: #990000;
+}
+.account-minor-link {
+    font-size: 13px;
+    align-self: flex-end;
+    margin: 2px 0 8px;
+}
+.account-help {
+    font-size: 13px;
+    color: #74675f;
+    margin: 0 0 4px;
+}
+.account-alert {
+    border: 1px solid #e9c0b8;
+    background: #fff4f0;
+    border-radius: 8px;
+    padding: 12px;
+    color: #8b281c;
+    font-size: 14px;
+}
+.account-success {
+    background: #eef7ef;
+    border: 1px solid #bed8c1;
+    border-radius: 8px;
+    padding: 14px;
+}
+.account-divider {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #887a70;
+    font-size: 12px;
+    margin: 24px 0 17px;
+}
+.account-divider:before,
+.account-divider:after {
+    content: "";
+    height: 1px;
+    background: #e9e2db;
+    flex: 1;
+}
+.account-social-buttons {
+    display: grid;
+    gap: 10px;
+}
+.account-social {
+    background: #fff;
+    color: #292420;
+    border: 1px solid #cfc5bc;
+}
+.account-social-apple {
+    background: #191919;
+    color: #fff;
+    border-color: #191919;
+}
+.account-social:hover {
+    box-shadow: 0 2px 7px #0002;
+}
+.account-switch {
+    font-size: 14px;
+    text-align: center;
+    margin: 25px 0 0;
+}
+.account-switch a {
+    font-weight: 650;
+}
+.account-footer {
+    text-align: center;
+    font-size: 13px;
+    margin: 25px auto;
+    color: #74675f;
+}
+.account-footer a {
+    color: inherit;
+}
+.account-choice {
+    border: 1px solid #ded4cb;
+    background: #faf8f5;
+    margin: 8px 0;
+    text-align: left;
+}
+.account-details {
+    margin-top: 22px;
+    border-top: 1px solid #e9e2db;
+    padding-top: 18px;
+}
+.account-details summary {
+    cursor: pointer;
+    font-weight: 650;
+}
+.account-note {
+    font-size: 13px;
+    color: #74675f;
+    line-height: 1.6;
+}
+@media (max-width: 520px) {
+    .account-page {
+        padding: 25px 14px;
+    }
+    .account-card {
+        padding: 26px 22px;
+        border-radius: 13px;
+    }
+    .account-card h1 {
+        font-size: 24px;
+    }
+}

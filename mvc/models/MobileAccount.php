@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__DIR__, 2) . '/inc/account_security.php';
+require_once dirname(__DIR__, 2) . '/inc/account_login.php';
 
 class MobileAccountException extends RuntimeException
 {
@@ -106,15 +107,21 @@ class MobileAccount
     }
 
     /** Also used by the website and the legacy token endpoint. */
-    public function authenticatePassword($username, $password)
+    public function authenticatePassword($username, $password, $pseudo = '')
     {
-        $user = $this->findUser($username);
+        try { $id = AccountLogin::resolve($this->db, $username, $pseudo); }
+        catch (AccountLoginAmbiguous $e) { AccountSecurity::dummyPasswordCheck($password); throw new MobileAccountException($e->getMessage(), 409, 'pseudo_required'); }
+        $user = $id ? $this->user($id) : null;
         // Perform an expensive check even for unknown users.
         if (!$user) {
             AccountSecurity::dummyPasswordCheck($password);
             $this->denied();
         }
-        if (!AccountSecurity::verifyPassword($password, $user) || intval($user->level) >= 98) $this->denied();
+        if (!AccountSecurity::verifyPassword($password, $user) || intval($user->level) >= 98) {
+            // A failed unique-email attempt has the same prompt as an unknown/shared email.
+            if ($pseudo === '' && AccountLogin::emailAttempt($username, $user)) throw new MobileAccountException(AccountLogin::PSEUDO_REQUIRED, 409, 'pseudo_required');
+            $this->denied();
+        }
         if (empty($user->password_v2)) {
             // Preserve the existing MD5 migration, without imposing the new-password policy.
             $hash = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
@@ -127,11 +134,11 @@ class MobileAccount
 
     public function login($input, $ip)
     {
-        $username = trim($this->text($input, 'username', 100, true));
+        $username = trim($this->text($input, 'username', 254, true));
         $password = $this->text($input, 'password', 4096, true);
         $this->throttle('login-ip', $ip, 60, 900);
         $this->throttle('login-user', mb_strtolower($username, 'UTF-8'), 15, 900);
-        $user = $this->authenticatePassword($username, $password);
+        $user = $this->authenticatePassword($username, $password, $this->text($input, 'pseudo', 100));
         $token = 'bdo2_' . bin2hex(random_bytes(32));
         $now = $this->date();
         $expiry = $this->date($this->now() + BDO_MOBILE_ABSOLUTE_SECONDS);
@@ -270,6 +277,25 @@ class MobileAccount
         $this->change('UPDATE users SET level = 2, LAST_UPDATE = LAST_UPDATE WHERE user_id = ? AND level = 98', array($user->user_id));
         return $this->user($user->user_id);
     }
+    public function createFederatedUser($username, $email, $trusted)
+    {
+        $username = trim($this->text(array('username' => $username), 'username', $this->maxLength('username', 25), true));
+        if (!preg_match('/^[A-Za-z0-9_@-]+$/D', $username) || (function_exists('AuthorisedLogin') && !AuthorisedLogin($username))) throw new MobileAccountException('Pseudo non autorisé.');
+        $email = $this->email(array('email' => $email));
+        try {
+            $this->change("INSERT INTO users (username, password, password_v2, email, level) VALUES (?, 'federated', NULL, ?, ?)", array($username, $email, $trusted ? 2 : 98));
+        } catch (mysqli_sql_exception $e) {
+            if ($e->getCode() === 1062) throw new MobileAccountException('Ce pseudo est indisponible.', 409, 'username_unavailable');
+            throw $e;
+        }
+        return $this->user($this->db->insert_id);
+    }
+    public function federatedRegistrationCode($user)
+    {
+        if (intval($user->level) !== 98 || $user->password !== 'federated') throw new MobileAccountException('Inscription invalide.');
+        $this->throttle('register-resend', $user->user_id, 1, 60);
+        return $this->challenge($user, 'register', $user->email);
+    }
     public function forgotPassword($input, $ip)
     {
         $this->throttle('reset-ip', $ip, 10, 3600);
@@ -288,6 +314,9 @@ class MobileAccount
         list($challenge, $user) = $this->consume($input, 'reset');
         if (intval($user->level) >= 98) throw new MobileAccountException('Code invalide ou expiré.');
         $this->setPassword($user, $password);
+        // Recovery must also remove a provider an attacker may have linked.
+        require_once __DIR__ . '/SocialAccount.php';
+        SocialAccount::forgetUser($this->db, $user->user_id);
     }
     private function requirePassword($user, $input)
     {
@@ -307,6 +336,16 @@ class MobileAccount
     {
         $this->requirePassword($user, $input);
         $this->setPassword($user, $this->newPassword($input));
+    }
+    public function initialPassword($user, $input)
+    {
+        if (!empty($user->password_v2) || $user->password !== 'federated') throw new MobileAccountException('Utilisez le changement de mot de passe habituel.');
+        $this->setPassword($user, $this->newPassword($input));
+    }
+    public function notifySocialLink($user, $provider)
+    {
+        try { call_user_func($this->sendMail, $user->email, 'Nouvelle connexion associée à votre compte BDovore', "Une connexion " . ($provider === 'apple' ? 'Apple' : 'Google') . " a été associée au compte BDovore " . $user->username . ".\nSi vous n'êtes pas à l'origine de cette opération, réinitialisez votre mot de passe BDovore pour supprimer ces associations et révoquer les accès."); }
+        catch (Throwable $e) { error_log('[account] security_notice_unavailable'); }
     }
     public function requestEmail($user, $input)
     {

@@ -1,0 +1,11 @@
+<?php require_once BDO_DIR . 'mvc/models/SocialOidc.php'; $socialProviders = SocialOidc::providers(); ?>
+<?php if ($socialProviders) : ?>
+<div class="account-divider"><span>ou</span></div><div class="account-social-buttons">
+<?php foreach ($socialProviders as $provider => $label) : ?>
+    <form method="post" action="<?php echo BDO_URL; ?>authsocial/start" target="_top">
+        <?php echo adminCsrfField('account-auth'); ?><input type="hidden" name="provider" value="<?php echo $provider; ?>">
+        <input type="hidden" name="intent" value="<?php echo !empty($socialManage) ? 'manage' : 'login'; ?>">
+        <button type="submit" class="account-social account-social-<?php echo $provider; ?>">Continuer avec <?php echo $label; ?></button>
+    </form>
+<?php endforeach; ?>
+</div><?php endif; ?>

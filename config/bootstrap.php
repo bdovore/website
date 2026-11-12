@@ -1,9 +1,9 @@
 <?php
 // Secure website cookies; mobile Bearer identities are never persisted here.
-session_set_cookie_params(array('httponly' => true, 'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'), 'samesite' => 'Lax', 'path' => '/'));
+session_set_cookie_params(array('httponly' => true, 'secure' => stripos(BDO_URL, 'https://') === 0 || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'), 'samesite' => 'Lax', 'path' => '/'));
 session_start();
 
-$accountRequest = in_array(strtolower($controller), array('apiauth', 'apicompte', 'auth', 'compte'), true)
+$accountRequest = in_array(strtolower($controller), array('apiauth', 'apicompte', 'auth', 'authsocial', 'compte'), true)
     || isset($_GET['API_TOKEN']) || isset($_GET['ticket']) || isset($_SERVER['HTTP_AUTHORIZATION']) || isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])
     || isset($_POST['user_password']) || isset($_POST['submitLoginConnect']) || isset($_COOKIE['pass']);
 Bdo_Cfg::setVar('debug', DEBUG && !$accountRequest);

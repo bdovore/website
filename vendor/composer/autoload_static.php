@@ -45,6 +45,10 @@ class ComposerStaticInitae8e1e2c3b003ce5b9df12d2008204ca
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
         ),
+        'F' =>
+        array (
+            'Firebase\\JWT\\' => 13,
+        ),
         'D' => 
         array (
             'DeepCopy\\' => 9,
@@ -120,6 +124,10 @@ class ComposerStaticInitae8e1e2c3b003ce5b9df12d2008204ca
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'Firebase\\JWT\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'DeepCopy\\' => 
         array (

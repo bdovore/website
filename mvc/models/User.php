@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__DIR__, 2) . '/inc/account_security.php';
+require_once dirname(__DIR__, 2) . '/inc/account_login.php';
 require_once dirname(__DIR__, 2) . '/config/mobile.php';
 
 /**
@@ -174,6 +175,11 @@ FROM " . $this->table_name . "
             }
         }
         // deconnexion demandee
+        if ((isset($_POST['submitLoginConnect']) || isset($_POST['submitLoginDisconnect'])) && !adminValidateCsrf('account-auth', $_POST['csrf_token'] ?? '')) {
+            $this->error = 'Formulaire expiré. Rechargez la page de connexion.';
+            if (empty($_SESSION['userConnect']->user_id)) $this->guest();
+            return $this;
+        }
         if (isset($_POST['submitLoginDisconnect'])) {
             $this->logout();
         }
@@ -199,7 +205,16 @@ FROM " . $this->table_name . "
             // navigateur
             if (isset($_COOKIE['PHPSESSID'])) {
                 // -----------
-                $this->load('c', "WHERE username ='" . Db_Escape_String($_POST['user_login']) . "'");
+                try {
+                    $id = AccountLogin::resolve(Bdo_Cfg::getVar('connexion'), $_POST['user_login'] ?? '', $_POST['user_pseudo'] ?? '');
+                } catch (AccountLoginAmbiguous $e) {
+                    $this->loginNeedsPseudo = true;
+                    $this->error = $e->getMessage();
+                    AccountSecurity::dummyPasswordCheck($_POST['user_password'] ?? '');
+                    $this->guest();
+                    return $this;
+                }
+                $this->load('c', 'WHERE user_id = ' . intval($id));
 
                 if (1 == $this->dbSelect->nbLineResult) {
 
@@ -212,6 +227,7 @@ FROM " . $this->table_name . "
 
                             session_regenerate_id(true);
                             $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
+                            $_SESSION['account_authenticated_at'] = time();
 
                             $this->addNbConnect();
 
@@ -241,43 +257,12 @@ FROM " . $this->table_name . "
                 $this->error = 'Vous devez accepter les cookies pour vous connecter.';
             }
         }
-            // connexion realise par openid username
-        else if ((! isset($_SESSION['userConnect']->user_id) or empty($_SESSION['userConnect']->user_id))
-                and isset($_SESSION['userConnect']->username)){
-            $this->load('c', "
-                WHERE username ='" . Db_Escape_String($_SESSION['userConnect']->username) . "'
-                AND level<98
-                ORDER BY nb_connect
-                ");
-
-            if (1 <= $this->dbSelect->nbLineResult) {
-                $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
-                $this->addNbConnect();
-            }
-            else {
-                $this->error = $_SESSION['userConnect']->username . ' -> pseudo inconnu';
-            }
-
+        if ($this->error && isset($_POST['submitLoginConnect']) && empty($_POST['user_pseudo'])
+            && AccountLogin::emailAttempt($_POST['user_login'] ?? '', ($this->dbSelect->nbLineResult ?? 0) === 1 ? $this : null)) {
+            $this->loginNeedsPseudo = true;
+            $this->error = AccountLogin::PSEUDO_REQUIRED;
         }
-        // connexion realise par openid email
-        else if ((! isset($_SESSION['userConnect']->user_id) or empty($_SESSION['userConnect']->user_id))
-                and isset($_SESSION['userConnect']->email)){
-            $this->load('c', "
-                WHERE email ='" . Db_Escape_String($_SESSION['userConnect']->email) . "'
-                AND level<98
-                ORDER BY nb_connect
-                ");
-
-            if (1 <= $this->dbSelect->nbLineResult) {
-                $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
-                $this->addNbConnect();
-            }
-            else {
-                $this->error = $_SESSION['userConnect']->email . ' -> Email inconnu';
-            }
-
-        }
-        if ($this->error) {
+        if ($this->error || empty($_SESSION['userConnect']->user_id)) {
             $this->guest();
         }
         if (array_key_exists("userConnect",$_SESSION)) {
@@ -318,6 +303,7 @@ FROM " . $this->table_name . "
 
     public function logout()
     {
+        unset($_SESSION['social_identity'], $_SESSION['social_registration'], $_SESSION['account_authenticated_at']);
         $this->guest();
 
         // On efface le cookie
@@ -466,6 +452,8 @@ FROM " . $this->table_name . "
          */
 
         $user_id = intval($profile_user_id);
+        require_once __DIR__ . '/SocialAccount.php';
+        SocialAccount::forgetUser(Bdo_Cfg::getVar('connexion'), $user_id);
         if (BDO_MOBILE_API_ENABLED) {
             require_once __DIR__ . '/MobileAccount.php';
             (new MobileAccount())->revokeAll($user_id);
@@ -657,8 +645,10 @@ FROM " . $this->table_name . "
         return false;
     }
 
-    public function getToken($username, $password) {
-         $this->load('c', "WHERE username ='" . Db_Escape_String($username) . "'");
+    public function getToken($username, $password, $pseudo = '') {
+        try { $id = AccountLogin::resolve(Bdo_Cfg::getVar('connexion'), $username, $pseudo); }
+        catch (AccountLoginAmbiguous $e) { AccountSecurity::dummyPasswordCheck($password); return array('Token' => null, 'Timestamp' => null, 'Error' => $e->getMessage()); }
+        $this->load('c', 'WHERE user_id = ' . intval($id));
         $error = "";
         $API_TOKEN = null;
         if (1 == $this->dbSelect->nbLineResult) {
@@ -695,6 +685,7 @@ FROM " . $this->table_name . "
             $error = 'Identifiant ou Mot de passe de connexion invalide';
         }
         
+        if ($error !== '' && $pseudo === '' && AccountLogin::emailAttempt($username, $this->dbSelect->nbLineResult === 1 ? $this : null)) $error = AccountLogin::PSEUDO_REQUIRED;
         return (array("Token" => $API_TOKEN, "Timestamp" => $this->LAST_UPDATE ?? null, "Error" => $error));
     }
     

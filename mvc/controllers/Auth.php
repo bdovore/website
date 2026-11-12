@@ -7,33 +7,18 @@ class Auth extends Bdo_Controller
      */
     public function Provider ($openid_identifier=null)
     {
-        $openid_identifier = getVal('openid_identifier',$openid_identifier);
-
-        if ($openid_identifier == 'twitter') {
-            $auth = new Bdo_Auth_Twitter();
-        }
-        elseif ($openid_identifier == 'facebook') {
-            $auth = new Bdo_Auth_Facebook();
-        }
-
-        $auth = new Bdo_Auth_Provider($openid_identifier);
+        // Retire the old OpenID 2.0 callback, which trusted profile attributes.
+        header('Location: ' . BDO_URL . 'compte/connexion', true, 303);
     }
 
     public function Google ()
     {
-        $auth = new Bdo_Auth_Google();
-
-        // confirmation de connexion
-        if (isset($_GET['code'])) {
-            $auth->confirmConnect();
-        }
-
-        header("location:" . BDO_URL);
+        header('Location: ' . BDO_URL . 'compte/connexion', true, 303);
     }
 
     public function Twitter ()
     {
-        $auth = new Bdo_Auth_Twitter();
+        header('Location: ' . BDO_URL . 'compte/connexion', true, 303);
     }
     
     public function Gettoken () {
@@ -54,7 +39,8 @@ class Auth extends Bdo_Controller
             }
         }
         $this->loadModel("User");
-        $token = $this->User->getToken($username,$password );
+        $pseudo = isset($_POST['user_pseudo']) && is_string($_POST['user_pseudo']) ? $_POST['user_pseudo'] : '';
+        $token = $this->User->getToken($username,$password, $pseudo);
         
         if ( $token["Error"]) header("HTTP/1.1 401 Unauthorized");
          $this->view->set_var('json', json_encode($token));

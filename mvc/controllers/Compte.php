@@ -9,6 +9,32 @@ require_once BDO_DIR . "inc" . DS . "mail.php";
 
 class Compte extends Bdo_Controller {
 
+    public function Connexion()
+    {
+        if (User::minAccesslevel(2)) { header('Location: ' . BDO_URL); return; }
+        $user = Bdo_Cfg::user();
+        $this->view->layout = 'account';
+        $this->view->a_phtmlFile = array('BODY' => 'compte/connexion');
+        $this->view->set_var(array('PAGETITLE' => 'Connexion à BDovore', 'login_error' => is_string($user->error) ? $user->error : '',
+            'login_identifier' => is_string(postVal('user_login', '')) ? postVal('user_login', '') : '', 'login_pseudo' => is_string(postVal('user_pseudo', '')) ? postVal('user_pseudo', '') : '',
+            'login_needs_pseudo' => !empty($user->loginNeedsPseudo)));
+        $this->view->render();
+    }
+    public function Initialpassword()
+    {
+        $this->mutationGuard();
+        if (!User::minAccesslevel(2) || ($_SESSION['account_authenticated_at'] ?? 0) < time() - 300) {
+            $this->accountFailure('Reconnectez-vous avec Google ou Apple avant de définir votre mot de passe.'); return;
+        }
+        require_once dirname(__DIR__) . '/models/MobileAccount.php';
+        try {
+            if (postVal('txtpass1') !== postVal('txtpass2')) throw new MobileAccountException('Les mots de passe ne correspondent pas.');
+            $service = new MobileAccount();
+            $service->initialPassword($service->user($_SESSION['userConnect']->user_id), array('password' => postVal('txtpass1')));
+            echo GetMetaTag(2, 'Votre mot de passe est défini. Reconnectez-vous avec votre pseudo ou Google/Apple.', BDO_URL . 'compte/connexion');
+        } catch (MobileAccountException $e) { $this->accountFailure($e->getMessage()); }
+    }
+
     private function mutationGuard()
     {
         if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST' || !adminValidateCsrf('account', postVal('csrf_token', ''))) {
@@ -28,13 +54,16 @@ class Compte extends Bdo_Controller {
     private function pendingConfirmation($purpose, $result)
     {
         $_SESSION['account_confirmation'] = array('purpose' => $purpose, 'challenge_id' => $result['challenge_id']);
-        $this->view->addPhtmlFile('compte/confirmation', 'BODY');
+        $this->view->layout = 'account';
+        $this->view->a_phtmlFile = array('BODY' => 'compte/confirmation');
         $this->view->set_var(array('purpose' => $purpose, 'confirmation_error' => ''));
         $this->view->render();
     }
 
     public function Confirmation()
     {
+        $this->view->layout = 'account';
+        $this->view->a_phtmlFile = array('BODY' => 'compte/confirmation');
         if (!BDO_MOBILE_API_ENABLED || empty($_SESSION['account_confirmation'])) {
             $this->accountFailure('Confirmation expirée. Recommencez votre demande.');
             return;
@@ -284,6 +313,8 @@ class Compte extends Bdo_Controller {
     }
 
     public function Inscription() {
+        $this->view->layout = 'account';
+        $this->view->a_phtmlFile = array('BODY' => 'compte/inscription');
         $mobile = getVal("mobile",""); // check if mobile device detected
         $source = getVal("source","");
         //initialisation des variables de couleur
@@ -312,6 +343,7 @@ class Compte extends Bdo_Controller {
 
 //traitement des exceptions en cas de post
         $act = getVal("act");
+        if ($act === 'post') $this->mutationGuard();
         if ($act === 'post' && BDO_MOBILE_API_ENABLED) {
             require_once dirname(__DIR__) . '/models/MobileAccount.php';
             try {
@@ -431,8 +463,11 @@ class Compte extends Bdo_Controller {
 
     public function forgotPass() {
         $email = getVal("email");
-        $this->view->layout = "iframe";
+        $this->view->layout = 'account';
+        $this->view->a_phtmlFile = array('BODY' => 'compte/forgotpass');
+        $this->view->set_var(array('PAGETITLE' => 'Retrouver mon compte BDovore'));
         if ($email == "ok") {
+            $this->mutationGuard();
             $user_username = postVal("txtusername");
             $user_email = postVal("txtemail");
             if (BDO_MOBILE_API_ENABLED) {
@@ -511,6 +546,8 @@ class Compte extends Bdo_Controller {
                 ));
                 $this->User->update();
                 $resetUserId = intval($this->PasswordResetToken->user_id);
+                require_once dirname(__DIR__) . '/models/SocialAccount.php';
+                SocialAccount::forgetUser(Bdo_Cfg::getVar('connexion'), $resetUserId);
                 Db_query('UPDATE users SET API_TOKEN=NULL, DATE_TOKEN=NULL WHERE user_id=' . $resetUserId);
                 if (BDO_MOBILE_API_ENABLED) { require_once dirname(__DIR__) . '/models/MobileAccount.php'; (new MobileAccount())->revokeAll($resetUserId); }
                 // Invalidate other outstanding links for this account as well.

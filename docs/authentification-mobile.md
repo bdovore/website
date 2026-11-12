@@ -2,6 +2,8 @@
 
 Les changements PHP et React Native sont développés sur une branche `codex/auth-profil` dans chaque dépôt. Aucun merge ni déploiement n'est réalisé par cette livraison.
 
+Le complément [connexion par e-mail, Google et Apple](connexion-google-apple.md) décrit les nouvelles pages du site, la migration sociale facultative et la configuration des fournisseurs. Le déploiement backend puis app reste inchangé.
+
 ## Temps 1 : backend compatible avec l'app actuelle
 
 1. Sauvegarder la base et vérifier le schéma réel, en particulier `users.password_v2`, `users.API_TOKEN` et la clé unique de `users.username`.

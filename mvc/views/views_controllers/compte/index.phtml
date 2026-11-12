@@ -14,12 +14,13 @@
                
                 <div style="clear:both"></div>
                 <div>
-                    <form  method="post" action="<?php echo BDO_URL;?>">
+                    <form  method="post" action="<?php echo BDO_URL;?>compte/connexion">
+                        <?php echo adminCsrfField('account-auth'); ?>
                         <fieldset id="loginBody">
                             <fieldset>
                                 <div class="input-container">
                                  <i class="fa fa-user icon"></i>
-                                <input type="text" name="user_login" id="user_login" placeholder="login"/>
+                                <input type="text" name="user_login" id="user_login" placeholder="Pseudo ou e-mail"/>
                                 </div>
                             </fieldset>
                             <fieldset>
@@ -29,7 +30,6 @@
                                 </div>
                             </fieldset>
                             <input  type="submit" id="submitLoginConnect" name="submitLoginConnect" value="Se connecter" />
-                            <label for="chkvisit">Rester connecter</label><input type="checkbox" style="width:auto;margin-top: 12px;" id="chkvisit" name="chkvisit" />
                         </fieldset>
                         
                         <span><a href="<?php echo BDO_URL;?>compte/forgotpass?" class="fancybox fancybox.iframe {width:600,height:300}">Mot de passe oublié ?</a></span>
@@ -106,9 +106,11 @@
 
 <div class="cadre1">
     <h3>Changement du mot de passe</h3>
-    <form action="<?php echo BDO_URL; ?>compte?act=newpass&user_id=<?php echo $view->USERID; ?>" method="post">
+    <?php $hasAccountPassword = !empty(Bdo_Cfg::user()->password_v2) || preg_match('/^[a-f0-9]{32}$/i', (string) (Bdo_Cfg::user()->password ?? '')); ?>
+    <?php if (!$hasAccountPassword) : ?><p>Définissez un mot de passe BDovore pour utiliser également votre pseudo dans l’application. Votre connexion Google ou Apple doit dater de moins de cinq minutes.</p><?php endif; ?>
+    <form action="<?php echo BDO_URL; ?><?php echo $hasAccountPassword ? 'compte?act=newpass&amp;user_id=' . intval($view->USERID) : 'compte/initialpassword'; ?>" method="post">
         <?php echo adminCsrfField('account'); ?>
-        <label>Mot de passe actuel <input name="current_password" type="password" autocomplete="current-password" required></label>
+        <?php if ($hasAccountPassword) : ?><label>Mot de passe actuel <input name="current_password" type="password" autocomplete="current-password" required></label><?php endif; ?>
         <p>Le nouveau mot de passe doit contenir au moins 15 caractères et au maximum 72 octets. Les espaces sont autorisés.</p>
         <table border="0" cellspacing="1" cellpadding="5" align="center">
             <tr>
@@ -128,6 +130,11 @@
     </form>
 </div>
 <div class="cadre1">
+    <?php require_once BDO_DIR . 'mvc/models/SocialOidc.php'; if (SocialOidc::providers()) : ?>
+    <h3>Connexions Google et Apple</h3>
+    <p>Vous pouvez associer plusieurs collections à votre compte Google ou Apple, sans les fusionner.</p>
+    <?php $socialManage = true; require dirname(__DIR__) . '/account/socialbuttons.phtml'; ?>
+    <?php endif; ?>
     <h3>Compte forum</h3>
     Statut du compte forum :
 <?php if ($view->HASFORUMACCOUNT == true) : ?>

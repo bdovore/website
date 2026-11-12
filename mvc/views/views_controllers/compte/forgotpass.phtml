@@ -1,31 +1,10 @@
-<div class="cadre1">
-<h2>Connexion - Mot de passe oublié</h2>
-</div>
-<div class="cadre1">
-<form name="form1" method="post" action="?email=ok">
-  <table align="center" border="0" cellspacing="1" cellpadding="5">
-    <tr>
-      <td align="right">Votre pseudo :</td>
-      <td><input name="txtusername" type="text" id="txtusername" maxlength="40" size="20"></td>
-    </tr>
-
-    <tr>
-      <td align="right">L'adresse email enregistrée pour ce pseudo :</td>
-      <td><input name="txtemail" type="text" id="txtemail" maxlength="40" size="40"></td>
-    </tr>
-    <tr>
-
-      <td colspan="2" align="center">
-      Ces deux informations sont obligatoires !<br/>
-          <input type="submit" name="Submit" value="Envoyer">
-        </td>
-    </tr>
-    <tr>
-
-      <td colspan="2" align="center">
-          <a href="forgotlogin">J'ai oublié mon pseudo (login)</a>
-        </td>
-    </tr>
-  </table>
+<p class="account-eyebrow">Retrouvez votre collection</p><h1>Mot de passe oublié ?</h1>
+<p class="account-intro">Indiquez le pseudo de votre collection et son adresse e-mail. Nous vous enverrons les étapes pour choisir un nouveau mot de passe.</p>
+<form class="account-form" method="post" action="<?php echo BDO_URL; ?>compte/forgotpass?email=ok">
+    <?php echo adminCsrfField('account'); ?><label for="forgot-pseudo">Votre pseudo</label><input id="forgot-pseudo" name="txtusername" autocomplete="username" maxlength="25" required>
+    <label for="forgot-email">Adresse e-mail du compte</label><input id="forgot-email" name="txtemail" type="email" autocomplete="email" maxlength="254" required>
+    <button type="submit" class="account-primary">Recevoir les instructions</button>
 </form>
-</div>
+<p class="account-note">La réinitialisation déconnectera vos appareils et dissociera Google et Apple de ce pseudo. Vos autres collections seront conservées.</p>
+<p class="account-switch"><a href="<?php echo BDO_URL; ?>compte/forgotlogin">J’ai oublié mon pseudo</a></p>
+<p class="account-switch"><a href="<?php echo BDO_URL; ?>compte/connexion">Retour à la connexion</a></p>

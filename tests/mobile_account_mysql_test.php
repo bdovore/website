@@ -86,6 +86,25 @@ try {
         check($preferences === array('OpenCollec' => false, 'ExplicitContent' => false), 'API historique Userpref sans tables mobiles');
         check((new User())->getToken('historique', 'incorrect')['Error'] !== '', 'mauvais mot de passe historique refusé sans tables mobiles');
         check((new User())->getToken('absent', 'incorrect')['Token'] === null, 'utilisateur inconnu sans avertissement ni jeton');
+        session_save_path(sys_get_temp_dir()); session_id('bdovoretest' . bin2hex(random_bytes(12))); session_start();
+        $_GET = array(); $_COOKIE = array('PHPSESSID' => session_id()); $_SESSION = array();
+        $_POST = array('submitLoginConnect' => '1', 'user_login' => 'same@example.test', 'user_password' => 'ancien', 'csrf_token' => adminCsrfToken('account-auth'));
+        (new User())->autoLogin();
+        check($_SESSION['userConnect']->user_id == 1, 'connexion web par e-mail unique sans migration');
+        $db->query("INSERT INTO users (username,password,email) VALUES ('second-account','" . md5('second') . "','same@example.test')");
+        $_SESSION = array(); $_POST['csrf_token'] = adminCsrfToken('account-auth');
+        $web = new User(); $web->autoLogin();
+        check(!empty($web->loginNeedsPseudo) && empty($_SESSION['userConnect']->user_id), 'connexion web partagée demande le pseudo sans choisir le premier compte');
+        $_POST['user_pseudo'] = 'second-account'; $_POST['user_password'] = 'second'; $_POST['csrf_token'] = adminCsrfToken('account-auth');
+        (new User())->autoLogin();
+        check($_SESSION['userConnect']->user_id == 2, 'précision du pseudo ouvre la bonne collection web');
+        $_POST['csrf_token'] = 'invalid';
+        (new User())->autoLogin();
+        check($_SESSION['userConnect']->user_id == 2, 'CSRF invalide ne déconnecte pas une session existante');
+        $_POST = array(); $_SESSION = array('userConnect' => (object) array('email' => 'same@example.test', 'level' => 2));
+        (new User())->autoLogin();
+        check(empty($_SESSION['userConnect']->user_id) && $_SESSION['userConnect']->level === 5, 'ancien profil OpenID seul ne suffit jamais à authentifier');
+        session_destroy();
     } else {
     $oldToken = '1-abcdef0123456'; $oldHash = md5($oldToken);
     $db->query("INSERT INTO users (username,password,email,API_TOKEN,DATE_TOKEN,LAST_UPDATE) VALUES ('historique','" . md5('ancien') . "','same@example.test','$oldHash','2020-01-01','2026-01-01 12:00:00')");
