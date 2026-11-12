@@ -1,5 +1,8 @@
 <?php
 
+require_once dirname(__DIR__, 2) . '/inc/account_security.php';
+require_once dirname(__DIR__, 2) . '/config/mobile.php';
+
 /**
  *
  * @author laurent
@@ -133,32 +136,63 @@ FROM " . $this->table_name . "
 
     function autoLogin ()
     {
+        // Explicit API credentials take precedence over any ambient website cookie.
+        $bearer = AccountSecurity::bearer($_SERVER);
+        if ($bearer !== null) {
+            if (!BDO_MOBILE_API_ENABLED) $this->rejectApiSession(503, 'api_unavailable', 'Le service est temporairement indisponible.');
+            if (!$bearer) $this->rejectApiSession();
+            require_once __DIR__ . '/MobileAccount.php';
+            try {
+                $context = (new MobileAccount())->session($bearer);
+            } catch (MobileAccountException $e) {
+                $this->rejectApiSession();
+            } catch (Throwable $e) {
+                error_log('[mobile-account] authentication_unavailable');
+                $this->rejectApiSession(503, 'api_unavailable', 'Le service est temporairement indisponible.');
+            }
+            // Keep the identity request-local: revoking a Bearer cannot leave a web session behind.
+            if (session_status() === PHP_SESSION_ACTIVE) session_write_close();
+            $_SESSION['userConnect'] = $context['user'];
+            $this->set_data($context['user']);
+            return $this;
+        }
+        if (isset($_GET['API_TOKEN'])) {
+            if (!is_string($_GET['API_TOKEN']) || !$this->verifyToken($_GET['API_TOKEN'])) $this->rejectApiSession();
+            $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
+            $this->set_data($_SESSION['userConnect']);
+            return $this;
+        }
+        // Refresh website permissions/profile and invalidate pre-password-change sessions.
+        if (!empty($_SESSION['userConnect']->user_id)) {
+            $previous = $_SESSION['userConnect'];
+            $this->load('c', 'WHERE user_id = ' . intval($previous->user_id));
+            if ($this->dbSelect->nbLineResult !== 1 || intval($this->level) >= 98
+                || !hash_equals(AccountSecurity::stamp($previous), AccountSecurity::stamp($this))) {
+                $this->guest();
+            } else {
+                $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
+            }
+        }
         // deconnexion demandee
         if (isset($_POST['submitLoginDisconnect'])) {
             $this->logout();
         }
 
-        // tentative de connexion automatique
-        if ((! isset($_SESSION['userConnect']->user_id) or empty($_SESSION['userConnect']->user_id))
-                and issetNotEmpty($_COOKIE["username"] ?? "")
-                and issetNotEmpty($_COOKIE["pass"] ?? "")) {
-
-            $this->load('c', "
-                WHERE username ='" . Db_Escape_String($_COOKIE["username"]) . "'
-                AND password='" . Db_Escape_String($_COOKIE["pass"]) . "'
-                AND level<98
-                ");
-
-            if (1 == $this->dbSelect->nbLineResult) {
-                $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
-                $this->addNbConnect();
-            }
-            else {
-                setcookie("pass", "", time() - 3600);
-            }
+        // Retire the password-as-cookie mechanism, including the shared 'migrated' sentinel.
+        if (isset($_COOKIE['pass'])) {
+            setcookie('pass', '', array('expires' => time() - 3600, 'path' => '/', 'httponly' => true, 'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off', 'samesite' => 'Lax'));
+            unset($_COOKIE['pass']);
         }
         // connexion demandee
-        else if (isset($_POST['submitLoginConnect'])) {
+        if (isset($_POST['submitLoginConnect'])) {
+            if (BDO_MOBILE_API_ENABLED) {
+                require_once __DIR__ . '/MobileAccount.php';
+                try {
+                    $security = new MobileAccount();
+                    $security->throttle('login-ip', $_SERVER['REMOTE_ADDR'] ?? 'unknown', 60, 900);
+                    $security->throttle('login-user', mb_strtolower((string) ($_POST['user_login'] ?? ''), 'UTF-8'), 15, 900);
+                } catch (MobileAccountException $e) { http_response_code($e->status); exit(htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8')); }
+            }
 
             // -----------
             // absence de cookie indique la non acceptation des cookies par le
@@ -171,56 +205,36 @@ FROM " . $this->table_name . "
 
                     $authenticated = false;
 
-                    if (!empty($this->password_v2)) {
-                        // Utilisateur déjà migré : on utilise password_verify()
-                        $authenticated = password_verify($_POST['user_password'], $this->password_v2);
-                    } else {
-                        // Ancien utilisateur MD5 : on vérifie à l'ancienne...
-                        if (md5($_POST['user_password']) === $this->password) {
-                            $authenticated = true;
-                            // ...et on en profite pour migrer immédiatement
-                            $newHash = password_hash($_POST['user_password'], PASSWORD_BCRYPT, ['cost' => 12]);
-                            Db_query("UPDATE users SET 
-                                password_v2 = '" . Db_Escape_String($newHash) . "',
-                                password = 'migrated'
-                                WHERE user_id = " . intval($this->user_id));
-                        }
-                    }
+                    $authenticated = $this->verifyAndMigratePassword($_POST['user_password'] ?? null);
 
                     if ($authenticated) {
                         if ($this->level < 98) {
 
+                            session_regenerate_id(true);
                             $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
 
                             $this->addNbConnect();
 
                             // défini les paramètres de cookie
                             setcookie("username", $this->username, time() + 31104000, "/");
-                            // connexion automatique "se souvenir de moi"
-                            if (isset($_POST['chkvisit'])) {
-                                setcookie("pass", $this->password, time() + 31104000, "/");
-                            } else {
-                                setcookie("pass", $this->password, time() + 3600, "/"); // on mémorise pour 1h
-                            }
-                            $test = strpos($_SERVER['HTTP_REFERER'],"inscription?act=post" );
-                            // on retourne à la page d'origine de la connexion
-                            if (strpos($_SERVER['HTTP_REFERER'],"inscription?act=post" ) ) { 
-                                header('Location: '.BDO_URL);
-                            } else {
-                                header('Location: '.$_SERVER['HTTP_REFERER']);
-                                
-                            }
+                            $referer = $_SERVER['HTTP_REFERER'] ?? BDO_URL;
+                            $base = parse_url(BDO_URL);
+                            $target = parse_url($referer);
+                            // Restrict post-login redirects to the website's origin.
+                            if (!$target || ($target['host'] ?? '') !== ($base['host'] ?? '') || ($target['scheme'] ?? '') !== ($base['scheme'] ?? '') || strpos($referer, 'inscription?act=post') !== false) $referer = BDO_URL;
+                            header('Location: ' . $referer);
                         }
                         else {
-                            $this->error = 'Compte bloqué';
+                            $this->error = 'Identifiant ou mot de passe invalide';
                         }
                     }
                     else {
-                        $this->error = 'Mot de passe de connexion invalide';
+                        $this->error = 'Identifiant ou mot de passe invalide';
                     }
                 }
                 else {
-                    $this->error = 'Identifiant de connexion inconnu';
+                    AccountSecurity::dummyPasswordCheck($_POST['user_password'] ?? '');
+                    $this->error = 'Identifiant ou mot de passe invalide';
                 }
             }
             else {
@@ -263,16 +277,6 @@ FROM " . $this->table_name . "
             }
 
         }
-        // connexion réalisé par appel d'API avec un token
-        else if (isset($_GET["API_TOKEN"])) {
-            if ($this->verifyToken($_GET["API_TOKEN"])) {
-                $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
-            } else {
-                header("HTTP/1.1 401 Unauthorized");
-            }
-            
-            
-        }
         if ($this->error) {
             $this->guest();
         }
@@ -293,8 +297,9 @@ FROM " . $this->table_name . "
                 "last_connect" => date("Y-m-d H:i:s")
         );
 
-        $this->set_dataPaste($a_data);
-        $this->update();
+                   $issued = Db_query("UPDATE users SET API_TOKEN='" . Db_Escape_String($a_data['API_TOKEN']) . "', DATE_TOKEN='" . Db_Escape_String($a_data['DATE_TOKEN']) . "'
+                       WHERE user_id=" . intval($this->user_id) . " AND COALESCE(password_v2, '')='" . Db_Escape_String($this->password_v2 ?? '') . "' AND password='" . Db_Escape_String($this->password) . "'");
+                   if (!$issued || Db_affected_rows() !== 1) { $API_TOKEN = null; $error = 'Identifiant ou Mot de passe de connexion invalide'; }
     }
 
     public function guest ()
@@ -308,6 +313,9 @@ FROM " . $this->table_name . "
         $user->user_id = null;
         $user->username = null;
         $_SESSION['userConnect'] = $user;
+        $this->user_id = null;
+        $this->level = 5;
+        $this->username = null;
     }
 
     public function logout()
@@ -397,7 +405,7 @@ FROM " . $this->table_name . "
                 'server' => FORUM_DB_HOST));
 
         if ($connexion === false) {
-            echo "Forum : connexion impossible. Seul le compte bdovore a été créé.<br/>";
+            error_log('[account] forum_unavailable');
             return;
         }
 
@@ -422,7 +430,8 @@ FROM " . $this->table_name . "
             curl_setopt($ch, CURLOPT_TIMEOUT, 5);         
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_MAXREDIRS, 1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
             $response = curl_exec($ch);
             // Check the return value of curl_exec(), too
@@ -459,6 +468,13 @@ FROM " . $this->table_name . "
          */
 
         $user_id = intval($profile_user_id);
+        if (BDO_MOBILE_API_ENABLED) {
+            require_once __DIR__ . '/MobileAccount.php';
+            (new MobileAccount())->revokeAll($user_id);
+            Db_query('DELETE FROM mobile_challenges WHERE user_id=' . $user_id);
+            Db_query('DELETE t FROM mobile_web_tickets t JOIN mobile_sessions s ON s.id=t.session_id WHERE s.user_id=' . $user_id);
+            Db_query('DELETE FROM mobile_sessions WHERE user_id=' . $user_id);
+        }
 
         Db_query("UPDATE `bd_edition` SET `USER_ID`=NULL WHERE `user_id`='" . $user_id . "'");
         Db_query("UPDATE `bd_edition` SET `VALIDATOR`=NULL WHERE `VALIDATOR`='" . $user_id . "'");
@@ -645,27 +661,18 @@ FROM " . $this->table_name . "
 
     public function getToken($username, $password) {
          $this->load('c', "WHERE username ='" . Db_Escape_String($username) . "'");
-         $error = "";
+        $error = "";
+        $API_TOKEN = null;
         if (1 == $this->dbSelect->nbLineResult) {
 
             $authenticated = false;
 
-            if (!empty($this->password_v2)) {
-                $authenticated = password_verify($password, $this->password_v2);
-            } else {
-                $authenticated = (md5($password) === $this->password);
-                if ($authenticated) {
-                    // Migration au passage
-                    $newHash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
-                    Db_query("UPDATE users SET password_v2='" . Db_Escape_String($newHash) . "',
-                        password='migrated' WHERE user_id=" . intval($this->user_id));
-                }
-            }
+            $authenticated = $this->verifyAndMigratePassword($password);
 
             if ($authenticated) {
                 if ($this->level < 98) {
 
-                   $API_TOKEN = uniqid($prefix=$this->user_id."-");
+                   $API_TOKEN = $this->user_id . '-' . bin2hex(random_bytes(32));
                    $this->DATE_TOKEN =date('Y-m-d H:i:s');
                    $a_data = array(
                        "user_id" => $this->user_id,
@@ -685,18 +692,20 @@ FROM " . $this->table_name . "
             }
         }
         else {
+            AccountSecurity::dummyPasswordCheck($password);
             $error = 'Identifiant ou Mot de passe de connexion invalide';
         }
         
-        return (array("Token" => $API_TOKEN, "Timestamp" => $this->LAST_UPDATE, "Error" => $error));
+        return (array("Token" => $API_TOKEN, "Timestamp" => $this->LAST_UPDATE ?? null, "Error" => $error));
     }
     
     public function verifyToken ($token) {
+        if (!is_string($token) || !preg_match('/^([1-9][0-9]*)-([a-f0-9]+)$/D', $token)) return false;
         $tab = explode("-", $token, 2);
         $user_id = $tab[0];
         $this->load('c', "WHERE user_id =" . Db_Escape_String($user_id) . "");
          if (1 == $this->dbSelect->nbLineResult) {
-             if (md5($token) == $this->API_TOKEN) {
+             if (intval($this->level) < 98 && hash_equals((string) $this->API_TOKEN, md5($token))) {
                  if ($this->DATE_TOKEN ) {
                      // todo : rendre le token temporaire
                      return ($user_id);
@@ -709,5 +718,26 @@ FROM " . $this->table_name . "
          } else {
               $this->error = "Utilisateur inconnu";
          }
+    }
+
+    private function verifyAndMigratePassword($password)
+    {
+        if (!AccountSecurity::verifyPassword($password, $this)) return false;
+        if (empty($this->password_v2)) {
+            $hash = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
+            if (!Db_query("UPDATE users SET password_v2='" . Db_Escape_String($hash) . "', password='migrated', LAST_UPDATE=LAST_UPDATE WHERE user_id=" . intval($this->user_id) . " AND COALESCE(password_v2, '')='' AND password='" . Db_Escape_String($this->password) . "'")) return false;
+            $this->load('c', 'WHERE user_id = ' . intval($this->user_id));
+            if (!AccountSecurity::verifyPassword($password, $this)) return false;
+        }
+        return true;
+    }
+
+    private function rejectApiSession($status = 401, $code = 'invalid_session', $message = 'Session invalide. Veuillez vous reconnecter.')
+    {
+        http_response_code($status);
+        header('Content-Type: application/json; charset=UTF-8');
+        header('Cache-Control: no-store');
+        echo json_encode(array('data' => null, 'error' => array('code' => $code, 'message' => $message)));
+        exit;
     }
 }

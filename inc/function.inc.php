@@ -74,12 +74,8 @@ function Checkmail ($email)
  */
 function Checkpassword ($password)
 {
-    if (is_integer(strrpos($password, ' ')) or strlen($password) < 6) {
-        return "Le password doit contenir au moins 6 caractères et ne doit pas comporter d'espaces.";
-    }
-    else {
-        return true;
-    }
+    require_once __DIR__ . '/account_security.php';
+    return AccountSecurity::passwordError($password) ?: true;
 }
 
 /**

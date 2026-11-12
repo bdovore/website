@@ -37,8 +37,22 @@ class Auth extends Bdo_Controller
     }
     
     public function Gettoken () {
-        $username = $_POST['user_login'];
-        $password = $_POST['user_password'];
+        $username = isset($_POST['user_login']) && is_string($_POST['user_login']) ? $_POST['user_login'] : '';
+        $password = isset($_POST['user_password']) && is_string($_POST['user_password']) ? $_POST['user_password'] : '';
+        if (BDO_MOBILE_API_ENABLED) {
+            require_once dirname(__DIR__) . '/models/MobileAccount.php';
+            try {
+                $security = new MobileAccount();
+                $security->throttle('login-ip', $_SERVER['REMOTE_ADDR'] ?? 'unknown', 60, 900);
+                $security->throttle('login-user', mb_strtolower($username, 'UTF-8'), 15, 900);
+            } catch (MobileAccountException $e) {
+                http_response_code($e->status);
+                header('Content-Type: application/json; charset=UTF-8');
+                header('Cache-Control: no-store');
+                echo json_encode(array('Token' => null, 'Timestamp' => null, 'Error' => $e->getMessage()));
+                return;
+            }
+        }
         $this->loadModel("User");
         $token = $this->User->getToken($username,$password );
         
