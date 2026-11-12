@@ -74,6 +74,11 @@ try {
         $_SERVER = array(); $_POST = array(); $_COOKIE = array(); $_SESSION = array(); $_GET = array('API_TOKEN' => $token['Token']);
         $legacyUser = new User(); $legacyUser->autoLogin(); Bdo_Cfg::setVar('user', $legacyUser);
         check($_SESSION['userConnect']->user_id == 1, 'authentification historique dans le bootstrap sans tables mobiles');
+        $legacyTimestamp = $db->query('SELECT LAST_UPDATE FROM users WHERE user_id=1')->fetch_object()->LAST_UPDATE;
+        $legacyUser->addNbConnect();
+        $counted = $db->query('SELECT nb_connect, last_connect, LAST_UPDATE FROM users WHERE user_id=1')->fetch_object();
+        check(intval($counted->nb_connect) === 1 && !empty($counted->last_connect), 'comptage de connexion web sans tables mobiles');
+        check($counted->LAST_UPDATE === $legacyTimestamp && (new User())->verifyToken($token['Token']) == 1, 'comptage web conserve le jeton et le timestamp collection');
         require_once BDO_DIR . 'mvc/controllers/Getjson.php';
         Bdo_Cfg::setVar('controller', 'Getjson'); Bdo_Cfg::setVar('action', 'Index');
         $_GET['data'] = 'Userpref'; $_GET['compress'] = 0;
@@ -96,6 +101,11 @@ try {
     check(array_keys($legacyLogin) === array('Token', 'Timestamp', 'Error') && $legacyLogin['Error'] === '', 'contrat historique conservé');
     check(preg_match('/^1-[a-f0-9]+$/D', $legacyLogin['Token']) === 1, 'format compatible avec le regex mobile actuel');
     check((new User())->verifyToken($legacyLogin['Token']) == 1, 'jeton historique nouvellement émis accepté');
+    $countedBefore = $service->user(1);
+    $websiteUser = new User(); $websiteUser->load('c', 'WHERE user_id=1'); $websiteUser->addNbConnect();
+    $countedAfter = $service->user(1);
+    check(intval($countedAfter->nb_connect) === intval($countedBefore->nb_connect) + 1 && !empty($countedAfter->last_connect), 'comptage de connexion web après migration');
+    check($countedBefore->API_TOKEN === $countedAfter->API_TOKEN && $countedBefore->LAST_UPDATE === $countedAfter->LAST_UPDATE, 'connexion web ne modifie ni jeton ni timestamp collection');
     check($service->session($login['token'])['user']->user_id == 1, 'connexion historique ne révoque pas la session moderne');
     $second = $service->login(array('username' => 'historique', 'password' => 'ancien'), 'ip2');
     check((new User())->verifyToken($legacyLogin['Token']) == 1, 'connexion moderne ne remplace pas API_TOKEN');

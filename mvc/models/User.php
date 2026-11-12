@@ -297,9 +297,7 @@ FROM " . $this->table_name . "
                 "last_connect" => date("Y-m-d H:i:s")
         );
 
-                   $issued = Db_query("UPDATE users SET API_TOKEN='" . Db_Escape_String($a_data['API_TOKEN']) . "', DATE_TOKEN='" . Db_Escape_String($a_data['DATE_TOKEN']) . "'
-                       WHERE user_id=" . intval($this->user_id) . " AND COALESCE(password_v2, '')='" . Db_Escape_String($this->password_v2 ?? '') . "' AND password='" . Db_Escape_String($this->password) . "'");
-                   if (!$issued || Db_affected_rows() !== 1) { $API_TOKEN = null; $error = 'Identifiant ou Mot de passe de connexion invalide'; }
+        Db_query('UPDATE users SET nb_connect = nb_connect + 1, last_connect = NOW(), LAST_UPDATE = LAST_UPDATE WHERE user_id = ' . intval($this->user_id));
     }
 
     public function guest ()
@@ -680,8 +678,9 @@ FROM " . $this->table_name . "
                         "DATE_TOKEN" =>  date('Y-m-d H:i:s')
                     );
 
-                    $this->set_dataPaste($a_data);
-                   $this->update();
+                   $issued = Db_query("UPDATE users SET API_TOKEN='" . Db_Escape_String($a_data['API_TOKEN']) . "', DATE_TOKEN='" . Db_Escape_String($a_data['DATE_TOKEN']) . "'
+                       WHERE user_id=" . intval($this->user_id) . " AND COALESCE(password_v2, '')='" . Db_Escape_String($this->password_v2 ?? '') . "' AND password='" . Db_Escape_String($this->password) . "'");
+                   if (!$issued || Db_affected_rows() !== 1) { $API_TOKEN = null; $error = 'Identifiant ou Mot de passe de connexion invalide'; }
                 }
                 else {
                     $error = 'Compte bloqué';
