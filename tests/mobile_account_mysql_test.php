@@ -31,6 +31,17 @@ require_once BDO_DIR . 'library/Bdo/Controller.php';
 require_once BDO_DIR . 'mvc/controllers/Auth.php';
 require_once BDO_DIR . 'mvc/controllers/Apicompte.php';
 
+// A separate connection competes with the parent while its replacement is paused.
+if (in_array('--challenge-worker', $argv, true)) {
+    if (!preg_match('/^bdovore_auth_test_[a-f0-9]{24}$/D', $argv[2] ?? '')) exit(1);
+    $db->select_db($argv[2]); $db->set_charset('utf8mb4');
+    try {
+        (new MobileAccount($db, function () { return true; }))->forgotPassword(array('username' => 'challenge-race', 'email' => 'race@example.test'), 'race-worker');
+        echo json_encode(array('status' => 200));
+    } catch (MobileAccountException $e) { echo json_encode(array('status' => $e->status, 'code' => $e->errorCode)); }
+    exit;
+}
+
 try {
     $db->query("CREATE DATABASE `$database` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
     $createdDatabase = true;
@@ -189,12 +200,20 @@ try {
     check(intval($confirmed->level) === 2, 'confirmation active le compte');
     rejects(function () use ($service, $registration, $code) { $service->verifyRegistration(array('challenge_id' => $registration['challenge_id'], 'code' => $code)); }, 422, 'code non réutilisable');
     check((new User())->getToken('nouveau', $password)['Error'] === '', 'nouveau compte utilisable dans ancienne app');
+    $oldAddressReset = $service->forgotPassword(array('username' => 'historique', 'email' => 'same@example.test'), 'old-address-ip');
+    preg_match('/[0-9]{8}/', end($messages)['body'], $match); $oldAddressCode = $match[0];
+    $db->query("INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (1, 'old-address-link', '2099-01-01')");
     $emailChange = $service->requestEmail($service->user(1), array('email' => 'new@example.test', 'current_password' => 'ancien'));
     preg_match('/[0-9]{8}/', end($messages)['body'], $match);
     check($service->user(1)->email === 'same@example.test', 'ancienne adresse conservée avant confirmation');
     rejects(function () use ($service, $confirmed, $emailChange, $match) { $service->confirmEmail($confirmed, array('challenge_id' => $emailChange['challenge_id'], 'code' => $match[0])); }, 422, 'code e-mail lié à son compte');
     $emailProfile = $service->confirmEmail($service->user(1), array('challenge_id' => $emailChange['challenge_id'], 'code' => $match[0]));
     check($emailProfile['email'] === 'new@example.test', 'nouvelle adresse confirmée');
+    rejects(function () use ($service, $oldAddressReset, $oldAddressCode) { $service->resetPassword(array('challenge_id' => $oldAddressReset['challenge_id'], 'code' => $oldAddressCode, 'password' => 'mot de passe refusé')); }, 422, 'changement d’adresse invalide le code envoyé à l’ancienne adresse');
+    check(intval($db->query('SELECT COUNT(*) AS total FROM password_reset_tokens WHERE user_id=1')->fetch_object()->total) === 0, 'changement d’adresse invalide les anciens liens de récupération');
+    // A recovery created from an old snapshot after the purge must also be refused.
+    $db->query("UPDATE mobile_challenges SET consumed_at=NULL WHERE id='" . $oldAddressReset['challenge_id'] . "'");
+    rejects(function () use ($service, $oldAddressReset, $oldAddressCode) { $service->resetPassword(array('challenge_id' => $oldAddressReset['challenge_id'], 'code' => $oldAddressCode, 'password' => 'mot de passe refusé')); }, 422, 'récupération refusée si son adresse ne correspond plus au compte');
     $db->query("INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (1, 'older-reset-link', '2099-01-01')");
     $reset = $service->forgotPassword(array('username' => 'historique', 'email' => 'new@example.test'), 'ip4');
     preg_match('/[0-9]{8}/', end($messages)['body'], $match);
@@ -239,6 +258,52 @@ try {
     $fresh = $service->login(array('username' => 'nouveau', 'password' => $password), 'ip11');
     $db->query('DELETE FROM users WHERE user_id=' . intval($confirmed->user_id));
     rejects(function () use ($service, $fresh) { $service->session($fresh['token']); }, 401, 'suppression du compte invalide ses sessions');
+
+    $db->query("INSERT INTO users (username,email,password) VALUES ('challenge-race','race@example.test','" . md5('race-password') . "')");
+    $raceUserId = intval($db->insert_id);
+    $raceMessages = array();
+    $raceDb = new class($db) {
+        private $db;
+        public $beforeInsert;
+        public $beforePasswordUpdate;
+        public function __construct($db) { $this->db = $db; }
+        public function prepare($sql) {
+            foreach (array('INSERT INTO mobile_challenges ' => 'beforeInsert', 'UPDATE users SET password_v2' => 'beforePasswordUpdate') as $prefix => $hook) {
+                if (strpos($sql, $prefix) === 0 && $this->$hook) {
+                    $callback = $this->$hook; $this->$hook = null; $callback();
+                }
+            }
+            return $this->db->prepare($sql);
+        }
+        public function __call($method, $args) { return $this->db->$method(...$args); }
+    };
+    $raceService = new MobileAccount($raceDb, function ($email, $subject, $body) use (&$raceMessages) { $raceMessages[] = $body; return true; });
+    $raceDb->beforeInsert = function () use ($database) {
+        $worker = proc_open(array(PHP_BINARY, '-d', 'xdebug.mode=off', __FILE__, '--challenge-worker', $database), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        if (!is_resource($worker)) throw new RuntimeException('Impossible de lancer la requête concurrente.');
+        fclose($pipes[0]);
+        $response = stream_get_contents($pipes[1]); fclose($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]); fclose($pipes[2]);
+        $status = proc_close($worker);
+        check($status === 0 && $stderr === '' && json_decode($response, true) === array('status' => 503, 'code' => 'challenge_busy'), 'deux créations concurrentes du premier code ne peuvent pas s’intercaler');
+    };
+    $firstRace = $raceService->forgotPassword(array('username' => 'challenge-race', 'email' => 'race@example.test'), 'race-parent');
+    preg_match('/[0-9]{8}/', end($raceMessages), $match); $firstRaceCode = $match[0];
+    check(intval($db->query("SELECT COUNT(*) AS total FROM mobile_challenges WHERE user_id=$raceUserId AND purpose='reset' AND consumed_at IS NULL")->fetch_object()->total) === 1, 'un seul code actif après deux demandes concurrentes');
+    $latestRace = $raceService->forgotPassword(array('username' => 'challenge-race', 'email' => 'race@example.test'), 'race-parent');
+    preg_match('/[0-9]{8}/', end($raceMessages), $match); $latestRaceCode = $match[0];
+    rejects(function () use ($raceService, $firstRace, $firstRaceCode) { $raceService->resetPassword(array('challenge_id' => $firstRace['challenge_id'], 'code' => $firstRaceCode, 'password' => 'race-new-password')); }, 422, 'un nouveau code remplace le précédent après libération du verrou');
+    $previousEmail = $raceService->requestEmail($raceService->user($raceUserId), array('email' => 'race-new@example.test', 'current_password' => 'race-password'));
+    $raceDb->beforeInsert = function () { throw new RuntimeException('insertion interrompue'); };
+    try { $raceService->requestEmail($raceService->user($raceUserId), array('email' => 'race-new@example.test', 'current_password' => 'race-password')); check(false, 'échec d’insertion propagé'); }
+    catch (RuntimeException $e) { check($e->getMessage() === 'insertion interrompue', 'échec d’insertion propagé'); }
+    check($db->query("SELECT consumed_at FROM mobile_challenges WHERE id='" . $previousEmail['challenge_id'] . "'")->fetch_object()->consumed_at === null, 'échec du remplacement conserve le code précédent');
+    // Rollback and lock release must let a retry succeed.
+    $emailRetry = $raceService->requestEmail($raceService->user($raceUserId), array('email' => 'race-new@example.test', 'current_password' => 'race-password'));
+    check(!empty($emailRetry['challenge_id']), 'verrou libéré et transaction annulée après un échec');
+    $raceDb->beforePasswordUpdate = function () use ($db, $raceUserId) { $db->query("UPDATE users SET email='changed-during-reset@example.test', LAST_UPDATE=LAST_UPDATE WHERE user_id=$raceUserId"); };
+    rejects(function () use ($raceService, $latestRace, $latestRaceCode) { $raceService->resetPassword(array('challenge_id' => $latestRace['challenge_id'], 'code' => $latestRaceCode, 'password' => 'race-new-password')); }, 409, 'changement d’adresse entre validation du code et écriture du mot de passe détecté');
+    check(AccountSecurity::verifyPassword('race-password', $raceService->user($raceUserId)), 'récupération concurrente refusée conserve le mot de passe');
     }
     // Same reminder service with and without the mobile schema; never sends real mail.
     $db->query("INSERT INTO users (username,email,level,password) VALUES

@@ -74,7 +74,7 @@ Profil : `user_id`, `public_id`, `username`, `email`, `location`, `birthday`, `o
 
 Sessions : jetons `bdo2_` suivis de 32 octets aléatoires en hexadécimal ; empreinte SHA-256 en base ; expiration après 30 jours d'inactivité et au plus 90 jours. Les durées sont surchargeables dans `config/constante.php` via `BDO_MOBILE_IDLE_SECONDS` et `BDO_MOBILE_ABSOLUTE_SECONDS`.
 
-Codes e-mail : huit chiffres, durée dix minutes, cinq tentatives maximum et usage unique. Un nouveau code invalide le précédent pour ce compte et cette opération. La récupération garde le couple pseudo/e-mail : une même adresse peut appartenir à plusieurs comptes historiques.
+Codes e-mail : huit chiffres, durée dix minutes, cinq tentatives maximum et usage unique. Un nouveau code invalide le précédent pour ce compte et cette opération, y compris en cas de demandes simultanées ; le remplacement est transactionnel et protégé par un verrou MySQL court. L'envoi d'e-mail se fait après libération du verrou. La récupération garde le couple pseudo/e-mail : une même adresse peut appartenir à plusieurs comptes historiques. La confirmation d'une nouvelle adresse invalide les codes et anciens liens de récupération du compte ; une récupération vérifie aussi que l'adresse n'a pas changé avant de modifier le mot de passe.
 
 Tickets web : 32 octets aléatoires, empreinte seule en base, usage unique, durée une minute, liés à une session encore valide. Destinations possibles : ajout (`type: album`, `keyword`), correction (`type: correction`, `id_edition`), nouvelle édition (`type: edition`, `id_tome`). Aucune URL de redirection libre n'est acceptée.
 

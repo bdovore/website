@@ -218,9 +218,25 @@ class MobileAccount
         $id = bin2hex(random_bytes(16));
         $code = (string) random_int(10000000, 99999999);
         $now = $this->date();
-        $this->change('UPDATE mobile_challenges SET consumed_at = ? WHERE user_id = ? AND purpose = ? AND consumed_at IS NULL', array($now, $user->user_id, $purpose));
-        $this->change('INSERT INTO mobile_challenges (id, user_id, purpose, code_hash, credential_stamp, target_email, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            array($id, $user->user_id, $purpose, hash('sha256', $id . ':' . $code), AccountSecurity::stamp($user), $email, $now, $this->date($this->now() + 600)));
+        // Serialize even the first challenge, when there is no row to lock yet.
+        $lock = hash('sha256', $this->row('SELECT DATABASE() AS name')->name . ':challenge:' . $user->user_id . ':' . $purpose);
+        if (intval($this->row('SELECT GET_LOCK(?, 5) AS acquired', array($lock))->acquired) !== 1) {
+            throw new MobileAccountException('Une demande est déjà en cours. Réessayez.', 503, 'challenge_busy');
+        }
+        try {
+            $this->db->begin_transaction();
+            try {
+                $this->change('UPDATE mobile_challenges SET consumed_at = ? WHERE user_id = ? AND purpose = ? AND consumed_at IS NULL', array($now, $user->user_id, $purpose));
+                $this->change('INSERT INTO mobile_challenges (id, user_id, purpose, code_hash, credential_stamp, target_email, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                    array($id, $user->user_id, $purpose, hash('sha256', $id . ':' . $code), AccountSecurity::stamp($user), $email, $now, $this->date($this->now() + 600)));
+                $this->db->commit();
+            } catch (Throwable $e) {
+                $this->db->rollback();
+                throw $e;
+            }
+        } finally {
+            $this->row('SELECT RELEASE_LOCK(?)', array($lock));
+        }
         $subjects = array('register' => 'Confirmez votre compte BDovore', 'reset' => 'Réinitialisation du mot de passe BDovore', 'email' => 'Confirmez votre nouvelle adresse BDovore');
         if (!call_user_func($this->sendMail, $email, $subjects[$purpose], "Votre code BDovore : $code\n\nIl est valable 10 minutes et ne peut être utilisé qu'une fois.\nSi vous n'êtes pas à l'origine de cette demande, ignorez ce message.")) {
             $this->change('UPDATE mobile_challenges SET consumed_at = ? WHERE id = ?', array($now, $id));
@@ -239,6 +255,7 @@ class MobileAccount
         $challenge = $this->row('SELECT * FROM mobile_challenges WHERE id = ?', array($id));
         $user = $this->user($challenge->user_id);
         if (!$user || ($userId !== null && intval($userId) !== intval($user->user_id)) || !hash_equals($challenge->credential_stamp, AccountSecurity::stamp($user))
+            || ($purpose === 'reset' && strcasecmp($challenge->target_email, $user->email) !== 0)
             || !hash_equals($challenge->code_hash, hash('sha256', $id . ':' . $code))) throw $error;
         $affected = $this->change('UPDATE mobile_challenges SET consumed_at = ? WHERE id = ? AND consumed_at IS NULL AND expires_at > ?', array($this->date(), $id, $this->date()));
         if (!$affected) throw $error;
@@ -350,8 +367,8 @@ class MobileAccount
     }
     private function setPassword($user, $password)
     {
-        $changed = $this->change("UPDATE users SET password_v2 = ?, password = 'migrated', API_TOKEN = NULL, DATE_TOKEN = NULL, LAST_UPDATE = LAST_UPDATE WHERE user_id = ? AND COALESCE(password_v2, '') = ? AND password = ?",
-            array(AccountSecurity::hashPassword($password), $user->user_id, $user->password_v2 ?? '', $user->password));
+        $changed = $this->change("UPDATE users SET password_v2 = ?, password = 'migrated', API_TOKEN = NULL, DATE_TOKEN = NULL, LAST_UPDATE = LAST_UPDATE WHERE user_id = ? AND COALESCE(password_v2, '') = ? AND password = ? AND email = ?",
+            array(AccountSecurity::hashPassword($password), $user->user_id, $user->password_v2 ?? '', $user->password, $user->email));
         if (!$changed) throw new MobileAccountException('Le compte a changé. Veuillez vous reconnecter.', 409, 'account_changed');
         $this->revokeAll($user->user_id);
         call_user_func($this->sendMail, $user->email, 'Votre mot de passe BDovore a été modifié', "Votre mot de passe BDovore a été modifié. Si vous n'êtes pas à l'origine de cette modification, contactez l'équipe BDovore.");
@@ -382,6 +399,8 @@ class MobileAccount
     {
         list($challenge) = $this->consume($input, 'email', $user->user_id);
         $this->change('UPDATE users SET email = ?, LAST_UPDATE = LAST_UPDATE WHERE user_id = ?', array($challenge->target_email, $user->user_id));
+        $this->change("UPDATE mobile_challenges SET consumed_at = ? WHERE user_id = ? AND purpose = 'reset' AND consumed_at IS NULL", array($this->date(), $user->user_id));
+        $this->change('DELETE FROM password_reset_tokens WHERE user_id = ?', array($user->user_id));
         call_user_func($this->sendMail, $user->email, 'Votre adresse BDovore a été modifiée', "Votre adresse e-mail BDovore a été modifiée. Si vous n'êtes pas à l'origine de cette modification, contactez l'équipe BDovore.");
         return $this->profile($this->user($user->user_id));
     }
