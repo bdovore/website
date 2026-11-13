@@ -1,5 +1,5 @@
 <?php
-// Configure in constante.php. Secrets and Apple keys must never be committed.
+// Configure in constante.php. Secrets and Apple keys must never be committed. 
 if (!defined('BDO_SOCIAL_ENABLED')) define('BDO_SOCIAL_ENABLED', false);
 if (!defined('BDO_GOOGLE_CLIENT_ID')) define('BDO_GOOGLE_CLIENT_ID', '');
 if (!defined('BDO_GOOGLE_CLIENT_SECRET')) define('BDO_GOOGLE_CLIENT_SECRET', '');
