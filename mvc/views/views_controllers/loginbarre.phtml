@@ -50,6 +50,7 @@ $userInitial = function_exists('mb_substr') ? mb_strtoupper(mb_substr($username,
                 <button class="header-account-primary" type="submit" name="submitLoginConnect" value="1">Se connecter</button>
             </form>
             <?php $socialManage = false; require __DIR__ . '/account/socialbuttons.phtml'; ?>
+            <p class="header-account-signup"><a href="<?php echo BDO_URL; ?>compte/forgotlogin">Pseudo oublié ?</a></p>
             <p class="header-account-signup">Pas encore de compte ? <a href="<?php echo BDO_URL; ?>compte/inscription">Créer un compte</a></p>
         <?php endif; ?>
     </div>

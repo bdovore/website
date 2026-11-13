@@ -350,7 +350,7 @@ class Compte extends Bdo_Controller {
 // initialisation des messages d'erreur
         $stringerror[0] = "";
         $stringerror[1] = "Veuillez remplir les champs indiqu&eacute;s en rouge";
-        $stringerror[2] = "Le mot de passe doit contenir au moins 15 caractères et au maximum 72 octets";
+        $stringerror[2] = "Le mot de passe doit contenir au moins 6 caractères et au maximum 72 octets";
         $stringerror[3] = "Les mots de passe ne concordent pas";
         $stringerror[4] = "veuillez entrer une adresse e-mail valide";
         $stringerror[5] = "le nom d'utilisateur ne doit comporter que lettres / chiffres";
@@ -588,49 +588,25 @@ class Compte extends Bdo_Controller {
 
     
     public function forgotLogin() {
-        $login = getVal("login");
-        $this->view->layout = "iframe";
-        if ($login=="ok")
-        {//initialise la procédure de renvoi
-            
-            $user_email = postVal("txtemail");
-            $this->loadModel("User");
-            $dbs_user = $this->User->load("c", " WHERE  email = '".Db_Escape_String($user_email)."'");
-
-            //Verifie qu'un nom a été retourné par la query
-            if (count($dbs_user->a_dataQuery) == 0)
-            {
-                $this->view->addAlertPage("L'utilisateur n'existe pas ou l'adresse e-mail est erron&eacute;e !");
-                            $this->view->addPhtmlFile('alert', 'BODY');
-
+        header('Cache-Control: no-store');
+        $this->view->layout = 'account';
+        $this->view->a_phtmlFile = array('BODY' => 'compte/forgotlogin');
+        $email = postVal('txtemail', '');
+        $error = ''; $sent = '';
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+            $this->mutationGuard();
+            require_once dirname(__DIR__) . '/models/MobileAccount.php';
+            try {
+                $result = (new MobileAccount())->forgotLogin(array('email' => $email), $_SERVER['REMOTE_ADDR'] ?? 'unknown');
+                $sent = $result['message'];
+            } catch (MobileAccountException $e) {
+                http_response_code($e->status);
+                $error = $e->getMessage();
             }
-            else {
-                 $listLogin = "";
-                 $nb = 0;
-                // on renvoie le/ les login pour l'utilisateur
-                foreach ($dbs_user->a_dataQuery as $u) {
-                    $listLogin .= $u->username."\n";
-                    $nb++;
-                }
-
-                //Prépare l'email à envoyer
-                $textemail = "Bonjour,\n\n";
-                $textemail .= "Suite à votre demande, voici le(s) compte(s) www.bdovore.com associé(s) à votre adresse email:\n\n";
-               
-                $textemail .= "$listLogin\n\n";
-                $textemail .= "Si vous avez oublié votre mot de passe pour un compte, utilisez la fonction Mot de passe oublié avec votre login.\n";
-                $textemail .= "Amicalement\n";
-
-
-                bdovoreMail($user_email,"Votre pseudo Bdovore",$textemail);
-                //echo $textemail;
-                echo  "Votre pseudo a &eacute;t&eacute; envoy&eacute;. Vous pouvez fermer cette fenêtre.";
-                exit();
-             }
         }
-
+        $this->view->set_var(array('PAGETITLE' => 'Retrouver mes pseudos BDovore', 'recovery_sent' => $sent,
+            'recovery_error' => $error, 'recovery_email' => is_string($email) ? $email : ''));
         $this->view->render();
-
     }
 
 

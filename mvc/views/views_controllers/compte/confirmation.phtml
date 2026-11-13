@@ -6,9 +6,9 @@
         <?php echo adminCsrfField('account'); ?>
         <label>Code reçu par e-mail <input name="code" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" autocomplete="one-time-code" required></label>
         <?php if ($view->purpose === 'reset') : ?>
-            <label>Nouveau mot de passe <input name="password" type="password" autocomplete="new-password" minlength="15" required></label>
-            <label>Confirmation <input name="password_confirmation" type="password" autocomplete="new-password" minlength="15" required></label>
-            <p>Au moins 15 caractères, au maximum 72 octets. Les espaces sont autorisés.</p>
+            <label>Nouveau mot de passe <input name="password" type="password" autocomplete="new-password" minlength="6" required></label>
+            <label>Confirmation <input name="password_confirmation" type="password" autocomplete="new-password" minlength="6" required></label>
+            <p>Au moins 6 caractères, au maximum 72 octets. Les espaces sont autorisés.</p>
         <?php endif; ?>
         <button type="submit" class="account-primary">Confirmer</button>
     </form>

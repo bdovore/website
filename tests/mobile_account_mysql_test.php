@@ -240,6 +240,41 @@ try {
     $db->query('DELETE FROM users WHERE user_id=' . intval($confirmed->user_id));
     rejects(function () use ($service, $fresh) { $service->session($fresh['token']); }, 401, 'suppression du compte invalide ses sessions');
     }
+    // Same reminder service with and without the mobile schema; never sends real mail.
+    $db->query("INSERT INTO users (username,email,level,password) VALUES
+        ('rappel-admin','reminder@example.test',0,'admin-secret'),
+        ('rappel-actif','reminder@example.test',2,'member-secret'),
+        ('rappel-attente','reminder@example.test',98,'pending-secret'),
+        ('rappel-bloque','reminder@example.test',99,'blocked-secret'),
+        ('rappel-inactif','inactive@example.test',99,'inactive-secret'),
+        ('rappel-seul','single@example.test',2,'single-secret')");
+    $beforeReminder = $db->query("SELECT * FROM users WHERE username LIKE 'rappel-%' ORDER BY user_id")->fetch_all(MYSQLI_ASSOC);
+    $reminderMessages = array();
+    $reminders = new MobileAccount($db, function ($email, $subject, $body) use (&$reminderMessages) { $reminderMessages[] = compact('email', 'subject', 'body'); return true; });
+    $reminder = $reminders->forgotLogin(array('email' => ' REMINDER@example.test '), 'reminder-ip');
+    check(count($reminderMessages) === 1 && $reminderMessages[0]['email'] === 'REMINDER@example.test', 'un seul e-mail envoyé pour une adresse partagée, espaces retirés et casse ignorée');
+    $body = $reminderMessages[0]['body'];
+    check(strpos($body, '<li>rappel-actif</li>') !== false && strpos($body, '<li>rappel-admin</li>') !== false, 'tous les pseudos actifs de l’adresse sont rappelés, y compris administrateur');
+    check(strpos($body, 'rappel-attente') === false && strpos($body, 'rappel-bloque') === false && strpos($body, 'rappel-seul') === false, 'comptes en attente, bloqués et autres adresses exclus');
+    check(strpos($body, 'compte/connexion') !== false && strpos($body, 'compte/forgotpass') !== false && strpos($body, '-secret') === false, 'e-mail contient les suites utiles sans secret de compte');
+    $unknownReminder = $reminders->forgotLogin(array('email' => 'unknown@example.test'), 'reminder-unknown-ip');
+    $inactiveReminder = $reminders->forgotLogin(array('email' => 'inactive@example.test'), 'reminder-inactive-ip');
+    check($reminder === $unknownReminder && $reminder === $inactiveReminder && count($reminderMessages) === 1 && array_keys($reminder) === array('message'), 'même réponse sans pseudos pour une adresse inconnue ou sans compte actif, sans envoi');
+    $reminders->forgotLogin(array('email' => 'single@example.test'), 'reminder-single-ip');
+    check(count($reminderMessages) === 2 && strpos(end($reminderMessages)['body'], '<li>rappel-seul</li>') !== false, 'un compte unique reçoit aussi son pseudo');
+    foreach (array('incorrect', array('invalid'), "user@example.test\r\nBcc: other@example.test") as $email) {
+        rejects(function () use ($reminders, $email) { $reminders->forgotLogin(array('email' => $email), 'reminder-invalid-ip'); }, 422, 'adresse invalide refusée');
+    }
+    $failedReminder = new MobileAccount($db, function () { return false; });
+    rejects(function () use ($failedReminder) { $failedReminder->forgotLogin(array('email' => 'single@example.test'), 'reminder-failure-ip'); }, 503, 'échec d’envoi signalé pour permettre une nouvelle tentative');
+    check($beforeReminder === $db->query("SELECT * FROM users WHERE username LIKE 'rappel-%' ORDER BY user_id")->fetch_all(MYSQLI_ASSOC), 'rappel ne modifie aucun compte ni mot de passe');
+    if (!$legacyOnly) {
+        $reminders->forgotLogin(array('email' => 'reminder@example.test'), 'reminder-ip-2');
+        $reminders->forgotLogin(array('email' => 'reminder@example.test'), 'reminder-ip-3');
+        rejects(function () use ($reminders) { $reminders->forgotLogin(array('email' => 'REMINDER@example.test'), 'reminder-ip-4'); }, 429, 'limite par adresse partagée entre IP et casses différentes');
+        for ($i = 0; $i < 10; $i++) $reminders->forgotLogin(array('email' => "unknown$i@example.test"), 'reminder-throttled-ip');
+        rejects(function () use ($reminders) { $reminders->forgotLogin(array('email' => 'other@example.test'), 'reminder-throttled-ip'); }, 429, 'limite par IP même avec des adresses différentes');
+    }
 } catch (Throwable $e) { $failures++; fwrite(STDERR, get_class($e) . ': ' . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n"); }
 finally { if ($createdDatabase) $db->query("DROP DATABASE `$database`"); }
 echo "$checks contrôles, $failures échec(s).\n";

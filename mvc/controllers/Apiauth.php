@@ -20,6 +20,7 @@ class Apiauth extends Bdo_AccountApiController
             return array('message' => 'Compte confirmé. Vous pouvez vous connecter.');
         });
     }
+    public function Forgotlogin() { $this->run('POST', function ($service, $input) { return $service->forgotLogin($input, $this->ip()); }); }
     public function Forgotpassword() { $this->run('POST', function ($service, $input) { return $service->forgotPassword($input, $this->ip()); }); }
     public function Resetpassword() {
         $this->run('POST', function ($service, $input) {

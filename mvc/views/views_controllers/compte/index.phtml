@@ -112,7 +112,7 @@
     <form action="<?php echo BDO_URL; ?><?php echo $hasAccountPassword ? 'compte?act=newpass&amp;user_id=' . intval($view->USERID) . $profileSiteQuery : 'compte/initialpassword'; ?>" method="post">
         <?php echo adminCsrfField('account'); ?>
         <?php if ($hasAccountPassword) : ?><label>Mot de passe actuel <input name="current_password" type="password" autocomplete="current-password" required></label><?php endif; ?>
-        <p>Le nouveau mot de passe doit contenir au moins 15 caractères et au maximum 72 octets. Les espaces sont autorisés.</p>
+        <p>Le nouveau mot de passe doit contenir au moins 6 caractères et au maximum 72 octets. Les espaces sont autorisés.</p>
         <table border="0" cellspacing="1" cellpadding="5" align="center">
             <tr>
                 <td align="right">Nouveau mot de passe :</td>

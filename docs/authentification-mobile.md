@@ -42,7 +42,7 @@ Une connexion moderne n'écrit jamais dans `users.API_TOKEN`. Une connexion hist
 
 - Le cookie `pass`, qui pouvait contenir le hash historique ou une sentinelle commune, n'authentifie plus personne. Les sessions PHP valides continuent à fonctionner ; certains utilisateurs devront se reconnecter dans leur navigateur. La mémorisation longue durée du site n'est pas remplacée dans ce lot.
 - Les mutations du profil web passent par POST et un jeton CSRF. Changement de mot de passe et suppression redemandent le mot de passe actuel.
-- Les nouveaux mots de passe utilisent bcrypt et une règle commune : au moins 15 caractères, au plus 72 octets ; espaces acceptés. Les mots de passe existants restent acceptés à la connexion.
+- Les nouveaux mots de passe utilisent bcrypt et une règle commune : au moins 6 caractères, au plus 72 octets ; espaces acceptés. Les mots de passe existants restent acceptés à la connexion.
 - Lorsque la nouvelle API est activée, inscription, récupération et changement d'e-mail du site utilisent les mêmes codes que l'app. Les comptes existants ne sont pas obligés de confirmer rétroactivement leur e-mail.
 - Les changements et réinitialisations de mot de passe révoquent les jetons historiques, les sessions modernes et les codes/liens de récupération. Les sessions web sont invalidées à leur prochaine requête par comparaison des identifiants de mot de passe.
 - Un compte bloqué ou supprimé perd ses accès. Un Bearer invalide ne retombe jamais sur une session PHP valide.
@@ -57,6 +57,7 @@ Corps JSON pour les POST ; réponses `{ "data": ..., "error": null }` ou `{ "dat
 | POST `/apiauth/login` | `username`, `password`, `device_name` facultatif | `token`, `expires_at`, `user`, `collection_timestamp` |
 | POST `/apiauth/register` | `username`, `email`, `password` | `challenge_id`, message |
 | POST `/apiauth/verify` | `challenge_id`, `code` | Confirmation du compte ; connexion séparée |
+| POST `/apiauth/forgotlogin` | `email` | Envoi par e-mail des pseudos actifs, réponse générique |
 | POST `/apiauth/forgotpassword` | `username`, `email` | Réponse générique et `challenge_id`, même pour un compte inconnu |
 | POST `/apiauth/resetpassword` | `challenge_id`, `code`, `password` | Mot de passe modifié ; reconnexion requise |
 | POST `/apiauth/logout` | `{}` + Bearer | Session révoquée |

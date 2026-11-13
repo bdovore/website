@@ -9,8 +9,8 @@ class AccountSecurity
     }
     public static function passwordError($password)
     {
-        if (!is_string($password) || mb_strlen($password, 'UTF-8') < 15 || strlen($password) > 72 || strpos($password, "\0") !== false) {
-            return 'Le mot de passe doit contenir au moins 15 caractères et au maximum 72 octets. Les espaces sont autorisés.';
+        if (!is_string($password) || mb_strlen($password, 'UTF-8') < 6 || strlen($password) > 72 || strpos($password, "\0") !== false) {
+            return 'Le mot de passe doit contenir au moins 6 caractères et au maximum 72 octets. Les espaces sont autorisés.';
         }
         return null;
     }

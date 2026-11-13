@@ -296,6 +296,30 @@ class MobileAccount
         $this->throttle('register-resend', $user->user_id, 1, 60);
         return $this->challenge($user, 'register', $user->email);
     }
+    public function forgotLogin($input, $ip)
+    {
+        // Also works on the website before the mobile tables are deployed.
+        if (BDO_MOBILE_API_ENABLED) $this->throttle('forgot-login-ip', $ip, 10, 3600);
+        $email = $this->email($input);
+        if (BDO_MOBILE_API_ENABLED) $this->throttle('forgot-login-email', mb_strtolower($email, 'UTF-8'), 3, 3600);
+        $statement = $this->execute('SELECT username FROM users WHERE email = ? AND level < 98 ORDER BY username', array($email));
+        $result = $statement->get_result();
+        $pseudos = array();
+        while ($user = $result->fetch_object()) $pseudos[] = htmlspecialchars($user->username, ENT_QUOTES, 'UTF-8');
+        $statement->close();
+        if ($pseudos) {
+            $url = htmlspecialchars(rtrim(BDO_URL, '/'), ENT_QUOTES, 'UTF-8');
+            $body = '<p>Bonjour,</p><p>Suite à votre demande, voici les pseudos des comptes BDovore actifs associés à votre adresse e-mail :</p>'
+                . '<ul><li>' . implode('</li><li>', $pseudos) . '</li></ul>'
+                . '<p>Vous pouvez <a href="' . $url . '/compte/connexion">vous connecter à BDovore</a> avec votre pseudo et votre mot de passe.</p>'
+                . '<p>Si vous avez aussi oublié votre mot de passe, <a href="' . $url . '/compte/forgotpass">demandez sa réinitialisation</a> avec le pseudo de votre choix et cette adresse e-mail.</p>'
+                . '<p>Si vous n’êtes pas à l’origine de cette demande, ignorez ce message. Vos comptes restent inchangés.</p><p>L’équipe BDovore</p>';
+            if (!call_user_func($this->sendMail, $email, 'Vos pseudos BDovore', $body)) {
+                throw new MobileAccountException('L’e-mail n’a pas pu être envoyé. Réessayez plus tard.', 503, 'mail_unavailable');
+            }
+        }
+        return array('message' => 'Si cette adresse est associée à un ou plusieurs comptes BDovore actifs, un e-mail contenant leurs pseudos a été envoyé. Pensez à vérifier vos courriers indésirables.');
+    }
     public function forgotPassword($input, $ip)
     {
         $this->throttle('reset-ip', $ip, 10, 3600);

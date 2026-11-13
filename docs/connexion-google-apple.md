@@ -71,6 +71,8 @@ Références : [configuration Apple Web](https://developer.apple.com/help/accoun
 
 ## Accès à l'app et récupération
 
+Le lien « Pseudo oublié ? » de la connexion et de la récupération de mot de passe demande uniquement l'adresse e-mail. Le site (`/compte/forgotlogin`) et l'app (`POST /apiauth/forgotlogin`, corps JSON `email`) envoient un seul e-mail listant tous les pseudos des comptes actifs (`level < 98`) associés à cette adresse. Les comptes en attente ou bloqués sont exclus. La réponse reste identique pour une adresse inconnue ou sans compte actif ; les pseudos sont communiqués uniquement par e-mail. Ce rappel ne modifie ni les mots de passe, ni les sessions, ni les associations sociales. Le site fonctionne aussi avant l'activation de la nouvelle API ; après activation, les envois sont limités par IP et par adresse e-mail.
+
 Un compte créé via Google/Apple n'a pas de mot de passe BDovore connu. Après une connexion sociale datant de moins de cinq minutes, son profil permet de définir un premier mot de passe ; cette opération conserve les associations Google/Apple. Il peut alors se connecter dans l'app actuelle ou nouvelle avec son pseudo et ce mot de passe.
 
 Une récupération de mot de passe par e-mail est différente : elle révoque les sessions et dissocie les fournisseurs du pseudo concerné. Cela évite qu'une association ajoutée à l'insu du propriétaire survive à sa récupération. Les autres pseudos liés au même Google/Apple restent associés et leurs collections sont conservées. Les fournisseurs peuvent ensuite être rattachés depuis le profil après nouvelle preuve d'accès.

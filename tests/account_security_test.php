@@ -2,13 +2,13 @@
 require_once dirname(__DIR__) . '/inc/account_security.php';
 $checks = 0; $failures = 0;
 function accountAssert($condition, $message) { global $checks, $failures; $checks++; if (!$condition) { $failures++; fwrite(STDERR, "ECHEC: $message\n"); } }
-$password = 'une phrase de passe sûre';
+$password = 'été BD';
 $hash = AccountSecurity::hashPassword($password);
 accountAssert(AccountSecurity::verifyPassword($password, (object) array('password_v2' => $hash)), 'mot de passe bcrypt');
 accountAssert(!AccountSecurity::verifyPassword('incorrect', (object) array('password_v2' => $hash)), 'mauvais mot de passe');
-accountAssert(AccountSecurity::verifyPassword('ancien', (object) array('password' => md5('ancien'))), 'anciens mots de passe toujours acceptés');
+accountAssert(AccountSecurity::verifyPassword('vieux', (object) array('password' => md5('vieux'))), 'anciens mots de passe toujours acceptés');
 accountAssert(!AccountSecurity::verifyPassword('migrated', (object) array('password' => 'migrated')), 'sentinelle refusée comme secret');
-accountAssert(AccountSecurity::passwordError('trop court') !== null, 'nouveaux mots de passe courts refusés');
+accountAssert(AccountSecurity::passwordError('court') !== null, 'nouveaux mots de passe courts refusés');
 accountAssert(AccountSecurity::passwordError(str_repeat('é', 37)) !== null, 'limite bcrypt en octets');
 accountAssert(AccountSecurity::passwordError($password) === null, 'espaces et accents autorisés');
 accountAssert(AccountSecurity::passwordError(array()) !== null, 'tableau refusé');

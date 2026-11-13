@@ -14,7 +14,7 @@ if (isset($argv[1])) {
     require_once BDO_DIR . 'library/Bdo/Controller.php';
     require_once BDO_DIR . 'mvc/controllers/Apiauth.php';
     require_once BDO_DIR . 'mvc/controllers/Apicompte.php';
-    $_SERVER['REQUEST_METHOD'] = $argv[1] === 'method' ? 'GET' : 'POST';
+    $_SERVER['REQUEST_METHOD'] = in_array($argv[1], array('method', 'forgotlogin-method'), true) ? 'GET' : 'POST';
     $_SERVER['CONTENT_TYPE'] = $argv[1] === 'media' ? 'text/plain' : 'application/json';
     if ($argv[1] === 'oversized') $_SERVER['CONTENT_LENGTH'] = 20000;
     if ($argv[1] === 'bad-bearer') $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer invalid';
@@ -22,13 +22,16 @@ if (isset($argv[1])) {
     if (in_array($argv[1], array('unauthenticated', 'bad-bearer'), true)) {
         Bdo_Cfg::setVar('controller', 'Apicompte'); Bdo_Cfg::setVar('action', 'Update');
         (new Apicompte())->Update();
+    } elseif ($argv[1] === 'forgotlogin-method') {
+        Bdo_Cfg::setVar('action', 'Forgotlogin');
+        (new Apiauth())->Forgotlogin();
     } else { (new Apiauth())->Login(); }
     $body = ob_get_clean();
     echo json_encode(array('status' => http_response_code(), 'body' => $body));
     exit;
 }
 $checks = 0; $failures = 0;
-foreach (array('disabled' => array(503, 'api_unavailable'), 'method' => array(405, 'method_not_allowed'), 'media' => array(415, 'unsupported_media_type'),
+foreach (array('disabled' => array(503, 'api_unavailable'), 'method' => array(405, 'method_not_allowed'), 'forgotlogin-method' => array(405, 'method_not_allowed'), 'media' => array(415, 'unsupported_media_type'),
     'json' => array(400, 'invalid_json'), 'oversized' => array(413, 'payload_too_large'), 'unauthenticated' => array(401, 'invalid_session'), 'bad-bearer' => array(401, 'invalid_session')) as $scenario => $expected) {
     $pipes = array();
     $process = proc_open(array(PHP_BINARY, '-d', 'xdebug.mode=off', __FILE__, $scenario), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);

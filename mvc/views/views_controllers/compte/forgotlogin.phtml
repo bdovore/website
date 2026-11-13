@@ -1,22 +1,14 @@
-<div class="cadre1">
-<h2>Connexion - Pseudo oublié</h2>
-</div>
-<div class="cadre1">
-<form name="form1" method="post" action="?login=ok">
-  <table align="center" border="0" cellspacing="1" cellpadding="5">
-
-    <tr>
-      <td align="right">L'adresse email pour ce pseudo :</td>
-      <td><input name="txtemail" type="text" id="txtemail" maxlength="40" size="40"></td>
-    </tr>
-    <tr>
-
-      <td colspan="2" align="center">
-      Si un pseudo existe, il sera renvoyé sur l'adresse email indiqué<br/>
-          <input type="submit" name="Submit" value="Envoyer">
-        </td>
-    </tr>
-    
-  </table>
+<p class="account-eyebrow">Retrouvez votre collection</p><h1>Pseudo oublié ?</h1>
+<?php if ($view->recovery_sent) : ?>
+<p class="account-success" role="status"><?php echo htmlspecialchars($view->recovery_sent, ENT_QUOTES, 'UTF-8'); ?></p>
+<?php else : ?>
+<p class="account-intro">Renseignez votre adresse e-mail. Nous vous enverrons le ou les pseudos de vos comptes BDovore actifs associés à cette adresse.</p>
+<?php if ($view->recovery_error) : ?><p class="account-alert" role="alert"><?php echo htmlspecialchars($view->recovery_error, ENT_QUOTES, 'UTF-8'); ?></p><?php endif; ?>
+<form class="account-form" method="post" action="<?php echo BDO_URL; ?>compte/forgotlogin">
+    <?php echo adminCsrfField('account'); ?>
+    <label for="forgot-login-email">Votre adresse e-mail</label><input id="forgot-login-email" name="txtemail" type="email" autocomplete="email" maxlength="254" required value="<?php echo htmlspecialchars($view->recovery_email, ENT_QUOTES, 'UTF-8'); ?>">
+    <button type="submit" class="account-primary">Recevoir mes pseudos</button>
 </form>
-</div>
+<?php endif; ?>
+<p class="account-switch"><a href="<?php echo BDO_URL; ?>compte/connexion">Retour à la connexion</a></p>
+<p class="account-switch"><a href="<?php echo BDO_URL; ?>compte/forgotpass">J’ai aussi oublié mon mot de passe</a></p>

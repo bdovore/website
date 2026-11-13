@@ -42,6 +42,7 @@ floatingAssert($controller->view->layout === 'account' && $controller->view->a_p
 ob_start(); require BDO_DIR . 'mvc/views/views_controllers/loginbarre.phtml'; $guest = ob_get_clean();
 floatingAssert(strpos($guest, 'Google, Apple ou plusieurs collections') === false && strpos($guest, 'authsocial/start') === false, 'aucune entrée technique ni fournisseur non configuré');
 floatingAssert(strpos($guest, 'name="csrf_token"') !== false && strpos($guest, 'autocomplete="current-password"') !== false && strpos($guest, 'href="' . BDO_URL . 'compte/connexion"') !== false, 'CSRF, gestionnaires de mots de passe et repli par lien conservés');
+floatingAssert(strpos($guest, 'compte/forgotlogin') !== false, 'pseudo oublié accessible depuis le panneau de connexion');
 User::$connected = true; $_SESSION['userConnect'] = (object) array('username' => '<script>"&');
 ob_start(); require BDO_DIR . 'mvc/views/views_controllers/loginbarre.phtml'; $member = ob_get_clean();
 floatingAssert(strpos($member, '<script>') === false && strpos($member, '&lt;script&gt;') !== false, 'pseudo échappé dans le bouton et le panneau connecté');
