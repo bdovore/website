@@ -62,6 +62,7 @@ $(function () {
         else closeBox(true);
     });
     box.find('.header-account-close').on('click', function () { closeBox(true); });
+    box.find('.header-profile-link').on('click', function () { closeBox(false); });
     backdrop.on('click', function () { closeBox(true); });
     $(document).on('click', function (event) {
         if (!box.prop('hidden') && !$(event.target).closest('#loginContainer').length) closeBox(false);

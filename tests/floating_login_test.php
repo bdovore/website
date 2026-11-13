@@ -8,7 +8,7 @@ define('BDO_SOCIAL_ENABLED', false);
 require BDO_DIR . 'inc/util.inc.php';
 require BDO_DIR . 'vendor/autoload.php';
 class Bdo_Cfg { public static $user; public static function user() { return self::$user; } }
-class User { public $error = ''; public $loginNeedsPseudo = false; public static $connected = false; public static function minAccesslevel($level) { return self::$connected; } }
+class User { public $error = ''; public $loginNeedsPseudo = false; public $password_v2 = 'fixture'; public static $connected = false; public static function minAccesslevel($level) { return self::$connected; } }
 class Bdo_Controller { public $view; }
 class FloatingView {
     public $layout; public $a_phtmlFile; public $values = array(); public $rendered = false;
@@ -46,4 +46,15 @@ User::$connected = true; $_SESSION['userConnect'] = (object) array('username' =>
 ob_start(); require BDO_DIR . 'mvc/views/views_controllers/loginbarre.phtml'; $member = ob_get_clean();
 floatingAssert(strpos($member, '<script>') === false && strpos($member, '&lt;script&gt;') !== false, 'pseudo échappé dans le bouton et le panneau connecté');
 floatingAssert(strpos($member, 'submitLoginDisconnect') !== false && strpos($member, 'name="csrf_token"') !== false && strpos($member, 'user_password') === false, 'état connecté avec profil et déconnexion protégée');
+floatingAssert(preg_match('/<a class="[^"]*header-profile-link[^\"]*fancybox\.iframe[^\"]*" href="' . preg_quote(BDO_URL, '/') . 'compte">/', $member) === 1, 'profil du site ouvert en iframe Fancybox sans changer la route autonome de l’app');
+foreach (array('', 'T') as $mobile) {
+    $_GET = $mobile === 'T' ? array('mobile' => 'T') : array();
+    $view = (object) array('CONNECTION' => 0, 'USERID' => 7, 'UTILISATEUR' => 'Lecteur', 'EMAIL' => 'lecteur@example.test',
+        'YESISSELECTED' => '', 'NOISSELECTED' => 'selected', 'URLCOLLEC' => BDO_URL . 'guest?user=7', 'OPTIONCARRE' => '',
+        'ADULTYESISSELECTED' => '', 'ADULTNOISSELECTED' => 'selected', 'HASFORUMACCOUNT' => true, 'IS_NEWSLETTER' => '');
+    ob_start(); require BDO_DIR . 'mvc/views/views_controllers/compte/index.phtml'; $profile = ob_get_clean();
+    preg_match_all('/<form[^>]+action="([^"]+)"/', $profile, $forms);
+    floatingAssert(count($forms[1]) === 3 && count(array_filter($forms[1], function ($url) { return strpos($url, 'mobile=T') !== false; })) === ($mobile === 'T' ? 3 : 0),
+        $mobile === 'T' ? 'formulaires du navigateur mobile conservent le contexte du site' : 'formulaires autonomes de l’app conservent leurs URL historiques');
+}
 echo "$checks contrôles du login flottant, $failures échec(s).\n"; exit($failures ? 1 : 0);

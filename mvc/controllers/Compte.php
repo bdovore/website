@@ -121,7 +121,8 @@ class Compte extends Bdo_Controller {
         /*
          * Affichage des informations du compte ou création de compte
          */
-        $mobile = getVal("mobile",""); // check if mobile device detected
+        $mobile = getVal("mobile",""); // Conserve le contexte du navigateur mobile après les formulaires.
+        $profileUrl = BDO_URL . 'compte' . ($mobile === 'T' ? '?mobile=T' : '');
         if (User::minAccesslevel(2)) {
             $user_id = getVal("user_id", "");
             $act=getVal("act","");
@@ -163,7 +164,7 @@ class Compte extends Bdo_Controller {
                         if (trim(postVal('txtemail', '')) !== $user->email) {
                             $result = $service->requestEmail($user, array('email' => postVal('txtemail'), 'current_password' => postVal('current_password', '')));
                             $this->pendingConfirmation('email', $result);
-                        } else { echo GetMetaTag(2, 'Votre profil a été mis à jour.', BDO_URL . 'compte'); }
+                        } else { echo GetMetaTag(2, 'Votre profil a été mis à jour.', $profileUrl); }
                     } catch (MobileAccountException $e) { $this->accountFailure($e->getMessage()); }
                     return;
                 }
@@ -185,7 +186,7 @@ class Compte extends Bdo_Controller {
                         var_dump($this->User->error);
                         exit();
                     }
-                    echo GetMetaTag(2, "Votre profil a &eacute;t&eacute; mis &agrave; jour.", (BDO_URL . "Compte"));
+                    echo GetMetaTag(2, "Votre profil a &eacute;t&eacute; mis &agrave; jour.", ($profileUrl));
                 }
             }
 
@@ -233,15 +234,15 @@ class Compte extends Bdo_Controller {
                     $newpass2 = postVal("txtpass2");
                     $validpassword = Checkpassword($newpass1);
                     if ($validpassword != 1) {
-                        echo GetMetaTag(5, $validpassword . ' Vous allez etre redirig&eacute;.', (BDO_URL . "Compte"));
+                        echo GetMetaTag(5, $validpassword . ' Vous allez etre redirig&eacute;.', ($profileUrl));
                     } elseif (($newpass1 != $newpass2) and ($validpassword == 1)) {
-                        echo GetMetaTag(5, "Les mots de passes ne sont pas identiques. Vous allez etre redirig&eacute;", (BDO_URL . "Compte"));
+                        echo GetMetaTag(5, "Les mots de passes ne sont pas identiques. Vous allez etre redirig&eacute;", ($profileUrl));
                     } elseif (($validpassword == 1) and ($newpass1 === $newpass2)) {
                         if (BDO_MOBILE_API_ENABLED && intval($profile_user_id) === intval($actor->user_id)) {
                             require_once dirname(__DIR__) . '/models/MobileAccount.php';
                             try {
                                 (new MobileAccount())->changePassword($actor, array('current_password' => postVal('current_password', ''), 'password' => $newpass2));
-                                echo GetMetaTag(2, 'Votre mot de passe est modifié. Veuillez vous reconnecter.', BDO_URL . 'compte');
+                                echo GetMetaTag(2, 'Votre mot de passe est modifié. Veuillez vous reconnecter.', $profileUrl);
                             } catch (MobileAccountException $e) { $this->accountFailure($e->getMessage()); }
                             return;
                         }
@@ -258,7 +259,7 @@ class Compte extends Bdo_Controller {
                         Db_query('UPDATE users SET API_TOKEN=NULL, DATE_TOKEN=NULL WHERE user_id=' . intval($profile_user_id));
                         if (BDO_MOBILE_API_ENABLED) { require_once dirname(__DIR__) . '/models/MobileAccount.php'; (new MobileAccount())->revokeAll($profile_user_id); }
 
-                        echo GetMetaTag(2, "Votre mot de passe est modifi&eacute;.", (BDO_URL . "Compte"));
+                        echo GetMetaTag(2, "Votre mot de passe est modifi&eacute;.", ($profileUrl));
                     }
 
             } elseif ($act == "setforum") {
@@ -266,7 +267,7 @@ class Compte extends Bdo_Controller {
                 $this->User->load();
                 $this->User->setForumAccount($this->User->username, genererMotDePasse(10), $this->User->email );
 
-                echo GetMetaTag(2, "Votre compte forum a été créé. Vous devrez demander un nouveau mot de passe pour l'utiliser.", (BDO_URL . "Compte"));
+                echo GetMetaTag(2, "Votre compte forum a été créé. Vous devrez demander un nouveau mot de passe pour l'utiliser.", ($profileUrl));
 
             }
             // Afficher le formulaire pré-remplis

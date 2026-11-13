@@ -20,7 +20,7 @@ $userInitial = function_exists('mb_substr') ? mb_strtoupper(mb_substr($username,
         </div>
         <?php if ($connected) : ?>
             <p class="header-account-identity"><?php echo $usernameHtml; ?></p>
-            <a class="header-account-primary header-profile-link" href="<?php echo BDO_URL; ?>compte">Mon profil</a>
+            <a class="header-account-primary header-profile-link fancybox fancybox.iframe {width:760,height:680}" href="<?php echo BDO_URL; ?>compte">Mon profil</a>
             <a class="header-account-collection" href="<?php echo BDO_URL; ?>macollection">Ma collection</a>
             <form method="post" action="<?php echo BDO_URL; ?>compte/connexion" class="header-logout-form">
                 <?php echo adminCsrfField('account-auth'); ?>

@@ -18,7 +18,7 @@
 #header #searchtable.header-navigation { display: flex; align-items: center; justify-content: space-between; gap: 16px; float: none; width: 100%; margin: 16px 0 0; padding: 0; border-top: 1px solid #ece5df; }
 #header #menusite1 { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin: 0; padding: 0; list-style: none; }
 #header #menusite1 li { display: block; margin: 0; padding: 0; }
-#header #searchtable a { display: inline-flex; align-items: center; gap: 7px; min-height: 46px; margin: 0; padding: 10px 0; background: transparent; border-radius: 0; box-shadow: none; color: #403731; font-size: 14px; font-weight: 400; }
+#header #searchtable a { display: inline-flex; align-items: center; gap: 7px; min-height: 46px; margin: 0; padding: 10px 0; background: transparent; border-radius: 0; box-shadow: none; color: #403731; font-size: 16px; font-weight: 400; }
 #header #searchtable a:hover, #header #searchtable a:focus-visible { color: #8f1204; }
 #header #searchtable a[aria-current="page"] { color: #8f1204; box-shadow: inset 0 -3px #8f1204; font-weight: 600; }
 #header .header-help-links { display: flex; align-items: center; gap: 17px; flex-shrink: 0; }
@@ -65,7 +65,6 @@
 .header-account-backdrop[hidden] { display: none; }
 @media (max-width: 1050px) {
     #header #menusite1 { gap: 15px; }
-    #header #searchtable a { font-size: 13px; }
     #header .header-help-links { gap: 12px; }
 }
 @media (max-width: 760px) {
@@ -83,9 +82,17 @@
     #header.header-enhanced #searchtable.header-navigation { display: none; }
     #header #searchtable.header-navigation.is-open { display: flex; }
     #header #menusite1 { flex-direction: column; align-items: stretch; gap: 0; width: 100%; }
-    #header #searchtable a { display: flex; min-height: 44px; padding: 10px 8px; font-size: 15px; }
+    #header #searchtable a { display: flex; min-height: 44px; padding: 10px 8px; font-size: 16px; }
     #header .header-help-links { border-top: 1px solid #ece5df; margin-top: 5px; padding-top: 5px; }
     #header #loginBox { position: fixed; top: auto; right: 0; bottom: 0; width: 100%; max-width: none; max-height: calc(100vh - 20px); max-height: calc(100dvh - 20px); padding: 24px max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left)); border-radius: 20px 20px 0 0; overscroll-behavior: contain; }
+}
+#content .account-profile { box-sizing: border-box; max-width: 900px; margin: 18px auto; padding: 24px; background: #fff; border: 1px solid #e2d7cf; border-radius: 10px; }
+#content .account-profile input, #content .account-profile select { box-sizing: border-box; max-width: 100%; }
+@media (max-width: 760px) {
+    #content .account-profile { margin: 10px; padding: 16px; }
+    #content .account-profile table, #content .account-profile tbody, #content .account-profile tr, #content .account-profile td { display: block; box-sizing: border-box; width: 100%; text-align: left; }
+    #content .account-profile input[type="email"], #content .account-profile input[type="password"] { display: block; width: 100%; min-width: 0; min-height: 44px; }
+    #content .account-profile a { overflow-wrap: anywhere; }
 }
 @media (prefers-reduced-motion: no-preference) {
     #header #loginBox:not([hidden]) { animation: header-account-appear .16s ease-out; }

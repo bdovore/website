@@ -16,3 +16,5 @@ Les formulaires classiques et les API de l'app conservent leur comportement. San
 - Vérification dans le navigateur sur le vrai layout avec des données fictives et sans base : ordinateur, 390 × 844, 320 × 568 et 320 × 350 ; menu, recherche avec suggestions, saisie partagée, erreur, succès, état connecté et fermeture au clavier. L'affichage des boutons sociaux a été contrôlé avec une configuration factice réservée à l'aperçu ; aucune authentification externe n'a été déclenchée.
 
 Le clavier logiciel réel et les fournisseurs réels restent à vérifier sur les appareils/en préproduction avant publication.
+
+Les rubriques utilisent une police de 16 px, y compris aux largeurs intermédiaires. « Mon profil » s'ouvre dans Fancybox sur ordinateur, avec fermeture préalable du panneau du compte. Le rendu autonome de `/compte` utilisé par l'app est conservé ; le chemin existant `?mobile=T` garde le layout du site dans le navigateur mobile, avec un cadre de profil responsive et un bouton de compte visible.
