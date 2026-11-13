@@ -95,17 +95,6 @@ $(function () {
         $(this).attr({ 'aria-pressed': String(show), 'aria-label': show ? 'Masquer le mot de passe' : 'Afficher le mot de passe' });
         $(this).find('i').toggleClass('fa-eye', !show).toggleClass('fa-eye-slash', show);
     });
-    // L'URL indique la rubrique active sans déplacer ni renommer les liens existants.
-    var currentPath = window.location.pathname.replace(/\/$/, '').toLowerCase();
-    var selected = null, longest = -1;
-    $('#menusite1 a').each(function () {
-        var path = this.pathname.replace(/\/$/, '').toLowerCase();
-        if ((path === currentPath || (path && currentPath.indexOf(path + '/') === 0)) && path.length > longest) {
-            selected = this; longest = path.length;
-        }
-    });
-    if (selected) $(selected).attr('aria-current', 'page');
-
     if (!form.length) return;
     var errorBox = $('#header-login-error');
     var pseudoField = $('#header-pseudo-field');

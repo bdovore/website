@@ -1,6 +1,8 @@
 <?php
 header ( 'Content-Type: text/html; charset=UTF-8' );
 $jquery = $view->getHelper('jquery');
+require_once BDO_DIR . 'inc/navigation.php';
+$navigationController = Bdo_Cfg::getVar('controller');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -283,8 +285,8 @@ $(document).ready(function() {
 <link href="<?php echo BDO_URL;?>jquery/jquery_util.css" rel="stylesheet">
 
 
-<script src="<?php echo BDO_URL;?>jquery/cool-login/cool-login.js?v=20261113b" type="text/javascript"></script>
-<link href="<?php echo BDO_URL;?>style/header.css?v=20261113b" rel="stylesheet" type="text/css" />
+<script src="<?php echo BDO_URL;?>jquery/cool-login/cool-login.js?v=20261113c" type="text/javascript"></script>
+<link href="<?php echo BDO_URL;?>style/header.css?v=20261113c" rel="stylesheet" type="text/css" />
 <!--
 
     <link type="text/css" rel="stylesheet" href="<?php echo BDO_URL;?>jquery/openid-selector/css/openid.css" />
@@ -374,17 +376,17 @@ div.verticaltext {
         </div>
         <nav id="searchtable" class="header-navigation" aria-label="Navigation principale">
                 <ul id="menusite1">
-                            <li> <a class="menuGene" href="<?php echo BDO_URL;?>"
+                            <li> <a class="menuGene"<?php echo bdoNavigationCurrent('accueil', $navigationController); ?> href="<?php echo BDO_URL;?>"
                     title="Retour à l'accueil">Accueil</a></li>
-                <li><a class="menuGene" href="<?php echo BDO_URL;?>browser"
+                <li><a class="menuGene"<?php echo bdoNavigationCurrent('browser', $navigationController); ?> href="<?php echo BDO_URL;?>browser"
                     title="Le BDo'Browser ! Oh Yeah!">Browser</a></li>
-                <li><a class="menuGene" href="<?php echo BDO_URL;?>leguide/avis"
+                <li><a class="menuGene"<?php echo bdoNavigationCurrent('leguide', $navigationController); ?> href="<?php echo BDO_URL;?>leguide/avis"
                     title="Le top des votes, les albums les plus r&eacute;pandus, les derniers commentaires, les derni&egrave;res sorties...">Le
                         Guide BD</a></li>
-                <?php if (parabdMenuVisible()) { ?><li><a class="menuGene" href="<?php echo BDO_URL; ?>parabd"
+                <?php if (parabdMenuVisible()) { ?><li><a class="menuGene"<?php echo bdoNavigationCurrent('parabd', $navigationController); ?> href="<?php echo BDO_URL; ?>parabd"
                     title="Rechercher dans le catalogue Para-BD">Para-BD</a></li><?php } ?>
 
-                                 <li><a class="menuGene" href=<?php
+                                 <li><a class="menuGene"<?php echo bdoNavigationCurrent('collection', $navigationController); ?> href=<?php
                                                 if (User::minAccesslevel(2)) {
                                                     echo '"'.BDO_URL."macollection".'"';
                                                 }
@@ -393,13 +395,13 @@ div.verticaltext {
                                                 }
                                                 ?>
                     title="Tout pour votre collection de BD">Ma Collection</a></li>
-                                <li><a class="menuGene" href="<?php echo BDO_URL_FORUM;?>index"
+                                <li><a class="menuGene"<?php echo bdoNavigationCurrent('forum', $navigationController); ?> href="<?php echo BDO_URL_FORUM;?>index"
                     title="Le forum">Forum</a></li>
-                                <li><a class="menuGene" href="<?php echo BDO_URL;?>presentation"
+                                <li><a class="menuGene"<?php echo bdoNavigationCurrent('presentation', $navigationController); ?> href="<?php echo BDO_URL;?>presentation"
                     title="C'est quoi ce bidule ?">Pr&eacute;sentation</a></li>
                                 <?php
 if (User::minAccesslevel(1)) { ?><li>
-<a class="menuGene" href="<?php echo BDO_URL;?>admin"
+<a class="menuGene"<?php echo bdoNavigationCurrent('admin', $navigationController); ?> href="<?php echo BDO_URL;?>admin"
 title="Pour les admins !">Admin</a></li> <?php } ?>
                 </ul>
             <div class="header-help-links">
