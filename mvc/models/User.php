@@ -238,7 +238,10 @@ FROM " . $this->table_name . "
                             $target = parse_url($referer);
                             // Restrict post-login redirects to the website's origin.
                             if (!$target || ($target['host'] ?? '') !== ($base['host'] ?? '') || ($target['scheme'] ?? '') !== ($base['scheme'] ?? '') || strpos($referer, 'inscription?act=post') !== false) $referer = BDO_URL;
-                            header('Location: ' . $referer);
+                            if (($_POST['account_login_form'] ?? '') !== 'floating'
+                                || ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') !== 'XMLHttpRequest') {
+                                header('Location: ' . $referer);
+                            }
                         }
                         else {
                             $this->error = 'Identifiant ou mot de passe invalide';

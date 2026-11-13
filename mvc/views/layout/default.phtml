@@ -283,9 +283,8 @@ $(document).ready(function() {
 <link href="<?php echo BDO_URL;?>jquery/jquery_util.css" rel="stylesheet">
 
 
-<link href="<?php echo BDO_URL;?>jquery/cool-login/cool-login.css" rel="stylesheet">
-<script src="<?php echo BDO_URL;?>jquery/cool-login/cool-login.js?v=5" type="text/javascript"></script>
-<link href="<?php echo BDO_URL;?>style/header.css?v=4" rel="stylesheet" type="text/css" />
+<script src="<?php echo BDO_URL;?>jquery/cool-login/cool-login.js?v=20261113a" type="text/javascript"></script>
+<link href="<?php echo BDO_URL;?>style/header.css?v=20261113a" rel="stylesheet" type="text/css" />
 <!--
 
     <link type="text/css" rel="stylesheet" href="<?php echo BDO_URL;?>jquery/openid-selector/css/openid.css" />
@@ -358,15 +357,22 @@ div.verticaltext {
 <body onLoad="<?php echo $view->BODYONLOAD ?? "" ;?>">
 
 
-    <div id="header" style="position: relative; z-index: 10;">
-        <div class="fondNoir"></div>
+    <header id="header" class="bdo-header">
         <div id="headerToolbar">
-            <div id="logo">
-                <a href="<?php echo BDO_URL;?>"><img
-                    src="<?php echo BDO_URL_IMAGE;?>site/bdovore-logo.png" border="0"
-                    alt="logo BDovore" width="120px" id="logo" /></a>
-            </div>
-            <div id="searchtable" class="rmm">
+            <button type="button" id="headerMenuButton" class="header-menu-button" aria-controls="searchtable" aria-expanded="false" aria-label="Ouvrir le menu">
+                <i class="fas fa-bars" aria-hidden="true"></i><span>Menu</span>
+            </button>
+            <a id="logo" class="header-logo" href="<?php echo BDO_URL; ?>" aria-label="BDovore, accueil">
+                <img src="<?php echo BDO_URL_IMAGE; ?>site/bdovore-logo.png" alt="BDovore" width="126" />
+            </a>
+            <form action="<?php echo BDO_URL; ?>browser" method="post" id="formsearch" name="formsearch" role="search">
+                <label class="header-sr-only" for="search">Rechercher un album, une série ou un auteur</label>
+                <input name="search" type="text" id="search" maxlength="60" placeholder="Rechercher album, série, auteur…" autocomplete="off" />
+                <button type="submit" class="header-search-submit" aria-label="Rechercher"><i class="fas fa-search" aria-hidden="true"></i></button>
+            </form>
+            <?php echo $view->LOGINBARRE; ?>
+        </div>
+        <nav id="searchtable" class="header-navigation" aria-label="Navigation principale">
                 <ul id="menusite1">
                             <li> <a class="menuGene" href="<?php echo BDO_URL;?>"
                     title="Retour à l'accueil">Accueil</a></li>
@@ -396,28 +402,12 @@ if (User::minAccesslevel(1)) { ?><li>
 <a class="menuGene" href="<?php echo BDO_URL;?>admin"
 title="Pour les admins !">Admin</a></li> <?php } ?>
                 </ul>
+            <div class="header-help-links">
+                <a href="<?php echo BDO_URL; ?>tutoriel" aria-label="Aide et tutoriel"><i class="far fa-question-circle" aria-hidden="true"></i><span>Aide</span></a>
+                <a href="https://fr-fr.facebook.com/bdovore/" target="_blank" rel="noopener noreferrer" aria-label="BDovore sur Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
             </div>
-            <?php echo $view->LOGINBARRE;?>
-        </div>
-        <form action="<?php echo BDO_URL;?>browser" method="post"
-            id="formsearch" name="formsearch" target="_self">
-                
-<div class="ui-widget">
-    <a class="facebook-social" id="facebookheader" target="_blank" href="https://fr-fr.facebook.com/bdovore/" title="Suivez-nous sur Facebook" style="opacity: 1;"><img src="<?php echo BDO_URL_IMAGE;?>site/facebook.png"></a>
-                     <a class="aide-header" id="aideheader" href="<?php echo BDO_URL; ?>tutoriel" title="Besoin d'aide ? Suivez le guide"><img src="<?php echo BDO_URL_IMAGE;?>site/help.png"></a>
-               
-                     <input name="search" type="text" id="search"
-                    onblur="if (!this.value) this.value='Rechercher album, série, auteur...';"
-                    onfocus="if (this.value=='Rechercher album, série, auteur...') this.value='';" size="40"
-                    maxlength="60" value="Rechercher album, série, auteur..." />
-                <img id="img_loupe" src="<?php echo BDO_URL_IMAGE;?>site/loupe.gif">
-</div>
-        </form>
-
-        <hr class="expSep" />
-    </div>
-
-
+        </nav>
+    </header>
 
     <div id="content">
 

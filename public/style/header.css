@@ -1,116 +1,93 @@
-/* En-tête principal : le menu et le compte partagent toujours la même ligne. */
-#headerToolbar {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    width: 100%;
+/* En-tête du layout principal, isolé du CSS historique. */
+#header.bdo-header { position: relative; z-index: 10; min-width: 0; padding: 16px 22px 0; box-sizing: border-box; background: #fff; border-radius: 10px; box-shadow: 0 3px 12px #28120d26; color: #302924; }
+#header.bdo-header *, #header.bdo-header *::before, #header.bdo-header *::after { box-sizing: border-box; }
+#header.bdo-header [hidden] { display: none !important; }
+#header.bdo-header button, #header.bdo-header input { font: inherit; }
+#header.bdo-header button { cursor: pointer; }
+#header.bdo-header a:hover, #header.bdo-header a:active { text-decoration: none; }
+#header.bdo-header a:focus-visible, #header.bdo-header button:focus-visible, #header.bdo-header input:focus-visible { outline: 3px solid #b85a5070; outline-offset: 3px; }
+.header-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+#headerToolbar { display: flex; align-items: center; gap: 24px; width: 100%; }
+#header #logo.header-logo { display: block; flex: 0 0 142px; float: none; width: 142px; margin: 0; padding: 0; }
+#header .header-logo img { display: block; width: 126px; max-width: 100%; height: auto; }
+#header #formsearch { display: flex; align-items: center; flex: 1 1 auto; max-width: 510px; min-width: 0; margin: 0 auto; padding: 0; position: relative; text-align: left; }
+#header #formsearch #search { width: 100% !important; min-width: 0; height: 46px; margin: 0 !important; padding: 10px 48px 10px 14px; border: 1px solid #e2d7cf; border-radius: 8px; background: #f7f4f1; color: #302924; font-size: 16px; box-shadow: none; }
+#header #search::placeholder { color: #756a62; opacity: 1; }
+#header .header-search-submit { position: absolute; right: 1px; top: 1px; width: 44px; height: 44px; border: 0; border-radius: 7px; background: transparent; color: #78675d; }
+#header .header-menu-button { display: none; }
+#header #searchtable.header-navigation { display: flex; align-items: center; justify-content: space-between; gap: 16px; float: none; width: 100%; margin: 16px 0 0; padding: 0; border-top: 1px solid #ece5df; }
+#header #menusite1 { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin: 0; padding: 0; list-style: none; }
+#header #menusite1 li { display: block; margin: 0; padding: 0; }
+#header #searchtable a { display: inline-flex; align-items: center; gap: 7px; min-height: 46px; margin: 0; padding: 10px 0; background: transparent; border-radius: 0; box-shadow: none; color: #403731; font-size: 14px; font-weight: 400; }
+#header #searchtable a:hover, #header #searchtable a:focus-visible { color: #8f1204; }
+#header #searchtable a[aria-current="page"] { color: #8f1204; box-shadow: inset 0 -3px #8f1204; font-weight: 600; }
+#header .header-help-links { display: flex; align-items: center; gap: 17px; flex-shrink: 0; }
+#header #searchtable .header-help-links a { color: #796b62; font-size: 13px; }
+#headerToolbar > #loginContainer { position: relative; flex: 0 0 auto; float: none; margin: 0; }
+#header #loginButton { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; max-width: 200px; padding: 10px 14px; background: #8f1204; color: #fff; border: 1px solid #8f1204; border-radius: 8px; box-shadow: none; font-size: 14px; font-weight: 600; text-decoration: none; }
+#header #loginButton:hover, #header #loginButton.active { background: #71190e; }
+#header .header-account-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#header .header-user-initial { display: grid; place-items: center; flex: 0 0 24px; width: 24px; height: 24px; border-radius: 50%; background: #ffffff24; font-size: 14px; font-weight: 600; }
+#header #loginBox { position: absolute; right: 0; top: calc(100% + 9px); width: 360px; max-width: calc(100vw - 32px); max-height: calc(100vh - 120px); max-height: calc(100dvh - 120px); overflow-y: auto; padding: 24px; background: #fff; border: 1px solid #e2d7cf; border-radius: 12px; box-shadow: 0 14px 42px #28120d33; z-index: 20; text-align: left; font: 15px/1.45 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overscroll-behavior: contain; }
+#header .header-account-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 22px; }
+#header .header-account-heading h2 { margin: 0; color: #302924; font-size: 24px; line-height: 1.25; font-weight: 650; letter-spacing: -.5px; }
+#header .header-account-close { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; margin: -10px -12px -10px 0; padding: 0; border: 0; border-radius: 8px; background: transparent; color: #796b62; }
+#header .header-account-field { margin: 0 0 17px; }
+#header .header-account-field label { display: block; float: none; margin: 0 0 7px; color: #403731; font-size: 14px; font-weight: 600; }
+#header .header-account-field input { display: block; width: 100%; min-width: 0; height: 48px; margin: 0; padding: 11px 12px; border: 1px solid #d7ccc4; border-radius: 7px; background: #fff; color: #302924; font-size: 16px; box-shadow: none; }
+#header .header-account-field input:focus { border-color: #8f1204; }
+#header .header-account-field input::placeholder { color: #80746a; opacity: 1; }
+#header .header-password-wrap { position: relative; }
+#header .header-password-wrap input { padding-right: 48px; }
+#header .header-password-toggle { position: absolute; top: 2px; right: 2px; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 6px; background: transparent; color: #796b62; }
+#header .header-account-link { display: inline-flex; align-items: center; min-height: 40px; padding: 0; background: transparent; border: 0; color: #8f1204; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+#header .header-account-link:hover { text-decoration: underline; }
+#header .header-account-forgot { display: flex; justify-content: flex-end; margin: -9px 0 10px; }
+#header .header-account-primary { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; padding: 11px 14px; border: 1px solid #8f1204; border-radius: 7px; background: #8f1204; color: #fff; font-weight: 600; text-align: center; }
+#header .header-account-primary:hover { background: #71190e; color: #fff; }
+#header .header-account-primary:disabled { opacity: .7; cursor: wait; }
+#header .account-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: #80746a; font-size: 13px; }
+#header .account-divider::before, #header .account-divider::after { content: ''; flex: 1; height: 1px; background: #e7dfd8; }
+#header .account-social-buttons { display: grid; gap: 10px; }
+#header .account-social-buttons form { margin: 0; }
+#header .account-social { width: 100%; min-height: 48px; padding: 11px 12px; border: 1px solid #d7ccc4; border-radius: 7px; background: #fff; color: #302924; font-weight: 600; }
+#header .account-social:hover { background: #f7f4f1; }
+#header .account-social-apple { background: #242120; border-color: #242120; color: #fff; }
+#header .account-social-apple:hover { background: #403731; }
+#header .header-account-signup { margin: 21px 0 0; color: #756a62; text-align: center; font-size: 14px; }
+#header .header-account-signup a { display: flex; justify-content: center; align-items: center; min-height: 40px; color: #8f1204; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+#header .header-login-error { margin: 0 0 18px; padding: 11px 12px; color: #7e251c; background: #fff3ef; border: 1px solid #edc3ba; border-radius: 7px; font-size: 14px; }
+#header .header-account-identity { margin: -5px 0 20px; color: #756a62; overflow-wrap: anywhere; }
+#header .header-account-collection { display: flex; align-items: center; justify-content: center; min-height: 44px; color: #8f1204; margin-top: 10px; }
+#header .header-logout-form { margin: 18px 0 0; padding-top: 10px; border-top: 1px solid #ece5df; text-align: center; }
+#header.bdo-header.header-account-open { z-index: 1010; }
+.header-account-backdrop { position: fixed; inset: 0; z-index: 1009; background: #21110c24; }
+.header-account-backdrop[hidden] { display: none; }
+@media (max-width: 1050px) {
+    #header #menusite1 { gap: 15px; }
+    #header #searchtable a { font-size: 13px; }
+    #header .header-help-links { gap: 12px; }
 }
-
-#headerToolbar > #logo {
-    flex: 0 0 170px;
-    float: none;
+@media (max-width: 760px) {
+    #header.bdo-header { width: calc(100% - 20px) !important; padding: 12px 14px 0 !important; margin: 10px auto !important; border-radius: 10px; }
+    #headerToolbar { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 10px 12px; }
+    #header #logo.header-logo { grid-column: 2; grid-row: 1; justify-self: center; width: 110px; }
+    #header .header-logo img { width: 110px; }
+    #header.header-enhanced .header-menu-button { grid-column: 1; grid-row: 1; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 7px; background: transparent; color: #403731; font-size: 19px; }
+    #header .header-menu-button span { display: none; }
+    #headerToolbar > #loginContainer { grid-column: 3; grid-row: 1; position: static; }
+    #header #loginButton { min-width: 44px; height: 44px; padding: 8px 10px; }
+    #header .header-account-label { display: none; }
+    #header #formsearch { grid-column: 1 / -1; grid-row: 2; width: 100%; max-width: none; margin: 0 0 12px; }
+    #header #searchtable.header-navigation { align-items: stretch; flex-direction: column; margin-top: 0; gap: 0; padding: 8px 0 !important; }
+    #header.header-enhanced #searchtable.header-navigation { display: none; }
+    #header #searchtable.header-navigation.is-open { display: flex; }
+    #header #menusite1 { flex-direction: column; align-items: stretch; gap: 0; width: 100%; }
+    #header #searchtable a { display: flex; min-height: 44px; padding: 10px 8px; font-size: 15px; }
+    #header .header-help-links { border-top: 1px solid #ece5df; margin-top: 5px; padding-top: 5px; }
+    #header #loginBox { position: fixed; top: auto; right: 0; bottom: 0; width: 100%; max-width: none; max-height: calc(100vh - 20px); max-height: calc(100dvh - 20px); padding: 24px max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left)); border-radius: 20px 20px 0 0; overscroll-behavior: contain; }
 }
-
-#headerToolbar > #searchtable {
-    flex: 1 1 auto;
-    float: none;
-    min-width: 0;
-    padding: 0;
-}
-
-#headerToolbar > #loginContainer {
-    flex: 0 0 auto;
-    float: none;
-    margin: 0;
-}
-
-/* Conserve 10 px entre les boutons tant que le menu complet est affiche. */
-#headerToolbar #searchtable .rmm-main-list {
-    font-size: 0;
-}
-
-#headerToolbar #searchtable .rmm-main-list > li > a {
-    margin: 0 5px;
-    padding: 8px 18px;
-    font-size: 15px;
-}
-
-#headerToolbar #loginButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 35px;
-    height: 35px;
-    padding: 0;
-    float: none;
-    background-color: rgba(143, 18, 4, 1);
-    border: 0;
-    border-radius: 50%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, .35);
-    font-family: inherit;
-}
-
-#headerToolbar #loginButton:hover,
-#headerToolbar #loginButton:focus {
-    background-color: #6c3030;
-}
-
-#headerToolbar #loginButton:focus {
-    outline: 2px solid #cd6767;
-    outline-offset: 2px;
-}
-
-#headerToolbar #loginButton.active {
-    border-radius: 50%;
-}
-
-#headerToolbar #loginButton span,
-#headerToolbar #loginButton.active span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    width: 35px;
-    height: 35px;
-    max-width: none;
-    padding: 0;
-    background: none;
-    color: #fff;
-    font-size: 16px;
-    line-height: 1;
-    text-shadow: 1px 1px #331414;
-}
-
-#headerToolbar #loginButton.loginButton-user span {
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-#headerToolbar #loginButton em {
-    display: none;
-}
-
-#formsearch {
-    margin: 10px 0 3px;
-    text-align: center;
-}
-
-@media screen and (max-width: 1200px) {
-    #formsearch {
-        margin-left: 0;
-    }
-}
-
-@media screen and (max-width: 920px), screen and (max-device-width: 768px) {
-    #headerToolbar > #searchtable {
-        padding: 0 !important;
-    }
-
-    #headerToolbar .rmm.graphite .rmm-toggled {
-        width: 100%;
-    }
-
-    #formsearch {
-        margin-top: 10px;
-    }
+@media (prefers-reduced-motion: no-preference) {
+    #header #loginBox:not([hidden]) { animation: header-account-appear .16s ease-out; }
+    @keyframes header-account-appear { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 }

@@ -11,8 +11,25 @@ class Compte extends Bdo_Controller {
 
     public function Connexion()
     {
-        if (User::minAccesslevel(2)) { header('Location: ' . BDO_URL); return; }
         $user = Bdo_Cfg::user();
+        // Même session et mêmes contrôles que le formulaire classique, sans navigation.
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST'
+            && ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest'
+            && postVal('account_login_form', '') === 'floating') {
+            $authenticated = User::minAccesslevel(2) && !$user->error;
+            $needsPseudo = !$authenticated && !empty($user->loginNeedsPseudo);
+            http_response_code($authenticated ? 200 : ($needsPseudo ? 409 : 401));
+            header_remove('Location');
+            header('Cache-Control: no-store');
+            header('X-Content-Type-Options: nosniff');
+            $this->view->layout = 'accountjson';
+            $this->view->a_phtmlFile = array('BODY' => 'compte/connexionjson');
+            $this->view->set_var('json', json_encode(array('authenticated' => $authenticated, 'needs_pseudo' => $needsPseudo,
+                'message' => $authenticated ? '' : (is_string($user->error) && $user->error !== '' ? $user->error : 'Identifiant ou mot de passe invalide'))));
+            $this->view->render();
+            return;
+        }
+        if (User::minAccesslevel(2)) { header('Location: ' . BDO_URL); return; }
         $this->view->layout = 'account';
         $this->view->a_phtmlFile = array('BODY' => 'compte/connexion');
         $this->view->set_var(array('PAGETITLE' => 'Connexion à BDovore', 'login_error' => is_string($user->error) ? $user->error : '',

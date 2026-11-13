@@ -101,6 +101,20 @@ try {
         $_POST['csrf_token'] = 'invalid';
         (new User())->autoLogin();
         check($_SESSION['userConnect']->user_id == 2, 'CSRF invalide ne déconnecte pas une session existante');
+        // Le panneau passe par le vrai bootstrap User puis le vrai contrôleur web.
+        require_once BDO_DIR . 'mvc/controllers/Compte.php';
+        Bdo_Cfg::setVar('controller', 'Compte'); Bdo_Cfg::setVar('action', 'Connexion');
+        $_SESSION = array();
+        $_SERVER['REQUEST_METHOD'] = 'POST'; $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $_POST['account_login_form'] = 'floating'; $_POST['csrf_token'] = adminCsrfToken('account-auth');
+        $web = new User(); $web->autoLogin(); Bdo_Cfg::setVar('user', $web);
+        ob_start(); (new Compte())->Connexion(); $inline = json_decode(ob_get_clean(), true);
+        check($inline['authenticated'] === true && $_SESSION['userConnect']->user_id == 2, 'login flottant ouvre la bonne collection via la session web sans tables mobiles');
+        $_SESSION = array(); $_POST['csrf_token'] = 'invalid';
+        $web = new User(); $web->autoLogin(); Bdo_Cfg::setVar('user', $web);
+        ob_start(); (new Compte())->Connexion(); $inline = json_decode(ob_get_clean(), true);
+        check($inline['authenticated'] === false && empty($_SESSION['userConnect']->user_id) && http_response_code() === 401, 'login flottant avec CSRF invalide ne crée aucune session');
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
         $_POST = array(); $_SESSION = array('userConnect' => (object) array('email' => 'same@example.test', 'level' => 2));
         (new User())->autoLogin();
         check(empty($_SESSION['userConnect']->user_id) && $_SESSION['userConnect']->level === 5, 'ancien profil OpenID seul ne suffit jamais à authentifier');
