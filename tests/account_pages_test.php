@@ -20,6 +20,11 @@ pageAssert(strpos($shared, 'Pseudo de la collection') !== false && strpos($share
 $signup = accountPage('compte/inscription', array('validInscription' => false, 'ERRORTEXT' => $input, 'USERNAME' => $input, 'EMAIL' => $input));
 pageAssert(strpos($signup, '<script>') === false, 'inscription échappe les valeurs utilisateur');
 pageAssert(strpos($signup, 'name="NewUser"') !== false && strpos($signup, 'autocomplete="new-password"') !== false && strpos($signup, 'name="csrf_token"') !== false, 'inscription moderne conserve pseudo, autocomplétion et CSRF');
+pageAssert(strpos($signup, 'activé après sa confirmation') !== false, 'inscription annonce la confirmation obligatoire');
+$confirmation = accountPage('compte/confirmation', array('purpose' => 'email', 'confirmation_error' => $input));
+pageAssert(strpos($confirmation, '<script>') === false && strpos($confirmation, 'L’adresse actuelle reste utilisée') !== false && strpos($confirmation, 'name="csrf_token"') !== false, 'confirmation explique le changement différé et échappe l’erreur');
+$result = accountPage('compte/resultat', array('account_error' => false, 'account_message' => $input, 'account_result_target' => 'compte', 'account_result_link' => 'Revenir au profil'));
+pageAssert(strpos($result, '<script>') === false && strpos($result, 'role="status"') !== false && strpos($result, 'Revenir au profil') !== false, 'résultat de confirmation visible et échappé');
 $choices = accountPage('authsocial/continue', array('social_error' => '', 'social_identity' => (object) array('provider' => 'google', 'email' => 'user@example.test'), 'social_accounts' => array(array('user_id' => 7, 'username' => $input, 'level' => 2)), 'social_pending_registration' => null));
 pageAssert(strpos($choices, '<script>') === false && strpos($choices, 'name="user_id" value="7"') !== false, 'choix de collection échappé et lié à un identifiant');
 pageAssert(strpos($choices, 'Associer un compte BDovore existant') !== false && strpos($choices, 'Créer un nouveau compte BDovore') !== false, 'association et nouvelle inscription distinguées');

@@ -1,6 +1,12 @@
 <div>
     <p class="account-eyebrow">Dernière étape</p><h1>Confirmez votre demande</h1>
+    <?php if ($view->purpose === 'register') : ?>
+    <p>Saisissez le code envoyé à votre adresse e-mail pour activer votre compte. Il est valable 10 minutes.</p>
+    <?php elseif ($view->purpose === 'email') : ?>
+    <p>Saisissez le code envoyé à l’adresse à vérifier. L’adresse actuelle reste utilisée jusqu’à cette confirmation. Le code est valable 10 minutes.</p>
+    <?php else : ?>
     <p>Si les informations correspondent à un compte, un code a été envoyé par e-mail. Il est valable 10 minutes.</p>
+    <?php endif; ?>
     <?php if ($view->confirmation_error) : ?><p role="alert"><?php echo htmlspecialchars($view->confirmation_error, ENT_QUOTES, 'UTF-8'); ?></p><?php endif; ?>
     <form class="account-form" method="post" action="<?php echo BDO_URL; ?>compte/confirmation">
         <?php echo adminCsrfField('account'); ?>
@@ -12,4 +18,6 @@
         <?php endif; ?>
         <button type="submit" class="account-primary">Confirmer</button>
     </form>
+    <?php if ($view->purpose === 'register') : ?><p>Code expiré ou non reçu ? <a href="<?php echo BDO_URL; ?>compte/inscription">Reprenez l’inscription avec les mêmes pseudo, adresse et mot de passe pour recevoir un nouveau code.</a></p>
+    <?php elseif ($view->purpose === 'email') : ?><p>Code expiré ou non reçu ? <a href="<?php echo BDO_URL; ?>compte">Revenez au profil pour envoyer un nouveau code.</a></p><?php endif; ?>
 </div>

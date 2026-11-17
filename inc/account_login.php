@@ -23,11 +23,11 @@ class AccountLogin
         if ($user) return intval($user->user_id);
         if ($pseudo !== '') {
             if (!filter_var($identifier, FILTER_VALIDATE_EMAIL)) return null;
-            $statement = $db->prepare('SELECT user_id FROM users WHERE username = ? AND email = ? LIMIT 1');
+            $statement = $db->prepare('SELECT user_id FROM users WHERE username = ? AND email = ? AND email_verified_at IS NOT NULL AND email_verified_address = email AND level < 98 LIMIT 1');
             $statement->bind_param('ss', $pseudo, $identifier);
         } else {
             if (!filter_var($identifier, FILTER_VALIDATE_EMAIL)) return null;
-            $statement = $db->prepare('SELECT user_id FROM users WHERE email = ? LIMIT 2');
+            $statement = $db->prepare('SELECT user_id FROM users WHERE email = ? AND email_verified_at IS NOT NULL AND email_verified_address = email AND level < 98 LIMIT 2');
             $statement->bind_param('s', $identifier);
         }
         $statement->execute(); $result = $statement->get_result();

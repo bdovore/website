@@ -1,0 +1,17 @@
+# Vérification des adresses e-mail
+
+Appliquer `sql/2026-11-17-email-verification.sql` avant de déployer les fichiers PHP et rafraîchir le cache de schéma MVC `*_schema.serial` selon la procédure habituelle. Le script est réapplicable, conserve les comptes et collections et ne marque aucune adresse historique comme vérifiée. Il fournit les tables de codes, de limitation et de liens de récupération si elles n’existent pas encore. Il ne nécessite pas les tables sociales ni l’activation de l’API mobile.
+
+- **Création classique** : compte au niveau 98, sans accès web ni jeton, jusqu’à confirmation du code envoyé à l’adresse saisie. La confirmation active le compte et enregistre l’adresse vérifiée. Reprendre l’inscription avec le même pseudo, la même adresse et le même mot de passe permet de recevoir un nouveau code après le délai de renvoi.
+- **Changement d’adresse** : mot de passe actuel demandé ; code envoyé uniquement à la nouvelle adresse. L’adresse actuelle reste utilisée jusqu’à confirmation. Le code est lié au compte et aux identifiants de mot de passe. La validation invalide les anciens codes et liens de récupération et notifie l’ancienne adresse. Un administrateur ne peut pas remplacer directement l’adresse d’un autre compte depuis son profil.
+- **Comptes existants** : connexion par pseudo et mot de passe conservée. Le bouton « Vérifier mon adresse e-mail » du profil envoie un code à l’adresse courante après contrôle du mot de passe. L’API permet le même parcours via `requestemail` puis `confirmemail` avec la même adresse.
+- **Connexion par e-mail** : seules les adresses vérifiées des comptes actifs sont résolues, sur le site, l’API moderne et `/auth/gettoken`. Une adresse partagée entre plusieurs comptes vérifiés demande le pseudo ; une adresse inconnue ou non vérifiée reçoit la même demande générique. Les comptes non vérifiés ne rendent pas ambiguë l’adresse d’un compte vérifié.
+- **Google/Apple** : une adresse dont le fournisseur fait autorité et prouve la vérification est enregistrée comme vérifiée à la création. Les autres adresses exigent le même code. Aucun compte existant n’est associé automatiquement par correspondance d’e-mail.
+
+`users.email_verified_at` et `users.email_verified_address` conservent la preuve. Elle n’est reconnue que si l’adresse vérifiée correspond encore à `users.email`, pour éviter qu’une écriture extérieure transfère cette preuve à une autre adresse. Le profil JSON expose uniquement le booléen `email_verified` en complément des champs existants.
+
+Les codes contiennent huit chiffres, expirent après dix minutes, permettent cinq tentatives et ne sont utilisables qu’une fois. Un nouveau code remplace le précédent pour ce compte et cette opération. Aucun mot de passe ni code n’est stocké en clair. Les vérifications du site restent actives avec `BDO_MOBILE_API_ENABLED=false`.
+
+La migration ne révoque pas les sessions existantes et ne transforme pas la récupération historique en preuve de vérification. Elle ne change pas la possibilité d’avoir plusieurs pseudos partageant une adresse.
+
+Tests sans e-mails réels : `tests/account_security_test.php`, `tests/account_pages_test.php`, `tests/mobile_account_mysql_test.php` (avec et sans `--legacy-only`) et `tests/social_account_mysql_test.php`. Les tests MySQL créent et suppriment uniquement leur propre base aléatoire ; le scénario `--legacy-only` exerce les vrais formulaires web avec l’API désactivée et un expéditeur factice. Vérifier la délivrabilité SMTP en préproduction avant déploiement.

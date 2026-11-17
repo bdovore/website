@@ -3,6 +3,12 @@
 /** Shared password rules; existing passwords remain accepted at login. */
 class AccountSecurity
 {
+    public static function emailVerified($user)
+    {
+        return !empty($user->email_verified_at) && !empty($user->email_verified_address)
+            && strcasecmp($user->email_verified_address, (string) $user->email) === 0;
+    }
+
     public static function dummyPasswordCheck($password)
     {
         password_verify(is_string($password) ? $password : '', '$2y$12$6TKgWmxoG2Art8zk4wsqa.QBXl/hijQrDQJV03ylfTGB.aUQcc2rK');

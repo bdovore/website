@@ -8,7 +8,7 @@ Le complément [connexion par e-mail, Google et Apple](connexion-google-apple.md
 
 1. Sauvegarder la base et vérifier le schéma réel, en particulier `users.password_v2`, `users.API_TOKEN` et la clé unique de `users.username`.
 2. Appliquer `sql/2026-11-12-mobile-account.sql` avec le processus habituel de migration. Le script peut être réappliqué : il crée seulement des tables absentes, sans supprimer ni convertir les données historiques.
-3. Déployer les fichiers PHP, contrôleurs, layouts et vues ensemble. `config/mobile.php` désactive les nouvelles routes par défaut ; le site et `/auth/gettoken` restent disponibles sans les tables mobiles.
+3. Appliquer aussi `sql/2026-11-17-email-verification.sql` avant les fichiers PHP, puis rafraîchir le cache de schéma MVC `*_schema.serial`. Cette migration réapplicable ajoute les preuves de vérification et fournit les tables de codes et de limitation même si l’API mobile est désactivée. Déployer les fichiers PHP, contrôleurs, layouts et vues ensemble. `config/mobile.php` désactive les nouvelles routes API par défaut ; les vérifications d’e-mail du site restent obligatoires. Voir [vérification des adresses](verification-email.md).
 4. Après la migration, définir `BDO_MOBILE_API_ENABLED` à `true` dans la configuration d'environnement `config/constante.php`. Garder `config/mobile.php`, qui fournit les valeurs par défaut.
 5. Vérifier que PHP reçoit l'en-tête `Authorization` derrière Apache/FastCGI ou le proxy. Le code lit `HTTP_AUTHORIZATION` et `REDIRECT_HTTP_AUTHORIZATION`. Ajouter si nécessaire la transmission de cet en-tête dans la configuration du serveur ; ne pas ajouter le jeton dans la query string.
 6. Réaliser les vérifications ci-dessous avec une app actuelle non modifiée puis une build de test de la nouvelle app. Publier l'app seulement après leur réussite.
@@ -43,7 +43,7 @@ Une connexion moderne n'écrit jamais dans `users.API_TOKEN`. Une connexion hist
 - Le cookie `pass`, qui pouvait contenir le hash historique ou une sentinelle commune, n'authentifie plus personne. Les sessions PHP valides continuent à fonctionner ; certains utilisateurs devront se reconnecter dans leur navigateur. La mémorisation longue durée du site n'est pas remplacée dans ce lot.
 - Les mutations du profil web passent par POST et un jeton CSRF. Changement de mot de passe et suppression redemandent le mot de passe actuel.
 - Les nouveaux mots de passe utilisent bcrypt et une règle commune : au moins 6 caractères, au plus 72 octets ; espaces acceptés. Les mots de passe existants restent acceptés à la connexion.
-- Lorsque la nouvelle API est activée, inscription, récupération et changement d'e-mail du site utilisent les mêmes codes que l'app. Les comptes existants ne sont pas obligés de confirmer rétroactivement leur e-mail.
+- Inscription et changement d’e-mail du site utilisent systématiquement les mêmes codes que l’app, indépendamment du drapeau d’activation de l’API. Les comptes existants restent accessibles par pseudo ; leur adresse doit être vérifiée depuis le profil avant de servir d’identifiant de connexion. La récupération utilise les codes lorsque l’API est activée et garde sinon les liens historiques.
 - Les changements et réinitialisations de mot de passe révoquent les jetons historiques, les sessions modernes et les codes/liens de récupération. Les sessions web sont invalidées à leur prochaine requête par comparaison des identifiants de mot de passe.
 - Un compte bloqué ou supprimé perd ses accès. Un Bearer invalide ne retombe jamais sur une session PHP valide.
 - Les identités Bearer restent propres à la requête et ne créent pas de session web persistante. La configuration de débogage est désactivée pour les requêtes de compte ou contenant des accès API.
@@ -70,7 +70,7 @@ Corps JSON pour les POST ; réponses `{ "data": ..., "error": null }` ou `{ "dat
 | POST `/apiauth/webticket` | Bearer, destination structurée | URL temporaire d'ouverture web |
 | GET `/apiauth/openweb?ticket=...` | Ticket | Session web et redirection 303 vers la destination autorisée |
 
-Profil : `user_id`, `public_id`, `username`, `email`, `location`, `birthday`, `open_collection`, `explicit_content`, `newsletter`, `square_type`. Seuls localisation, anniversaire et préférences sont modifiables par `update`. Les booléens sont de vrais booléens JSON ; `square_type` vaut 0 ou 1 ; anniversaire vide ou `AAAA-MM-JJ`.
+Profil : `user_id`, `public_id`, `username`, `email`, `email_verified`, `location`, `birthday`, `open_collection`, `explicit_content`, `newsletter`, `square_type`. `email_verified` indique si l’adresse courante a été confirmée. Seuls localisation, anniversaire et préférences sont modifiables par `update`. Les booléens sont de vrais booléens JSON ; `square_type` vaut 0 ou 1 ; anniversaire vide ou `AAAA-MM-JJ`.
 
 Sessions : jetons `bdo2_` suivis de 32 octets aléatoires en hexadécimal ; empreinte SHA-256 en base ; expiration après 30 jours d'inactivité et au plus 90 jours. Les durées sont surchargeables dans `config/constante.php` via `BDO_MOBILE_IDLE_SECONDS` et `BDO_MOBILE_ABSOLUTE_SECONDS`.
 

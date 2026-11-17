@@ -22,11 +22,16 @@ try {
     $db->query('CREATE TABLE users_album (user_id MEDIUMINT UNSIGNED NOT NULL, album_id INT NOT NULL) ENGINE=MyISAM');
     migration($db, BDO_DIR . 'sql/2026-11-12-mobile-account.sql');
     migration($db, BDO_DIR . 'sql/2026-11-12-social-login.sql'); migration($db, BDO_DIR . 'sql/2026-11-12-social-login.sql');
+    migration($db, BDO_DIR . 'sql/2026-11-17-email-verification.sql');
     socialAssert(intval($db->query("SHOW COLUMNS FROM users LIKE 'email'")->fetch_object()->Type === 'varchar(254)'), 'migration e-mail 254 caractères réapplicable');
     $password = 'une phrase de passe très longue'; $hash = $db->real_escape_string(AccountSecurity::hashPassword($password));
     $db->query("INSERT INTO users (username,password,password_v2,email) VALUES ('collection-one','migrated','$hash','shared@example.test'), ('collection-two','migrated','$hash','shared@example.test'), ('unique-member','migrated','$hash','unique@example.test')");
     $db->query('INSERT INTO users_album VALUES (1,10),(1,11),(2,20)');
     socialAssert(AccountLogin::resolve($db, 'collection-one') === 1, 'pseudo historique reconnu');
+    try { AccountLogin::resolve($db, 'unique@example.test'); socialAssert(false, 'e-mail historique non vérifié refusé'); }
+    catch (AccountLoginAmbiguous $e) { socialAssert(true, 'e-mail historique non vérifié refusé'); }
+    socialAssert(AccountLogin::resolve($db, 'shared@example.test', 'collection-two') === null, 'pseudo précisé ne contourne pas la vérification e-mail');
+    $db->query('UPDATE users SET email_verified_at=NOW(), email_verified_address=email, LAST_UPDATE=LAST_UPDATE');
     socialAssert(AccountLogin::resolve($db, 'unique@example.test') === 3, 'e-mail unique reconnu');
     $ambiguousMessages = array();
     foreach (array('shared@example.test', 'absent@example.test') as $identifier) {
@@ -38,6 +43,11 @@ try {
     socialAssert(AccountLogin::resolve($db, 'unique@example.test', 'collection-two') === null, 'pseudo doit appartenir à cette adresse');
     $db->query("INSERT INTO users (username,password,password_v2,email) VALUES ('unique@example.test','migrated','$hash','elsewhere@example.test')");
     socialAssert(AccountLogin::resolve($db, 'unique@example.test') === 4, 'pseudo littéral prioritaire sur un e-mail');
+    $db->query('UPDATE users SET email_verified_at=NULL, LAST_UPDATE=LAST_UPDATE WHERE user_id=2');
+    $db->query("INSERT INTO users (username,email,password,level) VALUES ('unverified-copy','shared@example.test','unverified',2), ('pending-copy','shared@example.test','pending',98)");
+    socialAssert(AccountLogin::resolve($db, 'shared@example.test') === 1, 'comptes non vérifiés et en attente ne perturbent pas la résolution du compte vérifié');
+    socialAssert(AccountLogin::resolve($db, 'shared@example.test', 'unverified-copy') === null, 'copier une adresse vérifiée ne donne pas un accès par e-mail');
+    $db->query('UPDATE users SET email_verified_at=NOW(), LAST_UPDATE=LAST_UPDATE WHERE user_id=2');
     $clock = time(); $messages = array(); $tokens = array();
     $accounts = new MobileAccount($db, function ($email, $subject, $body) use (&$messages) { $messages[] = compact('email','subject','body'); return true; }, function () use (&$clock) { return $clock; });
     socialRejects(function () use ($accounts) { $accounts->authenticatePassword('elsewhere@example.test', 'incorrect'); }, 'pseudo_required', 'échec sur e-mail unique ne révèle pas son existence');
@@ -79,6 +89,7 @@ try {
     socialAssert($other->id !== $identity->id && count($social->accounts($other->id)) === 0, 'même e-mail et subject différent restent deux identités');
     socialRejects(function () use ($social, $other, $accounts) { $social->register($other->id, 'collection-one', 'changed@gmail.com', $accounts); }, 'username_unavailable', 'pseudo existant jamais remplacé par inscription sociale');
     $newUser = $social->register($other->id, 'new-collection', 'changed@gmail.com', $accounts);
+    socialAssert(AccountSecurity::emailVerified($newUser), 'adresse de création sociale vérifiée par le fournisseur');
     socialAssert(intval($newUser->level) === 2 && empty($newUser->password_v2) && $newUser->password === 'federated', 'création sociale avec pseudo, sans mot de passe connu');
     socialRejects(function () use ($accounts) { $accounts->authenticatePassword('new-collection', 'federated'); }, 'invalid_credentials', 'sentinelle sociale ne permet pas de connexion');
     $accounts->initialPassword($newUser, array('password' => $password));
@@ -93,6 +104,7 @@ try {
     $pendingIdentity = $social->callback($pendingFlow['state'], $pendingFlow['cookie'], $pendingCode);
     $pendingUser = $social->register($pendingIdentity->id, 'pending-collection', 'contact@example.test', $accounts);
     socialAssert(intval($pendingUser->level) === 98, 'adresse Google tierce exige un code de contact');
+    socialAssert(!AccountSecurity::emailVerified($pendingUser), 'adresse sociale non fiable jamais marquée vérifiée');
     socialRejects(function () use ($social, $pendingIdentity, $pendingUser) { $social->selected($pendingIdentity->id, $pendingUser->user_id); }, 'account_not_linked', 'inscription en attente non authentifiable');
     $challenge = $accounts->federatedRegistrationCode($social->pending($pendingIdentity->id, $pendingUser->user_id, $accounts)); preg_match('/[0-9]{8}/', end($messages)['body'], $match);
     $accounts->verifyRegistration(array('challenge_id' => $challenge['challenge_id'], 'code' => $match[0]));

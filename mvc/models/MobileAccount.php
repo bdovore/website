@@ -178,7 +178,7 @@ class MobileAccount
     public function profile($user)
     {
         return array('user_id' => intval($user->user_id), 'public_id' => intval($user->user_id) * 1209 + 951,
-            'username' => $user->username, 'email' => $user->email, 'location' => $user->location ?? '', 'birthday' => $user->birthday ?? '',
+            'username' => $user->username, 'email' => $user->email, 'email_verified' => AccountSecurity::emailVerified($user), 'location' => $user->location ?? '', 'birthday' => $user->birthday ?? '',
             'open_collection' => $user->OPEN_COLLEC === 'Y', 'explicit_content' => intval($user->EXPLICIT_CONTENT) === 1,
             'newsletter' => intval($user->ABT_NEWS) === 1, 'square_type' => intval($user->CARRE_TYPE));
     }
@@ -255,7 +255,7 @@ class MobileAccount
         $challenge = $this->row('SELECT * FROM mobile_challenges WHERE id = ?', array($id));
         $user = $this->user($challenge->user_id);
         if (!$user || ($userId !== null && intval($userId) !== intval($user->user_id)) || !hash_equals($challenge->credential_stamp, AccountSecurity::stamp($user))
-            || ($purpose === 'reset' && strcasecmp($challenge->target_email, $user->email) !== 0)
+            || (in_array($purpose, array('register', 'reset'), true) && strcasecmp($challenge->target_email, $user->email) !== 0)
             || !hash_equals($challenge->code_hash, hash('sha256', $id . ':' . $code))) throw $error;
         $affected = $this->change('UPDATE mobile_challenges SET consumed_at = ? WHERE id = ? AND consumed_at IS NULL AND expires_at > ?', array($this->date(), $id, $this->date()));
         if (!$affected) throw $error;
@@ -291,7 +291,10 @@ class MobileAccount
     {
         list($challenge, $user) = $this->consume($input, 'register');
         if (intval($user->level) !== 98) throw new MobileAccountException('Confirmation invalide.');
-        $this->change('UPDATE users SET level = 2, LAST_UPDATE = LAST_UPDATE WHERE user_id = ? AND level = 98', array($user->user_id));
+        $changed = $this->change("UPDATE users SET level = 2, email_verified_address = email, email_verified_at = ?, LAST_UPDATE = LAST_UPDATE
+            WHERE user_id = ? AND level = 98 AND email = ? AND password = ? AND COALESCE(password_v2, '') = ?",
+            array($this->date(), $user->user_id, $challenge->target_email, $user->password, $user->password_v2 ?? ''));
+        if (!$changed) throw new MobileAccountException('Le compte a changé. Recommencez votre demande.', 409, 'account_changed');
         return $this->user($user->user_id);
     }
     public function createFederatedUser($username, $email, $trusted)
@@ -300,7 +303,8 @@ class MobileAccount
         if (!preg_match('/^[A-Za-z0-9_@-]+$/D', $username) || (function_exists('AuthorisedLogin') && !AuthorisedLogin($username))) throw new MobileAccountException('Pseudo non autorisé.');
         $email = $this->email(array('email' => $email));
         try {
-            $this->change("INSERT INTO users (username, password, password_v2, email, level) VALUES (?, 'federated', NULL, ?, ?)", array($username, $email, $trusted ? 2 : 98));
+            $this->change("INSERT INTO users (username, password, password_v2, email, level, email_verified_address, email_verified_at) VALUES (?, 'federated', NULL, ?, ?, ?, ?)",
+                array($username, $email, $trusted ? 2 : 98, $trusted ? $email : null, $trusted ? $this->date() : null));
         } catch (mysqli_sql_exception $e) {
             if ($e->getCode() === 1062) throw new MobileAccountException('Ce pseudo est indisponible.', 409, 'username_unavailable');
             throw $e;
@@ -397,11 +401,17 @@ class MobileAccount
     }
     public function confirmEmail($user, $input)
     {
-        list($challenge) = $this->consume($input, 'email', $user->user_id);
-        $this->change('UPDATE users SET email = ?, LAST_UPDATE = LAST_UPDATE WHERE user_id = ?', array($challenge->target_email, $user->user_id));
+        list($challenge, $user) = $this->consume($input, 'email', $user->user_id);
+        $changed = $this->change("UPDATE users SET email = ?, email_verified_address = ?, email_verified_at = ?, LAST_UPDATE = LAST_UPDATE
+            WHERE user_id = ? AND level < 98 AND email = ? AND password = ? AND COALESCE(password_v2, '') = ?",
+            array($challenge->target_email, $challenge->target_email, $this->date(), $user->user_id, $user->email, $user->password, $user->password_v2 ?? ''));
+        if (!$changed) throw new MobileAccountException('Le compte a changé. Recommencez votre demande.', 409, 'account_changed');
         $this->change("UPDATE mobile_challenges SET consumed_at = ? WHERE user_id = ? AND purpose = 'reset' AND consumed_at IS NULL", array($this->date(), $user->user_id));
         $this->change('DELETE FROM password_reset_tokens WHERE user_id = ?', array($user->user_id));
-        call_user_func($this->sendMail, $user->email, 'Votre adresse BDovore a été modifiée', "Votre adresse e-mail BDovore a été modifiée. Si vous n'êtes pas à l'origine de cette modification, contactez l'équipe BDovore.");
+        if (strcasecmp($user->email, $challenge->target_email) !== 0) {
+            try { call_user_func($this->sendMail, $user->email, 'Votre adresse BDovore a été modifiée', "Votre adresse e-mail BDovore a été modifiée. Si vous n'êtes pas à l'origine de cette modification, contactez l'équipe BDovore."); }
+            catch (Throwable $e) { error_log('[account] security_notice_unavailable'); }
+        }
         return $this->profile($this->user($user->user_id));
     }
     public function prepareDeletion($user, $input)

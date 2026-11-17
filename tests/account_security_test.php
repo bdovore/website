@@ -22,5 +22,8 @@ foreach (array(array('type' => 'https://evil.example'), array('type' => 'edition
     try { AccountSecurity::webDestination($input); accountAssert(false, 'destination invalide refusée'); } catch (InvalidArgumentException $e) { accountAssert(true, 'destination invalide refusée'); }
 }
 accountAssert(AccountSecurity::stamp((object) array('password_v2' => $hash)) !== AccountSecurity::stamp((object) array('password_v2' => 'changed')), 'changement de mot de passe invalide les sessions');
+accountAssert(!AccountSecurity::emailVerified((object) array('email' => 'old@example.test')), 'adresse historique non vérifiée par défaut');
+accountAssert(AccountSecurity::emailVerified((object) array('email' => 'CURRENT@example.test', 'email_verified_address' => 'current@example.test', 'email_verified_at' => '2026-11-17 12:00:00')), 'preuve liée à l’adresse courante sans distinction de casse');
+accountAssert(!AccountSecurity::emailVerified((object) array('email' => 'new@example.test', 'email_verified_address' => 'old@example.test', 'email_verified_at' => '2026-11-17 12:00:00')), 'preuve de l’ancienne adresse refusée pour une nouvelle adresse');
 echo "$checks contrôles, $failures échec(s).\n";
 exit($failures ? 1 : 0);

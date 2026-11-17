@@ -59,6 +59,11 @@
         </table>
         <br />
         <label>Mot de passe actuel (pour changer votre e-mail) <input name="current_password" type="password" autocomplete="current-password"></label>
+        <?php if (empty($view->EMAIL_VERIFIED)) : ?>
+        <p>Cette adresse n’est pas encore vérifiée. Connectez-vous avec votre pseudo jusqu’à sa confirmation.</p>
+        <button type="submit" name="verify_email" value="1">Vérifier mon adresse e-mail</button>
+        <?php else : ?><p>Adresse e-mail vérifiée.</p><?php endif; ?>
+        <p>Pour changer d’adresse, saisissez la nouvelle adresse et votre mot de passe actuel, puis mettez à jour le profil. L’adresse actuelle reste utilisée jusqu’à la confirmation du code reçu à la nouvelle adresse.</p>
         <h3> Personnalisation</h3>
         <table border="0" cellpadding="5" cellspacing="0" bordercolor="#FFFFCC">
 

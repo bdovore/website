@@ -5,7 +5,7 @@ Développé sur `codex/auth-profil`, sans merge de `master`. Ce lot complète `d
 ## Comportement retenu
 
 - Le pseudo reste obligatoire, unique et inchangé. L'e-mail devient un autre identifiant de connexion, pas un nouveau pseudo.
-- Un pseudo littéral est prioritaire. Sinon, un e-mail associé à un seul compte permet la connexion avec le mot de passe de ce compte.
+- Un pseudo littéral est prioritaire. Sinon, une adresse vérifiée associée à un seul compte actif permet la connexion avec le mot de passe de ce compte. Une adresse non vérifiée ne permet pas la connexion, même en précisant le pseudo ; les comptes historiques restent accessibles directement par pseudo.
 - Une adresse partagée demande une précision du pseudo. Une adresse inconnue reçoit le même message ; aucune liste de comptes n'est exposée avant authentification.
 - Un premier essai par e-mail unique qui échoue reçoit aussi cette demande de précision, afin de ne pas révéler quelles adresses existent. Une fois le pseudo précisé, l'erreur d'identifiants reste générique.
 - Une identité Google/Apple peut être associée à plusieurs pseudos. Un seul compte lié ouvre sa collection directement ; plusieurs comptes liés affichent le choix du pseudo.
@@ -21,6 +21,7 @@ Les nouvelles pages du site sont `/compte/connexion`, `/compte/inscription` et l
 1. Installer les dépendances verrouillées avec le processus Composer habituel (`composer install --no-dev --prefer-dist --no-interaction`). Seule `firebase/php-jwt` 7.2.1 a été ajoutée ; les autres paquets n'ont pas été mis à jour.
 2. Appliquer la migration du socle `sql/2026-11-12-mobile-account.sql` si elle ne l'est pas encore.
 3. Appliquer `sql/2026-11-12-social-login.sql`. Elle crée les identités, associations et transactions OAuth, et élargit `users.email` à 254 caractères si nécessaire pour les adresses masquées Apple. Elle conserve les identifiants, la collation, le caractère nullable et la valeur par défaut de la colonne. Aucun index unique n'est ajouté sur l'e-mail.
+   Appliquer également `sql/2026-11-17-email-verification.sql` avant le déploiement PHP. Voir [vérification des adresses](verification-email.md) pour la transition des comptes existants.
 4. Vérifier les index et la compatibilité de leur longueur avec le moteur/encodage réels avant l'élargissement, puis rafraîchir le cache de schéma MVC `*_schema.serial` selon la procédure du serveur.
 5. Déployer les contrôleurs, vues, layout, CSS et configuration ensemble. Activer `BDO_MOBILE_API_ENABLED` après la migration du socle, comme décrit dans le guide précédent.
 6. Configurer les fournisseurs puis activer `BDO_SOCIAL_ENABLED` dans `config/constante.php`. Cette configuration reste ignorée par Git. Les boutons sont cachés tant que leurs paramètres ne sont pas complets.

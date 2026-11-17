@@ -63,8 +63,11 @@ class Compte extends Bdo_Controller {
     private function accountFailure($message)
     {
         http_response_code(422);
-        $this->view->addAlertPage(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'));
-        $this->view->addPhtmlFile('alert', 'BODY');
+        $this->view->layout = 'account';
+        $this->view->a_phtmlFile = array('BODY' => 'compte/resultat');
+        $action = strtolower((string) Bdo_Cfg::getVar('action'));
+        $retry = in_array($action, array('inscription', 'forgotpass'), true) ? 'compte/' . $action : 'compte';
+        $this->view->set_var(array('account_message' => $message, 'account_error' => true, 'account_result_target' => $retry, 'account_result_link' => 'Revenir au formulaire'));
         $this->view->render();
     }
 
@@ -77,11 +80,17 @@ class Compte extends Bdo_Controller {
         $this->view->render();
     }
 
+    protected function accountService()
+    {
+        require_once dirname(__DIR__) . '/models/MobileAccount.php';
+        return new MobileAccount();
+    }
+
     public function Confirmation()
     {
         $this->view->layout = 'account';
         $this->view->a_phtmlFile = array('BODY' => 'compte/confirmation');
-        if (!BDO_MOBILE_API_ENABLED || empty($_SESSION['account_confirmation'])) {
+        if (empty($_SESSION['account_confirmation'])) {
             $this->accountFailure('Confirmation expirée. Recommencez votre demande.');
             return;
         }
@@ -91,7 +100,7 @@ class Compte extends Bdo_Controller {
         if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $this->mutationGuard();
             try {
-                $service = new MobileAccount();
+                $service = $this->accountService();
                 $service->throttle('verify-ip', $_SERVER['REMOTE_ADDR'] ?? 'unknown', 30, 900);
                 $input = array('challenge_id' => $pending['challenge_id'], 'code' => postVal('code', ''), 'password' => postVal('password', ''));
                 if ($pending['purpose'] === 'register') {
@@ -105,8 +114,12 @@ class Compte extends Bdo_Controller {
                     $service->confirmEmail($service->user($_SESSION['userConnect']->user_id), $input);
                 } else { throw new MobileAccountException('Confirmation invalide.'); }
                 unset($_SESSION['account_confirmation']);
-                $this->view->addAlertPage('Confirmation effectuée. Vous pouvez fermer cette fenêtre et vous connecter si nécessaire.');
-                $this->view->addPhtmlFile('alert', 'BODY');
+                $emailConfirmed = $pending['purpose'] === 'email';
+                $this->view->a_phtmlFile = array('BODY' => 'compte/resultat');
+                $this->view->set_var(array('account_error' => false,
+                    'account_message' => $emailConfirmed ? 'Confirmation effectuée. Votre adresse e-mail est vérifiée et peut maintenant servir à vous connecter.' : 'Confirmation effectuée. Vous pouvez maintenant vous connecter.',
+                    'account_result_target' => $emailConfirmed ? 'compte' : 'compte/connexion',
+                    'account_result_link' => $emailConfirmed ? 'Revenir au profil' : 'Me connecter'));
                 $this->view->render();
                 return;
             } catch (MobileAccountException $e) { $error = $e->getMessage(); }
@@ -153,41 +166,27 @@ class Compte extends Bdo_Controller {
             // Mettre à jour les informations
 
             if ($act == "update") {
-                if (BDO_MOBILE_API_ENABLED && intval($profile_user_id) === intval($_SESSION['userConnect']->user_id)) {
-                    require_once dirname(__DIR__) . '/models/MobileAccount.php';
-                    try {
-                        $service = new MobileAccount();
-                        $user = $service->user($profile_user_id);
-                        $service->updateProfile($user, array('location' => postVal('txtlocation', $user->location ?? ''), 'birthday' => postVal('txtanniv', $user->birthday ?? ''),
-                            'open_collection' => postVal('lstOpenCollec') === 'Y', 'explicit_content' => postVal('lstAdultContent') === '1',
-                            'newsletter' => postVal('txtNewsletter', null) === null ? intval($user->ABT_NEWS) === 1 : postVal('txtNewsletter') === 'checked', 'square_type' => intval(postVal('lstCarre', 0))));
-                        if (trim(postVal('txtemail', '')) !== $user->email) {
-                            $result = $service->requestEmail($user, array('email' => postVal('txtemail'), 'current_password' => postVal('current_password', '')));
-                            $this->pendingConfirmation('email', $result);
-                        } else { echo GetMetaTag(2, 'Votre profil a été mis à jour.', $profileUrl); }
-                    } catch (MobileAccountException $e) { $this->accountFailure($e->getMessage()); }
-                    return;
-                }
-                // vérifie que ni nom, prénom ou email ne sont nuls
-                if (postVal("txtemail") == '' or !Checkmail(postVal("txtemail"))) {
-                    echo '<META http-equiv="refresh" content="5; URL=javascript:history.go(-1)">' . "L'adresse email n'est pas valide. Vous allez etre redirig&eacute;.";
-                } else {
-                    // procède à la mise à jour
-                    $this->User->set_dataPaste(array("user_id" =>$profile_user_id,
-                       "email" => postVal("txtemail"),
-                        "birthday" => postVal("txtanniv"),
-                        "OPEN_COLLEC" => postVal("lstOpenCollec"),
-                        "EXPLICIT_CONTENT" => postVal("lstAdultContent"),
-                        "ABT_NEWS" => (postVal("txtNewsletter") == "checked" ? "1" : "0")  ,
-                        "location" => postVal("txtlocation"),
-                        "CARRE_TYPE" => postVal("lstCarre")));
-                    $this->User->update();
-                    if (issetNotEmpty($this->User->error)) {
-                        var_dump($this->User->error);
-                        exit();
+                require_once dirname(__DIR__) . '/models/MobileAccount.php';
+                try {
+                    $service = $this->accountService();
+                    $user = $service->user($profile_user_id);
+                    $email = postVal('txtemail', '');
+                    if (!is_string($email)) throw new MobileAccountException('Adresse e-mail invalide.');
+                    $verifyEmail = trim($email) !== $user->email || postVal('verify_email', '') === '1';
+                    if ($verifyEmail && intval($profile_user_id) !== intval($_SESSION['userConnect']->user_id)) {
+                        throw new MobileAccountException("Le titulaire du compte doit confirmer son adresse depuis son propre profil.", 403);
                     }
-                    echo GetMetaTag(2, "Votre profil a &eacute;t&eacute; mis &agrave; jour.", ($profileUrl));
-                }
+                    // E-mail is never written by the profile update, including for administrators.
+                    if ($verifyEmail) {
+                        $result = $service->requestEmail($user, array('email' => $email, 'current_password' => postVal('current_password', '')));
+                    }
+                    $service->updateProfile($user, array('location' => postVal('txtlocation', $user->location ?? ''), 'birthday' => postVal('txtanniv', $user->birthday ?? ''),
+                        'open_collection' => postVal('lstOpenCollec') === 'Y', 'explicit_content' => postVal('lstAdultContent') === '1',
+                        'newsletter' => postVal('txtNewsletter', null) === null ? intval($user->ABT_NEWS) === 1 : postVal('txtNewsletter') === 'checked', 'square_type' => intval(postVal('lstCarre', 0))));
+                    if ($verifyEmail) $this->pendingConfirmation('email', $result);
+                    else echo GetMetaTag(2, 'Votre profil a été mis à jour.', $profileUrl);
+                } catch (MobileAccountException $e) { $this->accountFailure($e->getMessage()); }
+                return;
             }
 
 
@@ -301,6 +300,7 @@ class Compte extends Bdo_Controller {
                     ("USERID" => $profile_user_id,
                     "UTILISATEUR" => $this->User->username,
                     "EMAIL" => $this->User->email,
+                    "EMAIL_VERIFIED" => AccountSecurity::emailVerified($this->User),
                     "LOCATION" => $this->User->location,
                     "BIRTHDAY" => $this->User->birthday,
                     "YESISSELECTED" => ($this->User->OPEN_COLLEC == 'Y' ? 'Selected' : ''),
@@ -333,149 +333,17 @@ class Compte extends Bdo_Controller {
     public function Inscription() {
         $this->view->layout = 'account';
         $this->view->a_phtmlFile = array('BODY' => 'compte/inscription');
-        $mobile = getVal("mobile",""); // check if mobile device detected
-        $source = getVal("source","");
-        //initialisation des variables de couleur
-        $color["NewUser"] = "#000000";
-        $color["NewPass1"] = "#000000";
-        $color["Newpass2"] = "#000000";
-        $color["NewEmail"] = "#000000";
-
-//initialisation des valeurs par défaut
-        $default_username = postVal("NewUser");
-        $defaut_pass1 = postVal("NewPass1");
-        $defaut_pass2 = postVal("Newpass2");
-        $defaut_email = postVal("NewEmail");
-
-// initialisation des messages d'erreur
-        $stringerror[0] = "";
-        $stringerror[1] = "Veuillez remplir les champs indiqu&eacute;s en rouge";
-        $stringerror[2] = "Le mot de passe doit contenir au moins 6 caractères et au maximum 72 octets";
-        $stringerror[3] = "Les mots de passe ne concordent pas";
-        $stringerror[4] = "veuillez entrer une adresse e-mail valide";
-        $stringerror[5] = "le nom d'utilisateur ne doit comporter que lettres / chiffres";
-        $stringerror[6] = "Le nom d'utilisateur est d&eacute;j&agrave; utilis&eacute;";
-        $stringerror[7] = "Une erreur inconnue s'est produite : votre inscription n'a pu s'effectuer normalement";
-
-        $errornum = 0;
-
-//traitement des exceptions en cas de post
-        $act = getVal("act");
-        if ($act === 'post') $this->mutationGuard();
-        if ($act === 'post' && BDO_MOBILE_API_ENABLED) {
+        if (getVal('act') === 'post') {
+            $this->mutationGuard();
             require_once dirname(__DIR__) . '/models/MobileAccount.php';
             try {
-                if ($defaut_pass1 !== $defaut_pass2) throw new MobileAccountException('Les mots de passe ne correspondent pas.');
-                $result = (new MobileAccount())->register(array('username' => $default_username, 'email' => $defaut_email, 'password' => $defaut_pass1), $_SERVER['REMOTE_ADDR'] ?? 'unknown');
+                if (postVal('NewPass1') !== postVal('Newpass2')) throw new MobileAccountException('Les mots de passe ne correspondent pas.');
+                $result = $this->accountService()->register(array('username' => postVal('NewUser'), 'email' => postVal('NewEmail'), 'password' => postVal('NewPass1')), $_SERVER['REMOTE_ADDR'] ?? 'unknown');
                 $this->pendingConfirmation('register', $result);
             } catch (MobileAccountException $e) { $this->accountFailure($e->getMessage()); }
             return;
         }
-        if ($act == "post") {//Détermine le nombre de champs vides
-            $champvide = 0;
-            if (!issetNotEmpty($defaut_pass1)) {
-                $champvide++;
-            }
-            if (!issetNotEmpty($defaut_pass2)) {
-                $champvide++;
-            }
-            if (!issetNotEmpty($defaut_email)) {
-                $champvide++;
-            }
-            if (!issetNotEmpty($default_username)) {
-                $champvide++;
-            }
-            
-
-            if ($champvide != 0) {
-                $errornum = 1;
-            }
-            //Verifie la validité du password
-            if ((Checkpassword($defaut_pass1) != 1) && ($errornum == 0)) {
-                $errornum = 2;
-                $defaut_pass1 = "";
-                $defaut_pass2 = "";
-            }
-            // Vérifie que les passwords concordent
-            if (($defaut_pass1 != $defaut_pass2) && ($errornum == 0)) {
-                $errornum = 3;
-                $defaut_pass1 = "";
-                $defaut_pass2 = "";
-            }
-
-            //Vérifie la validité de l'adresse e-mail
-            if ((Checkmail($defaut_email) != 1) && ($errornum == 0)) {
-                $errornum = 4;
-                $color["NewEmail"] = "#FF0000";
-            }
-            //Vérifie la validité du login
-            //Vérifie que le login ne comprend que des caractères authorisés et aucun espace
-            if ((CheckChars($default_username) != true) && ($errornum == 0)) {
-                $errornum = 5;
-                $color["NewUser"] = "#FF0000";
-            }
-
-            // vérifie que login choisi n'est pas réservé et qu'il n'est pas déjà utilisé
-            if ($errornum == 0) {
-                $user = New user();
-                $user->load("c", " WHERE LCASE(username)= LCASE('" . Db_Escape_String($default_username) . "')");
-
-                if (AuthorisedLogin($default_username) != true or (issetNotEmpty($user->user_id))) {
-                    $errornum = 6;
-                    $color["NewUser"] = "#FF0000";
-                } else {
-                    //on valide le nouvel utilisateur
-                    $user->set_dataPaste(array(
-                        "username" => Db_Escape_String($default_username),
-                        "password" => 'migrated',
-                        "password_v2" => AccountSecurity::hashPassword($defaut_pass1),
-                        "email" => $defaut_email,
-                        "level" => 2
-                    ));
-                    $user->update();
-
-                    if (notIssetOrEmpty($user->error)) {
-                        //ajout dans le forum si besoin
-                       $user->setForumAccount($default_username, $defaut_pass1, $defaut_email);
-                        $this->view->set_var(array("validInscription" => 1));
-                       
-                    } else
-                    {
-                        $this->set_var(array("ERROR" => $user->error));
-                    }
-                    $errornum = 7;
-                }
-            }
-        }
-
-
-
-        $errortext = $stringerror[$errornum];
-
-        $this->view->set_var(array
-            ("USERNAME" => $default_username,
-            "PASSWORD1" => '',
-            "PASSWORD2" => '',
-        //    "NOM" => $default_nom,
-          //  "PRENOM" => $default_prenom,
-            "EMAIL" => $defaut_email,
-            "COLORNEWUSER" => $color["NewUser"],
-            "COLORNEWPASS1" => $color["NewPass1"],
-            "COLORNEWPASS2" => $color["Newpass2"],
-            "COLORNEWEMAIL" => $color["NewEmail"],
-            "ERRORTEXT" => $errortext,
-            "source" => $source));
-        // set frame
-        $frame = "iframe";
-       /* $url_referer = parse_url($_SERVER["HTTP_REFERER"]);
-        $domaine = $url_referer['host'];
-        $url_host =  parse_url(BDO_URL);
-        if ($domaine != $url_host['host']) {
-            $frame = "default";
-        }
-        if ($mobile == "T") $frame = "default";*/
-        $this->view->set_var("PAGETITLE", "BDOVORE.com : inscription");
-        //$this->view->layout = "$frame";
+        $this->view->set_var(array('PAGETITLE' => 'BDOVORE.com : inscription', 'USERNAME' => '', 'EMAIL' => '', 'ERRORTEXT' => ''));
         $this->view->render();
     }
 

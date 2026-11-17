@@ -60,6 +60,10 @@ try {
         $db->multi_query($migration);
         do { if ($result = $db->store_result()) $result->free(); } while ($db->more_results() && $db->next_result());
     }
+    foreach (array(1, 2) as $run) {
+        $db->multi_query(file_get_contents(BDO_DIR . 'sql/2026-11-17-email-verification.sql'));
+        do { if ($result = $db->store_result()) $result->free(); } while ($db->more_results() && $db->next_result());
+    }
     Bdo_Cfg::setVar('connexion', $db);
     // Real legacy model writer and reader, with a fresh schema instead of the website cache.
     $schema = new class($db, $database) {
@@ -81,28 +85,33 @@ try {
     if ($legacyOnly) {
         $db->query("INSERT INTO users (username,password,email) VALUES ('historique','" . md5('ancien') . "','same@example.test')");
         $token = (new User())->getToken('historique', 'ancien');
-        check($token['Error'] === '' && preg_match('/^1-[a-f0-9]+$/D', $token['Token']), 'connexion historique sans tables mobiles');
+        check($token['Error'] === '' && preg_match('/^1-[a-f0-9]+$/D', $token['Token']), 'connexion historique avec API mobile désactivée');
         $_SERVER = array(); $_POST = array(); $_COOKIE = array(); $_SESSION = array(); $_GET = array('API_TOKEN' => $token['Token']);
         $legacyUser = new User(); $legacyUser->autoLogin(); Bdo_Cfg::setVar('user', $legacyUser);
-        check($_SESSION['userConnect']->user_id == 1, 'authentification historique dans le bootstrap sans tables mobiles');
+        check($_SESSION['userConnect']->user_id == 1, 'authentification historique dans le bootstrap avec API mobile désactivée');
         $legacyTimestamp = $db->query('SELECT LAST_UPDATE FROM users WHERE user_id=1')->fetch_object()->LAST_UPDATE;
         $legacyUser->addNbConnect();
         $counted = $db->query('SELECT nb_connect, last_connect, LAST_UPDATE FROM users WHERE user_id=1')->fetch_object();
-        check(intval($counted->nb_connect) === 1 && !empty($counted->last_connect), 'comptage de connexion web sans tables mobiles');
+        check(intval($counted->nb_connect) === 1 && !empty($counted->last_connect), 'comptage de connexion web avec API mobile désactivée');
         check($counted->LAST_UPDATE === $legacyTimestamp && (new User())->verifyToken($token['Token']) == 1, 'comptage web conserve le jeton et le timestamp collection');
         require_once BDO_DIR . 'mvc/controllers/Getjson.php';
         Bdo_Cfg::setVar('controller', 'Getjson'); Bdo_Cfg::setVar('action', 'Index');
         $_GET['data'] = 'Userpref'; $_GET['compress'] = 0;
         ob_start(); (new GetJSON())->Index(); $preferences = json_decode(ob_get_clean(), true);
-        check($preferences === array('OpenCollec' => false, 'ExplicitContent' => false), 'API historique Userpref sans tables mobiles');
-        check((new User())->getToken('historique', 'incorrect')['Error'] !== '', 'mauvais mot de passe historique refusé sans tables mobiles');
+        check($preferences === array('OpenCollec' => false, 'ExplicitContent' => false), 'API historique Userpref avec API mobile désactivée');
+        check((new User())->getToken('historique', 'incorrect')['Error'] !== '', 'mauvais mot de passe historique refusé avec API mobile désactivée');
         check((new User())->getToken('absent', 'incorrect')['Token'] === null, 'utilisateur inconnu sans avertissement ni jeton');
         session_save_path(sys_get_temp_dir()); session_id('bdovoretest' . bin2hex(random_bytes(12))); session_start();
         $_GET = array(); $_COOKIE = array('PHPSESSID' => session_id()); $_SESSION = array();
         $_POST = array('submitLoginConnect' => '1', 'user_login' => 'same@example.test', 'user_password' => 'ancien', 'csrf_token' => adminCsrfToken('account-auth'));
         (new User())->autoLogin();
-        check($_SESSION['userConnect']->user_id == 1, 'connexion web par e-mail unique sans migration');
+        check(empty($_SESSION['userConnect']->user_id), 'e-mail historique non vérifié refusé même avec API désactivée');
+        $db->query('UPDATE users SET email_verified_at=NOW(), email_verified_address=email, LAST_UPDATE=LAST_UPDATE WHERE user_id=1');
+        $_POST['csrf_token'] = adminCsrfToken('account-auth');
+        (new User())->autoLogin();
+        check($_SESSION['userConnect']->user_id == 1, 'connexion web par e-mail vérifié avec API désactivée');
         $db->query("INSERT INTO users (username,password,email) VALUES ('second-account','" . md5('second') . "','same@example.test')");
+        $db->query('UPDATE users SET email_verified_at=NOW(), email_verified_address=email, LAST_UPDATE=LAST_UPDATE WHERE user_id=2');
         $_SESSION = array(); $_POST['csrf_token'] = adminCsrfToken('account-auth');
         $web = new User(); $web->autoLogin();
         check(!empty($web->loginNeedsPseudo) && empty($_SESSION['userConnect']->user_id), 'connexion web partagée demande le pseudo sans choisir le premier compte');
@@ -120,7 +129,7 @@ try {
         $_POST['account_login_form'] = 'floating'; $_POST['csrf_token'] = adminCsrfToken('account-auth');
         $web = new User(); $web->autoLogin(); Bdo_Cfg::setVar('user', $web);
         ob_start(); (new Compte())->Connexion(); $inline = json_decode(ob_get_clean(), true);
-        check($inline['authenticated'] === true && $_SESSION['userConnect']->user_id == 2, 'login flottant ouvre la bonne collection via la session web sans tables mobiles');
+        check($inline['authenticated'] === true && $_SESSION['userConnect']->user_id == 2, 'login flottant ouvre la bonne collection via la session web avec API mobile désactivée');
         $_SESSION = array(); $_POST['csrf_token'] = 'invalid';
         $web = new User(); $web->autoLogin(); Bdo_Cfg::setVar('user', $web);
         ob_start(); (new Compte())->Connexion(); $inline = json_decode(ob_get_clean(), true);
@@ -129,6 +138,69 @@ try {
         $_POST = array(); $_SESSION = array('userConnect' => (object) array('email' => 'same@example.test', 'level' => 2));
         (new User())->autoLogin();
         check(empty($_SESSION['userConnect']->user_id) && $_SESSION['userConnect']->level === 5, 'ancien profil OpenID seul ne suffit jamais à authentifier');
+
+        // Real website flows with the native API disabled and mail captured locally.
+        class EmailTestCompte extends Compte {
+            public static $service;
+            protected function accountService() { return self::$service; }
+        }
+        $clock = time(); $messages = array();
+        $service = new MobileAccount($db, function ($email, $subject, $body) use (&$messages) { $messages[] = compact('email', 'subject', 'body'); return true; }, function () use (&$clock) { return $clock; });
+        EmailTestCompte::$service = $service;
+        $_SESSION = array(); $_GET = array('act' => 'post');
+        $_SERVER = array('REQUEST_METHOD' => 'POST', 'REMOTE_ADDR' => 'web-registration');
+        $_POST = array('NewUser' => 'web-pending', 'NewEmail' => 'same@example.test', 'NewPass1' => 'web-password', 'Newpass2' => 'web-password', 'csrf_token' => adminCsrfToken('account'));
+        Bdo_Cfg::setVar('controller', 'Compte'); Bdo_Cfg::setVar('action', 'Inscription');
+        ob_start(); (new EmailTestCompte())->Inscription(); $html = ob_get_clean();
+        $pending = $service->findUser('web-pending');
+        check(intval($pending->level) === 98 && !AccountSecurity::emailVerified($pending) && $_SESSION['account_confirmation']['purpose'] === 'register' && strpos($html, 'Code reçu') !== false, 'inscription web demande un code même API désactivée');
+        check((new User())->getToken('web-pending', 'web-password')['Token'] === null, 'aucun jeton historique avant validation');
+        preg_match('/[0-9]{8}/', end($messages)['body'], $match);
+        $registration = $_SESSION['account_confirmation'];
+        $confirmed = $service->verifyRegistration(array('challenge_id' => $registration['challenge_id'], 'code' => $match[0]));
+        check(AccountSecurity::emailVerified($confirmed) && AccountLogin::resolve($db, 'same@example.test', 'web-pending') === intval($confirmed->user_id), 'validation de création enregistre la preuve et autorise l’e-mail');
+        rejects(function () use ($service, $registration, $match) { $service->verifyRegistration(array('challenge_id' => $registration['challenge_id'], 'code' => $match[0])); }, 422, 'code de création à usage unique avec API désactivée');
+
+        $db->query('UPDATE users SET email_verified_at=NULL, email_verified_address=NULL, LAST_UPDATE=LAST_UPDATE WHERE user_id=1');
+        check(AccountLogin::resolve($db, 'same@example.test', 'historique') === null, 'préciser le pseudo ne contourne pas une adresse non vérifiée');
+        $_SESSION = array('userConnect' => $service->user(1)); $_GET = array('act' => 'update');
+        $_POST = array('txtemail' => 'same@example.test', 'verify_email' => '1', 'current_password' => 'ancien', 'csrf_token' => adminCsrfToken('account'));
+        Bdo_Cfg::setVar('action', 'Index');
+        ob_start(); (new EmailTestCompte())->Index(); ob_end_clean();
+        check(!AccountSecurity::emailVerified($service->user(1)) && $_SESSION['account_confirmation']['purpose'] === 'email', 'ancien compte vérifie son adresse actuelle depuis le profil sans l’activer prématurément');
+        preg_match('/[0-9]{8}/', end($messages)['body'], $match);
+        $_POST = array('code' => $match[0], 'csrf_token' => adminCsrfToken('account')); $_GET = array();
+        Bdo_Cfg::setVar('action', 'Confirmation');
+        ob_start(); (new EmailTestCompte())->Confirmation(); $html = ob_get_clean();
+        check(AccountSecurity::emailVerified($service->user(1)) && empty($_SESSION['account_confirmation']) && strpos($html, 'Confirmation effectuée') !== false, 'confirmation web fonctionne API désactivée et valide un ancien compte');
+
+        $_GET = array('act' => 'update'); $_POST = array('txtemail' => 'new-web@example.test', 'current_password' => 'ancien', 'csrf_token' => adminCsrfToken('account'));
+        Bdo_Cfg::setVar('action', 'Index');
+        ob_start(); (new EmailTestCompte())->Index(); ob_end_clean();
+        check($service->user(1)->email === 'same@example.test' && AccountSecurity::emailVerified($service->user(1)) && end($messages)['email'] === 'new-web@example.test', 'changement web envoie le code à la nouvelle adresse et conserve l’ancienne vérification');
+        $emailChange = $_SESSION['account_confirmation'];
+        preg_match('/[0-9]{8}/', end($messages)['body'], $match); $emailCode = $match[0];
+        $_GET = array(); $_POST = array('code' => '00000000', 'csrf_token' => adminCsrfToken('account'));
+        Bdo_Cfg::setVar('action', 'Confirmation');
+        ob_start(); (new EmailTestCompte())->Confirmation(); $html = ob_get_clean();
+        check($service->user(1)->email === 'same@example.test' && strpos($html, 'Code invalide') !== false, 'mauvais code web ne change pas l’adresse');
+        $_POST['code'] = $emailCode;
+        ob_start(); (new EmailTestCompte())->Confirmation(); ob_end_clean();
+        check($service->user(1)->email === 'new-web@example.test' && AccountSecurity::emailVerified($service->user(1)) && AccountLogin::resolve($db, 'new-web@example.test') === 1, 'code correct applique et vérifie la nouvelle adresse');
+        check(end($messages)['email'] === 'same@example.test', 'notification de sécurité envoyée à l’ancienne adresse');
+        rejects(function () use ($service, $emailChange, $emailCode) { $service->confirmEmail($service->user(1), array('challenge_id' => $emailChange['challenge_id'], 'code' => $emailCode)); }, 422, 'code de changement non réutilisable');
+        $db->query("UPDATE users SET email='external-change@example.test', LAST_UPDATE=LAST_UPDATE WHERE user_id=1");
+        check(!$service->profile($service->user(1))['email_verified'], 'écriture extérieure ne transfère pas la vérification à une autre adresse');
+        try { AccountLogin::resolve($db, 'external-change@example.test'); check(false, 'adresse changée hors vérification refusée'); }
+        catch (AccountLoginAmbiguous $e) { check(true, 'adresse changée hors vérification refusée'); }
+
+        $failedMail = new MobileAccount($db, function () { return false; });
+        rejects(function () use ($failedMail) { $failedMail->register(array('username' => 'mail-failure', 'email' => 'failure@example.test', 'password' => 'web-password'), 'mail-failure-ip'); }, 503, 'échec SMTP signalé à la création');
+        check(intval($failedMail->findUser('mail-failure')->level) === 98 && !AccountSecurity::emailVerified($failedMail->findUser('mail-failure')), 'échec SMTP laisse le compte inactif et non vérifié');
+        $challenge = $service->requestEmail($service->user(1), array('email' => 'expired@example.test', 'current_password' => 'ancien'));
+        preg_match('/[0-9]{8}/', end($messages)['body'], $match); $clock += 601;
+        rejects(function () use ($service, $challenge, $match) { $service->confirmEmail($service->user(1), array('challenge_id' => $challenge['challenge_id'], 'code' => $match[0])); }, 422, 'expiration du code de changement après dix minutes');
+        check($service->user(1)->email === 'external-change@example.test', 'code expiré conserve l’adresse courante');
         session_destroy();
     } else {
     $oldToken = '1-abcdef0123456'; $oldHash = md5($oldToken);
@@ -266,9 +338,10 @@ try {
         private $db;
         public $beforeInsert;
         public $beforePasswordUpdate;
+        public $beforeEmailUpdate;
         public function __construct($db) { $this->db = $db; }
         public function prepare($sql) {
-            foreach (array('INSERT INTO mobile_challenges ' => 'beforeInsert', 'UPDATE users SET password_v2' => 'beforePasswordUpdate') as $prefix => $hook) {
+            foreach (array('INSERT INTO mobile_challenges ' => 'beforeInsert', 'UPDATE users SET password_v2' => 'beforePasswordUpdate', 'UPDATE users SET email = ?' => 'beforeEmailUpdate') as $prefix => $hook) {
                 if (strpos($sql, $prefix) === 0 && $this->$hook) {
                     $callback = $this->$hook; $this->$hook = null; $callback();
                 }
@@ -304,6 +377,10 @@ try {
     $raceDb->beforePasswordUpdate = function () use ($db, $raceUserId) { $db->query("UPDATE users SET email='changed-during-reset@example.test', LAST_UPDATE=LAST_UPDATE WHERE user_id=$raceUserId"); };
     rejects(function () use ($raceService, $latestRace, $latestRaceCode) { $raceService->resetPassword(array('challenge_id' => $latestRace['challenge_id'], 'code' => $latestRaceCode, 'password' => 'race-new-password')); }, 409, 'changement d’adresse entre validation du code et écriture du mot de passe détecté');
     check(AccountSecurity::verifyPassword('race-password', $raceService->user($raceUserId)), 'récupération concurrente refusée conserve le mot de passe');
+    preg_match('/[0-9]{8}/', end($raceMessages), $match); $emailRetryCode = $match[0];
+    $raceDb->beforeEmailUpdate = function () use ($db, $raceUserId) { $db->query("UPDATE users SET password='changed-credentials', password_v2=NULL, LAST_UPDATE=LAST_UPDATE WHERE user_id=$raceUserId"); };
+    rejects(function () use ($raceService, $raceUserId, $emailRetry, $emailRetryCode) { $raceService->confirmEmail($raceService->user($raceUserId), array('challenge_id' => $emailRetry['challenge_id'], 'code' => $emailRetryCode)); }, 409, 'identifiants modifiés entre validation du code et changement d’adresse détectés');
+    check($raceService->user($raceUserId)->email === 'changed-during-reset@example.test' && !AccountSecurity::emailVerified($raceService->user($raceUserId)), 'modification concurrente des identifiants empêche la validation de l’adresse');
     }
     // Same reminder service with and without the mobile schema; never sends real mail.
     $db->query("INSERT INTO users (username,email,level,password) VALUES
