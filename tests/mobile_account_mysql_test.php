@@ -143,7 +143,26 @@ try {
         class EmailTestCompte extends Compte {
             public static $service;
             protected function accountService() { return self::$service; }
+            public function loadModel($model) {
+                parent::loadModel($model);
+                // Keep the real User reader, without connecting to the separate forum DB.
+                if ($model === 'User') $this->User = new class extends User {
+                    public function hasForumAccount($username) { return false; }
+                };
+            }
         }
+        $renderProfile = function () {
+            $request = array($_GET, $_POST, $_SERVER);
+            $_GET = array('mobile' => 'T'); $_POST = array(); $_SERVER['REQUEST_METHOD'] = 'GET';
+            Bdo_Cfg::setVar('action', 'Index');
+            Bdo_Cfg::setVar('user', $_SESSION['userConnect']);
+            $controller = new EmailTestCompte();
+            $controller->view->layout = 'account';
+            $controller->view->a_phtmlFile = array('BODY' => 'compte/index');
+            ob_start(); $controller->Index(); $html = ob_get_clean();
+            list($_GET, $_POST, $_SERVER) = $request;
+            return $html;
+        };
         $clock = time(); $messages = array();
         $service = new MobileAccount($db, function ($email, $subject, $body) use (&$messages) { $messages[] = compact('email', 'subject', 'body'); return true; }, function () use (&$clock) { return $clock; });
         EmailTestCompte::$service = $service;
@@ -173,6 +192,8 @@ try {
         Bdo_Cfg::setVar('action', 'Confirmation');
         ob_start(); (new EmailTestCompte())->Confirmation(); $html = ob_get_clean();
         check(AccountSecurity::emailVerified($service->user(1)) && empty($_SESSION['account_confirmation']) && strpos($html, 'Confirmation effectuée') !== false, 'confirmation web fonctionne API désactivée et valide un ancien compte');
+        $html = $renderProfile();
+        check(strpos($html, 'Adresse e-mail vérifiée.') !== false && strpos($html, 'name="verify_email"') === false, 'retour au profil affiche l’adresse vérifiée depuis le vrai modèle User');
 
         $_GET = array('act' => 'update'); $_POST = array('txtemail' => 'new-web@example.test', 'current_password' => 'ancien', 'csrf_token' => adminCsrfToken('account'));
         Bdo_Cfg::setVar('action', 'Index');
@@ -187,10 +208,14 @@ try {
         $_POST['code'] = $emailCode;
         ob_start(); (new EmailTestCompte())->Confirmation(); ob_end_clean();
         check($service->user(1)->email === 'new-web@example.test' && AccountSecurity::emailVerified($service->user(1)) && AccountLogin::resolve($db, 'new-web@example.test') === 1, 'code correct applique et vérifie la nouvelle adresse');
+        $html = $renderProfile();
+        check(strpos($html, 'value="new-web@example.test"') !== false && strpos($html, 'Adresse e-mail vérifiée.') !== false, 'retour au profil après changement affiche la nouvelle adresse et sa vérification');
         check(end($messages)['email'] === 'same@example.test', 'notification de sécurité envoyée à l’ancienne adresse');
         rejects(function () use ($service, $emailChange, $emailCode) { $service->confirmEmail($service->user(1), array('challenge_id' => $emailChange['challenge_id'], 'code' => $emailCode)); }, 422, 'code de changement non réutilisable');
         $db->query("UPDATE users SET email='external-change@example.test', LAST_UPDATE=LAST_UPDATE WHERE user_id=1");
         check(!$service->profile($service->user(1))['email_verified'], 'écriture extérieure ne transfère pas la vérification à une autre adresse');
+        $html = $renderProfile();
+        check(strpos($html, 'name="verify_email"') !== false && strpos($html, 'Adresse e-mail vérifiée.') === false, 'profil indique non vérifiée après une modification extérieure de l’adresse');
         try { AccountLogin::resolve($db, 'external-change@example.test'); check(false, 'adresse changée hors vérification refusée'); }
         catch (AccountLoginAmbiguous $e) { check(true, 'adresse changée hors vérification refusée'); }
 

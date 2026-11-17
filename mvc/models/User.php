@@ -46,6 +46,8 @@ class User extends Bdo_Db_Line
                 `password` ,
                 `level` ,
                 `email` ,
+                `email_verified_address` ,
+                `email_verified_at` ,
                 `birthday` ,
                 `location` ,
                 `image` ,
