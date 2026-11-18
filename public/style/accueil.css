@@ -5,6 +5,8 @@
     --bdo-home-accent: #8f1204;
     container-type: inline-size;
     padding: clamp(.8rem, 2.5vw, 1.65rem);
+    border-radius: 10px;
+    background: #fff;
     color: var(--bdo-home-ink);
     line-height: 1.45;
     overflow-wrap: anywhere;

@@ -34,6 +34,8 @@
     min-width: 0;
     margin: 0 auto;
     padding: clamp(1rem, 3vw, 2rem);
+    border-radius: 10px;
+    background: #fff;
     color: #302924;
     line-height: 1.55;
     overflow-wrap: anywhere;

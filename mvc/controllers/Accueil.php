@@ -13,8 +13,8 @@ class Accueil extends Bdo_Controller
     public function Index ()
     {
         $this->view->addCssFile('style/album-lists.css');
-        $this->view->addCssFile('style/actualites.css');
-        $this->view->addCssFile('style/accueil.css');
+        $this->view->addCssFile('style/actualites.css?v=20261118a');
+        $this->view->addCssFile('style/accueil.css?v=20261118a');
         // pas la peine de faire un $this->loadModel('Actus'). il est fait par
         // defaut dans le Bdo_Controller
 
