@@ -31,8 +31,9 @@ class News extends Bdo_Db_Line
     }
 
     public function getLastNewsPerType () {
-        $query = "SELECT `news_id`, n.`ID_NEWS_TYPE`, `news_level`, `news_posteur`, `news_date`, `news_titre` , `news_text`, `news_on_date`, `news_off_date`, `USER_ID`
+        $query = "SELECT `news_id`, n.`ID_NEWS_TYPE`, nt.NAME_NEWS_TYPE AS label_news_type, `news_level`, `news_posteur`, `news_date`, `news_titre` , `news_text`, `news_on_date`, `news_off_date`, `USER_ID`
                 FROM news n
+                LEFT JOIN news_type nt ON n.ID_NEWS_TYPE = nt.ID_NEWS_TYPE
                 INNER JOIN (
                     SELECT ID_NEWS_TYPE, MAX(news_id) as last_id
                     FROM news
@@ -40,7 +41,7 @@ class News extends Bdo_Db_Line
                     news_date > DATE_SUB(NOW(), INTERVAL 15 DAY)
                     GROUP BY ID_NEWS_TYPE
                 ) as last ON n.ID_NEWS_TYPE = last.ID_NEWS_TYPE AND n.news_id = last.last_id
-                ORDER BY news_id DESC
+                ORDER BY news_id DESC LIMIT 5
         ";
         $resultat = Db_query($query);
 
@@ -53,8 +54,9 @@ class News extends Bdo_Db_Line
 
      public function getLastSecondNews ($limit) {
         // les news qui ne sont pas à la une
-        $query = "SELECT `news_id`, n.`ID_NEWS_TYPE`, `news_level`, `news_posteur`, `news_date`, `news_titre` , `news_text`, `news_on_date`, `news_off_date`, `USER_ID`
+        $query = "SELECT `news_id`, n.`ID_NEWS_TYPE`, nt.NAME_NEWS_TYPE AS label_news_type, `news_level`, `news_posteur`, `news_date`, `news_titre` , `news_text`, `news_on_date`, `news_off_date`, `USER_ID`
                 FROM news n
+                LEFT JOIN news_type nt ON n.ID_NEWS_TYPE = nt.ID_NEWS_TYPE
                 LEFT JOIN (
                     SELECT ID_NEWS_TYPE, MAX(news_id) as last_id
                     FROM news

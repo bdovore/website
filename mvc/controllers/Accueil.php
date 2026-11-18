@@ -12,6 +12,9 @@ class Accueil extends Bdo_Controller
      */
     public function Index ()
     {
+        $this->view->addCssFile('style/album-lists.css');
+        $this->view->addCssFile('style/actualites.css');
+        $this->view->addCssFile('style/accueil.css');
         // pas la peine de faire un $this->loadModel('Actus'). il est fait par
         // defaut dans le Bdo_Controller
 
@@ -22,7 +25,7 @@ class Accueil extends Bdo_Controller
         $this->loadModel("Tome");
         $this->loadModel("News");
         $this->view->set_var(array(
-                'ACTUAIR' => $this->Actus->actuAir(),
+                'ACTUAIR' => $this->tendances(5),
                 'LASTAJOUT' => $this->Actus->lastAjout()
         ));
         $opengraph = array(
@@ -34,21 +37,41 @@ class Accueil extends Bdo_Controller
 
         $this->view->set_var(
                 array(
-                        'a_lastSorties' => $this->lastSorties(6),
+                        'a_lastSorties' => $this->lastSorties(5),
                         'a_lastNews' => $this->News->getLastSecondNews(5),
                         'a_laUne' => $this->News->getLastNewsPerType(),
                        /* 'a_lastBD' => $this->lastCommentaires(3),
                         'a_lastManga' => $this->lastCommentaires(3,"Mangas"),
                         'a_lastComics' => $this->lastCommentaires(3,"Comics"),*/
                         'a_lastComment' => $dbs->a_dataQuery,
-                        'a_futurSorties' => $this->futurSorties(6),
+                        'a_futurSorties' => $this->futurSorties(5),
                         'nbTome' => $this->Tome->getNbTotalTome(),
                     'opengraph' => $opengraph,
                         'PAGETITLE' => "BDOVORE.com - gestion de collection de BD, Manga et Comics"
                 ));
 
-        $this->view->addPhtmlFile('news', 'LASTNEWS', true);
         $this->view->render();
+    }
+
+    private function tendances($limit)
+    {
+        $albums = array_slice((array) $this->Actus->actuAir(), 0, $limit);
+        if (!$albums) {
+            return $albums;
+        }
+
+        // Les entrées du cache portent le classement et la couverture, mais pas les auteurs.
+        $ids = implode(',', array_map('intval', array_column($albums, 'ID_TOME')));
+        $details = $this->Tome->load('c', "WHERE bd_tome.ID_TOME IN ($ids)")->a_dataQuery;
+        $parAlbum = array_column($details, null, 'ID_TOME');
+        foreach ($albums as $album) {
+            $detail = $parAlbum[$album->ID_TOME] ?? null;
+            $album->ID_SCENAR = $detail->ID_SCENAR ?? null;
+            $album->scpseudo = $detail->scpseudo ?? null;
+            $album->ID_DESSIN = $detail->ID_DESSIN ?? null;
+            $album->depseudo = $detail->depseudo ?? null;
+        }
+        return $albums;
     }
 
     private function lastCommentaires ($max=5,$origine="BD")

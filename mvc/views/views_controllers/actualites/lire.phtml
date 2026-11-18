@@ -1,0 +1,13 @@
+<?php $publication = $view->publication; ?>
+<div class="bdo-news-page">
+    <a href="<?php echo BDO_URL; ?>actualites">← Toutes les actualités</a>
+    <?php if (!$publication) { ?>
+        <h1>Actualité introuvable</h1>
+    <?php } else { ?>
+        <article>
+            <h1><?php echo htmlspecialchars($publication->news_titre, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></h1>
+            <?php require __DIR__ . '/_signature.phtml'; ?>
+            <div class="bdo-news-article"><?php echo $publication->news_text; ?></div>
+        </article>
+    <?php } ?>
+</div>

@@ -1,0 +1,206 @@
+.bdo-accueil {
+    --bdo-home-ink: #302924;
+    --bdo-home-muted: #665a53;
+    --bdo-home-border: #e6ddd6;
+    --bdo-home-accent: #8f1204;
+    container-type: inline-size;
+    padding: clamp(.8rem, 2.5vw, 1.65rem);
+    color: var(--bdo-home-ink);
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.bdo-accueil > section + section {
+    margin-top: 1.25rem;
+}
+
+.bdo-accueil h1,
+.bdo-accueil h2,
+.bdo-accueil h3 {
+    margin: 0;
+    text-align: left;
+    line-height: 1.25;
+}
+
+.bdo-accueil h1 {
+    color: var(--bdo-home-ink);
+    font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+}
+
+.bdo-accueil h2 {
+    color: var(--bdo-home-ink);
+    font-size: 1.2rem;
+}
+
+.bdo-home-heading,
+.bdo-home-links,
+.bdo-home-byline {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: .25rem .8rem;
+}
+
+.bdo-home-heading {
+    justify-content: space-between;
+    margin-bottom: .35rem;
+}
+
+.bdo-home-heading a,
+.bdo-home-links,
+.bdo-home-catalogue section > a {
+    font-size: .875rem;
+}
+
+.bdo-home-intro p,
+.bdo-home-meta {
+    margin: .2rem 0;
+    color: var(--bdo-home-muted);
+}
+
+.bdo-home-intro > .bdo-home-links {
+    margin-top: .55rem;
+}
+
+.bdo-home-discord {
+    display: inline-flex;
+    align-items: center;
+    padding: .3rem .6rem;
+    border: 1px solid var(--bdo-home-border);
+    border-radius: 6px;
+    background: #f9f5f0;
+    color: var(--bdo-home-accent);
+    font-weight: 600;
+}
+
+.bdo-home-featured {
+    padding: .7rem .85rem .25rem;
+    border-block: 1px solid var(--bdo-home-border);
+    background: #faf7f3;
+}
+
+.bdo-home-featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 1rem;
+}
+
+.bdo-home-featured-grid[data-count="1"] {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.bdo-home-featured-grid[data-count="2"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.bdo-home-reviews {
+    --bdo-cover-width: 3.4rem;
+    margin-bottom: 0;
+    border-top: 2px solid var(--bdo-home-accent);
+}
+
+.bdo-home-reviews h3 {
+    font-size: 1rem;
+}
+
+.bdo-home-meta {
+    font-size: .875rem;
+}
+
+.bdo-home-score {
+    color: var(--bdo-home-accent);
+    white-space: nowrap;
+}
+
+.bdo-home-reviews blockquote {
+    margin: .25rem 0;
+    padding: 0;
+    font-size: .925rem;
+}
+
+.bdo-home-reviews .bdo-album-preview-text > a {
+    font-size: .875rem;
+}
+
+.bdo-home-catalogue {
+    --bdo-cover-width: 3.4rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: .45rem;
+}
+
+.bdo-home-catalogue > section {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.bdo-home-album-heading {
+    margin: 0;
+    align-items: center;
+}
+
+.bdo-home-catalogue h3 {
+    color: var(--bdo-home-ink);
+    font-size: 1rem;
+    line-height: 1.3;
+}
+
+.bdo-home-albums,
+.bdo-home-additions {
+    margin: .35rem 0 .5rem;
+    padding: 0;
+    list-style: none;
+    border-top: 2px solid var(--bdo-home-accent);
+}
+
+.bdo-home-albums {
+    flex: 1;
+}
+
+.bdo-home-albums > li,
+.bdo-home-additions > li {
+    min-width: 0;
+    border-bottom: 1px solid var(--bdo-home-border);
+}
+
+.bdo-home-additions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    column-gap: 1rem;
+}
+
+.bdo-home-additions > li {
+    padding: .35rem 0;
+}
+
+@container (max-width: 44rem) {
+    .bdo-home-featured-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .bdo-home-catalogue {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .bdo-home-trends {
+        grid-column: 1 / -1;
+    }
+}
+
+@container (max-width: 29rem) {
+    .bdo-home-featured-grid,
+    .bdo-home-featured-grid[data-count="2"],
+    .bdo-home-catalogue {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (pointer: coarse) {
+    .bdo-home-intro .bdo-home-links a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+    }
+}

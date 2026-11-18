@@ -1,0 +1,15 @@
+<?php
+$urlPublication = BDO_URL . 'actualites/lire?id=' . (int) $publication->news_id;
+$titrePublication = htmlspecialchars($publication->news_titre, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+[$apercu, $tronque] = $texte->apercu((string) $publication->news_text, 150);
+?>
+<article class="bdo-news-preview">
+    <<?php echo $niveauTitre; ?>><a href="<?php echo $urlPublication; ?>"><?php echo $titrePublication; ?></a></<?php echo $niveauTitre; ?>>
+    <?php require __DIR__ . '/_signature.phtml'; ?>
+    <?php if ($apercu !== '') { ?>
+        <p class="bdo-news-excerpt"><?php echo htmlspecialchars($apercu, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></p>
+    <?php } ?>
+    <?php if ($tronque) { ?>
+        <a href="<?php echo $urlPublication; ?>" aria-label="Lire la suite de « <?php echo $titrePublication; ?> »">Lire la suite <span aria-hidden="true">→</span></a>
+    <?php } ?>
+</article>

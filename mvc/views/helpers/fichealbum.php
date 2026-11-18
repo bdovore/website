@@ -129,10 +129,7 @@ class FicheAlbum {
             $html .= '<i><span itemprop="genre"> ' . $o_tome->NOM_GENRE . '</span></i><br>';
         }
         if ($o_tome->scpseudo) {
-           // $html .= 'Auteur(s) : ';
-            $url_scenar = $this->urlAuteur(array("ID_AUTEUR" => $o_tome->ID_SCENAR, "PSEUDO" =>$o_tome->scpseudo ));
-            $url_dessin = $this->urlAuteur(array("ID_AUTEUR" => $o_tome->ID_DESSIN, "PSEUDO" =>$o_tome->depseudo ));
-            $html .= '<i>' . $url_scenar . ($o_tome->ID_SCENAR == $o_tome->ID_DESSIN ? '' : " / " . $url_dessin ) . '</i><br>';
+            $html .= '<i>' . $this->auteurs($o_tome) . '</i><br>';
         }
 
         // editeur
@@ -386,6 +383,18 @@ class FicheAlbum {
         return $html;
     }
 
+    public function auteurs($tome)
+    {
+        $auteurs = array();
+        if (!empty($tome->scpseudo)) {
+            $auteurs[$tome->ID_SCENAR] = $this->urlAuteur(array('ID_AUTEUR' => $tome->ID_SCENAR, 'PSEUDO' => $tome->scpseudo));
+        }
+        if (!empty($tome->depseudo) && !isset($auteurs[$tome->ID_DESSIN])) {
+            $auteurs[$tome->ID_DESSIN] = $this->urlAuteur(array('ID_AUTEUR' => $tome->ID_DESSIN, 'PSEUDO' => $tome->depseudo));
+        }
+        return implode(' / ', $auteurs);
+    }
+
     public function linkCollection($o_tome, $exclu = false) {
         // fonction pour ajouter les liens d'ajouts dans la collection
         $html = "";
@@ -496,29 +505,4 @@ class FicheAlbum {
         return $dte_parution;
     }
 
-    public function getFicheWithComment($tome) {
-        if (strlen($tome->COMMENT) < 100) {
-            $comment = $tome->COMMENT;
-        } else {
-            $comment = substr($tome->COMMENT,0,100)."...". $this->urlalbum($tome,'link',$is_edition = false, $sponsor = true,  $gotocomment= true, "", $title='lire la suite');
-        }
-         $html = "<div class='cadre1'>
-                <table>
-            <tr class='listAlbum'>
-                <td style='vertical-align:top'>".$this->urlalbum($tome,'couvBig')."</td>
-            <td style='vertical-align:top'>
-                ".$this->getTitreTome($tome, true, true)."<br>
-                     ".(($tome->NOM_SERIE AND ($tome->TITRE_TOME AND (strtolower($tome->NOM_SERIE) != strtolower($tome->TITRE_TOME)) )) ? $this->urlSerie($tome) : "")." <br>
-                <span id='noteTome".$tome->ID_TOME."_".$tome->user_id."'> </span>
-                <p class='fiche_album'>               
-                Publié par <a href='./guest?user=$tome->user_id'>$tome->username</a> le $tome->DTE_POST 
-                    
-                </p>
-                $comment 
-            </td>
-            </table>
-             </div>
-             <script>$('#noteTome".$tome->ID_TOME."_".$tome->user_id."').raty({score: ".($tome->NOTE/2).", readOnly: true});</script>";
-         return $html;
-    }
 }

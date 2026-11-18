@@ -9,6 +9,7 @@
 class AuteurBD extends Bdo_Controller {
 
     public function Index() {
+        $this->view->addCssFile('style/album-lists.css');
 
         $ID_AUTEUR = getValInteger('id_auteur',1);
         $activite = getValInteger('activite',0);

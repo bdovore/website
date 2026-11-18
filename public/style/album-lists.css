@@ -1,0 +1,62 @@
+/* Listes d’albums des fiches Série, Auteur et de l’accueil. */
+.bdo-album-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, max(19rem, calc((100% - 1rem) / 2))), 1fr));
+    gap: .6rem 1rem;
+    margin: 0 0 1rem;
+    padding: 0;
+    list-style: none;
+}
+
+.bdo-album-list > li {
+    min-width: 0;
+    margin: 0;
+    border-bottom: 1px solid #e6ddd6;
+}
+
+.bdo-album-group + .bdo-album-group {
+    margin-top: 1rem;
+}
+
+.bdo-album-list .fiche_big,
+.bdo-album-preview {
+    display: grid;
+    grid-template-columns: var(--bdo-cover-width, 6.25rem) minmax(0, 1fr);
+    align-items: start;
+    gap: .7rem;
+    margin: 0;
+    padding: .65rem 0;
+    height: auto;
+    border: 0;
+    background: transparent;
+    overflow-wrap: anywhere;
+}
+
+.bdo-album-list .fiche_big > .mw50 {
+    max-width: none;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 0;
+}
+
+.bdo-album-list .fiche_big img.couvBig,
+.bdo-album-preview img.couvBig {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: none;
+    border-radius: 2px;
+    border-color: #d5c7bc;
+}
+
+.bdo-album-list .fiche_big .img-sponsor,
+.bdo-album-preview .img-sponsor {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+}
+
+.bdo-album-list .fiche_big .fiche_album {
+    margin: .3rem 0;
+}
