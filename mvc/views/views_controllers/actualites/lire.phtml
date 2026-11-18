@@ -1,6 +1,11 @@
 <?php $publication = $view->publication; ?>
 <div class="bdo-news-page">
-    <a href="<?php echo BDO_URL; ?>actualites">← Toutes les actualités</a>
+    <nav class="bdo-news-breadcrumb" aria-label="Fil d’Ariane">
+        <ol>
+            <li><a href="<?php echo BDO_URL; ?>">Accueil</a></li>
+            <li><span aria-hidden="true">›</span> <a href="<?php echo BDO_URL; ?>actualites">Toutes les actualités</a></li>
+        </ol>
+    </nav>
     <?php if (!$publication) { ?>
         <h1>Actualité introuvable</h1>
     <?php } else { ?>
