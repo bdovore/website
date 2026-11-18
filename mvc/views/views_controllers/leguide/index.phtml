@@ -29,7 +29,7 @@ $urlGuide = static function (string $action, int $origine, array $genres = [], i
         <div class="bdo-guide-links">
             <?php foreach ($view->rayons as $idRayon => $nom) { ?>
                 <a href="<?php echo $urlGuide($action, $idRayon, $view->origine === $idRayon ? $view->genresRetenus : []); ?>"<?php if ($view->origine === $idRayon) { ?> aria-current="true"<?php } ?>>
-                    <img class="bdo-guide-rayon-icon" src="<?php echo BDO_URL . 'style/guide/' . $iconesRayons[$idRayon]; ?>" alt="" width="44" height="44">
+                    <img class="bdo-guide-rayon-icon" src="<?php echo BDO_URL . 'style/guide/' . $iconesRayons[$idRayon]; ?>" alt="" width="40" height="40">
                     <span><?php echo $nom; ?></span>
                 </a>
             <?php } ?>
