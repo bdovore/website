@@ -239,38 +239,6 @@
     margin-top: .55rem;
 }
 
-.bdo-guide-decouvrir {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-    gap: .75rem 1rem;
-    margin-top: 1.4rem;
-    padding-top: .65rem;
-    border-top: 1px solid var(--guide-border);
-}
-
-.bdo-guide-decouvrir h2 {
-    margin-bottom: .45rem;
-    font-size: 1rem;
-}
-
-.bdo-guide-covers {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .4rem;
-}
-
-.bdo-guide-covers img.couvMedium {
-    display: block;
-    width: 4rem;
-    height: auto;
-}
-
-.bdo-guide-additions {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
-    gap: .2rem .6rem;
-}
-
 @media (pointer: coarse) {
     .bdo-guide-links a,
     .bdo-guide-genres summary,

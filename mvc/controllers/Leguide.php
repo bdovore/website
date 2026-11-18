@@ -135,9 +135,8 @@ class Leguide extends Bdo_Controller
                 break;
         }
 
-        $this->loadModel('Actus');
         $this->view->addCssFile('style/album-lists.css?v=20261118e');
-        $this->view->addCssFile('style/leguide.css?v=20261118a');
+        $this->view->addCssFile('style/leguide.css?v=20261118b');
         $this->view->addPhtmlFile('leguide/index', 'BODY');
         $this->view->set_var(array(
             'PAGETITLE' => self::RUBRIQUES[$mode][2] . " · $rayon · Le Guide BD",
@@ -149,8 +148,6 @@ class Leguide extends Bdo_Controller
             'genresRetenus' => $genresRetenus,
             'resultats' => $resultats->a_dataQuery,
             'page' => $page,
-            'ACTUAIR' => (array) $this->Actus->actuAir(),
-            'LASTAJOUT' => (array) $this->Actus->lastAjout(),
         ));
         $this->view->render();
     }
