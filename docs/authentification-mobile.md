@@ -108,6 +108,12 @@ Si la publication mobile est suspendue, garder le backend compatible : aucune re
 
 Surveiller séparément erreurs du contrat historique et du nouveau, taux de 401/429/503 et échecs SMTP, sans journaliser corps, mots de passe, jetons ou codes. Purger périodiquement les sessions expirées/révoquées, tickets et codes anciens, et les buckets de limitation expirés ; ne pas supprimer les inscriptions en attente sans politique explicite de conservation.
 
+## Reconnexion longue durée du site (« Rester connecté »)
+
+La case « Rester connecté » des formulaires de connexion (page `compte/connexion`, panneau flottant, parcours Google/Apple) pose un cookie `bdo_remember` qui ne contient qu'une valeur aléatoire `bdo2_…` ; seule son empreinte sha256 est stockée dans `mobile_sessions` (device `web`), avec le `credential_stamp` du compte. À chaque requête sans session, `User::autoLogin()` valide le cookie via `MobileAccount::rememberLogin()` : révocation, expiration absolue (`BDO_MOBILE_ABSOLUTE_SECONDS`, 90 jours) et fenêtre d'inactivité (`BDO_MOBILE_IDLE_SECONDS`, 30 jours glissants), puis pivote le jeton (l'ancien est révoqué, un nouveau est émis) et régénère l'identifiant de session. Un jeton présenté après révocation alors qu'il est encore valide, ou un stamp ne correspondant plus après un changement de mot de passe, est traité comme un rejeu possible : tous les accès du compte sont révoqués. La déconnexion révoque le jeton de l'appareil et efface le cookie. Le cookie est `HttpOnly`, `Secure` en HTTPS, `SameSite=Lax`, et rien de dérivé du mot de passe n'y figure, contrairement à l'ancien cookie `pass`.
+
+Nécessite `sql/2026-11-12-mobile-account.sql` ; `BDO_REMEMBER_ME_ENABLED` (défaut `true` dans `config/mobile.php`) permet de désactiver sans migration, auquel cas aucun cookie n'est posé ni accepté.
+
 ## Tests reproductibles
 
 ```sh
@@ -115,6 +121,7 @@ php -d xdebug.mode=off tests/account_security_test.php
 php -d xdebug.mode=off tests/mobile_api_contract_test.php
 php -d xdebug.mode=off tests/mobile_account_mysql_test.php
 php -d xdebug.mode=off tests/mobile_account_mysql_test.php --legacy-only
+php -d xdebug.mode=off tests/remember_me_mysql_test.php
 php -d xdebug.mode=off tests/admin_http_test.php
 php -d xdebug.mode=off tests/adminproposition_http_test.php
 ```

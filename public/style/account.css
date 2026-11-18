@@ -114,6 +114,22 @@
     color: #74675f;
     margin: 0 0 4px;
 }
+.account-form .account-remember {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 4px 0 0;
+    cursor: pointer;
+}
+.account-form .account-remember input {
+    width: auto;
+    min-height: 0;
+    height: 18px;
+    margin: 0;
+    accent-color: #990000;
+}
 .account-alert {
     border: 1px solid #e9c0b8;
     background: #fff4f0;

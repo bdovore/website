@@ -50,6 +50,29 @@ class AccountSecurity
         return $match[1];
     }
 
+    const REMEMBER_COOKIE = 'bdo_remember';
+
+    public static function rememberCookieParams($expires)
+    {
+        $secure = (defined('BDO_URL') && stripos(BDO_URL, 'https://') === 0)
+            || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+        return array('expires' => $expires, 'path' => '/', 'httponly' => true, 'secure' => $secure, 'samesite' => 'Lax');
+    }
+
+    /** The cookie carries only the random token; the database stores its sha256 hash. */
+    public static function rememberCookie($token, $expires)
+    {
+        setcookie(self::REMEMBER_COOKIE, $token, self::rememberCookieParams($expires));
+    }
+
+    public static function clearRememberCookie()
+    {
+        if (isset($_COOKIE[self::REMEMBER_COOKIE])) {
+            setcookie(self::REMEMBER_COOKIE, '', self::rememberCookieParams(time() - 3600));
+            unset($_COOKIE[self::REMEMBER_COOKIE]);
+        }
+    }
+
     public static function webDestination($input)
     {
         // Construct the destination rather than accepting arbitrary redirect URLs.

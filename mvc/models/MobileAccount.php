@@ -168,6 +168,57 @@ class MobileAccount
     {
         $this->change('UPDATE mobile_sessions SET revoked_at = ? WHERE id = ?', array($this->date(), $session->id));
     }
+    /** Issue a long-lived web "remember me" token; the cookie carries only the random value. */
+    public function rememberIssue($user)
+    {
+        $token = 'bdo2_' . bin2hex(random_bytes(32));
+        $now = $this->date();
+        $this->change('INSERT INTO mobile_sessions (user_id, token_hash, credential_stamp, device_name, created_at, last_used_at, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            array($user->user_id, hash('sha256', $token), AccountSecurity::stamp($user), 'web', $now, $now, $this->date($this->now() + BDO_MOBILE_ABSOLUTE_SECONDS)));
+        return $token;
+    }
+    /**
+     * Validate a remember-me cookie and rotate it, keeping the original absolute expiry.
+     * Returns the user and the replacement token. A revoked-but-still-valid token, or a
+     * credential-stamp mismatch after a password change, is treated as a possible replay
+     * and revokes every access of the account.
+     */
+    public function rememberLogin($token)
+    {
+        if (!is_string($token) || !preg_match('/^bdo2_[a-f0-9]{64}$/D', $token)) throw new MobileAccountException('Session invalide.', 401, 'invalid_session');
+        $session = $this->row('SELECT * FROM mobile_sessions WHERE token_hash = ?', array(hash('sha256', $token)));
+        if (!$session) throw new MobileAccountException('Session invalide.', 401, 'invalid_session');
+        $user = $this->user($session->user_id);
+        $now = $this->date();
+        $valid = $user && intval($user->level) < 98 && $session->revoked_at === null && $session->expires_at > $now
+            && $session->last_used_at > $this->date($this->now() - BDO_MOBILE_IDLE_SECONDS)
+            && hash_equals($session->credential_stamp, AccountSecurity::stamp($user));
+        if ($valid) {
+            $newToken = 'bdo2_' . bin2hex(random_bytes(32));
+            $this->change('UPDATE mobile_sessions SET revoked_at = ? WHERE id = ? AND revoked_at IS NULL', array($now, $session->id));
+            $this->change('INSERT INTO mobile_sessions (user_id, token_hash, credential_stamp, device_name, created_at, last_used_at, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                array($user->user_id, hash('sha256', $newToken), AccountSecurity::stamp($user), $session->device_name, $now, $now, $session->expires_at));
+            return array('user' => $user, 'token' => $newToken);
+        }
+        if ($user && ($session->revoked_at !== null || !hash_equals($session->credential_stamp, AccountSecurity::stamp($user)))) {
+            $this->revokeAll($user->user_id);
+        }
+        throw new MobileAccountException('Session invalide.', 401, 'invalid_session');
+    }
+    public function revokeToken($token)
+    {
+        if (!is_string($token) || !preg_match('/^bdo2_[a-f0-9]{64}$/D', $token)) return;
+        $this->change('UPDATE mobile_sessions SET revoked_at = ? WHERE token_hash = ? AND revoked_at IS NULL', array($this->date(), hash('sha256', $token)));
+    }
+    /** Pose le cookie « Rester connecté » après une authentification web réussie ; n'échoue jamais la connexion. */
+    public static function issueRememberCookie($user)
+    {
+        if (!BDO_REMEMBER_ME_ENABLED || !is_object($user) || empty($user->user_id)) return;
+        try {
+            $token = (new self())->rememberIssue($user);
+            AccountSecurity::rememberCookie($token, time() + BDO_MOBILE_ABSOLUTE_SECONDS);
+        } catch (Throwable $e) { error_log('[account] remember_issue_unavailable'); }
+    }
     public function revokeAll($id)
     {
         $this->change('UPDATE mobile_sessions SET revoked_at = ? WHERE user_id = ? AND revoked_at IS NULL', array($this->date(), $id));

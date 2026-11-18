@@ -36,6 +36,10 @@ class Authsocial extends Bdo_Controller
         session_regenerate_id(true);
         $_SESSION['userConnect'] = $user;
         $_SESSION['account_authenticated_at'] = time();
+        if (postVal('remember_me', '') === '1') {
+            require_once dirname(__DIR__) . '/models/MobileAccount.php';
+            MobileAccount::issueRememberCookie($user);
+        }
         $model = new User(); $model->set_data($user); $model->addNbConnect();
         $this->redirect('compte');
     }

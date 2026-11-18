@@ -47,6 +47,9 @@ $userInitial = function_exists('mb_substr') ? mb_strtoupper(mb_substr($username,
                     </div>
                 </div>
                 <a class="header-account-link header-account-forgot" href="<?php echo BDO_URL; ?>compte/forgotpass">Mot de passe oublié ?</a>
+                <div class="header-account-field header-remember-field">
+                    <label for="header-remember-me"><input type="checkbox" id="header-remember-me" name="remember_me" value="1" /> Rester connecté sur cet appareil</label>
+                </div>
                 <button class="header-account-primary" type="submit" name="submitLoginConnect" value="1">Se connecter</button>
             </form>
             <?php $socialManage = false; require __DIR__ . '/account/socialbuttons.phtml'; ?>

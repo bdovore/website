@@ -11,6 +11,7 @@
     <?php endif; ?>
     <label for="account-password">Mot de passe</label><input id="account-password" name="user_password" type="password" autocomplete="current-password" required>
     <a class="account-minor-link" href="<?php echo BDO_URL; ?>compte/forgotpass">Mot de passe oublié ?</a>
+    <label class="account-remember" for="remember-me"><input type="checkbox" id="remember-me" name="remember_me" value="1"> Rester connecté sur cet appareil</label>
     <button class="account-primary" type="submit" name="submitLoginConnect" value="1">Se connecter</button>
 </form>
 <?php require dirname(__DIR__) . '/account/socialbuttons.phtml'; ?>

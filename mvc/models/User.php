@@ -231,6 +231,11 @@ FROM " . $this->table_name . "
                             $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
                             $_SESSION['account_authenticated_at'] = time();
 
+                            if (postVal('remember_me', '') === '1') {
+                                require_once __DIR__ . '/MobileAccount.php';
+                                MobileAccount::issueRememberCookie($this->dbSelect->a_dataQuery[0]);
+                            }
+
                             $this->addNbConnect();
 
                             // défini les paramètres de cookie
@@ -267,6 +272,10 @@ FROM " . $this->table_name . "
             $this->loginNeedsPseudo = true;
             $this->error = AccountLogin::PSEUDO_REQUIRED;
         }
+        // Reconnexion longue durée : cookie « Rester connecté » validé et pivoté, puis session régénérée.
+        if (empty($_SESSION['userConnect']->user_id) && isset($_COOKIE[AccountSecurity::REMEMBER_COOKIE])) {
+            $this->autoLoginRemember();
+        }
         if ($this->error || empty($_SESSION['userConnect']->user_id)) {
             $this->guest();
         }
@@ -277,6 +286,22 @@ FROM " . $this->table_name . "
         }
        
         return $this;
+    }
+
+    private function autoLoginRemember()
+    {
+        if (!BDO_REMEMBER_ME_ENABLED) return;
+        require_once __DIR__ . '/MobileAccount.php';
+        try {
+            $result = (new MobileAccount())->rememberLogin($_COOKIE[AccountSecurity::REMEMBER_COOKIE] ?? '');
+        } catch (Throwable $e) {
+            AccountSecurity::clearRememberCookie();
+            return;
+        }
+        AccountSecurity::rememberCookie($result['token'], time() + BDO_MOBILE_ABSOLUTE_SECONDS);
+        if (session_status() === PHP_SESSION_ACTIVE) session_regenerate_id(true);
+        $_SESSION['userConnect'] = $result['user'];
+        $_SESSION['account_authenticated_at'] = time();
     }
 
     public function addNbConnect ()
@@ -314,6 +339,15 @@ FROM " . $this->table_name . "
         // On efface le cookie
         if (isset($_COOKIE["pass"])) unset($_COOKIE["pass"]);
         setcookie("pass", "", time() - 3600, "/"); // Note: time() - 3600 pour supprimer le cookie
+
+        // Révoque aussi le jeton « Rester connecté » de cet appareil.
+        if (isset($_COOKIE[AccountSecurity::REMEMBER_COOKIE])) {
+            try {
+                require_once __DIR__ . '/MobileAccount.php';
+                (new MobileAccount())->revokeToken((string) $_COOKIE[AccountSecurity::REMEMBER_COOKIE]);
+            } catch (Throwable $e) { error_log('[account] remember_revoke_unavailable'); }
+            AccountSecurity::clearRememberCookie();
+        }
 
        
         echo '<script type="text/javascript">

@@ -25,5 +25,11 @@ accountAssert(AccountSecurity::stamp((object) array('password_v2' => $hash)) !==
 accountAssert(!AccountSecurity::emailVerified((object) array('email' => 'old@example.test')), 'adresse historique non vérifiée par défaut');
 accountAssert(AccountSecurity::emailVerified((object) array('email' => 'CURRENT@example.test', 'email_verified_address' => 'current@example.test', 'email_verified_at' => '2026-11-17 12:00:00')), 'preuve liée à l’adresse courante sans distinction de casse');
 accountAssert(!AccountSecurity::emailVerified((object) array('email' => 'new@example.test', 'email_verified_address' => 'old@example.test', 'email_verified_at' => '2026-11-17 12:00:00')), 'preuve de l’ancienne adresse refusée pour une nouvelle adresse');
+$rememberParams = AccountSecurity::rememberCookieParams(time() + 100);
+accountAssert($rememberParams['httponly'] === true && $rememberParams['samesite'] === 'Lax' && $rememberParams['path'] === '/' && $rememberParams['secure'] === false, 'cookie remember httponly, Lax, racine (http en CLI)');
+accountAssert(AccountSecurity::REMEMBER_COOKIE === 'bdo_remember', 'nom de cookie remember stable');
+$_COOKIE[AccountSecurity::REMEMBER_COOKIE] = 'bdo2_' . str_repeat('a', 64);
+AccountSecurity::clearRememberCookie();
+accountAssert(!isset($_COOKIE[AccountSecurity::REMEMBER_COOKIE]), 'clearRememberCookie retire le cookie du tableau');
 echo "$checks contrôles, $failures échec(s).\n";
 exit($failures ? 1 : 0);
