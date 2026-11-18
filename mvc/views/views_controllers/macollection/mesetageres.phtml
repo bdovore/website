@@ -146,8 +146,8 @@ $page = $view->getHelper('pagination');
     <!-- Sélecteur de vue amélioré -->
     <div style="margin: 15px 0; padding: 10px; background: #f8f9fa; border-radius: 8px; display: inline-block;">
         <strong style="margin-right: 10px;">Mode d'affichage :</strong>
-        <a href="?<?php 
-            $query = $_SERVER['QUERY_STRING'];
+        <a href="?<?php
+            $query = $_SERVER['QUERY_STRING'] ?? '';
             $query = str_replace('&view=grid', '', $query);
             $query = str_replace('view=grid&', '', $query);
             $query = str_replace('view=grid', '', $query);
@@ -155,8 +155,8 @@ $page = $view->getHelper('pagination');
         ?>" class="view-mode-btn <?php echo (!isset($view->view_mode) || $view->view_mode == 'table') ? 'active' : ''; ?>" title="Affichage tableau pour l'édition">
             <i class="fas fa-table"></i> <span class="desktop-text">Tableau</span>
         </a>
-        <a href="?<?php 
-            $query = $_SERVER['QUERY_STRING'];
+        <a href="?<?php
+            $query = $_SERVER['QUERY_STRING'] ?? '';
             $query = str_replace('&view=table', '', $query);
             $query = str_replace('view=table&', '', $query);
             $query = str_replace('view=table', '', $query);
