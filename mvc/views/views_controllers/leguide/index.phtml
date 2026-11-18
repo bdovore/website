@@ -5,10 +5,10 @@ $rubrique = $view->rubriques[$view->mode];
 $rayon = $view->rayons[$view->origine];
 $nombreGenres = count($view->genresRetenus);
 $groupes = ['À suivre' => [3, 4, 5, 6], 'Classements' => [7, 1, 2]];
-$couverturesRayons = [
-    1 => 'CV-002074-001008.jpg', // Spirou et Fantasio, Il y a un sorcier à Champignac
-    2 => 'CV-025874-021865.jpg', // One Piece, À l’aube d’une grande aventure
-    3 => 'CV-337020-355261.jpg', // Amazing Spider-Man, Les comic strips 1977-1979
+$iconesRayons = [
+    1 => 'guide-rayon-bd.png',
+    2 => 'guide-rayon-mangas.png',
+    3 => 'guide-rayon-comics.png',
 ];
 $urlGuide = static function (string $action, int $origine, array $genres = [], int $page = 1): string {
     $parametres = ['origine' => $origine];
@@ -29,7 +29,7 @@ $urlGuide = static function (string $action, int $origine, array $genres = [], i
         <div class="bdo-guide-links">
             <?php foreach ($view->rayons as $idRayon => $nom) { ?>
                 <a href="<?php echo $urlGuide($action, $idRayon, $view->origine === $idRayon ? $view->genresRetenus : []); ?>"<?php if ($view->origine === $idRayon) { ?> aria-current="true"<?php } ?>>
-                    <img class="bdo-guide-rayon-cover" src="<?php echo BDO_URL_COUV . $couverturesRayons[$idRayon]; ?>" alt="" width="34" height="46">
+                    <img class="bdo-guide-rayon-icon" src="<?php echo BDO_URL . 'style/guide/' . $iconesRayons[$idRayon]; ?>" alt="" width="44" height="44">
                     <span><?php echo $nom; ?></span>
                 </a>
             <?php } ?>
