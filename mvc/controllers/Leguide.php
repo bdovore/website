@@ -136,7 +136,7 @@ class Leguide extends Bdo_Controller
         }
 
         $this->view->addCssFile('style/album-lists.css?v=20261118e');
-        $this->view->addCssFile('style/leguide.css?v=20261118b');
+        $this->view->addCssFile('style/leguide.css?v=20261118d');
         $this->view->addPhtmlFile('leguide/index', 'BODY');
         $this->view->set_var(array(
             'PAGETITLE' => self::RUBRIQUES[$mode][2] . " · $rayon · Le Guide BD",

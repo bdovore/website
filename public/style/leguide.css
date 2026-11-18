@@ -58,7 +58,18 @@
 }
 
 .bdo-guide-rayons a {
+    gap: .4rem;
     border-color: var(--guide-border);
+}
+
+.bdo-guide-rayon-cover {
+    display: block;
+    flex: none;
+    width: 34px;
+    height: 46px;
+    object-fit: cover;
+    border-radius: 3px;
+    background: var(--guide-band);
 }
 
 .bdo-guide-rayons a[aria-current] {
@@ -237,6 +248,18 @@
 .bdo-guide-reply,
 .bdo-guide-thread {
     margin-top: .55rem;
+}
+
+@container (max-width: 23rem) {
+    .bdo-guide-rayons a {
+        gap: .3rem;
+        padding-inline: .35rem;
+    }
+
+    .bdo-guide-rayon-cover {
+        width: 28px;
+        height: 38px;
+    }
 }
 
 @media (pointer: coarse) {
