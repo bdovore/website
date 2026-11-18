@@ -96,7 +96,6 @@
 }
 
 .bdo-home-reviews {
-    --bdo-cover-width: 3.4rem;
     margin-bottom: 0;
     border-top: 2px solid var(--bdo-home-accent);
 }
@@ -125,7 +124,6 @@
 }
 
 .bdo-home-catalogue {
-    --bdo-cover-width: 3.4rem;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
@@ -181,7 +179,9 @@
     .bdo-home-featured-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+}
 
+@container (max-width: 56rem) {
     .bdo-home-catalogue {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -191,10 +191,15 @@
     }
 }
 
+@container (max-width: 38rem) {
+    .bdo-home-catalogue {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
 @container (max-width: 29rem) {
     .bdo-home-featured-grid,
-    .bdo-home-featured-grid[data-count="2"],
-    .bdo-home-catalogue {
+    .bdo-home-featured-grid[data-count="2"] {
         grid-template-columns: minmax(0, 1fr);
     }
 }

@@ -21,7 +21,7 @@
 .bdo-album-list .fiche_big,
 .bdo-album-preview {
     display: grid;
-    grid-template-columns: var(--bdo-cover-width, 6.25rem) minmax(0, 1fr);
+    grid-template-columns: min(160px, 45%) minmax(0, 1fr);
     align-items: start;
     gap: .7rem;
     margin: 0;
@@ -42,10 +42,12 @@
 .bdo-album-list .fiche_big img.couvBig,
 .bdo-album-preview img.couvBig {
     display: block;
-    width: auto;
+    width: 100%;
     max-width: 100%;
     height: auto;
-    max-height: none;
+    max-height: 200px;
+    object-fit: contain;
+    object-position: left top;
     border-radius: 2px;
     border-color: #d5c7bc;
 }

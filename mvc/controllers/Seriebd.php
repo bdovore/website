@@ -13,7 +13,7 @@
 class SerieBD extends Bdo_Controller {
 
     public function Index () {
-        $this->view->addCssFile('style/album-lists.css');
+        $this->view->addCssFile('style/album-lists.css?v=20261118b');
 
         $ID_SERIE = getValInteger('id_serie',1);
         $page = getValInteger('page',1);
