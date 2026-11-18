@@ -54,7 +54,7 @@ $rubriques = array(
 
     <?php if ($view->a_laUne) { ?>
         <section class="bdo-home-featured" id="news_du_site" aria-labelledby="titre-une">
-            <div class="bdo-home-heading">
+            <div class="bdo-home-heading bdo-home-section-band">
                 <h2 id="titre-une">À la une</h2>
                 <a href="<?php echo $urlActualites; ?>">Toutes les actualités <span aria-hidden="true">→</span></a>
             </div>
@@ -67,7 +67,7 @@ $rubriques = array(
     <?php } ?>
 
     <section aria-labelledby="titre-avis">
-        <div class="bdo-home-heading">
+        <div class="bdo-home-heading bdo-home-section-band">
             <h2 id="titre-avis">Derniers avis</h2>
             <a href="<?php echo BDO_URL; ?>leguide/avis">Tous les avis <span aria-hidden="true">→</span></a>
         </div>
@@ -109,7 +109,9 @@ $rubriques = array(
     </section>
 
     <section aria-labelledby="titre-actu-bd">
-        <h2 id="titre-actu-bd">Actu BD</h2>
+        <div class="bdo-home-section-band">
+            <h2 id="titre-actu-bd">Actu BD</h2>
+        </div>
         <div class="bdo-home-catalogue">
             <?php foreach ($rubriques as $id => $rubrique) {
                 $estSortie = isset($rubrique['rss']);

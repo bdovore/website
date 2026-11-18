@@ -3,6 +3,8 @@
     --bdo-home-muted: #665a53;
     --bdo-home-border: #e6ddd6;
     --bdo-home-accent: #8f1204;
+    --bdo-home-band: #f4ebe3;
+    --bdo-home-featured-band: #76271e;
     container-type: inline-size;
     padding: clamp(.8rem, 2.5vw, 1.65rem);
     border-radius: 10px;
@@ -25,7 +27,7 @@
 }
 
 .bdo-accueil h1 {
-    color: var(--bdo-home-ink);
+    color: var(--bdo-home-accent);
     font-size: clamp(1.35rem, 2.4vw, 1.9rem);
 }
 
@@ -75,10 +77,26 @@
     font-weight: 600;
 }
 
-.bdo-home-featured {
-    padding: .7rem .85rem .25rem;
-    border-block: 1px solid var(--bdo-home-border);
-    background: #faf7f3;
+.bdo-home-section-band {
+    padding: .4rem .7rem;
+    border-inline-start: 3px solid var(--bdo-home-accent);
+    background: var(--bdo-home-band);
+}
+
+.bdo-home-featured .bdo-home-section-band {
+    border-color: var(--bdo-home-featured-band);
+    background: var(--bdo-home-featured-band);
+    color: #fff4ef;
+}
+
+.bdo-home-section-band h2,
+.bdo-home-featured .bdo-home-section-band a {
+    color: inherit;
+}
+
+.bdo-home-featured .bdo-news-preview {
+    border-top: 0;
+    border-bottom: 1px solid var(--bdo-home-border);
 }
 
 .bdo-home-featured-grid {
@@ -97,7 +115,6 @@
 
 .bdo-home-reviews {
     margin-bottom: 0;
-    border-top: 2px solid var(--bdo-home-accent);
 }
 
 .bdo-home-reviews h3 {
@@ -152,11 +169,11 @@
     margin: .35rem 0 .5rem;
     padding: 0;
     list-style: none;
-    border-top: 2px solid var(--bdo-home-accent);
 }
 
 .bdo-home-albums {
     flex: 1;
+    border-top: 1px solid var(--bdo-home-border);
 }
 
 .bdo-home-albums > li,
@@ -169,6 +186,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
     column-gap: 1rem;
+    border-top: 2px solid var(--bdo-home-accent);
 }
 
 .bdo-home-additions > li {

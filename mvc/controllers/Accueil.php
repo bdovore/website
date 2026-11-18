@@ -14,7 +14,7 @@ class Accueil extends Bdo_Controller
     {
         $this->view->addCssFile('style/album-lists.css?v=20261118b');
         $this->view->addCssFile('style/actualites.css?v=20261118c');
-        $this->view->addCssFile('style/accueil.css?v=20261118b');
+        $this->view->addCssFile('style/accueil.css?v=20261118d');
         // pas la peine de faire un $this->loadModel('Actus'). il est fait par
         // defaut dans le Bdo_Controller
 
