@@ -1,0 +1,293 @@
+.bdo-guide {
+    --guide-ink: #302924;
+    --guide-muted: #665a53;
+    --guide-accent: #8f1204;
+    --guide-bordeaux: #76271e;
+    --guide-band: #f4ebe3;
+    --guide-border: #e6ddd6;
+    container-type: inline-size;
+    padding: clamp(.8rem, 2.5vw, 1.65rem);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--guide-ink);
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.bdo-guide h1 {
+    margin: 0 0 .7rem;
+    color: var(--guide-accent);
+    font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+    line-height: 1.25;
+    text-align: left;
+}
+
+.bdo-guide h2 {
+    margin: 0;
+    color: var(--guide-ink);
+}
+
+.bdo-guide-sections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .65rem 1.5rem;
+    margin: .85rem 0 .55rem;
+}
+
+.bdo-guide-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .25rem;
+}
+
+.bdo-guide-rayons p,
+.bdo-guide-sections p {
+    margin: 0 0 .25rem;
+    color: var(--guide-muted);
+    font-size: .875rem;
+}
+
+.bdo-guide-links a {
+    display: inline-flex;
+    align-items: center;
+    padding: .3rem .55rem;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    color: var(--guide-ink);
+}
+
+.bdo-guide-rayons a {
+    border-color: var(--guide-border);
+}
+
+.bdo-guide-rayons a[aria-current] {
+    border-color: var(--guide-accent);
+    background: var(--guide-band);
+    color: var(--guide-accent);
+    font-weight: 600;
+}
+
+.bdo-guide-sections a[aria-current] {
+    background: var(--guide-bordeaux);
+    color: #fff4ef;
+    font-weight: 600;
+}
+
+.bdo-guide-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .4rem .75rem;
+    padding: .55rem 0 .75rem;
+    border-top: 1px solid var(--guide-border);
+    font-size: .875rem;
+}
+
+.bdo-guide-genres {
+    position: relative;
+}
+
+.bdo-guide-genres summary {
+    padding: .25rem .55rem;
+    border: 1px solid var(--guide-border);
+    border-radius: 5px;
+    color: var(--guide-accent);
+    cursor: pointer;
+}
+
+.bdo-guide-genre-form {
+    position: absolute;
+    inset: calc(100% + .3rem) auto auto 0;
+    z-index: 2;
+    box-sizing: border-box;
+    width: min(22rem, 100cqi);
+    padding: .6rem;
+    border: 1px solid var(--guide-border);
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 4px 12px #28120d26;
+}
+
+.bdo-guide-genre-search {
+    box-sizing: border-box;
+    width: 100%;
+    padding: .4rem .5rem;
+    border: 1px solid var(--guide-border);
+    border-radius: 4px;
+    color: var(--guide-ink);
+    font: inherit;
+}
+
+.bdo-guide-genre-choices {
+    min-width: 0;
+    max-height: 14rem;
+    margin: .35rem 0;
+    padding: 0;
+    overflow-y: auto;
+    border: 0;
+}
+
+.bdo-guide-genre-choices label {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .15rem .2rem;
+}
+
+.bdo-guide-genre-choices input {
+    flex: none;
+    accent-color: var(--guide-accent);
+}
+
+.bdo-guide [hidden] {
+    display: none;
+}
+
+.bdo-guide-genre-limit,
+.bdo-guide-no-genre {
+    margin: .25rem 0 .5rem;
+    color: var(--guide-muted);
+}
+
+.bdo-guide-apply,
+.bdo-guide-reply button {
+    padding: .3rem .65rem;
+    border: 1px solid var(--guide-bordeaux);
+    border-radius: 5px;
+    background: var(--guide-bordeaux);
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+}
+
+.bdo-guide-band {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .2rem .6rem;
+    padding: .4rem .7rem;
+    border-inline-start: 3px solid var(--guide-accent);
+    background: var(--guide-band);
+}
+
+.bdo-guide-band span,
+.bdo-guide-description {
+    color: var(--guide-muted);
+}
+
+.bdo-guide-description {
+    margin: .55rem 0;
+}
+
+.bdo-guide-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: baseline;
+    gap: .35rem .9rem;
+}
+
+.bdo-guide-review-social,
+.bdo-guide-review-actions {
+    margin-top: .4rem;
+}
+
+.bdo-guide-review-actions,
+.bdo-guide-review-social ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .25rem .65rem;
+    font-size: .875rem;
+}
+
+.bdo-guide-review-actions button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--guide-accent);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.bdo-guide-review-social ul,
+.bdo-guide-reply,
+.bdo-guide-thread {
+    display: none;
+}
+
+.bdo-guide-review-social ul li {
+    display: inline-block;
+    margin-right: .5rem;
+}
+
+.bdo-guide-reply label,
+.bdo-guide-reply textarea {
+    display: block;
+}
+
+.bdo-guide-reply textarea {
+    box-sizing: border-box;
+    width: 100%;
+    margin: .3rem 0;
+}
+
+.bdo-guide-reply,
+.bdo-guide-thread {
+    margin-top: .55rem;
+}
+
+.bdo-guide-decouvrir {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: .75rem 1rem;
+    margin-top: 1.4rem;
+    padding-top: .65rem;
+    border-top: 1px solid var(--guide-border);
+}
+
+.bdo-guide-decouvrir h2 {
+    margin-bottom: .45rem;
+    font-size: 1rem;
+}
+
+.bdo-guide-covers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+}
+
+.bdo-guide-covers img.couvMedium {
+    display: block;
+    width: 4rem;
+    height: auto;
+}
+
+.bdo-guide-additions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    gap: .2rem .6rem;
+}
+
+@media (pointer: coarse) {
+    .bdo-guide-links a,
+    .bdo-guide-genres summary,
+    .bdo-guide-genre-choices label,
+    .bdo-guide-apply,
+    .bdo-guide-review-actions button,
+    .bdo-guide-reply button {
+        box-sizing: border-box;
+        min-height: 44px;
+    }
+
+    .bdo-guide-genres summary {
+        padding-block: .65rem;
+    }
+
+    .bdo-guide-genre-search,
+    .bdo-guide-reply textarea {
+        font-size: 16px;
+    }
+}

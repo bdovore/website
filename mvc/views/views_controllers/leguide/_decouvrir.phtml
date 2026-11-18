@@ -1,0 +1,27 @@
+<?php if ($view->ACTUAIR || $view->LASTAJOUT) { ?>
+    <aside class="bdo-guide-decouvrir" aria-label="À découvrir aussi sur BDovore">
+        <?php if ($view->ACTUAIR) { ?>
+            <section>
+                <h2><a href="<?php echo $urlGuide('actualites_bd', $view->origine); ?>">Albums tendance sur BDovore</a></h2>
+                <ul class="bdo-guide-covers">
+                    <?php foreach ($view->ACTUAIR as $album) { ?>
+                        <li><?php echo $ficheAlbum->urlAlbum($album, 'couvMedium'); ?></li>
+                    <?php } ?>
+                </ul>
+            </section>
+        <?php } ?>
+        <?php if ($view->LASTAJOUT) { ?>
+            <section>
+                <h2>
+                    <a href="<?php echo $urlGuide('ajouts', $view->origine); ?>">Derniers ajouts au catalogue</a>
+                    <a href="<?php echo BDO_URL; ?>rss" aria-label="Fil RSS des derniers ajouts"><img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" alt="" width="14" height="14"></a>
+                </h2>
+                <ul class="bdo-guide-additions">
+                    <?php foreach ($view->LASTAJOUT as $album) { ?>
+                        <li><?php echo $ficheAlbum->urlAlbum($album, 'albTitle'); ?></li>
+                    <?php } ?>
+                </ul>
+            </section>
+        <?php } ?>
+    </aside>
+<?php } ?>

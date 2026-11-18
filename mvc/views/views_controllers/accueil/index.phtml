@@ -75,35 +75,12 @@ $rubriques = array(
             <p>Aucun avis récent.</p>
         <?php } else { ?>
             <ul class="bdo-album-list bdo-home-reviews">
-                <?php foreach ($view->a_lastComment as $avis) {
-                    [$apercu] = $texte->apercu((string) $avis->COMMENT, 150);
-                    $dateAvis = strtotime((string) $avis->DTE_POST);
-                    ?>
-                    <li class="bdo-album-preview">
-                        <div class="bdo-album-cover">
-                            <?php echo $ficheAlbum->urlAlbum($avis, 'couvBig'); ?>
-                        </div>
-                        <div class="bdo-album-preview-text">
-                            <h3><?php echo $ficheAlbum->getTitreTome($avis, true, true); ?></h3>
-                            <?php if ($avis->NOM_SERIE && strcasecmp($avis->NOM_SERIE, $avis->TITRE_TOME) !== 0) { ?>
-                                <p class="bdo-home-meta"><?php echo $ficheAlbum->urlSerie($avis); ?></p>
-                            <?php } ?>
-                            <p class="bdo-home-meta bdo-home-byline">
-                                <?php if ($avis->NOTE > 0) { ?>
-                                    <strong class="bdo-home-score"><span aria-hidden="true">★</span> <?php echo str_replace('.', ',', (string) ($avis->NOTE / 2)); ?>/5</strong>
-                                <?php } ?>
-                                <a href="<?php echo BDO_URL; ?>guest?user=<?php echo (int) $avis->user_id; ?>"><?php echo htmlspecialchars($avis->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></a>
-                                <?php if ($dateAvis !== false) { ?>
-                                    <time datetime="<?php echo date('Y-m-d', $dateAvis); ?>"><?php echo date('d/m/Y', $dateAvis); ?></time>
-                                <?php } ?>
-                            </p>
-                            <?php if ($apercu !== '') { ?>
-                                <blockquote><?php echo htmlspecialchars($apercu, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></blockquote>
-                            <?php } ?>
-                            <?php echo $ficheAlbum->urlAlbum($avis, 'link', false, true, true, '', 'Lire l’avis →'); ?>
-                        </div>
-                    </li>
-                <?php } ?>
+                <?php
+                $avisDansGuide = false;
+                foreach ($view->a_lastComment as $avis) {
+                    require __DIR__ . '/../_partials/avis-album.phtml';
+                }
+                ?>
             </ul>
         <?php } ?>
     </section>

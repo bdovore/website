@@ -62,3 +62,50 @@
 .bdo-album-list .fiche_big .fiche_album {
     margin: .3rem 0;
 }
+
+.bdo-avis-content h3 {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.25;
+}
+
+.bdo-avis-meta {
+    margin: .2rem 0;
+    color: #665a53;
+    font-size: .875rem;
+}
+
+.bdo-avis-byline {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: .25rem .65rem;
+}
+
+.bdo-avis-score {
+    color: #8f1204;
+    white-space: nowrap;
+}
+
+.bdo-avis-excerpt,
+.bdo-avis-full {
+    margin: .25rem 0;
+    padding: 0;
+    font-size: .925rem;
+}
+
+.bdo-avis-detail summary,
+.bdo-avis-content > a {
+    color: #8f1204;
+    font-size: .875rem;
+}
+
+.bdo-avis-detail summary {
+    cursor: pointer;
+}
+
+.bdo-avis-detail:not([open]) summary > span:last-child,
+.bdo-avis-detail[open] summary > span:first-child,
+.bdo-avis-content div:has(> .bdo-avis-detail[open]) > .bdo-avis-excerpt {
+    display: none;
+}

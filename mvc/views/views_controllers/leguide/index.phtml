@@ -1,240 +1,107 @@
 <?php
-  $ficheAlbum = $view->getHelper('ficheAlbum');
+$ficheAlbum = $view->getHelper('ficheAlbum');
+$rubrique = $view->rubriques[$view->mode];
+[$action, , $titre, $description] = $rubrique;
+$rayon = $view->rayons[$view->origine];
+$nombreGenres = count($view->genresRetenus);
+$groupes = ['À suivre' => [3, 4, 5, 6], 'Classements' => [7, 1, 2]];
+$urlGuide = static function (string $action, int $origine, array $genres = [], int $page = 1): string {
+    $parametres = ['origine' => $origine];
+    if ($genres) {
+        $parametres['a_idGenre'] = $genres;
+    }
+    if ($page > 1) {
+        $parametres['page'] = $page;
+    }
+    $url = BDO_URL . 'leguide/' . $action . '?' . http_build_query($parametres);
+    return htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+};
 ?>
-<div class="colleft">
-  <div class="col1wrap">
-    <div class="col1 fond">
-      <!-- Column 1 start -->
-      <div class="middle_title">
-        <h3>Le Guide BD</h3>
-      </div>
-      <br />
-      <form id="form1" name="form1" method="get">
-        <div class="nbGalerie">
-          <div class="nbConteneur">
-            <div class="newButton">
-              <input type="radio" name="origine" id="o1" value="1" <?php if ($view->origine == 1) echo "checked"; ?> onclick="$('#form1').submit();">  
-              <label for="o1">BD</label>
-              <input type="radio" name="origine" id="o2" value="2" <?php if ($view->origine == 2) echo "checked"; ?> onclick="$('#form1').submit();">  
-              <label for="o2">Mangas</label> 
-              <input type="radio" name="origine" id="o3" value="3" <?php if ($view->origine == 3) echo "checked"; ?> onclick="$('#form1').submit();">
-              <label for="o3">Comics</label>  
-            </div>
-          </div>
-          
-            <div id="select_genre">
-              <br />
-              <select data-placeholder="Choisir un ou plusieurs genres..." name="a_idGenre[]" id="a_idGenre" style="width:350px;" multiple="multiple" size="10">
-              <?php
-                foreach ($view->dbs_genre->a_dataQuery as $genre) {
-                    $selected = (isset($_GET['a_idGenre']) and (in_array($genre->ID_GENRE, $_GET['a_idGenre']))) ? 'selected' : '';
-                    echo '<option value="' . $genre->ID_GENRE . '" ' . $selected . '>' . $genre->LIBELLE . '</option>';
-                }
-              ?>
-              </select>  <input type="submit" name="submitGuide" value="Ok">
-            </div>
+<div class="bdo-guide">
+    <h1>Le Guide BD</h1>
+    <nav class="bdo-guide-rayons" aria-label="Rayons du Guide BD">
+        <p>Rayon</p>
+        <div class="bdo-guide-links">
+            <?php foreach ($view->rayons as $idRayon => $nom) { ?>
+                <a href="<?php echo $urlGuide($action, $idRayon, $view->origine === $idRayon ? $view->genresRetenus : []); ?>"<?php if ($view->origine === $idRayon) { ?> aria-current="true"<?php } ?>><?php echo $nom; ?></a>
+            <?php } ?>
         </div>
-        <br />
-
-        <div  class="nbConteneur">
-          <div class="newButton">
-            <input id="rb_mode2" name="rb_mode" value="3" <?php echo $view->a_chGuide[2]["checked"]; ?>  type="radio">
-            <label for="rb_mode2"><a href="<?php echo BDO_URL; ?>leguide/avis" style="color:white;">Avis</a></label>
-            <input id="rb_mode3" name="rb_mode" value="4" <?php echo $view->a_chGuide[3]["checked"]; ?> type="radio">
-            <label for="rb_mode3"><a href="<?php echo BDO_URL; ?>leguide/sorties_bd" style="color:white;">Nouveautés</a></label>
-            <input id="rb_mode6" name="rb_mode" value="7" <?php echo $view->a_chGuide[6]["checked"]; ?> type="radio">
-            <label for="rb_mode6"><a href="<?php echo BDO_URL; ?>leguide/actualites_bd" style="color:white;">Tendances</a></label>
-            <input id="rb_mode4" name="rb_mode" value="5" <?php echo $view->a_chGuide[4]["checked"]; ?> type="radio">
-            <label for="rb_mode4"><a href="<?php echo BDO_URL; ?>leguide/prochaines_sorties_bd" style="color:white;">A paraitre</a></label>
-
-            <input id="rb_mode5" name="rb_mode" value="6" <?php echo $view->a_chGuide[5]["checked"]; ?> type="radio">
-            <label for="rb_mode5"><a href="<?php echo BDO_URL; ?>leguide/ajouts" style="color:white;">Ajouts</a></label>
-            <input id="rb_mode0" name="rb_mode" value="1" <?php echo $view->a_chGuide[0]["checked"]; ?> type="radio">
-            <label for="rb_mode0"><a href="<?php echo BDO_URL; ?>leguide/top_bd" style="color:white;">Top Bdovore</a></label>
-            <input id="rb_mode1" name="rb_mode" value="2" <?php echo $view->a_chGuide[1]["checked"]; ?>  type="radio">
-            <label for="rb_mode1"><a href="<?php echo BDO_URL; ?>leguide/incontournables" style="color:white;">Incontournables</a></label>
-          </div>
-        </div>
-      </form>
-
-      <br />
-
-<?php
-if (isset($view->dbs_tome)) {?>
-    <table class="list_album">
-
-     <?php
-     $tr = true;
-    foreach ($view->dbs_tome->a_dataQuery as $tome) {
-        if ($tr)
-               echo "<tr>";
-
-            echo "<td class='mw50'>" . $ficheAlbum->big($tome,$sep=true,$getUrlSerie=true) . "</td>";
-
-        if (!$tr) {
-            echo "</tr>";
-        }
-        $tr = !$tr;
-
-    }
-    if (!$tr)
-                        echo "</tr>";
-    ?>
-    </table>
- <?php
-}
-
-if (isset($view->dbs_serie)) {?>
-    <table class="list_album">
-
-     <?php
-     $tr = true;
-
-    foreach ($view->dbs_serie->a_dataQuery as $serie) {
-        if ($tr)
-               echo "<tr>";
-
-            echo "<td class='mw50'>" . $ficheAlbum->serie($serie,"big");
-
-    if (!$tr) {
-            echo "</tr>";
-        }
-        $tr = !$tr;
-
-    }
-    if (!$tr)
-                        echo "</tr>";
-    ?>
-    </table>
- <?php
-}
-
-if (isset($view->dbs_comment)) {
-    //echo ("<table>");
-
-    foreach ($view->dbs_comment->a_dataQuery as $tome) {
-        ?>
-
-                    <div class='cadre1'itemscope itemtype="http://schema.org/Book" >
-                        <table>
-                            <tr><td style='vertical-align:top'>
-                    <?php echo $ficheAlbum->urlalbum($tome, 'couvBig'); ?>
-
-
-                                </td>
-                                <td style='vertical-align:top;width:100%'>
-
-                                    <?php echo $ficheAlbum->getTitreTome($tome, true, true); ?><br>
-                                     <?php if ((($tome->NOM_SERIE AND ($tome->TITRE_TOME AND (strtolower($tome->NOM_SERIE) != strtolower($tome->TITRE_TOME)) )))) echo $ficheAlbum->urlSerie($tome); ?>
-                                    <div itemprop="review" itemscope itemtype="http://schema.org/Review">
-                                    <div itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" >
-                                            <meta itemprop='ratingValue' content='<?php echo $tome->NOTE / 2; ?>' />   
-                                            <meta itemprop="worstRating" content = "1">
-                                            <meta itemprop="bestRating" content = "5">
-                                            <span id='noteTome<?php echo $tome->ID_TOME."_".$tome->user_id; ?>'> </span>
-                                    </div>
-                                        <?php if (User::minAccesslevel(1)) { ?>
-                                    <a title="Passer ce commentaire en status privé" onclick="setCommentPrivate(<?php echo $tome->user_id;?>,<?php echo $tome->ID_TOME; ?>);"><img src="<?php echo BDO_URL_IMAGE;?>poubelle.gif"></a>
-                                        <?php } ?>
-                                    <p class="fiche_album">
-                                      
-                                     Publié par <span itemprop='author'><a href='./guest?user=<?php echo $tome->user_id; ?>'><?php echo $tome->username; ?></a></span> le <meta itemprop='datePublished' content='<?php echo $tome->DTE_POST; ?>' /><?php echo $tome->DTE_POST; ?></p>
-                                    <p>  <span itemprop='description'><?php echo (stripslashes(nl2br($tome->COMMENT))); ?></span>
-                                    </div>
-                                    <div class="cadre1" id="social-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>">
-                                            <ul class="social" style="list-style: none;/*! position: relative; *//*! left: 50%; *//*! margin-right: 3px; */font-size: 0.8em;float: right;">
-                                                <li style="float: left;/*! margin-left: 5px; *//*! padding-left: 5px; */"> 1 j'aime</li>
-                                                <li style="float: left;margin-left: 5px;padding-left: 5px;">2 commentaires</li>
-                                            </ul>  
-                                        <hr class="expSep">
-                                      </div> 
-                                        <div class="social">
-                                                <a><i class="far fa-thumbs-up" id="like-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>" onClick="likeComment(<?php echo $tome->user_id; ?>, <?php echo $tome->ID_TOME ?>);"> J'aime</i></a> - 
-                                                <a><i class="far fa-comment-alt" id="add-cmt-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>" onclick='$("#writecmt-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>").toggle();'> Commenter</i></a>
-                                        </div>
-                                        <hr class="expSep">
-                                          <div class="cmt-social" style="width: 95%;float: right;padding-right:10px;" id="writecmt-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>" >
-                                                  <textarea id="txt-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>"  class="champ_commentaire"></textarea>
-                                                  <input type="button" value="Ok" style="float:right;" onclick="addCommentToReview(<?php echo $tome->user_id.",".$tome->ID_TOME; ?>);">
-
-                                          </div>
-                                        <hr class="expSep">
-                                        <div class="cmt-social" style="width:90%;float:right;" id="lst-cmt-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>">
-                                            
-                                        </div>
-                                        <hr class="expSep">
-                                    <script>getSocialInfo(<?php echo $tome->user_id; ?>, <?php echo $tome->ID_TOME ?>);
-                                            $("#lst-cmt-<?php echo $tome->user_id."-".$tome->ID_TOME; ?>").hide();
-                                    </script>
-                                 </td>                     
-                        </tr>
-                        </table>
-                    </div>
-                  <?php if ($tome->NOTE > 0) { ?> <script>$('#noteTome<?php echo $tome->ID_TOME."_".$tome->user_id; ?>').raty({score: <?php echo $tome->NOTE / 2; ?>, readOnly: true});</script><?php } ?>
-
-    <?php
-    }
-}
-?><div align="center">
-<?php
-// pagination
-
-$a_qstring = $_GET;
-unset($a_qstring["page"]);
-$qstring = http_build_query($a_qstring);
-$Path_Info = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : (isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : '');
-if ($view->NUM_PAGE > 1)
-    echo "<a href='".$Path_Info ."?" . $qstring . "&page=" . ($view->NUM_PAGE - 1) . "'>Précédent &nbsp;</a>";
-if ($view->NUM_PAGE < 20)
-    echo "<a href='".$Path_Info."?" . $qstring . "&page=" . ($view->NUM_PAGE + 1) . "'>&nbsp;Suivant</a>";
-?>
+    </nav>
+    <nav class="bdo-guide-sections" aria-label="Rubriques du Guide BD">
+        <?php foreach ($groupes as $groupe => $modes) { ?>
+            <div>
+                <p><?php echo $groupe; ?></p>
+                <div class="bdo-guide-links">
+                    <?php foreach ($modes as $mode) {
+                        [$lien, $libelle] = $view->rubriques[$mode];
+                        ?>
+                        <a href="<?php echo $urlGuide($lien, $view->origine, $view->genresRetenus); ?>"<?php if ($view->mode === $mode) { ?> aria-current="page"<?php } ?>><?php echo $libelle; ?></a>
+                    <?php } ?>
+                </div>
             </div>
-            <!-- Column 1 end -->
-        </div>
+        <?php } ?>
+    </nav>
+
+    <div class="bdo-guide-filters">
+        <details class="bdo-guide-genres">
+            <summary>Genres<?php if ($nombreGenres) { ?> (<?php echo $nombreGenres; ?>)<?php } ?></summary>
+            <form action="<?php echo BDO_URL . 'leguide/' . $action; ?>" method="get" class="bdo-guide-genre-form">
+                <input type="hidden" name="origine" value="<?php echo $view->origine; ?>">
+                <input type="search" class="bdo-guide-genre-search" aria-label="Rechercher un genre" placeholder="Rechercher un genre…" hidden>
+                <fieldset class="bdo-guide-genre-choices" aria-label="Genres du rayon <?php echo $rayon; ?>">
+                    <?php foreach ($view->genres as $genre) { ?>
+                        <label>
+                            <input type="checkbox" name="a_idGenre[]" value="<?php echo (int) $genre->ID_GENRE; ?>"<?php if (in_array((int) $genre->ID_GENRE, $view->genresRetenus, true)) { ?> checked<?php } ?>>
+                            <?php echo htmlspecialchars($genre->LIBELLE, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        </label>
+                    <?php } ?>
+                </fieldset>
+                <p class="bdo-guide-no-genre" hidden>Aucun genre trouvé.</p>
+                <p class="bdo-guide-genre-limit" hidden role="status">Dix genres sélectionnés au maximum.</p>
+                <button type="submit" class="bdo-guide-apply">Appliquer</button>
+            </form>
+        </details>
+        <?php if ($nombreGenres) { ?>
+            <a href="<?php echo $urlGuide($action, $view->origine); ?>">Effacer les filtres</a>
+        <?php } ?>
     </div>
-    <!-- Debut de la partie de droite -->
-    <div class="col2">
-        <!-- Column 2 start -->
-               <!-- Column 2 start -->
-        <div id="actu" class="right fond">
-            <div class="middle_title">
-                <h3>Actualité</h3>
-            </div>
-            
-            <div class="right">
-                <?php 
-                 $genre ="";
-                foreach ($view->ACTUAIR as $actu) { 
 
-                    echo $ficheAlbum->urlAlbum($actu,$class="couvMedium",$sponsor=FALSE)." ";
-
-              } ?>
-            </div>
+    <section aria-labelledby="bdo-guide-rubrique">
+        <div class="bdo-guide-band">
+            <h2 id="bdo-guide-rubrique"><?php echo $titre; ?></h2>
+            <span><?php echo $rayon; ?></span>
         </div>
-         <div id="last" class="right fond">
-    <div class="middle_title">
-    <h3><a href="<?php echo BDO_URL;?>leguide?rb_mode=6&rb_list=album&submitGuide=Envoyer">Derniers ajouts</a>
-    <a href="<?php echo BDO_URL;?>rss">
-    <img src="<?php echo BDO_URL_IMAGE;?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" />
-    </a></h3>
-    </div>
-        <div class="cadre1" style="margin:3px 3px 3px 3px ;">
-            <?php 
-           
-            foreach ($view->LASTAJOUT as $ajout) {
-                echo $ficheAlbum->urlAlbum($ajout,$class="albTitle")."<br />";
-            }?>
-        </div>
-        
-         </div>
-        <!-- Column 2 end -->
-    </div>
+        <p class="bdo-guide-description"><?php echo $description; ?></p>
+        <?php if (!$view->resultats) { ?>
+            <p>Aucun résultat<?php echo $nombreGenres ? ' pour les genres sélectionnés' : ' dans ce rayon'; ?>.</p>
+        <?php } else { ?>
+            <ul class="bdo-album-list">
+                <?php if ($view->mode === 3) {
+                    $texte = $view->getHelper('texte');
+                    $avisDansGuide = true;
+                    $peutModerer = User::minAccesslevel(1);
+                    foreach ($view->resultats as $avis) {
+                        require __DIR__ . '/../_partials/avis-album.phtml';
+                    }
+                } else {
+                    foreach ($view->resultats as $album) { ?>
+                        <li><?php echo $view->mode === 2 ? $ficheAlbum->serie($album, 'big') : $ficheAlbum->big($album, false); ?></li>
+                    <?php }
+                } ?>
+            </ul>
+        <?php } ?>
+        <?php if ($view->page > 1 || ($view->page < 20 && count($view->resultats) === 20)) { ?>
+            <nav class="bdo-guide-pagination" aria-label="Pages des résultats">
+                <?php if ($view->page > 1) { ?>
+                    <a rel="prev" href="<?php echo $urlGuide($action, $view->origine, $view->genresRetenus, $view->page - 1); ?>">← Précédent</a>
+                <?php } ?>
+                <span>Page <?php echo $view->page; ?></span>
+                <?php if ($view->page < 20 && count($view->resultats) === 20) { ?>
+                    <a rel="next" href="<?php echo $urlGuide($action, $view->origine, $view->genresRetenus, $view->page + 1); ?>">Suivant →</a>
+                <?php } ?>
+            </nav>
+        <?php } ?>
+    </section>
+    <?php require __DIR__ . '/_decouvrir.phtml'; ?>
 </div>
-<script>
-    $(document).ready(function() {
-        $("#select_origine").buttonset();
-         $("#rb_mode").buttonset();
-          $("#a_idGenre").chosen({max_selected_options: 10});
-    });
-
-</script>
+<script src="<?php echo BDO_URL; ?>script/leguide.js?v=20261118a" defer></script>

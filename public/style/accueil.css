@@ -37,8 +37,7 @@
 }
 
 .bdo-home-heading,
-.bdo-home-links,
-.bdo-home-byline {
+.bdo-home-links {
     display: flex;
     align-items: baseline;
     flex-wrap: wrap;
@@ -117,10 +116,6 @@
     margin-bottom: 0;
 }
 
-.bdo-home-reviews h3 {
-    font-size: 1rem;
-}
-
 .bdo-home-meta {
     font-size: .875rem;
 }
@@ -128,16 +123,6 @@
 .bdo-home-score {
     color: var(--bdo-home-accent);
     white-space: nowrap;
-}
-
-.bdo-home-reviews blockquote {
-    margin: .25rem 0;
-    padding: 0;
-    font-size: .925rem;
-}
-
-.bdo-home-reviews .bdo-album-preview-text > a {
-    font-size: .875rem;
 }
 
 .bdo-home-catalogue {
