@@ -29,16 +29,29 @@ class Compte extends Bdo_Controller {
             $this->view->render();
             return;
         }
-        if (User::minAccesslevel(2)) { header('Location: ' . BDO_URL); return; }
-        $this->renderLogin();
+        $returnToProfile = getVal('retour') === 'compte';
+        $mobile = getVal('mobile') === 'T';
+        if (User::minAccesslevel(2)) {
+            if ($returnToProfile) {
+                header('Location: ' . BDO_URL . 'compte' . ($mobile ? '?mobile=T' : ''), true, 303);
+            } else {
+                header('Location: ' . BDO_URL);
+            }
+            return;
+        }
+        $this->renderLogin($returnToProfile, $mobile);
     }
 
-    private function renderLogin()
+    private function renderLogin($returnToProfile, $mobile)
     {
         $user = Bdo_Cfg::user();
+        $action = BDO_URL . 'compte/connexion';
+        if ($returnToProfile) {
+            $action .= '?retour=compte' . ($mobile ? '&mobile=T' : '');
+        }
         $this->view->layout = 'account';
         $this->view->a_phtmlFile = array('BODY' => 'compte/connexion');
-        $this->view->set_var(array('PAGETITLE' => 'Connexion à BDovore', 'login_error' => is_string($user->error) ? $user->error : '',
+        $this->view->set_var(array('PAGETITLE' => 'Connexion à BDovore', 'login_form_action' => $action, 'login_error' => is_string($user->error) ? $user->error : '',
             'login_identifier' => is_string(postVal('user_login', '')) ? postVal('user_login', '') : '', 'login_pseudo' => is_string(postVal('user_pseudo', '')) ? postVal('user_pseudo', '') : '',
             'login_needs_pseudo' => !empty($user->loginNeedsPseudo)));
         $this->view->render();
@@ -326,7 +339,7 @@ class Compte extends Bdo_Controller {
                 $this->view->render();
             }
         } else {
-            $this->renderLogin();
+            $this->renderLogin(true, $mobile === 'T');
         }
     }
 

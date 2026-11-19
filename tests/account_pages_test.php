@@ -5,7 +5,7 @@ $_SESSION = array(); $checks = 0; $failures = 0;
 function pageAssert($condition, $message) { global $checks, $failures; $checks++; if (!$condition) { $failures++; fwrite(STDERR, "ECHEC: $message\n"); } }
 function accountPage($path, $values) { $view = (object) $values; ob_start(); require BDO_DIR . 'mvc/views/views_controllers/' . $path . '.phtml'; return ob_get_clean(); }
 $input = '<script>alert(1)</script>"';
-$login = accountPage('compte/connexion', array('login_error' => $input, 'login_identifier' => $input, 'login_pseudo' => '', 'login_needs_pseudo' => false));
+$login = accountPage('compte/connexion', array('login_form_action' => BDO_URL . 'compte/connexion', 'login_error' => $input, 'login_identifier' => $input, 'login_pseudo' => '', 'login_needs_pseudo' => false));
 pageAssert(strpos($login, '<script>') === false && strpos($login, '&lt;script&gt;') !== false, 'identifiant et message de connexion échappés');
 pageAssert(strpos($login, 'name="csrf_token"') !== false && strpos($login, 'method="post"') !== false, 'connexion protégée par formulaire POST et CSRF');
 pageAssert(strpos($login, 'Continuer avec Google') === false, 'boutons sociaux masqués avant configuration');
@@ -15,8 +15,9 @@ pageAssert(strpos($recovery, '<script>') === false && strpos($recovery, '&lt;scr
 pageAssert(strpos($recovery, 'name="csrf_token"') !== false && strpos($recovery, 'type="email"') !== false && strpos($recovery, 'method="post"') !== false, 'récupération demande uniquement un e-mail avec POST et CSRF');
 $sent = accountPage('compte/forgotlogin', array('recovery_sent' => 'Si cette adresse est associée à un compte actif, un e-mail a été envoyé.'));
 pageAssert(strpos($sent, 'role="status"') !== false && strpos($sent, '<form') === false && strpos($sent, 'compte/connexion') !== false && strpos($sent, 'compte/forgotpass') !== false, 'confirmation du rappel permet la connexion et la récupération du mot de passe');
-$shared = accountPage('compte/connexion', array('login_error' => '', 'login_identifier' => 'shared@example.test', 'login_pseudo' => $input, 'login_needs_pseudo' => true));
+$shared = accountPage('compte/connexion', array('login_form_action' => BDO_URL . 'compte/connexion?retour=compte&mobile=T', 'login_error' => '', 'login_identifier' => 'shared@example.test', 'login_pseudo' => $input, 'login_needs_pseudo' => true));
 pageAssert(strpos($shared, 'Pseudo de la collection') !== false && strpos($shared, '<script>') === false, 'précision du pseudo rendue et échappée');
+pageAssert(strpos($shared, 'action="' . BDO_URL . 'compte/connexion?retour=compte&amp;mobile=T"') !== false, 'le formulaire encode les paramètres du retour au profil');
 $signup = accountPage('compte/inscription', array('validInscription' => false, 'ERRORTEXT' => $input, 'USERNAME' => $input, 'EMAIL' => $input));
 pageAssert(strpos($signup, '<script>') === false, 'inscription échappe les valeurs utilisateur');
 pageAssert(strpos($signup, 'name="NewUser"') !== false && strpos($signup, 'autocomplete="new-password"') !== false && strpos($signup, 'name="csrf_token"') !== false, 'inscription moderne conserve pseudo, autocomplétion et CSRF');

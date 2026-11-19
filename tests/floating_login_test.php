@@ -39,11 +39,26 @@ floatingAssert(array_keys($response) === array('authenticated', 'needs_pseudo', 
 User::$connected = false; $_POST = array(); unset($_SERVER['HTTP_X_REQUESTED_WITH']); $_SERVER['REQUEST_METHOD'] = 'GET';
 $controller = new Compte(); $controller->view = new FloatingView(); $controller->Connexion();
 floatingAssert($controller->view->layout === 'account' && $controller->view->a_phtmlFile === array('BODY' => 'compte/connexion'), 'page classique accessible sans JavaScript');
-$loginView = $controller->view;
+floatingAssert($controller->view->values['login_form_action'] === BDO_URL . 'compte/connexion', 'le lien du menu ouvre une connexion sans retour au profil');
 foreach (array(array(), array('mobile' => 'T')) as $query) {
     $_GET = $query;
     $controller->view = new FloatingView(); $controller->Index();
-    floatingAssert($controller->view == $loginView, 'le profil sans session affiche le même écran que la page de connexion');
+    $action = BDO_URL . 'compte/connexion?retour=compte' . ($query ? '&mobile=T' : '');
+    floatingAssert($controller->view->rendered && $controller->view->layout === 'account'
+        && $controller->view->a_phtmlFile === array('BODY' => 'compte/connexion')
+        && $controller->view->values['login_form_action'] === $action, 'le profil sans session ouvre la connexion avec retour au profil');
+    $_GET['retour'] = 'compte';
+    $_SERVER['REQUEST_METHOD'] = 'POST';
+    $_POST = array('submitLoginConnect' => '1', 'user_login' => 'lecteur@example.test');
+    $controller->view = new FloatingView(); $controller->Connexion();
+    floatingAssert($controller->view->rendered && $controller->view->values['login_form_action'] === $action
+        && $controller->view->values['login_identifier'] === 'lecteur@example.test', 'une nouvelle tentative conserve le retour au profil');
+    User::$connected = true;
+    $controller->view = new FloatingView(); $controller->Connexion();
+    floatingAssert(http_response_code() === 303 && !$controller->view->rendered, 'une connexion réussie rouvre le profil en GET');
+    User::$connected = false;
+    $_SERVER['REQUEST_METHOD'] = 'GET';
+    $_POST = array();
 }
 $_GET = array();
 ob_start(); require BDO_DIR . 'mvc/views/views_controllers/loginbarre.phtml'; $guest = ob_get_clean();
