@@ -160,7 +160,13 @@ FROM " . $this->table_name . "
             return $this;
         }
         if (isset($_GET['API_TOKEN'])) {
-            if (!is_string($_GET['API_TOKEN']) || !$this->verifyToken($_GET['API_TOKEN'])) $this->rejectApiSession();
+            if (!is_string($_GET['API_TOKEN']) || !$this->verifyToken($_GET['API_TOKEN'])) {
+                http_response_code(401);
+                header('Content-Type: application/json; charset=UTF-8');
+                header('Cache-Control: no-store');
+                echo json_encode(array('Token' => null, 'Timestamp' => null, 'Error' => ($this->error ?: 'Token invalide. Veuillez vous reconnecter.')));
+                exit;
+            }
             $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
             $this->set_data($_SESSION['userConnect']);
             return $this;
