@@ -34,6 +34,8 @@ SHOW INDEX FROM users;
 
 Les jetons historiques déjà émis restent acceptés dans `API_TOKEN` ; aucune expiration générale n'est activée. Les nouveaux jetons de ce parcours gardent le format `user_id-hex`, mais la partie aléatoire est maintenant cryptographique. Leur empreinte reste dans `users.API_TOKEN`.
 
+Un `API_TOKEN` refusé renvoie un **HTTP 401 au corps vide**. L'ancienne app propose la reconnexion quand la lecture du JSON échoue. Sur le même point d'entrée, un Bearer refusé conserve la réponse JSON de la nouvelle API.
+
 Les API `getjson`, collection, commentaires et préférences gardent leurs formats et timestamps. Elles acceptent également la nouvelle authentification Bearer, sans obliger l'ancienne app à changer son transport.
 
 Une connexion moderne n'écrit jamais dans `users.API_TOKEN`. Une connexion historique ne révoque pas les sessions modernes. La déconnexion moderne révoque uniquement la session concernée.
@@ -125,6 +127,8 @@ php -d xdebug.mode=off tests/remember_me_mysql_test.php
 php -d xdebug.mode=off tests/admin_http_test.php
 php -d xdebug.mode=off tests/adminproposition_http_test.php
 ```
+
+`tests/mobile_api_contract_test.php` vérifie sans base le rejet des jetons historiques invalides et révoqués, l'acceptation des jetons valides et la priorité du Bearer sur le jeton historique et la session web. Lancer ce test avant de fusionner une modification du bootstrap d'authentification.
 
 Le test MySQL crée un nom de base aléatoire et ne supprime la base qu'après avoir lui-même réussi sa création. Il ne charge pas la configuration de production. Paramètres facultatifs : `AUTH_TEST_HOST`, `AUTH_TEST_USER`, `AUTH_TEST_PASSWORD`, `AUTH_TEST_PORT`, `AUTH_TEST_SOCKET`. Les valeurs locales par défaut correspondent au MySQL MAMP de développement.
 
