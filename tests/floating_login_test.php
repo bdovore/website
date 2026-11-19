@@ -39,6 +39,13 @@ floatingAssert(array_keys($response) === array('authenticated', 'needs_pseudo', 
 User::$connected = false; $_POST = array(); unset($_SERVER['HTTP_X_REQUESTED_WITH']); $_SERVER['REQUEST_METHOD'] = 'GET';
 $controller = new Compte(); $controller->view = new FloatingView(); $controller->Connexion();
 floatingAssert($controller->view->layout === 'account' && $controller->view->a_phtmlFile === array('BODY' => 'compte/connexion'), 'page classique accessible sans JavaScript');
+$loginView = $controller->view;
+foreach (array(array(), array('mobile' => 'T')) as $query) {
+    $_GET = $query;
+    $controller->view = new FloatingView(); $controller->Index();
+    floatingAssert($controller->view == $loginView, 'le profil sans session affiche le même écran que la page de connexion');
+}
+$_GET = array();
 ob_start(); require BDO_DIR . 'mvc/views/views_controllers/loginbarre.phtml'; $guest = ob_get_clean();
 floatingAssert(strpos($guest, 'Google, Apple ou plusieurs collections') === false && strpos($guest, 'authsocial/start') === false, 'aucune entrée technique ni fournisseur non configuré');
 floatingAssert(strpos($guest, 'name="csrf_token"') !== false && strpos($guest, 'autocomplete="current-password"') !== false && strpos($guest, 'href="' . BDO_URL . 'compte/connexion"') !== false, 'CSRF, gestionnaires de mots de passe et repli par lien conservés');
@@ -50,7 +57,7 @@ floatingAssert(strpos($member, 'submitLoginDisconnect') !== false && strpos($mem
 floatingAssert(preg_match('/<a class="[^"]*header-profile-link[^\"]*fancybox\.iframe[^\"]*" href="' . preg_quote(BDO_URL, '/') . 'compte">/', $member) === 1, 'profil du site ouvert en iframe Fancybox sans changer la route autonome de l’app');
 foreach (array('', 'T') as $mobile) {
     $_GET = $mobile === 'T' ? array('mobile' => 'T') : array();
-    $view = (object) array('CONNECTION' => 0, 'USERID' => 7, 'UTILISATEUR' => 'Lecteur', 'EMAIL' => 'lecteur@example.test',
+    $view = (object) array('USERID' => 7, 'UTILISATEUR' => 'Lecteur', 'EMAIL' => 'lecteur@example.test',
         'YESISSELECTED' => '', 'NOISSELECTED' => 'selected', 'URLCOLLEC' => BDO_URL . 'guest?user=7', 'OPTIONCARRE' => '',
         'ADULTYESISSELECTED' => '', 'ADULTNOISSELECTED' => 'selected', 'HASFORUMACCOUNT' => true, 'IS_NEWSLETTER' => '');
     ob_start(); require BDO_DIR . 'mvc/views/views_controllers/compte/index.phtml'; $profile = ob_get_clean();

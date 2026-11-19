@@ -11,11 +11,11 @@ class Compte extends Bdo_Controller {
 
     public function Connexion()
     {
-        $user = Bdo_Cfg::user();
         // Même session et mêmes contrôles que le formulaire classique, sans navigation.
         if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST'
             && ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest'
             && postVal('account_login_form', '') === 'floating') {
+            $user = Bdo_Cfg::user();
             $authenticated = User::minAccesslevel(2) && !$user->error;
             $needsPseudo = !$authenticated && !empty($user->loginNeedsPseudo);
             http_response_code($authenticated ? 200 : ($needsPseudo ? 409 : 401));
@@ -30,6 +30,12 @@ class Compte extends Bdo_Controller {
             return;
         }
         if (User::minAccesslevel(2)) { header('Location: ' . BDO_URL); return; }
+        $this->renderLogin();
+    }
+
+    private function renderLogin()
+    {
+        $user = Bdo_Cfg::user();
         $this->view->layout = 'account';
         $this->view->a_phtmlFile = array('BODY' => 'compte/connexion');
         $this->view->set_var(array('PAGETITLE' => 'Connexion à BDovore', 'login_error' => is_string($user->error) ? $user->error : '',
@@ -132,7 +138,7 @@ class Compte extends Bdo_Controller {
      */
     public function Index() {
         /*
-         * Affichage des informations du compte ou création de compte
+         * Affichage du profil ou de l'écran de connexion
          */
         $mobile = getVal("mobile",""); // Conserve le contexte du navigateur mobile après les formulaires.
         $profileUrl = BDO_URL . 'compte' . ($mobile === 'T' ? '?mobile=T' : '');
@@ -308,7 +314,6 @@ class Compte extends Bdo_Controller {
                     "URLCOLLEC" => BDO_URL . 'guest?user=' . encodeUserId($profile_user_id),
                     "HASFORUMACCOUNT" => $this->User->hasForumAccount($this->User->username),
                     "IS_NEWSLETTER" => ($this->User->ABT_NEWS == 1 ? 'Checked' : ''),
-                    "CONNECTION" => 0,
                     "OPTIONCARRE" => GetOptionValue($carre_options, $this->User->CARRE_TYPE),
                     "ADULTYESISSELECTED" => ($this->User->EXPLICIT_CONTENT == "1" ? 'Selected' : ''),
                     "ADULTNOISSELECTED" => ($this->User->EXPLICIT_CONTENT == "0" ? 'Selected' : '')));
@@ -321,12 +326,7 @@ class Compte extends Bdo_Controller {
                 $this->view->render();
             }
         } else {
-            $this->view->set_var("PAGETITLE", "BDOVORE.com : Mon profil");
-            $this->view->layout = "iframe";
-            $this->view->set_var("CONNECTION", 1);
-                //$this->view->layout = "iframe";
-            $this->view->render();
-            
+            $this->renderLogin();
         }
     }
 
