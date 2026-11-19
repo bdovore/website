@@ -4,6 +4,25 @@ if (isset($argv[1])) {
     define('BDO_DIR', dirname(__DIR__) . '/'); define('DS', DIRECTORY_SEPARATOR);
     define('BDO_MOBILE_API_ENABLED', $argv[1] !== 'disabled');
     require_once BDO_DIR . 'config/mobile.php';
+    if ($argv[1] === 'invalid-legacy-token') {
+        class Bdo_Db_Line {
+            public $dbSelect;
+            public function __construct($table, $data) {}
+            public function load($mode, $where) {
+                $this->dbSelect = (object) array('nbLineResult' => 0);
+            }
+        }
+        function Db_Escape_String($value) { return $value; }
+        require_once BDO_DIR . 'mvc/models/User.php';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['API_TOKEN'] = '2147483647-0000000000000';
+        ob_start();
+        register_shutdown_function(function () {
+            echo json_encode(array('status' => http_response_code(), 'body' => ob_get_clean()));
+        });
+        (new User())->autoLogin();
+        exit(1);
+    }
     class Bdo_Cfg {
         private static $values = array('controller' => 'Apiauth', 'action' => 'Login');
         public static function getVar($key) { return self::$values[$key] ?? null; }
@@ -32,13 +51,17 @@ if (isset($argv[1])) {
 }
 $checks = 0; $failures = 0;
 foreach (array('disabled' => array(503, 'api_unavailable'), 'method' => array(405, 'method_not_allowed'), 'forgotlogin-method' => array(405, 'method_not_allowed'), 'media' => array(415, 'unsupported_media_type'),
-    'json' => array(400, 'invalid_json'), 'oversized' => array(413, 'payload_too_large'), 'unauthenticated' => array(401, 'invalid_session'), 'bad-bearer' => array(401, 'invalid_session')) as $scenario => $expected) {
+    'json' => array(400, 'invalid_json'), 'oversized' => array(413, 'payload_too_large'), 'unauthenticated' => array(401, 'invalid_session'), 'bad-bearer' => array(401, 'invalid_session'),
+    'invalid-legacy-token' => array(401, null)) as $scenario => $expected) {
     $pipes = array();
     $process = proc_open(array(PHP_BINARY, '-d', 'xdebug.mode=off', __FILE__, $scenario), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     fclose($pipes[0]); $output = stream_get_contents($pipes[1]); $error = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
     $exit = proc_close($process); $result = json_decode($output, true); $body = json_decode($result['body'] ?? '', true);
     $checks++;
-    if ($exit !== 0 || ($result['status'] ?? null) !== $expected[0] || ($body['error']['code'] ?? '') !== $expected[1] || !array_key_exists('data', $body ?? array())) {
+    $bodyMatches = $expected[1] === null
+        ? ($result['body'] ?? null) === ''
+        : ($body['error']['code'] ?? '') === $expected[1] && array_key_exists('data', $body ?? array());
+    if ($exit !== 0 || ($result['status'] ?? null) !== $expected[0] || !$bodyMatches) {
         $failures++; fwrite(STDERR, "ECHEC: $scenario : $output $error\n");
     }
 }
