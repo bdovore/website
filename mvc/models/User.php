@@ -161,10 +161,9 @@ FROM " . $this->table_name . "
         }
         if (isset($_GET['API_TOKEN'])) {
             if (!is_string($_GET['API_TOKEN']) || !$this->verifyToken($_GET['API_TOKEN'])) {
+                // L'ancien client relance l'authentification quand la lecture du JSON échoue.
                 http_response_code(401);
-                header('Content-Type: application/json; charset=UTF-8');
                 header('Cache-Control: no-store');
-                echo json_encode(array('Token' => null, 'Timestamp' => null, 'Error' => ($this->error ?: 'Token invalide. Veuillez vous reconnecter.')));
                 exit;
             }
             $_SESSION['userConnect'] = $this->dbSelect->a_dataQuery[0];
