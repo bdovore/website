@@ -14,11 +14,12 @@ class Browser extends Bdo_Controller
         $rayons = [1 => 'BD', 2 => 'Mangas', 3 => 'Comics'];
         $origine = getValInteger('origine');
         $rayon = is_int($origine) ? ($rayons[$origine] ?? '') : '';
-        $choices = array_filter($this->Genre->all()->a_dataQuery,
+        $genres = $this->Genre->all()->a_dataQuery;
+        $choices = array_filter($genres,
             static fn($genre) => !$rayon || $genre->ORIGINE === $rayon);
         $allowed = array_map('intval', array_column($choices, 'ID_GENRE'));
         $selected = array_slice(array_values(array_intersect($allowed, (array)getValInteger('a_idGenre', []))), 0, 10);
-        return compact('rayons','origine','choices','selected') + ['ids' => $selected ?: ($rayon ? $allowed : [])];
+        return compact('rayons','rayon','origine','genres','choices','selected') + ['ids' => $selected ?: ($rayon ? $allowed : [])];
     }
 
     public function Index()

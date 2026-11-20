@@ -119,16 +119,34 @@ document.addEventListener('DOMContentLoaded', () => {
         if (overflow) event.target.checked = false;
         filters.querySelector('.browser-limit').hidden = !overflow;
     });
-    filters.elements.origine.onchange = () => {
-        filters.querySelectorAll(':checked[type=checkbox]').forEach(box => { box.checked = false; });
-        filters.requestSubmit();
+    const rayon = filters.elements.origine;
+    const genreSearch = filters.querySelector('input[type=search]');
+    function updateGenres() {
+        const name = rayon.value ? rayon.selectedOptions[0].textContent : '';
+        const term = genreSearch.value.trim().toLocaleLowerCase('fr');
+        for (const label of filters.querySelectorAll('label[data-rayon]')) {
+            const outside = Boolean(name && label.dataset.rayon !== name);
+            label.querySelector('input').disabled = outside;
+            label.hidden = outside || !label.textContent.toLocaleLowerCase('fr').includes(term);
+        }
+    }
+    rayon.onchange = () => {
+        filters.querySelectorAll('input[type=checkbox]:checked').forEach(box => { box.checked = false; });
+        genreSearch.value = '';
+        updateGenres();
+        filters.querySelector('.browser-genre-count').textContent = '';
+        filters.querySelector('.browser-limit').hidden = true;
+        browser.querySelector('.browser-chips')?.remove();
+        const url = new URL(location.href);
+        for (const key of Array.from(url.searchParams.keys())) {
+            if (/^a_idGenre(?:\[\d*\])?$/.test(key)) url.searchParams.delete(key);
+        }
+        if (rayon.value) url.searchParams.set('origine', rayon.value);
+        else url.searchParams.delete('origine');
+        history.replaceState(null, '', url);
+        load(list, params(list, filters.elements.rb_browse.value));
     };
-    browser.querySelector('.browser-genres input[type=search]').oninput = event => {
-        const term = event.target.value.toLocaleLowerCase('fr');
-        filters.querySelectorAll('div label').forEach(label => {
-            label.hidden = !label.textContent.toLocaleLowerCase('fr').includes(term);
-        });
-    };
+    genreSearch.oninput = updateGenres;
     browser.addEventListener('toggle', event => {
         const node = event.target;
         if (!node.matches('.browser-node[open]')) return;

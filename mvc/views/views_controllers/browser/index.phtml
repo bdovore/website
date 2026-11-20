@@ -20,10 +20,11 @@
                     <option value="<?= $id ?>" <?= $view->origine === $id ? 'selected' : '' ?>><?= $label ?></option>
                 <?php } ?>
             </select></label>
-            <details class="browser-genres"><summary>Genres<?= $view->selected ? ' (' . count($view->selected) . ')' : '' ?></summary>
+            <details class="browser-genres"><summary>Genres<span class="browser-genre-count"><?= $view->selected ? ' (' . count($view->selected) . ')' : '' ?></span></summary>
                 <input type="search" aria-label="Rechercher un genre" placeholder="Rechercher un genre…">
-                <div><?php foreach ($view->choices as $genre) { ?>
-                    <label><input type="checkbox" name="a_idGenre[]" value="<?= (int)$genre->ID_GENRE ?>"
+                <div><?php foreach ($view->genres as $genre) {
+                    $visible = !$view->rayon || $genre->ORIGINE === $view->rayon; ?>
+                    <label data-rayon="<?= $h($genre->ORIGINE) ?>" <?= $visible ? '' : 'hidden' ?>><input <?= $visible ? '' : 'disabled' ?> type="checkbox" name="a_idGenre[]" value="<?= (int)$genre->ID_GENRE ?>"
                         <?= in_array((int)$genre->ID_GENRE, $view->selected, true) ? 'checked' : '' ?>> <?= $h($genre->LIBELLE) ?></label>
                 <?php } ?></div>
                 <button>Appliquer les genres</button>
