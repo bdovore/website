@@ -18,7 +18,7 @@
 .browser-node summary::-webkit-details-marker { display:none; }
 .browser-node summary:after { content:'▸'; margin-left:auto; color:var(--wine); }
 .browser-node[open]>summary:after { content:'▾'; }
-.browser-node summary img,.browser-album img { width:36px; height:48px; object-fit:contain; }
+.browser-node summary img,.browser-album>a:first-child>img { width:36px; height:48px; object-fit:contain; }
 .browser-branch { border-left:3px solid #be9e89; background:#faf6f2; padding:.45rem clamp(.35rem,1vw,.8rem); margin-bottom:.4rem; }
 .browser-branch>a,.browser-arrows { display:inline-flex; align-items:center; min-height:40px; margin-right:.6rem; }
 .browser-arrows { gap:.25rem; }
@@ -26,7 +26,7 @@
 .browser-rail { display:flex; gap:.7rem; overflow-x:auto; scroll-snap-type:x proximity; padding:.3rem 0; }
 .browser-rail .browser-album { flex:0 0 clamp(98px,22vw,140px); scroll-snap-align:start; border:0; }
 .browser-rail .browser-album>a:first-child { display:block; padding:0; }
-.browser-rail img { width:100%; height:auto; aspect-ratio:3/4; object-fit:contain; background:#f0e9e3; }
+.browser-rail .browser-album>a:first-child>img { width:100%; height:auto; aspect-ratio:3/4; object-fit:contain; background:#f0e9e3; }
 .browser-rail .browser-more { flex:0 0 7rem; align-self:center; }
 .bdo-browser small { color:#665a53; }
 .bdo-browser h2 { font-size:1.15rem; background:#f4ebe3; padding:.45rem .65rem; margin:.8rem 0 .2rem; }
