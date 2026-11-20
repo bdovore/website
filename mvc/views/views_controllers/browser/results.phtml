@@ -1,0 +1,50 @@
+<?php
+$h = static fn($s) => htmlspecialchars((string)$s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+$edit = ['ser'=>'editserie?serie_id=', 'alb'=>'editalbum?alb_id=', 'aut'=>'editauteur?auteur_id=',
+    'edit'=>'editediteur?editeur_id=', 'col'=>'editcollection?collec_id='];
+$names = BrowserCatalogue::TYPES + ['col'=>'Collections'];
+$hasResults = false;
+foreach ($view->groups as $kind => $group) {
+    if (!$group['rows']) continue;
+    $hasResults = true;
+    if ($view->type === 'all') { ?><section><h2><?= $names[$kind] ?></h2><?php }
+    foreach ($group['rows'] as $row) {
+        $id = (int)$row['id'];
+        $name = $row['label'] ?: 'Sans titre';
+        $cover = BDO_URL_COUV . ($row['cover'] ?? 'default.png');
+        $editUrl = BDO_URL . 'admin/' . $edit[$kind] . $id;
+        if ($kind === 'alb') { ?>
+            <div class="browser-album">
+                <a href="<?= $h(BDO_URL . 'album?id_tome=' . $id) ?>">
+                    <img loading="lazy" src="<?= $h($cover) ?>" alt="">
+                    <span><small><?= $h($row['subtitle'] ?? '') ?><?= isset($row['number']) ? ' · T. ' . (int)$row['number'] : '' ?></small>
+                    <strong><?= $h($name) ?></strong></span>
+                </a>
+                <?php if ($view->canEdit) { ?><a href="<?= $h($editUrl) ?>">Modifier</a><?php } ?>
+            </div>
+        <?php } else { ?>
+            <details class="browser-node" data-kind="<?= $kind ?>" data-id="<?= $id ?>"
+                <?php if ($kind === 'col') { ?>data-publisher="<?= (int)$view->id ?>"<?php } ?>>
+                <summary><?php if ($kind === 'ser') { ?><img src="<?= $h($cover) ?>" loading="lazy" alt=""><?php } ?>
+                    <span><strong><?= $h($name) ?></strong><?php if (!empty($row['subtitle'])) { ?><small><?= $h($row['subtitle']) ?></small><?php } ?></span>
+                </summary>
+                <div class="browser-branch">
+                    <?php if ($kind === 'ser' || $kind === 'aut') { ?>
+                        <a href="<?= $h(BDO_URL . ($kind === 'ser' ? 'serie-bd-' : 'auteur-bd-') . $id . '-' . clean_url($name)) ?>">Voir la fiche <?= $kind === 'ser' ? 'série' : 'auteur' ?></a>
+                    <?php } ?>
+                    <?php if ($view->canEdit) { ?><a href="<?= $h($editUrl) ?>">Modifier</a><?php } ?>
+                    <?php if ($kind === 'ser') { ?><div class="browser-arrows" aria-label="Défilement des albums">
+                        <button type="button" aria-label="Faire défiler les albums vers la gauche" data-scroll="-1">‹</button>
+                        <button type="button" aria-label="Faire défiler les albums vers la droite" data-scroll="1">›</button>
+                    </div><?php } ?>
+                    <div class="browser-children <?= $kind === 'ser' ? 'browser-rail' : '' ?>"></div>
+                </div>
+            </details>
+        <?php }
+    }
+    if ($group['more']) { ?>
+        <button class="browser-more" type="button" data-type="<?= $kind ?>" data-offset="<?= $view->offset + $view->size ?>">Afficher plus · <?= $h($names[$kind]) ?></button>
+    <?php }
+    if ($view->type === 'all') { ?></section><?php }
+}
+if (!$hasResults) { ?><p>Aucun résultat. <?php if (!$view->parent) { ?><a href="<?= $h(BDO_URL . 'proposition') ?>">Proposer un album</a><?php } ?></p><?php }

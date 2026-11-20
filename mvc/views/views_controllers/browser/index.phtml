@@ -1,135 +1,49 @@
-<div align="center" class="cadre1">
-    <h1>BDoBrowser</h1>
-
-
-    <script type="text/javascript">
-        function go()
-        {
-            document.browser.pageNum.value='0';
-            go1();
-
-           /* var div=getObj("livesearch2");
-            if (document.browser.let.value.length > 2)
-            {
-                go2();
-            }
-            else
-            {
-                div.style.display = "none";
-            }*/
-
-        }
-        function go1()
-        {
-
-            $.get("<?php echo BDO_URL;?>browser/search", $("#browser").serialize(), function(data) {
-             $("#livesearch1").html(data);
-                //alert("Data Loaded: " + data);
-            });
-
-            //SubmitXhr(document.browser,"livesearch1","browser/search",false);
-        }
-       
-
-    </script>
-    <form id="browser" name="browser" method="get" onsubmit='return false;'>
-      <div style="text-align: center; margin: 20px 0;">
-        <div style="display: inline-block; position: relative;">
-            <input
-                type="text"
-                id="searchtext"
-                placeholder="(3 caractères minimum)"
-                onKeyUp='chrono=setTimeout("go()", 1000);'
-                onKeyDown="clearTimeout(chrono)"
-                autocomplete="off"
-                name="let"
-                value="<?php echo $view->VALUELET;?>"
-                style="
-                    padding: 10px 15px 10px 35px;
-                    border: 1px solid #ccc;
-                    border-radius: 20px;
-                    font-size: 14px;
-                    width: 300px;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-                    outline: none;
-                    margin: 5px 0;
-                    box-sizing: border-box;
-                "
-                onfocus="this.style.borderColor='#4a90e2'; this.style.boxShadow='0 0 0 2px rgba(74,144,226,0.2)';"
-                onblur="this.style.borderColor='#ccc'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)';"
-            />
-            <span style="
-                position: absolute;
-                left: 12px;
-                top: 50%;
-                transform: translateY(-50%);
-                color: #999;
-                pointer-events: none;
-            ">🔍</span>
-        </div>
-      </div>
-      <!-- Lien pour afficher/masquer les filtres -->
-    <div style="margin-top: -5px; margin-bottom: 5px; text-align: center;">
-        <a href="javascript:void(0);"
-           onclick="document.getElementById('select_genre').style.display = (document.getElementById('select_genre').style.display === 'none' ? 'block' : 'none');"
-           style="color: #4a90e2; text-decoration: none; font-size: 14px; cursor: pointer;">
-            Filtre additionnel par genres ▼
-        </a>
-    </div>
-<div id="select_genre" align=center style="display: none; margin-top: 10px;">
-          Genre : <select data-placeholder="Choisir un ou plusieurs genres..."
-                          name="a_idGenre[]" id="a_idGenre" style="width: 350px;"
-                          multiple="multiple" size="10" onchange="go();">
-                    <?php
-
-                      foreach ($view->dbs_genre->a_dataQuery as $genre) {
-                        $selected = (isset($_GET['a_idGenre']) and in_array($genre->ID_GENRE, $_GET['a_idGenre'])) ? 'selected' : '';
-                        echo '<option value="' . $genre->ID_GENRE . '" ' . $selected . '>' . $genre->LIBELLE . '</option>';
-                      }
-                    ?>
-                  </select>
-
-          <script type="text/javascript">
-
-
-            $(document).ready(function() {
-                $("#a_idGenre").chosen({max_selected_options: 10});
-            });
-          </script>
-        <br /><br /></div>
-        
-        <div class="nbGalerie">
-          <div class="nbConteneur">
-            <div class="newButton">
-              <?php
-                $i = 0;
-                foreach ($view->a_searchType as $type => $lib) {
-                  $checked = ($view->TYPBROWSE == $type) ? "checked" : "";
-                  echo  '<input onClick="this.form.rb_browse.value=this.value;go()" type="radio" id="chbrowse' . $i . '" name="chbrowse" value="' . $type . '" '.$checked.'/>'
-                       .'<label for="chbrowse' . $i . '">' . $lib . '</label>';
-                  $i ++;
-                }
-              ?>
-            </div>
-          </div>
-          <br />
-          <input type=hidden id="rb_browse" name="rb_browse"
-                        value="<?php echo $view->TYPBROWSE;?>" /> <input type=hidden
-                        name="pageNum" value="" />
-        </div>
-        
-<script>
-$(document).ready(function() {
-    $( "#chbrowses" ).buttonset();
-    });
-  </script>
-
+<?php $h = static fn($s) => htmlspecialchars((string)$s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+<main class="bdo-browser" data-endpoint="<?= $h(BDO_URL . 'browser/results') ?>">
+    <h1>Explorer le catalogue</h1>
+    <form class="browser-search" method="get" action="<?= $h(BDO_URL . 'browser') ?>">
+        <label for="browser-query">Recherche dans tout le catalogue</label>
+        <div><input id="browser-query" name="q" type="search" maxlength="120" value="<?= $h($view->query) ?>"
+            placeholder="Album, série, auteur, éditeur…"><button>Rechercher</button></div>
     </form>
-
-
-    <br />
-    <div id="livesearch1"></div>
-    <div id="livesearch2"></div>
-    <script type="text/javascript">go()</script>
-</div>
+    <div class="browser-explore">
+        <form class="browser-filters" method="get" action="<?= $h(BDO_URL . 'browser') ?>">
+            <input type="hidden" name="rb_browse" value="<?= $h($view->type) ?>">
+            <label>Rayon <select name="origine"><option value="">Tous les rayons</option>
+                <?php foreach ($view->rayons as $id => $label) { ?>
+                    <option value="<?= $id ?>" <?= $view->origine === $id ? 'selected' : '' ?>><?= $label ?></option>
+                <?php } ?>
+            </select></label>
+            <details class="browser-genres"><summary>Genres<?= $view->selected ? ' (' . count($view->selected) . ')' : '' ?></summary>
+                <input type="search" aria-label="Rechercher un genre" placeholder="Rechercher un genre…">
+                <div><?php foreach ($view->choices as $genre) { ?>
+                    <label><input type="checkbox" name="a_idGenre[]" value="<?= (int)$genre->ID_GENRE ?>"
+                        <?= in_array((int)$genre->ID_GENRE, $view->selected, true) ? 'checked' : '' ?>> <?= $h($genre->LIBELLE) ?></label>
+                <?php } ?></div>
+                <button>Appliquer les genres</button>
+                <small class="browser-limit" role="status" hidden>Dix genres sélectionnés au maximum.</small>
+            </details>
+        </form>
+        <?php if ($view->selected) { ?>
+            <div class="browser-chips" aria-label="Genres actifs">
+            <?php foreach ($view->choices as $genre) {
+                $id = (int)$genre->ID_GENRE;
+                if (!in_array($id, $view->selected, true)) continue;
+                $remaining = array_values(array_diff($view->selected, [$id]));
+                $params = ['origine'=>$view->origine, 'rb_browse'=>$view->type, 'a_idGenre'=>$remaining];
+                ?>
+                <a href="<?= $h(BDO_URL . 'browser?' . http_build_query($params)) ?>" aria-label="<?= $h('Retirer ' . $genre->LIBELLE) ?>"><?= $h($genre->LIBELLE) ?> ×</a>
+            <?php } ?>
+            </div>
+        <?php } ?>
+        <nav class="browser-types" aria-label="Parcourir le catalogue">
+            <?php foreach ($view->types as $key => $label) { ?>
+                <button type="button" data-type="<?= $key ?>" aria-pressed="<?= $view->type === $key ? 'true' : 'false' ?>"><?= $label ?></button>
+            <?php } ?>
+        </nav>
+        <div class="browser-list"></div>
+    </div>
+    <div class="browser-matches" hidden></div>
+    <noscript>Activez JavaScript pour parcourir les branches du catalogue.</noscript>
+</main>
+<script src="<?= $h(BDO_URL . 'script/browser.js') ?>" defer></script>
