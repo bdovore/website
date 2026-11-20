@@ -97,17 +97,33 @@ class BrowserCatalogue
     }
 
     public function page(string $type, string $query, array $genres, string $parent, int $id,
-        int $publisher, int $offset, int $size): array
+        int $publisher, int $offset, int $size, ?int $collection = null): array
     {
         $params = [];
         $limit = ' LIMIT ' . $offset . ',' . ($size + 1);
         $genre = $genres ? ' IN (' . implode(',', array_map('intval', $genres)) . ')' : '';
         $order = 'label, id';
         if ($type === 'col') {
-            $sql = "SELECT st.ID_COLLECTION id, COALESCE(NULLIF(NULLIF(c.NOM,'<N/A>'),''),'Sans collection') label
-                FROM bd_edition_stat st LEFT JOIN bd_collection c USING (ID_COLLECTION)
-                WHERE st.ID_EDITEUR=?" . ($genre ? " AND st.ID_GENRE $genre" : '') . ' GROUP BY st.ID_COLLECTION,c.NOM';
+            $sql = "SELECT COALESCE(e.ID_COLLECTION,0) id,
+                    CASE WHEN BINARY c.NOM = '<N/A>' THEN 'Sans collection'
+                         ELSE COALESCE(NULLIF(c.NOM,''),'Collection non renseignée') END label
+                FROM bd_edition e LEFT JOIN bd_collection c ON c.ID_COLLECTION=e.ID_COLLECTION";
+            if ($genre) $sql .= ' JOIN bd_tome t ON t.ID_TOME=e.ID_TOME JOIN bd_serie s ON s.ID_SERIE=t.ID_SERIE';
+            $sql .= ' WHERE e.ID_EDITEUR=?' . ($genre ? " AND s.ID_GENRE $genre" : '') .
+                ' GROUP BY COALESCE(e.ID_COLLECTION,0),c.NOM';
             $params[] = $id;
+        } elseif ($parent === 'ser' && $collection !== null) {
+            $cover = $this->cover();
+            $condition = $collection ? 'e.ID_COLLECTION=?' : '(e.ID_COLLECTION IS NULL OR e.ID_COLLECTION=0)';
+            $sql = "SELECT t.ID_TOME id,t.TITRE label,t.NUM_TOME number,s.NOM subtitle,e.ID_EDITION edition,$cover cover
+                FROM (SELECT e.ID_TOME,COALESCE(MAX(IF(e.ID_EDITION=t.ID_EDITION,e.ID_EDITION,NULL)),MIN(e.ID_EDITION)) edition
+                      FROM bd_tome t JOIN bd_edition e ON e.ID_TOME=t.ID_TOME
+                      WHERE t.ID_SERIE=? AND e.ID_EDITEUR=? AND $condition GROUP BY e.ID_TOME) hits
+                JOIN bd_tome t ON t.ID_TOME=hits.ID_TOME JOIN bd_serie s USING (ID_SERIE)
+                JOIN bd_edition e ON e.ID_EDITION=hits.edition";
+            $params = [$id, $publisher];
+            if ($collection) $params[] = $collection;
+            $order = 't.NUM_TOME,id';
         } else {
             [$table,$key,$label] = self::TABLES[$type];
             $where = $type === 'aut' ? ['x.ID_AUTEUR NOT IN (2,3,5572,8497,6086,6243)'] : [];
@@ -123,8 +139,11 @@ class BrowserCatalogue
                 }
                 $where[] = 'x.ID_SERIE IN (SELECT ID_SERIE FROM (' . implode(' UNION ', $parts) . ') credits)';
             } elseif ($parent === 'col') {
-                $where[] = 'x.ID_SERIE IN (SELECT ID_SERIE FROM bd_edition_stat WHERE ID_EDITEUR=? AND ID_COLLECTION=?)';
-                array_push($params, $publisher, $id);
+                $condition = $id ? 'e.ID_COLLECTION=?' : '(e.ID_COLLECTION IS NULL OR e.ID_COLLECTION=0)';
+                $where[] = "x.ID_SERIE IN (SELECT t.ID_SERIE FROM bd_edition e JOIN bd_tome t USING (ID_TOME)
+                    WHERE e.ID_EDITEUR=? AND $condition)";
+                $params[] = $publisher;
+                if ($id) $params[] = $id;
             }
             if ($genre) $where[] = $this->genrePredicate($type, $genre);
             if ($query !== '') {
@@ -173,6 +192,6 @@ class BrowserCatalogue
         $hits = $this->rows("$sql ORDER BY $order $limit", $params);
         $more = count($hits) > $size;
         if ($more) array_pop($hits);
-        return ['rows' => $this->hydrate($type, $hits), 'more' => $more];
+        return ['rows' => $parent === 'ser' && $collection !== null ? $hits : $this->hydrate($type, $hits), 'more' => $more];
     }
 }

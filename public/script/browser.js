@@ -38,7 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (node) {
             query.set('parent', node.dataset.kind);
             query.set('id', node.dataset.id);
-            if (node.dataset.publisher) query.set('publisher', node.dataset.publisher);
+            const collection = node.closest('[data-kind=col]');
+            if (collection) {
+                query.set('publisher', collection.dataset.publisher);
+                if (node.dataset.kind === 'ser') query.set('collection', collection.dataset.id);
+            }
             if (global) query.set('global', '1');
         } else if (global) {
             query.set('q', input.value.trim());

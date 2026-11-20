@@ -15,7 +15,7 @@ foreach ($view->groups as $kind => $group) {
         $cover = BDO_URL_COUV . ($row['cover'] ?? 'default.png');
         $editUrl = BDO_URL . 'admin/' . $edit[$kind] . $id;
         if ($kind === 'alb') {
-            $albumUrl = $h(BDO_URL . 'album?id_tome=' . $id . ($view->mobile ? '&mobile=T' : ''));
+            $albumUrl = $h(BDO_URL . 'album?id_tome=' . $id . (isset($row['edition']) ? '&id_edition=' . (int)$row['edition'] : '') . ($view->mobile ? '&mobile=T' : ''));
             $albumClass = $view->mobile ? '' : 'fancybox fancybox.iframe {width:600,height:600}';
             ?>
             <div class="browser-album">
@@ -25,7 +25,7 @@ foreach ($view->groups as $kind => $group) {
                 <div>
                     <small><?= $h($row['subtitle'] ?? '') ?><?= isset($row['number']) ? ' · T. ' . (int)$row['number'] : '' ?></small>
                     <strong><a class="<?= $albumClass ?>" href="<?= $albumUrl ?>"><?= $h($name) ?></a></strong>
-                    <?php if ($view->canEdit) { ?><a href="<?= $h($editUrl) ?>" title="Modifier <?= $h($name) ?>"><img src="<?= $h(BDO_URL_IMAGE . 'edit.gif') ?>" width="18" height="13" alt="Modifier <?= $h($name) ?>"></a><?php } ?>
+                    <?php if ($view->canEdit && $id) { ?><a href="<?= $h($editUrl) ?>" title="Modifier <?= $h($name) ?>"><img src="<?= $h(BDO_URL_IMAGE . 'edit.gif') ?>" width="18" height="13" alt="Modifier <?= $h($name) ?>"></a><?php } ?>
                 </div>
             </div>
         <?php } else { ?>
@@ -38,7 +38,7 @@ foreach ($view->groups as $kind => $group) {
                     <?php if ($kind === 'ser' || $kind === 'aut') { ?>
                         <a href="<?= $h(BDO_URL . ($kind === 'ser' ? 'serie-bd-' : 'auteur-bd-') . $id . '-' . clean_url($name)) ?>">Voir la fiche <?= $kind === 'ser' ? 'série' : 'auteur' ?></a>
                     <?php } ?>
-                    <?php if ($view->canEdit) { ?><a href="<?= $h($editUrl) ?>" title="Modifier <?= $h($name) ?>"><img src="<?= $h(BDO_URL_IMAGE . 'edit.gif') ?>" width="18" height="13" alt="Modifier <?= $h($name) ?>"></a><?php } ?>
+                    <?php if ($view->canEdit && $id) { ?><a href="<?= $h($editUrl) ?>" title="Modifier <?= $h($name) ?>"><img src="<?= $h(BDO_URL_IMAGE . 'edit.gif') ?>" width="18" height="13" alt="Modifier <?= $h($name) ?>"></a><?php } ?>
                     <?php if ($kind === 'ser') { ?><div class="browser-arrows" aria-label="Défilement des albums">
                         <button type="button" aria-label="Faire défiler les albums vers la gauche" data-scroll="-1">‹</button>
                         <button type="button" aria-label="Faire défiler les albums vers la droite" data-scroll="1">›</button>
