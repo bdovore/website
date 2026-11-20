@@ -10,7 +10,7 @@ if (!$estSortie && !empty($album->FLG_EXPLICIT) && !empty($album->IMG_COUV) && !
 ?>
 <li class="bdo-album-preview" itemscope itemtype="http://schema.org/Book">
     <div class="bdo-album-cover">
-        <?php echo $ficheAlbum->urlAlbum($album, 'couvBig', false, $estSortie); ?>
+        <?php echo $ficheAlbum->urlAlbum($album, 'couvBig', false, false); ?>
     </div>
     <div class="bdo-album-preview-text">
         <?php echo $ficheAlbum->getTitreTome($album); ?>

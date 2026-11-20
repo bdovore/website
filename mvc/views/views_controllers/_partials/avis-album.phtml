@@ -9,7 +9,7 @@ $note = $avis->NOTE / 2;
 ?>
 <li class="bdo-album-preview bdo-avis-card" itemscope itemtype="https://schema.org/Book">
     <div class="bdo-album-cover">
-        <?php echo $ficheAlbum->urlAlbum($avis, 'couvBig'); ?>
+        <?php echo $ficheAlbum->urlAlbum($avis, 'couvBig', false, $avisDansGuide); ?>
     </div>
     <div class="bdo-avis-content">
         <h3><?php echo $ficheAlbum->getTitreTome($avis, true, true); ?></h3>
