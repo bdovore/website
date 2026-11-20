@@ -11,7 +11,7 @@ $card = function ($item) use ($h, $view) { ?>
         <?php if ($view->can_contribute) { ?><div class="parabd-copy-lazy" data-item-id="<?php echo intval($item['ID_ITEM']); ?>"></div><?php } ?>
     </article>
 <?php }; ?>
-<div class="cadre1 parabd-page" id="parabd-catalog"<?php if ($view->can_contribute) { ?> data-csrf-token="<?php echo $h($view->csrf_token); ?>"<?php } ?>>
+<div class="parabd-page" id="parabd-catalog"<?php if ($view->can_contribute) { ?> data-csrf-token="<?php echo $h($view->csrf_token); ?>"<?php } ?>>
     <div class="parabd-heading">
         <div><h1>Catalogue Para-BD</h1><p>Objets partagés par les collectionneurs.</p></div>
     </div>
