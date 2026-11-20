@@ -46,6 +46,39 @@ class BrowserCatalogue
         return $hits;
     }
 
+    // Suggest catalogue names starting with the input, allowing one character edit.
+    // Keep a literal leading character on every LIKE so the name index remains usable.
+    public function suggestions(string $type, string $query, int $size): array
+    {
+        $letters = mb_str_split($query);
+        if (count($letters) < 4 || count($letters) > 60 || !preg_match('/\p{L}/u', $query)) return [];
+
+        $letters = array_map(static fn($letter) => strtr($letter, ['!' => '!!', '%' => '!%', '_' => '!_']), $letters);
+        $patterns = [];
+        foreach ($letters as $i => $letter) {
+            $before = implode('', array_slice($letters, 0, $i));
+            $after = implode('', array_slice($letters, $i + 1));
+            $patterns[] = $before . $after . '%';
+            $replacements = $i === 0 ? range('a', 'z') : ['_'];
+            foreach ($replacements as $replacement) {
+                $patterns[] = $before . $replacement . $after . '%';
+                $patterns[] = $before . $replacement . $letter . $after . '%';
+            }
+            if (isset($letters[$i + 1])) {
+                $patterns[] = $before . $letters[$i + 1] . $letter . implode('', array_slice($letters, $i + 2)) . '%';
+            }
+        }
+        $patterns = array_values(array_unique($patterns));
+        [$table, $key, $label] = self::TABLES[$type];
+        $condition = implode(' OR ', array_fill(0, count($patterns), "$label LIKE ? ESCAPE '!'"));
+        $sql = "SELECT $key id, $label label FROM $table WHERE ($condition)";
+        if ($type === 'aut') $sql .= " AND ID_AUTEUR NOT IN (2,3,5572,8497,6086,6243)";
+        // Prefer a complete short name (Dupuis) to a longer matching title.
+        $sql .= " ORDER BY ABS(CHAR_LENGTH($label) - ?), $label, $key LIMIT $size";
+        $patterns[] = mb_strlen($query);
+        return $this->hydrate($type, $this->rows($sql, $patterns));
+    }
+
     private function genrePredicate(string $type, string $genre): string
     {
         if ($type === 'aut') {

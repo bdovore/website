@@ -58,8 +58,15 @@ class Browser extends Bdo_Controller
             $groups[$kind] = $this->BrowserCatalogue->page($kind, $parent ? '' : $query, $genres,
                 $parent, (int)$id, (int)$publisher, $offset, $size);
         }
+        $approximate = false;
+        if ($query !== '' && $parent === '' && $offset === 0 && !array_filter(array_column($groups, 'rows'))) {
+            foreach (array_keys($groups) as $kind) {
+                $groups[$kind]['rows'] = $this->BrowserCatalogue->suggestions($kind, $query, $size);
+                if ($groups[$kind]['rows']) $approximate = true;
+            }
+        }
         $this->view->layout = 'ajax';
-        $this->view->set_var(compact('groups','type','parent','id','offset','size') + ['canEdit'=>User::minAccesslevel(1)]);
+        $this->view->set_var(compact('approximate','groups','type','parent','id','offset','size') + ['canEdit'=>User::minAccesslevel(1)]);
         $this->view->render();
     }
 }

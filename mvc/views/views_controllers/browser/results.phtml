@@ -4,6 +4,7 @@ $edit = ['ser'=>'editserie?serie_id=', 'alb'=>'editalbum?alb_id=', 'aut'=>'edita
     'edit'=>'editediteur?editeur_id=', 'col'=>'editcollection?collec_id='];
 $names = BrowserCatalogue::TYPES + ['col'=>'Collections'];
 $hasResults = false;
+if ($view->approximate) { ?><p>Résultats proches de votre recherche</p><?php }
 foreach ($view->groups as $kind => $group) {
     if (!$group['rows']) continue;
     $hasResults = true;
