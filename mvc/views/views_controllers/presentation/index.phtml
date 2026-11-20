@@ -52,9 +52,11 @@
                 Et le tout <strong>GRATUITEMENT</strong> et <strong>SANS PUBLICITÉ !</strong>
                 =&gt; <a href="<?php echo BDO_URL;?>tutoriel?page=1">Pour le début de la visite guidée cliquez ici !</a>
             </p>
-            <p>
-                Vous voulez utiliser le site, participer au projet et vous joindre à la communauté&nbsp;? <a class="bdo-presentation-signup" href="<?php echo BDO_URL;?>membres/inscription">Inscrivez-vous&nbsp;!</a>
-            </p>
+            <?php if (!User::minAccesslevel(2)) { ?>
+                <p>
+                    Vous voulez utiliser le site, participer au projet et vous joindre à la communauté&nbsp;? <a class="bdo-presentation-signup" href="<?php echo BDO_URL; ?>compte/inscription">Inscrivez-vous&nbsp;!</a>
+                </p>
+            <?php } ?>
             <p>
                 Encore des questions sur BDovore ? Rendez-vous sur le <a href="<?php echo BDO_URL_FORUM;?>index">forum</a> !
             </p>

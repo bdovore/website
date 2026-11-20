@@ -13,6 +13,7 @@ $(function () {
     var mobile = window.matchMedia('(max-width: 760px)');
     var previousOverflow = null;
     var pending = false;
+    var opener = button;
 
     function updateViewport() {
         var opened = !box.prop('hidden');
@@ -44,9 +45,10 @@ $(function () {
         backdrop.prop('hidden', true);
         button.removeClass('active').attr('aria-expanded', 'false');
         updateViewport();
-        if (restoreFocus) button.focus();
+        if (restoreFocus) opener.focus();
     }
-    function openBox() {
+    function openBox(trigger) {
+        opener = $(trigger);
         setMenu(false);
         box.prop('hidden', false);
         backdrop.prop('hidden', false);
@@ -58,14 +60,19 @@ $(function () {
     }
     button.on('click', function (event) {
         event.preventDefault();
-        if (box.prop('hidden')) openBox();
+        if (box.prop('hidden')) openBox(this);
         else closeBox(true);
+    });
+    $('[data-open-login]').on('click', function (event) {
+        if (!form.length || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        openBox(this);
     });
     box.find('.header-account-close').on('click', function () { closeBox(true); });
     box.find('.header-profile-link').on('click', function () { closeBox(false); });
     backdrop.on('click', function () { closeBox(true); });
     $(document).on('click', function (event) {
-        if (!box.prop('hidden') && !$(event.target).closest('#loginContainer').length) closeBox(false);
+        if (!box.prop('hidden') && !$(event.target).closest('#loginContainer, [data-open-login]').length) closeBox(false);
     });
     menuButton.on('click', function () {
         closeBox(false);
