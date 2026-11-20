@@ -139,7 +139,7 @@ class Leguide extends Bdo_Controller
         $this->view->addCssFile('style/leguide.css?v=20261118g');
         $this->view->addPhtmlFile('leguide/index', 'BODY');
         $this->view->set_var(array(
-            'PAGETITLE' => self::RUBRIQUES[$mode][2] . " · $rayon · Le Guide BD",
+            'PAGETITLE' => self::RUBRIQUES[$mode][2] . " · $rayon · Actu BD",
             'mode' => $mode,
             'rubriques' => self::RUBRIQUES,
             'origine' => $origine,

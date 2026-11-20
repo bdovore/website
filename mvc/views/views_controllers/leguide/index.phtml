@@ -23,8 +23,8 @@ $urlGuide = static function (string $action, int $origine, array $genres = [], i
 };
 ?>
 <div class="bdo-guide">
-    <h1>Le Guide BD</h1>
-    <nav class="bdo-guide-rayons" aria-label="Rayons du Guide BD">
+    <h1>Actu BD</h1>
+    <nav class="bdo-guide-rayons" aria-label="Rayons d’Actu BD">
         <p>Rayon</p>
         <div class="bdo-guide-links">
             <?php foreach ($view->rayons as $idRayon => $nom) { ?>
@@ -35,7 +35,7 @@ $urlGuide = static function (string $action, int $origine, array $genres = [], i
             <?php } ?>
         </div>
     </nav>
-    <nav class="bdo-guide-sections" aria-label="Rubriques du Guide BD">
+    <nav class="bdo-guide-sections" aria-label="Rubriques d’Actu BD">
         <?php foreach ($groupes as $groupe => $modes) { ?>
             <div>
                 <p><?php echo $groupe; ?></p>

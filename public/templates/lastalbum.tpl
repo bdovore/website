@@ -1,5 +1,5 @@
 <div class="cadre1">
-<h2>Le Guide BD</h2>
+<h2>Actu BD</h2>
         <a href="listlast.php?rb_mode=futur">A paraitre</a>
         - <a href="listlast.php?rb_mode=last_par">Derni&egrave;res parutions</a>
         - <a href="listop.php?rb_mode=top_vote">Top des notes</a>
