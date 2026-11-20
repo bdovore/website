@@ -1,0 +1,47 @@
+body {
+    margin: 5px;
+    font: 12px/1.4 Verdana, Arial, sans-serif;
+    color: #241c18;
+}
+
+.parabd-minifiche {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px;
+    border: 1px solid #71483d;
+    background: #fdf5e6;
+    overflow-wrap: anywhere;
+}
+
+.parabd-minifiche img {
+    width: 100px;
+    max-width: 35%;
+    height: 140px;
+    object-fit: contain;
+}
+
+.parabd-minifiche h1 {
+    margin: 0 0 5px;
+    font-size: 14px;
+}
+
+.parabd-minifiche a {
+    color: #71483d;
+}
+
+.parabd-minifiche dl,
+.parabd-minifiche dd,
+.parabd-minifiche p {
+    margin: 0;
+}
+
+.parabd-minifiche dt,
+.parabd-minifiche dd {
+    display: inline;
+}
+
+.parabd-minifiche dt {
+    font-style: italic;
+    margin-right: 6px;
+}

@@ -1,0 +1,45 @@
+<?php
+$item = $view->item;
+$h = function ($value) { return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); };
+$title = $item ? $item['TITLE'] : 'Objet Para-BD introuvable';
+?>
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title><?php echo $h($title); ?></title>
+    <link rel="stylesheet" href="<?php echo $h(BDO_URL . 'style/parabd-minifiche.css'); ?>">
+</head>
+<body>
+<main class="parabd-minifiche">
+    <?php if ($item) { ?>
+        <?php if (!empty($item['media'][0]['FILE_PATH'])) { ?>
+            <img src="<?php echo $h(BDO_URL_PARABD . $item['media'][0]['FILE_PATH']); ?>" alt="<?php echo $h($title); ?>">
+        <?php } ?>
+        <div>
+            <h1><a href="<?php echo $h(BDO_URL . 'parabd/fiche?id=' . intval($item['ID_ITEM'])); ?>" target="_blank" rel="noopener"><?php echo $h($title); ?></a></h1>
+            <dl>
+                <?php
+                $details = array(
+                    'Type' => $item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL'],
+                    'Fabricant' => $item['MANUFACTURER'],
+                    'Éditeur' => $item['PUBLISHER'],
+                    'Artistes' => implode(', ', array_column($item['authors'], 'LABEL')),
+                    'Séries' => implode(', ', array_column($item['series'], 'LABEL')),
+                    'Parution' => $item['RELEASE_DATE'] ? ParabdService::displayPartialDate($item['RELEASE_DATE'], $item['DATE_PRECISION']) : '',
+                );
+                foreach ($details as $label => $value) {
+                    if ($value === null || $value === '') continue;
+                    ?>
+                    <div><dt><?php echo $h($label); ?></dt><dd><?php echo $h($value); ?></dd></div>
+                <?php } ?>
+            </dl>
+        </div>
+    <?php } else { ?>
+        <p>Objet Para-BD introuvable.</p>
+    <?php } ?>
+</main>
+</body>
+</html>

@@ -71,6 +71,7 @@ $triOptions = function ($current) {
                     <?php foreach ($item['authors'] as $link) { ?><li><a href="<?php echo BDO_URL . 'auteur-bd-' . intval($link['AUTHOR_ID']) . '-' . clean_url($link['LABEL']); ?>">#<?php echo intval($link['AUTHOR_ID']); ?> — <?php echo $h($link['LABEL']); ?></a><?php if (!empty($link['ROLE'])) { ?> (<?php echo $h(isset($authorRoleLabels[$link['ROLE']]) ? $authorRoleLabels[$link['ROLE']] : $link['ROLE']); ?>)<?php } ?></li><?php } ?>
                 </ul>
             <?php } ?>
+            <p><small>ID-BDovore : <?php echo intval($item['ID_ITEM']); ?></small></p>
             <?php if ($item['series'] || $item['tomes']) { ?>
                 <h2>Rattachements BD</h2>
                 <ul class="parabd-references">

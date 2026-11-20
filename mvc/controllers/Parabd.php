@@ -234,6 +234,10 @@ class Parabd extends Bdo_Controller
     public function Fiche()
     {
         if (!$this->enabled()) return;
+        if (getVal('mini') === '1') {
+            $this->renderMiniFiche();
+            return;
+        }
         $this->view->addCssFile('style/parabd.css?v=20260831d');
         $this->view->addJavascriptFile('script/parabd.js');
         $item = $this->service()->getItem(getValInteger('id', 0));
@@ -265,6 +269,27 @@ class Parabd extends Bdo_Controller
             'charter_accepted' => $canContribute ? $this->service()->hasAcceptedCharter($userId) : false,
             'explicit_allowed' => (bool) Bdo_Cfg::getVar('explicit'), 'can_admin' => $userId && User::minAccesslevel(1),
             'back_url' => $backUrl, 'back_label' => $backLabel));
+        $this->view->render();
+    }
+
+    private function renderMiniFiche()
+    {
+        $id = getVal('id', '');
+        $item = null;
+        if (is_string($id) && ctype_digit($id) && (int) $id > 0 && (int) $id <= 4294967295) {
+            $item = $this->service()->getItem((int) $id);
+        }
+        if (!$item) {
+            http_response_code(404);
+        } elseif (!empty($item['REDIRECT_ID'])) {
+            header('Location: ' . BDO_URL . 'parabd/fiche?id=' . intval($item['REDIRECT_ID']) . '&mini=1', true, 301);
+            return;
+        }
+
+        header('Content-Type: text/html; charset=UTF-8');
+        $this->view->layout = false;
+        $this->view->a_phtmlFile = array('BODY' => 'parabd/minifiche');
+        $this->view->set_var('item', $item);
         $this->view->render();
     }
 
