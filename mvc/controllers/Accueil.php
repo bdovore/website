@@ -12,6 +12,9 @@ class Accueil extends Bdo_Controller
      */
     public function Index ()
     {
+        $this->view->addCssFile('style/album-lists.css?v=20261118e');
+        $this->view->addCssFile('style/actualites.css?v=20261118c');
+        $this->view->addCssFile('style/accueil.css?v=20261118e');
         // pas la peine de faire un $this->loadModel('Actus'). il est fait par
         // defaut dans le Bdo_Controller
 
@@ -22,7 +25,7 @@ class Accueil extends Bdo_Controller
         $this->loadModel("Tome");
         $this->loadModel("News");
         $this->view->set_var(array(
-                'ACTUAIR' => $this->Actus->actuAir(),
+                'ACTUAIR' => array_slice($this->Actus->actuAir(), 0, 5),
                 'LASTAJOUT' => $this->Actus->lastAjout()
         ));
         $opengraph = array(
@@ -34,20 +37,19 @@ class Accueil extends Bdo_Controller
 
         $this->view->set_var(
                 array(
-                        'a_lastSorties' => $this->lastSorties(6),
+                        'a_lastSorties' => $this->lastSorties(5),
                         'a_lastNews' => $this->News->getLastSecondNews(5),
                         'a_laUne' => $this->News->getLastNewsPerType(),
                        /* 'a_lastBD' => $this->lastCommentaires(3),
                         'a_lastManga' => $this->lastCommentaires(3,"Mangas"),
                         'a_lastComics' => $this->lastCommentaires(3,"Comics"),*/
                         'a_lastComment' => $dbs->a_dataQuery,
-                        'a_futurSorties' => $this->futurSorties(6),
+                        'a_futurSorties' => $this->futurSorties(5),
                         'nbTome' => $this->Tome->getNbTotalTome(),
                     'opengraph' => $opengraph,
                         'PAGETITLE' => "BDOVORE.com - gestion de collection de BD, Manga et Comics"
                 ));
 
-        $this->view->addPhtmlFile('news', 'LASTNEWS', true);
         $this->view->render();
     }
 

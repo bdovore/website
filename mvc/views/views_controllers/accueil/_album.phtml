@@ -1,0 +1,51 @@
+<?php
+$genreAlbum = $album->NOM_GENRE ?? '';
+$editeurAlbum = $album->NOM_EDITEUR ?? '';
+$collectionAlbum = $album->NOM_COLLECTION ?? '';
+$dateAlbum = $album->DATE_PARUTION_EDITION ?? $album->DTE_PARUTION ?? '';
+if (!$estSortie && !empty($album->FLG_EXPLICIT) && !empty($album->IMG_COUV) && !Bdo_Cfg::getVar('explicit')) {
+    $album = clone $album;
+    $album->IMG_COUV = '?source=' . $album->IMG_COUV;
+}
+?>
+<li class="bdo-album-preview" itemscope itemtype="http://schema.org/Book">
+    <div class="bdo-album-cover">
+        <?php echo $ficheAlbum->urlAlbum($album, 'couvBig', false, false); ?>
+    </div>
+    <div class="bdo-album-preview-text">
+        <?php echo $ficheAlbum->getTitreTome($album); ?>
+        <?php $auteursAlbum = $ficheAlbum->auteurs($album); ?>
+        <?php if ($auteursAlbum !== '') { ?>
+            <p class="bdo-home-meta"><?php echo $auteursAlbum; ?></p>
+        <?php } ?>
+        <?php if (!empty($album->NOM_SERIE) && strcasecmp($album->NOM_SERIE, $album->TITRE_TOME) !== 0) { ?>
+            <p class="bdo-home-meta"><?php echo $ficheAlbum->urlSerie($album); ?></p>
+        <?php } ?>
+        <?php if ($genreAlbum || $editeurAlbum || $dateAlbum) { ?>
+            <p class="bdo-home-meta">
+                <?php if ($genreAlbum) { ?>
+                    <span itemprop="genre"><?php echo htmlspecialchars($genreAlbum, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                <?php } ?>
+                <?php if ($editeurAlbum) { ?>
+                    <?php if ($genreAlbum) { ?> · <?php } ?>
+                    <span itemprop="publisher"><?php echo htmlspecialchars($editeurAlbum, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                    <?php if ($collectionAlbum && $collectionAlbum !== '<N/A>') { ?>
+                        · <?php echo htmlspecialchars($collectionAlbum, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    <?php } ?>
+                <?php } ?>
+                <?php if ($dateAlbum) { ?>
+                    <?php if ($genreAlbum || $editeurAlbum) { ?> · <?php } ?>
+                    <?php echo $ficheAlbum->dateParution($dateAlbum); ?>
+                <?php } ?>
+            </p>
+        <?php } ?>
+        <?php if ($estSortie && !empty($album->NB_NOTE_TOME)) {
+            $noteSurCinq = floor($album->MOYENNE_NOTE_TOME * 5) / 10;
+            ?>
+            <p class="bdo-home-meta bdo-home-score"><span aria-hidden="true">★</span> <?php echo number_format($noteSurCinq, 1, ',', ''); ?>/5</p>
+        <?php } ?>
+        <?php if (!empty($album->ID_EDITION) && Bdo_Cfg::user()->minAccesslevel(2)) {
+            echo $ficheAlbum->linkCollection($album);
+        } ?>
+    </div>
+</li>

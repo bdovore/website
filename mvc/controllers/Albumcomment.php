@@ -46,6 +46,37 @@ class AlbumComment extends Bdo_Controller {
         $this->view->render();
     }
 
+    public function Aviscomplet()
+    {
+        $idTome = getValInteger('id_tome');
+        $idAuteur = getValInteger('user_id');
+        $avis = null;
+
+        if (is_int($idTome) && $idTome > 0 && is_int($idAuteur) && $idAuteur > 951) {
+            $idUtilisateur = (int) decodeUserId($idAuteur);
+            if (encodeUserId($idUtilisateur) === $idAuteur) {
+                $this->loadModel('Comment');
+                $resultats = $this->Comment->load('c', "
+                    WHERE c.ID_TOME = $idTome AND c.user_id = $idUtilisateur AND c.COMMENT <> ''
+                    LIMIT 1");
+                $avis = $resultats->a_dataQuery[0] ?? null;
+            }
+        }
+
+        $reponse = ['error' => 'Avis indisponible.'];
+        if ($avis) {
+            $texte = preg_replace('~<br\b[^>]*>|</(?:p|div|li)>~i', "\n", stripslashes($avis->COMMENT));
+            $reponse = ['texte' => html_entity_decode(trim(strip_tags($texte)), ENT_QUOTES | ENT_HTML5, 'UTF-8')];
+        } else {
+            http_response_code(404);
+        }
+
+        header('Cache-Control: no-store');
+        $this->view->set_var('json', json_encode($reponse, JSON_INVALID_UTF8_SUBSTITUTE));
+        $this->view->layout = 'json';
+        $this->view->render();
+    }
+
     public function writeComment () {
         $id_tome = getValInteger('id_tome',0);
        /* Fonction pour écrire un commentaire

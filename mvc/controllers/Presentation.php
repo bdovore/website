@@ -12,8 +12,7 @@ class Presentation extends Bdo_Controller
      */
     public function Index ()
     {
-        //Bdo_Security::page();
-
+        $this->view->addCssFile('style/presentation.css?v=20261118a');
 
         // integration de stats dans la page presentation
         $this->loadModel('Statistique');

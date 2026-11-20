@@ -146,30 +146,15 @@ $pageinate = $view->getHelper('Pagination');
                 <input type="hidden" name="page" value="<?php echo $view->page; ?>">
 
   </form>  </div>
-                <!-- BEGIN AlbBlock -->
-                <table class="list_album">
-<?php
-$tr = true;
-if (count($view->dbs_tome->a_dataQuery) == 0) echo "Aucun album pour cet auteur pour cette activité";
-foreach ($view->dbs_tome->a_dataQuery as $tome) {
-    if ($tr)
-        echo "<tr>";
-
-    echo "<td class='mw50'>" . $ficheAlbum->big($tome,$sep=true,$getUrlSerie=true) . "</td>";
-
-    if (!$tr) {
-        echo "</tr>";
-    }
-    $tr = !$tr;
-    ?>
-
-
-
-                    <?php
-                    }
-                    if (!$tr)
-                        echo "</tr>";
-                    ?></table>
+                <?php if (!$view->dbs_tome->a_dataQuery) { ?>
+                    <p>Aucun album pour cet auteur pour cette activité</p>
+                <?php } else { ?>
+                    <ul class="bdo-album-list">
+                        <?php foreach ($view->dbs_tome->a_dataQuery as $tome) { ?>
+                            <li><?php echo $ficheAlbum->big($tome, false); ?></li>
+                        <?php } ?>
+                    </ul>
+                <?php } ?>
 
                 <div align="center">
 <?php

@@ -1,285 +1,154 @@
 <?php
 
-/**
- *
- * @author laurent
- *
- */
-
 class Leguide extends Bdo_Controller
 {
+    private const RUBRIQUES = array(
+        3 => ['avis', 'Avis', 'Derniers avis', 'Les derniers avis de lecture publiés par les membres.'],
+        4 => ['sorties_bd', 'Dernières sorties', 'Dernières sorties', 'Les éditions déjà parues, classées de la plus récente à la plus ancienne.'],
+        5 => ['prochaines_sorties_bd', 'À paraître', 'À paraître', 'Les prochaines parutions, de la date la plus proche à la plus lointaine.'],
+        6 => ['ajouts', 'Ajouts au catalogue', 'Ajouts au catalogue', 'Les fiches ajoutées récemment à BDovore, quelle que soit la date de parution.'],
+        7 => ['actualites_bd', 'Tendances', 'Tendances', 'Les éditions mises en avant selon les ajouts en collection et leur date de parution.'],
+        1 => ['top_bd', 'Top BDovore', 'Top BDovore', 'Les albums classés selon leur note moyenne et le nombre de votes.'],
+        2 => ['incontournables', 'Incontournables', 'Incontournables', 'Les séries les plus présentes dans les collections des membres.'],
+    );
 
-    /**
-     */
-    public function Index () {
-        
-            header('Status: 301 Moved Permanently', false, 301);
-            header('Location: '.BDO_URL."leguide/avis");
+    private const RAYONS = array(1 => 'BD', 2 => 'Mangas', 3 => 'Comics');
 
-    }
-    
-    public function Avis () {
-        $this->Render();
-    }
-    
-    public function Sorties_bd () {
-        $this->Render(4);
-    }
-    
-    public function Actualites_bd () {
-        $this->Render(7);
-    }
-    
-    public function Prochaines_sorties_bd () {
-        $this->Render(5);
-    }
-    
-     public function Ajouts () {
-        $this->Render(6);
-    }
-    
-    public function Top_bd () {
-        $this->Render(1);
-    }
-    
-    public function Incontournables () {
-        $this->Render(2);
-    }
-    
-            
-    private function Render ($mode = 3)
+    public function Index()
     {
-        // liste des genres
-        $origine = getVal("origine",1);
-        $this->loadModel('Genre');
-        switch ($origine) :
-            case 1 :
-                $dbs_genre = $this->Genre->bd();
-                $filter_origine = "BD";
-                break;
-            case 2 :
-                $dbs_genre = $this->Genre->mangas();
-                $filter_origine = "Mangas";
-                break;
-            case 3 :
-                $dbs_genre = $this->Genre->comics();
-                $filter_origine = "Comics";
-                break;
-            default :
-                $dbs_genre = $this->Genre->all();
-                $filter_origine = "BD";
+        $mode = getValInteger('rb_mode', 3);
+        $action = is_int($mode) ? (self::RUBRIQUES[$mode][0] ?? 'avis') : 'avis';
+        $parametres = array_intersect_key($_GET, array_flip(['origine', 'a_idGenre', 'page']));
+        $requete = http_build_query($parametres);
+        header('Location: ' . BDO_URL . 'leguide/' . $action . ($requete !== '' ? '?' . $requete : ''), true, 301);
+    }
 
-        endswitch;
+    public function Avis()
+    {
+        $this->renderGuide(3);
+    }
 
-        $page = getValInteger('page',1);
-        $limit = "LIMIT ".(($page-1)*20).",20";
-        //if (! isset($_GET['a_idGenre'])) $_GET['a_idGenre'][] = $dbs_genre->a_dataQuery[0]->ID_GENRE;
+    public function Sorties_bd()
+    {
+        $this->renderGuide(4);
+    }
 
-        $this->view->set_var('dbs_genre', $dbs_genre);
-        $this->view->set_var('origine', $origine);
+    public function Actualites_bd()
+    {
+        $this->renderGuide(7);
+    }
 
-        $a_chGuide = array(
-                array(
-                        'mode' => 1,
-                        "checked" => "",
-                        "title" => "Top des Meilleurs Albums BD, Mangas, Comics"
-                ),
-                array(
-                        'mode' => 2,
-                        "checked" => "",
-                        "title" => "Les Séries BD, Comics, Mangas Incontournables"
-                ),
-                array(
-                        'mode' => 3,
-                        "checked" => "",
-                        "title" => "Tous les Avis BD, Comics, Mangas"
+    public function Prochaines_sorties_bd()
+    {
+        $this->renderGuide(5);
+    }
 
-                ),
-                array(
-                        'mode' => 4,
-                        "checked" => "",
-                        "title" => "Derni&egrave;res Parutions BD, Comics, Mangas"
-                ),
-                array(
-                        'mode' => 5,
-                        "checked" => "",
-                        "title" => "BD, Comics, Mangas À paraitre"
-                ),
-                array(
-                        'mode' => 6,
-                        "checked" => "",
-                        "title" => "Derniers ajouts sur Bdovore"
+    public function Ajouts()
+    {
+        $this->renderGuide(6);
+    }
 
-                ),
-             array(
-                        'mode' => 7,
-                        "checked" => "",
-                        "title" => "Actualités BD, Comics, Mangas"
+    public function Top_bd()
+    {
+        $this->renderGuide(1);
+    }
 
-                ),
-               /* array(
-                        'mode' => 6,
-                        "checked" => "",
-                        "title" => "Derniers commentaires"
-                )*/
-        );
+    public function Incontournables()
+    {
+        $this->renderGuide(2);
+    }
 
-        $title = "Le Guide BD Bdovore : " ;
-
-        // checkbox de recherche
-        if (! isset($_GET['rb_mode'])) $_GET['rb_mode'] = 3;
-
-        foreach ($a_chGuide as $key => $chGuide) {
-            if ($mode == $chGuide['mode']) {
-                $a_chGuide[$key]['checked'] = 'checked';
-                $title.= $a_chGuide[$key]["title"];
-            }
+    private function renderGuide(int $mode)
+    {
+        $origine = getValInteger('origine', 1);
+        if (!is_int($origine) || !isset(self::RAYONS[$origine])) {
+            $origine = 1;
         }
+        $rayon = self::RAYONS[$origine];
+        $this->loadModel('Genre');
+        $genres = match ($origine) {
+            2 => $this->Genre->mangas(),
+            3 => $this->Genre->comics(),
+            default => $this->Genre->bd(),
+        };
+        $genresRetenus = array_values(array_unique(array_intersect(
+            (array) getValInteger('a_idGenre', []),
+            array_column($genres->a_dataQuery, 'ID_GENRE')
+        )));
+        $colonneGenre = $mode === 2 ? 'bd_genre.ID_GENRE' : 'g.ID_GENRE';
+        $filtreGenre = $genresRetenus ? ' AND ' . $colonneGenre . ' IN (' . implode(',', $genresRetenus) . ')' : '';
 
-        
+        $page = getValInteger('page', 1);
+        if (!is_int($page) || $page < 1 || $page > intdiv(PHP_INT_MAX, 20)) {
+            $page = 1;
+        }
+        $debut = ($page - 1) * 20;
+        $limite = "LIMIT $debut,20";
 
         switch ($mode) {
-
-            case 1: // top des votes
-                {
-                               
-
-                    $this->loadModel('Tome');
-                    $dbs_tome = $this->Tome->load('c', "
-
-                        WHERE note_tome.NB_NOTE_TOME> 5
-
-                        ".(isset($_GET['a_idGenre']) ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                             and g.ORIGINE = '".$filter_origine ."'
-                        ORDER BY (note_tome.MOYENNE_NOTE_TOME*log(note_tome.NB_NOTE_TOME)) DESC ".$limit);
-
-                    $this->view->set_var('dbs_tome', $dbs_tome);
-
-
-                    break;
-                }
-
-            case 2: // Les plus repandus
-                {
-                   
-                    $this->loadModel('Serie');
-
-                    $dbs_serie = $this->Serie->load('c', "
-
-                        WHERE `bd_edition_stat`.`NBR_USER_ID_SERIE` > 100
-                        ".(isset($_GET['a_idGenre']) ? "AND bd_genre.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                        and bd_genre.origine = '".$filter_origine ."'
-                     GROUP BY ID_SERIE   ORDER BY `bd_edition_stat`.`NBR_USER_ID_SERIE` DESC ".$limit);
-
-                    $this->view->set_var('dbs_serie', $dbs_serie);
-
-
-                    break;
-                }
-
-            case 3: // derniers commentaires
-                {
-                   
-                    $this->loadModel('Comment');
-
-                    $dbs_comment = $this->Comment->load('c', "
-                      WHERE   c.comment <> ''
-                      ".(isset($_GET['a_idGenre']) ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                        and g.origine = '".$filter_origine ."'
-                        ORDER BY c.`DTE_POST` DESC ".$limit);
-
-                    $this->view->set_var('dbs_comment', $dbs_comment);
-                    break;
-                }
-
-            case 4: // Dernieres parutions
-                {
-                   
-                    $this->loadModel('Edition');
-
-                    $dbs_tome = $this->Edition->load('c', "
-                        WHERE bd_edition.`DTE_PARUTION`<= NOW() and bd_edition.`DTE_PARUTION` >= DATE_ADD(NOW(), INTERVAL -1 YEAR)
-                        ".(isset($_GET['a_idGenre']) ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                                 and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
-                    ORDER BY bd_edition.`DTE_PARUTION` DESC ".$limit);
-
-                    $this->view->set_var('dbs_tome', $dbs_tome);
-
-                    break;
-                }
-
-            case 5: // A paraitre
-                {
-                   
-                    $this->loadModel('Edition');
-
-                    $dbs_tome = $this->Edition->load('c', "
-                        WHERE bd_edition.`DTE_PARUTION`>'".date('Y-m-d')."'
-                            ".(isset($_GET['a_idGenre']) ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                                 and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
-                            ORDER BY bd_edition.`DTE_PARUTION` ASC ".$limit);
-
-                    $this->view->set_var('dbs_tome', $dbs_tome);
-
-                    break;
-                }
-
-            case 6: // Derniers ajouts
-                {
-                       $this->loadModel('Tome');
-
-                        //this doesn't use the cache in bd_edition_stat (seems light though)
-                        $where = " WHERE";
-
-                        if (isset($_GET['a_idGenre'])) {
-                            $where .= " g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])) . ") AND";
-                        }
-
-                        $where .= " g.origine = '" . $filter_origine . "'";
-
-                        $order = " ORDER BY bd_tome.id_tome DESC ";
-
-                        $dbs_tome = $this->Tome->load('c', $where .$order . $limit);
-                        //this uses the cache:
-//"
-//                            WHERE 1
-//                            ".($_GET['a_idGenre'] ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-//                                     and g.origine = '".$filter_origine ."'
-//                            ORDER BY `bd_edition_stat`.`ID_EDITION` DESC ".$limit);
-
-                        $this->view->set_var('dbs_tome', $dbs_tome);
-
-
-                    break;
-                }
-
-            case 7: // Derniers commentaires
-                {
-                   
-                    $this->loadModel('Edition');
-
-                    $dbs_tome = $this->Edition->load('c', "
-                        WHERE bd_tome.id_edition = bd_edition.id_edition AND bd_edition.`DTE_PARUTION`> date_add(now(),INTERVAL -6 MONTH)
-                            ".(isset($_GET['a_idGenre']) ? "AND g.ID_GENRE IN (" . Db_Escape_String(implode(',',$_GET['a_idGenre'])).")":'') ."
-                                 and g.origine = '".$filter_origine ."' and bd_edition.PROP_STATUS=1
-                            ORDER BY (15.0*bd_edition_stat.NBR_USER_ID_EDITION /(DATEDIFF(now(),DTE_PARUTION) +1)) DESC ".$limit);
-
-                    $this->view->set_var('dbs_tome', $dbs_tome);
-                    break;
-                }
+            case 1:
+                $this->loadModel('Tome');
+                $resultats = $this->Tome->load('c', "
+                    WHERE note_tome.NB_NOTE_TOME > 5 AND g.ORIGINE = '$rayon' $filtreGenre
+                    ORDER BY (note_tome.MOYENNE_NOTE_TOME * LOG(note_tome.NB_NOTE_TOME)) DESC $limite");
+                break;
+            case 2:
+                $this->loadModel('Serie');
+                $resultats = $this->Serie->load('c', "
+                    WHERE bd_edition_stat.NBR_USER_ID_SERIE > 100 AND bd_genre.ORIGINE = '$rayon' $filtreGenre
+                    GROUP BY ID_SERIE ORDER BY bd_edition_stat.NBR_USER_ID_SERIE DESC $limite");
+                break;
+            case 3:
+                $this->loadModel('Comment');
+                $resultats = $this->Comment->loadApercus("
+                    WHERE c.COMMENT <> '' AND g.ORIGINE = '$rayon' $filtreGenre
+                    ORDER BY c.DTE_POST DESC $limite", !$genresRetenus);
+                break;
+            case 4:
+                $this->loadModel('Edition');
+                $resultats = $this->Edition->load('c', "
+                    WHERE bd_edition.DTE_PARUTION <= NOW() AND bd_edition.DTE_PARUTION >= DATE_ADD(NOW(), INTERVAL -1 YEAR)
+                    AND g.ORIGINE = '$rayon' AND bd_edition.PROP_STATUS = 1 $filtreGenre
+                    ORDER BY bd_edition.DTE_PARUTION DESC $limite");
+                break;
+            case 5:
+                $this->loadModel('Edition');
+                $aujourdhui = date('Y-m-d');
+                $resultats = $this->Edition->load('c', "
+                    WHERE bd_edition.DTE_PARUTION > '$aujourdhui'
+                    AND g.ORIGINE = '$rayon' AND bd_edition.PROP_STATUS = 1 $filtreGenre
+                    ORDER BY bd_edition.DTE_PARUTION ASC $limite");
+                break;
+            case 6:
+                $this->loadModel('Tome');
+                $resultats = $this->Tome->load('c', "
+                    WHERE g.ORIGINE = '$rayon' $filtreGenre
+                    ORDER BY bd_tome.ID_TOME DESC $limite");
+                break;
+            case 7:
+                $this->loadModel('Edition');
+                $resultats = $this->Edition->load('c', "
+                    WHERE bd_tome.ID_EDITION = bd_edition.ID_EDITION
+                    AND bd_edition.DTE_PARUTION > DATE_ADD(NOW(), INTERVAL -6 MONTH)
+                    AND g.ORIGINE = '$rayon' AND bd_edition.PROP_STATUS = 1 $filtreGenre
+                    ORDER BY (15.0 * bd_edition_stat.NBR_USER_ID_EDITION / (DATEDIFF(NOW(), DTE_PARUTION) + 1)) DESC $limite");
+                break;
         }
 
-        $this->view->set_var('PAGETITLE', $title);        
-        $this->view->set_var('a_chGuide', $a_chGuide);       
-
-        $this->loadModel('Actus');
-        $this->view->addPhtmlFile("leguide/index","BODY");
+        $this->view->addCssFile('style/album-lists.css?v=20261120a');
+        $this->view->addCssFile('style/leguide.css?v=20261118g');
+        $this->view->addPhtmlFile('leguide/index', 'BODY');
         $this->view->set_var(array(
-                'ACTUAIR' => $this->Actus->actuAir(),
-                'LASTAJOUT' => $this->Actus->lastAjout(),
-                'NUM_PAGE' => $page
+            'PAGETITLE' => self::RUBRIQUES[$mode][2] . " · $rayon · Actu BD",
+            'mode' => $mode,
+            'rubriques' => self::RUBRIQUES,
+            'origine' => $origine,
+            'rayons' => self::RAYONS,
+            'genres' => $genres->a_dataQuery,
+            'genresRetenus' => $genresRetenus,
+            'resultats' => $resultats->a_dataQuery,
+            'page' => $page,
         ));
         $this->view->render();
     }
 }
-

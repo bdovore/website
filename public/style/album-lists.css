@@ -1,0 +1,115 @@
+/* Listes d’albums des fiches Série, Auteur et de l’accueil. */
+.bdo-album-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, max(19rem, calc((100% - 1rem) / 2))), 1fr));
+    gap: .6rem 1rem;
+    margin: 0 0 1rem;
+    padding: 0;
+    list-style: none;
+}
+
+.bdo-album-list > li {
+    min-width: 0;
+    margin: 0;
+    border-bottom: 1px solid #e6ddd6;
+}
+
+.bdo-album-group + .bdo-album-group {
+    margin-top: 1rem;
+}
+
+.bdo-album-list .fiche_big,
+.bdo-album-preview {
+    display: grid;
+    grid-template-columns: min(160px, 45%) minmax(0, 1fr);
+    align-items: start;
+    gap: .7rem;
+    margin: 0;
+    padding: .65rem 0;
+    height: auto;
+    border: 0;
+    background: transparent;
+    overflow-wrap: anywhere;
+}
+
+.bdo-album-list .fiche_big > .mw50 {
+    max-width: none;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 0;
+}
+
+.bdo-album-list .fiche_big img.couvBig,
+.bdo-album-preview img.couvBig {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 200px;
+    object-fit: contain;
+    object-position: left top;
+    border-radius: 2px;
+    border-color: #d5c7bc;
+}
+
+.bdo-album-list .fiche_big .img-sponsor,
+.bdo-album-preview .img-sponsor {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+}
+
+.bdo-album-list .fiche_big .fiche_album {
+    margin: .3rem 0;
+}
+
+.bdo-avis-content h3 {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.25;
+}
+
+.bdo-avis-meta {
+    margin: .2rem 0;
+    color: #665a53;
+    font-size: .875rem;
+}
+
+.bdo-avis-byline {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: .25rem .65rem;
+}
+
+.bdo-avis-score {
+    color: #8f1204;
+    white-space: nowrap;
+}
+
+.bdo-avis-excerpt,
+.bdo-avis-full {
+    margin: .25rem 0;
+    padding: 0;
+    font-size: .925rem;
+}
+
+.bdo-avis-detail summary,
+.bdo-avis-content > a {
+    color: #8f1204;
+    font-size: .875rem;
+}
+
+.bdo-avis-detail summary {
+    cursor: pointer;
+}
+
+.bdo-avis-full {
+    white-space: pre-line;
+}
+
+.bdo-avis-detail:not([open]) summary > span:last-child,
+.bdo-avis-detail[open] summary > span:first-child,
+.bdo-avis-content div:has(> .bdo-avis-detail.is-loaded[open]) > .bdo-avis-excerpt {
+    display: none;
+}

@@ -1,209 +1,172 @@
-<div class="cadre1">
-    <h2>BDovore en quelques mots</h2>
-    <p>
-        Le projet BDovore est né en mai 2004 de l'imagination de
-
-        passionnés de Bandes Dessinées. L'idée était de fournir gratuitement aux
-
-        internautes une solution pour <b>gérer leur collection de BD, comics et mangas en ligne</b>. Depuis, le site est en continuelle évolution et est administré par l'<b>association à but non lucratif Bdovore</b>.
-    </p>
-    <p>  
-            <a href='https://play.google.com/store/apps/details?id=com.mobile.bdovore&hl=fr&gl=FR&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Disponible sur Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/fr_badge_web_generic.png' width="140px" height="63px" style="margin-bottom: -7px;"/></a>
-            <a href="https://apps.apple.com/fr/app/bdovore/id1519677181?itsct=apps_box_badge&amp;itscg=30200" style="display: inline-block; overflow: hidden; border-top-left-radius: 13px; border-top-right-radius: 13px; border-bottom-right-radius: 13px; border-bottom-left-radius: 13px; width: 140px;height: 47px;"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/fr-fr?size=140x47&amp;releaseDate=1593561600&h=d4303f9776e5f1c99c675c024483651e" alt="Download on the App Store" style="border-top-left-radius: 13px; border-top-right-radius: 13px; border-bottom-right-radius: 13px; border-bottom-left-radius: 13px; width: 140px; height: 47px;"></a>
-            
-        
-    </p>
-    <p>
-        <h3>BDovore c'est&nbsp;:</h3>
-    </p>
-    <ul style="margin:auto;list-style-type:disc;padding:1,5em;">
-        <li>
-            - Une <b>base de donnée</b> de <b><?php echo number_format(intVal($view->NBALB),"0",","," ");?></b> volumes BD, comics et mangas, tenue à jour
-            en permanence, notée et commentée par les membres
-            (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur la base de données</a>).
-            
-        </li>
-        <li>
-           - La possibilité de <b>gérer simplement sa bdthèque en ligne</b>, en utilisant toute l'information disponible dans la base de donnée
-            commune (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur la gestion de votre bdtheque</a>).
-           
-        </li>
-        <li>
-           - Le suivi de ses <b>prêts</b>, de ses <b>futurs achats</b>
-            (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info</a>).
-           
-        </li>
-        <li>
-           - Consulter les <strong>statistiques</strong> propres à sa collection mais
-            aussi celles de la communauté dans son ensemble (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur les stats</a>).
-           
-        </li>
-        <li>
-           - La possibilité de <b>mettre en ligne sa collection</b> de bandes
-            dessinées, permettant de partager votre bdthèque et vos envies BD
-            (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur la mise en ligne</a>).
-           
-        </li>
-        <li>
-           - La possibilité de suivre au plus près <b>les sorties et
-            l'actualité du monde de la bande dessinée</b>
-            (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur l'actualité</a>).
-           
-        </li>
-        <li>
-           - Un <a href="<?php echo BDO_URL_FORUM;?>index">forum</a> pour discuter de tout ce qui touche à la BD mais
-            pas seulement
-        </li>
-        <li>
-           - Un <a href="https://discord.gg/NJVptrR9y9" target="_blank" style="background-color: #7289da; color: white; padding: 3px 15px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                <img src="https://www.bdovore.com/images/Discord.png" alt="Discord" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 3px;">
-                Serveur Discord
-            </a> qui rassemble une communauté de passionnéées de BD, Mangas et Comics 
-        </li>
-    </ul>
-    <p>
-        Et le tout <font color="#990000" size="-1"><strong>GRATUITEMENT</strong> et <strong>SANS PUBLICITÉ !</strong></font>
-        =>   <a href="<?php echo BDO_URL;?>tutoriel?page=1">Pour le début de la visite guidée cliquez ici !</a>
-    </p>
-    <p>
-        Vous voulez utiliser le site, participer au projet et vous joindre à la
-        communauté&nbsp;? <a href="<?php echo BDO_URL;?>membres/inscription">Inscrivez-vous&nbsp;!</a>
-    </p>
-    <p>
-        Encore des questions sur BDovore ? Rendez-vous sur le <a href="<?php echo BDO_URL_FORUM;?>index">forum</a> !
-    </p>
-     <hr class="expSep" />
-      
-    
-    <h2>Bdovore en quelques chiffres</h2>
-    <div style='float:left; padding:5px;margin:0 auto;max-width:365px;'>
-        <p>
-            <font color="#990000" size="-1">
-                <strong>Base de donn&eacute;es BD</strong>
-            </font>
+<div class="bdo-presentation">
+    <section aria-labelledby="presentation-mots">
+        <h1 id="presentation-mots">BDovore en quelques mots</h1>
+        <p class="bdo-presentation-intro">
+            Le projet BDovore est né en mai 2004 de l'imagination de passionnés de Bandes Dessinées. L'idée était de fournir gratuitement aux internautes une solution pour <strong>gérer leur collection de BD, comics et mangas en ligne</strong>. Depuis, le site est en continuelle évolution et est administré par l'<strong>association à but non lucratif Bdovore</strong>.
         </p>
-        <p><ul>
-            <li>Nombre d'albums dans la base : <a href="browser"><?php echo number_format(intVal($view->NBALB),"0",","," ");?></a></li>
+        <div class="bdo-presentation-apps">
+            <a href="https://play.google.com/store/apps/details?id=com.mobile.bdovore&amp;hl=fr&amp;gl=FR&amp;pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
+                <img alt="Disponible sur Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/fr_badge_web_generic.png" width="140" height="63">
+            </a>
+            <a href="https://apps.apple.com/fr/app/bdovore/id1519677181?itsct=apps_box_badge&amp;itscg=30200">
+                <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/fr-fr?size=140x47&amp;releaseDate=1593561600&amp;h=d4303f9776e5f1c99c675c024483651e" alt="Download on the App Store" width="140" height="47">
+            </a>
+        </div>
+
+        <h2 class="bdo-presentation-band">BDovore c'est&nbsp;:</h2>
+        <ul class="bdo-presentation-features">
             <li>
-                Nombre de séries : <a href="browser"><?php echo number_format(intVal($view->NBSERIE),"0",","," ");?></a></li>
-            <li>
-            Albums en attente d'ajout actuellement : <a href="proposition/listpropal?type=AJOUT"><?php echo $view->NBAJOUT;?></a>
+                - Une <strong>base de donnée</strong> de <strong><?php echo number_format(intVal($view->NBALB),"0",","," ");?></strong> volumes BD, comics et mangas, tenue à jour en permanence, notée et commentée par les membres
+                (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur la base de données</a>).
             </li>
-            <li>Albums en attente de correction actuellement : <a href="proposition/listpropal?type=CORRECTION"><?php echo $view->NBCORRECT;?></a>
-            </li><li>
-                 </ul>
-        </p>
-    </div>
-    <div style='float:left; padding:5px;margin:0 auto;max-width:365px;'>
-        <p>
-            <font color="#990000" size="-1">
-                <b>La vie du site</b>
-            </font>
-        </p>
-        <p>
-            Nombre de Bdovores : <?php echo number_format(intVal($view->NBUSER),"0",","," ");?>
-            <br />
-            Nombre d'albums dans les collections : <?php echo number_format(intVal($view->NBCOLLEC),"0",","," ");?>
-            <br />
-             Nombre de notes d'albums : <a href="leguide?origine=1&rb_mode=1&rb_list=album"><?php echo number_format(intVal($view->NBNOTEALBUM),"0",","," ");?></a>
-            <br />
-            Nombre de commentaires d'albums : <a href="leguide"><?php echo number_format(intVal($view->NBCOMMENTALBUM),"0",","," ");?></a>
-            <br />
-        </p>
-    </div>
-    
-       <hr class="expSep" />
-    <h2>Qui c'est qui fait tout ça ? </h2>
-        <p>
-        <font color="#990000" size="+1"><b>Ils travaillent en cuisine...</b></font>
-    </p>
-    <p>
-        <i> L'équipe de BDovore est composée uniquement de <u>bénévoles</u>
-            qui travaillent tous les jours pour assouvir votre fringale de
-            bandes-dessinées.
-        </i> <br /> <b>BDovore</b> c'est aussi une association loi 1901 dédié à la bandes-dessinée.
-    </p>
-    <p>
-        <font color="#990000" size="-1"><b>Les chefs concoctent les menus</b></font>
-    </p>
-    <p>
-        <i>Les chefs travaillent sur la partie technique et esthétique du
-            site. Vous pouvez leur reporter bugs ou commentaires sur le site.</i>
-    </p>
-    <p>
-         - <a href=""
-            title="Désolé, nous ne pouvons divulguer l'adresse de l'association des BDOvores anonymes. Latruffe est en cure de désyntoxication suite à une trop forte accoutumance à la BD et au site..."><b>Latruffe</b></a>
-        : Co-créateur du site avec Tomlamèche et qui cuisine encore de temps
-        en temps. Il est aussi le trésorier de l'association... <br /> - <a href=""
-            title="Tomlameche a délaissé les instruments de cuisine pour les instruments musicaux, retrouvez-le sur son site !"><b>Tomlamèche</b></a>
-        : Co-créateur du site avec Latruffe et actuel président de l'association. Vous pouvez aussi le retrouver sur son <a
-            href="http://lameche.zique.free.fr"
-            title="Ouvre directement le lien dans la page courante">site musical</a>.
-        <br />        
-    </p>
-    <p>
-        <font color="#990000" size="-1"><b>Les cuistots font la cuisine et le
-                ménage</b></font>
-    </p>
-    <p>
-        <i> Les cuistots s'occupent de gérer la base de donnée du site. Ce
-            sont eux qui ajoutent les nouveaux albums, qui valident vos
-            propositions. N'hésitez pas à les contacter si vous avez des
-            questions sur la manière dont la base est organisée et gérée ou sur
-            l'utilisation générale du site. <br /> N'oubliez pas de lire la <a
-            href="<?php echo BDO_URL;?>presentation"><b>présentation du site</b></a>
-            dans un premier temps et de suivre la petite <a
-            href="<?php echo BDO_URL;?>tutoriel"><b>visite guidée</b></a>
-        </i>.
-    </p>
-    <p>
-            - <a
-            href="mailto:cptoldchap@gmail.com"
-            title="Cliquez pour envoyer un email à cptdoug_chez_gmail.com"><b>Cptdoug</b></a>
-        : Captain BD. La BD européenne, c'est son rayon mais il peut également
-        s'occuper de vos problèmes de comics. Signe particulier de
-        déséquilibre mental : il s'est lancé dans un vaste chantier de
-        révision de la base par ordre alphabétique qui devrait l'occuper pour
-        de nombreuses années. <br />
-                - <a href="mailto:bouri@bdovore.com"
-            title="Cliquez pour envoyer un email à bouri_chez_bdovore.com"><b>Bouri</b></a>
-        : Jeune cuistot dynamique, plutôt spécialisé dans la BD européenne,
-        genre Fantasy. <br /> - <a href="mailto:smurz44@gmail.com"
-            title="Cliquez pour envoyer un email à smurz_chez_bdovore.com"><b>Smurz</b></a>
-        : Le doyen de nos cuisiniers, plutôt spécialisé dans la BD européenne,
-        il traite les demandes de nouvelles éditions et participe au grand
-        nettoyage de notre base de données par ordre alphabétique. <br />
+            <li>
+                - La possibilité de <strong>gérer simplement sa bdthèque en ligne</strong>, en utilisant toute l'information disponible dans la base de donnée commune (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur la gestion de votre bdtheque</a>).
+            </li>
+            <li>
+                - Le suivi de ses <strong>prêts</strong>, de ses <strong>futurs achats</strong>
+                (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info</a>).
+            </li>
+            <li>
+                - Consulter les <strong>statistiques</strong> propres à sa collection mais aussi celles de la communauté dans son ensemble (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur les stats</a>).
+            </li>
+            <li>
+                - La possibilité de <strong>mettre en ligne sa collection</strong> de bandes dessinées, permettant de partager votre bdthèque et vos envies BD
+                (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur la mise en ligne</a>).
+            </li>
+            <li>
+                - La possibilité de suivre au plus près <strong>les sorties et l'actualité du monde de la bande dessinée</strong>
+                (<a href="<?php echo BDO_URL;?>tutoriel?page=1">plus d'info sur l'actualité</a>).
+            </li>
+            <li>
+                - Un <a href="<?php echo BDO_URL_FORUM;?>index">forum</a> pour discuter de tout ce qui touche à la BD mais pas seulement
+            </li>
+            <li>
+                - Un <a class="bdo-presentation-discord" href="https://discord.gg/NJVptrR9y9" target="_blank" rel="noopener">
+                    <img src="https://www.bdovore.com/images/Discord.png" alt="Discord" width="20" height="20">
+                    Serveur Discord
+                </a> qui rassemble une communauté de passionnéées de BD, Mangas et Comics
+            </li>
+        </ul>
+        <div class="bdo-presentation-actions">
+            <p>
+                Et le tout <strong>GRATUITEMENT</strong> et <strong>SANS PUBLICITÉ !</strong>
+                =&gt; <a href="<?php echo BDO_URL;?>tutoriel?page=1">Pour le début de la visite guidée cliquez ici !</a>
+            </p>
+            <p>
+                Vous voulez utiliser le site, participer au projet et vous joindre à la communauté&nbsp;? <a class="bdo-presentation-signup" href="<?php echo BDO_URL;?>membres/inscription">Inscrivez-vous&nbsp;!</a>
+            </p>
+            <p>
+                Encore des questions sur BDovore ? Rendez-vous sur le <a href="<?php echo BDO_URL_FORUM;?>index">forum</a> !
+            </p>
+        </div>
+    </section>
+
+    <section aria-labelledby="presentation-chiffres">
+        <h2 class="bdo-presentation-band" id="presentation-chiffres">Bdovore en quelques chiffres</h2>
+        <div class="bdo-presentation-stats">
+            <section aria-labelledby="presentation-base">
+                <h3 id="presentation-base">Base de donn&eacute;es BD</h3>
+                <dl>
+                    <div>
+                        <dt>Nombre d'albums dans la base :</dt>
+                        <dd><a href="browser"><?php echo number_format(intVal($view->NBALB),"0",","," ");?></a></dd>
+                    </div>
+                    <div>
+                        <dt>Nombre de séries :</dt>
+                        <dd><a href="browser"><?php echo number_format(intVal($view->NBSERIE),"0",","," ");?></a></dd>
+                    </div>
+                    <div>
+                        <dt>Albums en attente d'ajout actuellement :</dt>
+                        <dd><a href="proposition/listpropal?type=AJOUT"><?php echo $view->NBAJOUT;?></a></dd>
+                    </div>
+                    <div>
+                        <dt>Albums en attente de correction actuellement :</dt>
+                        <dd><a href="proposition/listpropal?type=CORRECTION"><?php echo $view->NBCORRECT;?></a></dd>
+                    </div>
+                </dl>
+            </section>
+            <section aria-labelledby="presentation-vie">
+                <h3 id="presentation-vie">La vie du site</h3>
+                <dl>
+                    <div>
+                        <dt>Nombre de Bdovores :</dt>
+                        <dd><?php echo number_format(intVal($view->NBUSER),"0",","," ");?></dd>
+                    </div>
+                    <div>
+                        <dt>Nombre d'albums dans les collections :</dt>
+                        <dd><?php echo number_format(intVal($view->NBCOLLEC),"0",","," ");?></dd>
+                    </div>
+                    <div>
+                        <dt>Nombre de notes d'albums :</dt>
+                        <dd><a href="leguide?origine=1&amp;rb_mode=1&amp;rb_list=album"><?php echo number_format(intVal($view->NBNOTEALBUM),"0",","," ");?></a></dd>
+                    </div>
+                    <div>
+                        <dt>Nombre de commentaires d'albums :</dt>
+                        <dd><a href="leguide"><?php echo number_format(intVal($view->NBCOMMENTALBUM),"0",","," ");?></a></dd>
+                    </div>
+                </dl>
+            </section>
+        </div>
+    </section>
+
+    <section aria-labelledby="presentation-equipe">
+        <h2 class="bdo-presentation-band" id="presentation-equipe">Qui c'est qui fait tout ça ?</h2>
+        <div class="bdo-presentation-team">
+            <h3>Ils travaillent en cuisine...</h3>
+            <p>
+                <em>L'équipe de BDovore est composée uniquement de <u>bénévoles</u> qui travaillent tous les jours pour assouvir votre fringale de bandes-dessinées.</em><br>
+                <strong>BDovore</strong> c'est aussi une association loi 1901 dédié à la bandes-dessinée.
+            </p>
+
+            <h3>Les chefs concoctent les menus</h3>
+            <p>
+                <em>Les chefs travaillent sur la partie technique et esthétique du site. Vous pouvez leur reporter bugs ou commentaires sur le site.</em>
+            </p>
+            <ul class="bdo-presentation-people">
+                <li>
+                    - <a href="" title="Désolé, nous ne pouvons divulguer l'adresse de l'association des BDOvores anonymes. Latruffe est en cure de désyntoxication suite à une trop forte accoutumance à la BD et au site..."><strong>Latruffe</strong></a>
+                    : Co-créateur du site avec Tomlamèche et qui cuisine encore de temps en temps. Il est aussi le trésorier de l'association...
+                </li>
+                <li>
+                    - <a href="" title="Tomlameche a délaissé les instruments de cuisine pour les instruments musicaux, retrouvez-le sur son site !"><strong>Tomlamèche</strong></a>
+                    : Co-créateur du site avec Latruffe et actuel président de l'association. Vous pouvez aussi le retrouver sur son <a href="http://lameche.zique.free.fr" title="Ouvre directement le lien dans la page courante">site musical</a>.
+                </li>
+            </ul>
+
+            <h3>Les cuistots font la cuisine et le ménage</h3>
+            <p>
+                <em>Les cuistots s'occupent de gérer la base de donnée du site. Ce sont eux qui ajoutent les nouveaux albums, qui valident vos propositions. N'hésitez pas à les contacter si vous avez des questions sur la manière dont la base est organisée et gérée ou sur l'utilisation générale du site. <br>
+                    N'oubliez pas de lire la <a href="<?php echo BDO_URL;?>presentation"><strong>présentation du site</strong></a> dans un premier temps et de suivre la petite <a href="<?php echo BDO_URL;?>tutoriel"><strong>visite guidée</strong></a>
+                </em>.
+            </p>
+            <ul class="bdo-presentation-people">
+                <li>
+                    - <a href="mailto:cptoldchap@gmail.com" title="Cliquez pour envoyer un email à cptdoug_chez_gmail.com"><strong>Cptdoug</strong></a>
+                    : Captain BD. La BD européenne, c'est son rayon mais il peut également s'occuper de vos problèmes de comics. Signe particulier de déséquilibre mental : il s'est lancé dans un vaste chantier de révision de la base par ordre alphabétique qui devrait l'occuper pour de nombreuses années.
+                </li>
+                <li>
+                    - <a href="mailto:bouri@bdovore.com" title="Cliquez pour envoyer un email à bouri_chez_bdovore.com"><strong>Bouri</strong></a>
+                    : Jeune cuistot dynamique, plutôt spécialisé dans la BD européenne, genre Fantasy.
+                </li>
+                <li>
+                    - <a href="mailto:smurz44@gmail.com" title="Cliquez pour envoyer un email à smurz_chez_bdovore.com"><strong>Smurz</strong></a>
+                    : Le doyen de nos cuisiniers, plutôt spécialisé dans la BD européenne, il traite les demandes de nouvelles éditions et participe au grand nettoyage de notre base de données par ordre alphabétique.
+                </li>
 <!--        - <a href="mailto:cinoche@bdovore.com"
-             title="Cliquez pour envoyer un email à cinoche_chez_bdovore.com"><b>Cinoche</b></a> : 
+             title="Cliquez pour envoyer un email à cinoche_chez_bdovore.com"><b>Cinoche</b></a> :
              Le petit dernier du groupe. Il a grandi avec les comics mais sans oublier toutes les autres BDs. Il alimente les fiches des auteurs et elles sont très nombreuses. Il va aussi revoir la rubrique « Présentation » quant à l’actualisation des copies d’écrans.-->
-    </p> 
-    <p>
-        <font color="#990000" size="-1"><b>Les clients râlent quand ce n'est
-                pas assez salé</b></font>
-    </p>
-    <p>
-        N'hésitez pas à faire un tour sur le <a
-            href="<?php echo BDO_URL_FORUM;?>"><b>forum</b></a> (vous pouvez
-        commencer par vous prèsenter <a
-            href="<?php echo BDO_URL_FORUM;?>viewtopic?t=146"
-            title="Ouvre le lien dans la page courante">ici</a>) ou <a href="https://discord.gg/NJVptrR9y9" target="_blank" style="background-color: #7289da; color: white; padding: 3px 15px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                <img src="https://www.bdovore.com/images/Discord.png" alt="Discord" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 8px;">
-                nous rejoindre sur Discord
-            </a>  si les plats qui
-        vous sont servis ne sont pas à votre goût ou si, au contraire, vous
-        avez aimé.
-    </p>
-    <p>
-        Sachez aussi que <u>nous recrutons sans cesse</u> : si l'envie vous
-        prend de participer à la vie du site, n'hésitez pas à nous contacter
-        !!!
-    </p>
-    <br />
-        
+            </ul>
 
+            <h3>Les clients râlent quand ce n'est pas assez salé</h3>
+            <p>
+                N'hésitez pas à faire un tour sur le <a href="<?php echo BDO_URL_FORUM;?>"><strong>forum</strong></a> (vous pouvez commencer par vous prèsenter <a href="<?php echo BDO_URL_FORUM;?>viewtopic?t=146" title="Ouvre le lien dans la page courante">ici</a>) ou <a class="bdo-presentation-discord" href="https://discord.gg/NJVptrR9y9" target="_blank" rel="noopener">
+                    <img src="https://www.bdovore.com/images/Discord.png" alt="Discord" width="20" height="20">
+                    nous rejoindre sur Discord
+                </a> si les plats qui vous sont servis ne sont pas à votre goût ou si, au contraire, vous avez aimé.
+            </p>
+            <p>
+                Sachez aussi que <u>nous recrutons sans cesse</u> : si l'envie vous prend de participer à la vie du site, n'hésitez pas à nous contacter !!!
+            </p>
+        </div>
+    </section>
 </div>
-
-
-
-
-

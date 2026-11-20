@@ -95,13 +95,16 @@ class Actus
 
     public function actuAir ()
     {
-        // dernier topactu recharger si cree avant 0h00
-        $file = BDO_DIR . "cache/actualite.json";
-        if (! file_exists($file) or @filemtime($file) < mktime(0, 0, 0, date("m"), date("d"), date("Y")) or (@filesize($file) == 0)) {
-            $size = $this->setTopActu($file);
+        $file = BDO_DIR . 'cache/actualite.json';
+        $albums = json_decode((string) @file_get_contents($file));
+        // Recharge aussi les fichiers créés avant l’ajout des métadonnées.
+        $cacheAncien = is_array($albums) && $albums && !isset($albums[0]->ID_EDITION);
+        if (!is_array($albums) || @filemtime($file) < strtotime('today') || $cacheAncien) {
+            if ($this->setTopActu($file) !== false) {
+                $albums = json_decode((string) @file_get_contents($file));
+            }
         }
-        // $this->set_var("ACTUAIR",file_get_contents($file));
-        return json_decode(file_get_contents($file));
+        return is_array($albums) ? $albums : [];
     }
 
     public function lastAjout ()
@@ -117,18 +120,12 @@ class Actus
 
     function setTopActu ($file)
     {
-        $a_genre = array(
-                'BD',
-                'Mangas',
-                'Comics'
-        );
-        // requete select de base pour les top 1 et 2
-
         $select_topactu = "
     SELECT
         t.TITRE as TITRE_TOME,
         t.ID_TOME,
         note_tome.MOYENNE_NOTE_TOME as MOYENNE_TOME,
+        en.ID_EDITION,
         en.IMG_COUV,
         note_tome.NB_NOTE_TOME as NB_VOTE_TOME,
         s.NOM as NOM_SERIE,
@@ -158,6 +155,7 @@ class Actus
         s.ID_SERIE,
         g.ORIGINE as ORIGINE_GENRE,
         t.MOYENNE as MOYENNE_TOME,
+        en.ID_EDITION,
         en.IMG_COUV,
         count(*) nb
     FROM
@@ -177,38 +175,79 @@ class Actus
     ORDER BY nb DESC, IFNULL(ua.date_achat,ua.date_ajout) DESC
     ";
 
-      
-        $a_actu= array();
-        $filter = "";
-        //foreach ($a_genre as $genre) {
-           
-          //  $filter = " and g.origine = '" . $genre . "' ";
+        $albums = [];
+        $resultat = Db_query($select_topactu . $order_actu);
+        if (!$resultat) {
+            return false;
+        }
+        while ($album = Db_fetch_object($resultat)) {
+            $albums[] = $album;
+        }
 
-            // actu
-            $requete = $select_topactu . $filter . " " . $order_actu;
-            $resultat = Db_query($requete);
-            $nb = 0;
-            while ($obj = Db_fetch_object($resultat)) {
-                 $a_actu[] = $obj;
-                 $filter .= " and t.ID_TOME <> '" . $obj->ID_TOME . "' ";
-                 $nb++;
+        $idsTomes = array_map('intval', array_column($albums, 'ID_TOME'));
+        $filtre = $idsTomes ? ' AND t.ID_TOME NOT IN (' . implode(',', $idsTomes) . ')' : '';
+        $limite = 12 - count($albums);
+        $resultat = Db_query($select_topair . $filtre . $order_air . " LIMIT $limite");
+        if (!$resultat) {
+            return false;
+        }
+        while ($album = Db_fetch_object($resultat)) {
+            $albums[] = $album;
+        }
+
+        if ($albums && !$this->completerTendances($albums)) {
+            return false;
+        }
+
+        $json = json_encode($albums, JSON_INVALID_UTF8_SUBSTITUTE);
+        if ($json === false) {
+            return false;
+        }
+        $temporaire = tempnam(dirname($file), '.actualite-');
+        if ($temporaire === false) {
+            return false;
+        }
+        $taille = file_put_contents($temporaire, $json);
+        if ($taille !== strlen($json) || !rename($temporaire, $file)) {
+            unlink($temporaire);
+            return false;
+        }
+        return $taille;
+    }
+
+    private function completerTendances(array $albums): bool
+    {
+        // Les infos d’édition doivent correspondre à la couverture retenue par le classement.
+        $ids = implode(',', array_map('intval', array_column($albums, 'ID_EDITION')));
+        $resultat = Db_query("
+            SELECT en.ID_EDITION, t.NUM_TOME, t.FLG_INT AS FLG_INT_TOME,
+                g.LIBELLE AS NOM_GENRE, en.DTE_PARUTION, en.FLG_EXPLICIT,
+                c.NOM AS NOM_COLLECTION, er.NOM AS NOM_EDITEUR,
+                t.ID_SCENAR, sc.PSEUDO AS scpseudo, t.ID_DESSIN, de.PSEUDO AS depseudo,
+                n.NB_NOTE_TOME, n.MOYENNE_NOTE_TOME
+            FROM bd_edition en
+            INNER JOIN bd_tome t ON t.ID_TOME = en.ID_TOME
+            INNER JOIN bd_serie s ON s.ID_SERIE = t.ID_SERIE
+            LEFT JOIN bd_genre g ON g.ID_GENRE = s.ID_GENRE
+            LEFT JOIN bd_collection c ON c.ID_COLLECTION = en.ID_COLLECTION
+            LEFT JOIN bd_editeur er ON er.ID_EDITEUR = c.ID_EDITEUR
+            LEFT JOIN bd_auteur sc ON sc.ID_AUTEUR = t.ID_SCENAR
+            LEFT JOIN bd_auteur de ON de.ID_AUTEUR = t.ID_DESSIN
+            LEFT JOIN note_tome n ON n.ID_TOME = t.ID_TOME
+            WHERE en.ID_EDITION IN ($ids)");
+        if (!$resultat) {
+            return false;
+        }
+        $details = [];
+        while ($edition = Db_fetch_object($resultat)) {
+            $details[$edition->ID_EDITION] = (array) $edition;
+        }
+        foreach ($albums as $album) {
+            foreach ($details[$album->ID_EDITION] ?? [] as $nom => $valeur) {
+                $album->$nom = $valeur;
             }
-            
-
-            // air du temps
-            $limit = "LIMIT 0,".(12-$nb);
-            $requete = $select_topair . $filter." " . $order_air.$limit;
-            $resultat = Db_query($requete);
-            while ($obj = Db_fetch_object($resultat)) {
-                 $a_actu[] = $obj;
-            }
-           
-           
-       // }
-
-       
-
-        return file_put_contents($file, json_encode($a_actu));
+        }
+        return true;
     }
 
     function setLastAjout ($file)

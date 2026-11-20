@@ -129,10 +129,7 @@ class FicheAlbum {
             $html .= '<i><span itemprop="genre"> ' . $o_tome->NOM_GENRE . '</span></i><br>';
         }
         if ($o_tome->scpseudo) {
-           // $html .= 'Auteur(s) : ';
-            $url_scenar = $this->urlAuteur(array("ID_AUTEUR" => $o_tome->ID_SCENAR, "PSEUDO" =>$o_tome->scpseudo ));
-            $url_dessin = $this->urlAuteur(array("ID_AUTEUR" => $o_tome->ID_DESSIN, "PSEUDO" =>$o_tome->depseudo ));
-            $html .= '<i>' . $url_scenar . ($o_tome->ID_SCENAR == $o_tome->ID_DESSIN ? '' : " / " . $url_dessin ) . '</i><br>';
+            $html .= '<i>' . $this->auteurs($o_tome) . '</i><br>';
         }
 
         // editeur
@@ -386,44 +383,29 @@ class FicheAlbum {
         return $html;
     }
 
+    public function auteurs($tome)
+    {
+        $auteurs = array();
+        if (!empty($tome->scpseudo)) {
+            $auteurs[$tome->ID_SCENAR] = $this->urlAuteur(array('ID_AUTEUR' => $tome->ID_SCENAR, 'PSEUDO' => $tome->scpseudo));
+        }
+        if (!empty($tome->depseudo) && !isset($auteurs[$tome->ID_DESSIN])) {
+            $auteurs[$tome->ID_DESSIN] = $this->urlAuteur(array('ID_AUTEUR' => $tome->ID_DESSIN, 'PSEUDO' => $tome->depseudo));
+        }
+        return implode(' / ', $auteurs);
+    }
+
     public function linkCollection($o_tome, $exclu = false) {
-        // fonction pour ajouter les liens d'ajouts dans la collection
-        $html = "";
-
-        if (User::minAccesslevel(2)) {
-//            $id_source = "addAlbum" . $o_tome->ID_EDITION;
-//            $html = "<div id='" . $id_source . "' style='font-size:0.9em;'>";
-//
-//            if ($o_tome->DATE_AJOUT) {
-//                if ($o_tome->FLG_ACHAT == "O") {
-//                    $html.= "ajouté à vos futurs achats le " . date_format(date_create($o_tome->DATE_AJOUT), "d/m/Y");
-//                } else {
-//                    $html.= "ajouté à votre collection le " . date_format(date_create($o_tome->DATE_AJOUT), "d/m/Y");
-//                }
-//
-//                $html .= " - <a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' title='Supprimer l'édition de ma collection' onclick='deleteEdition(" . $o_tome->ID_EDITION . ")'>Supprimer</a>";
-//            } else {
-//
-//                $html .= "<a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' href='javascript:addAlbum(" . $o_tome->ID_TOME . "," . $o_tome->ID_EDITION . ',"N")' . "'" . ' title="Ajouter cet album dans votre collection">Dans ma collection</a>';
-//                $html .= " - <a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' href='javascript:addAlbum(" . $o_tome->ID_TOME . "," . $o_tome->ID_EDITION . ',"O")' . "'" . ' title="A acheter prochainement">Futur Achat</a>';
-//            }
-//
-//            $html.= "</div>";
-            $id_source = "infoCollection" . $o_tome->ID_TOME;
-            // Lazy loading : les infos de collection ne sont chargées que lorsque
-            // la div devient visible (voir collection.js, IntersectionObserver).
-            $html= "<div id='".$id_source."' class='info-collection-lazy'"
-                 . " data-id-serie='".$o_tome->ID_SERIE."'"
-                 . " data-id-tome='".$o_tome->ID_TOME."'"
-                 . " data-id-edition='".$o_tome->ID_EDITION."'"
-                 . " data-exclu='".($exclu ? "1" : "0")."'"
-                 . " data-tomeonly='1'></div>";
-
-        } else {
-            $html = "<i>Connectez vous pour ajouter cet album dans votre collection !</i>";
+        if (!User::minAccesslevel(2)) {
+            return "<i>Connectez vous pour ajouter cet album dans votre collection !</i>";
         }
 
-        return $html;
+        // Le même tome peut apparaître plusieurs fois sur une page de liste.
+        return "<div class='info-collection-lazy'"
+             . " data-id-serie='" . (int) $o_tome->ID_SERIE . "'"
+             . " data-id-tome='" . (int) $o_tome->ID_TOME . "'"
+             . " data-id-edition='" . (int) $o_tome->ID_EDITION . "'"
+             . " data-exclu='" . ($exclu ? "1" : "0") . "'></div>";
     }
 
     public function getSponsor($o_tome, $img=true, $all=false) {
@@ -496,29 +478,4 @@ class FicheAlbum {
         return $dte_parution;
     }
 
-    public function getFicheWithComment($tome) {
-        if (strlen($tome->COMMENT) < 100) {
-            $comment = $tome->COMMENT;
-        } else {
-            $comment = substr($tome->COMMENT,0,100)."...". $this->urlalbum($tome,'link',$is_edition = false, $sponsor = true,  $gotocomment= true, "", $title='lire la suite');
-        }
-         $html = "<div class='cadre1'>
-                <table>
-            <tr class='listAlbum'>
-                <td style='vertical-align:top'>".$this->urlalbum($tome,'couvBig')."</td>
-            <td style='vertical-align:top'>
-                ".$this->getTitreTome($tome, true, true)."<br>
-                     ".(($tome->NOM_SERIE AND ($tome->TITRE_TOME AND (strtolower($tome->NOM_SERIE) != strtolower($tome->TITRE_TOME)) )) ? $this->urlSerie($tome) : "")." <br>
-                <span id='noteTome".$tome->ID_TOME."_".$tome->user_id."'> </span>
-                <p class='fiche_album'>               
-                Publié par <a href='./guest?user=$tome->user_id'>$tome->username</a> le $tome->DTE_POST 
-                    
-                </p>
-                $comment 
-            </td>
-            </table>
-             </div>
-             <script>$('#noteTome".$tome->ID_TOME."_".$tome->user_id."').raty({score: ".($tome->NOTE/2).", readOnly: true});</script>";
-         return $html;
-    }
 }

@@ -1,0 +1,10 @@
+<?php $datePublication = strtotime((string) $publication->news_date); ?>
+<p class="bdo-news-meta">
+    <?php if (!empty($publication->label_news_type)) { ?>
+        <?php echo htmlspecialchars($publication->label_news_type, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?> ·
+    <?php } ?>
+    <?php echo htmlspecialchars((string) $publication->news_posteur, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+    <?php if ($datePublication !== false) { ?>
+        · <time datetime="<?php echo date('Y-m-d', $datePublication); ?>"><?php echo date('d/m/Y', $datePublication); ?></time>
+    <?php } ?>
+</p>

@@ -163,60 +163,32 @@
         </div>
       </div>
 
-      <!-- cadre liste d'albums -->
-       <div class="cadre1">
-      <?php 
-      $last_list = ""; // ordre : albums, intégrales, coffrets
-      $close_table = "";
-      $tr = true;
-      foreach ($view->dbs_tome->a_dataQuery as $tome) {
+      <div class="bdo-album-groups">
+        <?php
+        $groupes = array();
+        foreach ($view->dbs_tome->a_dataQuery as $tome) {
           if ($tome->FLG_INT_TOME == "O") {
-              $current = "Intégrales";
-          } else if ($tome->FLG_TYPE_TOME == 1) {
-              $current = "Coffrets";
+            $groupe = "Intégrales";
+          } elseif ($tome->FLG_TYPE_TOME == 1) {
+            $groupe = "Coffrets";
           } else {
-              $current = "Albums";
+            $groupe = "Albums";
           }
-          
-          if ($current <> $last_list) {
-              $last_list = $current;
-              if (!$tr) {
-                echo "</tr>";
-              }
-              $tr = true; 
-              echo $close_table; ?>
-           <hr class="expSep">
-            <div class="middle_title">
-              <h3><?php echo $current;?></h3> 
-            </div>
-            <!-- BEGIN AlbBlock -->
-            <table class="list_album">
-          <?php 
-            $close_table = "</table>";
-          }
-          if ($tr) echo "<tr>";
-      
-        // Si false, l'album n'est pas exclu...
-        if (Bdo_Cfg::user()->minAccesslevel(2)) {
-          $exclu = array_search($tome->ID_TOME,$view->tomesExclus) === false ? false : true;
-        } else {
-            $exclu = false;
+          $groupes[$groupe][] = $tome;
         }
-        echo "<td class='mw50'>" . $ficheAlbum->big($tome,$sep=true,$getUrlSerie=false,$exclu) . "</td>";
-
-        if (!$tr) {
-          echo "</tr>";
-        }
-
-        $tr = !$tr;
-            
-            
-      }
-      if (!$tr)
-              echo "</tr>";
-      ?>
-      
-        </table>
+        $connecte = Bdo_Cfg::user()->minAccesslevel(2);
+        foreach ($groupes as $groupe => $albums) { ?>
+          <section class="bdo-album-group">
+            <div class="middle_title"><h3><?php echo $groupe; ?></h3></div>
+            <ul class="bdo-album-list">
+              <?php foreach ($albums as $tome) {
+                $exclu = $connecte && in_array($tome->ID_TOME, $view->tomesExclus);
+                ?>
+                <li><?php echo $ficheAlbum->big($tome, false, false, $exclu); ?></li>
+              <?php } ?>
+            </ul>
+          </section>
+        <?php } ?>
 
         <div align="center">
           <?php

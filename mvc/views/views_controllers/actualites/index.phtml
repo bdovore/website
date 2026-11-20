@@ -1,0 +1,25 @@
+<?php
+$texte = $view->getHelper('texte');
+$niveauTitre = 'h2';
+$urlActualites = BDO_URL . 'actualites';
+?>
+<div class="bdo-news-page">
+    <a href="<?php echo BDO_URL; ?>">← Retour à l’accueil</a>
+    <h1>Toutes les actualités</h1>
+    <?php if (!$view->actualites) { ?>
+        <p>Aucune actualité sur cette page.</p>
+    <?php } ?>
+    <?php foreach ($view->actualites as $publication) {
+        require __DIR__ . '/_apercu.phtml';
+    } ?>
+    <?php if ($view->page > 1 || $view->pageSuivante) { ?>
+        <nav class="bdo-news-pagination" aria-label="Pages des actualités">
+            <?php if ($view->page > 1) { ?>
+                <a rel="prev" href="<?php echo $urlActualites . ($view->page > 2 ? '?page=' . ($view->page - 1) : ''); ?>">← Page précédente</a>
+            <?php } ?>
+            <?php if ($view->pageSuivante) { ?>
+                <a rel="next" href="<?php echo $urlActualites . '?page=' . ($view->page + 1); ?>">Page suivante →</a>
+            <?php } ?>
+        </nav>
+    <?php } ?>
+</div>

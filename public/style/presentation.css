@@ -1,0 +1,168 @@
+.bdo-presentation {
+    --presentation-ink: #302924;
+    --presentation-accent: #8f1204;
+    --presentation-band: #f4ebe3;
+    --presentation-line: #e6ddd6;
+    container-type: inline-size;
+    padding: clamp(.8rem, 2.5vw, 1.65rem);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--presentation-ink);
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.bdo-presentation > section + section {
+    margin-top: 1.5rem;
+}
+
+.bdo-presentation h1,
+.bdo-presentation h2,
+.bdo-presentation h3 {
+    margin: 0;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: left;
+}
+
+.bdo-presentation h1 {
+    color: var(--presentation-accent);
+    font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+}
+
+.bdo-presentation .bdo-presentation-intro {
+    max-width: 72ch;
+    margin: .55rem 0 0;
+    font-size: 1rem;
+}
+
+.bdo-presentation-apps {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .25rem .55rem;
+    margin: .4rem 0 .95rem;
+}
+
+.bdo-presentation-apps img {
+    display: block;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.bdo-presentation h2.bdo-presentation-band {
+    padding: .4rem .7rem;
+    border-inline-start: 3px solid var(--presentation-accent);
+    background: var(--presentation-band);
+    color: var(--presentation-ink);
+    font-size: 1.2rem;
+}
+
+.bdo-presentation-features,
+.bdo-presentation-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .15rem 1.1rem;
+    margin: .45rem 0 0;
+    padding: 0;
+}
+
+.bdo-presentation-features li,
+.bdo-presentation-stats dl > div {
+    min-width: 0;
+    padding: .45rem .1rem;
+    border-bottom: 1px solid var(--presentation-line);
+}
+
+.bdo-presentation-actions {
+    margin-top: .9rem;
+    padding: .65rem .85rem;
+    border: 1px solid var(--presentation-line);
+    border-radius: 6px;
+    background: #faf7f3;
+}
+
+.bdo-presentation-actions p {
+    margin: 0;
+}
+
+.bdo-presentation-actions p + p {
+    margin-top: .5rem;
+}
+
+.bdo-presentation-signup {
+    display: inline-block;
+    padding: .15rem .55rem;
+    border-radius: 5px;
+    background: var(--presentation-accent);
+    color: #fff;
+    font-weight: 700;
+}
+
+.bdo-presentation a.bdo-presentation-signup:hover,
+.bdo-presentation a.bdo-presentation-signup:focus-visible {
+    color: #fff;
+}
+
+.bdo-presentation-discord {
+    font-weight: 700;
+}
+
+.bdo-presentation-discord img {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-inline-end: .2rem;
+}
+
+.bdo-presentation h3 {
+    color: var(--presentation-accent);
+    font-size: 1rem;
+}
+
+.bdo-presentation-stats {
+    gap: .8rem 1.15rem;
+    margin-top: .75rem;
+}
+
+.bdo-presentation-stats dl {
+    margin: .25rem 0 0;
+}
+
+.bdo-presentation-stats dl > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: .55rem;
+}
+
+.bdo-presentation-stats dd {
+    margin: 0;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.bdo-presentation-team {
+    max-width: 76ch;
+    margin-top: .85rem;
+}
+
+.bdo-presentation-team h3:not(:first-child) {
+    margin-top: 1.05rem;
+}
+
+.bdo-presentation-team p,
+.bdo-presentation-people {
+    margin: .35rem 0 0;
+}
+
+.bdo-presentation-people li + li {
+    margin-top: .35rem;
+}
+
+@container (max-width: 40rem) {
+    .bdo-presentation-features,
+    .bdo-presentation-stats {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

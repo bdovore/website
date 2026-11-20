@@ -1,0 +1,100 @@
+.bdo-news-preview {
+    min-width: 0;
+    padding: .75rem 0;
+    border-top: 1px solid #e6ddd6;
+    overflow-wrap: anywhere;
+}
+
+.bdo-news-preview h2,
+.bdo-news-preview h3 {
+    margin: 0;
+    color: #302924;
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+.bdo-news-preview h2 a,
+.bdo-news-preview h3 a {
+    color: inherit;
+}
+
+.bdo-news-meta {
+    margin: .2rem 0 .3rem;
+    color: #6b5b52;
+    font-size: .875rem;
+}
+
+.bdo-news-excerpt {
+    max-width: 68ch;
+    margin: .25rem 0;
+}
+
+.bdo-news-page {
+    min-width: 0;
+    padding: clamp(.8rem, 2.5vw, 1.65rem);
+    border-radius: 10px;
+    background: #fff;
+    color: #302924;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+.bdo-news-breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .25rem .5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: .875rem;
+}
+
+.bdo-news-breadcrumb span {
+    margin-inline-end: .2rem;
+    color: #6b5b52;
+}
+
+.bdo-news-page h1 {
+    margin: .55rem 0 .8rem;
+    color: #302924;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.bdo-news-page .bdo-news-preview {
+    padding-block: 1rem;
+}
+
+.bdo-news-page a,
+.bdo-news-preview > a {
+    text-underline-offset: .15em;
+}
+
+.bdo-news-article {
+    max-width: 76ch;
+    margin-top: 1rem;
+    overflow-x: auto;
+}
+
+.bdo-news-article img,
+.bdo-news-article video {
+    max-width: 100%;
+    height: auto;
+}
+
+.bdo-news-article iframe {
+    max-width: 100%;
+}
+
+.bdo-news-article table {
+    max-width: 100%;
+}
+
+.bdo-news-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: .65rem 1.25rem;
+    padding-top: .9rem;
+    border-top: 1px solid #e6ddd6;
+}

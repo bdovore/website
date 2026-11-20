@@ -1,176 +1,150 @@
 <?php
 $ficheAlbum = $view->getHelper('ficheAlbum');
+$texte = $view->getHelper('texte');
+$niveauTitre = 'h3';
+$urlActualites = BDO_URL . 'actualites';
+$rubriques = array(
+    'titre-tendance' => array(
+        'titre' => 'Tendance',
+        'url' => 'leguide/actualites_bd',
+        'lien' => 'Tous les albums tendance',
+        'albums' => $view->ACTUAIR,
+    ),
+    'dernieres-sorties' => array(
+        'titre' => 'Dernières sorties',
+        'url' => 'leguide/sorties_bd',
+        'rss' => 'rss/dernieres_sorties',
+        'lien' => 'Toutes les dernières sorties',
+        'albums' => $view->a_lastSorties,
+    ),
+    'sorties-a-venir' => array(
+        'titre' => 'Sorties à venir',
+        'url' => 'leguide/prochaines_sorties_bd',
+        'rss' => 'rss/sorties_a_venir',
+        'lien' => 'Toutes les sorties à venir',
+        'albums' => $view->a_futurSorties,
+    ),
+);
 ?>
-<div id="actu" style="padding:5px;" class="cadre1">
-    <div class="cadre1">
-        <h1>BDovore, gestion de collection BD comics et mangas pour les dévoreurs de BD </h1>
-        <p align="center">
-       G&eacute;rez votre <b>collection de bandes dessin&eacute;es</b> en ligne via une
-
-        gargantuesque base de données de plus de <strong><?php echo number_format(intVal($view->nbTome),0,',', ' ' ); ?></strong> <a
-
-            href="<?php echo BDO_URL; ?>leguide/actualites_bd"><b>BDs</b></a>,  <a
-
-            href="<?php echo BDO_URL; ?>leguide/actualites_bd?origine=2"><b>Mangas</b></a> et
-
-        <a
-
-            href="<?php echo BDO_URL; ?>leguide/actualites_bd?origine=3"><b>Comics</b></a>.
-            <br>  
-            <a href='https://play.google.com/store/apps/details?id=com.mobileapp.bdovore'><img alt='Disponible sur Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/fr_badge_web_generic.png' width="140px" height="58px" style="margin-bottom: -5px;"/></a>
-            <a href="https://apps.apple.com/fr/app/bdovore/id1519677181?itsct=apps_box_badge&amp;itscg=30200" style="display: inline-block; overflow: hidden; border-top-left-radius: 13px; border-top-right-radius: 13px; border-bottom-right-radius: 13px; border-bottom-left-radius: 13px; width: 140px;height: 47px;"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/fr-fr?size=140x47&amp;releaseDate=1593561600&h=d4303f9776e5f1c99c675c024483651e" alt="Download on the App Store" style="border-top-left-radius: 13px; border-top-right-radius: 13px; border-bottom-right-radius: 13px; border-bottom-left-radius: 13px; width: 140px; height: 47px;"></a>
-            <br>
-            <br>
-            
-            
-            Échangez avec d’autres passionnés, posez vos questions, et participez à des discussions exclusives 
-            <br> &#128073;
-
-            <a href="https://discord.gg/NJVptrR9y9" target="_blank" style="background-color: #7289da; color: white; padding: 3px 15px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                <img src="https://www.bdovore.com/images/Discord.png" alt="Discord" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 8px;">
-                Nous rejoindre sur Discord
-            </a>
-        
-            <br><br>
-         Besoin d'une visite guidée ?<a href="<?php echo BDO_URL; ?>tutoriel" style="font-weight: bold;"> Suivez le tutoriel BDovore !</a> <br>
-        </p>
-    </div>
-    
-    <hr class="expSep" />
-    <?php if (count($view->a_laUne) > 0) { ?>
-    <div class="cadre1" id="news_du_site">
-        <div class="middle_title" ><h3>A la Une</h3></div>
-        <div style="margin: 5px;" >
-
-           <?php 
-           $icones = array(
-                1 => "📢",
-                2 => "👓",
-                3 => "🎟️",
-                4 => "📅",
-                5 => "🎭"
-           );
-           foreach ( $view->a_laUne as $lastNews) { ?>
-
-            <div class="cadre1">
-                <h4><?php echo $icones[$lastNews->ID_NEWS_TYPE]." ". $lastNews->news_titre;?> - Postée par <?php echo $lastNews->news_posteur;?> </h4>
-                <div>
-                    <p>
-                        <?php echo $lastNews->news_text;?>
-                    </p>
-                </div>
+<div class="bdo-accueil">
+    <section class="bdo-home-intro" aria-labelledby="titre-accueil">
+        <div class="bdo-home-heading">
+            <div>
+                <h1 id="titre-accueil">Gérez votre collection de BD, mangas et comics</h1>
+                <p>Explorez <strong><?php echo number_format((int) $view->nbTome, 0, ',', ' '); ?></strong> albums dans le catalogue
+                    <a href="<?php echo BDO_URL; ?>leguide/actualites_bd">BD</a>,
+                    <a href="<?php echo BDO_URL; ?>leguide/actualites_bd?origine=2">mangas</a> et
+                    <a href="<?php echo BDO_URL; ?>leguide/actualites_bd?origine=3">comics</a>.
+                </p>
             </div>
-            <?php } ?>
-
-
+            <div class="bdo-home-links">
+                <a href="<?php echo BDO_URL; ?>presentation">Découvrir BDovore</a>
+                <a href="<?php echo BDO_URL; ?>tutoriel">Visite guidée</a>
+            </div>
         </div>
-    </div>
+        <div class="bdo-home-links">
+            <a class="bdo-home-discord" href="https://discord.gg/NJVptrR9y9" target="_blank" rel="noopener noreferrer">Rejoindre le Discord</a>
+            <div class="bdo-home-links" role="group" aria-label="Télécharger l’application BDovore">
+                <span>Appli mobile</span>
+                <a href="https://play.google.com/store/apps/details?id=com.mobileapp.bdovore">Google Play</a>
+                <a href="https://apps.apple.com/fr/app/bdovore/id1519677181">App Store</a>
+            </div>
+        </div>
+    </section>
+
+    <?php if ($view->a_laUne) { ?>
+        <section class="bdo-home-featured" id="news_du_site" aria-labelledby="titre-une">
+            <div class="bdo-home-heading bdo-home-section-band">
+                <h2 id="titre-une">À la une</h2>
+                <a href="<?php echo $urlActualites; ?>">Toutes les actualités <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="bdo-home-featured-grid" data-count="<?php echo count($view->a_laUne); ?>">
+                <?php
+                $longueurApercu = 200;
+                foreach ($view->a_laUne as $publication) {
+                    require __DIR__ . '/../actualites/_apercu.phtml';
+                }
+                unset($longueurApercu);
+                ?>
+            </div>
+        </section>
     <?php } ?>
-            <!-- Column 2 start -->
 
-    
-    <div class="cadre1">
-        <div class="middle_title"><h3><a href="./leguide/avis">Dernières Critiques</a></h3></div>
-        <table class="list_album">
-              <?php
-              $tr = true;
-              foreach ($view->a_lastComment as $lastComment) {
-                  if ($tr)
-                      echo "<tr>";
-                  echo "<td class='mw50'>" . $ficheAlbum->getFicheWithComment($lastComment) . "</td>";
-
-                  if (!$tr) {
-                      echo "</tr>";
-                  }
-                  $tr = !$tr;
-              }
-              ?>
-          </table>
-    </div>
-
-    <hr class="expSep" />
-    <div class="cadre1">
-        <div class="middle_title">
-            <h3><a href="./leguide/actualites_bd">Albums BD Mangas Comics tendances</a></h3>
+    <section aria-labelledby="titre-avis">
+        <div class="bdo-home-heading bdo-home-section-band">
+            <h2 id="titre-avis">Derniers avis</h2>
+            <a href="<?php echo BDO_URL; ?>leguide/avis">Tous les avis <span aria-hidden="true">→</span></a>
         </div>
-        
-            <div class="albums-grid">
-            <?php foreach ($view->ACTUAIR as $actu): ?>
-                <div class="album-item">
-                    <?php echo $ficheAlbum->urlAlbum($actu, $class="couvBig", $sponsor=FALSE); ?>
-                </div>
-            <?php endforeach; ?>
+        <?php if (!$view->a_lastComment) { ?>
+            <p>Aucun avis récent.</p>
+        <?php } else { ?>
+            <ul class="bdo-album-list bdo-home-reviews">
+                <?php
+                $avisDansGuide = false;
+                foreach ($view->a_lastComment as $avis) {
+                    require __DIR__ . '/../_partials/avis-album.phtml';
+                }
+                ?>
+            </ul>
+        <?php } ?>
+    </section>
+
+    <section aria-labelledby="titre-actu-bd">
+        <div class="bdo-home-section-band">
+            <h2 id="titre-actu-bd">Actu BD</h2>
+        </div>
+        <div class="bdo-home-catalogue">
+            <?php foreach ($rubriques as $id => $rubrique) {
+                $estSortie = isset($rubrique['rss']);
+                ?>
+                <section aria-labelledby="<?php echo $id; ?>"<?php if (!$estSortie) { ?> class="bdo-home-trends"<?php } ?>>
+                    <div class="bdo-home-heading bdo-home-album-heading">
+                        <h3 id="<?php echo $id; ?>"><?php echo $rubrique['titre']; ?></h3>
+                        <?php if ($estSortie) { ?>
+                            <a href="<?php echo BDO_URL . $rubrique['rss']; ?>" aria-label="Fil RSS · <?php echo $rubrique['titre']; ?>">
+                                <img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" alt="" width="14" height="14">
+                            </a>
+                        <?php } ?>
+                    </div>
+                    <ul class="bdo-home-albums">
+                        <?php foreach ($rubrique['albums'] as $album) {
+                            require __DIR__ . '/_album.phtml';
+                        } ?>
+                    </ul>
+                    <a href="<?php echo BDO_URL . $rubrique['url']; ?>"><?php echo $rubrique['lien']; ?> <span aria-hidden="true">→</span></a>
+                </section>
+            <?php } ?>
+        </div>
+    </section>
+
+    <section aria-labelledby="titre-news">
+        <div class="bdo-home-heading">
+            <h2 id="titre-news">Actualités BDovore</h2>
+            <a href="<?php echo $urlActualites; ?>">Toutes les actualités <span aria-hidden="true">→</span></a>
+        </div>
+        <?php if ($view->a_lastNews) { ?>
+            <div class="bdo-home-featured-grid" data-count="<?php echo count($view->a_lastNews); ?>">
+                <?php foreach ($view->a_lastNews as $publication) {
+                    require __DIR__ . '/../actualites/_apercu.phtml';
+                } ?>
+            </div>
+        <?php } ?>
+    </section>
+
+    <section id="lastajout" aria-labelledby="titre-ajouts">
+        <div class="bdo-home-heading">
+            <h2 id="titre-ajouts">Derniers ajouts</h2>
+            <div class="bdo-home-links">
+                <a href="<?php echo BDO_URL; ?>leguide/ajouts">Tous les derniers ajouts <span aria-hidden="true">→</span></a>
+                <a href="<?php echo BDO_URL; ?>rss" aria-label="Fil RSS des derniers ajouts">
+                    <img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" alt="" width="14" height="14">
+                </a>
+            </div>
+        </div>
+        <ul class="bdo-home-additions">
+            <?php foreach ((array) $view->LASTAJOUT as $album) { ?>
+                <li><?php echo $ficheAlbum->urlAlbum($album, 'albTitle'); ?></li>
+            <?php } ?>
+        </ul>
+    </section>
 </div>
-
-       
-    </div>
-    <hr class="expSep" />
-    <div class="cadre1">
-        <div class="middle_title"><h3><a href="./leguide/sorties_bd">Derni&egrave;res sorties</a> <a href="<?php echo BDO_URL; ?>rss/dernieres_sorties"> <img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" /></a></h3></div>
-          <table class="list_album">
-            <?php
-            $tr = true;
-            foreach ($view->a_lastSorties as $lastSorties) {
-                if ($tr)
-                    echo "<tr>";
-                echo "<td class='mw50'>" . $ficheAlbum->big($lastSorties, $sep = true, $getUrlSerie = true) . "</td>";
-
-                if (!$tr) {
-                    echo "</tr>";
-                }
-                $tr = !$tr;
-            }
-            ?>
-        </table>
-        <hr class="expSep" />
-        <div class="fright"><a href="./leguide/sorties_bd">Toutes les dernières sorties</a></div>
-        <hr class="expSep" />
-    </div>
-    <hr class="expSep" />
-
-    <div class="cadre1">
-        <div class="middle_title"><h3><a href="./leguide/prochaines_sorties_bd">Sorties &agrave; venir</a> <a href="<?php echo BDO_URL; ?>rss/sorties_a_venir"> <img src="<?php echo BDO_URL_IMAGE; ?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" /></a></h3></div>
-        <table class="list_album">
-            <?php
-            $tr = true;
-            foreach ($view->a_futurSorties as $futurSorties) {
-                if ($tr)
-                    echo "<tr>";
-                echo "<td class='mw50'>" . $ficheAlbum->big($futurSorties, $sep = true, $getUrlSerie = true) . "</td>";
-
-                if (!$tr) {
-                    echo "</tr>";
-                }
-                $tr = !$tr;
-            }
-            ?>
-        </table>
-        <hr class="expSep" />
-        <div class="fright"><a href="./leguide/prochaines_sorties_bd">Toutes les futures sorties</a></div>
-        <hr class="expSep" />
-    </div>
-    <hr class="expSep" />
-     <?php echo $view->LASTNEWS; ?>   
-    <hr class="expSep" />
-    <div class="cadre1">
-        <div id="lastajout" class="right fond">
-            <div class="middle_title">
-                <h3><a href="<?php echo BDO_URL;?>leguide/ajouts">Derniers ajouts</a>
-                    <a href="<?php echo BDO_URL;?>rss">
-                    <img src="<?php echo BDO_URL_IMAGE;?>site/feed.png" style="border: 0;" alt="logo fil rss" title="Suivez l'actualité des ajouts d'albums sur le site grace à ce fil rss" />
-                    </a>
-                </h3>
-            </div>
-            <div class="cadre1" style="margin:3px 3px 3px 3px ;">
-                <?php 
-
-                foreach ($view->LASTAJOUT as $ajout) {
-                    echo $ficheAlbum->urlAlbum($ajout,$class="albTitle")."<br />";
-                }?>
-            </div>
-        </div>
-    </div>
-     <hr class="expSep" />
- </div>
-         
-

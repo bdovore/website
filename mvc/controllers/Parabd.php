@@ -105,7 +105,7 @@ class Parabd extends Bdo_Controller
     public function Index()
     {
         if (!$this->enabled()) return;
-        $this->view->addCssFile('style/parabd.css?v=20260909b');
+        $this->view->addCssFile('style/parabd.css?v=20261120b');
         $this->view->addJavascriptFile('script/parabd.js');
         $search = getVal('q', '');
 

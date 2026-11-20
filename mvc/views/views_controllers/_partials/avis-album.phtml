@@ -1,0 +1,64 @@
+<?php
+$idTome = (int) $avis->ID_TOME;
+$idAuteurAvis = (int) $avis->user_id;
+$idAvis = $idAuteurAvis . '-' . $idTome;
+$commentaire = $avisDansGuide ? stripslashes((string) $avis->COMMENT) : (string) $avis->COMMENT;
+[$apercu, $tronque] = $texte->apercu($commentaire, 150);
+$dateAvis = strtotime((string) $avis->DTE_POST);
+$note = $avis->NOTE / 2;
+?>
+<li class="bdo-album-preview bdo-avis-card" itemscope itemtype="https://schema.org/Book">
+    <div class="bdo-album-cover">
+        <?php echo $ficheAlbum->urlAlbum($avis, 'couvBig', false, $avisDansGuide); ?>
+    </div>
+    <div class="bdo-avis-content">
+        <h3><?php echo $ficheAlbum->getTitreTome($avis, true, true); ?></h3>
+        <?php if ($avis->NOM_SERIE && strcasecmp($avis->NOM_SERIE, $avis->TITRE_TOME) !== 0) { ?>
+            <p class="bdo-avis-meta"><?php echo $ficheAlbum->urlSerie($avis); ?></p>
+        <?php } ?>
+        <div itemprop="review" itemscope itemtype="https://schema.org/Review">
+            <p class="bdo-avis-meta bdo-avis-byline">
+                <?php if ($note > 0) { ?>
+                    <span class="bdo-avis-score" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                        <meta itemprop="ratingValue" content="<?php echo $note; ?>">
+                        <meta itemprop="bestRating" content="5">
+                        <strong><span aria-hidden="true">★</span> <?php echo str_replace('.', ',', (string) $note); ?>/5</strong>
+                    </span>
+                <?php } ?>
+                <a itemprop="author" href="<?php echo BDO_URL; ?>guest?user=<?php echo $idAuteurAvis; ?>"><?php echo htmlspecialchars($avis->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></a>
+                <?php if ($dateAvis !== false) { ?>
+                    <time itemprop="datePublished" datetime="<?php echo date('Y-m-d', $dateAvis); ?>"><?php echo date('d/m/Y', $dateAvis); ?></time>
+                <?php } ?>
+            </p>
+            <?php if ($apercu !== '') { ?>
+                <blockquote class="bdo-avis-excerpt" itemprop="reviewBody"><?php echo htmlspecialchars($apercu, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></blockquote>
+            <?php } ?>
+            <?php if ($avisDansGuide && ($tronque || !empty($avis->COMMENT_SUITE))) { ?>
+                <details class="bdo-avis-detail" data-avis-url="<?php echo BDO_URL; ?>albumcomment/aviscomplet?id_tome=<?php echo $idTome; ?>&amp;user_id=<?php echo $idAuteurAvis; ?>">
+                    <summary><span>Lire la suite</span><span>Réduire l’avis</span></summary>
+                    <div class="bdo-avis-full"></div>
+                </details>
+            <?php } ?>
+        </div>
+        <?php if ($avisDansGuide) { ?>
+            <div class="bdo-guide-review-social" data-avis-auteur="<?php echo $idAuteurAvis; ?>" data-avis-tome="<?php echo $idTome; ?>">
+                <div id="social-<?php echo $idAvis; ?>"><ul><li></li><li></li></ul></div>
+                <div class="bdo-guide-review-actions">
+                    <button type="button" data-action-avis="aimer"><i class="far fa-thumbs-up" id="like-<?php echo $idAvis; ?>" aria-hidden="true"></i> J’aime</button>
+                    <button type="button" data-action-avis="repondre" aria-controls="writecmt-<?php echo $idAvis; ?>"><i class="far fa-comment-alt" aria-hidden="true"></i> Commenter</button>
+                    <?php if ($peutModerer) { ?>
+                        <button type="button" data-action-avis="privatiser">Passer en privé</button>
+                    <?php } ?>
+                </div>
+                <div class="bdo-guide-reply" id="writecmt-<?php echo $idAvis; ?>">
+                    <label for="txt-<?php echo $idAvis; ?>">Votre réponse</label>
+                    <textarea id="txt-<?php echo $idAvis; ?>" class="champ_commentaire" rows="3"></textarea>
+                    <button type="button" data-action-avis="envoyer">Envoyer</button>
+                </div>
+                <div class="bdo-guide-thread" id="lst-cmt-<?php echo $idAvis; ?>"></div>
+            </div>
+        <?php } else { ?>
+            <?php echo $ficheAlbum->urlAlbum($avis, 'link', false, true, true, '', 'Lire l’avis →'); ?>
+        <?php } ?>
+    </div>
+</li>
