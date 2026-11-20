@@ -14,14 +14,19 @@ foreach ($view->groups as $kind => $group) {
         $name = $row['label'] ?: 'Sans titre';
         $cover = BDO_URL_COUV . ($row['cover'] ?? 'default.png');
         $editUrl = BDO_URL . 'admin/' . $edit[$kind] . $id;
-        if ($kind === 'alb') { ?>
+        if ($kind === 'alb') {
+            $albumUrl = $h(BDO_URL . 'album?id_tome=' . $id . ($view->mobile ? '&mobile=T' : ''));
+            $albumClass = $view->mobile ? '' : 'fancybox fancybox.iframe';
+            ?>
             <div class="browser-album">
-                <a href="<?= $h(BDO_URL . 'album?id_tome=' . $id) ?>">
+                <a class="<?= $albumClass ?>" href="<?= $albumUrl ?>" aria-label="<?= $h($name) ?>">
                     <img loading="lazy" src="<?= $h($cover) ?>" alt="">
-                    <span><small><?= $h($row['subtitle'] ?? '') ?><?= isset($row['number']) ? ' · T. ' . (int)$row['number'] : '' ?></small>
-                    <strong><?= $h($name) ?></strong></span>
                 </a>
-                <?php if ($view->canEdit) { ?><a href="<?= $h($editUrl) ?>" title="Modifier <?= $h($name) ?>"><img src="<?= $h(BDO_URL_IMAGE . 'edit.gif') ?>" width="18" height="13" alt="Modifier <?= $h($name) ?>"></a><?php } ?>
+                <div>
+                    <small><?= $h($row['subtitle'] ?? '') ?><?= isset($row['number']) ? ' · T. ' . (int)$row['number'] : '' ?></small>
+                    <strong><a class="<?= $albumClass ?>" href="<?= $albumUrl ?>"><?= $h($name) ?></a></strong>
+                    <?php if ($view->canEdit) { ?><a href="<?= $h($editUrl) ?>" title="Modifier <?= $h($name) ?>"><img src="<?= $h(BDO_URL_IMAGE . 'edit.gif') ?>" width="18" height="13" alt="Modifier <?= $h($name) ?>"></a><?php } ?>
+                </div>
             </div>
         <?php } else { ?>
             <details class="browser-node" data-kind="<?= $kind ?>" data-id="<?= $id ?>"

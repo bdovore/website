@@ -3,7 +3,7 @@
 .bdo-browser h1 { color:var(--wine); margin:0 0 .7rem; font-size:clamp(1.35rem,2.4vw,1.9rem); }
 .bdo-browser button,.bdo-browser select,.browser-search input[type=search],.browser-genres input[type=search] { font:inherit; border:1px solid #cbbdb2; border-radius:5px; background:white; color:var(--ink); min-height:40px; padding:.35rem .65rem; }
 .bdo-browser button,.bdo-browser summary { cursor:pointer; }
-.browser-search label,.browser-node small,.browser-album small,.browser-album strong { display:block; }
+.browser-search label,.browser-node small,.browser-album small { display:block; }
 .browser-search div,.browser-types,.browser-filters { display:flex; gap:.45rem; align-items:center; flex-wrap:wrap; }
 .browser-search input[type=search] { flex:1 1 11rem; min-width:0; }
 .browser-search button,.browser-types button[aria-pressed=true] { background:var(--wine); color:white; }
@@ -13,7 +13,7 @@
 .browser-genres div { display:flex; flex-wrap:wrap; gap:.4rem 1rem; max-height:12rem; overflow:auto; margin:.5rem 0; }
 .browser-genres summary { padding:.55rem; }
 .browser-node,.browser-album { border-top:1px solid var(--line); }
-.browser-node summary,.browser-album>a:first-child { display:flex; gap:.75rem; align-items:center; padding:.45rem; overflow-wrap:anywhere; min-height:44px; }
+.browser-node summary,.browser-album { display:flex; gap:.75rem; align-items:center; padding:.45rem; overflow-wrap:anywhere; min-height:44px; }
 .browser-node summary { list-style:none; }
 .browser-node summary::-webkit-details-marker { display:none; }
 .browser-node summary:after { content:'▸'; margin-left:auto; color:var(--wine); }
@@ -24,7 +24,7 @@
 .browser-arrows { gap:.25rem; }
 .browser-arrows button { min-width:44px; }
 .browser-rail { display:flex; gap:.7rem; overflow-x:auto; scroll-snap-type:x proximity; padding:.3rem 0; }
-.browser-rail .browser-album { flex:0 0 clamp(98px,22vw,140px); scroll-snap-align:start; border:0; }
+.browser-rail .browser-album { display:block; padding:0; flex:0 0 clamp(98px,22vw,140px); scroll-snap-align:start; border:0; }
 .browser-rail .browser-album>a:first-child { display:block; padding:0; }
 .browser-rail .browser-album>a:first-child>img { width:100%; height:auto; aspect-ratio:3/4; object-fit:contain; background:#f0e9e3; }
 .browser-rail .browser-more { flex:0 0 7rem; align-self:center; }

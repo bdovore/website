@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         query.set('type', type);
+        if (window.jQuery?.browser?.mobile) query.set('mobile', 'T');
         const node = target.closest('.browser-node');
         if (node) {
             query.set('parent', node.dataset.kind);

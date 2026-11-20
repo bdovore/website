@@ -66,7 +66,7 @@ class Browser extends Bdo_Controller
             }
         }
         $this->view->layout = 'ajax';
-        $this->view->set_var(compact('approximate','groups','type','parent','id','offset','size') + ['canEdit'=>User::minAccesslevel(1)]);
+        $this->view->set_var(compact('approximate','groups','type','parent','id','offset','size') + ['canEdit'=>User::minAccesslevel(1), 'mobile'=>($_GET['mobile'] ?? '') === 'T']);
         $this->view->render();
     }
 }
