@@ -104,6 +104,12 @@ class BrowserCatalogue
                     if ($tokens[0]) {
                         $matches .= " UNION SELECT $key FROM $table WHERE MATCH($label) AGAINST (? IN BOOLEAN MODE)";
                         $params[] = '+' . implode('* +', $tokens[0]) . '*';
+                        // A required prefix such as +le* can miss the unindexed article "le".
+                        // Phrase matching lets the full-text parser handle short words and stopwords.
+                        if (count($tokens[0]) > 1) {
+                            $matches .= " UNION SELECT $key FROM $table WHERE MATCH($label) AGAINST (? IN BOOLEAN MODE)";
+                            $params[] = '"' . implode(' ', $tokens[0]) . '"';
+                        }
                     }
                     $where[] = "x.$key IN (SELECT $key FROM ($matches) hits)";
                 } elseif ($type === 'aut') {
