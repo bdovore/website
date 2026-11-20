@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rayon = filters.elements.origine;
     const genreSearch = filters.querySelector('input[type=search]');
     function updateGenres() {
-        const name = rayon.value ? rayon.selectedOptions[0].textContent : '';
+        const name = filters.querySelector('input[name=origine]:checked').dataset.name;
         const term = genreSearch.value.trim().toLocaleLowerCase('fr');
         for (const label of filters.querySelectorAll('label[data-rayon]')) {
             const outside = Boolean(name && label.dataset.rayon !== name);
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
             label.hidden = outside || !label.textContent.toLocaleLowerCase('fr').includes(term);
         }
     }
-    rayon.onchange = () => {
+    filters.querySelector('.browser-rayons').onchange = () => {
         filters.querySelectorAll('input[type=checkbox]:checked').forEach(box => { box.checked = false; });
         genreSearch.value = '';
         updateGenres();

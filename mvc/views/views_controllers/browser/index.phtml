@@ -15,11 +15,21 @@
     <div class="browser-explore">
         <form class="browser-filters" method="get" action="<?= $h(BDO_URL . 'browser') ?>">
             <input type="hidden" name="rb_browse" value="<?= $h($view->type) ?>">
-            <label>Rayon <select name="origine"><option value="">Tous les rayons</option>
-                <?php foreach ($view->rayons as $id => $label) { ?>
-                    <option value="<?= $id ?>" <?= $view->origine === $id ? 'selected' : '' ?>><?= $label ?></option>
-                <?php } ?>
-            </select></label>
+            <fieldset class="browser-rayons">
+                <legend>Rayon</legend>
+                <div>
+                    <label class="browser-rayon-all">
+                        <input type="radio" name="origine" value="" data-name="" <?= !$view->rayon ? 'checked' : '' ?>>
+                        <span><i class="fas fa-th-large" aria-hidden="true"></i> Tous</span>
+                    </label>
+                    <?php foreach ($view->rayons as $id => $label) { ?>
+                        <label>
+                            <input type="radio" name="origine" value="<?= $id ?>" data-name="<?= $h($label) ?>" <?= $view->origine === $id ? 'checked' : '' ?>>
+                            <span><img src="<?= $h(BDO_URL . 'style/guide/guide-rayon-' . strtolower($label) . '.png') ?>" width="40" height="40" alt=""><?= $h($label) ?></span>
+                        </label>
+                    <?php } ?>
+                </div>
+            </fieldset>
             <details class="browser-genres"><summary>Genres<span class="browser-genre-count"><?= $view->selected ? ' (' . count($view->selected) . ')' : '' ?></span></summary>
                 <input type="search" aria-label="Rechercher un genre" placeholder="Rechercher un genre…">
                 <div><?php foreach ($view->genres as $genre) {
