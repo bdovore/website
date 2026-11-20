@@ -25,7 +25,7 @@ class Accueil extends Bdo_Controller
         $this->loadModel("Tome");
         $this->loadModel("News");
         $this->view->set_var(array(
-                'ACTUAIR' => $this->tendances(5),
+                'ACTUAIR' => array_slice($this->Actus->actuAir(), 0, 5),
                 'LASTAJOUT' => $this->Actus->lastAjout()
         ));
         $opengraph = array(
@@ -51,27 +51,6 @@ class Accueil extends Bdo_Controller
                 ));
 
         $this->view->render();
-    }
-
-    private function tendances($limit)
-    {
-        $albums = array_slice((array) $this->Actus->actuAir(), 0, $limit);
-        if (!$albums) {
-            return $albums;
-        }
-
-        // Les entrées du cache portent le classement et la couverture, mais pas les auteurs.
-        $ids = implode(',', array_map('intval', array_column($albums, 'ID_TOME')));
-        $details = $this->Tome->load('c', "WHERE bd_tome.ID_TOME IN ($ids)")->a_dataQuery;
-        $parAlbum = array_column($details, null, 'ID_TOME');
-        foreach ($albums as $album) {
-            $detail = $parAlbum[$album->ID_TOME] ?? null;
-            $album->ID_SCENAR = $detail->ID_SCENAR ?? null;
-            $album->scpseudo = $detail->scpseudo ?? null;
-            $album->ID_DESSIN = $detail->ID_DESSIN ?? null;
-            $album->depseudo = $detail->depseudo ?? null;
-        }
-        return $albums;
     }
 
     private function lastCommentaires ($max=5,$origine="BD")
