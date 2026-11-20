@@ -2,9 +2,15 @@
 <main class="bdo-browser" data-endpoint="<?= $h(BDO_URL . 'browser/results') ?>">
     <h1>Explorer le catalogue</h1>
     <form class="browser-search" method="get" action="<?= $h(BDO_URL . 'browser') ?>">
-        <label for="browser-query">Recherche dans tout le catalogue</label>
+        <label for="browser-query">Rechercher dans le catalogue</label>
         <div><input id="browser-query" name="q" type="search" maxlength="120" value="<?= $h($view->query) ?>"
             placeholder="Album, série, auteur, éditeur…"><button>Rechercher</button></div>
+        <fieldset class="browser-scope" hidden>
+            <legend>Rechercher parmi</legend>
+            <div><?php foreach (['all' => 'Tout'] + $view->types as $key => $label) { ?>
+                <label><input type="radio" name="scope" value="<?= $key ?>"> <?= $label ?></label>
+            <?php } ?></div>
+        </fieldset>
     </form>
     <div class="browser-explore">
         <form class="browser-filters" method="get" action="<?= $h(BDO_URL . 'browser') ?>">

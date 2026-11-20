@@ -9,6 +9,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const matches = browser.querySelector('.browser-matches');
     const children = {ser: 'alb', aut: 'ser', edit: 'col', col: 'ser'};
     const requests = new WeakMap();
+    const scope = search.elements.scope;
+    const scopeGroup = search.querySelector('.browser-scope');
+    function defaultScope() {
+        const tab = filters.elements.rb_browse.value;
+        return tab === 'ser' ? 'all' : tab;
+    }
+    scope.value = defaultScope();
+    const savedScope = new URLSearchParams(location.search).get('scope');
+    if (input.value.trim() && Array.from(scope).some(radio => radio.value === savedScope)) {
+        scope.value = savedScope;
+    }
     let timer;
 
     function params(target, type) {
@@ -73,20 +84,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const url = new URL(location.href);
         url.searchParams.delete('let');
         url.searchParams.set('rb_browse', filters.elements.rb_browse.value);
-        if (input.value.trim()) url.searchParams.set('q', input.value.trim());
-        else url.searchParams.delete('q');
+        if (input.value.trim()) {
+            url.searchParams.set('q', input.value.trim());
+            url.searchParams.set('scope', scope.value);
+        } else {
+            url.searchParams.delete('q');
+            url.searchParams.delete('scope');
+        }
         history.replaceState(null, '', url);
     }
     function refresh() {
         clearTimeout(timer);
         updateUrl();
         const searching = Boolean(input.value.trim());
+        scopeGroup.hidden = !searching;
+        if (!searching) scope.value = defaultScope();
         explore.hidden = searching;
         matches.hidden = !searching;
-        if (searching) load(matches, params(matches, 'all'));
+        if (searching) load(matches, params(matches, scope.value));
         else if (!list.dataset.loaded) load(list, params(list, filters.elements.rb_browse.value));
     }
     search.onsubmit = event => { event.preventDefault(); refresh(); };
+    scopeGroup.onchange = refresh;
     input.oninput = () => {
         clearTimeout(timer);
         requests.get(matches)?.abort();
@@ -121,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!button) return;
         if (button.matches('.browser-types button')) {
             filters.elements.rb_browse.value = button.dataset.type;
+            scope.value = defaultScope();
             browser.querySelectorAll('.browser-types button').forEach(tab =>
                 tab.setAttribute('aria-pressed', String(tab === button)));
             updateUrl();
