@@ -16,7 +16,7 @@ foreach ($view->groups as $kind => $group) {
         $editUrl = BDO_URL . 'admin/' . $edit[$kind] . $id;
         if ($kind === 'alb') {
             $albumUrl = $h(BDO_URL . 'album?id_tome=' . $id . ($view->mobile ? '&mobile=T' : ''));
-            $albumClass = $view->mobile ? '' : 'fancybox fancybox.iframe';
+            $albumClass = $view->mobile ? '' : 'fancybox fancybox.iframe {width:600,height:600}';
             ?>
             <div class="browser-album">
                 <a class="<?= $albumClass ?>" href="<?= $albumUrl ?>" aria-label="<?= $h($name) ?>">
