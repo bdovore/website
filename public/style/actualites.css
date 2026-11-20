@@ -71,9 +71,7 @@
 }
 
 .bdo-news-article {
-    max-width: 76ch;
     margin-top: 1rem;
-    overflow-x: auto;
 }
 
 .bdo-news-article img,
@@ -88,6 +86,12 @@
 
 .bdo-news-article table {
     max-width: 100%;
+    /* Les tableaux collés depuis Word peuvent avoir une marge définie en ligne. */
+    margin-inline: 0 !important;
+}
+
+.bdo-news-article pre {
+    white-space: pre-wrap;
 }
 
 .bdo-news-pagination {

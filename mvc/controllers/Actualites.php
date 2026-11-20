@@ -5,7 +5,7 @@ class Actualites extends Bdo_Controller
     public function Index()
     {
         $this->loadModel('News');
-        $this->view->addCssFile('style/actualites.css?v=20261118c');
+        $this->view->addCssFile('style/actualites.css?v=20261120a');
 
         $taille = 12;
         $page = getValInteger('page', 1);
@@ -27,7 +27,7 @@ class Actualites extends Bdo_Controller
     public function Lire()
     {
         $this->loadModel('News');
-        $this->view->addCssFile('style/actualites.css?v=20261118c');
+        $this->view->addCssFile('style/actualites.css?v=20261120a');
 
         $id = getValInteger('id');
         $publication = null;
