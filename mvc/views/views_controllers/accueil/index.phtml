@@ -59,9 +59,13 @@ $rubriques = array(
                 <a href="<?php echo $urlActualites; ?>">Toutes les actualités <span aria-hidden="true">→</span></a>
             </div>
             <div class="bdo-home-featured-grid" data-count="<?php echo count($view->a_laUne); ?>">
-                <?php foreach ($view->a_laUne as $publication) {
+                <?php
+                $longueurApercu = 200;
+                foreach ($view->a_laUne as $publication) {
                     require __DIR__ . '/../actualites/_apercu.phtml';
-                } ?>
+                }
+                unset($longueurApercu);
+                ?>
             </div>
         </section>
     <?php } ?>
