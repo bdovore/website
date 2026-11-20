@@ -195,7 +195,7 @@ function includeSerie(id_serie) {
 
 // Boutons "Acheter" et "Futur achat" sur un album
 function addAlbum(id_serie, id_tome, id_edition, exclu, flg_achat) {
-  $("#addAlbum" + id_edition).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
+  $("#addAlbum" + id_edition).add(collectionNodesForTome(id_tome)).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
   var url = $.bdovore.URL + "macollection/majcollection?api_version=2&id_edition=" + id_edition + "&id_tome=" + id_tome + "&flg_achat=" + flg_achat;
 
   $.getJSON(url, function(data) {
@@ -208,7 +208,9 @@ function addAlbum(id_serie, id_tome, id_edition, exclu, flg_achat) {
           } else {
             $("#cb_achat").attr('checked', false);
           }
-          toggleFutureAchatFields();
+          if (typeof toggleFutureAchatFields === "function") {
+              toggleFutureAchatFields();
+          }
           getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu);
       }
       else {
@@ -225,12 +227,12 @@ function deleteEdition(id_serie, id_tome, id_edition, exclu) {
   bdovoreModal.confirm({
     message: "Retirer l'édition de votre collection ?"
   }).done(function() {
-      $("#addAlbum" + id_edition).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
+      $("#addAlbum" + id_edition).add(collectionNodesForTome(id_tome)).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
       var url = $.bdovore.URL + "macollection/deleteAlbum?api_version=2&id_edition=" + id_edition;
 
       $.getJSON(url, function(data) {
           if (data.error == "") {
-              $("#addAlbum" + id_edition).html("Album supprimé de votre collection !");
+              $("#addAlbum" + id_edition).add(collectionNodesForTome(id_tome)).html("Album supprimé de votre collection !");
               $("#info_collection").hide();
               getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu);
           }
@@ -280,90 +282,96 @@ function includeAlbum(id_serie, id_tome, id_edition, exclu) {
   });
 }
 
-function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu,tomeonly) {
-  /*
-   * Appel à getJson pour récupérer les infos de la collection d'un album et crée les infos si besoin
-   * 
-   * exclu : Permet de gérer l'exclusion de l'album
-   * valeurs :
-   *     true  : L'album fait partie de la liste des exclusion de l'utilisateur   => Prendre en compte
-   *     false : Il n'en fait pas partie                                          => Achat / Futur / Ignorer
-   * 
-   */
-  var exclu = exclu || false;
-  var tomeonly = tomeonly || false;
-  $("#infoCollection" + id_tome).html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
-  var url = "";
-  if (tomeonly) {
-      url = $.bdovore.URL + "getjson?data=Useralbum&id_tome=" + id_tome;
-  } else {
-    url = $.bdovore.URL + "getjson?data=Useralbum&id_edition=" + id_edition;
-  }
-  $.getJSON(url, function(data) {
-    if (typeof data.data[0] == 'undefined') {
-      // l'album n'est pas dans la collection
-      $madiv = '<div id="addAlbum' + id_edition + '" style="font-size:0.9em;">'
-      if (!exclu) {
-        $madiv = $madiv
-               +   '<div class="button-simple"><a   '
-               +       'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')" '
-               +       'title="Ajouter cet album dans votre collection">'
-               +        '<span class="fas fa-check fa-border button-collection"></span>'
-               +        '<span class="for-big-screen">J\'ai</span></a></div>'
-               + ' '
-               +   '<div class="button-simple"><a   '
-               +        'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'O\')" '
-               +        'title="A acheter prochainement"><span class="far fa-heart fa-border button-collection"></span>'
-               +         '<span class="for-big-screen">Je veux</span></a></div>';
-            if (data.nbAlbumSerie > 0)
-                $madiv += ' ' 
-               +   '<div class="button-simple"><a '
-               +        'href="javascript:excludeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
-               +        'title="Ignorer cet album"><span class="fas fa-ban fa-border button-collection" ></span>'
-               +          '<span class="for-big-screen">Ignorer</span></a></div>';
-        }
-      else {
-            // C'est un album ignoré
-            $madiv = $madiv
-                   +   '<a class="fas fa-ban fa-border button-collection collection-select" '
-                   +        'href="javascript:includeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
-                   +        'title="Ne plus ignorer cet album"></a>';
+function collectionNodesForTome(id_tome) {
+  return $(".info-collection-lazy[data-id-tome='" + id_tome + "']");
+}
 
-          
-        }
-        $madiv = $madiv
-                 + '</div>';
-    } else {
-      // l'album est dans la collection
-      // on récupère sa date d'ajout dans la collection
-      $dte = data.data[0].DATE_AJOUT.substring(8,10) + "/" +   data.data[0].DATE_AJOUT.substring(5,7) + "/" +  data.data[0].DATE_AJOUT.substring(0,4);
-      if (data.data[0].FLG_ACHAT === "O") {
-        // C'est un achat futur
-        $madiv = '<div id="addAlbum' + id_edition + '" class="collection-status collection-status-wishlist">'
-                + '<span class="collection-status-badge"><span class="far fa-heart" aria-hidden="true"></span>Dans ma wishlist</span>'
-                + '<span class="collection-status-date">Depuis le ' + $dte + '</span>'
-               + ' <div class="button-simple"> <a   '
-               + '     onclick="addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')"'
-               + '     title="Ajouter cet album dans votre collection">' 
-               + '  <span class="fas fa-check fa-border button-collection"></span><span class="for-big-screen">J\'ai</span></a></div>'
-                + ' <div class="button-simple">'
-               + '  <a title="Retirer cet album de votre wishlist" onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">'
-               + '   <span class="far fa-trash-alt fa-border button-collection"></span><span class="for-big-screen">Retirer</span></a></div>'
-               + '</div>';
-      } else {
-        // on l'a réellement
-        $madiv = '<div id="addAlbum' + id_edition + '" class="collection-status collection-status-owned">'
-                + '<span class="collection-status-badge"><span class="fas fa-check" aria-hidden="true"></span>Dans ma collection</span>'
-                + '<span class="collection-status-date">Ajouté le ' + $dte + '</span>'
-               + '  <a class="far fa-trash-alt fa-border button-collection" '
-               + '     title="Retirer l\'édition de ma collection ?"'
-               + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">'
-               + '  </a>'
-               + '</div>';
+function getInfoCollectionFromTome(id_serie, id_tome, id_edition, exclu) {
+  var $fiches = collectionNodesForTome(id_tome);
+  var $cibles = $fiches.length ? $fiches : $("#infoCollection" + id_tome);
+  $fiches.addClass("info-collection-loaded");
+  $cibles.html("<img src='" + $.bdovore.URL + "script/ajax-loader.gif'>");
+
+  // Une seule lecture par tome pour toutes ses occurrences dans les listes.
+  var url = $.bdovore.URL + "getjson?data=Useralbum&" + ($fiches.length
+    ? "id_tome=" + id_tome
+    : "id_edition=" + id_edition);
+  $.getJSON(url, function(data) {
+    $cibles.each(function() {
+      var $fiche = $(this);
+      var edition = $fiches.length ? $fiche.data("id-edition") : id_edition;
+      var entree = data.data.filter(function(item) {
+        return Number(item.ID_EDITION) === Number(edition);
+      })[0] || data.data[0];
+      if (entree && entree.ID_EDITION) {
+        edition = Number(entree.ID_EDITION);
       }
-    }
-    $("#infoCollection" + id_tome).html($madiv);
+      $fiche.html(collectionMarkup(id_serie, id_tome, edition, !!exclu, data.nbAlbumSerie, entree, !$fiches.length));
+    });
   });
+}
+
+function collectionMarkup(id_serie, id_tome, id_edition, exclu, nbAlbumSerie, entree, ficheDetail) {
+  var html;
+  var attributId = ficheDetail ? ' id="addAlbum' + id_edition + '"' : '';
+  if (!entree) {
+    // l'album n'est pas dans la collection
+    html = '<div' + attributId + ' style="font-size:0.9em;">'
+    if (!exclu) {
+      html = html
+             +   '<div class="button-simple"><a   '
+             +       'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')" '
+             +       'title="Ajouter cet album dans votre collection">'
+             +        '<span class="fas fa-check fa-border button-collection"></span>'
+             +        '<span class="for-big-screen">J\'ai</span></a></div>'
+             + ' '
+             +   '<div class="button-simple"><a   '
+             +        'href="javascript:addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'O\')" '
+             +        'title="A acheter prochainement"><span class="far fa-heart fa-border button-collection"></span>'
+             +         '<span class="for-big-screen">Je veux</span></a></div>';
+      if (nbAlbumSerie > 0) {
+        html += ' '
+             + '<div class="button-simple"><a '
+             + 'href="javascript:excludeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
+             + 'title="Ignorer cet album"><span class="fas fa-ban fa-border button-collection"></span>'
+             + '<span class="for-big-screen">Ignorer</span></a></div>';
+      }
+    } else {
+      html += '<a class="fas fa-ban fa-border button-collection collection-select" '
+           + 'href="javascript:includeAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')" '
+           + 'title="Ne plus ignorer cet album"></a>';
+    }
+    html += '</div>';
+  } else {
+    // l'album est dans la collection
+    // on récupère sa date d'ajout dans la collection
+    var dateAjout = entree.DATE_AJOUT.substring(8,10) + "/" +   entree.DATE_AJOUT.substring(5,7) + "/" +  entree.DATE_AJOUT.substring(0,4);
+    if (entree.FLG_ACHAT === "O") {
+      // C'est un achat futur
+      html = '<div' + attributId + ' class="collection-status collection-status-wishlist">'
+              + '<span class="collection-status-badge"><span class="far fa-heart" aria-hidden="true"></span>Dans ma wishlist</span>'
+              + '<span class="collection-status-date">Depuis le ' + dateAjout + '</span>'
+             + ' <div class="button-simple"> <a   '
+             + '     onclick="addAlbum(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ',\'N\')"'
+             + '     title="Ajouter cet album dans votre collection">'
+             + '  <span class="fas fa-check fa-border button-collection"></span><span class="for-big-screen">J\'ai</span></a></div>'
+              + ' <div class="button-simple">'
+             + '  <a title="Retirer cet album de votre wishlist" onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">'
+             + '   <span class="far fa-trash-alt fa-border button-collection"></span><span class="for-big-screen">Retirer</span></a></div>'
+             + '</div>';
+    } else {
+      // on l'a réellement
+      html = '<div' + attributId + ' class="collection-status collection-status-owned">'
+              + '<span class="collection-status-badge"><span class="fas fa-check" aria-hidden="true"></span>Dans ma collection</span>'
+              + '<span class="collection-status-date">Ajouté le ' + dateAjout + '</span>'
+             + '  <a class="far fa-trash-alt fa-border button-collection" '
+             + '     title="Retirer l\'édition de ma collection ?"'
+             + '     onclick="deleteEdition(' + id_serie + ',' + id_tome + ',' + id_edition + ',' + exclu + ')">'
+             + '  </a>'
+             + '</div>';
+    }
+  }
+  return html;
 }
 
 function getInfoCollectionFromEdition(id_tome, id_edition) {
@@ -419,13 +427,11 @@ var lazyInfoCollection = (function($) {
   function loadNode(el) {
     var $el = $(el);
     if ($el.hasClass("info-collection-loaded")) return;
-    $el.addClass("info-collection-loaded");
     getInfoCollectionFromTome(
       $el.data("id-serie"),
       $el.data("id-tome"),
       $el.data("id-edition"),
-      $el.data("exclu") == 1,
-      $el.data("tomeonly") == 1
+      $el.data("exclu") == 1
     );
   }
 

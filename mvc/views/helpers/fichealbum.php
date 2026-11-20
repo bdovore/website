@@ -396,43 +396,16 @@ class FicheAlbum {
     }
 
     public function linkCollection($o_tome, $exclu = false) {
-        // fonction pour ajouter les liens d'ajouts dans la collection
-        $html = "";
-
-        if (User::minAccesslevel(2)) {
-//            $id_source = "addAlbum" . $o_tome->ID_EDITION;
-//            $html = "<div id='" . $id_source . "' style='font-size:0.9em;'>";
-//
-//            if ($o_tome->DATE_AJOUT) {
-//                if ($o_tome->FLG_ACHAT == "O") {
-//                    $html.= "ajouté à vos futurs achats le " . date_format(date_create($o_tome->DATE_AJOUT), "d/m/Y");
-//                } else {
-//                    $html.= "ajouté à votre collection le " . date_format(date_create($o_tome->DATE_AJOUT), "d/m/Y");
-//                }
-//
-//                $html .= " - <a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' title='Supprimer l'édition de ma collection' onclick='deleteEdition(" . $o_tome->ID_EDITION . ")'>Supprimer</a>";
-//            } else {
-//
-//                $html .= "<a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' href='javascript:addAlbum(" . $o_tome->ID_TOME . "," . $o_tome->ID_EDITION . ',"N")' . "'" . ' title="Ajouter cet album dans votre collection">Dans ma collection</a>';
-//                $html .= " - <a class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' href='javascript:addAlbum(" . $o_tome->ID_TOME . "," . $o_tome->ID_EDITION . ',"O")' . "'" . ' title="A acheter prochainement">Futur Achat</a>';
-//            }
-//
-//            $html.= "</div>";
-            $id_source = "infoCollection" . $o_tome->ID_TOME;
-            // Lazy loading : les infos de collection ne sont chargées que lorsque
-            // la div devient visible (voir collection.js, IntersectionObserver).
-            $html= "<div id='".$id_source."' class='info-collection-lazy'"
-                 . " data-id-serie='".$o_tome->ID_SERIE."'"
-                 . " data-id-tome='".$o_tome->ID_TOME."'"
-                 . " data-id-edition='".$o_tome->ID_EDITION."'"
-                 . " data-exclu='".($exclu ? "1" : "0")."'"
-                 . " data-tomeonly='1'></div>";
-
-        } else {
-            $html = "<i>Connectez vous pour ajouter cet album dans votre collection !</i>";
+        if (!User::minAccesslevel(2)) {
+            return "<i>Connectez vous pour ajouter cet album dans votre collection !</i>";
         }
 
-        return $html;
+        // Le même tome peut apparaître plusieurs fois sur une page de liste.
+        return "<div class='info-collection-lazy'"
+             . " data-id-serie='" . (int) $o_tome->ID_SERIE . "'"
+             . " data-id-tome='" . (int) $o_tome->ID_TOME . "'"
+             . " data-id-edition='" . (int) $o_tome->ID_EDITION . "'"
+             . " data-exclu='" . ($exclu ? "1" : "0") . "'></div>";
     }
 
     public function getSponsor($o_tome, $img=true, $all=false) {

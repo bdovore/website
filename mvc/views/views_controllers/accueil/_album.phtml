@@ -39,12 +39,12 @@ if (!$estSortie && !empty($album->FLG_EXPLICIT) && !empty($album->IMG_COUV) && !
                 <?php } ?>
             </p>
         <?php } ?>
-        <?php if (!empty($album->NB_NOTE_TOME)) {
+        <?php if ($estSortie && !empty($album->NB_NOTE_TOME)) {
             $noteSurCinq = floor($album->MOYENNE_NOTE_TOME * 5) / 10;
             ?>
             <p class="bdo-home-meta bdo-home-score"><span aria-hidden="true">★</span> <?php echo number_format($noteSurCinq, 1, ',', ''); ?>/5</p>
         <?php } ?>
-        <?php if ($estSortie && Bdo_Cfg::user()->minAccesslevel(2)) {
+        <?php if (!empty($album->ID_EDITION) && Bdo_Cfg::user()->minAccesslevel(2)) {
             echo $ficheAlbum->linkCollection($album);
         } ?>
     </div>
