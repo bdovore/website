@@ -50,6 +50,8 @@
 .browser-rayon-all input:checked+span { background:var(--wine); color:white; }
 .browser-rayons input:focus-visible+span { outline:2px solid currentColor; outline-offset:2px; }
 @media (max-width:600px) {
+    .browser-scope>div { flex-wrap:nowrap; gap:0; justify-content:space-between; }
+    .browser-scope label { flex:1 0 auto; justify-content:center; gap:2px; padding:0; font-size:clamp(.75rem,3.4vw,.875rem); }
     .browser-rayons span { flex-direction:column; }
     .browser-rayon-all i { display:grid; place-items:center; height:40px; }
 }
