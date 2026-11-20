@@ -100,9 +100,9 @@ class Leguide extends Bdo_Controller
                 break;
             case 3:
                 $this->loadModel('Comment');
-                $resultats = $this->Comment->load('c', "
+                $resultats = $this->Comment->loadApercus("
                     WHERE c.COMMENT <> '' AND g.ORIGINE = '$rayon' $filtreGenre
-                    ORDER BY c.DTE_POST DESC $limite");
+                    ORDER BY c.DTE_POST DESC $limite", !$genresRetenus);
                 break;
             case 4:
                 $this->loadModel('Edition');
@@ -135,7 +135,7 @@ class Leguide extends Bdo_Controller
                 break;
         }
 
-        $this->view->addCssFile('style/album-lists.css?v=20261118e');
+        $this->view->addCssFile('style/album-lists.css?v=20261120a');
         $this->view->addCssFile('style/leguide.css?v=20261118g');
         $this->view->addPhtmlFile('leguide/index', 'BODY');
         $this->view->set_var(array(

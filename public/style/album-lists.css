@@ -104,8 +104,12 @@
     cursor: pointer;
 }
 
+.bdo-avis-full {
+    white-space: pre-line;
+}
+
 .bdo-avis-detail:not([open]) summary > span:last-child,
 .bdo-avis-detail[open] summary > span:first-child,
-.bdo-avis-content div:has(> .bdo-avis-detail[open]) > .bdo-avis-excerpt {
+.bdo-avis-content div:has(> .bdo-avis-detail.is-loaded[open]) > .bdo-avis-excerpt {
     display: none;
 }

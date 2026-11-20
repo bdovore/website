@@ -48,6 +48,32 @@
     });
     updateLimit();
 
+    guide.querySelectorAll('.bdo-avis-detail[data-avis-url]').forEach(detail => {
+        const fullText = detail.querySelector('.bdo-avis-full');
+        let loading = false;
+
+        detail.addEventListener('toggle', () => {
+            if (!detail.open || loading || detail.classList.contains('is-loaded')) {
+                return;
+            }
+            loading = true;
+            fullText.textContent = 'Chargement de l’avis…';
+            $.getJSON(detail.dataset.avisUrl)
+                .done(data => {
+                    fullText.textContent = data.texte;
+                    detail.classList.add('is-loaded');
+                })
+                .fail(request => {
+                    fullText.textContent = request.status === 404
+                        ? 'Cet avis n’est plus disponible.'
+                        : 'Impossible de charger cet avis. Refermez-le puis réessayez.';
+                })
+                .always(() => {
+                    loading = false;
+                });
+        });
+    });
+
     guide.querySelectorAll('.bdo-guide-review-social').forEach(review => {
         const user = Number(review.dataset.avisAuteur);
         const album = Number(review.dataset.avisTome);

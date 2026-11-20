@@ -33,12 +33,10 @@ $note = $avis->NOTE / 2;
             <?php if ($apercu !== '') { ?>
                 <blockquote class="bdo-avis-excerpt" itemprop="reviewBody"><?php echo htmlspecialchars($apercu, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></blockquote>
             <?php } ?>
-            <?php if ($avisDansGuide && $tronque) {
-                $commentaire = preg_replace('~<br\b[^>]*>|</(?:p|div|li)>~i', "\n", $commentaire);
-                ?>
-                <details class="bdo-avis-detail">
+            <?php if ($avisDansGuide && ($tronque || !empty($avis->COMMENT_SUITE))) { ?>
+                <details class="bdo-avis-detail" data-avis-url="<?php echo BDO_URL; ?>albumcomment/aviscomplet?id_tome=<?php echo $idTome; ?>&amp;user_id=<?php echo $idAuteurAvis; ?>">
                     <summary><span>Lire la suite</span><span>Réduire l’avis</span></summary>
-                    <div class="bdo-avis-full"><?php echo nl2br(htmlspecialchars(trim(strip_tags($commentaire)), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false)); ?></div>
+                    <div class="bdo-avis-full"></div>
                 </details>
             <?php } ?>
         </div>

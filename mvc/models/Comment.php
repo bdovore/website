@@ -51,16 +51,23 @@ class Comment extends Bdo_Db_Line
 
 
 
-    public function select ()
+    public function select ($apercu = false, $parDate = false)
 
     {
 
 
+        $texte = $apercu
+            ? 'LEFT(c.`COMMENT`, 300) AS COMMENT, CHAR_LENGTH(c.`COMMENT`) > 300 AS COMMENT_SUITE'
+            : 'c.`COMMENT`';
+        // Sans filtre par genre, partir des avis les plus récents permet de s'arrêter à la limite.
+        $ordreJointures = $parDate ? 'STRAIGHT_JOIN' : '';
+        $indexDate = $parDate ? 'FORCE INDEX FOR ORDER BY (DTE_POST)' : '';
+
         return "
-        SELECT (c.`user_id`*1209 + 951) as user_id ,
+        SELECT $ordreJointures (c.`user_id`*1209 + 951) as user_id ,
                c.`ID_TOME` ,
                c.`NOTE` ,
-               c.`COMMENT` ,
+               $texte ,
                c.`DTE_POST` ,
                u.`username` ,
                bd_tome.titre as TITRE_TOME,
@@ -68,13 +75,20 @@ class Comment extends Bdo_Db_Line
                bd_edition.IMG_COUV,
                 s.ID_SERIE,
             s.nom as NOM_SERIE
-        FROM `users_comment` c INNER JOIN users u using(user_id)
+        FROM `users_comment` c $indexDate INNER JOIN users u using(user_id)
                inner join bd_tome using (id_tome)
                inner join bd_edition using (id_edition)
                inner join bd_serie s using (id_serie)
               inner join bd_genre g on (bd_tome.id_genre = g.id_genre)
                ";
 
+    }
+
+    public function loadApercus(string $where, bool $parDate): Bdo_Db_Select
+    {
+        $resultats = new Bdo_Db_Select($this->select(true, $parDate) . ' ' . $where);
+        $resultats->exec();
+        return $resultats;
     }
 
     public function replaceIdTome($old_idtome, $new_idtome) {
