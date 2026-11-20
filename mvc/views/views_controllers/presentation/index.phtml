@@ -78,6 +78,10 @@
                         <dd><a href="browser"><?php echo number_format(intVal($view->NBSERIE),"0",","," ");?></a></dd>
                     </div>
                     <div>
+                        <dt>Nombre d'objets Parabd dans la base :</dt>
+                        <dd><a href="parabd"><?php echo number_format(intVal($view->NBPARABD),"0",","," ");?></a></dd>
+                    </div>
+                    <div>
                         <dt>Albums en attente d'ajout actuellement :</dt>
                         <dd><a href="proposition/listpropal?type=AJOUT"><?php echo $view->NBAJOUT;?></a></dd>
                     </div>
@@ -97,6 +101,10 @@
                     <div>
                         <dt>Nombre d'albums dans les collections :</dt>
                         <dd><?php echo number_format(intVal($view->NBCOLLEC),"0",","," ");?></dd>
+                    </div>
+                    <div>
+                        <dt>Nombre d'objets Parabd dans les collections :</dt>
+                        <dd><?php echo number_format(intVal($view->NBPARABDCOLLEC),"0",","," ");?></dd>
                     </div>
                     <div>
                         <dt>Nombre de notes d'albums :</dt>

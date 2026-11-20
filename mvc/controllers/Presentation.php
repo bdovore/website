@@ -30,7 +30,9 @@ class Presentation extends Bdo_Controller
             array(
                 'NBALB' => $this->Statistique->a_tableStatus['bd_tome']->Rows,
                 'NBSERIE' => $this->Statistique->a_tableStatus['bd_serie']->Rows,
+                'NBPARABD' => $this->Statistique->a_tableStatus['parabd_item']->Rows,
                 'NBCOLLEC' => $this->Statistique->a_tableStatus['users_album']->Rows,
+                'NBPARABDCOLLEC' => $this->Statistique->a_tableStatus['users_parabd']->Rows,
                 'NBEDITION' => $this->Statistique->nbEditionAttente,
                 "NBAJOUT" => $this->Statistique->nbajout,
                 "NBCORRECT" => $this->Statistique->nbcorrect,
