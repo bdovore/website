@@ -14,6 +14,8 @@ require_once dirname(__DIR__) . '/models/ParabdRules.php';
 
 class GetJSON extends Bdo_Controller {
 
+    private const LIMITED_GENRES = [6, 8, 9, 10, 28, 51];
+
     public function Index() {
         Bdo_Cfg::setVar('debug',false);
 
@@ -23,6 +25,9 @@ class GetJSON extends Bdo_Controller {
             ob_start("ob_gzhandler");
         }
         switch ($data) {
+            case "Catalogue":
+                $this->catalogue();
+                break;
             case "Auteur" :
                 $this->Auteur();
                 break;
@@ -89,6 +94,67 @@ class GetJSON extends Bdo_Controller {
             default :
                 break;
         }
+    }
+
+    private function catalogue() {
+        $this->loadModel('BrowserCatalogue');
+        $types = ['ser', 'alb', 'aut'];
+        $query = is_string($_GET['q'] ?? '') ? mb_substr(trim($_GET['q'] ?? ''), 0, 120) : '';
+        $scope = $_GET['scope'] ?? 'ser';
+        $series = max(0, (int)getValInteger('serie'));
+        $offset = max(0, (int)getValInteger('offset'));
+        if ((!in_array($scope, $types, true) && !($scope === 'all' && $query !== '')) ||
+            ($series && ($scope !== 'alb' || $query !== ''))) {
+            http_response_code(400);
+            return;
+        }
+
+        $rayon = $_GET['rayon'] ?? '';
+        $genre = (int)getValInteger('genre');
+        $ids = [];
+        $result = [];
+        if ($query === '' && !$series && ($rayon || $genre || isset($_GET['facets']))) {
+            $this->loadModel('Genre');
+            $choices = [];
+            foreach ($this->Genre->all()->a_dataQuery as $item) {
+                $id = (int)$item->ID_GENRE;
+                $choices[] = ['id'=>$id, 'label'=>$item->LIBELLE, 'rayon'=>$item->ORIGINE];
+                if ((!$rayon || $item->ORIGINE === $rayon) && (!$genre || $id === $genre)) {
+                    $ids[] = $id;
+                }
+            }
+            if (isset($_GET['facets'])) $result['genres'] = $choices;
+            if (!$rayon && !$genre) $ids = [];
+            elseif (!$ids) $ids = [-1];
+        }
+        $restricted = ($_SESSION['userConnect']->user_id ?? 0) == 28039;
+        if ($restricted) {
+            $ids = $ids ? array_values(array_intersect($ids, self::LIMITED_GENRES)) : self::LIMITED_GENRES;
+            if (!$ids) $ids = [-1];
+            if (isset($result['genres'])) {
+                $result['genres'] = array_values(array_filter($result['genres'],
+                    static fn($genre) => in_array($genre['id'], self::LIMITED_GENRES, true)));
+            }
+        }
+        $groups = [];
+        $size = $query === '' ? 24 : 8;
+        foreach ($scope === 'all' ? $types : [$scope] as $type) {
+            if ($restricted && $query !== '' && $this->filterTerms($query) === '') {
+                $groups[$type] = ['rows'=>[], 'more'=>false];
+                continue;
+            }
+            $groups[$type] = $this->BrowserCatalogue->page($type, $query, $ids,
+                $series ? 'ser' : '', $series, 0, $offset, $size);
+        }
+        $approximate = false;
+        if (!$restricted && $query !== '' && !$offset && !array_filter(array_column($groups, 'rows'))) {
+            foreach (array_keys($groups) as $type) {
+                $groups[$type]['rows'] = $this->BrowserCatalogue->suggestions($type, $query, $size);
+                if ($groups[$type]['rows']) $approximate = true;
+            }
+        }
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($result + ['groups'=>$groups, 'approximate'=>$approximate], JSON_INVALID_UTF8_SUBSTITUTE);
     }
 
     private function Auteur() {
@@ -200,7 +266,7 @@ class GetJSON extends Bdo_Controller {
         $mode = getValInteger("mode", 0);
         $addfilter = "";
             if ($_SESSION['userConnect']->user_id == 28039) {
-                $addfilter .= " AND g.ID_GENRE in (6, 8, 9, 10, 28, 51) ";
+                $addfilter .= " AND g.ID_GENRE in (" . implode(',', self::LIMITED_GENRES) . ") ";
                 $term = $this->filterTerms($term);
                     
             }
@@ -406,7 +472,7 @@ class GetJSON extends Bdo_Controller {
         } else if ($term <> "") {
             $addfilter = "";
             if ($_SESSION['userConnect']->user_id == 28039) {
-                $addfilter .= " AND bd_genre.ID_GENRE in (6, 8, 9, 10, 28, 51) ";
+                $addfilter .= " AND bd_genre.ID_GENRE in (" . implode(',', self::LIMITED_GENRES) . ") ";
                  $term = $this->filterTerms($term);
                 
                 
