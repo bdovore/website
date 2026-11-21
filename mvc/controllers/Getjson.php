@@ -143,6 +143,15 @@ class GetJSON extends Bdo_Controller {
                 $groups[$type] = ['rows'=>[], 'more'=>false];
                 continue;
             }
+            if ($type === 'ser' && $query === '' && !$rayon && !$genre && !$restricted &&
+                ($_GET['sort'] ?? '') !== 'alpha') {
+                $trending = $this->BrowserCatalogue->trendingSeries();
+                if ($trending) {
+                    $groups[$type] = ['rows'=>array_slice($trending, $offset), 'more'=>false];
+                    $result['sort'] = 'trending';
+                    continue;
+                }
+            }
             $groups[$type] = $this->BrowserCatalogue->page($type, $query, $ids,
                 $series ? 'ser' : '', $series, 0, $offset, $size);
         }

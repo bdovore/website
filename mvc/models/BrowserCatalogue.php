@@ -46,6 +46,57 @@ class BrowserCatalogue
         return $hits;
     }
 
+    private function refreshTrendingSeries(string $file): array
+    {
+        $rows = $this->rows("SELECT s.ID_SERIE id, s.NOM label
+            FROM users_album ua JOIN bd_edition e ON e.ID_EDITION=ua.id_edition
+            JOIN bd_tome t ON t.ID_TOME=e.ID_TOME JOIN bd_serie s USING (ID_SERIE)
+            WHERE ua.flg_achat='N' AND ua.date_ajout BETWEEN NOW() - INTERVAL 30 DAY AND NOW()
+            GROUP BY s.ID_SERIE,s.NOM
+            ORDER BY COUNT(DISTINCT ua.user_id) DESC, MAX(ua.date_ajout) DESC, s.ID_SERIE
+            LIMIT 10");
+        $json = json_encode($rows, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
+        $tmp = tempnam(dirname($file), '.series-tendance-');
+        if ($tmp !== false) {
+            try {
+                if (file_put_contents($tmp, $json) === strlen($json)) rename($tmp, $file);
+            } finally {
+                if (file_exists($tmp)) unlink($tmp);
+            }
+        }
+        return $rows;
+    }
+
+    // Cache only catalogue identities. Cover visibility is resolved for each reader.
+    public function trendingSeries(): array
+    {
+        $file = BDO_DIR . 'cache/series-tendance.json';
+        $read = static function () use ($file) {
+            clearstatcache(true, $file);
+            $rows = json_decode((string) @file_get_contents($file), true);
+            return is_array($rows) && array_is_list($rows) ? $rows : null;
+        };
+        $rows = $read();
+        $today = strtotime('today');
+        if (($rows === null || @filemtime($file) < $today) && ($lock = @fopen($file . '.lock', 'c'))) {
+            try {
+                // With a previous ranking, concurrent readers can use it during refresh.
+                if (flock($lock, $rows === null ? LOCK_EX : (LOCK_EX | LOCK_NB))) {
+                    $rows = $read();
+                    if ($rows === null || @filemtime($file) < $today) {
+                        $rows = $this->refreshTrendingSeries($file);
+                    }
+                }
+            } catch (mysqli_sql_exception $e) {
+                if ($rows === null) throw $e;
+                error_log('BD Browser : échec du rafraîchissement des séries tendance.');
+            } finally {
+                fclose($lock);
+            }
+        }
+        return $this->hydrate('ser', $rows ?? []);
+    }
+
     // Suggest catalogue names starting with the input, allowing one character edit.
     // Keep a literal leading character on every LIKE so the name index remains usable.
     public function suggestions(string $type, string $query, int $size): array
