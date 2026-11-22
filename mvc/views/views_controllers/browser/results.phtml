@@ -3,6 +3,7 @@ $h = static fn($s) => htmlspecialchars((string)$s, ENT_QUOTES | ENT_SUBSTITUTE, 
 $edit = ['ser'=>'editserie?serie_id=', 'alb'=>'editalbum?alb_id=', 'aut'=>'editauteur?auteur_id=',
     'edit'=>'editediteur?editeur_id=', 'col'=>'editcollection?collec_id='];
 $names = BrowserCatalogue::TYPES + ['col'=>'Collections'];
+$ficheAlbum = User::minAccesslevel(2) ? $view->getHelper('ficheAlbum') : null;
 $hasResults = false;
 if ($view->approximate) { ?><p>Résultats proches de votre recherche</p><?php }
 foreach ($view->groups as $kind => $group) {
@@ -26,6 +27,14 @@ foreach ($view->groups as $kind => $group) {
                     <small><?= $h($row['subtitle'] ?? '') ?><?= isset($row['number']) ? ' · T. ' . (int)$row['number'] : '' ?></small>
                     <strong><a class="<?= $albumClass ?>" href="<?= $albumUrl ?>"><?= $h($name) ?></a></strong>
                     <?php if ($view->canEdit && $id) { ?><a href="<?= $h($editUrl) ?>" title="Modifier <?= $h($name) ?>"><img src="<?= $h(BDO_URL_IMAGE . 'edit.gif') ?>" width="18" height="13" alt="Modifier <?= $h($name) ?>"></a><?php } ?>
+                    <?php
+                    $edition = $row['edition'] ?? $row['ID_EDITION'] ?? null;
+                    if ($ficheAlbum && $edition) {
+                        echo $ficheAlbum->linkCollection((object)[
+                            'ID_SERIE' => $row['ID_SERIE'], 'ID_TOME' => $id, 'ID_EDITION' => $edition,
+                        ]);
+                    }
+                    ?>
                 </div>
             </div>
         <?php } else { ?>

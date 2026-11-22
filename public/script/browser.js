@@ -69,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 target.innerHTML = html;
                 target.dataset.loaded = '1';
             }
+            window.lazyInfoCollection?.init();
         } catch (error) {
             if (error.name === 'AbortError') return;
             if (append) {

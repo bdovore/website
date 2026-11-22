@@ -32,7 +32,7 @@ class BrowserCatalogue
         $ids = implode(',', array_map('intval', array_column($hits, 'id')));
         $cover = $this->cover();
         if ($type === 'alb') {
-            $sql = "SELECT t.ID_TOME id, t.NUM_TOME number, s.NOM subtitle, $cover cover
+            $sql = "SELECT t.ID_TOME id, t.NUM_TOME number, t.ID_SERIE, e.ID_EDITION, s.NOM subtitle, $cover cover
                 FROM bd_tome t JOIN bd_serie s USING (ID_SERIE)
                 LEFT JOIN bd_edition e ON e.ID_EDITION=t.ID_EDITION WHERE t.ID_TOME IN ($ids)";
         } else {
@@ -166,7 +166,7 @@ class BrowserCatalogue
         } elseif ($parent === 'ser' && $collection !== null) {
             $cover = $this->cover();
             $condition = $collection ? 'e.ID_COLLECTION=?' : '(e.ID_COLLECTION IS NULL OR e.ID_COLLECTION=0)';
-            $sql = "SELECT t.ID_TOME id,t.TITRE label,t.NUM_TOME number,s.NOM subtitle,e.ID_EDITION edition,$cover cover
+            $sql = "SELECT t.ID_TOME id,t.TITRE label,t.NUM_TOME number,t.ID_SERIE,s.NOM subtitle,e.ID_EDITION edition,$cover cover
                 FROM (SELECT e.ID_TOME,COALESCE(MAX(IF(e.ID_EDITION=t.ID_EDITION,e.ID_EDITION,NULL)),MIN(e.ID_EDITION)) edition
                       FROM bd_tome t JOIN bd_edition e ON e.ID_TOME=t.ID_TOME
                       WHERE t.ID_SERIE=? AND e.ID_EDITEUR=? AND $condition GROUP BY e.ID_TOME) hits
