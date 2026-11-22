@@ -248,7 +248,7 @@ class Controle extends Bdo_Controller
                                 CASE PROP_STATUS WHEN 1 THEN 'Validé' WHEN 99 then 'Supprimé' WHEN 98 THEN 'Non validé' WHEN 0 THEN 'Inactive' END as 'Status',
                                count(*) AS 'Nb de user' 
                         FROM `bd_edition` INNER JOIN users_album using (id_edition) 
-                        WHERE PROP_STATUS <> 1
+                        WHERE PROP_STATUS not in ('98','99','1')
                         GROUP BY bd_edition.ID_EDITION, PROP_STATUS",
                     "url" => BDO_URL."admin/editedition?edition_id=",
                     "colUrl" => "ID_EDITION",
