@@ -48,8 +48,7 @@
     max-height: 200px;
     object-fit: contain;
     object-position: left top;
-    border-radius: 2px;
-    border-color: #d5c7bc;
+    border: 0;
 }
 
 .bdo-album-list .fiche_big .img-sponsor,
