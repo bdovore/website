@@ -43,7 +43,9 @@ class Browser extends Bdo_Controller
         $children = ['ser'=>'alb', 'aut'=>'ser', 'edit'=>'col', 'col'=>'ser'];
         $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
         $publisher = filter_input(INPUT_GET, 'publisher', FILTER_VALIDATE_INT);
-        if (!is_string($parent) || !is_string($type) ||
+        $collection = filter_input(INPUT_GET, 'collection', FILTER_VALIDATE_INT);
+        if (($collection !== null && ($collection === false || $collection < 0 || $publisher < 1 || $parent !== 'ser')) ||
+            !is_string($parent) || !is_string($type) ||
             ($parent !== '' && (!isset($children[$parent]) || $children[$parent] !== $type ||
              $id === false || $id === null || $id < ($parent === 'col' ? 0 : 1) || ($parent === 'col' && $publisher < 1))) ||
             ($parent === '' && !isset(BrowserCatalogue::TYPES[$type]) && !($type === 'all' && $query !== ''))) {
@@ -57,7 +59,7 @@ class Browser extends Bdo_Controller
         foreach ($type === 'all' ? array_keys(BrowserCatalogue::TYPES) : [$type] as $kind) {
             $size = $query !== '' ? 8 : 24;
             $groups[$kind] = $this->BrowserCatalogue->page($kind, $parent ? '' : $query, $genres,
-                $parent, (int)$id, (int)$publisher, $offset, $size);
+                $parent, (int)$id, (int)$publisher, $offset, $size, $collection);
         }
         $approximate = false;
         if ($query !== '' && $parent === '' && $offset === 0 && !array_filter(array_column($groups, 'rows'))) {

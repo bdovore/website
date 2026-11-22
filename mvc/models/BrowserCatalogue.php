@@ -46,6 +46,57 @@ class BrowserCatalogue
         return $hits;
     }
 
+    private function refreshTrendingSeries(string $file): array
+    {
+        $rows = $this->rows("SELECT s.ID_SERIE id, s.NOM label
+            FROM users_album ua JOIN bd_edition e ON e.ID_EDITION=ua.id_edition
+            JOIN bd_tome t ON t.ID_TOME=e.ID_TOME JOIN bd_serie s USING (ID_SERIE)
+            WHERE ua.flg_achat='N' AND ua.date_ajout BETWEEN NOW() - INTERVAL 30 DAY AND NOW()
+            GROUP BY s.ID_SERIE,s.NOM
+            ORDER BY COUNT(DISTINCT ua.user_id) DESC, MAX(ua.date_ajout) DESC, s.ID_SERIE
+            LIMIT 10");
+        $json = json_encode($rows, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
+        $tmp = tempnam(dirname($file), '.series-tendance-');
+        if ($tmp !== false) {
+            try {
+                if (file_put_contents($tmp, $json) === strlen($json)) rename($tmp, $file);
+            } finally {
+                if (file_exists($tmp)) unlink($tmp);
+            }
+        }
+        return $rows;
+    }
+
+    // Cache only catalogue identities. Cover visibility is resolved for each reader.
+    public function trendingSeries(): array
+    {
+        $file = BDO_DIR . 'cache/series-tendance.json';
+        $read = static function () use ($file) {
+            clearstatcache(true, $file);
+            $rows = json_decode((string) @file_get_contents($file), true);
+            return is_array($rows) && array_is_list($rows) ? $rows : null;
+        };
+        $rows = $read();
+        $today = strtotime('today');
+        if (($rows === null || @filemtime($file) < $today) && ($lock = @fopen($file . '.lock', 'c'))) {
+            try {
+                // With a previous ranking, concurrent readers can use it during refresh.
+                if (flock($lock, $rows === null ? LOCK_EX : (LOCK_EX | LOCK_NB))) {
+                    $rows = $read();
+                    if ($rows === null || @filemtime($file) < $today) {
+                        $rows = $this->refreshTrendingSeries($file);
+                    }
+                }
+            } catch (mysqli_sql_exception $e) {
+                if ($rows === null) throw $e;
+                error_log('BD Browser : échec du rafraîchissement des séries tendance.');
+            } finally {
+                fclose($lock);
+            }
+        }
+        return $this->hydrate('ser', $rows ?? []);
+    }
+
     // Suggest catalogue names starting with the input, allowing one character edit.
     // Keep a literal leading character on every LIKE so the name index remains usable.
     public function suggestions(string $type, string $query, int $size): array
@@ -97,17 +148,33 @@ class BrowserCatalogue
     }
 
     public function page(string $type, string $query, array $genres, string $parent, int $id,
-        int $publisher, int $offset, int $size): array
+        int $publisher, int $offset, int $size, ?int $collection = null): array
     {
         $params = [];
         $limit = ' LIMIT ' . $offset . ',' . ($size + 1);
         $genre = $genres ? ' IN (' . implode(',', array_map('intval', $genres)) . ')' : '';
         $order = 'label, id';
         if ($type === 'col') {
-            $sql = "SELECT st.ID_COLLECTION id, COALESCE(NULLIF(NULLIF(c.NOM,'<N/A>'),''),'Sans collection') label
-                FROM bd_edition_stat st LEFT JOIN bd_collection c USING (ID_COLLECTION)
-                WHERE st.ID_EDITEUR=?" . ($genre ? " AND st.ID_GENRE $genre" : '') . ' GROUP BY st.ID_COLLECTION,c.NOM';
+            $sql = "SELECT COALESCE(e.ID_COLLECTION,0) id,
+                    CASE WHEN BINARY c.NOM = '<N/A>' THEN 'Sans collection'
+                         ELSE COALESCE(NULLIF(c.NOM,''),'Collection non renseignée') END label
+                FROM bd_edition e LEFT JOIN bd_collection c ON c.ID_COLLECTION=e.ID_COLLECTION";
+            if ($genre) $sql .= ' JOIN bd_tome t ON t.ID_TOME=e.ID_TOME JOIN bd_serie s ON s.ID_SERIE=t.ID_SERIE';
+            $sql .= ' WHERE e.ID_EDITEUR=?' . ($genre ? " AND s.ID_GENRE $genre" : '') .
+                ' GROUP BY COALESCE(e.ID_COLLECTION,0),c.NOM';
             $params[] = $id;
+        } elseif ($parent === 'ser' && $collection !== null) {
+            $cover = $this->cover();
+            $condition = $collection ? 'e.ID_COLLECTION=?' : '(e.ID_COLLECTION IS NULL OR e.ID_COLLECTION=0)';
+            $sql = "SELECT t.ID_TOME id,t.TITRE label,t.NUM_TOME number,s.NOM subtitle,e.ID_EDITION edition,$cover cover
+                FROM (SELECT e.ID_TOME,COALESCE(MAX(IF(e.ID_EDITION=t.ID_EDITION,e.ID_EDITION,NULL)),MIN(e.ID_EDITION)) edition
+                      FROM bd_tome t JOIN bd_edition e ON e.ID_TOME=t.ID_TOME
+                      WHERE t.ID_SERIE=? AND e.ID_EDITEUR=? AND $condition GROUP BY e.ID_TOME) hits
+                JOIN bd_tome t ON t.ID_TOME=hits.ID_TOME JOIN bd_serie s USING (ID_SERIE)
+                JOIN bd_edition e ON e.ID_EDITION=hits.edition";
+            $params = [$id, $publisher];
+            if ($collection) $params[] = $collection;
+            $order = 't.NUM_TOME,id';
         } else {
             [$table,$key,$label] = self::TABLES[$type];
             $where = $type === 'aut' ? ['x.ID_AUTEUR NOT IN (2,3,5572,8497,6086,6243)'] : [];
@@ -123,8 +190,11 @@ class BrowserCatalogue
                 }
                 $where[] = 'x.ID_SERIE IN (SELECT ID_SERIE FROM (' . implode(' UNION ', $parts) . ') credits)';
             } elseif ($parent === 'col') {
-                $where[] = 'x.ID_SERIE IN (SELECT ID_SERIE FROM bd_edition_stat WHERE ID_EDITEUR=? AND ID_COLLECTION=?)';
-                array_push($params, $publisher, $id);
+                $condition = $id ? 'e.ID_COLLECTION=?' : '(e.ID_COLLECTION IS NULL OR e.ID_COLLECTION=0)';
+                $where[] = "x.ID_SERIE IN (SELECT t.ID_SERIE FROM bd_edition e JOIN bd_tome t USING (ID_TOME)
+                    WHERE e.ID_EDITEUR=? AND $condition)";
+                $params[] = $publisher;
+                if ($id) $params[] = $id;
             }
             if ($genre) $where[] = $this->genrePredicate($type, $genre);
             if ($query !== '') {
@@ -173,6 +243,6 @@ class BrowserCatalogue
         $hits = $this->rows("$sql ORDER BY $order $limit", $params);
         $more = count($hits) > $size;
         if ($more) array_pop($hits);
-        return ['rows' => $this->hydrate($type, $hits), 'more' => $more];
+        return ['rows' => $parent === 'ser' && $collection !== null ? $hits : $this->hydrate($type, $hits), 'more' => $more];
     }
 }
