@@ -174,14 +174,14 @@ class BrowserCatalogue
                 JOIN bd_edition e ON e.ID_EDITION=hits.edition";
             $params = [$id, $publisher];
             if ($collection) $params[] = $collection;
-            $order = 't.NUM_TOME,id';
+            $order = 't.FLG_INT DESC, t.FLG_TYPE, t.NUM_TOME, t.TITRE, t.ID_TOME';
         } else {
             [$table,$key,$label] = self::TABLES[$type];
             $where = $type === 'aut' ? ['x.ID_AUTEUR NOT IN (2,3,5572,8497,6086,6243)'] : [];
             if ($parent === 'ser') {
                 $where[] = 'x.ID_SERIE=?';
                 $params[] = $id;
-                $order = 'x.NUM_TOME, id';
+                $order = 'x.FLG_INT DESC, x.FLG_TYPE, x.NUM_TOME, x.TITRE, x.ID_TOME';
             } elseif ($parent === 'aut') {
                 $parts = [];
                 foreach (self::ROLES as $role) {
