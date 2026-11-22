@@ -55,7 +55,10 @@ $triOptions = function ($current) {
             <?php } ?>
         </div>
         <div class="parabd-summary">
-            <small><?php echo $h($item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL']); ?></small>
+            <small>
+                <?php echo $h($item['SUBTYPE_LABEL'] ?: $item['TYPE_LABEL']); ?><br>
+                ID-BDovore : <?php echo intval($item['ID_ITEM']); ?>
+            </small>
             <h1><?php echo $h($item['TITLE']); ?> <?php if ($view->can_admin) { ?> · <a href="<?php echo BDO_URL; ?>adminparabd/edit?id=<?php echo intval($item['ID_ITEM']); ?>"> <img src="<?php echo BDO_URL_IMAGE; ?>/edit.gif"></a><?php } ?></h1>
             <?php if ($item['DESCRIPTION']) { ?><p><?php echo nl2br($h($item['DESCRIPTION'])); ?></p><?php } ?>
             <dl class="parabd-data">
@@ -71,7 +74,6 @@ $triOptions = function ($current) {
                     <?php foreach ($item['authors'] as $link) { ?><li><a href="<?php echo BDO_URL . 'auteur-bd-' . intval($link['AUTHOR_ID']) . '-' . clean_url($link['LABEL']); ?>">#<?php echo intval($link['AUTHOR_ID']); ?> — <?php echo $h($link['LABEL']); ?></a><?php if (!empty($link['ROLE'])) { ?> (<?php echo $h(isset($authorRoleLabels[$link['ROLE']]) ? $authorRoleLabels[$link['ROLE']] : $link['ROLE']); ?>)<?php } ?></li><?php } ?>
                 </ul>
             <?php } ?>
-            <p><small>ID-BDovore : <?php echo intval($item['ID_ITEM']); ?></small></p>
             <?php if ($item['series'] || $item['tomes']) { ?>
                 <h2>Rattachements BD</h2>
                 <ul class="parabd-references">
