@@ -99,7 +99,7 @@ class BrowserCatalogue
         $rows = $this->rows("SELECT s.ID_SERIE id, s.NOM label
             FROM users_album ua JOIN bd_edition e ON e.ID_EDITION=ua.id_edition
             JOIN bd_tome t ON t.ID_TOME=e.ID_TOME JOIN bd_serie s USING (ID_SERIE)
-            WHERE ua.flg_achat='N' AND ua.date_ajout BETWEEN NOW() - INTERVAL 30 DAY AND NOW()
+            WHERE ua.date_ajout BETWEEN NOW() - INTERVAL 30 DAY AND NOW()
             GROUP BY s.ID_SERIE,s.NOM
             ORDER BY COUNT(DISTINCT ua.user_id) DESC, MAX(ua.date_ajout) DESC, s.ID_SERIE
             LIMIT 10");
