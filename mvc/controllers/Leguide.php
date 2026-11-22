@@ -135,7 +135,7 @@ class Leguide extends Bdo_Controller
                 break;
         }
 
-        $this->view->addCssFile('style/album-lists.css?v=20261120a');
+        $this->view->addCssFile('style/album-lists.css?v=20261120b');
         $this->view->addCssFile('style/leguide.css?v=20261118g');
         $this->view->addPhtmlFile('leguide/index', 'BODY');
         $this->view->set_var(array(
