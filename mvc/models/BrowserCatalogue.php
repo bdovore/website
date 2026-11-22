@@ -39,6 +39,22 @@ class BrowserCatalogue
 
     public function autocompleteTitles(string $type, string $query, string $prefix): array
     {
+        return $this->rankedTitles($type, $query, $prefix, [], 0, 10);
+    }
+
+    public function searchSeriesPage(string $query, array $genres, int $offset, int $size): array
+    {
+        $prefix = strtr($query, ['!' => '!!', '%' => '!%', '_' => '!_']) . '%';
+        $hits = $this->rankedTitles('ser', $query, $prefix, $genres, $offset, $size + 1);
+        $more = count($hits) > $size;
+        if ($more) array_pop($hits);
+        $rows = array_map(static fn($hit) => ['id'=>$hit['ID_SERIE'], 'label'=>$hit['label']], $hits);
+        return ['rows'=>$this->hydrate('ser', $rows), 'more'=>$more];
+    }
+
+    private function rankedTitles(string $type, string $query, string $prefix, array $genres,
+        int $offset, int $limit): array
+    {
         [$table, $key, $label] = self::TABLES[$type];
         [$matches, $params] = $this->titleMatches($table, $key, $label, $query, $prefix);
         // Keep natural-language matches from the original autocomplete alongside Browser prefixes.
@@ -55,8 +71,9 @@ class BrowserCatalogue
             $popularity = '(SELECT st.NBR_USER_ID_SERIE FROM bd_edition_stat st
                 WHERE st.ID_SERIE=x.ID_SERIE ORDER BY st.ID_EDITION LIMIT 1)';
         }
+        $where = $genres ? ' WHERE x.ID_GENRE IN (' . implode(',', array_map('intval', $genres)) . ')' : '';
         return $this->rows("SELECT x.$key, x.$label label $fields
-            FROM ($matches) hits JOIN $table x USING ($key) $joins
+            FROM ($matches) hits JOIN $table x USING ($key) $joins $where
             ORDER BY
                 CASE
                     WHEN x.$label = ? THEN 1000
@@ -64,7 +81,7 @@ class BrowserCatalogue
                     ELSE MATCH(x.$label) AGAINST (? IN NATURAL LANGUAGE MODE) * 10
                 END + LOG(COALESCE($popularity, 0) + 2) * 0.5 DESC,
                 x.$label, x.$key
-            LIMIT 10", [...$params, $query, $prefix, $query]);
+            LIMIT $offset, $limit", [...$params, $query, $prefix, $query]);
     }
 
     private function cover(): string
