@@ -19,6 +19,54 @@ class BrowserCatalogue
         return $statement->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
+    private function titleMatches(string $table, string $key, string $label, string $query, string $prefix): array
+    {
+        // Separate index probes: combining MATCH and LIKE with OR scans the catalogue.
+        $sql = "SELECT $key FROM $table WHERE $label LIKE ? ESCAPE '!'";
+        $params = [$prefix];
+        preg_match_all('/[\p{L}\p{N}]+/u', $query, $tokens);
+        if ($tokens[0]) {
+            $sql .= " UNION SELECT $key FROM $table WHERE MATCH($label) AGAINST (? IN BOOLEAN MODE)";
+            $params[] = '+' . implode('* +', $tokens[0]) . '*';
+            // Phrase matching lets the full-text parser handle short words and stopwords such as "le".
+            if (count($tokens[0]) > 1) {
+                $sql .= " UNION SELECT $key FROM $table WHERE MATCH($label) AGAINST (? IN BOOLEAN MODE)";
+                $params[] = '"' . implode(' ', $tokens[0]) . '"';
+            }
+        }
+        return [$sql, $params];
+    }
+
+    public function autocompleteTitles(string $type, string $query, string $prefix): array
+    {
+        [$table, $key, $label] = self::TABLES[$type];
+        [$matches, $params] = $this->titleMatches($table, $key, $label, $query, $prefix);
+        // Keep natural-language matches from the original autocomplete alongside Browser prefixes.
+        $matches .= " UNION SELECT $key FROM $table WHERE MATCH($label) AGAINST (? IN NATURAL LANGUAGE MODE)";
+        $params[] = $query;
+        if ($type === 'alb') {
+            $fields = ", e.ID_EDITION, 'Albums' category";
+            $joins = 'JOIN bd_edition e ON e.ID_EDITION=x.ID_EDITION
+                LEFT JOIN bd_edition_stat st ON st.ID_EDITION=e.ID_EDITION';
+            $popularity = 'st.NBR_USER_ID_TOME';
+        } else {
+            $fields = ", 'Séries' category";
+            $joins = '';
+            $popularity = '(SELECT st.NBR_USER_ID_SERIE FROM bd_edition_stat st
+                WHERE st.ID_SERIE=x.ID_SERIE ORDER BY st.ID_EDITION LIMIT 1)';
+        }
+        return $this->rows("SELECT x.$key, x.$label label $fields
+            FROM ($matches) hits JOIN $table x USING ($key) $joins
+            ORDER BY
+                CASE
+                    WHEN x.$label = ? THEN 1000
+                    WHEN x.$label LIKE ? ESCAPE '!' THEN 500
+                    ELSE MATCH(x.$label) AGAINST (? IN NATURAL LANGUAGE MODE) * 10
+                END + LOG(COALESCE($popularity, 0) + 2) * 0.5 DESC,
+                x.$label, x.$key
+            LIMIT 10", [...$params, $query, $prefix, $query]);
+    }
+
     private function cover(): string
     {
         return Bdo_Cfg::getVar('explicit') ? 'e.IMG_COUV' :
@@ -200,20 +248,8 @@ class BrowserCatalogue
             if ($query !== '') {
                 $prefix = strtr($query, ['!' => '!!', '%' => '!%', '_' => '!_']) . '%';
                 if (in_array($type, ['alb', 'ser'], true) && mb_strlen($query) >= 4) {
-                    // Separate index probes: combining MATCH and LIKE with OR scans the catalogue.
-                    $matches = "SELECT $key FROM $table WHERE $label LIKE ? ESCAPE '!'";
-                    $params[] = $prefix;
-                    preg_match_all('/[\p{L}\p{N}]+/u', $query, $tokens);
-                    if ($tokens[0]) {
-                        $matches .= " UNION SELECT $key FROM $table WHERE MATCH($label) AGAINST (? IN BOOLEAN MODE)";
-                        $params[] = '+' . implode('* +', $tokens[0]) . '*';
-                        // A required prefix such as +le* can miss the unindexed article "le".
-                        // Phrase matching lets the full-text parser handle short words and stopwords.
-                        if (count($tokens[0]) > 1) {
-                            $matches .= " UNION SELECT $key FROM $table WHERE MATCH($label) AGAINST (? IN BOOLEAN MODE)";
-                            $params[] = '"' . implode(' ', $tokens[0]) . '"';
-                        }
-                    }
+                    [$matches, $matchParams] = $this->titleMatches($table, $key, $label, $query, $prefix);
+                    array_push($params, ...$matchParams);
                     $where[] = "x.$key IN (SELECT $key FROM ($matches) hits)";
                 } elseif ($type === 'aut') {
                     $where[] = "(x.PSEUDO LIKE ? ESCAPE '!' OR x.NOM LIKE ? ESCAPE '!' OR

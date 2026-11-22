@@ -210,19 +210,35 @@ $(document).ready(function() {
     }
   });
   $(function() {
-        var cache = {};
-        $( "#search" ).catcomplete({
+        var cache = Object.create(null);
+        var cachedTerms = [];
+        var pending = null;
+        var input = $( "#search" );
+        input.catcomplete({
           minLength: 2,
+          delay: 300,
           source: function( request, response ) {
-            var term = request.term;
+            if ( pending ) pending.abort();
+            var term = $.trim( request.term );
+            if ( term.length < 2 ) {
+              response( [] );
+              return;
+            }
             if ( term in cache ) {
               response( cache[ term ] );
               return;
             }
 
-            $.getJSON( "<?php echo BDO_URL;?>search/auto", request, function( data, status, xhr ) {
+            pending = $.getJSON( "<?php echo BDO_URL;?>search/auto", {term: term} );
+            pending.done(function( data ) {
               cache[ term ] = data;
+              cachedTerms.push( term );
+              if ( cachedTerms.length > 50 ) delete cache[ cachedTerms.shift() ];
               response( data );
+            }).fail(function() {
+              response( [] );
+            }).always(function() {
+              pending = null;
             });
           },
           select: function( event, ui ) {
@@ -256,6 +272,12 @@ $(document).ready(function() {
                     window.location.href = "<?php echo BDO_URL;?>guest?user="+encodeURIComponent(ui.item.ID_USER);
                 }
           }
+        });
+        input.on( "input", function() {
+          input.catcomplete( "close" );
+          if ( pending ) pending.abort();
+          // Force a new search if the user returns to the previous term before the delay.
+          $(this).data( "custom-catcomplete" ).term = null;
         });
       });
 
